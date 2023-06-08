@@ -1,0 +1,6 @@
+# Project exclude paths
+/.gradle/
+/.idea
+/app/build/
+/app/release/
+/lib_mediaplayer_ui/build/

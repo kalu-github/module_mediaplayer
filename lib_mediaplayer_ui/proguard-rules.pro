@@ -1,0 +1,10 @@
+# ui
+-dontwarn org.apache.commons.io.**
+-dontwarn tv.kalu.android.exoplayer.player.DemoPlayer
+-dontwarn com.google.android.exoplayer2.**
+-dontwarn com.google.android.exoplayer.**
+-dontwarn lib.kalu.exoplayer2.ffmpeg.**
+-dontwarn lib.kalu.exoplayer2.util.**
+-dontwarn lib.kalu.exoplayer.util.**
+-dontwarn lib.kalu.ffplayer.**
+-dontwarn lib.kalu.vlc.**

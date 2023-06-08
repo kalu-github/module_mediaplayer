@@ -1,0 +1,89 @@
+apply plugin: 'com.android.application'
+
+android {
+
+    compileSdkVersion 32
+    buildToolsVersion "32.0.0"
+    namespace 'com.kalu.mediaplayer'
+
+    defaultConfig {
+
+        minSdkVersion 19
+        targetSdkVersion 32
+
+        ndk {
+            abiFilters 'armeabi-v7a'
+//            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+
+        //添加此行
+        flavorDimensions "default"
+    }
+
+    signingConfigs {
+        config {
+            keyAlias 'test'
+            keyPassword '123456'
+            storeFile file('test.jks')
+            storePassword '123456'
+            v2SigningEnabled true
+        }
+    }
+
+    //打包APK默认名称格式
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def date = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
+            def suffix = (variant.signingConfig == null) ? "Unsigned" : "Unsigned"
+            def channel = new String(output.name).split("-")
+            outputFileName = "test_player" + "_${date}_${suffix}.apk"
+        }
+    }
+
+    buildTypes {
+        buildTypes {
+            release {
+                signingConfig signingConfigs.config
+                minifyEnabled false
+                zipAlignEnabled false
+                shrinkResources false
+                multiDexEnabled true
+            }
+            debug {
+                signingConfig signingConfigs.config
+                minifyEnabled false
+                zipAlignEnabled false
+                shrinkResources false
+                multiDexEnabled false
+            }
+        }
+    }
+    lint {
+        abortOnError false
+    }
+
+    //jdk1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    api files('libs/lib_mediaplayer_ui_release_20230531.aar')
+    api files('libs/lib_mediaplayer_ffplayer_ff4.0_release_20230517.aar')
+    api files('libs/lib_mediaplayer_exo_r2.18.5_release_20230513.aar')
+    api files('libs/lib_mediaplayer_exo_r1.5.15_release_20230424.aar')
+    api files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.8_full_release_20230531.aar')
+
+//    api project(path: ':lib_mediaplayer_ui')
+}
+

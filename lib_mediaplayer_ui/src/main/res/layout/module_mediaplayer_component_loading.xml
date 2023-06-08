@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00000000"
+    android:focusable="false">
+
+    <!-- 背景 -->
+    <ImageView
+        android:id="@+id/module_mediaplayer_component_loading_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="false"
+        android:visibility="gone" />
+
+    <!-- 转圈 -->
+    <lib.kalu.mediaplayer.widget.loading.MPLoadingView
+        android:id="@+id/module_mediaplayer_component_loading_pb"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        android:focusable="false"
+        android:indeterminateDuration="2000"
+        android:longClickable="false"
+        android:visibility="gone"
+        app:lv_color_round="#ffffff"
+        app:lv_count="8"
+        app:lv_radius="10dp"
+        app:lv_rate="0.9" />
+
+    <!-- 提示 -->
+    <TextView
+        android:id="@+id/module_mediaplayer_component_loading_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/module_mediaplayer_component_loading_pb"
+        android:layout_centerHorizontal="true"
+        android:focusable="false"
+        android:textColor="@color/module_mediaplayer_color_ffffff"
+        android:textSize="22sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

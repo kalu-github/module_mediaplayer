@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MPLoadingView">
+        <attr name="lv_radius" format="dimension|reference" />
+        <attr name="lv_rate" format="float|reference" />
+        <attr name="lv_count" format="integer|reference" />
+        <attr name="lv_color_background" format="color|reference" />
+        <attr name="lv_color_round" format="color|reference" />
+    </declare-styleable>
+</resources>

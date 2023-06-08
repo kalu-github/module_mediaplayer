@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/main_edit"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="输入视频地址" />
+
+    <RadioGroup
+        android:id="@+id/main_kernel"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/main_kernel_button1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="true"
+            android:enabled="true"
+            android:text="ijk" />
+
+        <RadioButton
+            android:id="@+id/main_kernel_button2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="false"
+            android:enabled="true"
+            android:text="exo1" />
+
+        <RadioButton
+            android:id="@+id/main_kernel_button3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="false"
+            android:enabled="true"
+            android:text="exo2" />
+
+        <RadioButton
+            android:id="@+id/main_kernel_button4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:enabled="false"
+            android:checked="false"
+            android:text="vlc" />
+
+        <RadioButton
+            android:id="@+id/main_kernel_button5"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="false"
+            android:text="ffplayer" />
+
+        <RadioButton
+            android:id="@+id/main_kernel_button6"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:enabled="true"
+            android:checked="false"
+            android:text="android" />
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/main_exo_ffmpeg"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/main_exo_ffmpeg_yes_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="true"
+            android:enabled="true"
+            android:text="ffmpg_yes_audio" />
+
+        <RadioButton
+            android:id="@+id/main_exo_ffmpeg_no"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="false"
+            android:enabled="true"
+            android:text="ffmpg_no" />
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/main_radio"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/main_radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="video-test.rmvb"
+            android:text="rmvb" />
+
+        <RadioButton
+            android:id="@+id/main_radio2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="video-h265.mkv"
+            android:text="h265" />
+
+        <RadioButton
+            android:id="@+id/main_radio3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+            android:text="mp4" />
+
+        <RadioButton
+            android:id="@+id/main_radio4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com"
+            android:text="m3u8" />
+
+        <RadioButton
+            android:id="@+id/main_radio5"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4"
+            android:text="rtsp" />
+
+        <RadioButton
+            android:id="@+id/main_radio6"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp"
+            android:text="rtmp" />
+
+        <RadioButton
+            android:id="@+id/main_radio7"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="udp://224.255.0.247:10000"
+            android:text="udp" />
+
+        <RadioButton
+            android:id="@+id/main_radio8"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="true"
+            android:tag="http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&amp;bizid=1023&amp;hy=SH&amp;fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400"
+            android:text="test" />
+
+        <RadioButton
+            android:id="@+id/main_radio9"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="https://link.jianshu.com/?t=https%3A%2F%2Fdevimages.apple.com.edgekey.net%2Fstreaming%2Fexamples%2Fbipbop_4x3%2Fbipbop_4x3_variant.m3u8"
+            android:text="https" />
+<!--        <RadioButton-->
+<!--            android:id="@+id/main_radio9"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:tag="https://media.w3.org/2010/05/sintel/trailer.mp4"-->
+<!--            android:text="https" />-->
+
+        <RadioButton
+            android:id="@+id/main_radio10"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd"
+            android:text="dash1" />
+        <RadioButton
+            android:id="@+id/main_radio11"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="https://dash.akamaized.net/akamai/bbb_30fps/bbb-manifest-refresh.mpd"
+            android:text="dash1" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/main_button1"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="播放" />
+
+    <Button
+        android:id="@+id/main_button3"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="测试：进度条" />
+
+</LinearLayout>
