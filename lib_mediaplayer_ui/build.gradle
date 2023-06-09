@@ -60,13 +60,13 @@ repositories {
 dependencies {
     compileOnly('androidx.appcompat:appcompat:1.5.1')
     // ijk
-    compileOnly project(path: ':lib_mediaplayer_ijk_k0.8.8_ff3.4.12_release_20230608')
+    compileOnly files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.12_release_20230608.aar')
     // exo1
     compileOnly files('libs/lib_mediaplayer_exo_r1.5.15_release_20230424.aar')
     // exo2
-    compileOnly files('libs/lib_mediaplayer_exo_r2.18.5_release_20230513.aar')
+    compileOnly files('libs/lib_mediaplayer_exo_r2.18.5_ff4.4_audio_release_20230422.aar')
     // ffplayer
-    compileOnly files('libs/lib_mediaplayer_exo_r2.18.5_release_20230513.aar')
+    compileOnly files('libs/lib_mediaplayer_ffplayer_ff4.0_release_20230517.aar')
     // vlc
     compileOnly files('libs/lib_mediaplayer_vlc_r3.5.1_release_20230420.aar')
 }
