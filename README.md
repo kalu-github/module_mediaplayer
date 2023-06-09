@@ -1,58 +1,4 @@
 #
-#### libijkplayer.so => lib_mediaplayer_ijk_k0.8.8_ff3.4_release_xxx.aar
-```
-https://github.com/kalu-github/ijkplayer-k0.8.8-ff3.4
-```
-
-#
-#### libijkplayer.so => lib_mediaplayer_ijk_k0.8.8_ff3.4_openssl_release_xxx.aar
-```
-https://github.com/kalu-github/ijkplayer-k0.8.8-ff3.4-openssl
-```
-
-#
-#### libijkplayer.so => lib_mediaplayer_ijk_k0.8.8_ff4.0_release_xxx.aar
-```
-https://github.com/kalu-github/ijkplayer-k0.8.8-ff4.0
-```
-
-#
-#### libijkplayer.so => lib_mediaplayer_ijk_k0.8.8_ff4.0_openssl_release_xxx.aar
-```
-https://github.com/kalu-github/ijkplayer-k0.8.8-ff4.0-openssl
-```
-
-#
-#### libexoplayer-ffmpeg.so => 
-```
-https://github.com/kalu-github/exoplayer2-ff4.4.3
-```
-#
-#### libffplayer-ffmpeg.so => 
-```
-https://github.com/kalu-github/ffplayer-ff4.0
-```
-
-#
-####  exoplayer-extensions
-```
-- [x] av1 => 视频格式
-- [x] cast => DRM支持
-- [x] cronet => 网络库
-- [✓] ffmpeg
-- [x] flac => 音频解码库
-- [x] ima => ad
-- [x] leanback
-- [x] media2
-- [x] mediasession => 音频播放器
-- [x] okhttp => 网络库
-- [x] opus => 音频解码库
-- [✓] rtmp
-- [x] vp9 => 视频格式
-- [x] workmanager
-```
-
-#
 #### 更新
 ```
 2023-03-22
@@ -175,15 +121,6 @@ https://github.com/kalu-github/ffplayer-ff4.0
 ```
 
 #
-####  计划
-```
-- [✓] 支持TV
-- [✓] 支持exoplayer硬解
-- [✓] 支持ijkplayer软解
-- [✓] 编译更新ffmpeg4.0
-```
-
-#
 #### 资料
 ```
 https://exoplayer.dev/
@@ -193,20 +130,6 @@ https://github.com/bilibili/ijkplayer
 https://github.com/bilibili/FFmpeg/tags
 https://code.videolan.org/videolan/vlc-android
 https://mvnrepository.com/artifact/org.videolan.android/libvlc-all
-```
-
-#
-####  exoplayer-jar
-```
-files('libs/androidx-annotation-1.2.0.jar')
-files('libs/commons-io-2.5.jar')
-files('libs/guava-30.1-android.jar')
-files('libs/failureaccess-1.0.1.jar')
-files('libs/checker-qual-2.5.0.jar')
-files('libs/checker-compat-qual-2.5.0.jar')
-files('libs/j2objc-annotations-1.3.jar')
-files('libs/error_prone_annotations-2.10.0.jar')
-files('libs/annotations-3.0.1.jar')
 ```
 
 #
