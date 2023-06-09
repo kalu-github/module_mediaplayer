@@ -1,0 +1,5 @@
+# Project exclude paths
+/.gradle/
+/.idea
+/lib_mediaplayer_vlc_r3.5.1/.cxx/
+/lib_mediaplayer_vlc_r3.5.1/build/

@@ -1,0 +1,61 @@
+apply plugin: 'com.android.library'
+
+android {
+
+    compileSdkVersion 32
+    buildToolsVersion "32.0.0"
+    namespace 'org.videolan'
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 32
+
+        //添加此行
+        flavorDimensions "default"
+
+        externalNativeBuild {
+            cmake {
+                version "3.18.1"
+//                abiFilters 'armeabi-v7a'
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            }
+        }
+
+        ndk {
+            abiFilters 'armeabi-v7a'
+//            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            def type = new String(buildType.name).toLowerCase()
+            def time = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
+            outputFileName = "lib_mediaplayer_vlc_r3.5.1_" + type + "_" + time + ".aar"
+        }
+    }
+
+    buildTypes {
+        release {
+            //  proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
+        }
+        debug {
+            //  proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard/proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "/src/main/cpp/CMakeLists.txt"
+        }
+    }
+}
+
+dependencies {
+    compileOnly('androidx.appcompat:appcompat:1.5.1')
+}
