@@ -77,9 +77,10 @@ repositories {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.multidex:multidex:2.0.1'
-    // ui
 //    implementation project(path: ':lib_mediaplayer_ui')
-     api files('libs/lib_mediaplayer_ui_release_20230609.aar')
+
+    // ui
+    api files('libs/lib_mediaplayer_ui_release_20230609.aar')
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.12_release_20230608.aar')
     // exo1
