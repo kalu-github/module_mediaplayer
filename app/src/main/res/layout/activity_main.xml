@@ -171,7 +171,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:tag="https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd"
-            android:text="dash1" />
+            android:text="dash2" />
         <RadioButton
             android:id="@+id/main_radio11"
             android:layout_width="wrap_content"
