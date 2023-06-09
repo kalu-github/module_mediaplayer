@@ -1,6 +1,12 @@
 #
 #### 更新
 ```
+2023-06-09
+1. 新增：ijkplayer支持dash【*_full版本】
+2. 更新：ijkplayer-ffmpeg3.4.12
+3. 更新：ijkplayer-ffmpeg4.4.4
+```
+```
 2023-03-22
 1. 更新：exoplayer-2.18.5
 ```
