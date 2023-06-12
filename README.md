@@ -3,7 +3,6 @@
 |:-----------:|:---------:|:---------:|:---------:|:---------:|:--------:|
 |  &#10004;   | &#10004;  | &#10004;  | &#10004;  | &#10004;  | &#10004; |
 
-#
 #### 更新
 ```
 2023-06-09
@@ -131,7 +130,6 @@
 2. 重构lib_mediaplayer_ui模块
 ```
 
-#
 #### 资料
 ```
 https://exoplayer.dev/
@@ -143,7 +141,6 @@ https://code.videolan.org/videolan/vlc-android
 https://mvnrepository.com/artifact/org.videolan.android/libvlc-all
 ```
 
-#
 ####  优化
 ```
 https://hejunlin.blog.csdn.net/article/details/57075026?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-57075026-blog-80149176.235%5Ev31%5Epc_relevant_increate_t0_download_v2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-57075026-blog-80149176.235%5Ev31%5Epc_relevant_increate_t0_download_v2&utm_relevant_index=2
