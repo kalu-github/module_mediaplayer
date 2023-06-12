@@ -1,4 +1,10 @@
 #
+#### 支持
+| mediaplayer硬解 | exoplayer硬解 | ijkplayer硬解 | ijkplayer软解 | vlcplayer软解 | ffplayer软解 |
+|:-------------:|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|
+|      yes      |     yse     |     yse     |     yse     |     yse     |     yse     |
+
+#
 #### 更新
 ```
 2023-06-09
