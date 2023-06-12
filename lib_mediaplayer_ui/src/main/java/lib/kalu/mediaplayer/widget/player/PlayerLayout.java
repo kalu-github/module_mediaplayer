@@ -654,7 +654,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void callPlayerEvent1(@PlayerType.StateType.Value int state) {
+    public final void callPlayerEvent(@PlayerType.StateType.Value int state) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
