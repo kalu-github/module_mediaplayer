@@ -181,13 +181,20 @@ public @interface PlayerType {
         int EXO_V1 = 5_002; // exo
         int EXO_V2 = 5_003; // exo
         int IJK = 5_004; // ijk
-        int VLC = 5_005; // vlc
-        int FFPLAYER = 5_006; // ffplayer
+        int IJK_MEDIACODEC = 5_005; // ijk_mediacodec
+        int VLC = 5_006; // vlc
+        int FFPLAYER = 5_007; // ffplayer
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({IJK, ANDROID, EXO_V1, EXO_V2, VLC, FFPLAYER})
+        @IntDef({IJK,
+                IJK_MEDIACODEC,
+                ANDROID,
+                EXO_V1,
+                EXO_V2,
+                VLC,
+                FFPLAYER})
         @Keep
         @interface Value {
         }

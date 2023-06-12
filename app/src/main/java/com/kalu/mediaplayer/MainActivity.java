@@ -112,8 +112,12 @@ public class MainActivity extends Activity {
         RadioGroup radioGroup = findViewById(R.id.main_kernel);
         int id = radioGroup.getCheckedRadioButtonId();
         switch (id) {
-            case R.id.main_kernel_button1:
+            case R.id.main_kernel_button0:
                 type = PlayerType.KernelType.IJK;
+                Toast.makeText(getApplicationContext(), "ijk init succ", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.main_kernel_button1:
+                type = PlayerType.KernelType.IJK_MEDIACODEC;
                 Toast.makeText(getApplicationContext(), "ijk init succ", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.main_kernel_button2:

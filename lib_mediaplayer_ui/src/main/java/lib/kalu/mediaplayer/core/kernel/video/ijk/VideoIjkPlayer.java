@@ -30,10 +30,12 @@ public final class VideoIjkPlayer extends BasePlayer {
     private boolean isFromNetBufferStart = false;
 
 
+    private boolean mUseMediaCodec;
     private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer = null;
 
-    public VideoIjkPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
+    public VideoIjkPlayer(@NonNull boolean useMediaCodec, @NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         super(musicApi, eventApi);
+        mUseMediaCodec = useMediaCodec;
     }
 
     @NonNull
@@ -132,11 +134,15 @@ public final class VideoIjkPlayer extends BasePlayer {
             // 循环次数1次， 不能是0
             mIjkPlayer.setOption(player, "loop", 1);
             // 硬解码相关 0关闭
-            mIjkPlayer.setOption(player, "mediacodec", 0);
-            mIjkPlayer.setOption(player, "mediacodec-hevc", 0);
             mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
             mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
-            mIjkPlayer.setOption(player, "videotoolbox", 0);
+            mIjkPlayer.setOption(player, "mediacodec-all-videos", mUseMediaCodec ? 1 : 0);
+            mIjkPlayer.setOption(player, "mediacodec-avc", mUseMediaCodec ? 1 : 0);
+            mIjkPlayer.setOption(player, "mediacodec-hevc", mUseMediaCodec ? 1 : 0);
+            mIjkPlayer.setOption(player, "mediacodec-mpeg2", mUseMediaCodec ? 1 : 0);
+            mIjkPlayer.setOption(player, "mediacodec-mpeg4", mUseMediaCodec ? 1 : 0);
+            mIjkPlayer.setOption(player, "mediacodec-vp8", mUseMediaCodec ? 1 : 0);
+            mIjkPlayer.setOption(player, "mediacodec-vp9", mUseMediaCodec ? 1 : 0);
             // 使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
             mIjkPlayer.setOption(player, "opensles", 0);
             mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
