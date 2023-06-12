@@ -1,4 +1,3 @@
-#
 #### 支持
 |mediaplayer硬解|exoplayer硬解|ijkplayer硬解|ijkplayer软解|vlcplayer软解|ffplayer软解|
 |:-----------:|:---------:|:---------:|:---------:|:---------:|:--------:|
