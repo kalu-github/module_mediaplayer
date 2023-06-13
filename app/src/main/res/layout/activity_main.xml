@@ -86,7 +86,7 @@
             android:layout_height="match_parent"
             android:checked="true"
             android:enabled="true"
-            android:text="ffmpg_yes_audio" />
+            android:text="only_ffmpeg_audio" />
 
         <RadioButton
             android:id="@+id/main_exo_ffmpeg_no"
@@ -94,7 +94,7 @@
             android:layout_height="match_parent"
             android:checked="false"
             android:enabled="true"
-            android:text="ffmpg_no" />
+            android:text="only_ffmpeg_video" />
 
     </RadioGroup>
 

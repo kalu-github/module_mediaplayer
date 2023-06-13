@@ -177,10 +177,10 @@ public class MainActivity extends Activity {
         int buttonId = radioGroup.getCheckedRadioButtonId();
         switch (buttonId) {
             case R.id.main_exo_ffmpeg_yes_audio:
-                exoFFmpeg = PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_ON_HIGH_AUDIO;
+                exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG;
                 break;
             default:
-                exoFFmpeg = PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_OFF;
+                exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
                 break;
         }
         PlayerBuilder build = new PlayerBuilder.Builder()

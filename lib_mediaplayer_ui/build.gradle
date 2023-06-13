@@ -64,7 +64,7 @@ dependencies {
     // exo1
     compileOnly files('libs/lib_mediaplayer_exo_r1.5.15_release_20230424.aar')
     // exo2
-    compileOnly files('libs/lib_mediaplayer_exo_r2.18.5_ff4.4_audio_release_20230422.aar')
+    compileOnly files('libs/lib_mediaplayer_exo_r2.18.7_full_release_20230613.aar')
     // ffplayer
     compileOnly files('libs/lib_mediaplayer_ffplayer_ff4.0_release_20230517.aar')
     // vlc

@@ -316,25 +316,23 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
     @interface FFmpegType {
-        int EXO_EXTENSION_RENDERER_ON_HIGH_ALL = 9_001;
-        int EXO_EXTENSION_RENDERER_ON_HIGH_AUDIO = 9_002;
-        int EXO_EXTENSION_RENDERER_ON_LOW_ALL = 9_003;
-        int EXO_EXTENSION_RENDERER_ON_LOW_AUDIO = 9_004;
-        int EXO_EXTENSION_RENDERER_OFF = 9_005;
-        int EXO_EXTENSION_RENDERER_OFF_ONLY_AUDIO = 9_006;
-        int EXO_EXTENSION_RENDERER_OFF_ONLY_VIDEO = 9_007;
+        int EXO_RENDERER_ONLY_MEDIACODEC = 9_001;
+        int EXO_RENDERER_ONLY_MEDIACODEC_AUDIO = 9_002;
+        int EXO_RENDERER_ONLY_MEDIACODEC_VIDEO = 9_003;
+        int EXO_RENDERER_ONLY_FFMPEG = 9_004;
+        int EXO_RENDERER_ONLY_FFMPEG_AUDIO = 9_005;
+        int EXO_RENDERER_ONLY_FFMPEG_VIDEO = 9_006;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {
-                FFmpegType.EXO_EXTENSION_RENDERER_ON_HIGH_ALL,
-                FFmpegType.EXO_EXTENSION_RENDERER_ON_HIGH_AUDIO,
-                FFmpegType.EXO_EXTENSION_RENDERER_ON_LOW_ALL,
-                FFmpegType.EXO_EXTENSION_RENDERER_ON_LOW_AUDIO,
-                FFmpegType.EXO_EXTENSION_RENDERER_OFF,
-                FFmpegType.EXO_EXTENSION_RENDERER_OFF_ONLY_AUDIO,
-                FFmpegType.EXO_EXTENSION_RENDERER_OFF_ONLY_VIDEO})
+                FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC,
+                FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_AUDIO,
+                FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_VIDEO,
+                FFmpegType.EXO_RENDERER_ONLY_FFMPEG,
+                FFmpegType.EXO_RENDERER_ONLY_FFMPEG_AUDIO,
+                FFmpegType.EXO_RENDERER_ONLY_FFMPEG_VIDEO})
         @Keep
         @interface Value {
         }

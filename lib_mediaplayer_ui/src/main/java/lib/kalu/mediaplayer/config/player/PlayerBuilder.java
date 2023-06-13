@@ -17,7 +17,7 @@ public final class PlayerBuilder {
     @PlayerType.SeekType.Value
     private int exoSeekParameters = PlayerType.SeekType.EXO_SEEK_DEFAULT;
     @PlayerType.FFmpegType.Value
-    private int exoFFmpeg = PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_OFF;
+    private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
     @PlayerType.KernelType.Value
     private int kernel; // 播放器内核
     @PlayerType.RenderType.Value
@@ -147,7 +147,7 @@ public final class PlayerBuilder {
         @PlayerType.SeekType.Value
         private int exoSeekParameters = PlayerType.SeekType.EXO_SEEK_DEFAULT;
         @PlayerType.FFmpegType.Value
-        private int exoFFmpeg = PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_OFF;
+        private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
         @PlayerType.KernelType.Value
         private int kernel = PlayerType.KernelType.ANDROID; // 播放器内核
         @PlayerType.RenderType.Value

@@ -22,8 +22,6 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 
-import lib.kalu.exoplayer2.ffmpeg.BaseRenderersFactory;
-import lib.kalu.exoplayer2.ffmpeg.FFmpegHighAudioRenderersFactory;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -64,10 +62,23 @@ public final class MusicExoPlayer2 implements MusicKernelApi {
             builder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
             int exoFFmpeg = config.getExoFFmpeg();
-            if (exoFFmpeg != PlayerType.FFmpegType.EXO_EXTENSION_RENDERER_OFF) {
-                builder.setRenderersFactory(new FFmpegHighAudioRenderersFactory(context));
-            } else {
-                builder.setRenderersFactory(new BaseRenderersFactory(context));
+            try {
+                // only_mediacodec_audio
+                if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_AUDIO) {
+                    Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory");
+                    if (null == clazz)
+                        throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory");
+                    builder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory(context));
+                }
+                // only_ffmpeg_audio
+                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG_AUDIO) {
+                    Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory");
+                    if (null == clazz)
+                        throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory");
+                    builder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory(context));
+                }
+                throw new Exception("not find: config");
+            } catch (Exception e) {
             }
             mExoPlayer = builder.build();
             setVolume(1F);
