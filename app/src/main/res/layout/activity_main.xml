@@ -53,8 +53,8 @@
             android:id="@+id/main_kernel_button4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:enabled="false"
             android:checked="false"
+            android:enabled="false"
             android:text="vlc" />
 
         <RadioButton
@@ -68,8 +68,8 @@
             android:id="@+id/main_kernel_button6"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:enabled="true"
             android:checked="false"
+            android:enabled="true"
             android:text="android" />
 
     </RadioGroup>
@@ -86,7 +86,7 @@
             android:layout_height="match_parent"
             android:checked="true"
             android:enabled="true"
-            android:text="only_ffmpeg_audio" />
+            android:text="video_m_audio_f" />
 
         <RadioButton
             android:id="@+id/main_exo_ffmpeg_no"
@@ -94,7 +94,7 @@
             android:layout_height="match_parent"
             android:checked="false"
             android:enabled="true"
-            android:text="only_ffmpeg_video" />
+            android:text="video_m_audio_m" />
 
     </RadioGroup>
 
@@ -167,12 +167,12 @@
             android:layout_height="match_parent"
             android:tag="https://link.jianshu.com/?t=https%3A%2F%2Fdevimages.apple.com.edgekey.net%2Fstreaming%2Fexamples%2Fbipbop_4x3%2Fbipbop_4x3_variant.m3u8"
             android:text="https" />
-<!--        <RadioButton-->
-<!--            android:id="@+id/main_radio9"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:tag="https://media.w3.org/2010/05/sintel/trailer.mp4"-->
-<!--            android:text="https" />-->
+        <!--        <RadioButton-->
+        <!--            android:id="@+id/main_radio9"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:tag="https://media.w3.org/2010/05/sintel/trailer.mp4"-->
+        <!--            android:text="https" />-->
 
         <RadioButton
             android:id="@+id/main_radio10"
@@ -180,6 +180,7 @@
             android:layout_height="match_parent"
             android:tag="https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd"
             android:text="dash2" />
+
         <RadioButton
             android:id="@+id/main_radio11"
             android:layout_width="wrap_content"

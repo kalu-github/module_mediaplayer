@@ -158,6 +158,20 @@ public final class VideoExoPlayer2 extends BasePlayer {
                         throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory");
                     builder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory(context));
                 }
+                // video_mediacodec_audio_ffmpeg
+                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG) {
+                    Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory");
+                    if (null == clazz)
+                        throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory");
+                    builder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory(context));
+                }
+                // video_ffmpeg_audio_mediacodec
+                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC) {
+                    Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory");
+                    if (null == clazz)
+                        throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory");
+                    builder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory(context));
+                }
                 throw new Exception("not find: config");
             } catch (Exception e) {
             }

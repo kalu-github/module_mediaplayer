@@ -322,6 +322,8 @@ public @interface PlayerType {
         int EXO_RENDERER_ONLY_FFMPEG = 9_004;
         int EXO_RENDERER_ONLY_FFMPEG_AUDIO = 9_005;
         int EXO_RENDERER_ONLY_FFMPEG_VIDEO = 9_006;
+        int EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG = 9_007;
+        int EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC = 9_008;
 
         @Documented
         @Retention(CLASS)
@@ -332,7 +334,9 @@ public @interface PlayerType {
                 FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_VIDEO,
                 FFmpegType.EXO_RENDERER_ONLY_FFMPEG,
                 FFmpegType.EXO_RENDERER_ONLY_FFMPEG_AUDIO,
-                FFmpegType.EXO_RENDERER_ONLY_FFMPEG_VIDEO})
+                FFmpegType.EXO_RENDERER_ONLY_FFMPEG_VIDEO,
+                FFmpegType.EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG,
+                FFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC})
         @Keep
         @interface Value {
         }
