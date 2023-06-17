@@ -244,6 +244,11 @@ public final class VideoFFmpegPlayer extends BasePlayer {
     }
 
     @Override
+    public boolean isPlayWhenReady() {
+        return mPlayWhenReady;
+    }
+
+    @Override
     public float getSpeed() {
 //        try {
 //            if (null == mFFmpegPlayer)

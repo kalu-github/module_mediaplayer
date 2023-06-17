@@ -249,6 +249,11 @@ public final class VideoAndroidPlayer extends BasePlayer {
     }
 
     @Override
+    public boolean isPlayWhenReady() {
+        return mPlayWhenReady;
+    }
+
+    @Override
     public float getSpeed() {
         try {
             if (null == mMediaPlayer)

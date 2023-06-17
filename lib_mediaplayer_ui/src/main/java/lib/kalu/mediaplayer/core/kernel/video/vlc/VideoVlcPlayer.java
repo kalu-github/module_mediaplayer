@@ -231,6 +231,11 @@ public final class VideoVlcPlayer extends BasePlayer {
         this.mPlayWhenReady = playWhenReady;
     }
 
+    @Override
+    public boolean isPlayWhenReady() {
+        return mPlayWhenReady;
+    }
+
     /**
      * 获取播放速度
      *

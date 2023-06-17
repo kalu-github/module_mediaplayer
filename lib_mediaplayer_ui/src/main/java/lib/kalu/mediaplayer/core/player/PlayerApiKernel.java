@@ -5,6 +5,8 @@ import android.view.View;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 
+import java.util.HashMap;
+
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
@@ -191,6 +193,7 @@ interface PlayerApiKernel extends PlayerApiListener,
     }
 
     default void pause(boolean ignore) {
+        setPlayWhenReady(false);
         pauseKernel(ignore);
     }
 
@@ -222,6 +225,7 @@ interface PlayerApiKernel extends PlayerApiListener,
     }
 
     default void resume(boolean ignore) {
+        setPlayWhenReady(true);
         try {
             MPLogUtil.log("PlayerApiKernel => resume => ignore = " + ignore);
             checkKernel();
@@ -399,6 +403,7 @@ interface PlayerApiKernel extends PlayerApiListener,
     }
 
     default void resumeKernel(@NonNull boolean ignore) {
+        setPlayWhenReady(true);
         try {
             // 1
             checkKernel();
@@ -436,6 +441,7 @@ interface PlayerApiKernel extends PlayerApiListener,
     }
 
     default void pauseKernel(@NonNull boolean ignore) {
+        setPlayWhenReady(false);
         try {
             // 1
             checkKernel();
@@ -635,7 +641,11 @@ interface PlayerApiKernel extends PlayerApiListener,
                             resume(true);
                             // step5
                             checkExternalMusic(getBaseContext());
-
+                            // step6
+                            MPLogUtil.log("PlayerApiKernel => onEvent => event_video_start_seek => playWhenReady = " + isPlayWhenReady());
+                            if (!isPlayWhenReady()) {
+                                pause();
+                            }
                             break;
                         // 播放开始
                         case PlayerType.EventType.EVENT_VIDEO_START:
@@ -653,7 +663,11 @@ interface PlayerApiKernel extends PlayerApiListener,
                             checkReal();
                             // step4
                             checkExternalMusic(getBaseContext());
-
+                            // step5
+                            MPLogUtil.log("PlayerApiKernel => onEvent => event_video_start_seek => playWhenReady = " + isPlayWhenReady());
+                            if (!isPlayWhenReady()) {
+                                pause();
+                            }
                             break;
                         // 播放错误
                         case PlayerType.EventType.EVENT_ERROR_URL:

@@ -229,6 +229,11 @@ public final class VideoExoPlayer extends BasePlayer {
         this.mPlayWhenReady = playWhenReady;
     }
 
+    @Override
+    public boolean isPlayWhenReady() {
+        return mPlayWhenReady;
+    }
+
     /**
      * 设置播放速度
      */

@@ -424,6 +424,11 @@ public final class VideoIjkPlayer extends BasePlayer {
     }
 
     @Override
+    public boolean isPlayWhenReady() {
+        return mPlayWhenReady;
+    }
+
+    @Override
     public void setSpeed(float speed) {
         try {
             if (null == mIjkPlayer)

@@ -316,6 +316,18 @@ interface PlayerApiBase {
         }
     }
 
+    default boolean isPlayWhenReady() {
+        try {
+            KernelApi kernel = getKernel();
+            if (null == kernel)
+                throw new Exception("kernel error: null");
+            return kernel.isPlayWhenReady();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => isPlayWhenReady => " + e.getMessage());
+            return false;
+        }
+    }
+
     KernelApi getKernel();
 
     void setKernel(@NonNull KernelApi kernel);

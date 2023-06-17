@@ -78,4 +78,6 @@ public interface KernelApi extends KernelApiBase,
     void setSurface(@NonNull Surface surface, int w, int h);
 
     void setPlayWhenReady(boolean playWhenReady);
+
+    boolean isPlayWhenReady();
 }
