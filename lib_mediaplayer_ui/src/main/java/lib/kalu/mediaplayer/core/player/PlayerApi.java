@@ -23,7 +23,15 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
 
         dispatchKeyEventComponentAll(event);
         if (isFull()) {
-            return true;
+            if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+                return true;
+            } else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+                return true;
+            } else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
