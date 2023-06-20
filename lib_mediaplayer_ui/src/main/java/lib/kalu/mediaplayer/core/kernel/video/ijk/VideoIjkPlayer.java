@@ -188,8 +188,10 @@ public final class VideoIjkPlayer extends BasePlayer {
             // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
             mIjkPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
-            // 探针大小，播放前的探测Size，默认是1M, 改小一点会出画面更快
-            mIjkPlayer.setOption(format, "probesize", 1 * 1024 * 1024);// 1M
+            // 探测带第一帧后就会数据返回，如果这个值设置过小，会导致流的信息分析不完整，从而导致丢失流，用于秒开
+            mIjkPlayer.setOption(format, "probesize", 4096); // 4096
+            // 减小预读取的阀值，这样能更快的打开视频
+            mIjkPlayer.setOption(format, "max-buffer-size", 10 * 1024 * 1024);// 10M
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => setOptions => OPT_CATEGORY_FORMAT => " + e.getMessage());
         }
@@ -227,8 +229,6 @@ public final class VideoIjkPlayer extends BasePlayer {
 //            mIjkPlayer.setOption(player, "packet-buffering", 0);
 //            // 须要准备好后自动播放
 //            mIjkPlayer.setOption(player, "start-on-prepared", 1);
-//            // 最大缓冲大小,单位kb
-//            mIjkPlayer.setOption(player, "max-buffer-size", 20 * 1024 * 1024); // 4KB
 //        } catch (Exception e) {
 //        }
 //
