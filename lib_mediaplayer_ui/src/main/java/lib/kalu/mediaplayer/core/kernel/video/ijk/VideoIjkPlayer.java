@@ -129,6 +129,7 @@ public final class VideoIjkPlayer extends BasePlayer {
     @Override
     public void setOptions() {
 
+        // player
         try {
             int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
             // 循环次数1次， 不能是0
@@ -167,6 +168,8 @@ public final class VideoIjkPlayer extends BasePlayer {
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => setOptions => OPT_CATEGORY_PLAYER => " + e.getMessage());
         }
+
+        // format
         try {
             int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
             mIjkPlayer.setOption(format, "http-detect-range-support", 0);
@@ -185,6 +188,8 @@ public final class VideoIjkPlayer extends BasePlayer {
             // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
             mIjkPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
+            // 探针大小，播放前的探测Size，默认是1M, 改小一点会出画面更快
+            mIjkPlayer.setOption(format, "probesize", 1 * 1024 * 1024);// 1M
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => setOptions => OPT_CATEGORY_FORMAT => " + e.getMessage());
         }
@@ -229,17 +234,15 @@ public final class VideoIjkPlayer extends BasePlayer {
 //
 //        // format
 //        try {
+        // 设置播放前的探测时间 1,达到首屏秒开效果
+//        mIjkPlayer.setOption(format, "analyzeduration", 100);
+        // 设置播放前的最大探测时间 （100未测试是否是最佳值）
+//        mIjkPlayer.setOption(format, "analyzemaxduration", 100);
 //            int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
 //            // 不清楚 1、允许 0、不允许
 //            mIjkPlayer.setOption(format, "http-detect-range-support", 0);
-//            // 探针大小，播放前的探测Size，默认是1M, 改小一点会出画面更快
-//            mIjkPlayer.setOption(format, "probesize", 20 * 1024 * 1024);// 2M
 //            // 最大帧率 20
 //            mIjkPlayer.setOption(format, "max-fps", 0);
-//            // 设置播放前的探测时间 1,达到首屏秒开效果
-//            mIjkPlayer.setOption(format, "analyzeduration", 100);
-//            // 设置播放前的最大探测时间 （100未测试是否是最佳值）
-//            mIjkPlayer.setOption(format, "analyzemaxduration", 100);
 //            // 缩短播放的rtmp视频延迟在1s内
 //            mIjkPlayer.setOption(format, "fflags", "nobuffer");
 //        } catch (Exception e) {
