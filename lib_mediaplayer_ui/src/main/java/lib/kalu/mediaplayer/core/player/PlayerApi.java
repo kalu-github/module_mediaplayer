@@ -40,7 +40,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
     default void checkOnWindowVisibilityChanged(int visibility) {
         try {
             String url = getUrl();
-            if (null == url || url.length() <= 0)
+            if (null == url || url.length() == 0)
                 throw new Exception("url error: " + url);
             boolean playing = isPlaying();
             boolean windowVisibilityChangedRelease = isWindowVisibilityChangedRelease();
@@ -82,13 +82,13 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         try {
             String url = getUrl();
             if (null == url || url.length() <= 0)
-                throw new Exception("url warning: "+url);
+                throw new Exception("url warning: " + url);
             boolean playing = isPlaying();
             MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => url = " + url + ", playing = " + playing + ", this = " + this);
             if (playing)
                 throw new Exception("playing warning: true");
             restart();
-        }catch (Exception e){
+        } catch (Exception e) {
             MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => " + e.getMessage());
         }
     }
@@ -97,7 +97,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         try {
             String url = getUrl();
             if (null == url || url.length() <= 0)
-                throw new Exception("url warning: "+url);
+                throw new Exception("url warning: " + url);
             long position = getPosition();
             long duration = getDuration();
             saveBundle(getBaseContext(), url, position, duration);

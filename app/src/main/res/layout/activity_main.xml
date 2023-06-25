@@ -158,7 +158,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:checked="true"
-            android:tag="http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&amp;bizid=1023&amp;hy=SH&amp;fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400"
+            android:tag="http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&amp;amp;bizid=1023&amp;amp;hy=SH&amp;amp;fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400"
             android:text="test" />
 
         <RadioButton
@@ -187,6 +187,13 @@
             android:layout_height="match_parent"
             android:tag="https://dash.akamaized.net/akamai/bbb_30fps/bbb-manifest-refresh.mpd"
             android:text="dash1" />
+
+        <RadioButton
+            android:id="@+id/main_radio12"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="http://zteres.sn.chinamobile.com:6060/ystxds/32/movie62ff2023041019270000?AuthInfo=XtytY6od2CoxL3Ece34qrDut5VCPsz5XztCLvxBRpErVaX%2F0PpXSHHk8ZrK18wSwUcPUBpKvvT33aM%2FbcRBNJw%3D%3D&amp;version=v1.0&amp;BreakPoint=0&amp;virtualDomain=ystxds.vod_hpd.zte.com&amp;mescid=00000050280009590769&amp;programid=&amp;contentid=movie62ff2023041019270000&amp;videoid=00000050280009590769&amp;recommendtype=0&amp;userid=A089E4CA0921&amp;boid=&amp;stbid=&amp;terminalflag=1&amp;profilecode=&amp;usersessionid=755219691"
+            android:text="m3u8-sn" />
 
     </RadioGroup>
 

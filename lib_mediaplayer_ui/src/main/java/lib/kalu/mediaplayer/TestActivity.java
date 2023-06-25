@@ -300,20 +300,20 @@ public final class TestActivity extends Activity {
     protected void onResume() {
         super.onResume();
         PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-        videoLayout.resume();
+        videoLayout.resume(true);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-        videoLayout.pause();
+        videoLayout.pause(true);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-        videoLayout.release();
+        videoLayout.release(true);
     }
 }
