@@ -52,6 +52,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
             mMediaPlayer.setOnInfoListener(null);
             mMediaPlayer.setOnBufferingUpdateListener(null);
             mMediaPlayer.setOnPreparedListener(null);
+            mMediaPlayer.setOnSeekCompleteListener(null);
             mMediaPlayer.setOnVideoSizeChangedListener(null);
             mMediaPlayer.setSurface(null);
             mMediaPlayer.pause();
@@ -101,12 +102,11 @@ public final class VideoAndroidPlayer extends BasePlayer {
      * MediaPlayer视频播放器监听listener
      */
     private void initListener() {
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setOnErrorListener(onErrorListener);
         mMediaPlayer.setOnCompletionListener(onCompletionListener);
         mMediaPlayer.setOnInfoListener(onInfoListener);
-//        mMediaPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
-        mMediaPlayer.setOnPreparedListener(onPreparedListener);
+        mMediaPlayer.setOnPreparedListener(mOnPreparedListener);
+        mMediaPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
         mMediaPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
     }
 
@@ -283,15 +283,14 @@ public final class VideoAndroidPlayer extends BasePlayer {
     private MediaPlayer.OnErrorListener onErrorListener = new MediaPlayer.OnErrorListener() {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
-            MPLogUtil.log("VideoAndroidPlayer => onError => what = " + what);
-            // ignore -38
-            if (what == -38) {
-
-            }
-            // error
-            else {
+            try {
+                if (what == -38)
+                    throw new Exception("what warning: " + what);
+                MPLogUtil.log("VideoAndroidPlayer => onError => what = " + what);
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+            } catch (Exception e) {
+                MPLogUtil.log("VideoAndroidPlayer => onError => " + e.getMessage());
             }
             return true;
         }
@@ -335,7 +334,19 @@ public final class VideoAndroidPlayer extends BasePlayer {
         }
     };
 
-    private MediaPlayer.OnPreparedListener onPreparedListener = new MediaPlayer.OnPreparedListener() {
+    private MediaPlayer.OnSeekCompleteListener mOnSeekCompleteListener = new MediaPlayer.OnSeekCompleteListener() {
+        @Override
+        public void onSeekComplete(MediaPlayer mediaPlayer) {
+            try {
+                MPLogUtil.log("VideoAndroidPlayer => onSeekComplete =>");
+                start();
+            } catch (Exception e) {
+                MPLogUtil.log("VideoAndroidPlayer => onSeekComplete => " + e.getMessage());
+            }
+        }
+    };
+
+    private MediaPlayer.OnPreparedListener mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
             try {
@@ -345,8 +356,8 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 seekTo(seek, false);
             } catch (Exception e) {
                 MPLogUtil.log("VideoAndroidPlayer => onPrepared => " + e.getMessage());
+                start();
             }
-            start();
         }
     };
 
