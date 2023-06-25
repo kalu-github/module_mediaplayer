@@ -176,13 +176,20 @@ public class MainActivity extends Activity {
         RadioGroup radioGroup = findViewById(R.id.main_exo_ffmpeg);
         int buttonId = radioGroup.getCheckedRadioButtonId();
         switch (buttonId) {
-            case R.id.main_exo_ffmpeg_yes_audio:
+            case R.id.main_exo_vff_amc:
                 exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC;
+                break;
+            case R.id.main_exo_vmc_aff:
+                exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG;
+                break;
+            case R.id.main_exo_vff_aff:
+                exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG;
                 break;
             default:
                 exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
                 break;
         }
+        Toast.makeText(getApplicationContext(), "exoFFmpeg = " + exoFFmpeg, Toast.LENGTH_SHORT).show();
         PlayerBuilder build = new PlayerBuilder.Builder()
                 .setLog(true)
                 .setKernel(type)

@@ -81,20 +81,37 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/main_exo_ffmpeg_yes_audio"
+            android:id="@+id/main_exo_vmc_amc"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:checked="true"
             android:enabled="true"
-            android:text="video_m_audio_f" />
+            android:text="视频硬解_音频硬解" />
 
         <RadioButton
-            android:id="@+id/main_exo_ffmpeg_no"
+            android:id="@+id/main_exo_vmc_aff"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:checked="false"
+            android:checked="true"
             android:enabled="true"
-            android:text="video_m_audio_m" />
+            android:text="视频硬解_音频软解" />
+
+        <RadioButton
+            android:id="@+id/main_exo_vff_amc"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="true"
+            android:enabled="true"
+            android:text="视频软解_音频硬解" />
+
+        <RadioButton
+            android:id="@+id/main_exo_vff_aff"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="true"
+            android:enabled="true"
+            android:text="视频软解_音频软解" />
+
 
     </RadioGroup>
 
