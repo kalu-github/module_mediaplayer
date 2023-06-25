@@ -191,7 +191,8 @@ public final class VideoAndroidPlayer extends BasePlayer {
             if (seek < 0)
                 throw new Exception("seek error: " + seek);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_CLOSEST);
+//                mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_CLOSEST);
+                mMediaPlayer.seekTo((int) seek);
             } else {
                 mMediaPlayer.seekTo((int) seek);
             }
