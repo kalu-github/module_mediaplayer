@@ -60,7 +60,7 @@ repositories {
 dependencies {
     compileOnly('androidx.appcompat:appcompat:1.5.1')
     // ijk
-    compileOnly files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.12_release_20230608.aar')
+    compileOnly files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.12_release_20230625.aar')
     // exo1
     compileOnly files('libs/lib_mediaplayer_exo_r1.5.15_release_20230424.aar')
     // exo2
