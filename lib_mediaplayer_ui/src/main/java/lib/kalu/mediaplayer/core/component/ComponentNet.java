@@ -13,7 +13,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public final class ComponentNet extends RelativeLayout implements ComponentApi {
+public class ComponentNet extends RelativeLayout implements ComponentApi {
 
     public ComponentNet(Context context) {
         super(context);
@@ -21,7 +21,7 @@ public final class ComponentNet extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
+    public final void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
         boolean showing = isShowing();
         MPLogUtil.log("ComponentNet => onUpdateTimeMillis => showing = " + showing);
         if (!showing)
@@ -30,7 +30,7 @@ public final class ComponentNet extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void callPlayerEvent(int playState) {
+    public final void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_BUFFERING_START:
                 MPLogUtil.log("ComponentNet => onPlayStateChanged => playState = " + playState);
@@ -48,7 +48,7 @@ public final class ComponentNet extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void callWindowEvent(int state) {
+    public final void callWindowEvent(int state) {
         switch (state) {
             case PlayerType.WindowType.FLOAT:
             case PlayerType.WindowType.NORMAL:
@@ -73,7 +73,7 @@ public final class ComponentNet extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void gone() {
+    public final void gone() {
         try {
             findViewById(R.id.module_mediaplayer_component_net).setVisibility(View.GONE);
         } catch (Exception e) {
@@ -81,7 +81,7 @@ public final class ComponentNet extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void show() {
+    public final void show() {
         try {
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_net).setVisibility(View.VISIBLE);

@@ -17,7 +17,7 @@ import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-public final class ComponentSeek extends RelativeLayout implements ComponentApi {
+public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
     public ComponentSeek(@NonNull Context context) {
         super(context);
@@ -36,15 +36,15 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
+                public final void onStartTrackingTouch(SeekBar seekBar) {
                 }
 
                 @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
+                public final void onStopTrackingTouch(SeekBar seekBar) {
                 }
 
                 @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                public final void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 //                    if (fromUser) {
 //                        onSeekTo(progress);
 //                    } else if (!mTouch) {
@@ -136,7 +136,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     }
 
     @Override
-    public void callPlayerEvent(int playState) {
+    public final void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_FAST_FORWARD_START:
             case PlayerType.StateType.STATE_FAST_REWIND_START:
@@ -161,7 +161,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     }
 
     @Override
-    public void callWindowEvent(int windowState) {
+    public final void callWindowEvent(int windowState) {
         switch (windowState) {
             default:
                 gone();
@@ -170,7 +170,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     }
 
     @Override
-    public void show() {
+    public final void show() {
         try {
             PlayerApi playerApi = getPlayerApi();
             if (null == playerApi)
@@ -185,7 +185,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     }
 
     @Override
-    public void gone() {
+    public final void gone() {
         try {
             setTag(R.id.module_mediaplayer_component_seek_sb, false);
             findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.GONE);
@@ -196,7 +196,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     }
 
     @Override
-    public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
+    public final void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
         try {
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
             if (null == seekBar)
@@ -211,7 +211,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     }
 
     @Override
-    public void seekForward(int action) {
+    public final void seekForward(int action) {
         try {
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
             if (null == seekBar)
@@ -251,7 +251,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
 
 
     @Override
-    public void seekRewind(int action) {
+    public final void seekRewind(int action) {
         try {
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
             if (null == seekBar)
@@ -290,7 +290,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     }
 
     @Override
-    public void onSeekUpdateProgress(@NonNull long position, @NonNull long duration, @NonNull boolean updateTime) {
+    public final void onSeekUpdateProgress(@NonNull long position, @NonNull long duration, @NonNull boolean updateTime) {
         try {
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
             if (null == seekBar)
@@ -348,7 +348,7 @@ public final class ComponentSeek extends RelativeLayout implements ComponentApi 
     }
 
     @Override
-    public void onSeekTo(@NonNull int position) {
+    public final void onSeekTo(@NonNull int position) {
         try {
             PlayerApi playerApi = getPlayerApi();
             if (null == playerApi)

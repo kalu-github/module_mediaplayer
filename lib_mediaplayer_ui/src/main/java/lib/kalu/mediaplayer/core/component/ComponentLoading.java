@@ -12,7 +12,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public final class ComponentLoading extends RelativeLayout implements ComponentApi {
+public class ComponentLoading extends RelativeLayout implements ComponentApi {
 
     public ComponentLoading(@NonNull Context context) {
         super(context);
@@ -20,7 +20,7 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void callPlayerEvent(int playState) {
+    public final void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_START:
                 MPLogUtil.log("ComponentLoading => callPlayerEvent => show => playState = " + playState);
@@ -34,7 +34,7 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void callWindowEvent(int state) {
+    public final void callWindowEvent(int state) {
         switch (state) {
             case PlayerType.WindowType.FLOAT:
             case PlayerType.WindowType.NORMAL:
@@ -57,36 +57,36 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void show() {
+    public final void show() {
         try {
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
             PlayerApi playerApi = getPlayerApi();
-            if(null == playerApi)
+            if (null == playerApi)
                 throw new Exception("playerApi warning: null");
             boolean full = playerApi.isFull();
             findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(full ? View.VISIBLE : View.INVISIBLE);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentLoading => show => "+e.getMessage());
+            MPLogUtil.log("ComponentLoading => show => " + e.getMessage());
         }
     }
 
     @Override
-    public void gone() {
+    public final void gone() {
         try {
             findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentLoading => gone => "+e.getMessage());
+            MPLogUtil.log("ComponentLoading => gone => " + e.getMessage());
         }
     }
 
     /*************/
 
     @Override
-    public void setComponentBackgroundColorInt(int value) {
+    public final void setComponentBackgroundColorInt(int value) {
         try {
             setBackgroundColorInt(this, R.id.module_mediaplayer_component_loading_bg, value);
         } catch (Exception e) {
@@ -94,7 +94,7 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void setComponentBackgroundResource(int resid) {
+    public final void setComponentBackgroundResource(int resid) {
         try {
             setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_loading_bg, resid);
         } catch (Exception e) {
@@ -102,7 +102,7 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void setComponentImageResource(int resid) {
+    public final void setComponentImageResource(int resid) {
         try {
             setImageResource(this, R.id.module_mediaplayer_component_loading_bg, resid);
         } catch (Exception e) {
@@ -110,7 +110,7 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void setComponentImageUrl(@NonNull String url) {
+    public final void setComponentImageUrl(@NonNull String url) {
         try {
             setImageUrl(this, R.id.module_mediaplayer_component_loading_bg, url);
         } catch (Exception e) {
@@ -118,7 +118,7 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void setComponentText(int value) {
+    public final void setComponentText(int value) {
         try {
             setText(this, R.id.module_mediaplayer_component_loading_message, value);
         } catch (Exception e) {
@@ -126,7 +126,7 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void setComponentText(@NonNull String value) {
+    public final void setComponentText(@NonNull String value) {
         try {
             setText(this, R.id.module_mediaplayer_component_loading_message, value);
         } catch (Exception e) {
@@ -134,7 +134,7 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void setComponentTextSize(int value) {
+    public final void setComponentTextSize(int value) {
         try {
             setTextSize(this, R.id.module_mediaplayer_component_loading_message, value);
         } catch (Exception e) {
@@ -142,7 +142,7 @@ public final class ComponentLoading extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void setComponentTextColor(int color) {
+    public final void setComponentTextColor(int color) {
         try {
             setTextColor(this, R.id.module_mediaplayer_component_loading_message, color);
         } catch (Exception e) {

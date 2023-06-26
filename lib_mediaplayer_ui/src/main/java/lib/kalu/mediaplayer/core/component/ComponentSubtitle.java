@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.R;
 
-public final class ComponentSubtitle extends RelativeLayout implements ComponentApi {
+public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
 
     public ComponentSubtitle(@NonNull Context context) {
         super(context);
@@ -17,7 +17,7 @@ public final class ComponentSubtitle extends RelativeLayout implements Component
     }
 
     @Override
-    public void show() {
+    public final void show() {
         try {
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_subtitle).setVisibility(View.VISIBLE);
@@ -26,7 +26,7 @@ public final class ComponentSubtitle extends RelativeLayout implements Component
     }
 
     @Override
-    public void gone() {
+    public final void gone() {
         try {
             findViewById(R.id.module_mediaplayer_component_subtitle).setVisibility(View.GONE);
         } catch (Exception e) {

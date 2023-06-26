@@ -19,7 +19,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void callPlayerEvent(int playState) {
+    public final void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_END:
                 MPLogUtil.log("ComponentComplete[show] => playState = " + playState);
@@ -33,7 +33,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void show() {
+    public final void show() {
         try {
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.VISIBLE);
@@ -43,7 +43,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void gone() {
+    public final void gone() {
         try {
             findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_complete_message).setVisibility(View.GONE);
@@ -54,7 +54,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     /*************/
 
     @Override
-    public void setComponentBackgroundColorInt(int value) {
+    public final void setComponentBackgroundColorInt(int value) {
         try {
             setBackgroundColorInt(this, R.id.module_mediaplayer_component_complete_bg, value);
         } catch (Exception e) {
@@ -62,7 +62,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void setComponentBackgroundResource(int resid) {
+    public final void setComponentBackgroundResource(int resid) {
         try {
             setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_complete_bg, resid);
         } catch (Exception e) {
@@ -70,7 +70,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void setComponentImageResource(int resid) {
+    public final void setComponentImageResource(int resid) {
         try {
             setImageResource(this, R.id.module_mediaplayer_component_complete_bg, resid);
         } catch (Exception e) {
@@ -78,7 +78,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void setComponentImageUrl(@NonNull String url) {
+    public final void setComponentImageUrl(@NonNull String url) {
         try {
             setImageUrl(this, R.id.module_mediaplayer_component_complete_bg, url);
         } catch (Exception e) {
@@ -86,7 +86,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void setComponentText(int value) {
+    public final void setComponentText(int value) {
         try {
             setText(this, R.id.module_mediaplayer_component_complete_message, value);
         } catch (Exception e) {
@@ -94,7 +94,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void setComponentText(@NonNull String value) {
+    public final void setComponentText(@NonNull String value) {
         try {
             setText(this, R.id.module_mediaplayer_component_complete_message, value);
         } catch (Exception e) {
@@ -102,7 +102,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void setComponentTextSize(int value) {
+    public final void setComponentTextSize(int value) {
         try {
             setTextSize(this, R.id.module_mediaplayer_component_complete_message, value);
         } catch (Exception e) {
@@ -110,7 +110,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void setComponentTextColor(int color) {
+    public final void setComponentTextColor(int color) {
         try {
             setTextColor(this, R.id.module_mediaplayer_component_complete_message, color);
         } catch (Exception e) {

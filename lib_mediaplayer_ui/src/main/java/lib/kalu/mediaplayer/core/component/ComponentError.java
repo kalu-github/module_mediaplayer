@@ -18,7 +18,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public final class ComponentError extends RelativeLayout implements ComponentApi {
+public class ComponentError extends RelativeLayout implements ComponentApi {
 
     public ComponentError(Context context) {
         super(context);
@@ -26,7 +26,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void callPlayerEvent(int playState) {
+    public final void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ERROR_IGNORE:
@@ -46,28 +46,28 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void show() {
+    public final void show() {
         try {
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_error_ui).setVisibility(View.VISIBLE);
-        }catch (Exception e){
+        } catch (Exception e) {
         }
     }
 
     @Override
-    public void gone() {
+    public final void gone() {
         try {
             findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_error_ui).setVisibility(View.GONE);
-        }catch (Exception e){
+        } catch (Exception e) {
         }
     }
 
     /*************/
 
     @Override
-    public void setComponentBackgroundColorInt(int value) {
+    public final void setComponentBackgroundColorInt(int value) {
         try {
             setBackgroundColorInt(this, R.id.module_mediaplayer_component_error_bg, value);
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentBackgroundResource(int resid) {
+    public final void setComponentBackgroundResource(int resid) {
         try {
             setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_error_bg, resid);
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentImageResource(int resid) {
+    public final void setComponentImageResource(int resid) {
         try {
             setImageResource(this, R.id.module_mediaplayer_component_error_icon, resid);
         } catch (Exception e) {
@@ -91,7 +91,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentImageUrl(@NonNull String url) {
+    public final void setComponentImageUrl(@NonNull String url) {
         try {
             setImageUrl(this, R.id.module_mediaplayer_component_error_icon, url);
         } catch (Exception e) {
@@ -99,7 +99,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentText(int value) {
+    public final void setComponentText(int value) {
         try {
             setText(this, R.id.module_mediaplayer_component_error_message, value);
         } catch (Exception e) {
@@ -107,7 +107,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentText(@NonNull String value) {
+    public final void setComponentText(@NonNull String value) {
         try {
             setText(this, R.id.module_mediaplayer_component_error_message, value);
         } catch (Exception e) {
@@ -115,7 +115,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentTextSize(int value) {
+    public final void setComponentTextSize(int value) {
         try {
             setTextSize(this, R.id.module_mediaplayer_component_error_message, value);
         } catch (Exception e) {
@@ -123,7 +123,7 @@ public final class ComponentError extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentTextColor(int color) {
+    public final void setComponentTextColor(int color) {
         try {
             setTextColor(this, R.id.module_mediaplayer_component_error_message, color);
         } catch (Exception e) {

@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.R;
 
-public final class ComponentTitle extends RelativeLayout implements ComponentApi {
+public class ComponentTitle extends RelativeLayout implements ComponentApi {
 
     public ComponentTitle(@NonNull Context context) {
         super(context);
@@ -18,7 +18,7 @@ public final class ComponentTitle extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void show() {
+    public final void show() {
         try {
             findViewById(R.id.module_mediaplayer_controller_title).setVisibility(View.VISIBLE);
         } catch (Exception e) {
@@ -32,7 +32,7 @@ public final class ComponentTitle extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void gone() {
+    public final void gone() {
         try {
             findViewById(R.id.module_mediaplayer_controller_title).setVisibility(View.GONE);
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public final class ComponentTitle extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentText(int value) {
+    public final void setComponentText(int value) {
         try {
             setText(this, R.id.module_mediaplayer_controller_title_name, value);
         } catch (Exception e) {
@@ -48,7 +48,7 @@ public final class ComponentTitle extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentText(@NonNull String value) {
+    public final void setComponentText(@NonNull String value) {
         try {
             setText(this, R.id.module_mediaplayer_controller_title_name, value);
         } catch (Exception e) {
@@ -56,7 +56,7 @@ public final class ComponentTitle extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentTextSize(int value) {
+    public final void setComponentTextSize(int value) {
         try {
             setTextSize(this, R.id.module_mediaplayer_controller_title_name, value);
         } catch (Exception e) {
@@ -64,7 +64,7 @@ public final class ComponentTitle extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentTextColor(int color) {
+    public final void setComponentTextColor(int color) {
         try {
             setTextColor(this, R.id.module_mediaplayer_controller_title_name, color);
         } catch (Exception e) {
