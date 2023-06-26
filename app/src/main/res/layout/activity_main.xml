@@ -86,32 +86,56 @@
             android:layout_height="match_parent"
             android:checked="true"
             android:enabled="true"
-            android:text="视频硬解_音频硬解" />
+            android:text="exo2_视频硬解_音频硬解" />
 
         <RadioButton
             android:id="@+id/main_exo_vmc_aff"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:checked="true"
+            android:checked="false"
             android:enabled="true"
-            android:text="视频硬解_音频软解" />
+            android:text="exo2_视频硬解_音频软解" />
 
         <RadioButton
             android:id="@+id/main_exo_vff_amc"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:checked="true"
+            android:checked="false"
             android:enabled="true"
-            android:text="视频软解_音频硬解" />
+            android:text="exo2_视频软解_音频硬解" />
 
         <RadioButton
             android:id="@+id/main_exo_vff_aff"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:checked="false"
+            android:enabled="true"
+            android:text="exo2_视频软解_音频软解" />
+
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/main_seek"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/main_seek_yes"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="false"
+            android:enabled="true"
+            android:text="起播快进" />
+
+        <RadioButton
+            android:id="@+id/main_seek_no"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:checked="true"
             android:enabled="true"
-            android:text="视频软解_音频软解" />
-
+            android:text="起播正常" />
 
     </RadioGroup>
 
@@ -219,11 +243,5 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="播放" />
-
-    <Button
-        android:id="@+id/main_button3"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="测试：进度条" />
 
 </LinearLayout>

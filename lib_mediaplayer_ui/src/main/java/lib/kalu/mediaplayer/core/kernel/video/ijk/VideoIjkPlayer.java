@@ -165,6 +165,12 @@ public final class VideoIjkPlayer extends BasePlayer {
             mIjkPlayer.setOption(player, "vn", 0);
             // 音频, 1静音 0原音
             mIjkPlayer.setOption(player, "an", 0);
+            // 暂停输出直到停止后读取足够的数据包
+            mIjkPlayer.setOption(player, "packet-buffering", 0L);
+            // 查询stream_info, 1查询 0不查询
+            mIjkPlayer.setOption(player, "find_stream_info", 1);
+            // 等待开始之后才绘制
+            mIjkPlayer.setOption(player, "render-wait-start", 1);
             // 减小预读取的阀值，这样能更快的打开视频
             // mIjkPlayer.setOption(player, "max-buffer-size", 20 * 1024 * 1024);// 20M
         } catch (Exception e) {
@@ -175,16 +181,20 @@ public final class VideoIjkPlayer extends BasePlayer {
         try {
             int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
             mIjkPlayer.setOption(format, "http-detect-range-support", 0);
+            // 设置最长分析时长
+            mIjkPlayer.setOption(format, "analyzemaxduration", 100L); // 100ms
+            // 通过立即清理数据包来减少等待时长, 每处理一个packet以后刷新io上下文
+            mIjkPlayer.setOption(format, "flush_packets", 1L);
             // 清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频), 有时会造成因为DNS的问题而报10000问题的
             mIjkPlayer.setOption(format, "dns_cache_clear", 1);
             // 若是是rtsp协议，能够优先用tcp(默认是用udp)
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
-            // 每处理一个packet以后刷新io上下文
-            mIjkPlayer.setOption(format, "flush_packets", 1);
             // 超时时间,单位ms => 20s
             mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000);
             // 设置seekTo能够快速seek到指定位置并播放, 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
             mIjkPlayer.setOption(format, "fflags", "fastseek");
+            // 起播seek会失效
+//            mIjkPlayer.setOption(format, "fflags", "nobuffer");
             // 根据媒体类型来配置 => bug => resp aac音频无声音
             mIjkPlayer.setOption(format, "allowed_media_types", "video");
             // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
@@ -225,8 +235,6 @@ public final class VideoIjkPlayer extends BasePlayer {
 //            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
 //            // 不额外优化（使能非规范兼容优化，默认值0 ）
 //            mIjkPlayer.setOption(player, "fast", 1);
-//            // 是否开启预缓冲，通常直播项目会开启，达到秒开的效果，不过带来了播放丢帧卡顿的体验
-//            mIjkPlayer.setOption(player, "packet-buffering", 0);
 //            // 须要准备好后自动播放
 //            mIjkPlayer.setOption(player, "start-on-prepared", 1);
 //        } catch (Exception e) {

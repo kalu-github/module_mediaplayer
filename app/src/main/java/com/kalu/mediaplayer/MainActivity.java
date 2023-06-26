@@ -54,26 +54,33 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(getApplicationContext(), TestActivity.class);
                 intent.putExtra(TestActivity.INTENT_URL, getUrl());
                 intent.putExtra(TestActivity.INTENT_LIVE, isLive());
-//                intent.putExtra(TestActivity.INTENT_SEEK, 4000L);
-                startActivity(intent);
-            }
-        });
-        findViewById(R.id.main_button3).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), SeekActivity.class);
-                intent.putExtra(SeekActivity.INTENT_URL, getUrl());
+                intent.putExtra(TestActivity.INTENT_SEEK, getSeek());
                 startActivity(intent);
             }
         });
     }
 
-    private final boolean isLive() {
+    private boolean isLive() {
         String url = getUrl();
         return "http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com".equals(url);
     }
 
-    private final String getUrl() {
+    private long getSeek() {
+        long seek;
+        RadioGroup radioGroup = findViewById(R.id.main_seek);
+        int id = radioGroup.getCheckedRadioButtonId();
+        switch (id) {
+            case R.id.main_seek_yes:
+                seek = 10 * 1000; // 10s
+                break;
+            default:
+                seek = 0;
+                break;
+        }
+        return seek;
+    }
+
+    private String getUrl() {
         String s = null;
         try {
             EditText editText = findViewById(R.id.main_edit);
