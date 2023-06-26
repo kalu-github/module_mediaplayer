@@ -88,7 +88,7 @@ dependencies {
     // exo2
     api files('libs/lib_mediaplayer_exo_r2.18.7_full_release_20230625.aar')
     // ffplayer
-    api files('libs/lib_mediaplayer_ffplayer_ff3.4.12_full_release_20230626.aar')
+    api files('libs/lib_mediaplayer_ffplayer_ff3.4.12_release_20230626.aar')
     // vlc
     api files('libs/lib_mediaplayer_vlc_r3.5.1_release_20230420.aar')
 }
