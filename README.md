@@ -3,6 +3,13 @@
 |:-----------:|:---------:|:---------:|:---------:|:---------:|:---------:|:--------:|
 |  &#10004;   | &#10004;  | &#10004;  | &#10004;  | &#10004;  | &#10004;  | &#10004; |
 
+#### 编译
+```
+https://github.com/kalu-github/exoplayer-ff3.4.12-audio
+https://github.com/kalu-github/ijkplayer-ffmpeg-4.4.4
+https://github.com/kalu-github/ijkplayer-ffmpeg-3.4.12
+```
+
 #### 更新
 ```
 2023-06-25
