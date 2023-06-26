@@ -192,7 +192,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             // 超时时间,单位ms => 20s
             mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000);
             // 设置seekTo能够快速seek到指定位置并播放, 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
-            mIjkPlayer.setOption(format, "fflags", "fastseek");
+//            mIjkPlayer.setOption(format, "fflags", "fastseek");
             // 起播seek会失效
 //            mIjkPlayer.setOption(format, "fflags", "nobuffer");
             // 根据媒体类型来配置 => bug => resp aac音频无声音
