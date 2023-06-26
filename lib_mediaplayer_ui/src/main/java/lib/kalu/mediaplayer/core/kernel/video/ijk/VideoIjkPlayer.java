@@ -181,10 +181,12 @@ public final class VideoIjkPlayer extends BasePlayer {
         try {
             int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
             mIjkPlayer.setOption(format, "http-detect-range-support", 0);
+            // 设置播放前的探测时间 1,达到首屏秒开效果， bug有画面没声音
+//            mIjkPlayer.setOption(format, "analyzeduration", 1); // 100ms
             // 设置最长分析时长
-            mIjkPlayer.setOption(format, "analyzemaxduration", 100L); // 100ms
+            mIjkPlayer.setOption(format, "analyzemaxduration", 100); // 100ms
             // 通过立即清理数据包来减少等待时长, 每处理一个packet以后刷新io上下文
-            mIjkPlayer.setOption(format, "flush_packets", 1L);
+            mIjkPlayer.setOption(format, "flush_packets", 1);
             // 清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频), 有时会造成因为DNS的问题而报10000问题的
             mIjkPlayer.setOption(format, "dns_cache_clear", 1);
             // 若是是rtsp协议，能够优先用tcp(默认是用udp)
@@ -242,10 +244,6 @@ public final class VideoIjkPlayer extends BasePlayer {
 //
 //        // format
 //        try {
-        // 设置播放前的探测时间 1,达到首屏秒开效果
-//        mIjkPlayer.setOption(format, "analyzeduration", 100);
-        // 设置播放前的最大探测时间 （100未测试是否是最佳值）
-//        mIjkPlayer.setOption(format, "analyzemaxduration", 100);
 //            int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
 //            // 不清楚 1、允许 0、不允许
 //            mIjkPlayer.setOption(format, "http-detect-range-support", 0);
