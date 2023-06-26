@@ -15,7 +15,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public final class ComponentPause extends RelativeLayout implements ComponentApi {
+public class ComponentPause extends RelativeLayout implements ComponentApi {
 
     public ComponentPause(@NonNull Context context) {
         super(context);
@@ -50,7 +50,7 @@ public final class ComponentPause extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void callPlayerEvent(int playState) {
+    public final void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_PAUSE:
                 MPLogUtil.log("ComponentPause[show] => playState = " + playState);
@@ -70,7 +70,7 @@ public final class ComponentPause extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void gone() {
+    public final void gone() {
         try {
             findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_pause_title).setVisibility(View.GONE);
@@ -80,7 +80,7 @@ public final class ComponentPause extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void show() {
+    public final void show() {
         try {
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.VISIBLE);
@@ -91,12 +91,12 @@ public final class ComponentPause extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
+    public final void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
         onSeekUpdateProgress(position, duration, true);
     }
 
     @Override
-    public void onSeekUpdateProgress(@NonNull long position, @NonNull long duration, @NonNull boolean updateTime) {
+    public final void onSeekUpdateProgress(@NonNull long position, @NonNull long duration, @NonNull boolean updateTime) {
         try {
             if (position < 0 || duration < 0)
                 throw new Exception();
@@ -155,7 +155,7 @@ public final class ComponentPause extends RelativeLayout implements ComponentApi
     /*************/
 
     @Override
-    public void setComponentBackgroundColorInt(int value) {
+    public final void setComponentBackgroundColorInt(int value) {
         try {
             setBackgroundColorInt(this, R.id.module_mediaplayer_component_pause_bg, value);
         } catch (Exception e) {
@@ -163,7 +163,7 @@ public final class ComponentPause extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentBackgroundResource(int resid) {
+    public final void setComponentBackgroundResource(int resid) {
         try {
             setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_pause_bg, resid);
         } catch (Exception e) {
@@ -171,7 +171,7 @@ public final class ComponentPause extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentImageResource(int resid) {
+    public final void setComponentImageResource(int resid) {
         try {
             setImageResource(this, R.id.module_mediaplayer_component_pause_icon, resid);
         } catch (Exception e) {
@@ -179,35 +179,35 @@ public final class ComponentPause extends RelativeLayout implements ComponentApi
     }
 
     @Override
-    public void setComponentImageUrl(@NonNull String url) {
+    public final void setComponentImageUrl(@NonNull String url) {
         try {
             setImageUrl(this, R.id.module_mediaplayer_component_pause_icon, url);
         } catch (Exception e) {
         }
     }
 
-    public void setComponentTitleText(int value) {
+    public final void setComponentTitleText(int value) {
         try {
             setText(this, R.id.module_mediaplayer_component_pause_title, value);
         } catch (Exception e) {
         }
     }
 
-    public void setComponentTitleText(@NonNull String value) {
+    public final void setComponentTitleText(@NonNull String value) {
         try {
             setText(this, R.id.module_mediaplayer_component_pause_title, value);
         } catch (Exception e) {
         }
     }
 
-    public void setComponentTitleTextSize(int value) {
+    public final void setComponentTitleTextSize(int value) {
         try {
             setTextSize(this, R.id.module_mediaplayer_component_pause_title, value);
         } catch (Exception e) {
         }
     }
 
-    public void setComponentTitleTextColor(int color) {
+    public final void setComponentTitleTextColor(int color) {
         try {
             setTextColor(this, R.id.module_mediaplayer_component_pause_title, color);
         } catch (Exception e) {

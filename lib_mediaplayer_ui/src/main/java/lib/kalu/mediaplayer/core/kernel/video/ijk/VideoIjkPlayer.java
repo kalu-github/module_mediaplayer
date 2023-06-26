@@ -631,10 +631,15 @@ public final class VideoIjkPlayer extends BasePlayer {
     private IMediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new IMediaPlayer.OnBufferingUpdateListener() {
         @Override
         public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int percent) {
-            MPLogUtil.log("VideoIjkPlayer => onBufferingUpdate => percent = " + percent + ", isFromNetBufferStart = " + isFromNetBufferStart);
-            if (percent > 0 && isFromNetBufferStart) {
+            try {
+                if (percent <= 0)
+                    throw new Exception("percent warning: " + percent);
+                if (!isFromNetBufferStart)
+                    throw new Exception("isFromNetBufferStart warning: false");
                 onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
                 onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
+            } catch (Exception e) {
+                MPLogUtil.log("VideoIjkPlayer => onBufferingUpdate => " + e.getMessage());
             }
         }
     };
@@ -646,10 +651,13 @@ public final class VideoIjkPlayer extends BasePlayer {
     private IMediaPlayer.OnPreparedListener onPreparedListener = new IMediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(IMediaPlayer iMediaPlayer) {
-            MPLogUtil.log("VideoIjkPlayer => onPrepared => seek = " + mSeek);
-            long seek = getSeek();
-            if (seek > 0) {
+            try {
+                long seek = getSeek();
+                if (seek > 0)
+                    throw new Exception("seek waring: " + seek);
                 seekTo(seek, true);
+            } catch (Exception e) {
+                MPLogUtil.log("VideoIjkPlayer => onPrepared => " + e.getMessage());
             }
         }
     };
@@ -660,11 +668,16 @@ public final class VideoIjkPlayer extends BasePlayer {
     private IMediaPlayer.OnVideoSizeChangedListener onVideoSizeChangedListener = new IMediaPlayer.OnVideoSizeChangedListener() {
         @Override
         public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int width, int height, int sar_num, int sar_den) {
-            MPLogUtil.log("VideoIjkPlayer => onVideoSizeChanged => width = " + width + ", height = " + height);
-            int videoWidth = iMediaPlayer.getVideoWidth();
-            int videoHeight = iMediaPlayer.getVideoHeight();
-            if (videoWidth != 0 && videoHeight != 0) {
+            try {
+                if (null == iMediaPlayer)
+                    throw new Exception("iMediaPlayer error: null");
+                int videoWidth = iMediaPlayer.getVideoWidth();
+                int videoHeight = iMediaPlayer.getVideoHeight();
+                if (videoWidth <= 0 && videoHeight <= 0)
+                    throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
                 onChanged(PlayerType.KernelType.IJK, videoWidth, videoHeight, -1);
+            } catch (Exception e) {
+                MPLogUtil.log("VideoIjkPlayer => onVideoSizeChanged => " + e.getMessage());
             }
         }
     };
