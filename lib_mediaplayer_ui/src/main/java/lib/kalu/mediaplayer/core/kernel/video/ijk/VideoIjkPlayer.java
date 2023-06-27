@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.core.kernel.video.ijk;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Surface;
 
 import androidx.annotation.Keep;
@@ -195,8 +196,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000);
             // 设置seekTo能够快速seek到指定位置并播放, 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
 //            mIjkPlayer.setOption(format, "fflags", "fastseek");
-            // 起播seek会失效
-//            mIjkPlayer.setOption(format, "fflags", "nobuffer");
+            mIjkPlayer.setOption(format, "fflags", "nobuffer");  // 起播seek会失效
             // 根据媒体类型来配置 => bug => resp aac音频无声音
             mIjkPlayer.setOption(format, "allowed_media_types", "video");
             // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
@@ -653,7 +653,7 @@ public final class VideoIjkPlayer extends BasePlayer {
         public void onPrepared(IMediaPlayer iMediaPlayer) {
             try {
                 long seek = getSeek();
-                if (seek > 0)
+                if (seek <= 0)
                     throw new Exception("seek waring: " + seek);
                 seekTo(seek, true);
             } catch (Exception e) {
