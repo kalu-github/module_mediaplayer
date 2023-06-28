@@ -10,24 +10,42 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender, PlayerApiExternalMusic {
 
     default boolean dispatchKeyEventPlayer(@NonNull KeyEvent event) {
-        // stopFull
-        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK && isFull()) {
-            stopFull();
-            return true;
-        }
-        // stopFloat
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK && isFloat()) {
-            stopFloat();
-            return true;
-        }
-
         dispatchKeyEventComponentAll(event);
-        if (isFull()) {
-            if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+        // float
+        if (isFloat()) {
+            // keycode_back => stopFloat
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK && isFloat()) {
+                stopFloat();
                 return true;
-            } else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            } else {
+                return false;
+            }
+        }
+        // full
+        else if (isFull()) {
+            // keycode_back => stopfull
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                stopFull();
                 return true;
-            } else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            }
+            // keycode_dpad_center
+            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+                return true;
+            }
+            // keycode_dpad_left
+            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+                return true;
+            }
+            // keycode_dpad_right
+            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                return true;
+            }
+            // keycode_dpad_up
+            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
+                return true;
+            }
+            // keycode_dpad_down
+            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
                 return true;
             } else {
                 return false;

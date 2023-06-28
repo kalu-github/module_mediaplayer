@@ -714,4 +714,28 @@ public class PlayerLayout extends RelativeLayout {
             MPLogUtil.log("PlayerLayout => setPlayerBackgroundColor => " + e.getMessage());
         }
     }
+
+    /*******************/
+
+//    public void setInterceptKeycodeDpadUp(boolean enable) {
+//        try {
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("playerView error: null");
+//            playerView.setInterceptKeycodeDpadUp(enable);
+//        } catch (Exception e) {
+//            MPLogUtil.log("PlayerLayout => setInterceptKeycodeDpadUp => " + e.getMessage());
+//        }
+//    }
+//
+//    public void setInterceptKeycodeDpadDown(boolean enable) {
+//        try {
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("playerView error: null");
+//            playerView.setInterceptKeycodeDpadUp(enable);
+//        } catch (Exception e) {
+//            MPLogUtil.log("PlayerLayout => setInterceptKeycodeDpadDown => " + e.getMessage());
+//        }
+//    }
 }
