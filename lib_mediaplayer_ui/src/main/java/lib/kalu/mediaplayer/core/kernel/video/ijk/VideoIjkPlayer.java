@@ -3,7 +3,6 @@ package lib.kalu.mediaplayer.core.kernel.video.ijk;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Surface;
 
 import androidx.annotation.Keep;
@@ -102,8 +101,9 @@ public final class VideoIjkPlayer extends BasePlayer {
             initListener();
             setVolume(1F, 1F);
             setOptions();
+            lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(logger);
             tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogger(logger);
-            tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO);
+            tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_ERROR);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => createDecoder => " + e.getMessage());
         }
