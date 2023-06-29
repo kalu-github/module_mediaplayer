@@ -168,7 +168,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             // 音频, 1静音 0原音
             mIjkPlayer.setOption(player, "an", 0);
             // 暂停输出直到停止后读取足够的数据包
-            mIjkPlayer.setOption(player, "packet-buffering", 0L);
+            mIjkPlayer.setOption(player, "packet-buffering", 0);
             // 查询stream_info, 1查询 0不查询
             mIjkPlayer.setOption(player, "find_stream_info", 1);
             // 等待开始之后才绘制
@@ -286,8 +286,8 @@ public final class VideoIjkPlayer extends BasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            if (null == surfaceHolder)
-                throw new Exception("surfaceHolder error: null");
+//            if (null == surfaceHolder)
+//                throw new Exception("surfaceHolder error: null");
             mIjkPlayer.setDisplay(surfaceHolder);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => setDisplay => " + e.getMessage());

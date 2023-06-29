@@ -23,7 +23,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     @Override
     public final void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
         boolean showing = isShowing();
-        MPLogUtil.log("ComponentNet => onUpdateTimeMillis => showing = " + showing);
+//        MPLogUtil.log("ComponentNet => onUpdateTimeMillis => showing = " + showing);
         if (!showing)
             return;
         updateSpeed();
