@@ -189,6 +189,7 @@ public class MainActivity extends Activity {
                 .setKernel(kernelType)
                 .setRender(renderType)
                 .setExoFFmpeg(exoFFmpeg)
+                .setIjkMediaCodecSufaceViewSwitchWindowForceRestart(true)
                 .setBuriedEvent(new LogBuriedEvent())
                 .build();
         PlayerManager.getInstance().setConfig(build);

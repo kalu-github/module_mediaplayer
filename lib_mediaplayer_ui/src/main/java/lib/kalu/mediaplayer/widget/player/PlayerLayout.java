@@ -22,6 +22,8 @@ import androidx.annotation.RequiresApi;
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.config.player.PlayerBuilder;
+import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
@@ -252,7 +254,19 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.startFull();
+            boolean startFull = playerView.startFull();
+            if (startFull) {
+                PlayerBuilder config = PlayerManager.getInstance().getConfig();
+                if (null != config) {
+                    int render = config.getRender();
+                    int kernel = config.getKernel();
+                    boolean forceRestart = config.isIjkMediaCodecSufaceViewSwitchWindowForceRestart();
+                    if (render == PlayerType.RenderType.SURFACE_VIEW && kernel == PlayerType.KernelType.IJK_MEDIACODEC && forceRestart) {
+                        playerView.updateSeek();
+                        restart();
+                    }
+                }
+            }
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => startFull => " + e.getMessage());
         }
@@ -263,7 +277,19 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.stopFull();
+            boolean stopFull = playerView.stopFull();
+            if (stopFull) {
+                PlayerBuilder config = PlayerManager.getInstance().getConfig();
+                if (null != config) {
+                    int render = config.getRender();
+                    int kernel = config.getKernel();
+                    boolean forceRestart = config.isIjkMediaCodecSufaceViewSwitchWindowForceRestart();
+                    if (render == PlayerType.RenderType.SURFACE_VIEW && kernel == PlayerType.KernelType.IJK_MEDIACODEC && forceRestart) {
+                        playerView.updateSeek();
+                        restart();
+                    }
+                }
+            }
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => stopFull => " + e.getMessage());
         }
@@ -283,7 +309,19 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.startFloat();
+            boolean startFloat = playerView.startFloat();
+            if (startFloat) {
+                PlayerBuilder config = PlayerManager.getInstance().getConfig();
+                if (null != config) {
+                    int render = config.getRender();
+                    int kernel = config.getKernel();
+                    boolean forceRestart = config.isIjkMediaCodecSufaceViewSwitchWindowForceRestart();
+                    if (render == PlayerType.RenderType.SURFACE_VIEW && kernel == PlayerType.KernelType.IJK_MEDIACODEC && forceRestart) {
+                        playerView.updateSeek();
+                        restart();
+                    }
+                }
+            }
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => startFloat => " + e.getMessage());
         }
@@ -294,7 +332,19 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.stopFloat();
+            boolean stopFloat = playerView.stopFloat();
+            if (stopFloat) {
+                PlayerBuilder config = PlayerManager.getInstance().getConfig();
+                if (null != config) {
+                    int render = config.getRender();
+                    int kernel = config.getKernel();
+                    boolean forceRestart = config.isIjkMediaCodecSufaceViewSwitchWindowForceRestart();
+                    if (render == PlayerType.RenderType.SURFACE_VIEW && kernel == PlayerType.KernelType.IJK_MEDIACODEC && forceRestart) {
+                        playerView.updateSeek();
+                        restart();
+                    }
+                }
+            }
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => stopFloat => " + e.getMessage());
         }

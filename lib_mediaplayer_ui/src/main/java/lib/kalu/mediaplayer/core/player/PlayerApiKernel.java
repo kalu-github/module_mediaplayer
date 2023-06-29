@@ -268,6 +268,15 @@ interface PlayerApiKernel extends PlayerApiListener,
         }
     }
 
+    default void updateSeek() {
+        try {
+            KernelApi kernel = getKernel();
+            long position = kernel.getPosition();
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_position, position);
+        } catch (Exception e) {
+        }
+    }
+
     default long getMax() {
         try {
             KernelApi kernel = getKernel();
@@ -448,13 +457,10 @@ interface PlayerApiKernel extends PlayerApiListener,
             // 2
             pauseExternalMusic();
             // 3
-            KernelApi kernel = getKernel();
-            MPLogUtil.log("PlayerApiKernel => pauseKernel => kernel = " + kernel);
+            getKernel().pause();
             // 4
-            kernel.pause();
+            updateSeek();
             // 5
-            long position = kernel.getPosition();
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_position, position);
             setScreenKeep(false);
             callPlayerEvent(ignore ? PlayerType.StateType.STATE_PAUSE_IGNORE : PlayerType.StateType.STATE_PAUSE);
         } catch (Exception e) {

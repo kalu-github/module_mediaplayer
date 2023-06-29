@@ -72,7 +72,7 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
-    default void startFull() {
+    default boolean startFull() {
         try {
             boolean isPhoneWindow = isParentEqualsPhoneWindow();
             if (isPhoneWindow)
@@ -82,12 +82,14 @@ interface PlayerApiRender extends PlayerApiBase {
             if (b) {
                 callWindowEvent(PlayerType.WindowType.FULL);
             }
+            return b;
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => startFull => " + e.getMessage());
+            return false;
         }
     }
 
-    default void stopFull() {
+    default boolean stopFull() {
         try {
             boolean isFull = isFull();
             if (!isFull)
@@ -97,36 +99,42 @@ interface PlayerApiRender extends PlayerApiBase {
                 callWindowEvent(PlayerType.WindowType.NORMAL);
                 cleanFocusFull();
             }
+            return b;
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => stopFull => " + e.getMessage());
+            return false;
         }
     }
 
-    default void startFloat() {
+    default boolean startFloat() {
         try {
             boolean isPhoneWindow = isParentEqualsPhoneWindow();
             if (isPhoneWindow)
                 throw new Exception("always Float");
-            // 1
-            switchToDecorView(false);
-            // 2
-            callWindowEvent(PlayerType.WindowType.FLOAT);
+            boolean switchToDecorView = switchToDecorView(false);
+            if (switchToDecorView) {
+                callWindowEvent(PlayerType.WindowType.FLOAT);
+            }
+            return switchToDecorView;
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => startFloat => " + e.getMessage());
+            return false;
         }
     }
 
-    default void stopFloat() {
+    default boolean stopFloat() {
         try {
             boolean isFloat = isFloat();
             if (!isFloat)
                 throw new Exception("not Float");
-            // 1
-            switchToPlayerLayout();
-            // 2
-            callWindowEvent(PlayerType.WindowType.NORMAL);
+            boolean switchToPlayerLayout = switchToPlayerLayout();
+            if (switchToPlayerLayout) {
+                callWindowEvent(PlayerType.WindowType.NORMAL);
+            }
+            return switchToPlayerLayout;
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => stopFloat => " + e.getMessage());
+            return false;
         }
     }
 
