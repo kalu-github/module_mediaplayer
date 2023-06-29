@@ -163,6 +163,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             releaseKernel(isFromUser);
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE);
         } catch (Exception e) {
+            callPlayerEvent(PlayerType.StateType.STATE_RELEASE_EXCEPTION);
             MPLogUtil.log("PlayerApiKernel => release => " + e.getMessage());
         }
     }

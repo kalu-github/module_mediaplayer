@@ -105,6 +105,7 @@ public @interface PlayerType {
         int STATE_ERROR_IGNORE = 3_026; // 错误
         int STATE_COMPONENT_SEEK_SHOW = 3_027; // 显示进度条
         int STATE_RELEASE = 3_028;
+        int STATE_RELEASE_EXCEPTION = 3_029;
 
         @Documented
         @Retention(CLASS)
@@ -137,6 +138,7 @@ public @interface PlayerType {
                 STATE_ERROR,
                 STATE_ERROR_IGNORE,
                 STATE_RELEASE,
+                STATE_RELEASE_EXCEPTION,
                 STATE_COMPONENT_SEEK_SHOW})
         @Keep
         @interface Value {
