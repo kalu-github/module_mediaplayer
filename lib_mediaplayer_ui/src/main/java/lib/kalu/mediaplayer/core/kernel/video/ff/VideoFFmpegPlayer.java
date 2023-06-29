@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.view.Surface;
+import android.view.SurfaceHolder;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -94,6 +95,11 @@ public final class VideoFFmpegPlayer extends BasePlayer {
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
+    }
+
+    @Override
+    public void setDisplay(SurfaceHolder surfaceHolder) {
+
     }
 
     /**

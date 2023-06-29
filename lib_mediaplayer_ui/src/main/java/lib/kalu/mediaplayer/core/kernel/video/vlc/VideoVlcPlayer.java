@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.core.kernel.video.vlc;
 import android.content.Context;
 import android.net.Uri;
 import android.view.Surface;
+import android.view.SurfaceHolder;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -90,6 +91,11 @@ public final class VideoVlcPlayer extends BasePlayer {
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_URL);
         }
+    }
+
+    @Override
+    public void setDisplay(SurfaceHolder surfaceHolder) {
+
     }
 
     /**

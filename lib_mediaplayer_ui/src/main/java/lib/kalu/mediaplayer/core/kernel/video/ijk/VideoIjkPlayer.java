@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Surface;
+import android.view.SurfaceHolder;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -278,6 +279,19 @@ public final class VideoIjkPlayer extends BasePlayer {
 ////            // 2、 网络相关
 ////            // 23、设置播放前的最大探测时间
 ////            mIjkPlayer.setOption(format, "rtbufsize", 60);
+    }
+
+    @Override
+    public void setDisplay(SurfaceHolder surfaceHolder) {
+        try {
+            if (null == mIjkPlayer)
+                throw new Exception("mIjkPlayer error: null");
+            if (null == surfaceHolder)
+                throw new Exception("surfaceHolder error: null");
+            mIjkPlayer.setDisplay(surfaceHolder);
+        } catch (Exception e) {
+            MPLogUtil.log("VideoIjkPlayer => setDisplay => " + e.getMessage());
+        }
     }
 
     /**

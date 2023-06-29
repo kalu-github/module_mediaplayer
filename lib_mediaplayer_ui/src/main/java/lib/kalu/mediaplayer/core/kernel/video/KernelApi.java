@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.kernel.video;
 
 import android.content.Context;
 import android.view.Surface;
+import android.view.SurfaceHolder;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -74,6 +75,8 @@ public interface KernelApi extends KernelApiBase,
         setMax(max);
         setLooping(loop);
     }
+
+    void setDisplay(SurfaceHolder surfaceHolder);
 
     void setSurface(@NonNull Surface surface, int w, int h);
 

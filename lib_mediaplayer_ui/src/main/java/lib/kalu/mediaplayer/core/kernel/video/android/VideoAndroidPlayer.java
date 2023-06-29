@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Surface;
+import android.view.SurfaceHolder;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -96,6 +97,11 @@ public final class VideoAndroidPlayer extends BasePlayer {
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
+    }
+
+    @Override
+    public void setDisplay(SurfaceHolder surfaceHolder) {
+
     }
 
     /**

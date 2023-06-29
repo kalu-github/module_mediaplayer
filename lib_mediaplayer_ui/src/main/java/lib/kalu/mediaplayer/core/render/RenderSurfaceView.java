@@ -72,6 +72,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     @Override
     public void createReal() {
         mSurfaceHolderCallback = new SurfaceHolder.Callback() {
+
             /**
              * 创建的时候调用该方法
              * @param holder                        holder
@@ -119,6 +120,9 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
                 MPLogUtil.log("RenderSurfaceView => surfaceDestroyed => " + this);
+                if (mKernel != null) {
+                    mKernel.setDisplay(null);
+                }
                 if (null != mHandler) {
                     mHandler.removeMessages(9899);
                     mHandler.removeCallbacksAndMessages(null);
