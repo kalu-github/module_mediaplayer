@@ -34,7 +34,7 @@ android {
     android.applicationVariants.all { variant ->
         variant.outputs.all { output ->
             def date = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
-            def suffix = (variant.signingConfig == null) ? "Unsigned" : "Unsigned"
+            def suffix = (variant.signingConfig == null) ? "Unsigned" : "Signed"
             def channel = new String(output.name).split("-")
             outputFileName = "test_player" + "_${date}_${suffix}.apk"
         }
@@ -54,7 +54,7 @@ android {
                 minifyEnabled false
                 zipAlignEnabled false
                 shrinkResources false
-                multiDexEnabled false
+                multiDexEnabled true
             }
         }
     }
@@ -80,7 +80,7 @@ dependencies {
 //    implementation project(path: ':lib_mediaplayer_ui')
 
     // ui
-    api files('libs/lib_mediaplayer_ui_release_20230628.aar')
+    api files('libs/lib_mediaplayer_ui_release_20230629.aar')
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.12_release_20230628.aar')
     // exo1

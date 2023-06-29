@@ -190,6 +190,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 throw new Exception("mMediaPlayer error: null");
             if (seek < 0)
                 throw new Exception("seek error: " + seek);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //                mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_CLOSEST);
                 mMediaPlayer.seekTo((int) seek);
@@ -338,6 +339,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
     private MediaPlayer.OnSeekCompleteListener mOnSeekCompleteListener = new MediaPlayer.OnSeekCompleteListener() {
         @Override
         public void onSeekComplete(MediaPlayer mediaPlayer) {
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
             try {
                 MPLogUtil.log("VideoAndroidPlayer => onSeekComplete =>");
                 start();

@@ -3,6 +3,7 @@ package com.kalu.mediaplayer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -32,25 +33,13 @@ public class MainActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        init();
-        ((RadioGroup) findViewById(R.id.main_kernel)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                init();
-            }
-        });
-
-        ((RadioGroup) findViewById(R.id.main_exo_ffmpeg)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                init();
-            }
-        });
-
+        initAsset();
         findViewById(R.id.main_button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 1
+                initPlayer();
+                // 2
                 Intent intent = new Intent(getApplicationContext(), TestActivity.class);
                 intent.putExtra(TestActivity.INTENT_URL, getUrl());
                 intent.putExtra(TestActivity.INTENT_LIVE, isLive());
@@ -112,44 +101,7 @@ public class MainActivity extends Activity {
 //        return "http://ottrrs.hl.chinamobile.com/88888888/16/20230427/276732502/276732502.ts?rrsip=ottrrs.hl.chinamobile.com&zoneoffset=0&servicetype=0&icpid=&limitflux=-1&limitdur=-1&tenantId=8601&accountinfo=%2C3918822%2C61.185.224.115%2C20230515181603%2C10019232542%2C3918822%2C0.0%2C1%2C0%2C-1%2C4%2C1%2C%2C%2C377747652%2C1%2C%2C377747857%2CEND&GuardEncType=2&it=H4sIAAAAAAAAAE2OQQuCMBzFv82Ow2kWO-xUBEFYoHWNf9tzidPVpkHfPg0PHd_j93u8IZDGYacImckTIIPA6p5L0nWaybVYZWkKWecs4lV4lTJNzjW9LbyZtWu5vYmECyG53HCxFqyaB_eOrEp-bDF2d4QlTGKJ8G40lIk1f1PkZG2ApaHxPT87-lyCWxCGajnXj86xYQ4VxXYq2IPi1ndPCjBHb3-cqslFsCfpliwK6vDnnYKZTnwBm4g0x-0AAAA";
     }
 
-    private void init() {
-
-        // 1
-        int type;
-        RadioGroup radioGroup = findViewById(R.id.main_kernel);
-        int id = radioGroup.getCheckedRadioButtonId();
-        switch (id) {
-            case R.id.main_kernel_button0:
-                type = PlayerType.KernelType.IJK;
-                Toast.makeText(getApplicationContext(), "ijk init succ", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.main_kernel_button1:
-                type = PlayerType.KernelType.IJK_MEDIACODEC;
-                Toast.makeText(getApplicationContext(), "ijk init succ", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.main_kernel_button2:
-                type = PlayerType.KernelType.EXO_V1;
-                Toast.makeText(getApplicationContext(), "exo init succ", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.main_kernel_button3:
-                type = PlayerType.KernelType.EXO_V2;
-                Toast.makeText(getApplicationContext(), "exo init succ", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.main_kernel_button4:
-                type = PlayerType.KernelType.VLC;
-                Toast.makeText(getApplicationContext(), "vlc init succ", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.main_kernel_button5:
-                type = PlayerType.KernelType.FFPLAYER;
-                Toast.makeText(getApplicationContext(), "ffmplayer init succ", Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                type = PlayerType.KernelType.ANDROID;
-                Toast.makeText(getApplicationContext(), "android init succ", Toast.LENGTH_SHORT).show();
-                break;
-        }
-
-        // 2
+    private void initAsset() {
         List<String> list = Arrays.asList("video-h265.mkv", "video-test.rmvb", "video-h264-adts.m3u8", "video-h264-adts-0000.ts", "video-h264-adts-0001.ts", "video-sxgd.mpeg");
         for (int i = 0; i < list.size(); i++) {
             String fromPath = list.get(i);
@@ -172,17 +124,40 @@ public class MainActivity extends Activity {
             }
         }
         Toast.makeText(getApplicationContext(), "初始化资源文件 => 成功", Toast.LENGTH_SHORT).show();
-
-        // 3
-        init(type);
     }
 
-    private void init(@PlayerType.KernelType.Value int type) {
+    private void initPlayer() {
+
+        // 1
+        int kernelType;
+        int kernelTypeId = ((RadioGroup) findViewById(R.id.main_kernel)).getCheckedRadioButtonId();
+        switch (kernelTypeId) {
+            case R.id.main_kernel_ijk:
+                kernelType = PlayerType.KernelType.IJK;
+                break;
+            case R.id.main_kernel_ijk_mediacodec:
+                kernelType = PlayerType.KernelType.IJK_MEDIACODEC;
+                break;
+            case R.id.main_kernel_exo_v1:
+                kernelType = PlayerType.KernelType.EXO_V1;
+                break;
+            case R.id.main_kernel_exo_v2:
+                kernelType = PlayerType.KernelType.EXO_V2;
+                break;
+            case R.id.main_kernel_vlc:
+                kernelType = PlayerType.KernelType.VLC;
+                break;
+            case R.id.main_kernel_ffplayer:
+                kernelType = PlayerType.KernelType.FFPLAYER;
+                break;
+            default:
+                kernelType = PlayerType.KernelType.ANDROID;
+                break;
+        }
 
         int exoFFmpeg;
-        RadioGroup radioGroup = findViewById(R.id.main_exo_ffmpeg);
-        int buttonId = radioGroup.getCheckedRadioButtonId();
-        switch (buttonId) {
+        int exoFFmpegId = ((RadioGroup) findViewById(R.id.main_exo_ffmpeg)).getCheckedRadioButtonId();
+        switch (exoFFmpegId) {
             case R.id.main_exo_vff_amc:
                 exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC;
                 break;
@@ -196,11 +171,23 @@ public class MainActivity extends Activity {
                 exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
                 break;
         }
-        Toast.makeText(getApplicationContext(), "exoFFmpeg = " + exoFFmpeg, Toast.LENGTH_SHORT).show();
+
+        int renderType;
+        int renderTypeId = ((RadioGroup) findViewById(R.id.main_render)).getCheckedRadioButtonId();
+        switch (renderTypeId) {
+            case R.id.main_render_surfaceview:
+                renderType = PlayerType.RenderType.SURFACE_VIEW;
+                break;
+            default:
+                renderType = PlayerType.RenderType.TEXTURE_VIEW;
+                break;
+        }
+
+        Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", exoFFmpeg = " + exoFFmpeg);
         PlayerBuilder build = new PlayerBuilder.Builder()
                 .setLog(true)
-                .setKernel(type)
-                .setRender(PlayerType.RenderType.TEXTURE_VIEW)
+                .setKernel(kernelType)
+                .setRender(renderType)
                 .setExoFFmpeg(exoFFmpeg)
                 .setBuriedEvent(new LogBuriedEvent())
                 .build();

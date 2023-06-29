@@ -24,6 +24,8 @@ public interface RenderApi {
      */
     void init();
 
+    void createReal();
+
     /**
      * 释放资源
      */

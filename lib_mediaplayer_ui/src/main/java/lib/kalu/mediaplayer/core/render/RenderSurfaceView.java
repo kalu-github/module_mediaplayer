@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -9,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,39 +47,30 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     }
 
     @Override
-    public boolean hasFocus() {
-        return false;
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        MPLogUtil.log("RenderSurfaceView => onDetachedFromWindow => " + this);
     }
 
     @Override
-    public boolean hasFocusable() {
-        return false;
-    }
-
-    @Override
-    public boolean hasExplicitFocusable() {
-        return false;
-    }
-
-    @Override
-    public boolean hasWindowFocus() {
-        return false;
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        return false;
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        MPLogUtil.log("RenderSurfaceView => onAttachedToWindow => " + this);
     }
 
     @Override
     public void init() {
-//        mMeasureHelper = new MeasureHelper();
         setFocusable(false);
         setFocusableInTouchMode(false);
-        SurfaceHolder holder = this.getHolder();
-        //holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        //类型必须设置成SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS
-//        holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        setZOrderOnTop(true);
+        setZOrderMediaOverlay(true);
+        getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        createReal();
+    }
+
+    @Override
+    public void createReal() {
         mSurfaceHolderCallback = new SurfaceHolder.Callback() {
             /**
              * 创建的时候调用该方法
@@ -85,7 +78,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
              */
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                MPLogUtil.log("RenderSurfaceView => surfaceCreated => " + this);
+                MPLogUtil.log("RenderSurfaceView => surfaceCreated => mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
                 if (mKernel != null) {
                     mSurface = holder.getSurface();
                     int width = getWidth();
@@ -117,10 +110,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
                 MPLogUtil.log("RenderSurfaceView => surfaceChanged => " + this);
-//            if (mKernel != null) {
-//                mSurface = holder.getSurface();
-//                mKernel.setSurface(mSurface);
-//            }
             }
 
             /**
@@ -137,9 +126,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                 }
             }
         };
-        holder.addCallback(mSurfaceHolderCallback);
-//        setZOrderOnTop(true);
-//        setZOrderMediaOverlay(true);
+        getHolder().addCallback(mSurfaceHolderCallback);
     }
 
     @Override
@@ -176,7 +163,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Override
     public void setScaleType(int scaleType) {
-
     }
 
     @Override
@@ -225,5 +211,30 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             super.setRotation(rotation);
             requestLayout();
         }
+    }
+
+    @Override
+    public boolean hasFocus() {
+        return false;
+    }
+
+    @Override
+    public boolean hasFocusable() {
+        return false;
+    }
+
+    @Override
+    public boolean hasExplicitFocusable() {
+        return false;
+    }
+
+    @Override
+    public boolean hasWindowFocus() {
+        return false;
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        return false;
     }
 }

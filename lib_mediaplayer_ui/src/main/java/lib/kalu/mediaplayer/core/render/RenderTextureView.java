@@ -50,34 +50,26 @@ public class RenderTextureView extends TextureView implements RenderApi {
     }
 
     @Override
-    public boolean hasFocus() {
-        return false;
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        MPLogUtil.log("RenderTextureView => onDetachedFromWindow => " + this);
     }
 
     @Override
-    public boolean hasFocusable() {
-        return false;
-    }
-
-    @Override
-    public boolean hasExplicitFocusable() {
-        return false;
-    }
-
-    @Override
-    public boolean hasWindowFocus() {
-        return false;
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        return false;
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        MPLogUtil.log("RenderTextureView => onAttachedToWindow => " + this);
     }
 
     @Override
     public void init() {
         setFocusable(false);
         setFocusableInTouchMode(false);
+        createReal();
+    }
+
+    @Override
+    public void createReal() {
         mSurfaceTextureListener = new SurfaceTextureListener() {
             /**
              * SurfaceTexture准备就绪
@@ -201,5 +193,30 @@ public class RenderTextureView extends TextureView implements RenderApi {
             super.setRotation(rotation);
             requestLayout();
         }
+    }
+
+    @Override
+    public boolean hasFocus() {
+        return false;
+    }
+
+    @Override
+    public boolean hasFocusable() {
+        return false;
+    }
+
+    @Override
+    public boolean hasExplicitFocusable() {
+        return false;
+    }
+
+    @Override
+    public boolean hasWindowFocus() {
+        return false;
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        return false;
     }
 }
