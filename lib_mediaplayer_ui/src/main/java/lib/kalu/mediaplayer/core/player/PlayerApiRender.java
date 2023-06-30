@@ -90,13 +90,13 @@ interface PlayerApiRender extends PlayerApiBase {
                 throw new Exception("render warning: not instanceof PlayerApiKernel");
             createRender(true);
             ((PlayerApiKernel) this).attachRender();
-            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
-                }
-            }, 4000);
+//            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
+//            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
+//                }
+//            }, 4000);
             return true;
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => resetRender => " + e.getMessage());
