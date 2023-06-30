@@ -78,16 +78,7 @@ public interface RenderApi {
      */
     String screenshot();
 
-    default String saveDrawable(@NonNull Context context, @NonNull Drawable drawable) {
-        try {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            Bitmap bitmap = bitmapDrawable.getBitmap();
-            return saveBitmap(context, bitmap);
-        } catch (Exception e) {
-            MPLogUtil.log("saveDrawable => " + e.getMessage(), e);
-            return null;
-        }
-    }
+
 
     default String saveBitmap(@NonNull Context context, @NonNull Bitmap bitmap) {
         try {

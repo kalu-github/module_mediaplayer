@@ -1,8 +1,11 @@
 package lib.kalu.mediaplayer.core.player;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -87,6 +90,13 @@ interface PlayerApiRender extends PlayerApiBase {
                 throw new Exception("render warning: not instanceof PlayerApiKernel");
             createRender(true);
             ((PlayerApiKernel) this).attachRender();
+            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
+                }
+            }, 4000);
             return true;
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => resetRender => " + e.getMessage());
@@ -299,7 +309,7 @@ interface PlayerApiRender extends PlayerApiBase {
             releaseRender(reset);
             // 2
             int type = PlayerManager.getInstance().getConfig().getRender();
-            setRender(RenderFactoryManager.getRender(getBaseContext(), type));
+            setRender(RenderFactoryManager.createRender(getBaseContext(), type));
             // 3
             updateRender();
         } catch (Exception e) {

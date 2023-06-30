@@ -1,5 +1,9 @@
 package lib.kalu.mediaplayer.core.player;
 
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
+import android.os.Build;
 import android.view.View;
 
 import androidx.annotation.FloatRange;
@@ -16,6 +20,7 @@ import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.KernelFactoryManager;
 import lib.kalu.mediaplayer.core.render.RenderApi;
+import lib.kalu.mediaplayer.util.BitmapUtil;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 interface PlayerApiKernel extends PlayerApiListener,
@@ -760,4 +765,36 @@ interface PlayerApiKernel extends PlayerApiListener,
             MPLogUtil.log("PlayerApiKernel => createDecoder => " + e.getMessage(), e);
         }
     }
+
+//    default String getScreenshotPath() {
+//        try {
+//            String url = getUrl();
+//            MPLogUtil.log("PlayerApiKernel => getScreenshotPath => url => " + url);
+//            if (null == url || url.length() == 0)
+//                throw new Exception("url error: " + url);
+//            long position = getPosition();
+//            if (position < 0)
+//                throw new Exception("position error: " + position);
+//            long duration = getDuration();
+//            if (duration < 0)
+//                throw new Exception("duration error: " + duration);
+//            // android 2.3及其以上版本使用
+//            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+////            retriever.setDataSource(getBaseContext(), Uri.parse(url));
+//            retriever.setDataSource(url, new HashMap<String, String>());
+//            // 这一句是必须的
+//            String timeString = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+//            // 获取总长度,这一句也是必须的
+//            long titalTime = Long.parseLong(timeString) * 1000;
+//            // 通过这个计算出想截取的画面所在的时间
+//            long videoPosition = titalTime * position / duration;
+//            if (videoPosition < 0)
+//                throw new Exception("videoPosition error: " + videoPosition);
+//            Bitmap bitmap = retriever.getFrameAtTime(videoPosition, MediaMetadataRetriever.OPTION_CLOSEST);
+//            return BitmapUtil.saveScreenshot(getBaseContext(), bitmap);
+//        } catch (Exception e) {
+//            MPLogUtil.log("PlayerApiKernel => getScreenshotPath => " + e.getMessage(), e);
+//            return null;
+//        }
+//    }
 }
