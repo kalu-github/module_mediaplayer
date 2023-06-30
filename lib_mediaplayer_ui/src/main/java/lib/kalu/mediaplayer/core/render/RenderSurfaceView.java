@@ -84,6 +84,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                     mSurface = holder.getSurface();
                     int width = getWidth();
                     int height = getHeight();
+//                    getHolder().setFixedSize(width, height);
                     mKernel.setSurface(mSurface, width, height);
                 }
                 if (null == mHandler) {
@@ -111,6 +112,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
                 MPLogUtil.log("RenderSurfaceView => surfaceChanged => " + this);
+                MPLogUtil.log("RenderSurfaceView => surfaceChanged => width = " + width + ", height = " + height);
             }
 
             /**
@@ -195,13 +197,12 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        MPLogUtil.log("RenderSurfaceView => onMeasure => width = " + width + ", height = " + height);
+        setMeasuredDimension(width, height);
     }
-    //    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        int[] measuredSize = mMeasureHelper.doMeasure(widthMeasureSpec, heightMeasureSpec);
-//        setMeasuredDimension(measuredSize[0], measuredSize[1]);
-//    }
 
     /**
      * 记得一定要重新写这个方法，如果角度发生了变化，就重新绘制布局
