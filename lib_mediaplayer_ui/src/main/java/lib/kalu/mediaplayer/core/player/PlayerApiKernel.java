@@ -43,7 +43,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             // 5
             createKernel(builder, config);
             // 4
-            createRender();
+            createRender(false);
             // 6
             initKernel(builder, playUrl);
             // 7
@@ -159,7 +159,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             if (releaseTag) {
                 releaseTag();
             }
-            releaseRender();
+            releaseRender(false);
             releaseKernel(isFromUser);
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE);
         } catch (Exception e) {

@@ -72,6 +72,28 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
+    default boolean resetRender() {
+        try {
+            PlayerBuilder config = PlayerManager.getInstance().getConfig();
+            if (null == config)
+                throw new Exception("config warning: null");
+            int render = config.getRender();
+            if (render != PlayerType.RenderType.SURFACE_VIEW)
+                throw new Exception("render warning: not SURFACE_VIEW");
+            int kernel = config.getKernel();
+            if (kernel != PlayerType.KernelType.IJK_MEDIACODEC && kernel != PlayerType.KernelType.EXO_V1 && kernel != PlayerType.KernelType.EXO_V2)
+                throw new Exception("kernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
+            if (!(this instanceof PlayerApiKernel))
+                throw new Exception("render warning: not instanceof PlayerApiKernel");
+            createRender(true);
+            ((PlayerApiKernel) this).attachRender();
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => resetRender => " + e.getMessage());
+            return false;
+        }
+    }
+
     default boolean startFull() {
         try {
             boolean isPhoneWindow = isParentEqualsPhoneWindow();
@@ -80,6 +102,7 @@ interface PlayerApiRender extends PlayerApiBase {
             requestFocusFull();
             boolean b = switchToDecorView(true);
             if (b) {
+                resetRender();
                 callWindowEvent(PlayerType.WindowType.FULL);
             }
             return b;
@@ -96,6 +119,7 @@ interface PlayerApiRender extends PlayerApiBase {
                 throw new Exception("not full");
             boolean b = switchToPlayerLayout();
             if (b) {
+                resetRender();
                 callWindowEvent(PlayerType.WindowType.NORMAL);
                 cleanFocusFull();
             }
@@ -113,6 +137,7 @@ interface PlayerApiRender extends PlayerApiBase {
                 throw new Exception("always Float");
             boolean switchToDecorView = switchToDecorView(false);
             if (switchToDecorView) {
+                resetRender();
                 callWindowEvent(PlayerType.WindowType.FLOAT);
             }
             return switchToDecorView;
@@ -129,6 +154,7 @@ interface PlayerApiRender extends PlayerApiBase {
                 throw new Exception("not Float");
             boolean switchToPlayerLayout = switchToPlayerLayout();
             if (switchToPlayerLayout) {
+                resetRender();
                 callWindowEvent(PlayerType.WindowType.NORMAL);
             }
             return switchToPlayerLayout;
@@ -206,7 +232,7 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
-    default void releaseRender() {
+    default void releaseRender(boolean reset) {
         try {
             // 1
             RenderApi render = searchRender();
@@ -218,7 +244,9 @@ interface PlayerApiRender extends PlayerApiBase {
                 MPLogUtil.log("PlayerApiRender => releaseRender => fail");
             }
             // 2
-            clearRender();
+            if (!reset) {
+                clearRender();
+            }
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => releaseRender => " + e.getMessage());
         }
@@ -265,16 +293,13 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
-    default void createRender() {
+    default void createRender(boolean reset) {
         try {
             // 1
+            releaseRender(reset);
+            // 2
             int type = PlayerManager.getInstance().getConfig().getRender();
-            RenderApi render = RenderFactoryManager.getRender(getBaseContext(), type);
-            MPLogUtil.log("PlayerApiRender => createRender => render = " + render);
-            // 2
-            releaseRender();
-            // 2
-            setRender(render);
+            setRender(RenderFactoryManager.getRender(getBaseContext(), type));
             // 3
             updateRender();
         } catch (Exception e) {

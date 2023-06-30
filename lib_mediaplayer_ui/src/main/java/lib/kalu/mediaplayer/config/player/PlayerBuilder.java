@@ -27,7 +27,6 @@ public final class PlayerBuilder {
     private boolean checkMobileNetwork; // 监测手机网络环境
     private boolean fitMobileCutout; // 是否适配手机刘海屏，默认适配
     private boolean checkOrientation;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
-    private boolean ijkMediaCodecSufaceViewSwitchWindowForceRestart = false; // ijk surfaceview 全屏切换, 强制重新播放
     private BuriedEvent buriedEvent;  // 埋点事件log
     private KeycodeApi keycodeApi; // 遥控code
 
@@ -92,10 +91,6 @@ public final class PlayerBuilder {
         return checkOrientation;
     }
 
-    public boolean isIjkMediaCodecSufaceViewSwitchWindowForceRestart() {
-        return ijkMediaCodecSufaceViewSwitchWindowForceRestart;
-    }
-
     public BuriedEvent getBuriedEvent() {
         return buriedEvent;
     }
@@ -117,7 +112,6 @@ public final class PlayerBuilder {
         checkMobileNetwork = builder.checkMobileNetwork;
         fitMobileCutout = builder.fitMobileCutout;
         checkOrientation = builder.checkOrientation;
-        ijkMediaCodecSufaceViewSwitchWindowForceRestart = builder.ijkMediaCodecSufaceViewSwitchWindowForceRestart;
         buriedEvent = builder.buriedEvent;
         keycodeApi = builder.keycodeApi;
         cacheType = builder.cacheType;
@@ -137,7 +131,6 @@ public final class PlayerBuilder {
         builder.setCheckMobileNetwork(this.checkMobileNetwork);
         builder.setFitMobileCutout(this.fitMobileCutout);
         builder.setCheckOrientation(this.checkOrientation);
-        builder.setIjkMediaCodecSufaceViewSwitchWindowForceRestart(this.ijkMediaCodecSufaceViewSwitchWindowForceRestart);
         builder.setBuriedEvent(this.buriedEvent);
         builder.setKeycodeApi(this.keycodeApi);
         builder.setCacheType(this.cacheType);
@@ -164,7 +157,6 @@ public final class PlayerBuilder {
         private boolean checkMobileNetwork = false; // 监测手机网络环境
         private boolean fitMobileCutout = true; // 是否适配手机刘海屏，默认适配
         private boolean checkOrientation = false;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
-        private boolean ijkMediaCodecSufaceViewSwitchWindowForceRestart = false; // ijk surfaceview 全屏切换, 强制重新播放
         private BuriedEvent buriedEvent = null;  // 埋点事件log
         private KeycodeApi keycodeApi = null; // 遥控code
 
@@ -175,11 +167,6 @@ public final class PlayerBuilder {
         private int cacheType = PlayerType.CacheType.NONE;
         private int cacheMax = 0;
         private String cacheDir = null;
-
-        public Builder setIjkMediaCodecSufaceViewSwitchWindowForceRestart(boolean v) {
-            this.ijkMediaCodecSufaceViewSwitchWindowForceRestart = v;
-            return this;
-        }
 
         public Builder setSeekHelp(boolean v) {
             seekHelp = v;

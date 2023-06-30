@@ -255,18 +255,7 @@ public class PlayerLayout extends RelativeLayout {
             if (null == playerView)
                 throw new Exception("playerView error: null");
             boolean startFull = playerView.startFull();
-            if (startFull) {
-                PlayerBuilder config = PlayerManager.getInstance().getConfig();
-                if (null != config) {
-                    int render = config.getRender();
-                    int kernel = config.getKernel();
-                    boolean forceRestart = config.isIjkMediaCodecSufaceViewSwitchWindowForceRestart();
-                    if (render == PlayerType.RenderType.SURFACE_VIEW && kernel == PlayerType.KernelType.IJK_MEDIACODEC && forceRestart) {
-                        playerView.updateSeek();
-                        restart();
-                    }
-                }
-            }
+            MPLogUtil.log("PlayerLayout => startFull => status = " + startFull);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => startFull => " + e.getMessage());
         }
@@ -278,18 +267,7 @@ public class PlayerLayout extends RelativeLayout {
             if (null == playerView)
                 throw new Exception("playerView error: null");
             boolean stopFull = playerView.stopFull();
-            if (stopFull) {
-                PlayerBuilder config = PlayerManager.getInstance().getConfig();
-                if (null != config) {
-                    int render = config.getRender();
-                    int kernel = config.getKernel();
-                    boolean forceRestart = config.isIjkMediaCodecSufaceViewSwitchWindowForceRestart();
-                    if (render == PlayerType.RenderType.SURFACE_VIEW && kernel == PlayerType.KernelType.IJK_MEDIACODEC && forceRestart) {
-                        playerView.updateSeek();
-                        restart();
-                    }
-                }
-            }
+            MPLogUtil.log("PlayerLayout => stopFull => status = " + stopFull);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => stopFull => " + e.getMessage());
         }
@@ -310,18 +288,7 @@ public class PlayerLayout extends RelativeLayout {
             if (null == playerView)
                 throw new Exception("playerView error: null");
             boolean startFloat = playerView.startFloat();
-            if (startFloat) {
-                PlayerBuilder config = PlayerManager.getInstance().getConfig();
-                if (null != config) {
-                    int render = config.getRender();
-                    int kernel = config.getKernel();
-                    boolean forceRestart = config.isIjkMediaCodecSufaceViewSwitchWindowForceRestart();
-                    if (render == PlayerType.RenderType.SURFACE_VIEW && kernel == PlayerType.KernelType.IJK_MEDIACODEC && forceRestart) {
-                        playerView.updateSeek();
-                        restart();
-                    }
-                }
-            }
+            MPLogUtil.log("PlayerLayout => startFloat => status = " + startFloat);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => startFloat => " + e.getMessage());
         }
@@ -333,18 +300,7 @@ public class PlayerLayout extends RelativeLayout {
             if (null == playerView)
                 throw new Exception("playerView error: null");
             boolean stopFloat = playerView.stopFloat();
-            if (stopFloat) {
-                PlayerBuilder config = PlayerManager.getInstance().getConfig();
-                if (null != config) {
-                    int render = config.getRender();
-                    int kernel = config.getKernel();
-                    boolean forceRestart = config.isIjkMediaCodecSufaceViewSwitchWindowForceRestart();
-                    if (render == PlayerType.RenderType.SURFACE_VIEW && kernel == PlayerType.KernelType.IJK_MEDIACODEC && forceRestart) {
-                        playerView.updateSeek();
-                        restart();
-                    }
-                }
-            }
+            MPLogUtil.log("PlayerLayout => stopFloat => status = " + stopFloat);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => stopFloat => " + e.getMessage());
         }
