@@ -294,6 +294,19 @@ public final class VideoIjkPlayer extends BasePlayer {
         }
     }
 
+    @Override
+    public void setSurface(@NonNull Surface surface, int w, int h) {
+        try {
+            if (null == mIjkPlayer)
+                throw new Exception("mIjkPlayer error: null");
+//            if (null == surface)
+//                throw new Exception("surface error: null");
+            mIjkPlayer.setSurface(surface);
+        } catch (Exception e) {
+            MPLogUtil.log("VideoIjkPlayer => setSurface => " + e.getMessage());
+        }
+    }
+
     /**
      * ijk视频播放器监听listener
      */
@@ -425,19 +438,6 @@ public final class VideoIjkPlayer extends BasePlayer {
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => getDuration => " + e.getMessage());
             return 0L;
-        }
-    }
-
-    @Override
-    public void setSurface(@NonNull Surface surface, int w, int h) {
-        try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
-            if (null == surface)
-                throw new Exception("surface error: null");
-            mIjkPlayer.setSurface(surface);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => setSurface => " + e.getMessage());
         }
     }
 

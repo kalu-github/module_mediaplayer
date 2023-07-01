@@ -65,11 +65,11 @@ public class RenderTextureView extends TextureView implements RenderApi {
     public void init() {
         setFocusable(false);
         setFocusableInTouchMode(false);
-        createReal();
+        addListener();
     }
 
     @Override
-    public void createReal() {
+    public void addListener() {
         mSurfaceTextureListener = new SurfaceTextureListener() {
             /**
              * SurfaceTexture准备就绪
@@ -134,7 +134,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
      * 释放资源
      */
     @Override
-    public void releaseReal() {
+    public void releaseListener() {
         if (mSurfaceTexture != null) {
             mSurfaceTexture.release();
         }

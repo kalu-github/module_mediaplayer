@@ -24,12 +24,12 @@ public interface RenderApi {
      */
     void init();
 
-    void createReal();
+    void addListener();
 
     /**
      * 释放资源
      */
-    void releaseReal();
+    void releaseListener();
 
 //    /**
 //     * 获取真实的RenderView

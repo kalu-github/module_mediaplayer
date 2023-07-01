@@ -66,11 +66,11 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         setZOrderMediaOverlay(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
         getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        createReal();
+        addListener();
     }
 
     @Override
-    public void createReal() {
+    public void addListener() {
         mSurfaceHolderCallback = new SurfaceHolder.Callback() {
 
             /**
@@ -79,7 +79,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
              */
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                MPLogUtil.log("RenderSurfaceView => surfaceCreated => mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
+                MPLogUtil.log("RenderSurfaceView => addListener => surfaceCreated => mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
                 if (mKernel != null) {
                     mSurface = holder.getSurface();
                     int width = getWidth();
@@ -111,8 +111,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
              */
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                MPLogUtil.log("RenderSurfaceView => surfaceChanged => " + this);
-                MPLogUtil.log("RenderSurfaceView => surfaceChanged => width = " + width + ", height = " + height);
+                MPLogUtil.log("RenderSurfaceView => addListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
             }
 
             /**
@@ -121,9 +120,10 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
              */
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-                MPLogUtil.log("RenderSurfaceView => surfaceDestroyed => " + this);
+                MPLogUtil.log("RenderSurfaceView => addListener => surfaceDestroyed => " + this);
                 if (mKernel != null) {
                     mKernel.setDisplay(null);
+                    mKernel.setSurface(null, 0, 0);
                 }
                 if (null != mHandler) {
                     mHandler.removeMessages(9899);
@@ -136,8 +136,8 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     }
 
     @Override
-    public void releaseReal() {
-        MPLogUtil.log("RenderSurfaceView => releaseReal => " + this);
+    public void releaseListener() {
+        MPLogUtil.log("RenderSurfaceView => releaseListener => " + this);
         if (null != mHandler) {
             mHandler.removeMessages(9899);
             mHandler.removeCallbacksAndMessages(null);

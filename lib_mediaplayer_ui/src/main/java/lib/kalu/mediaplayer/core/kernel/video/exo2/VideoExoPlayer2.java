@@ -378,7 +378,24 @@ public final class VideoExoPlayer2 extends BasePlayer {
 
     @Override
     public void setDisplay(SurfaceHolder surfaceHolder) {
+    }
 
+    @Override
+    public void setSurface(@NonNull Surface surface, int w, int h) {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+//            if(null == surface)
+//                throw new Exception("surface error: null");
+            if (null == surface) {
+                mExoPlayer.setVideoSurface(null);
+                mExoPlayer.clearVideoSurface();
+            } else {
+                mExoPlayer.setVideoSurface(surface);
+            }
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer => " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -435,17 +452,6 @@ public final class VideoExoPlayer2 extends BasePlayer {
             duration = 0L;
         }
         return duration;
-    }
-
-    @Override
-    public void setSurface(@NonNull Surface surface, int w, int h) {
-        if (null != surface && null != mExoPlayer) {
-            try {
-                mExoPlayer.setVideoSurface(surface);
-            } catch (Exception e) {
-                MPLogUtil.log("VideoExoPlayer => " + e.getMessage(), e);
-            }
-        }
     }
 
     @Override

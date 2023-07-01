@@ -160,7 +160,7 @@ interface PlayerApiKernel extends PlayerApiListener,
     default void release(@NonNull boolean releaseTag, boolean isFromUser) {
         try {
             checkKernel();
-            clearRender();
+            removeRender();
             if (releaseTag) {
                 releaseTag();
             }
