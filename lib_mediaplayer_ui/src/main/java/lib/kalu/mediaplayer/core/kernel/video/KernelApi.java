@@ -7,6 +7,7 @@ import android.view.SurfaceHolder;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -21,6 +22,8 @@ public interface KernelApi extends KernelApiBase,
         KernelApiEvent {
 
     void onUpdateTimeMillis();
+
+    void onUpdateBuffer(@PlayerType.StateType.Value int status);
 
     @NonNull
     <T extends Object> T getPlayer();

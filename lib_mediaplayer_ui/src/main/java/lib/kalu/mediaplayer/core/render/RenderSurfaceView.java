@@ -15,6 +15,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -33,7 +34,27 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Nullable
-    private Handler mHandler;
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 9899) {
+                if (null != mKernel) {
+                    mKernel.onUpdateTimeMillis();
+                    mHandler.sendEmptyMessageDelayed(9899, 100);
+                }
+            } else if (msg.what == 9888) {
+                if (null != mKernel) {
+                    mKernel.onUpdateBuffer(PlayerType.StateType.STATE_BUFFERING_START);
+                    mHandler.sendEmptyMessageDelayed(9877, 4000);
+                }
+            } else if (msg.what == 9877) {
+                if (null != mKernel) {
+                    mKernel.onUpdateBuffer(PlayerType.StateType.STATE_BUFFERING_STOP);
+                }
+            }
+        }
+    };
     @Nullable
     private KernelApi mKernel;
     @Nullable
@@ -87,19 +108,8 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 //                    getHolder().setFixedSize(width, height);
                     mKernel.setSurface(mSurface, width, height);
                 }
-                if (null == mHandler) {
-                    mHandler = new Handler(Looper.myLooper()) {
-                        @Override
-                        public void handleMessage(@NonNull Message msg) {
-                            super.handleMessage(msg);
-                            if (null != mKernel && null != msg && msg.what == 9899) {
-                                mKernel.onUpdateTimeMillis();
-                                mHandler.sendEmptyMessageDelayed(9899, 100);
-                            }
-                        }
-                    };
-                    mHandler.sendEmptyMessageDelayed(9899, 100);
-                }
+                mHandler.removeMessages(9899);
+                mHandler.sendEmptyMessageDelayed(9899, 100);
             }
 
             /**
@@ -127,6 +137,8 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                 }
                 if (null != mHandler) {
                     mHandler.removeMessages(9899);
+                    mHandler.removeMessages(9888);
+                    mHandler.removeMessages(9877);
                     mHandler.removeCallbacksAndMessages(null);
                     mHandler = null;
                 }
@@ -189,6 +201,19 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Override
     public void updateCanvas() {
+    }
+
+    @Override
+    public void updateBuffer() {
+        try {
+            if (null == mHandler)
+                throw new Exception("mHandler error: null");
+            mHandler.removeMessages(9888);
+            mHandler.removeMessages(9877);
+            mHandler.sendEmptyMessage(9888);
+        } catch (Exception e) {
+            MPLogUtil.log("RenderSurfaceView => updateBuffer => " + e.getMessage());
+        }
     }
 
     /**

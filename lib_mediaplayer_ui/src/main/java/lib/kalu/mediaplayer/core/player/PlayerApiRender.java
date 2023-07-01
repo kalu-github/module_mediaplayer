@@ -88,19 +88,9 @@ interface PlayerApiRender extends PlayerApiBase {
                 throw new Exception("kernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
             if (!(this instanceof PlayerApiKernel))
                 throw new Exception("render warning: not instanceof PlayerApiKernel");
-//            releaseRenderListener();
-//            addRenderListener();
-//            setRender(searchRender());
-//            ((PlayerApiKernel) this).attachRender();
             createRender(true);
             ((PlayerApiKernel) this).attachRender();
-//            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
-//            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
-//                }
-//            }, 4000);
+            updateRenderBuffer();
             return true;
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => resetRender => " + e.getMessage());
@@ -299,6 +289,18 @@ interface PlayerApiRender extends PlayerApiBase {
             removeRender();
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => releaseRender => " + e.getMessage());
+        }
+    }
+
+    default void updateRenderBuffer() {
+        try {
+            RenderApi render = searchRender();
+            if (null == render)
+                throw new Exception("render warning: null");
+            render.updateBuffer();
+            MPLogUtil.log("PlayerApiRender => updateRenderBuffer => succ");
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => updateRenderBuffer => " + e.getMessage());
         }
     }
 

@@ -10,11 +10,25 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 public abstract class BasePlayer implements KernelApi {
 
     private KernelApiEvent eventApi;
-    private PlayerApi musicApi;
+    private PlayerApi playerApi;
 
-    public BasePlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
-        this.musicApi = musicApi;
+    public BasePlayer(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent eventApi) {
+        this.playerApi = playerApi;
         this.eventApi = eventApi;
+    }
+
+    @Override
+    public void onUpdateBuffer(int status) {
+        try {
+            if (null == playerApi)
+                throw new Exception("playerApi error: null");
+            boolean playing = isPlaying();
+            if (!playing)
+                throw new Exception("playing error: false");
+            playerApi.callPlayerEvent(status);
+        } catch (Exception e) {
+            MPLogUtil.log("BasePlayer => onUpdateBuffer => " + e.getMessage());
+        }
     }
 
     @Override
@@ -54,7 +68,7 @@ public abstract class BasePlayer implements KernelApi {
     @Override
     public boolean isExternalMusicPlayWhenReady() {
         try {
-            return musicApi.isExternalMusicPlayWhenReady();
+            return playerApi.isExternalMusicPlayWhenReady();
         } catch (Exception e) {
             return false;
         }
@@ -63,7 +77,7 @@ public abstract class BasePlayer implements KernelApi {
     @Override
     public boolean isExternalMusicLooping() {
         try {
-            return musicApi.isExternalMusicLooping();
+            return playerApi.isExternalMusicLooping();
         } catch (Exception e) {
             return false;
         }
@@ -72,7 +86,7 @@ public abstract class BasePlayer implements KernelApi {
     @Override
     public boolean isExternalMusicSeek() {
         try {
-            return musicApi.isExternalMusicSeek();
+            return playerApi.isExternalMusicSeek();
         } catch (Exception e) {
             return true;
         }
@@ -81,7 +95,7 @@ public abstract class BasePlayer implements KernelApi {
     @Override
     public String getExternalMusicPath() {
         try {
-            return musicApi.getExternalMusicPath();
+            return playerApi.getExternalMusicPath();
         } catch (Exception e) {
             return null;
         }

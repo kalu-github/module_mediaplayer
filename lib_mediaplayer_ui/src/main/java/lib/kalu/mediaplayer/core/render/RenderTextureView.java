@@ -189,6 +189,11 @@ public class RenderTextureView extends TextureView implements RenderApi {
     public void updateCanvas() {
     }
 
+    @Override
+    public void updateBuffer() {
+
+    }
+
     /**
      * 记得一定要重新写这个方法，如果角度发生了变化，就重新绘制布局
      * 设置视频旋转角度

@@ -119,4 +119,9 @@ public interface RenderApi {
      * 刷屏
      */
     void updateCanvas();
+
+    /**
+     *
+     */
+    void updateBuffer();
 }
