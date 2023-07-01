@@ -152,8 +152,16 @@ public class RenderTextureView extends TextureView implements RenderApi {
     }
 
     @Override
-    public void setVideoSize(int videoWidth, int videoHeight) {
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+//        MPLogUtil.log("RenderTextureView => onMeasure => width = " + width + ", height = " + height);
+        setMeasuredDimension(width, height);
+    }
 
+    @Override
+    public void setVideoSize(int videoWidth, int videoHeight) {
     }
 
     @Override

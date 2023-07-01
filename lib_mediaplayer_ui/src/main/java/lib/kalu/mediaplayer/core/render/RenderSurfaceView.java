@@ -159,12 +159,11 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Override
     public void setVideoSize(int videoWidth, int videoHeight) {
-
+        getHolder().setFixedSize(videoWidth, videoHeight);
     }
 
     @Override
     public void setVideoRotation(int degree) {
-
     }
 
     @Override
@@ -200,8 +199,9 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 //        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
-        MPLogUtil.log("RenderSurfaceView => onMeasure => width = " + width + ", height = " + height);
+//        MPLogUtil.log("RenderSurfaceView => onMeasure => width = " + width + ", height = " + height);
         setMeasuredDimension(width, height);
+        setVideoSize(width, height);
     }
 
     /**
