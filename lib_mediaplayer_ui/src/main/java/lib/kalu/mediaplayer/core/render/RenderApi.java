@@ -123,5 +123,5 @@ public interface RenderApi {
     /**
      *
      */
-    void updateBuffer();
+    void updateBuffer(int delayMillis);
 }

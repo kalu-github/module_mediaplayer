@@ -90,7 +90,7 @@ interface PlayerApiRender extends PlayerApiBase {
                 throw new Exception("render warning: not instanceof PlayerApiKernel");
             createRender(true);
             ((PlayerApiKernel) this).attachRender();
-            updateRenderBuffer();
+            updateRenderBuffer(kernel == PlayerType.KernelType.IJK_MEDIACODEC ? 4000 : 400);
             return true;
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => resetRender => " + e.getMessage());
@@ -292,12 +292,12 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
-    default void updateRenderBuffer() {
+    default void updateRenderBuffer(int delayMillis) {
         try {
             RenderApi render = searchRender();
             if (null == render)
                 throw new Exception("render warning: null");
-            render.updateBuffer();
+            render.updateBuffer(delayMillis);
             MPLogUtil.log("PlayerApiRender => updateRenderBuffer => succ");
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => updateRenderBuffer => " + e.getMessage());

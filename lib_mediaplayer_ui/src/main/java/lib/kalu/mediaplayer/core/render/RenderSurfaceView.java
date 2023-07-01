@@ -34,33 +34,39 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Nullable
-    private Handler mHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 9899) {
-                if (null != mKernel) {
-                    mKernel.onUpdateTimeMillis();
-                    mHandler.sendEmptyMessageDelayed(9899, 100);
-                }
-            } else if (msg.what == 9888) {
-                if (null != mKernel) {
-                    mKernel.onUpdateBuffer(PlayerType.StateType.STATE_BUFFERING_START);
-                    mHandler.sendEmptyMessageDelayed(9877, 4000);
-                }
-            } else if (msg.what == 9877) {
-                if (null != mKernel) {
-                    mKernel.onUpdateBuffer(PlayerType.StateType.STATE_BUFFERING_STOP);
-                }
-            }
-        }
-    };
+    private Handler mHandler = null;
     @Nullable
     private KernelApi mKernel;
     @Nullable
     private Surface mSurface;
     @Nullable
     private SurfaceHolder.Callback mSurfaceHolderCallback;
+
+    private void addHandler() {
+        if (null != mHandler)
+            return;
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == 9899) {
+                    if (null != mKernel) {
+                        mKernel.onUpdateTimeMillis();
+                        mHandler.sendEmptyMessageDelayed(9899, 100);
+                    }
+                } else if (msg.what == 9888) {
+                    if (null != mKernel) {
+                        mKernel.onUpdateBuffer(PlayerType.StateType.STATE_BUFFERING_START);
+                        mHandler.sendEmptyMessageDelayed(9877, msg.arg1);
+                    }
+                } else if (msg.what == 9877) {
+                    if (null != mKernel) {
+                        mKernel.onUpdateBuffer(PlayerType.StateType.STATE_BUFFERING_STOP);
+                    }
+                }
+            }
+        };
+    }
 
     public RenderSurfaceView(Context context) {
         super(context);
@@ -107,6 +113,10 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                     int height = getHeight();
 //                    getHolder().setFixedSize(width, height);
                     mKernel.setSurface(mSurface, width, height);
+                }
+
+                if (null == mHandler) {
+                    addHandler();
                 }
                 mHandler.removeMessages(9899);
                 mHandler.sendEmptyMessageDelayed(9899, 100);
@@ -204,13 +214,17 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     }
 
     @Override
-    public void updateBuffer() {
+    public void updateBuffer(int delayMillis) {
         try {
-            if (null == mHandler)
-                throw new Exception("mHandler error: null");
+            if (null == mHandler) {
+                addHandler();
+            }
             mHandler.removeMessages(9888);
             mHandler.removeMessages(9877);
-            mHandler.sendEmptyMessage(9888);
+            Message message = new Message();
+            message.what = 9888;
+            message.arg1 = delayMillis;
+            mHandler.sendMessage(message);
         } catch (Exception e) {
             MPLogUtil.log("RenderSurfaceView => updateBuffer => " + e.getMessage());
         }

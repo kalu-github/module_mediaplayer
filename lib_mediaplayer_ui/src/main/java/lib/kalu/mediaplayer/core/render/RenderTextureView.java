@@ -190,7 +190,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
     }
 
     @Override
-    public void updateBuffer() {
+    public void updateBuffer(int delayMillis) {
 
     }
 
