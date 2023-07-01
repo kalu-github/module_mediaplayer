@@ -721,16 +721,16 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void resetRender() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.resetRender();
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => resetRender => " + e.getMessage());
-        }
-    }
+//    public final void resetRender() {
+//        try {
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("playerView error: null");
+//            playerView.resetRender();
+//        } catch (Exception e) {
+//            MPLogUtil.log("PlayerLayout => resetRender => " + e.getMessage());
+//        }
+//    }
 
     /*******************/
 
