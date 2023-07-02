@@ -13,7 +13,7 @@ https://github.com/kalu-github/ijkplayer-ffmpeg-3.4.12
 #### 更新
 ```
 2023-07-02
-1. 解决：ijk-mediaplayer+surfaceview切换大小屏黑屏
+1. 解决：ijk-mediacodec+surfaceview切换大小屏黑屏
 ```
 ```
 2023-06-25
