@@ -8,96 +8,98 @@ import lib.kalu.mediaplayer.keycode.KeycodeApi;
 @Keep
 public final class PlayerManager {
 
-    private PlayerBuilder mConfig;
+    private PlayerBuilder mConfig = null;
     private PlayerBuilder.Builder mPlayerBuilder;
+
+    /***************/
+
+    private static final class Holder {
+        private static final PlayerManager mInstance = new PlayerManager();
+    }
+
+    public static PlayerManager getInstance() {
+        return Holder.mInstance;
+    }
+
+    /***************/
 
     private PlayerManager() {
         mPlayerBuilder = new PlayerBuilder.Builder();
     }
 
-    private static final class Holder {
-        private static final PlayerManager INSTANCE = new PlayerManager();
-    }
-
-    public static PlayerManager getInstance() {
-        return PlayerManager.Holder.INSTANCE;
-    }
-
-    /***************/
-
-    public PlayerBuilder.Builder setSeekHelp(boolean v) {
+    public PlayerManager setSeekHelp(boolean v) {
         mPlayerBuilder.setSeekHelp(v);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setExoFFmpeg(@PlayerType.FFmpegType int v) {
+    public PlayerManager setExoFFmpeg(@PlayerType.FFmpegType int v) {
         mPlayerBuilder.setExoFFmpeg(v);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setExoSeekParameters(@PlayerType.SeekType int v) {
+    public PlayerManager setExoSeekParameters(@PlayerType.SeekType int v) {
         mPlayerBuilder.setExoSeekParameters(v);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setCacheType(@PlayerType.CacheType int v) {
+    public PlayerManager setCacheType(@PlayerType.CacheType int v) {
         mPlayerBuilder.setCacheType(v);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setCacheMax(int v) {
+    public PlayerManager setCacheMax(int v) {
         mPlayerBuilder.setCacheMax(v);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setCacheDir(String v) {
+    public PlayerManager setCacheDir(String v) {
         mPlayerBuilder.setCacheDir(v);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setLog(boolean v) {
+    public PlayerManager setLog(boolean v) {
         mPlayerBuilder.setLog(v);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setKernel(@PlayerType.KernelType.Value int v) {
+    public PlayerManager setKernel(@PlayerType.KernelType.Value int v) {
         mPlayerBuilder.setKernel(v);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setRender(@PlayerType.RenderType.Value int v) {
+    public PlayerManager setRender(@PlayerType.RenderType.Value int v) {
         mPlayerBuilder.setRender(v);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setScaleType(@PlayerType.ScaleType.Value int v) {
+    public PlayerManager setScaleType(@PlayerType.ScaleType.Value int v) {
         mPlayerBuilder.setScaleType(v);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setCheckMobileNetwork(boolean v) {
+    public PlayerManager setCheckMobileNetwork(boolean v) {
         mPlayerBuilder.setCheckMobileNetwork(v);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setFitMobileCutout(boolean v) {
+    public PlayerManager setFitMobileCutout(boolean v) {
         mPlayerBuilder.setFitMobileCutout(v);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setCheckOrientation(boolean v) {
+    public PlayerManager setCheckOrientation(boolean v) {
         mPlayerBuilder.setCheckOrientation(v);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setBuriedEvent(BuriedEvent buriedEvent) {
+    public PlayerManager setBuriedEvent(BuriedEvent buriedEvent) {
         mPlayerBuilder.setBuriedEvent(buriedEvent);
-        return mPlayerBuilder;
+        return this;
     }
 
-    public PlayerBuilder.Builder setKeycodeApi(KeycodeApi keycodeApi) {
+    public PlayerManager setKeycodeApi(KeycodeApi keycodeApi) {
         mPlayerBuilder.setKeycodeApi(keycodeApi);
-        return mPlayerBuilder;
+        return this;
     }
 
     public void build() {
