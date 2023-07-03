@@ -107,10 +107,19 @@ public @interface PlayerType {
         int STATE_RELEASE = 3_028;
         int STATE_RELEASE_EXCEPTION = 3_029;
 
+        int STATE_FULL_START = 3_030;
+        int STATE_FULL_STOP = 3_031;
+        int STATE_FLOAT_START = 3_032;
+        int STATE_FLOAT_STOP = 3_033;
+
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
+                STATE_FULL_START,
+                STATE_FULL_STOP,
+                STATE_FLOAT_START,
+                STATE_FLOAT_STOP,
                 STATE_FAST_FORWARD_START,
                 STATE_FAST_FORWARD_STOP,
                 STATE_FAST_REWIND_START,

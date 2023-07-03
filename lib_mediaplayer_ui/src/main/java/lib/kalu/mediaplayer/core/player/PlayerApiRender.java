@@ -107,6 +107,7 @@ interface PlayerApiRender extends PlayerApiBase {
             boolean b = switchToDecorView(true);
             if (b) {
                 resetRender();
+                callPlayerEvent(PlayerType.StateType.STATE_FULL_START);
                 callWindowEvent(PlayerType.WindowType.FULL);
             }
             return b;
@@ -124,6 +125,7 @@ interface PlayerApiRender extends PlayerApiBase {
             boolean b = switchToPlayerLayout();
             if (b) {
                 resetRender();
+                callPlayerEvent(PlayerType.StateType.STATE_FULL_STOP);
                 callWindowEvent(PlayerType.WindowType.NORMAL);
                 cleanFocusFull();
             }
@@ -142,6 +144,7 @@ interface PlayerApiRender extends PlayerApiBase {
             boolean switchToDecorView = switchToDecorView(false);
             if (switchToDecorView) {
                 resetRender();
+                callPlayerEvent(PlayerType.StateType.STATE_FLOAT_START);
                 callWindowEvent(PlayerType.WindowType.FLOAT);
             }
             return switchToDecorView;
@@ -159,6 +162,7 @@ interface PlayerApiRender extends PlayerApiBase {
             boolean switchToPlayerLayout = switchToPlayerLayout();
             if (switchToPlayerLayout) {
                 resetRender();
+                callPlayerEvent(PlayerType.StateType.STATE_FLOAT_STOP);
                 callWindowEvent(PlayerType.WindowType.NORMAL);
             }
             return switchToPlayerLayout;
