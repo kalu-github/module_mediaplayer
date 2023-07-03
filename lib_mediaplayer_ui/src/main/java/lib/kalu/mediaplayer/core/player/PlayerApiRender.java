@@ -154,9 +154,9 @@ interface PlayerApiRender extends PlayerApiBase {
             switchPlaying();
             if (b) {
                 resetRender();
+                cleanFocusFull();
                 callPlayerEvent(PlayerType.StateType.STATE_FULL_STOP);
                 callWindowEvent(PlayerType.WindowType.NORMAL);
-                cleanFocusFull();
             }
             return b;
         } catch (Exception e) {
