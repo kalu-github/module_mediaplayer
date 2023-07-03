@@ -184,13 +184,12 @@ public class MainActivity extends Activity {
         }
 
         Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", exoFFmpeg = " + exoFFmpeg);
-        PlayerBuilder build = new PlayerBuilder.Builder()
+        PlayerManager.getInstance()
                 .setLog(true)
                 .setKernel(kernelType)
                 .setRender(renderType)
                 .setExoFFmpeg(exoFFmpeg)
                 .setBuriedEvent(new LogBuriedEvent())
                 .build();
-        PlayerManager.getInstance().setConfig(build);
     }
 }
