@@ -242,10 +242,10 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     public final void startFull() {
-        startFull(false);
+        startFull(false, false);
     }
 
-    public final void startFull(boolean checkUrl) {
+    public final void startFull(boolean checkUrl, boolean rememberPlaying) {
         try {
             if (checkUrl) {
                 String url = getUrl();
@@ -255,7 +255,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            boolean startFull = playerView.startFull();
+            boolean startFull = playerView.startFull(rememberPlaying);
             MPLogUtil.log("PlayerLayout => startFull => status = " + startFull);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => startFull => " + e.getMessage());
@@ -275,10 +275,10 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     public final void startFloat() {
-        startFloat(false);
+        startFloat(false, false);
     }
 
-    public final void startFloat(boolean checkUrl) {
+    public final void startFloat(boolean checkUrl, boolean rememberPlaying) {
         try {
             if (checkUrl) {
                 String url = getUrl();
@@ -288,7 +288,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            boolean startFloat = playerView.startFloat();
+            boolean startFloat = playerView.startFloat(rememberPlaying);
             MPLogUtil.log("PlayerLayout => startFloat => status = " + startFloat);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => startFloat => " + e.getMessage());

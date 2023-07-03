@@ -98,7 +98,32 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
-    default boolean startFull() {
+    default void checkPlaying() {
+        try {
+            if (!(this instanceof PlayerApiKernel))
+                throw new Exception("this error: not instanceof PlayerApiKernel");
+            boolean playing = ((PlayerApiKernel) this).isPlaying();
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_switch_window_check_playing, playing);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => checkPlaying => " + e.getMessage());
+        }
+    }
+
+    default void switchPlaying() {
+        try {
+            if (!(this instanceof PlayerApiKernel))
+                throw new Exception("this error: not instanceof PlayerApiKernel");
+            Object tag = ((View) this).getTag(R.id.module_mediaplayer_id_player_switch_window_check_playing);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_switch_window_check_playing, null);
+            if (null == tag || ((boolean) tag))
+                throw new Exception("tag warning: null");
+            ((PlayerApiKernel) this).pause(true);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => switchPlaying => " + e.getMessage());
+        }
+    }
+
+    default boolean startFull(boolean rememberPlaying) {
         try {
             boolean isPhoneWindow = isParentEqualsPhoneWindow();
             if (isPhoneWindow)
@@ -109,6 +134,9 @@ interface PlayerApiRender extends PlayerApiBase {
                 resetRender();
                 callPlayerEvent(PlayerType.StateType.STATE_FULL_START);
                 callWindowEvent(PlayerType.WindowType.FULL);
+            }
+            if (rememberPlaying) {
+                checkPlaying();
             }
             return b;
         } catch (Exception e) {
@@ -123,6 +151,7 @@ interface PlayerApiRender extends PlayerApiBase {
             if (!isFull)
                 throw new Exception("not full");
             boolean b = switchToPlayerLayout();
+            switchPlaying();
             if (b) {
                 resetRender();
                 callPlayerEvent(PlayerType.StateType.STATE_FULL_STOP);
@@ -136,7 +165,7 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
-    default boolean startFloat() {
+    default boolean startFloat(boolean rememberPlaying) {
         try {
             boolean isPhoneWindow = isParentEqualsPhoneWindow();
             if (isPhoneWindow)
@@ -146,6 +175,9 @@ interface PlayerApiRender extends PlayerApiBase {
                 resetRender();
                 callPlayerEvent(PlayerType.StateType.STATE_FLOAT_START);
                 callWindowEvent(PlayerType.WindowType.FLOAT);
+            }
+            if (rememberPlaying) {
+                checkPlaying();
             }
             return switchToDecorView;
         } catch (Exception e) {
@@ -160,6 +192,7 @@ interface PlayerApiRender extends PlayerApiBase {
             if (!isFloat)
                 throw new Exception("not Float");
             boolean switchToPlayerLayout = switchToPlayerLayout();
+            switchPlaying();
             if (switchToPlayerLayout) {
                 resetRender();
                 callPlayerEvent(PlayerType.StateType.STATE_FLOAT_STOP);

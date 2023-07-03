@@ -20,7 +20,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void callPlayerEvent(int playState) {
+    public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_START:
                 MPLogUtil.log("ComponentLoading => callPlayerEvent => show => playState = " + playState);
@@ -34,7 +34,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void callWindowEvent(int state) {
+    public void callWindowEvent(int state) {
         switch (state) {
             case PlayerType.WindowType.FLOAT:
             case PlayerType.WindowType.NORMAL:

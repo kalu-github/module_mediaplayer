@@ -30,7 +30,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void callPlayerEvent(int playState) {
+    public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_BUFFERING_START:
                 MPLogUtil.log("ComponentNet => onPlayStateChanged => playState = " + playState);
@@ -48,7 +48,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void callWindowEvent(int state) {
+    public void callWindowEvent(int state) {
         switch (state) {
             case PlayerType.WindowType.FLOAT:
             case PlayerType.WindowType.NORMAL:

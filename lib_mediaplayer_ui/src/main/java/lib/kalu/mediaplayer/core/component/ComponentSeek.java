@@ -136,7 +136,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void callPlayerEvent(int playState) {
+    public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_FAST_FORWARD_START:
             case PlayerType.StateType.STATE_FAST_REWIND_START:
@@ -161,7 +161,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void callWindowEvent(int windowState) {
+    public void callWindowEvent(int windowState) {
         switch (windowState) {
             default:
                 gone();

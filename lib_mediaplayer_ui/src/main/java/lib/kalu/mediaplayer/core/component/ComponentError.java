@@ -26,7 +26,7 @@ public class ComponentError extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void callPlayerEvent(int playState) {
+    public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ERROR_IGNORE:

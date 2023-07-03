@@ -24,7 +24,7 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void callPlayerEvent(int playState) {
+    public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_INIT:
                 MPLogUtil.log("ComponentInit[show] => playState = " + playState);
