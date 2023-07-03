@@ -139,6 +139,27 @@ public final class TestActivity extends Activity {
                 playerLayout.hideComponent(ComponentNet.class);
             }
         });
+        findViewById(R.id.module_mediaplayer_test_button11).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+                playerLayout.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
+            }
+        });
+        findViewById(R.id.module_mediaplayer_test_button10).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+                playerLayout.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_4_3);
+            }
+        });
+        findViewById(R.id.module_mediaplayer_test_button9).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+                playerLayout.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);
+            }
+        });
     }
 
     private void initComponent() {

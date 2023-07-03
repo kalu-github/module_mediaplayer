@@ -152,29 +152,6 @@ public class RenderTextureView extends TextureView implements RenderApi {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = MeasureSpec.getSize(heightMeasureSpec);
-//        MPLogUtil.log("RenderTextureView => onMeasure => width = " + width + ", height = " + height);
-        setMeasuredDimension(width, height);
-    }
-
-    @Override
-    public void setVideoSize(int videoWidth, int videoHeight) {
-    }
-
-    @Override
-    public void setVideoRotation(int degree) {
-
-    }
-
-    @Override
-    public void setScaleType(int scaleType) {
-
-    }
-
-    @Override
     public String screenshot() {
         Context context = getContext();
         Bitmap bitmap = getBitmap();
@@ -192,20 +169,6 @@ public class RenderTextureView extends TextureView implements RenderApi {
     @Override
     public void updateBuffer(int delayMillis) {
 
-    }
-
-    /**
-     * 记得一定要重新写这个方法，如果角度发生了变化，就重新绘制布局
-     * 设置视频旋转角度
-     *
-     * @param rotation 角度
-     */
-    @Override
-    public void setRotation(float rotation) {
-        if (rotation != getRotation()) {
-            super.setRotation(rotation);
-            requestLayout();
-        }
     }
 
     @Override
@@ -231,5 +194,47 @@ public class RenderTextureView extends TextureView implements RenderApi {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         return false;
+    }
+
+    /****************/
+
+    /************/
+
+    /**
+     * 记得一定要重新写这个方法，如果角度发生了变化，就重新绘制布局
+     * 设置视频旋转角度
+     *
+     * @param rotation 角度
+     */
+    @Override
+    public void setRotation(float rotation) {
+        if (rotation != getRotation()) {
+            super.setRotation(rotation);
+            requestLayout();
+        }
+    }
+
+    @Override
+    public void setVideoRotation(int videoRotationDegree) {
+        RenderApi.super.setVideoRotation(videoRotationDegree);
+        requestLayout();
+    }
+
+    @Override
+    public void setScaleType(int scaleType) {
+        RenderApi.super.setScaleType(scaleType);
+        requestLayout();
+    }
+
+    @Override
+    public void setVideoSize(int width, int height) {
+        RenderApi.super.setVideoSize(width, height);
+        requestLayout();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int[] measureSpec = doMeasureSpec(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(measureSpec[0], measureSpec[1]);
     }
 }

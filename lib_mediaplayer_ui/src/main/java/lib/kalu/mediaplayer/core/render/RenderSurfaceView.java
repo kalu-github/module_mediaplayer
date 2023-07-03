@@ -129,6 +129,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
                 MPLogUtil.log("RenderSurfaceView => addListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
+                setVideoSize(width, height);
             }
 
             /**
@@ -177,14 +178,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     }
 
     @Override
-    public void setVideoRotation(int degree) {
-    }
-
-    @Override
-    public void setScaleType(int scaleType) {
-    }
-
-    @Override
     public String screenshot() {
         Context context = getContext();
         Bitmap bitmap = getDrawingCache();
@@ -222,50 +215,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         }
     }
 
-    /**
-     * 释放资源
-     */
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width;
-        int height;
-        if (mVideoWidth > 0 && mVideoHeight > 0) {
-            width = MeasureSpec.makeMeasureSpec(mVideoWidth, MeasureSpec.EXACTLY);
-            height = MeasureSpec.makeMeasureSpec(mVideoHeight, MeasureSpec.EXACTLY);
-            mVideoWidth = 0;
-            mVideoHeight = 0;
-        } else {
-            width = MeasureSpec.getSize(widthMeasureSpec);
-            height = MeasureSpec.getSize(heightMeasureSpec);
-        }
-        setMeasuredDimension(width, height);
-        getHolder().setFixedSize(width, height);
-    }
-
-    private int mVideoWidth;
-    private int mVideoHeight;
-
-    @Override
-    public void setVideoSize(int videoWidth, int videoHeight) {
-        mVideoWidth = videoWidth;
-        mVideoHeight = videoHeight;
-        requestLayout();
-    }
-
-    /**
-     * 记得一定要重新写这个方法，如果角度发生了变化，就重新绘制布局
-     * 设置视频旋转角度
-     *
-     * @param rotation 角度
-     */
-    @Override
-    public void setRotation(float rotation) {
-        if (rotation != getRotation()) {
-            super.setRotation(rotation);
-            requestLayout();
-        }
-    }
-
     @Override
     public boolean hasFocus() {
         return false;
@@ -289,5 +238,46 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         return false;
+    }
+
+    /************/
+
+    /**
+     * 记得一定要重新写这个方法，如果角度发生了变化，就重新绘制布局
+     * 设置视频旋转角度
+     *
+     * @param rotation 角度
+     */
+    @Override
+    public void setRotation(float rotation) {
+        if (rotation != getRotation()) {
+            super.setRotation(rotation);
+            requestLayout();
+        }
+    }
+
+    @Override
+    public void setVideoRotation(int videoRotationDegree) {
+        RenderApi.super.setVideoRotation(videoRotationDegree);
+        requestLayout();
+    }
+
+    @Override
+    public void setScaleType(int scaleType) {
+        RenderApi.super.setScaleType(scaleType);
+        requestLayout();
+    }
+
+    @Override
+    public void setVideoSize(int width, int height) {
+        RenderApi.super.setVideoSize(width, height);
+        requestLayout();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int[] measureSpec = doMeasureSpec(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(measureSpec[0], measureSpec[1]);
+        getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
     }
 }

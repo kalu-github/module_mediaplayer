@@ -30,7 +30,9 @@ final class PlayerView extends RelativeLayout implements PlayerApi {
         // player
         RelativeLayout layoutPlayer = new RelativeLayout(getContext());
         layoutPlayer.setId(R.id.module_mediaplayer_video);
-        layoutPlayer.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        layoutPlayer.setLayoutParams(layoutParams);
         addView(layoutPlayer);
         // control
         RelativeLayout controlPlayer = new RelativeLayout(getContext());

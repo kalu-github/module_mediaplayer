@@ -19,6 +19,38 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/module_mediaplayer_test_button12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:text="90" />
+
+        <Button
+            android:id="@+id/module_mediaplayer_test_button11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:text="match_parent" />
+
+        <Button
+            android:id="@+id/module_mediaplayer_test_button10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:text="4:3" />
+
+        <Button
+            android:id="@+id/module_mediaplayer_test_button9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:text="16:9" />
+
+        <Button
             android:id="@+id/module_mediaplayer_test_button8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
