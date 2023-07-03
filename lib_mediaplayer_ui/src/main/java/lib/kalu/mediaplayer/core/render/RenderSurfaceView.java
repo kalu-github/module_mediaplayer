@@ -90,11 +90,11 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         setFocusable(false);
         setFocusableInTouchMode(false);
         addListener();
-        getHolder().setType(SurfaceHolder.SURFACE_TYPE_NORMAL);
         //画布透明处理
-        this.setZOrderOnTop(true);
+        setZOrderOnTop(true);
+        setZOrderMediaOverlay(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
-
+        getHolder().setType(SurfaceHolder.SURFACE_TYPE_NORMAL);
     }
 
     @Override

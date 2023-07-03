@@ -547,10 +547,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default void setKernel(@PlayerType.KernelType.Value int v) {
         try {
-            PlayerBuilder config = PlayerManager.getInstance().getConfig();
-            PlayerBuilder.Builder builder = config.newBuilder();
-            builder.setKernel(v);
-            PlayerManager.getInstance().setConfig(config);
+            PlayerManager.getInstance().setKernel(v);
         } catch (Exception e) {
         }
     }

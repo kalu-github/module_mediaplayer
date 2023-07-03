@@ -257,10 +257,7 @@ interface PlayerApiRender extends PlayerApiBase {
 
     default void setRender(@PlayerType.RenderType int v) {
         try {
-            PlayerBuilder config = PlayerManager.getInstance().getConfig();
-            PlayerBuilder.Builder builder = config.newBuilder();
-            builder.setRender(v);
-            PlayerManager.getInstance().setConfig(config);
+            PlayerManager.getInstance().setRender(v);
         } catch (Exception e) {
         }
     }
