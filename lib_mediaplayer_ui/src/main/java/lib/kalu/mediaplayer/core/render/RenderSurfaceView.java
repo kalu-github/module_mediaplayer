@@ -90,6 +90,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         setFocusable(false);
         setFocusableInTouchMode(false);
         addListener();
+        getHolder().setType(SurfaceHolder.SURFACE_TYPE_NORMAL);
         //画布透明处理
         this.setZOrderOnTop(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
@@ -106,15 +107,11 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
              */
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                MPLogUtil.log("RenderSurfaceView => addListener => surfaceCreated => mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
+                MPLogUtil.log("RenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + "mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
                 if (mKernel != null) {
                     mSurface = holder.getSurface();
-                    int width = getWidth();
-                    int height = getHeight();
-//                    getHolder().setFixedSize(width, height);
-                    mKernel.setSurface(mSurface, width, height);
+                    mKernel.setSurface(mSurface, 0, 0);
                 }
-
                 if (null == mHandler) {
                     addHandler();
                 }
@@ -180,11 +177,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     }
 
     @Override
-    public void setVideoSize(int videoWidth, int videoHeight) {
-        getHolder().setFixedSize(videoWidth, videoHeight);
-    }
-
-    @Override
     public void setVideoRotation(int degree) {
     }
 
@@ -235,12 +227,29 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = MeasureSpec.getSize(heightMeasureSpec);
-//        MPLogUtil.log("RenderSurfaceView => onMeasure => width = " + width + ", height = " + height);
+        int width;
+        int height;
+        if (mVideoWidth > 0 && mVideoHeight > 0) {
+            width = MeasureSpec.makeMeasureSpec(mVideoWidth, MeasureSpec.EXACTLY);
+            height = MeasureSpec.makeMeasureSpec(mVideoHeight, MeasureSpec.EXACTLY);
+            mVideoWidth = 0;
+            mVideoHeight = 0;
+        } else {
+            width = MeasureSpec.getSize(widthMeasureSpec);
+            height = MeasureSpec.getSize(heightMeasureSpec);
+        }
         setMeasuredDimension(width, height);
-        setVideoSize(width, height);
+        getHolder().setFixedSize(width, height);
+    }
+
+    private int mVideoWidth;
+    private int mVideoHeight;
+
+    @Override
+    public void setVideoSize(int videoWidth, int videoHeight) {
+        mVideoWidth = videoWidth;
+        mVideoHeight = videoHeight;
+        requestLayout();
     }
 
     /**
