@@ -221,49 +221,49 @@
             android:id="@+id/main_radio3"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:tag="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+            android:tag="@string/url_mp4"
             android:text="mp4" />
 
         <RadioButton
             android:id="@+id/main_radio4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:tag="http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com"
+            android:tag="@string/url_m3u8"
             android:text="m3u8" />
 
         <RadioButton
             android:id="@+id/main_radio5"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:tag="rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4"
+            android:tag="@string/url_rtsp"
             android:text="rtsp" />
 
         <RadioButton
             android:id="@+id/main_radio6"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:tag="rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp"
+            android:tag="@string/url_rtmp"
             android:text="rtmp" />
 
         <RadioButton
             android:id="@+id/main_radio7"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:tag="udp://224.255.0.247:10000"
+            android:tag="@string/url_udp"
             android:text="udp" />
 
         <RadioButton
             android:id="@+id/main_radio8"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:tag="http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&amp;amp;bizid=1023&amp;amp;hy=SH&amp;amp;fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400"
+            android:tag="@string/url_tencent"
             android:text="test" />
 
         <RadioButton
             android:id="@+id/main_radio9"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:tag="https://link.jianshu.com/?t=https%3A%2F%2Fdevimages.apple.com.edgekey.net%2Fstreaming%2Fexamples%2Fbipbop_4x3%2Fbipbop_4x3_variant.m3u8"
+            android:tag="@string/url_https"
             android:text="https" />
         <!--        <RadioButton-->
         <!--            android:id="@+id/main_radio9"-->

@@ -8,7 +8,13 @@
     <string name="retry">重试</string>
     <string name="loading">加载中</string>
     <string name="error">发生错误</string>
-
+    <string name="url_mp4">http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4</string>
+    <string name="url_m3u8">http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com</string>
+    <string name="url_rtsp">rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4</string>
+    <string name="url_rtmp">rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp</string>
+    <string name="url_udp">udp://224.255.0.247:10000</string>
+    <string name="url_tencent">http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&amp;amp;bizid=1023&amp;amp;hy=SH&amp;amp;fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400</string>
+    <string name="url_https">https://link.jianshu.com/?t=https%3A%2F%2Fdevimages.apple.com.edgekey.net%2Fstreaming%2Fexamples%2Fbipbop_4x3%2Fbipbop_4x3_variant.m3u8</string>
     <string name="url_dash1">https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd</string>
     <string name="url_dash2">https://dash.akamaized.net/akamai/bbb_30fps/bbb-manifest-refresh.mpd</string>
     <string name="url_sx1">http://zteres.sn.chinamobile.com:6060/ystxds/32/movie62ff2023041019270000?AuthInfo=XtytY6od2CoxL3Ece34qrDut5VCPsz5XztCLvxBRpErVaX%2F0PpXSHHk8ZrK18wSwUcPUBpKvvT33aM%2FbcRBNJw%3D%3D&amp;version=v1.0&amp;BreakPoint=0&amp;virtualDomain=ystxds.vod_hpd.zte.com&amp;mescid=00000050280009590769&amp;programid=&amp;contentid=movie62ff2023041019270000&amp;videoid=00000050280009590769&amp;recommendtype=0&amp;userid=A089E4CA0921&amp;boid=&amp;stbid=&amp;terminalflag=1&amp;profilecode=&amp;usersessionid=755219691</string>
