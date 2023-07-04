@@ -10,6 +10,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender, PlayerApiExternalMusic {
 
     default boolean dispatchKeyEventPlayer(@NonNull KeyEvent event) {
+        MPLogUtil.log("PlayerApi => dispatchKeyEventPlayer => action = " + event.getAction() + ", code = " + event.getKeyCode());
         dispatchKeyEventComponentAll(event);
         // float
         if (isFloat()) {
@@ -29,7 +30,10 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                 return true;
             }
             // keycode_dpad_center
-            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                if (event.getRepeatCount() == 0 && event.getAction() == KeyEvent.ACTION_UP) {
+                    toggle();
+                }
                 return true;
             }
             // keycode_dpad_left

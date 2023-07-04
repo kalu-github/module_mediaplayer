@@ -22,33 +22,6 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_pause, this, true);
     }
 
-    private long startTime = System.currentTimeMillis();
-
-    @Override
-    public boolean dispatchKeyEventComponent(KeyEvent event) {
-        // center
-        if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-                try {
-                    PlayerApi playerApi = getPlayerApi();
-                    if (null == playerApi)
-                        throw new Exception("playerApi error: null");
-                    long position = playerApi.getPosition();
-                    if (position <= 0)
-                        throw new Exception("position error: " + position);
-                    long timeMillis = System.currentTimeMillis();
-                    if (timeMillis - startTime < 100)
-                        throw new Exception("timeMillis error: " + timeMillis + ", startTime = " + startTime);
-                    startTime = timeMillis;
-                    playerApi.toggle();
-                } catch (Exception e) {
-                    MPLogUtil.log("ComponentPause => dispatchKeyEventComponent => " + e.getMessage());
-                }
-            }
-        }
-        return false;
-    }
-
     @Override
     public void callPlayerEvent(int playState) {
         switch (playState) {
