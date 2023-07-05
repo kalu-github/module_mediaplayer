@@ -31,7 +31,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             }
             // keycode_dpad_center
             else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                if (event.getRepeatCount() == 0 && event.getAction() == KeyEvent.ACTION_UP) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
                     toggle();
                 }
                 return true;

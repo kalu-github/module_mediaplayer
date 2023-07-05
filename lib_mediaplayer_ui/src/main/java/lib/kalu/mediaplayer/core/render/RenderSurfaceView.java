@@ -270,7 +270,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Override
     public void setVideoSize(int width, int height) {
-        RenderApi.super.setVideoSize(width, height);
+//        RenderApi.super.setVideoSize(width, height);
         requestLayout();
     }
 

@@ -61,7 +61,6 @@ public class PlayerLayout extends RelativeLayout {
             if (childCount > 0)
                 throw new Exception("childCount warning: " + childCount);
             PlayerView playerView = new PlayerView(getContext());
-            playerView.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
             playerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
             addView(playerView);
         } catch (Exception e) {

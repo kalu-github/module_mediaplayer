@@ -10,6 +10,7 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.core.render.RenderApi;
@@ -25,6 +26,7 @@ final class PlayerView extends RelativeLayout implements PlayerApi {
 
     public PlayerView(Context context) {
         super(context);
+        setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
         // id
         setId(R.id.module_mediaplayer_root);
         // player
