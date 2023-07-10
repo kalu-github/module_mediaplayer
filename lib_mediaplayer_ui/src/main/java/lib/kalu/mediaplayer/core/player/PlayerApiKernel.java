@@ -720,10 +720,11 @@ interface PlayerApiKernel extends PlayerApiListener,
                 }
 
                 @Override
-                public void onChanged(int kernel, int width, int height, int rotation) {
+                public void onMeasure(int kernel, int videoWidth, int videoHeight, @PlayerType.RotationType.Value int rotation) {
+                    MPLogUtil.log("PlayerApiKernel => onMeasure = kernel = " + kernel + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", rotation = " + rotation);
                     int scaleType = PlayerManager.getInstance().getConfig().getScaleType();
                     setVideoScaleType(scaleType);
-                    setVideoSize(width, height);
+                    setVideoSize(videoWidth, videoHeight);
                     setVideoRotation(rotation);
                 }
             });

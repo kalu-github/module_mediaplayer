@@ -159,38 +159,11 @@ public final class TestActivity extends Activity {
                 } else if (checkedRadioButtonId == R.id.module_mediaplayer_angle4) {
                     angle = PlayerType.RotationType.Rotation_90;
                 } else {
-                    angle = PlayerType.RotationType.Rotation_360;
+                    angle = PlayerType.RotationType.Rotation_0;
                 }
                 Toast.makeText(getApplicationContext(), "angle = " + angle, Toast.LENGTH_SHORT).show();
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
                 playerLayout.setVideoRotation(angle);
-            }
-        });
-
-        // 填充模式
-        findViewById(R.id.module_mediaplayer_test_button22).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                @PlayerType.ScaleType.Value
-                int scale;
-                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_scale);
-                int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-                if (checkedRadioButtonId == R.id.module_mediaplayer_scale1) {
-                    scale = PlayerType.ScaleType.SCREEN_SCALE_DEFAULT;
-                } else if (checkedRadioButtonId == R.id.module_mediaplayer_scale2) {
-                    scale = PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL;
-                } else if (checkedRadioButtonId == R.id.module_mediaplayer_scale3) {
-                    scale = PlayerType.ScaleType.SCREEN_SCALE_CENTER_CROP;
-                } else if (checkedRadioButtonId == R.id.module_mediaplayer_scale5) {
-                    scale = PlayerType.ScaleType.SCREEN_SCALE_4_3;
-                } else if (checkedRadioButtonId == R.id.module_mediaplayer_scale6) {
-                    scale = PlayerType.ScaleType.SCREEN_SCALE_16_9;
-                } else {
-                    scale = PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT;
-                }
-                Toast.makeText(getApplicationContext(), "scale = " + scale, Toast.LENGTH_SHORT).show();
-                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                playerLayout.setVideoScaleType(scale);
             }
         });
     }

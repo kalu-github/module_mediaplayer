@@ -66,6 +66,17 @@ public abstract class BasePlayer implements KernelApi {
     }
 
     @Override
+    public void onMeasure(int kernel, int videoWidth, int videoHeight, int rotation) {
+        try {
+            if (null == eventApi || null == eventApi)
+                throw new Exception("eventApi error: null");
+            eventApi.onMeasure(kernel, videoWidth, videoHeight, rotation);
+        } catch (Exception e) {
+            MPLogUtil.log("BasePlayer => onMeasure => " + e.getMessage());
+        }
+    }
+
+    @Override
     public boolean isExternalMusicPlayWhenReady() {
         try {
             return playerApi.isExternalMusicPlayWhenReady();

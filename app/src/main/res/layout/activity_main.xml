@@ -10,6 +10,59 @@
         android:layout_height="20dp"
         android:layout_marginLeft="6dp"
         android:gravity="center_vertical|left"
+        android:text="填充类型"
+        android:textSize="14sp" />
+
+    <RadioGroup
+        android:id="@+id/main_scale"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/main_scale1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="default" />
+
+        <RadioButton
+            android:id="@+id/main_scale2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="original" />
+
+        <RadioButton
+            android:id="@+id/main_scale3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="matchParent" />
+
+        <RadioButton
+            android:id="@+id/main_scale4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cropCenter" />
+
+        <RadioButton
+            android:id="@+id/main_scale5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4:3" />
+
+        <RadioButton
+            android:id="@+id/main_scale6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="16:9" />
+
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="6dp"
+        android:gravity="center_vertical|left"
         android:text="渲染类型"
         android:textSize="14sp" />
 
@@ -202,6 +255,13 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/main_radio0"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:tag="v_3_4.mp4"
+            android:text="mkv" />
 
         <RadioButton
             android:id="@+id/main_radio1"

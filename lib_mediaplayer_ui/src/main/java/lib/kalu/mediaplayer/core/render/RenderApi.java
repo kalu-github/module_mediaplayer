@@ -90,23 +90,17 @@ public interface RenderApi {
         mVideoRotation[0] = videoRotation;
     }
 
-    /**
-     * 设置视频宽高
-     *
-     * @param width  宽
-     * @param height 高
-     */
-    default void setVideoSize(int width, int height) {
-        mVideoWidth[0] = width;
-        mVideoHeight[0] = height;
+    default void setVideoSize(int videoWidth, int videoHeight) {
+        try {
+            if (videoWidth <= 0 || videoHeight <= 0)
+                throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
+            mVideoWidth[0] = videoWidth;
+            mVideoHeight[0] = videoHeight;
+        } catch (Exception e) {
+            MPLogUtil.log("RenderApi => setVideoSize => " + e.getMessage());
+        }
     }
 
-
-    /**
-     * 设置screen scale type
-     *
-     * @param scaleType 类型
-     */
     default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
         mVideoScaleType[0] = scaleType;
     }
@@ -117,8 +111,6 @@ public interface RenderApi {
      */
     default int[] doMeasureSpec(int widthMeasureSpec, int heightMeasureSpec) {
 
-        MPLogUtil.log("RenderApi => doMeasureSpec => mVideoRotation = " + mVideoRotation[0] + ", mVideoScaleType = " + mVideoScaleType[0] + ", mVideoWidth = " + mVideoWidth[0] + ", mVideoHeight = " + mVideoHeight[0]);
-
         if (mVideoRotation[0] == 90 || mVideoRotation[0] == 270) {
             // 软解码时处理旋转信息，交换宽高
             widthMeasureSpec = widthMeasureSpec + heightMeasureSpec;
@@ -126,62 +118,61 @@ public interface RenderApi {
             widthMeasureSpec = widthMeasureSpec - heightMeasureSpec;
         }
 
-        int width = View.MeasureSpec.getSize(widthMeasureSpec);
-        int height = View.MeasureSpec.getSize(heightMeasureSpec);
-
+        int measureWidth = View.MeasureSpec.getSize(widthMeasureSpec);
+        int measureHeight = View.MeasureSpec.getSize(heightMeasureSpec);
+        MPLogUtil.log("RenderApi => doMeasureSpec => mVideoRotation = " + mVideoRotation[0] + ", mVideoScaleType = " + mVideoScaleType[0] + ", mVideoWidth = " + mVideoWidth[0] + ", mVideoHeight = " + mVideoHeight[0] + ", measureWidth = " + measureWidth + ", measureHeight = " + measureHeight);
 
         try {
             if (mVideoHeight[0] == 0 || mVideoWidth[0] == 0)
                 throw new Exception("mVideoHeight error: " + mVideoHeight + ", mVideoWidth = " + mVideoWidth);
             switch (mVideoScaleType[0]) {
+                // 默认类型
+                default:
+                    if (mVideoWidth[0] * measureHeight < measureWidth * mVideoHeight[0]) {
+                        measureWidth = measureHeight * mVideoWidth[0] / mVideoHeight[0];
+                    } else if (mVideoWidth[0] * measureHeight > measureWidth * mVideoHeight[0]) {
+                        measureHeight = measureWidth * mVideoHeight[0] / mVideoWidth[0];
+                    }
+                    break;
+                // 裁剪类型
+                case PlayerType.ScaleType.SCREEN_SCALE_CENTER_CROP:
+                    if (mVideoWidth[0] * measureHeight > measureWidth * mVideoHeight[0]) {
+                        measureWidth = measureHeight * mVideoWidth[0] / mVideoHeight[0];
+                    } else {
+                        measureHeight = measureWidth * mVideoHeight[0] / mVideoWidth[0];
+                    }
+                    break;
                 // 4:3
                 case PlayerType.ScaleType.SCREEN_SCALE_4_3:
-                    if (height > width / 4 * 3) {
-                        height = width / 4 * 3;
+                    if (measureHeight > measureWidth / 4 * 3) {
+                        measureHeight = measureWidth / 4 * 3;
                     } else {
-                        width = height / 3 * 4;
+                        measureWidth = measureHeight / 3 * 4;
                     }
                     break;
                 // 16:9
                 case PlayerType.ScaleType.SCREEN_SCALE_16_9:
-                    if (height > width / 16 * 9) {
-                        height = width / 16 * 9;
+                    if (measureHeight > measureWidth / 16 * 9) {
+                        measureHeight = measureWidth / 16 * 9;
                     } else {
-                        width = height / 9 * 16;
+                        measureWidth = measureHeight / 9 * 16;
                     }
                     break;
                 // 原始类型，指视频的原始类型
                 case PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL:
-                    width = mVideoWidth[0];
-                    height = mVideoHeight[0];
-                    break;
-                //默认正常类型
-                case PlayerType.ScaleType.SCREEN_SCALE_DEFAULT:
-                default:
-                    if (mVideoWidth[0] * height < width * mVideoHeight[0]) {
-                        width = height * mVideoWidth[0] / mVideoHeight[0];
-                    } else if (mVideoWidth[0] * height > width * mVideoHeight[0]) {
-                        height = width * mVideoHeight[0] / mVideoWidth[0];
-                    }
+                    measureWidth = mVideoWidth[0];
+                    measureHeight = mVideoHeight[0];
                     break;
                 //充满整个控件视图
                 case PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT:
-                    width = widthMeasureSpec;
-                    height = heightMeasureSpec;
-                    break;
-                //剧中裁剪类型
-                case PlayerType.ScaleType.SCREEN_SCALE_CENTER_CROP:
-                    if (mVideoWidth[0] * height > width * mVideoHeight[0]) {
-                        width = height * mVideoWidth[0] / mVideoHeight[0];
-                    } else {
-                        height = width * mVideoHeight[0] / mVideoWidth[0];
-                    }
+                    measureWidth = widthMeasureSpec;
+                    measureHeight = heightMeasureSpec;
                     break;
             }
-            return new int[]{width, height};
+            return new int[]{measureWidth, measureHeight};
         } catch (Exception e) {
             MPLogUtil.log("RenderApi => doMeasureSpec => " + e.getMessage(), e);
-            return new int[]{width, height};
+            return new int[]{measureWidth, measureHeight};
         }
     }
 

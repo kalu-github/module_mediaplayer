@@ -129,7 +129,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
                 MPLogUtil.log("RenderSurfaceView => addListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
-                setVideoSize(width, height);
             }
 
             /**

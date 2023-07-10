@@ -358,6 +358,18 @@ public final class VideoAndroidPlayer extends BasePlayer {
     private MediaPlayer.OnPreparedListener mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
+//            try {
+//                if (null == mp)
+//                    throw new Exception("mp error: null");
+//                int videoWidth = mp.getVideoWidth();
+//                int videoHeight = mp.getVideoHeight();
+//                MPLogUtil.log("VideoAndroidPlayer => onPrepared => videoWidth = " + videoWidth+", videoHeight = "+videoHeight);
+//                if (videoWidth < 0 || videoHeight < 0)
+//                    throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
+//                onChanged(PlayerType.KernelType.ANDROID, videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);
+//            } catch (Exception e) {
+//                MPLogUtil.log("VideoAndroidPlayer => onPrepared => " + e.getMessage());
+//            }
             try {
                 long seek = getSeek();
                 if (seek <= 0)
@@ -372,13 +384,16 @@ public final class VideoAndroidPlayer extends BasePlayer {
 
     private MediaPlayer.OnVideoSizeChangedListener onVideoSizeChangedListener = new MediaPlayer.OnVideoSizeChangedListener() {
         @Override
-        public void onVideoSizeChanged(MediaPlayer o, int width, int height) {
+        public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
             try {
-                int w = o.getVideoWidth();
-                int h = o.getVideoHeight();
-                if (w < 0 || h < 0)
-                    throw new Exception("w error: " + w + ", h error: " + h);
-                onChanged(PlayerType.KernelType.ANDROID, w, h, -1);
+                if (null == mp)
+                    throw new Exception("mp error: null");
+                int videoWidth = mp.getVideoWidth();
+                int videoHeight = mp.getVideoHeight();
+                MPLogUtil.log("VideoAndroidPlayer => onVideoSizeChanged => videoWidth = " + videoWidth+", videoHeight = "+videoHeight);
+                if (videoWidth < 0 || videoHeight < 0)
+                    throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
+                onMeasure(PlayerType.KernelType.ANDROID, videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);
             } catch (Exception e) {
                 MPLogUtil.log("VideoAndroidPlayer => onVideoSizeChanged => " + e.getMessage());
             }

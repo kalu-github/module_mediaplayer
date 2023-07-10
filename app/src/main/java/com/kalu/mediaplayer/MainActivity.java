@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
         }
 
-        if ("video-h265.mkv".equals(s) || "video-test.rmvb".equals(s)) {
+        if ("v_3_4.mp4".equals(s) || "v_1_1.mkv".equals(s) || "video-h265.mkv".equals(s) || "video-test.rmvb".equals(s)) {
             s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
         } else if ("video-h264-adts.m3u8".equals(s)) {
             s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
     }
 
     private void initAsset() {
-        List<String> list = Arrays.asList("video-h265.mkv", "video-test.rmvb", "video-h264-adts.m3u8", "video-h264-adts-0000.ts", "video-h264-adts-0001.ts", "video-sxgd.mpeg");
+        List<String> list = Arrays.asList("v_3_4.mp4", "v_1_1.mkv", "video-h265.mkv", "video-test.rmvb", "video-h264-adts.m3u8", "video-h264-adts-0000.ts", "video-h264-adts-0001.ts", "video-sxgd.mpeg");
         for (int i = 0; i < list.size(); i++) {
             String fromPath = list.get(i);
             String savePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + fromPath;
@@ -183,12 +183,36 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", exoFFmpeg = " + exoFFmpeg);
+        int scaleType;
+        int scaleTypeId = ((RadioGroup) findViewById(R.id.main_scale)).getCheckedRadioButtonId();
+        switch (scaleTypeId) {
+            case R.id.main_scale2:
+                scaleType = PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL;
+                break;
+            case R.id.main_scale3:
+                scaleType = PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT;
+                break;
+            case R.id.main_scale4:
+                scaleType = PlayerType.ScaleType.SCREEN_SCALE_CENTER_CROP;
+                break;
+            case R.id.main_scale5:
+                scaleType = PlayerType.ScaleType.SCREEN_SCALE_4_3;
+                break;
+            case R.id.main_scale6:
+                scaleType = PlayerType.ScaleType.SCREEN_SCALE_16_9;
+                break;
+            default:
+                scaleType = PlayerType.ScaleType.SCREEN_SCALE_DEFAULT;
+                break;
+        }
+
+        Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", exoFFmpeg = " + exoFFmpeg + ", scaleType = " + scaleType);
         PlayerManager.getInstance()
                 .setLog(true)
                 .setKernel(kernelType)
                 .setRender(renderType)
                 .setExoFFmpeg(exoFFmpeg)
+                .setScaleType(scaleType)
                 .setBuriedEvent(new LogBuriedEvent())
                 .build();
     }

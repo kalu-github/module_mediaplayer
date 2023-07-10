@@ -248,7 +248,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
 
                 @Override
                 public void onVideoSizeChanged(EventTime eventTime, VideoSize videoSize) {
-                    onChanged(PlayerType.KernelType.EXO_V2, videoSize.width, videoSize.height, videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : -1);
+                    onMeasure(PlayerType.KernelType.EXO_V2, videoSize.width, videoSize.height, videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : -1);
                 }
 
                 @Override

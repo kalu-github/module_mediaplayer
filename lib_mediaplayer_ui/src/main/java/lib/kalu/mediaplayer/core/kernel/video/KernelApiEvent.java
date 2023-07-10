@@ -14,6 +14,10 @@ public interface KernelApiEvent {
     default void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {
     }
 
-    default void onChanged(@PlayerType.KernelType.Value int kernel, int width, int height, int rotation) {
+    default void onMeasure(@PlayerType.KernelType.Value int kernel,
+                           int videoWidth,
+                           int videoHeight,
+                           @PlayerType.RotationType.Value
+                           int rotation) {
     }
 }

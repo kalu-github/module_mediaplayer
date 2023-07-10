@@ -49,51 +49,6 @@
 
         </RadioGroup>
 
-        <RadioGroup
-            android:id="@+id/module_mediaplayer_scale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/module_mediaplayer_scale1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="default" />
-
-            <RadioButton
-                android:id="@+id/module_mediaplayer_scale2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="original" />
-
-            <RadioButton
-                android:id="@+id/module_mediaplayer_scale3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="matchParent" />
-
-            <RadioButton
-                android:id="@+id/module_mediaplayer_scale4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="cropCenter" />
-
-            <RadioButton
-                android:id="@+id/module_mediaplayer_scale5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="4:3" />
-
-            <RadioButton
-                android:id="@+id/module_mediaplayer_scale6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="16:9" />
-
-        </RadioGroup>
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

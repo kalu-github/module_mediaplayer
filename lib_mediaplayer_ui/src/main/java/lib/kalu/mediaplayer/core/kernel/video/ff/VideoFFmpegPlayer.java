@@ -360,7 +360,7 @@ public final class VideoFFmpegPlayer extends BasePlayer {
                 int h = o.getVideoHeight();
                 if (w < 0 || h < 0)
                     throw new Exception("w error: " + w + ", h error: " + h);
-                onChanged(PlayerType.KernelType.ANDROID, w, h, -1);
+                onMeasure(PlayerType.KernelType.ANDROID, w, h, -1);
             } catch (Exception e) {
                 MPLogUtil.log("VideoFFmpegPlayer => onVideoSizeChanged => " + e.getMessage());
             }

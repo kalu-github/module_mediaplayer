@@ -185,15 +185,15 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
     @interface RotationType {
-        int Rotation_360 = 4_0011;
-        int Rotation_90 = 4_0012;
-        int Rotation_180 = 4_0013;
-        int Rotation_270 = 4_0014;
+        int Rotation_0 = 5_001;
+        int Rotation_90 = 5_002;
+        int Rotation_180 = 5_003;
+        int Rotation_270 = 5_004;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({Rotation_360,
+        @IntDef({Rotation_0,
                 Rotation_90,
                 Rotation_180,
                 Rotation_270})
@@ -210,13 +210,13 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
     @interface KernelType {
-        int ANDROID = 5_001; // MediaPlayer，基于原生自带的播放器控件
-        int EXO_V1 = 5_002; // exo
-        int EXO_V2 = 5_003; // exo
-        int IJK = 5_004; // ijk
-        int IJK_MEDIACODEC = 5_005; // ijk_mediacodec
-        int VLC = 5_006; // vlc
-        int FFPLAYER = 5_007; // ffplayer
+        int ANDROID = 6_001; // MediaPlayer，基于原生自带的播放器控件
+        int EXO_V1 = 6_002; // exo
+        int EXO_V2 = 6_003; // exo
+        int IJK = 6_004; // ijk
+        int IJK_MEDIACODEC = 6_005; // ijk_mediacodec
+        int VLC = 6_006; // vlc
+        int FFPLAYER = 6_007; // ffplayer
 
         @Documented
         @Retention(CLASS)
@@ -238,13 +238,13 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
     @interface EventType {
-        int EVENT_ERROR_URL = 6_001;
-        int EVENT_ERROR_RETRY = 6_002;
-        int EVENT_ERROR_SOURCE = 6_003;
-        int EVENT_ERROR_PARSE = 6_004;
-        int EVENT_ERROR_NET = 6_005;
-        int EVENT_LOADING_START = 6_006; // 开始转圈
-        int EVENT_LOADING_STOP = 6_007; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放
+        int EVENT_ERROR_URL = 7_001;
+        int EVENT_ERROR_RETRY = 7_002;
+        int EVENT_ERROR_SOURCE = 7_003;
+        int EVENT_ERROR_PARSE = 7_004;
+        int EVENT_ERROR_NET = 7_005;
+        int EVENT_LOADING_START = 7_006; // 开始转圈
+        int EVENT_LOADING_STOP = 7_007; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放
         // 播放结束
         //        // 开始渲染视频画面
 //        int EVENT_VIDEO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
@@ -253,7 +253,7 @@ public @interface PlayerType {
 //        // 开始渲染视频画面
 //        int EVENT_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
         // 开始渲染视频画面
-        int EVENT_VIDEO_END = 6_008;
+        int EVENT_VIDEO_END = 7_008;
         int EVENT_VIDEO_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
         int EVENT_VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
         //        int EVENT_VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
@@ -309,8 +309,8 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
     @interface RenderType {
-        int TEXTURE_VIEW = 7_001;
-        int SURFACE_VIEW = 7_002;
+        int TEXTURE_VIEW = 8_001;
+        int SURFACE_VIEW = 8_002;
 
         @IntDef({TEXTURE_VIEW,
                 SURFACE_VIEW})
@@ -326,10 +326,10 @@ public @interface PlayerType {
     @Keep
     @interface SeekType {
 
-        int EXO_SEEK_DEFAULT = 8_001;
-        int EXO_SEEK_CLOSEST_SYNC = 8_002;
-        int EXO_SEEK_PREVIOUS_SYNC = 8_003;
-        int EXO_SEEK_NEXT_SYNC = 8_004;
+        int EXO_SEEK_DEFAULT = 9_001;
+        int EXO_SEEK_CLOSEST_SYNC = 9_002;
+        int EXO_SEEK_PREVIOUS_SYNC = 9_003;
+        int EXO_SEEK_NEXT_SYNC = 9_004;
 
         @Documented
         @Retention(CLASS)
@@ -349,14 +349,14 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
     @interface FFmpegType {
-        int EXO_RENDERER_ONLY_MEDIACODEC = 9_001;
-        int EXO_RENDERER_ONLY_MEDIACODEC_AUDIO = 9_002;
-        int EXO_RENDERER_ONLY_MEDIACODEC_VIDEO = 9_003;
-        int EXO_RENDERER_ONLY_FFMPEG = 9_004;
-        int EXO_RENDERER_ONLY_FFMPEG_AUDIO = 9_005;
-        int EXO_RENDERER_ONLY_FFMPEG_VIDEO = 9_006;
-        int EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG = 9_007;
-        int EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC = 9_008;
+        int EXO_RENDERER_ONLY_MEDIACODEC = 10_001;
+        int EXO_RENDERER_ONLY_MEDIACODEC_AUDIO = 10_002;
+        int EXO_RENDERER_ONLY_MEDIACODEC_VIDEO = 10_003;
+        int EXO_RENDERER_ONLY_FFMPEG = 10_004;
+        int EXO_RENDERER_ONLY_FFMPEG_AUDIO = 10_005;
+        int EXO_RENDERER_ONLY_FFMPEG_VIDEO = 10_006;
+        int EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG = 10_007;
+        int EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC = 10_008;
 
         @Documented
         @Retention(CLASS)
