@@ -171,7 +171,7 @@ public interface RenderApi {
             }
             return new int[]{measureWidth, measureHeight};
         } catch (Exception e) {
-            MPLogUtil.log("RenderApi => doMeasureSpec => " + e.getMessage(), e);
+            MPLogUtil.log("RenderApi => doMeasureSpec => " + e.getMessage());
             return new int[]{measureWidth, measureHeight};
         }
     }
@@ -201,7 +201,7 @@ public interface RenderApi {
             String path = file.getAbsolutePath();
             return path;
         } catch (Exception e) {
-            MPLogUtil.log("saveBitmap => " + e.getMessage(), e);
+            MPLogUtil.log("RenderApi => saveBitmap => " + e.getMessage());
             return null;
         }
     }

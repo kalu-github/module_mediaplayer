@@ -15,7 +15,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import lib.kalu.mediaplayer.util.MPLogUtil;
- interface PlayerApiCache {
+
+interface PlayerApiCache {
 
     default boolean setCache(Context context, String key, String value) {
         FileOutputStream out = null;
@@ -106,9 +107,9 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 
     default void saveBundle(@NonNull Context context, @NonNull String url, @NonNull long position, @NonNull long duration) {
 
-        if (null == url || url.length() <= 0)
-            return;
         try {
+            if (null == url || url.length() == 0)
+                throw new Exception("url error: " + url);
             JSONObject object = new JSONObject();
             object.putOpt("url", url);
             object.putOpt("position", position);
@@ -116,7 +117,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
             String s = object.toString();
             setCache(context, "save_bundle", s);
         } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
+            MPLogUtil.log("PlayerApiCache => saveBundle => " + e.getMessage());
         }
     }
 }

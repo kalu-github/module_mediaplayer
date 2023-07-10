@@ -189,7 +189,7 @@ public final class VideoExoPlayer extends BasePlayer {
             seekHelp = help;
             mExoPlayer.seekTo(position);
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => " + e.getMessage(), e);
+            MPLogUtil.log("VideoExoPlayer => seekTo => " + e.getMessage());
         }
     }
 
@@ -221,12 +221,12 @@ public final class VideoExoPlayer extends BasePlayer {
 
     @Override
     public void setSurface(@NonNull Surface surface, int w, int h) {
-        if (null != surface && null != mExoPlayer) {
-            try {
-                mExoPlayer.setSurface(surface);
-            } catch (Exception e) {
-                MPLogUtil.log("VideoExoPlayer => " + e.getMessage(), e);
-            }
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            mExoPlayer.setSurface(surface);
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer => setSurface => " + e.getMessage());
         }
     }
 
@@ -257,32 +257,11 @@ public final class VideoExoPlayer extends BasePlayer {
      */
     @Override
     public float getSpeed() {
-//        try {
-//            return mSpeedPlaybackParameters.speed;
-//        } catch (Exception e) {
-//            return 1f;
-//        }
         return 1;
     }
 
     @Override
     public void setVolume(float v1, float v2) {
-//        try {
-//            float value;
-//            boolean mute = isMute();
-//            MPLogUtil.log("VideoExoPlayer => setVolume => mute = " + mute);
-//            if (mute) {
-//                value = 0F;
-//            } else {
-//                value = Math.max(v1, v2);
-//                if (value > 1f) {
-//                    value = 1f;
-//                }
-//            }
-//            MPLogUtil.log("VideoExoPlayer => setVolume => value = " + value);
-//        } catch (Exception e) {
-//            MPLogUtil.log("VideoExoPlayer => setVolume => " + e.getMessage(), e);
-//        }
     }
 
     @Override

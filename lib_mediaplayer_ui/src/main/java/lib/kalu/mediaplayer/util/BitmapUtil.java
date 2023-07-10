@@ -18,7 +18,7 @@ public final class BitmapUtil {
             Bitmap bitmap = bitmapDrawable.getBitmap();
             return saveBitmap(context, bitmap);
         } catch (Exception e) {
-            MPLogUtil.log("saveDrawable => " + e.getMessage(), e);
+            MPLogUtil.log("BitmapUtil => saveDrawable => " + e.getMessage());
             return null;
         }
     }
@@ -48,7 +48,7 @@ public final class BitmapUtil {
             String path = file.getAbsolutePath();
             return path;
         } catch (Exception e) {
-            MPLogUtil.log("saveBitmap => " + e.getMessage(), e);
+            MPLogUtil.log("BitmapUtil => saveBitmap => " + e.getMessage());
             return null;
         }
     }
@@ -78,7 +78,7 @@ public final class BitmapUtil {
             String path = file.getAbsolutePath();
             return path;
         } catch (Exception e) {
-            MPLogUtil.log("saveBitmap => " + e.getMessage(), e);
+            MPLogUtil.log("BitmapUtil => saveBitmap => " + e.getMessage());
             return null;
         }
     }

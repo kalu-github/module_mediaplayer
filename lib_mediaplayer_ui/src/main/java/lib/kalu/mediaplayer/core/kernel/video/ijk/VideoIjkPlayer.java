@@ -345,7 +345,6 @@ public final class VideoIjkPlayer extends BasePlayer {
     //        try {
     //            mIjkPlayer.setDataSource(new IMediaDataSourceForRaw(fd));
     //        } catch (Exception e) {
-    //            MPLogUtil.log(e.getMessage(), e);
     //        }
     //    }
 

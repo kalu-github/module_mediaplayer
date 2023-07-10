@@ -196,7 +196,6 @@ public final class VideoVlcPlayer extends BasePlayer {
 //        try {
 //            mPlayer.seekTo((int) time);
 //        } catch (IllegalStateException e) {
-//            MPLogUtil.log(e.getMessage(), e);
 //        }
     }
 

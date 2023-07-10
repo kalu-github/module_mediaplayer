@@ -71,7 +71,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             ((View) this).setTag(R.id.module_mediaplayer_id_player_looping, data.isLoop());
             ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release, data.isWindowVisibilityChangedRelease());
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => updatePlayerData => " + e.getMessage(), e);
+            MPLogUtil.log("PlayerApiKernel => updatePlayerData => " + e.getMessage());
         }
     }
 
@@ -103,10 +103,9 @@ interface PlayerApiKernel extends PlayerApiListener,
             if (duration < 0L) {
                 duration = 0L;
             }
-            MPLogUtil.log("PlayerApiKernel => getDuration => duration = " + duration);
             return duration;
         } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
+            MPLogUtil.log("PlayerApiKernel => getDuration => "+e.getMessage());
             return 0L;
         }
     }
@@ -742,9 +741,8 @@ interface PlayerApiKernel extends PlayerApiListener,
             RenderApi render = getRender();
             KernelApi kernel = getKernel();
             render.setKernel(kernel);
-            MPLogUtil.log("PlayerApiKernel => attachRender => render = " + render + ", kernel = " + kernel);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => attachRender => " + e.getMessage(), e);
+            MPLogUtil.log("PlayerApiKernel => attachRender => " + e.getMessage());
         }
     }
 
@@ -760,7 +758,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             kernel.createDecoder(getBaseContext(), log, seekParameters);
             MPLogUtil.log("PlayerApiKernel => createDecoder => succ");
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => createDecoder => " + e.getMessage(), e);
+            MPLogUtil.log("PlayerApiKernel => createDecoder => " + e.getMessage());
         }
     }
 
@@ -791,7 +789,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 //            Bitmap bitmap = retriever.getFrameAtTime(videoPosition, MediaMetadataRetriever.OPTION_CLOSEST);
 //            return BitmapUtil.saveScreenshot(getBaseContext(), bitmap);
 //        } catch (Exception e) {
-//            MPLogUtil.log("PlayerApiKernel => getScreenshotPath => " + e.getMessage(), e);
+//            MPLogUtil.log("PlayerApiKernel => getScreenshotPath => " + e.getMessage());
 //            return null;
 //        }
 //    }

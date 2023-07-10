@@ -64,17 +64,15 @@ public class SubtitleCache {
     }
 
     private static String getMD5(String str) {
-        if (str == null) {
-            return null;
-        }
         try {
+            if (null == str || str.length()==0)
+                throw new Exception("str error: "+str);
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(str.getBytes());
             return new BigInteger(1, md.digest()).toString(16);
         } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
+            MPLogUtil.log("SubtitleCache => getMD5 => " + e.getMessage());
             return null;
         }
     }
-
 }
