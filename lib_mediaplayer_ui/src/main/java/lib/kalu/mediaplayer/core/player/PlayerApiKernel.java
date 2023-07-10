@@ -752,11 +752,9 @@ interface PlayerApiKernel extends PlayerApiListener,
             checkKernel();
             // 2
             KernelApi kernel = getKernel();
-            MPLogUtil.log("PlayerApiKernel => createDecoder => kernel = " + kernel);
             boolean log = config.isLog();
             int seekParameters = config.getExoSeekParameters();
             kernel.createDecoder(getBaseContext(), log, seekParameters);
-            MPLogUtil.log("PlayerApiKernel => createDecoder => succ");
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => createDecoder => " + e.getMessage());
         }
