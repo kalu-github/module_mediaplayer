@@ -722,7 +722,7 @@ interface PlayerApiKernel extends PlayerApiListener,
                 @Override
                 public void onChanged(int kernel, int width, int height, int rotation) {
                     int scaleType = PlayerManager.getInstance().getConfig().getScaleType();
-                    setScaleType(scaleType);
+                    setVideoScaleType(scaleType);
                     setVideoSize(width, height);
                     setVideoRotation(rotation);
                 }

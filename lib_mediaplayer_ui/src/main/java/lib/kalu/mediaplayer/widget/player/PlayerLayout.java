@@ -330,14 +330,25 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void setScaleType(@PlayerType.ScaleType.Value int scaleType) {
+    public final void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.setScaleType(scaleType);
+            playerView.setVideoScaleType(scaleType);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => setScaleType => " + e.getMessage());
+            MPLogUtil.log("PlayerLayout => setVideoScaleType => " + e.getMessage());
+        }
+    }
+
+    public final void setVideoRotation(@PlayerType.RotationType.Value int rotationType) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setVideoRotation(rotationType);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => setVideoRotation => " + e.getMessage());
         }
     }
 

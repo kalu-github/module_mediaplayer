@@ -221,8 +221,8 @@ public class RenderTextureView extends TextureView implements RenderApi {
     }
 
     @Override
-    public void setScaleType(int scaleType) {
-        RenderApi.super.setScaleType(scaleType);
+    public void setVideoScaleType(int scaleType) {
+        RenderApi.super.setVideoScaleType(scaleType);
         requestLayout();
     }
 

@@ -263,14 +263,14 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     }
 
     @Override
-    public void setScaleType(int scaleType) {
-        RenderApi.super.setScaleType(scaleType);
+    public void setVideoScaleType(int scaleType) {
+        RenderApi.super.setVideoScaleType(scaleType);
         requestLayout();
     }
 
     @Override
     public void setVideoSize(int width, int height) {
-//        RenderApi.super.setVideoSize(width, height);
+        RenderApi.super.setVideoSize(width, height);
         requestLayout();
     }
 

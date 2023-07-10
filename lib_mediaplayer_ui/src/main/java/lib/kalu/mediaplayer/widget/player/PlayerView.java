@@ -26,7 +26,7 @@ final class PlayerView extends RelativeLayout implements PlayerApi {
 
     public PlayerView(Context context) {
         super(context);
-        setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
+        setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
         // id
         setId(R.id.module_mediaplayer_root);
         // player

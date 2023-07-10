@@ -1,5 +1,6 @@
 package lib.kalu.mediaplayer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -8,6 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Keep;
 
@@ -139,25 +143,54 @@ public final class TestActivity extends Activity {
                 playerLayout.hideComponent(ComponentNet.class);
             }
         });
-        findViewById(R.id.module_mediaplayer_test_button11).setOnClickListener(new View.OnClickListener() {
+
+        // 旋转角度
+        findViewById(R.id.module_mediaplayer_test_button21).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                @PlayerType.RotationType.Value
+                int angle;
+                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_angle);
+                int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+                if (checkedRadioButtonId == R.id.module_mediaplayer_angle2) {
+                    angle = PlayerType.RotationType.Rotation_270;
+                } else if (checkedRadioButtonId == R.id.module_mediaplayer_angle3) {
+                    angle = PlayerType.RotationType.Rotation_180;
+                } else if (checkedRadioButtonId == R.id.module_mediaplayer_angle4) {
+                    angle = PlayerType.RotationType.Rotation_90;
+                } else {
+                    angle = PlayerType.RotationType.Rotation_360;
+                }
+                Toast.makeText(getApplicationContext(), "angle = " + angle, Toast.LENGTH_SHORT).show();
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                playerLayout.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT);
+                playerLayout.setVideoRotation(angle);
             }
         });
-        findViewById(R.id.module_mediaplayer_test_button10).setOnClickListener(new View.OnClickListener() {
+
+        // 填充模式
+        findViewById(R.id.module_mediaplayer_test_button22).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                @PlayerType.ScaleType.Value
+                int scale;
+                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_scale);
+                int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+                if (checkedRadioButtonId == R.id.module_mediaplayer_scale1) {
+                    scale = PlayerType.ScaleType.SCREEN_SCALE_DEFAULT;
+                } else if (checkedRadioButtonId == R.id.module_mediaplayer_scale2) {
+                    scale = PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL;
+                } else if (checkedRadioButtonId == R.id.module_mediaplayer_scale3) {
+                    scale = PlayerType.ScaleType.SCREEN_SCALE_CENTER_CROP;
+                } else if (checkedRadioButtonId == R.id.module_mediaplayer_scale5) {
+                    scale = PlayerType.ScaleType.SCREEN_SCALE_4_3;
+                } else if (checkedRadioButtonId == R.id.module_mediaplayer_scale6) {
+                    scale = PlayerType.ScaleType.SCREEN_SCALE_16_9;
+                } else {
+                    scale = PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT;
+                }
+                Toast.makeText(getApplicationContext(), "scale = " + scale, Toast.LENGTH_SHORT).show();
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                playerLayout.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_4_3);
-            }
-        });
-        findViewById(R.id.module_mediaplayer_test_button9).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                playerLayout.setScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);
+                playerLayout.setVideoScaleType(scale);
             }
         });
     }

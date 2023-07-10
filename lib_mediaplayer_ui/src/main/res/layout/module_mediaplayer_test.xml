@@ -12,99 +12,168 @@
         android:focusable="true" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:gravity="center"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button12"
+        <RadioGroup
+            android:id="@+id/module_mediaplayer_angle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:text="90" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:text="match_parent" />
+            <RadioButton
+                android:id="@+id/module_mediaplayer_angle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="360" />
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:text="4:3" />
+            <RadioButton
+                android:id="@+id/module_mediaplayer_angle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="270" />
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:text="16:9" />
+            <RadioButton
+                android:id="@+id/module_mediaplayer_angle3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="180" />
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:text="信息" />
+            <RadioButton
+                android:id="@+id/module_mediaplayer_angle4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="90" />
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:text="跳转" />
+        </RadioGroup>
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button1"
+        <RadioGroup
+            android:id="@+id/module_mediaplayer_scale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:text="换台" />
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:text="全屏" />
+            <RadioButton
+                android:id="@+id/module_mediaplayer_scale1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="default" />
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:text="浮动" />
+            <RadioButton
+                android:id="@+id/module_mediaplayer_scale2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="original" />
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:text="show-component" />
+            <RadioButton
+                android:id="@+id/module_mediaplayer_scale3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="matchParent" />
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button5"
+            <RadioButton
+                android:id="@+id/module_mediaplayer_scale4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="cropCenter" />
+
+            <RadioButton
+                android:id="@+id/module_mediaplayer_scale5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4:3" />
+
+            <RadioButton
+                android:id="@+id/module_mediaplayer_scale6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="16:9" />
+
+        </RadioGroup>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:text="gone-component" />
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/module_mediaplayer_test_button21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:text="旋转角度" />
+
+            <Button
+                android:id="@+id/module_mediaplayer_test_button22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:text="填充模式" />
+
+            <Button
+                android:id="@+id/module_mediaplayer_test_button8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:text="信息" />
+
+            <Button
+                android:id="@+id/module_mediaplayer_test_button0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:text="跳转" />
+
+            <Button
+                android:id="@+id/module_mediaplayer_test_button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:text="换台" />
+
+            <Button
+                android:id="@+id/module_mediaplayer_test_button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:text="全屏" />
+
+            <Button
+                android:id="@+id/module_mediaplayer_test_button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:text="浮动" />
+
+            <Button
+                android:id="@+id/module_mediaplayer_test_button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:text="show-component" />
+
+            <Button
+                android:id="@+id/module_mediaplayer_test_button5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:text="gone-component" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

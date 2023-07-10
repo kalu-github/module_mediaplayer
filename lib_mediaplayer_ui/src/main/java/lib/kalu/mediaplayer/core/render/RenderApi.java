@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -77,16 +78,16 @@ public interface RenderApi {
 
     int[] mVideoWidth = new int[1];
     int[] mVideoHeight = new int[1];
-    int[] mScaleType = new int[1];
-    int[] mVideoRotationDegree = new int[1];
+    int[] mVideoScaleType = new int[1];
+    int[] mVideoRotation = new int[1];
 
     /**
      * 设置视频旋转角度
      *
-     * @param videoRotationDegree 角度值
+     * @param videoRotation 角度值
      */
-    default void setVideoRotation(int videoRotationDegree) {
-        mVideoRotationDegree[0] = videoRotationDegree;
+    default void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
+        mVideoRotation[0] = videoRotation;
     }
 
     /**
@@ -106,8 +107,8 @@ public interface RenderApi {
      *
      * @param scaleType 类型
      */
-    default void setScaleType(@PlayerType.ScaleType.Value int scaleType) {
-        mScaleType[0] = scaleType;
+    default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
+        mVideoScaleType[0] = scaleType;
     }
 
     /**
@@ -116,9 +117,9 @@ public interface RenderApi {
      */
     default int[] doMeasureSpec(int widthMeasureSpec, int heightMeasureSpec) {
 
-        MPLogUtil.log("RenderApi => doMeasureSpec => mScaleType = " + mScaleType[0] + ", mVideoWidth = " + mVideoWidth[0] + ", mVideoHeight = " + mVideoHeight[0]);
+        MPLogUtil.log("RenderApi => doMeasureSpec => mVideoRotation = " + mVideoRotation[0] + ", mVideoScaleType = " + mVideoScaleType[0] + ", mVideoWidth = " + mVideoWidth[0] + ", mVideoHeight = " + mVideoHeight[0]);
 
-        if (mVideoRotationDegree[0] == 90 || mVideoRotationDegree[0] == 270) {
+        if (mVideoRotation[0] == 90 || mVideoRotation[0] == 270) {
             // 软解码时处理旋转信息，交换宽高
             widthMeasureSpec = widthMeasureSpec + heightMeasureSpec;
             heightMeasureSpec = widthMeasureSpec - heightMeasureSpec;
@@ -128,57 +129,60 @@ public interface RenderApi {
         int width = View.MeasureSpec.getSize(widthMeasureSpec);
         int height = View.MeasureSpec.getSize(heightMeasureSpec);
 
-        if (mVideoHeight[0] == 0 || mVideoWidth[0] == 0) {
+
+        try {
+            if (mVideoHeight[0] == 0 || mVideoWidth[0] == 0)
+                throw new Exception("mVideoHeight error: " + mVideoHeight + ", mVideoWidth = " + mVideoWidth);
+            switch (mVideoScaleType[0]) {
+                // 4:3
+                case PlayerType.ScaleType.SCREEN_SCALE_4_3:
+                    if (height > width / 4 * 3) {
+                        height = width / 4 * 3;
+                    } else {
+                        width = height / 3 * 4;
+                    }
+                    break;
+                // 16:9
+                case PlayerType.ScaleType.SCREEN_SCALE_16_9:
+                    if (height > width / 16 * 9) {
+                        height = width / 16 * 9;
+                    } else {
+                        width = height / 9 * 16;
+                    }
+                    break;
+                // 原始类型，指视频的原始类型
+                case PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL:
+                    width = mVideoWidth[0];
+                    height = mVideoHeight[0];
+                    break;
+                //默认正常类型
+                case PlayerType.ScaleType.SCREEN_SCALE_DEFAULT:
+                default:
+                    if (mVideoWidth[0] * height < width * mVideoHeight[0]) {
+                        width = height * mVideoWidth[0] / mVideoHeight[0];
+                    } else if (mVideoWidth[0] * height > width * mVideoHeight[0]) {
+                        height = width * mVideoHeight[0] / mVideoWidth[0];
+                    }
+                    break;
+                //充满整个控件视图
+                case PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT:
+                    width = widthMeasureSpec;
+                    height = heightMeasureSpec;
+                    break;
+                //剧中裁剪类型
+                case PlayerType.ScaleType.SCREEN_SCALE_CENTER_CROP:
+                    if (mVideoWidth[0] * height > width * mVideoHeight[0]) {
+                        width = height * mVideoWidth[0] / mVideoHeight[0];
+                    } else {
+                        height = width * mVideoHeight[0] / mVideoWidth[0];
+                    }
+                    break;
+            }
+            return new int[]{width, height};
+        } catch (Exception e) {
+            MPLogUtil.log("RenderApi => doMeasureSpec => " + e.getMessage(), e);
             return new int[]{width, height};
         }
-
-        //如果设置了比例
-        switch (mScaleType[0]) {
-            //默认正常类型
-            case PlayerType.ScaleType.SCREEN_SCALE_DEFAULT:
-            default:
-                if (mVideoWidth[0] * height < width * mVideoHeight[0]) {
-                    width = height * mVideoWidth[0] / mVideoHeight[0];
-                } else if (mVideoWidth[0] * height > width * mVideoHeight[0]) {
-                    height = width * mVideoHeight[0] / mVideoWidth[0];
-                }
-                break;
-            //原始类型，指视频的原始类型
-            case PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL:
-                width = mVideoWidth[0];
-                height = mVideoHeight[0];
-                break;
-            //16：9比例类型，最为常见
-            case PlayerType.ScaleType.SCREEN_SCALE_16_9:
-                if (height > width / 16 * 9) {
-                    height = width / 16 * 9;
-                } else {
-                    width = height / 9 * 16;
-                }
-                break;
-            //4：3比例类型，也比较常见
-            case PlayerType.ScaleType.SCREEN_SCALE_4_3:
-                if (height > width / 4 * 3) {
-                    height = width / 4 * 3;
-                } else {
-                    width = height / 3 * 4;
-                }
-                break;
-            //充满整个控件视图
-            case PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT:
-                width = widthMeasureSpec;
-                height = heightMeasureSpec;
-                break;
-            //剧中裁剪类型
-            case PlayerType.ScaleType.SCREEN_SCALE_CENTER_CROP:
-                if (mVideoWidth[0] * height > width * mVideoHeight[0]) {
-                    width = height * mVideoWidth[0] / mVideoHeight[0];
-                } else {
-                    height = width * mVideoHeight[0] / mVideoWidth[0];
-                }
-                break;
-        }
-        return new int[]{width, height};
     }
 
     default String saveBitmap(@NonNull Context context, @NonNull Bitmap bitmap) {

@@ -180,6 +180,28 @@ public @interface PlayerType {
         }
     }
 
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @Keep
+    @interface RotationType {
+        int Rotation_360 = 4_0011;
+        int Rotation_90 = 4_0012;
+        int Rotation_180 = 4_0013;
+        int Rotation_270 = 4_0014;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef({Rotation_360,
+                Rotation_90,
+                Rotation_180,
+                Rotation_270})
+        @Keep
+        @interface Value {
+        }
+    }
+
     /**
      * 通过注解限定类型
      */

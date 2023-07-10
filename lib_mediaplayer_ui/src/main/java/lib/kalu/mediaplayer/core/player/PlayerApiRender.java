@@ -205,11 +205,11 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
-    default void setScaleType(@PlayerType.ScaleType.Value int scaleType) {
+    default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
         try {
             // 1
             RenderApi render = getRender();
-            render.setScaleType(scaleType);
+            render.setVideoScaleType(scaleType);
             // 2
             PlayerManager.getInstance().getConfig().newBuilder().setScaleType(scaleType).build();
         } catch (Exception e) {
@@ -224,7 +224,7 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
-    default void setVideoRotation(int rotation) {
+    default void setVideoRotation(@PlayerType.RotationType.Value int rotation) {
         try {
             if (rotation == -1)
                 return;
