@@ -2,8 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="left|center_vertical"
     android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="6dp"
+        android:gravity="center_vertical|left"
+        android:text="旋转角度"
+        android:textSize="14sp" />
+
+    <RadioGroup
+        android:id="@+id/main_angle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/main_angle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="0" />
+
+        <RadioButton
+            android:id="@+id/main_angle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="270" />
+
+        <RadioButton
+            android:id="@+id/main_angle3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="180" />
+
+        <RadioButton
+            android:id="@+id/main_angle4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="90" />
+
+    </RadioGroup>
 
     <TextView
         android:layout_width="match_parent"

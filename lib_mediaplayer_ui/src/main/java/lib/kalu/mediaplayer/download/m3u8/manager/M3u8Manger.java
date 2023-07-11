@@ -175,7 +175,7 @@ public class M3u8Manger {
                         sendM3u8Info(m3u8);
                         mHandler.sendEmptyMessage(WHAT_ON_COMPLITED);
                     } catch (IOException e) {
-                        MPLogUtil.log(e.getMessage(), e);
+                        MPLogUtil.log("M3u8Manger => getM3U8 => "+e.getMessage());
                         handlerError(e);
                     }
                 }
@@ -230,10 +230,10 @@ public class M3u8Manger {
                         isRunning = false;//复位
                     }
                 } catch (IOException e) {
-                    MPLogUtil.log(e.getMessage(), e);
+                    MPLogUtil.log("M3u8Manger => startDownload => "+e.getMessage());
                     handlerError(e);
                 } catch (InterruptedException e) {
-                    MPLogUtil.log(e.getMessage(), e);
+                    MPLogUtil.log("M3u8Manger => startDownload => "+e.getMessage());
                     handlerError(e);
                 } finally {
                     //清空临时目录
@@ -299,7 +299,6 @@ public class M3u8Manger {
      * @throws IOException
      */
     private void download(final M3u8 m3u8, final String saveFileName) throws IOException {
-        MPLogUtil.log("caching(M3U8Manger.java:293):" + saveFileName);
         final File dir = new File(saveFileName);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -326,7 +325,6 @@ public class M3u8Manger {
                                 } catch (InterruptedIOException exception) {
                                     isRunning = false;
                                     currDownloadTsCount = 0;
-                                    System.out.println("----------InterruptedIOException------------");
                                     return;
                                 } finally {
                                     if (writer != null) {
@@ -350,7 +348,7 @@ public class M3u8Manger {
                             }
 //                        System.out.println("caching ok for: " + ts);
                         } catch (IOException e) {
-                            MPLogUtil.log(e.getMessage(), e);
+                            MPLogUtil.log("M3u8Manger => download => "+e.getMessage());
                             handlerError(e);
                         }
                     }

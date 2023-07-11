@@ -206,16 +206,11 @@ public class M3u8DownloadTask {
                                 isRunning = false;
                             }
                         } catch (InterruptedIOException e) {
-//                    MediaLogUtil.log(e.getMessage(), e);
                             //被中断了，使用stop时会抛出这个，不需要处理
-//                            handlerError(e);
-                            return;
-                        } catch (IOException e) {
-//                    MediaLogUtil.log(e.getMessage(), e);
                             handlerError(e);
-                            return;
+                        } catch (IOException e) {
+                            handlerError(e);
                         } catch (InterruptedException e) {
-//                            MediaLogUtil.log(e.getMessage(), e);
                             handlerError(e);
                         }
                     }
@@ -300,24 +295,20 @@ public class M3u8DownloadTask {
                                 handlerError(new Throwable(String.valueOf(conn.getResponseCode())));
                             }
                         } catch (MalformedURLException e) {
-//                            MediaLogUtil.log(e.getMessage(), e);
                             handlerError(e);
                         } catch (IOException e) {
-//                            MediaLogUtil.log(e.getMessage(), e);
                             handlerError(e);
                         } finally {//关流
                             if (inputStream != null) {
                                 try {
                                     inputStream.close();
                                 } catch (IOException e) {
-//                                    MediaLogUtil.log(e.getMessage(), e);
                                 }
                             }
                             if (fos != null) {
                                 try {
                                     fos.close();
                                 } catch (IOException e) {
-//                                    MediaLogUtil.log(e.getMessage(), e);
                                 }
                             }
                         }

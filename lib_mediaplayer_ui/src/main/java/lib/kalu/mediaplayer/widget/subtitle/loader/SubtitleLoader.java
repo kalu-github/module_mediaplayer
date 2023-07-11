@@ -26,8 +26,6 @@
 package lib.kalu.mediaplayer.widget.subtitle.loader;
 
 import android.text.TextUtils;
-import android.util.Log;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -82,7 +80,7 @@ public class SubtitleLoader {
                     }
 
                 } catch (final Exception e) {
-                    MPLogUtil.log(e.getMessage(), e);
+                    MPLogUtil.log("SubtitleLoader => loadFromRemoteAsync => "+e.getMessage());
                     if (callback != null) {
                         AppTaskExecutor.mainThread().execute(new Runnable() {
                             @Override
@@ -114,7 +112,7 @@ public class SubtitleLoader {
                     }
 
                 } catch (final Exception e) {
-                    MPLogUtil.log(e.getMessage(), e);
+                    MPLogUtil.log("SubtitleLoader => loadFromLocalAsync => "+e.getMessage());
                     if (callback != null) {
                         AppTaskExecutor.mainThread().execute(new Runnable() {
                             @Override
@@ -141,21 +139,19 @@ public class SubtitleLoader {
                 return loadFromLocal(path);
             }
         } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
+            MPLogUtil.log("SubtitleLoader => loadSubtitle => "+e.getMessage());
         }
         return null;
     }
 
     private static TimedTextObject loadFromRemote(final String remoteSubtitlePath)
             throws IOException, FatalParsingException {
-        Log.d(TAG, "parseRemote: remoteSubtitlePath = " + remoteSubtitlePath);
         URL url = new URL(remoteSubtitlePath);
         return loadAndParse(url.openStream(), url.getPath());
     }
 
     private static TimedTextObject loadFromLocal(final String localSubtitlePath)
             throws IOException, FatalParsingException {
-        Log.d(TAG, "parseLocal: localSubtitlePath = " + localSubtitlePath);
         File file = new File(localSubtitlePath);
         return loadAndParse(new FileInputStream(file), file.getPath());
     }
@@ -164,7 +160,6 @@ public class SubtitleLoader {
             throws IOException, FatalParsingException {
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         String ext = fileName.substring(fileName.lastIndexOf("."));
-        Log.d(TAG, "parse: name = " + fileName + ", ext = " + ext);
         if (".srt".equalsIgnoreCase(ext)) {
             return new FormatSRT().parseFile(fileName, is);
         } else if (".ass".equalsIgnoreCase(ext)) {

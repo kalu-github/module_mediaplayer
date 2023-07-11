@@ -136,7 +136,7 @@ public final class M3u8FileUtils {
         try {
             FileUtils.moveFile(new File(sFile), new File(tFile));
         } catch (IOException e) {
-            MPLogUtil.log(e.getMessage(), e);
+            MPLogUtil.log("M3u8FileUtils => moveFile => "+e.getMessage());
         }
     }
 
@@ -196,7 +196,6 @@ public final class M3u8FileUtils {
                 }
             }
         }
-        MPLogUtil.log("getLimitM3U8Ts(MUtils.java:152):" + downList);
         return downList;
     }
 }

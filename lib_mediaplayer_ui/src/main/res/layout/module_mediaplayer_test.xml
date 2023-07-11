@@ -12,123 +12,52 @@
         android:focusable="true" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal">
 
-        <RadioGroup
-            android:id="@+id/module_mediaplayer_angle"
+        <Button
+            android:id="@+id/module_mediaplayer_test_button8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:text="信息" />
 
-            <RadioButton
-                android:id="@+id/module_mediaplayer_angle1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="360" />
-
-            <RadioButton
-                android:id="@+id/module_mediaplayer_angle2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="270" />
-
-            <RadioButton
-                android:id="@+id/module_mediaplayer_angle3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="180" />
-
-            <RadioButton
-                android:id="@+id/module_mediaplayer_angle4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="90" />
-
-        </RadioGroup>
-
-        <LinearLayout
+        <Button
+            android:id="@+id/module_mediaplayer_test_button0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:text="跳转" />
 
-            <Button
-                android:id="@+id/module_mediaplayer_test_button21"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:text="旋转角度" />
+        <Button
+            android:id="@+id/module_mediaplayer_test_button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="换台" />
 
-            <Button
-                android:id="@+id/module_mediaplayer_test_button22"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:text="填充模式" />
+        <Button
+            android:id="@+id/module_mediaplayer_test_button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="全屏" />
 
-            <Button
-                android:id="@+id/module_mediaplayer_test_button8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:text="信息" />
+        <Button
+            android:id="@+id/module_mediaplayer_test_button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="浮动" />
 
-            <Button
-                android:id="@+id/module_mediaplayer_test_button0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:text="跳转" />
+        <Button
+            android:id="@+id/module_mediaplayer_test_button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="show-component" />
 
-            <Button
-                android:id="@+id/module_mediaplayer_test_button1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:text="换台" />
-
-            <Button
-                android:id="@+id/module_mediaplayer_test_button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:text="全屏" />
-
-            <Button
-                android:id="@+id/module_mediaplayer_test_button3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:text="浮动" />
-
-            <Button
-                android:id="@+id/module_mediaplayer_test_button4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:text="show-component" />
-
-            <Button
-                android:id="@+id/module_mediaplayer_test_button5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:text="gone-component" />
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/module_mediaplayer_test_button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="gone-component" />
 
     </LinearLayout>
 

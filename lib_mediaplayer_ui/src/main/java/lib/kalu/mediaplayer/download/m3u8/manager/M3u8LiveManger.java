@@ -187,24 +187,20 @@ public class M3u8LiveManger {
                                 handlerError(new Throwable(String.valueOf(conn.getResponseCode())));
                             }
                         } catch (MalformedURLException e) {
-//                            MediaLogUtil.log(e.getMessage(), e);
                             handlerError(e);
                         } catch (IOException e) {
-//                            MediaLogUtil.log(e.getMessage(), e);
                             handlerError(e);
                         } finally {//关流
                             if (inputStream != null) {
                                 try {
                                     inputStream.close();
                                 } catch (IOException e) {
-//                                    MediaLogUtil.log(e.getMessage(), e);
                                 }
                             }
                             if (fos != null) {
                                 try {
                                     fos.close();
                                 } catch (IOException e) {
-//                                    MediaLogUtil.log(e.getMessage(), e);
                                 }
                             }
                         }
@@ -269,7 +265,7 @@ public class M3u8LiveManger {
 //                                m3U8TsList.addAll(m3u8.getTsList());
                             }
                         } catch (IOException e) {
-                            MPLogUtil.log(e.getMessage(), e);
+                            MPLogUtil.log("M3u8LiveManger => startUpdateM3U8Info => "+e.getMessage());
                             handlerError(e);
                         }
                     }
@@ -350,7 +346,7 @@ public class M3u8LiveManger {
         try {
             M3u8FileUtils.merge(downloadedFileList, saveFilePath);
         } catch (IOException e) {
-            MPLogUtil.log(e.getMessage(), e);
+            MPLogUtil.log("M3u8LiveManger => getCurrentTs => "+e.getMessage());
             return "";
         }
         Log.i("hdltag", "getCurrentTs(M3U8LiveManger.java:287):已保存至 " + saveFilePath);

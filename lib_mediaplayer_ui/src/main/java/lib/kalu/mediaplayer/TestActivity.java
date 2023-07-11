@@ -143,29 +143,6 @@ public final class TestActivity extends Activity {
                 playerLayout.hideComponent(ComponentNet.class);
             }
         });
-
-        // 旋转角度
-        findViewById(R.id.module_mediaplayer_test_button21).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                @PlayerType.RotationType.Value
-                int angle;
-                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_angle);
-                int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-                if (checkedRadioButtonId == R.id.module_mediaplayer_angle2) {
-                    angle = PlayerType.RotationType.Rotation_270;
-                } else if (checkedRadioButtonId == R.id.module_mediaplayer_angle3) {
-                    angle = PlayerType.RotationType.Rotation_180;
-                } else if (checkedRadioButtonId == R.id.module_mediaplayer_angle4) {
-                    angle = PlayerType.RotationType.Rotation_90;
-                } else {
-                    angle = PlayerType.RotationType.Rotation_0;
-                }
-                Toast.makeText(getApplicationContext(), "angle = " + angle, Toast.LENGTH_SHORT).show();
-                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                playerLayout.setVideoRotation(angle);
-            }
-        });
     }
 
     private void initComponent() {

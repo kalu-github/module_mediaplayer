@@ -68,7 +68,6 @@ public class M3u8InfoManger {
                     M3u8 m3u8 = M3u8FileUtils.parseIndex(url);
                     handlerSuccess(m3u8);
                 } catch (IOException e) {
-//                    MediaLogUtil.log(e.getMessage(), e);
                     handlerError(e);
                 }
             }

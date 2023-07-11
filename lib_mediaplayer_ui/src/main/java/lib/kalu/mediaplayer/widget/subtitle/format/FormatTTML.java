@@ -236,11 +236,8 @@ public class FormatTTML implements TimedTextFileFormat {
                 }
 
             }
-
-
         } catch (Exception e) {
-            MPLogUtil.log(e.getMessage(), e);
-            //this could be a fatal error...
+            MPLogUtil.log("FormatTTML => parseFile => "+e.getMessage());
             throw new FatalParsingException("Error during parsing: " + e.getMessage());
         }
 
