@@ -30,17 +30,13 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                 return true;
             }
             // keycode_enter
-            else if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                if (event.getAction() == KeyEvent.ACTION_UP) {
-                    toggle();
-                }
+            else if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP && event.getRepeatCount() == 0) {
+                toggle();
                 return true;
             }
             // keycode_dpad_center
-            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-                if (event.getAction() == KeyEvent.ACTION_UP) {
-                    toggle();
-                }
+            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER && event.getAction() == KeyEvent.ACTION_UP && event.getRepeatCount() == 0) {
+                toggle();
                 return true;
             }
             // keycode_dpad_left
@@ -61,7 +57,19 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             } else {
                 return false;
             }
-        } else {
+        }
+        // action_up => keycode_enter
+        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getRepeatCount() == 0) {
+            toggle();
+            return true;
+        }
+        // action_up => keycode_dpad_center
+        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER && event.getRepeatCount() == 0) {
+            toggle();
+            return true;
+        }
+        // android
+        else {
             return false;
         }
     }
