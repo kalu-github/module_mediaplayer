@@ -120,7 +120,6 @@ public interface RenderApi {
 
         int measureWidth = View.MeasureSpec.getSize(widthMeasureSpec);
         int measureHeight = View.MeasureSpec.getSize(heightMeasureSpec);
-        MPLogUtil.log("RenderApi => doMeasureSpec => mVideoRotation = " + mVideoRotation[0] + ", mVideoScaleType = " + mVideoScaleType[0] + ", mVideoWidth = " + mVideoWidth[0] + ", mVideoHeight = " + mVideoHeight[0] + ", measureWidth = " + measureWidth + ", measureHeight = " + measureHeight);
 
         try {
             if (mVideoHeight[0] == 0 || mVideoWidth[0] == 0)
