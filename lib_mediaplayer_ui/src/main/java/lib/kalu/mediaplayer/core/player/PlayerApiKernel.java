@@ -105,7 +105,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             }
             return duration;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => getDuration => "+e.getMessage());
+            MPLogUtil.log("PlayerApiKernel => getDuration => " + e.getMessage());
             return 0L;
         }
     }
@@ -696,21 +696,17 @@ interface PlayerApiKernel extends PlayerApiListener,
 
                             // 埋点
                             onBuriedEventCompletion();
+                            callPlayerEvent(PlayerType.StateType.STATE_END);
 
                             boolean looping = isLooping();
                             MPLogUtil.log("PlayerApiKernel => onEvent = 播放结束 => looping = " + looping);
                             // loop
                             if (looping) {
-
-                                callPlayerEvent(PlayerType.StateType.STATE_END);
                                 hideReal();
-                                // step3
                                 seekTo(true, builder);
                             }
                             // sample
                             else {
-                                pause(true);
-                                release();
                                 playEnd();
                             }
 
