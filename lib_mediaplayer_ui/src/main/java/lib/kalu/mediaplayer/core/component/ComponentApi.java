@@ -48,7 +48,7 @@ public interface ComponentApi {
             ImageView imageView = layout.findViewById(id);
             imageView.setImageResource(value);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setImageResource => "+e.getMessage());
+            MPLogUtil.log("ComponentApi => setImageResource => " + e.getMessage());
         }
     }
 
@@ -57,7 +57,7 @@ public interface ComponentApi {
             ImageView imageView = layout.findViewById(id);
             imageView.setImageURI(Uri.parse(url));
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setImageUrl => "+e.getMessage());
+            MPLogUtil.log("ComponentApi => setImageUrl => " + e.getMessage());
         }
     }
 
@@ -66,7 +66,7 @@ public interface ComponentApi {
             TextView view = layout.findViewById(id);
             view.setTextColor(value);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setTextColor => "+e.getMessage());
+            MPLogUtil.log("ComponentApi => setTextColor => " + e.getMessage());
         }
     }
 
@@ -76,7 +76,7 @@ public interface ComponentApi {
             int offset = layout.getResources().getDimensionPixelOffset(value);
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setTextSize => "+e.getMessage());
+            MPLogUtil.log("ComponentApi => setTextSize => " + e.getMessage());
         }
     }
 
@@ -85,7 +85,7 @@ public interface ComponentApi {
             TextView view = layout.findViewById(id);
             view.setText(value);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setText => "+e.getMessage());
+            MPLogUtil.log("ComponentApi => setText => " + e.getMessage());
         }
     }
 
@@ -94,7 +94,7 @@ public interface ComponentApi {
             TextView view = layout.findViewById(id);
             view.setText(value);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setText => "+e.getMessage());
+            MPLogUtil.log("ComponentApi => setText => " + e.getMessage());
         }
     }
 
@@ -103,7 +103,7 @@ public interface ComponentApi {
             TextView view = layout.findViewById(id);
             view.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setCompoundDrawablesWithIntrinsicBounds => "+e.getMessage());
+            MPLogUtil.log("ComponentApi => setCompoundDrawablesWithIntrinsicBounds => " + e.getMessage());
         }
     }
 
@@ -116,7 +116,7 @@ public interface ComponentApi {
             layoutParams.height = offset;
             view.setLayoutParams(layoutParams);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setDimens => "+e.getMessage());
+            MPLogUtil.log("ComponentApi => setDimens => " + e.getMessage());
         }
     }
 
@@ -125,7 +125,7 @@ public interface ComponentApi {
             View view = layout.findViewById(id);
             view.setBackgroundColor(value);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setBackgroundColorInt => "+e.getMessage());
+            MPLogUtil.log("ComponentApi => setBackgroundColorInt => " + e.getMessage());
         }
     }
 
@@ -135,7 +135,7 @@ public interface ComponentApi {
             int color = view.getResources().getColor(resId);
             view.setBackgroundColor(color);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setBackgroundColorRes => "+e.getMessage());
+            MPLogUtil.log("ComponentApi => setBackgroundColorRes => " + e.getMessage());
         }
     }
 
@@ -144,7 +144,7 @@ public interface ComponentApi {
             View view = layout.findViewById(id);
             view.setBackgroundResource(resId);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setBackgroundDrawableRes => "+e.getMessage());
+            MPLogUtil.log("ComponentApi => setBackgroundDrawableRes => " + e.getMessage());
         }
     }
 
@@ -186,16 +186,7 @@ public interface ComponentApi {
 
     /******************/
 
-    default void seekForward(int action) {
-    }
-
-    default void seekRewind(int action) {
-    }
-
-    default void onSeekUpdateProgress(@NonNull long position, @NonNull long duration, @NonNull boolean updateTime) {
-    }
-
-    default void onSeekTo(@NonNull int position) {
+    default void onUpdateSeekProgress(@NonNull long position, @NonNull long duration, @NonNull boolean updateTime) {
     }
 
     default void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {

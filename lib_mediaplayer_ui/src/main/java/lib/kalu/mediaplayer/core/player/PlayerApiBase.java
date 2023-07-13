@@ -268,6 +268,25 @@ interface PlayerApiBase {
         }
     }
 
+    default void callUpdateSeekProgress(@NonNull long position, @NonNull long max) {
+        try {
+            ViewGroup viewGroup = getBaseControlViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).onUpdateSeekProgress(position, max, true);
+            }
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => callUpdateSeekProgress => " + e.getMessage());
+        }
+    }
+
     default void callWindowEvent(@PlayerType.WindowType.Value int state) {
 
         // listener

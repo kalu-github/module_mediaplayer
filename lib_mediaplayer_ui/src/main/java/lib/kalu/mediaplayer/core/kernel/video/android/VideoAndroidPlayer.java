@@ -41,6 +41,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
 
     @Override
     public void releaseDecoder(boolean isFromUser) {
+        MPLogUtil.log("VideoAndroidPlayer22 => releaseDecoder => mMediaPlayer = " + mMediaPlayer + ", isFromUser = " + isFromUser);
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayerCollects error: null");
@@ -58,6 +59,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
             mMediaPlayer.setSurface(null);
             mMediaPlayer.pause();
             mMediaPlayer.stop();
+            mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
         } catch (Exception e) {
@@ -67,6 +69,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
 
     @Override
     public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
+        MPLogUtil.log("VideoAndroidPlayer22 => createDecoder => mMediaPlayer = " + mMediaPlayer);
         try {
             releaseDecoder(false);
             mMediaPlayer = new MediaPlayer();
@@ -80,6 +83,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
 
     @Override
     public void startDecoder(@NonNull Context context, @NonNull String url) {
+        MPLogUtil.log("VideoAndroidPlayer22 => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url);
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -101,19 +105,24 @@ public final class VideoAndroidPlayer extends BasePlayer {
 
     @Override
     public void setDisplay(SurfaceHolder surfaceHolder) {
-
     }
 
     /**
      * MediaPlayer视频播放器监听listener
      */
     private void initListener() {
-        mMediaPlayer.setOnErrorListener(onErrorListener);
-        mMediaPlayer.setOnCompletionListener(onCompletionListener);
-        mMediaPlayer.setOnInfoListener(onInfoListener);
-        mMediaPlayer.setOnPreparedListener(mOnPreparedListener);
-        mMediaPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
-        mMediaPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
+        try {
+            if (null == mMediaPlayer)
+                throw new Exception("mMediaPlayer error: null");
+            mMediaPlayer.setOnErrorListener(onErrorListener);
+            mMediaPlayer.setOnCompletionListener(onCompletionListener);
+            mMediaPlayer.setOnInfoListener(onInfoListener);
+            mMediaPlayer.setOnPreparedListener(mOnPreparedListener);
+            mMediaPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
+            mMediaPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
+        } catch (Exception e) {
+            MPLogUtil.log("VideoAndroidPlayer => initListener => " + e.getMessage());
+        }
     }
 
 //    /**
@@ -181,7 +190,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 throw new Exception("mMediaPlayer error: null");
             return mMediaPlayer.isPlaying();
         } catch (Exception e) {
-            MPLogUtil.log("VideoAndroidPlayer => stop => " + e.getMessage());
+            MPLogUtil.log("VideoAndroidPlayer => isPlaying => " + e.getMessage());
             return false;
         }
     }
@@ -390,7 +399,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
                     throw new Exception("mp error: null");
                 int videoWidth = mp.getVideoWidth();
                 int videoHeight = mp.getVideoHeight();
-                MPLogUtil.log("VideoAndroidPlayer => onVideoSizeChanged => videoWidth = " + videoWidth+", videoHeight = "+videoHeight);
+                MPLogUtil.log("VideoAndroidPlayer => onVideoSizeChanged => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
                 if (videoWidth < 0 || videoHeight < 0)
                     throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
                 onMeasure(PlayerType.KernelType.ANDROID, videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);

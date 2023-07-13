@@ -9,8 +9,11 @@ import android.widget.RelativeLayout;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import java.util.List;
+
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.core.render.RenderApi;
@@ -40,6 +43,18 @@ final class PlayerView extends RelativeLayout implements PlayerApi {
         controlPlayer.setId(R.id.module_mediaplayer_control);
         controlPlayer.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         addView(controlPlayer);
+    }
+
+    @Override
+    public void addComponent(ComponentApi componentApi) {
+        PlayerApi.super.addComponent(componentApi);
+        attachPlayerApi(this);
+    }
+
+    @Override
+    public void addAllComponent(List<ComponentApi> componentApis) {
+        PlayerApi.super.addAllComponent(componentApis);
+        attachPlayerApi(this);
     }
 
     @Override

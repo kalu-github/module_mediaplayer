@@ -54,12 +54,14 @@
             android:layout_weight="1"
             android:background="#00000000"
             android:focusable="false"
+            android:max="0"
             android:maxHeight="5dp"
             android:minHeight="5dp"
             android:paddingStart="8dp"
             android:paddingLeft="0dp"
             android:paddingEnd="8dp"
             android:paddingRight="0dp"
+            android:progress="0"
             android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress"
             android:thumb="@drawable/module_mediaplayer_shape_seek_thumb" />
 

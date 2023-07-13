@@ -71,7 +71,6 @@ interface PlayerApiComponent extends PlayerApiBase {
             ViewGroup viewGroup = getBaseControlViewGroup();
             if (null == viewGroup)
                 throw new Exception("viewGroup error: null");
-            componentApi.attachPlayerApi((PlayerApi) PlayerApiComponent.this);
             viewGroup.addView((View) componentApi, 0, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiComponent => addComponent => " + e.getMessage());
@@ -119,8 +118,27 @@ interface PlayerApiComponent extends PlayerApiBase {
         }
     }
 
+    default void attachPlayerApi(PlayerApi playerApi) {
+        try {
+            ViewGroup viewGroup = getBaseControlViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).attachPlayerApi(playerApi);
+            }
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiComponent => attachPlayerKernel => " + e.getMessage());
+        }
+    }
 
-    default void dispatchKeyEventComponentAll(@NonNull KeyEvent event) {
+
+    default void dispatchKeyEventComponents(@NonNull KeyEvent event) {
         try {
             ViewGroup viewGroup = getBaseControlViewGroup();
             int childCount = viewGroup.getChildCount();
@@ -135,7 +153,7 @@ interface PlayerApiComponent extends PlayerApiBase {
                 ((ComponentApi) childAt).dispatchKeyEventComponent(event);
             }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiComponent => dispatchEventComponent => " + e.getMessage());
+            MPLogUtil.log("PlayerApiComponent => dispatchKeyEventComponents => " + e.getMessage());
         }
     }
 

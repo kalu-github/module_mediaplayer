@@ -65,11 +65,11 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
 
     @Override
     public final void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
-        onSeekUpdateProgress(position, duration, true);
+        onUpdateSeekProgress(position, duration, true);
     }
 
     @Override
-    public final void onSeekUpdateProgress(@NonNull long position, @NonNull long duration, @NonNull boolean updateTime) {
+    public final void onUpdateSeekProgress(@NonNull long position, @NonNull long duration, @NonNull boolean updateTime) {
         try {
             if (position < 0 || duration < 0)
                 throw new Exception();
