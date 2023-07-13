@@ -539,7 +539,6 @@ interface PlayerApiKernel extends PlayerApiListener,
     default void playEnd() {
         hideReal();
         setScreenKeep(false);
-        callPlayerEvent(PlayerType.StateType.STATE_END);
     }
 
     /***************************/
