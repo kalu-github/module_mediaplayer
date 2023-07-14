@@ -15,53 +15,35 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender, PlayerApiExternalMusic {
 
     default boolean dispatchKeyEventPlayer(@NonNull KeyEvent event) {
-        MPLogUtil.log("PlayerApi => dispatchKeyEventPlayer => action = " + event.getAction() + ", code = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+        boolean isFloat = isFloat();
+        boolean isFull = isFull();
+        MPLogUtil.log("PlayerApi => dispatchKeyEventPlayer => action = " + event.getAction() + ", code = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount() + ", isFloat = " + isFloat + ", isFull = " + isFull);
         dispatchKeyEventComponents(event);
-        // float
-        if (isFloat()) {
-            // keycode_back => stopFloat
-            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK && isFloat()) {
-                stopFloat();
-                return true;
-            } else {
-                return false;
-            }
+        // action_down => keycode_back
+        if (isFloat && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK && isFloat()) {
+            stopFloat();
+            return true;
         }
-        // full
-        else if (isFull()) {
-            // keycode_back => stopfull
-            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                stopFull();
-                return true;
-            }
-            // keycode_enter
-            else if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP && event.getRepeatCount() == 0) {
-                toggle();
-                return true;
-            }
-            // keycode_dpad_center
-            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER && event.getAction() == KeyEvent.ACTION_UP && event.getRepeatCount() == 0) {
-                toggle();
-                return true;
-            }
-            // keycode_dpad_left
-            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-                return true;
-            }
-            // keycode_dpad_right
-            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                return true;
-            }
-            // keycode_dpad_up
-            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
-                return true;
-            }
-            // keycode_dpad_down
-            else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
-                return true;
-            } else {
-                return false;
-            }
+        // action_down => keycode_back
+        else if (isFull && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK && isFloat()) {
+            stopFull();
+            return true;
+        }
+        // keycode_dpad_left
+        else if (isFull && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            return true;
+        }
+        // keycode_dpad_right
+        else if (isFull && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            return true;
+        }
+        // keycode_dpad_up
+        else if (isFull && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
+            return true;
+        }
+        // keycode_dpad_down
+        else if (isFull && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+            return true;
         }
         // action_up => keycode_enter
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getRepeatCount() == 0) {
