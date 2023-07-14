@@ -20,23 +20,23 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         MPLogUtil.log("PlayerApi => dispatchKeyEventPlayer => action = " + event.getAction() + ", code = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount() + ", isFloat = " + isFloat + ", isFull = " + isFull);
         dispatchKeyEventComponents(event);
         // action_down => keycode_back
-        if (isFloat && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK && isFloat()) {
+        if (isFloat && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             stopFloat();
             return true;
         }
         // action_down => keycode_back
-        else if (isFull && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK && isFloat()) {
+        else if (isFull && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             stopFull();
             return true;
         }
-        // keycode_dpad_left
-        else if (isFull && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            return true;
-        }
-        // keycode_dpad_right
-        else if (isFull && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            return true;
-        }
+//        // keycode_dpad_left
+//        else if (isFull && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+//            return true;
+//        }
+//        // keycode_dpad_right
+//        else if (isFull && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+//            return true;
+//        }
         // keycode_dpad_up
         else if (isFull && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
             return true;
@@ -57,6 +57,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         }
         // action_down => keycode_dpad_right => seek_forward => start
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start");
             try {
                 if (isLive())
                     throw new Exception("living error: true");
@@ -65,13 +66,14 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
                 seekForward(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
-                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
+                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start => " + e.getMessage());
             }
             return true;
         }
         // seekForward => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             try {
+                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => stop");
                 if (isLive())
                     throw new Exception("living error: true");
                 if (!isPlaying())
@@ -82,13 +84,14 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                     throw new Exception("playing waining: true");
                 resume();
             } catch (Exception e) {
-                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
+                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => stop => " + e.getMessage());
             }
             return true;
         }
         // seekRewind => start
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             try {
+                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => start");
                 if (isLive())
                     throw new Exception("living error: true");
                 if (!isPlaying())
@@ -96,13 +99,14 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
                 seekRewind(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
-                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
+                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => start => " + e.getMessage());
             }
             return true;
         }
         // seekRewind => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             try {
+                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => stop");
                 if (isLive())
                     throw new Exception("living error: true");
                 if (!isPlaying())
@@ -113,7 +117,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                     throw new Exception("playing waining: true");
                 resume();
             } catch (Exception e) {
-                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
+                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => stop => " + e.getMessage());
             }
             return true;
         }
