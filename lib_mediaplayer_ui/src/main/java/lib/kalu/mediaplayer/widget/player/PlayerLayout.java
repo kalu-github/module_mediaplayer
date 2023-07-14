@@ -558,6 +558,32 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public void setData(@NonNull String playerUrl) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setData(playerUrl);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => setData => " + e.getMessage());
+        }
+    }
+
+    public String getData() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            String data = playerView.getData();
+            if (null == data || data.length() == 0)
+                throw new Exception("data error: " + data);
+            return data;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => getData => " + e.getMessage());
+            return null;
+        }
+    }
+
     public void start(@NonNull String playerUrl) {
         try {
             PlayerView playerView = getPlayerView();

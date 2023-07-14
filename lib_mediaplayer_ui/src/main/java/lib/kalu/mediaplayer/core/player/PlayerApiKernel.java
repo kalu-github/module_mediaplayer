@@ -30,6 +30,28 @@ interface PlayerApiKernel extends PlayerApiListener,
         PlayerApiDevice,
         PlayerApiExternalMusic {
 
+    default void setData(@NonNull String url) {
+        try {
+            if (null == url || url.length() == 0)
+                throw new Exception("url error: " + url);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_data, url);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiKernel => setData => " + e.getMessage());
+        }
+    }
+
+    default String getData() {
+        try {
+            Object tag = ((View) this).getTag(R.id.module_mediaplayer_id_player_data);
+            if (null == tag)
+                throw new Exception("tag error: null");
+            return (String) tag;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiKernel => getData => " + e.getMessage());
+            return null;
+        }
+    }
+
     default void start(@NonNull String url) {
         StartBuilder.Builder builder = new StartBuilder.Builder();
         StartBuilder build = builder.build();
@@ -38,7 +60,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default void start(@NonNull StartBuilder builder, @NonNull String playUrl) {
         try {
-            if (null == playUrl || playUrl.length() <= 0)
+            if (null == playUrl || playUrl.length() == 0)
                 throw new Exception("playUrl error: " + playUrl);
             MPLogUtil.log("PlayerApiKernel => start = > playUrl = " + playUrl);
             callPlayerEvent(PlayerType.StateType.STATE_INIT);
@@ -69,6 +91,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             ((View) this).setTag(R.id.module_mediaplayer_id_player_url, playUrl);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_external_enable, data.isExternalEnable());
             ((View) this).setTag(R.id.module_mediaplayer_id_player_looping, data.isLoop());
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_looping_release, data.isLoopRelease());
             ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release, data.isWindowVisibilityChangedRelease());
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => updatePlayerData => " + e.getMessage());
@@ -252,6 +275,14 @@ interface PlayerApiKernel extends PlayerApiListener,
         }
     }
 
+    default boolean isLoopingRelease() {
+        try {
+            return (Boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_looping_release);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     default boolean isWindowVisibilityChangedRelease() {
         try {
             return (Boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release);
@@ -304,6 +335,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             ((View) this).setTag(R.id.module_mediaplayer_id_player_url, null);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_position, null);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_looping, null);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_looping_release, null);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release, null);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_external_music_url, null);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_external_music_looping, null);
@@ -698,9 +730,15 @@ interface PlayerApiKernel extends PlayerApiListener,
                             callPlayerEvent(PlayerType.StateType.STATE_END);
 
                             boolean looping = isLooping();
-                            MPLogUtil.log("PlayerApiKernel => onEvent = 播放结束 => looping = " + looping);
-                            // loop
-                            if (looping) {
+                            boolean loopingRelease = isLoopingRelease();
+                            MPLogUtil.log("PlayerApiKernel => onEvent = 播放结束 => looping = " + looping + ", loopingRelease = " + loopingRelease);
+                            // loop1
+                            if (looping && loopingRelease) {
+                                release(false, false);
+                                restart();
+                            }
+                            // loop2
+                            else if (looping) {
                                 hideReal();
                                 seekTo(true, builder);
                             }

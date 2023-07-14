@@ -9,6 +9,7 @@ public final class StartBuilder {
     private long seek;
     private boolean live;
     private boolean loop;
+    private boolean loopRelease;
     private boolean mute;
     private boolean playWhenReady;
 
@@ -39,6 +40,10 @@ public final class StartBuilder {
 
     public boolean isLoop() {
         return loop;
+    }
+
+    public boolean isLoopRelease() {
+        return loopRelease;
     }
 
     public boolean isPlayWhenReady() {
@@ -75,6 +80,7 @@ public final class StartBuilder {
         this.mute = builder.mute;
         this.live = builder.live;
         this.loop = builder.loop;
+        this.loopRelease = builder.loopRelease;
         this.playWhenReady = builder.playWhenReady;
         this.windowVisibilityChangedRelease = builder.windowVisibilityChangedRelease;
         this.externalEnable = builder.externalEnable;
@@ -92,6 +98,7 @@ public final class StartBuilder {
                 ", seek=" + seek +
                 ", live=" + live +
                 ", loop=" + loop +
+                ", loopRelease=" + loopRelease +
                 ", mute=" + mute +
                 ", windowVisibilityChangedRelease=" + windowVisibilityChangedRelease +
                 ", externalEnable='" + externalEnable + '\'' +
@@ -126,6 +133,7 @@ public final class StartBuilder {
         private long seek = 0;
         private boolean live = false;
         private boolean loop = false;
+        private boolean loopRelease = false;
         private boolean mute = false;
         private boolean playWhenReady = true;
 
@@ -192,6 +200,11 @@ public final class StartBuilder {
 
         public Builder setLoop(boolean v) {
             loop = v;
+            return this;
+        }
+
+        public Builder setLoopRelease(boolean v) {
+            loopRelease = v;
             return this;
         }
 
