@@ -30,11 +30,11 @@ interface PlayerApiKernel extends PlayerApiListener,
         PlayerApiDevice,
         PlayerApiExternalMusic {
 
-    default void setData(@NonNull String url) {
+    default void setData(@NonNull String data) {
         try {
-            if (null == url || url.length() == 0)
-                throw new Exception("url error: " + url);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_data, url);
+//            if (null == url || url.length() == 0)
+//                throw new Exception("url error: " + url);
+            ((View) this).setTag(R.id.module_mediaplayer_id_player_data, data);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => setData => " + e.getMessage());
         }

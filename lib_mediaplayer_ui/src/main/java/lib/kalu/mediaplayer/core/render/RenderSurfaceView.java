@@ -94,7 +94,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         setZOrderOnTop(true);
         setZOrderMediaOverlay(true);
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
-        getHolder().setType(SurfaceHolder.SURFACE_TYPE_NORMAL);
     }
 
     @Override
