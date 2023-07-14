@@ -188,6 +188,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             }
             releaseRender(false);
             releaseKernel(isFromUser);
+            cleanPlayerChangeListener();
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE);
         } catch (Exception e) {
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE_EXCEPTION);

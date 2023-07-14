@@ -21,7 +21,7 @@ import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
 interface PlayerApiBase {
 
-    List<OnPlayerChangeListener> mListeners = new LinkedList<>();
+    OnPlayerChangeListener[] mOnPlayerChangeListener = new OnPlayerChangeListener[1];
 
     default ViewGroup findDecorView(View view) {
         try {
@@ -207,28 +207,20 @@ interface PlayerApiBase {
     }
 
     default boolean hasPlayerChangeListener() {
-        return null != mListeners && mListeners.size() > 0;
+        return null != mOnPlayerChangeListener && null != mOnPlayerChangeListener[0];
     }
 
-    default List<OnPlayerChangeListener> getPlayerChangeListener() {
-        return mListeners;
+    default OnPlayerChangeListener getPlayerChangeListener() {
+        return mOnPlayerChangeListener[0];
     }
 
-    default void clearPlayerListener() {
-        mListeners.clear();
+    default void cleanPlayerChangeListener() {
+        mOnPlayerChangeListener[0] = null;
     }
 
-    default boolean removePlayerChangeListener(@NonNull OnPlayerChangeListener l) {
-        return mListeners.remove(l);
-    }
-
-    default void addPlayerChangeListener(@NonNull OnPlayerChangeListener l) {
-        mListeners.add(l);
-    }
-
-    default void setPlayerChangeListener(@NonNull OnPlayerChangeListener l) {
-        clearPlayerListener();
-        addPlayerChangeListener(l);
+    default void setOnPlayerChangeListener(@NonNull OnPlayerChangeListener l) {
+        mOnPlayerChangeListener[0] = null;
+        mOnPlayerChangeListener[0] = l;
     }
 
     default void callPlayerEvent(@PlayerType.StateType.Value int state) {
@@ -238,13 +230,10 @@ interface PlayerApiBase {
             boolean hasListener = hasPlayerChangeListener();
             if (!hasListener)
                 throw new Exception("not find PlayerChangeListener");
-            List<OnPlayerChangeListener> listener = getPlayerChangeListener();
-            for (OnPlayerChangeListener l : listener) {
-                MPLogUtil.log("PlayerApiBase => callPlayerEvent => l = " + l);
-                if (null == l)
-                    continue;
-                l.onChange(state);
-            }
+            OnPlayerChangeListener listener = getPlayerChangeListener();
+            if (null == listener)
+                throw new Exception("listener error: null");
+            listener.onChange(state);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiBase => callPlayerEvent => " + e.getMessage());
         }
@@ -294,13 +283,10 @@ interface PlayerApiBase {
             boolean hasListener = hasPlayerChangeListener();
             if (!hasListener)
                 throw new Exception("not find PlayerChangeListener");
-            List<OnPlayerChangeListener> listener = getPlayerChangeListener();
-            for (OnPlayerChangeListener l : listener) {
-                MPLogUtil.log("PlayerApiBase => callWindowEvent => l = " + l);
-                if (null == l)
-                    continue;
-                l.onWindow(state);
-            }
+            OnPlayerChangeListener listener = getPlayerChangeListener();
+            if (null == listener)
+                throw new Exception("listener error: null");
+            listener.onWindow(state);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiBase => callWindowEvent => " + e.getMessage());
         }

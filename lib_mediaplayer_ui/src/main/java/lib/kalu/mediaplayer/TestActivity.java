@@ -178,7 +178,7 @@ public final class TestActivity extends Activity {
     private void initPlayer() {
         // playerLayout
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.setPlayerChangeListener(new OnPlayerChangeListener() {
+        playerLayout.setOnPlayerChangeListener(new OnPlayerChangeListener() {
             @Override
             public void onWindow(int playerState) {
                 switch (playerState) {
