@@ -32,8 +32,6 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default void setData(@NonNull String data) {
         try {
-//            if (null == url || url.length() == 0)
-//                throw new Exception("url error: " + url);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_data, data);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => setData => " + e.getMessage());
@@ -184,6 +182,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             checkKernel();
             removeRender();
             if (releaseTag) {
+                setData(null);
                 releaseTag();
             }
             releaseRender(false);
