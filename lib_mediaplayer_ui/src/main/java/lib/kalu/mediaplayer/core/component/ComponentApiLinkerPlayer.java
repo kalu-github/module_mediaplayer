@@ -6,11 +6,29 @@ import android.view.ViewParent;
 import androidx.annotation.Keep;
 
 import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 
 @Keep
 public interface ComponentApiLinkerPlayer {
+
+    default PlayerLayout getPlayerLayout() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                new Exception("playerView error: null");
+            ViewParent parent = playerView.getParent();
+            if (null == parent)
+                throw new Exception("parent error: null");
+            if (!(parent instanceof PlayerLayout))
+                throw new Exception("parent error: not instanceof PlayerLayout");
+            return (PlayerLayout) parent;
+        } catch (Exception e) {
+            MPLogUtil.log("ComponentApiLinkerPlayer => getPlayerLayout => " + e.getMessage());
+            return null;
+        }
+    }
 
     default PlayerView getPlayerView() {
         try {
