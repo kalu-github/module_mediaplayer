@@ -45,8 +45,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
                     int visibility = findViewById(R.id.module_mediaplayer_component_loading_pb).getVisibility();
                     if (visibility == View.VISIBLE) {
                         try {
-                            PlayerApi playerApi = getPlayerApi();
-                            boolean full = playerApi.isFull();
+                            boolean full = isFull();
                             findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(full ? View.VISIBLE : View.INVISIBLE);
                         } catch (Exception e) {
                             findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.INVISIBLE);
@@ -64,10 +63,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
-            PlayerApi playerApi = getPlayerApi();
-            if (null == playerApi)
-                throw new Exception("playerApi warning: null");
-            boolean full = playerApi.isFull();
+            boolean full = isFull();
             findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(full ? View.VISIBLE : View.INVISIBLE);
         } catch (Exception e) {
             MPLogUtil.log("ComponentLoading => show => " + e.getMessage());

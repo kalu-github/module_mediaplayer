@@ -30,6 +30,7 @@ import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.SpeedUtil;
 
 @Keep
 public class PlayerLayout extends RelativeLayout {
@@ -806,4 +807,14 @@ public class PlayerLayout extends RelativeLayout {
 //            MPLogUtil.log("PlayerLayout => setInterceptKeycodeDpadDown => " + e.getMessage());
 //        }
 //    }
+    public String getNetSpeed() {
+        try {
+            String speed = SpeedUtil.getNetSpeed(getContext().getApplicationContext());
+            MPLogUtil.log("PlayerLayout => getNetSpeed => speed = " + speed);
+            return speed;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => getNetSpeed => " + e.getMessage());
+            return "0kb/s";
+        }
+    }
 }

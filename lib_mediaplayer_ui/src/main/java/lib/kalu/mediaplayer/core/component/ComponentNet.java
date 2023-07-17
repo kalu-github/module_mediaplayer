@@ -57,8 +57,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
                     int visibility = findViewById(R.id.module_mediaplayer_component_net).getVisibility();
                     if (visibility == View.VISIBLE) {
                         try {
-                            PlayerApi playerApi = getPlayerApi();
-                            boolean full = playerApi.isFull();
+                            boolean full = isFull();
                             TextView v1 = findViewById(R.id.module_mediaplayer_component_net_txt);
                             v1.setVisibility(full ? View.VISIBLE : View.INVISIBLE);
                             TextView v2 = findViewById(R.id.module_mediaplayer_component_net_unit);
@@ -88,8 +87,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
         } catch (Exception e) {
         }
         try {
-            PlayerApi playerApi = getPlayerApi();
-            boolean full = playerApi.isFull();
+            boolean full = isFull();
             TextView v1 = findViewById(R.id.module_mediaplayer_component_net_txt);
             v1.setVisibility(full ? View.VISIBLE : View.INVISIBLE);
             TextView v2 = findViewById(R.id.module_mediaplayer_component_net_unit);
@@ -100,7 +98,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
 
     private void updateSpeed() {
         try {
-            String speed = getPlayerApi().getNetSpeed();
+            String speed = getNetSpeed();
             int length = speed.length();
             int start = length - 4;
             String unit = speed.substring(start, length);

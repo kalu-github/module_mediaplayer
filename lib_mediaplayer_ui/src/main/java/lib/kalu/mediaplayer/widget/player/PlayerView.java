@@ -48,13 +48,11 @@ final class PlayerView extends RelativeLayout implements PlayerApi {
     @Override
     public void addComponent(ComponentApi componentApi) {
         PlayerApi.super.addComponent(componentApi);
-        attachPlayerApi(this);
     }
 
     @Override
     public void addAllComponent(List<ComponentApi> componentApis) {
         PlayerApi.super.addAllComponent(componentApis);
-        attachPlayerApi(this);
     }
 
     @Override

@@ -24,14 +24,6 @@ interface PlayerApiComponent extends PlayerApiBase {
             int childCount = viewGroup.getChildCount();
             if (childCount <= 0)
                 throw new Exception("not find component");
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).attachPlayerApi(null);
-            }
             viewGroup.removeAllViews();
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiComponent => clearAllComponent => " + e.getMessage());
@@ -52,7 +44,6 @@ interface PlayerApiComponent extends PlayerApiBase {
                 if (!(childAt instanceof ComponentApi))
                     continue;
                 if (childAt.getClass() == cls) {
-                    ((ComponentApi) childAt).attachPlayerApi(null);
                     views.add(childAt);
                 }
             }
@@ -138,26 +129,6 @@ interface PlayerApiComponent extends PlayerApiBase {
             return null;
         }
     }
-
-    default void attachPlayerApi(PlayerApi playerApi) {
-        try {
-            ViewGroup viewGroup = getBaseControlViewGroup();
-            int childCount = viewGroup.getChildCount();
-            if (childCount <= 0)
-                throw new Exception("not find component");
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).attachPlayerApi(playerApi);
-            }
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerApiComponent => attachPlayerKernel => " + e.getMessage());
-        }
-    }
-
 
     default void dispatchKeyEventComponents(@NonNull KeyEvent event) {
         try {

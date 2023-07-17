@@ -17,23 +17,11 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
-import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
 @Keep
-public interface ComponentApi {
-
-    PlayerApi[] mPlayerApi = new PlayerApi[1];
-
-    default void attachPlayerApi(@NonNull PlayerApi api) {
-        mPlayerApi[0] = null;
-        mPlayerApi[0] = api;
-    }
-
-    default PlayerApi getPlayerApi() {
-        return mPlayerApi[0];
-    }
+public interface ComponentApi extends ComponentApiLinkerPlayer {
 
     default void callPlayerEvent(@NonNull int playState) {
     }
