@@ -807,14 +807,4 @@ public class PlayerLayout extends RelativeLayout {
 //            MPLogUtil.log("PlayerLayout => setInterceptKeycodeDpadDown => " + e.getMessage());
 //        }
 //    }
-    public String getNetSpeed() {
-        try {
-            String speed = SpeedUtil.getNetSpeed(getContext().getApplicationContext());
-            MPLogUtil.log("PlayerLayout => getNetSpeed => speed = " + speed);
-            return speed;
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => getNetSpeed => " + e.getMessage());
-            return "0kb/s";
-        }
-    }
 }

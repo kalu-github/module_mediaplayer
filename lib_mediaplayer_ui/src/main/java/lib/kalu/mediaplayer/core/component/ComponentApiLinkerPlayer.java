@@ -6,42 +6,42 @@ import android.view.ViewParent;
 import androidx.annotation.Keep;
 
 import lib.kalu.mediaplayer.util.MPLogUtil;
-import lib.kalu.mediaplayer.widget.player.PlayerLayout;
+import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 
 @Keep
 public interface ComponentApiLinkerPlayer {
 
-    default PlayerLayout getPlayerLayout() {
+    default PlayerView getPlayerView() {
         try {
-            PlayerLayout playerLayout = null;
+            PlayerView playerView = null;
             View view = (View) this;
             while (true) {
                 ViewParent parent = view.getParent();
                 if (null == parent) {
                     break;
-                } else if (parent instanceof PlayerLayout) {
-                    playerLayout = (PlayerLayout) parent;
+                } else if (parent instanceof PlayerView) {
+                    playerView = (PlayerView) parent;
                     break;
                 } else {
                     view = (View) parent;
                 }
             }
-            if (null == playerLayout)
+            if (null == playerView)
                 new Exception("not find");
-            return playerLayout;
+            return playerView;
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApiLinkerPlayer => getPlayerLayout => " + e.getMessage());
+            MPLogUtil.log("ComponentApiLinkerPlayer => getPlayerView => " + e.getMessage());
             return null;
         }
     }
 
     default boolean isFull() {
         try {
-            PlayerLayout playerLayout = getPlayerLayout();
-            if (null == playerLayout)
-                throw new Exception("playerLayout error: null");
-            return playerLayout.isFull();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.isFull();
         } catch (Exception e) {
             MPLogUtil.log("ComponentApiLinkerPlayer => isFull => " + e.getMessage());
             return false;
@@ -50,10 +50,10 @@ public interface ComponentApiLinkerPlayer {
 
     default boolean isPlaying() {
         try {
-            PlayerLayout playerLayout = getPlayerLayout();
-            if (null == playerLayout)
-                throw new Exception("playerLayout error: null");
-            return playerLayout.isPlaying();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.isPlaying();
         } catch (Exception e) {
             MPLogUtil.log("ComponentApiLinkerPlayer => isPlaying => " + e.getMessage());
             return false;
@@ -62,10 +62,10 @@ public interface ComponentApiLinkerPlayer {
 
     default String getNetSpeed() {
         try {
-            PlayerLayout playerLayout = getPlayerLayout();
-            if (null == playerLayout)
-                throw new Exception("playerLayout error: null");
-            return playerLayout.getNetSpeed();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getNetSpeed();
         } catch (Exception e) {
             MPLogUtil.log("ComponentApiLinkerPlayer => isFull => " + e.getMessage());
             return "0kb/s";
@@ -74,10 +74,10 @@ public interface ComponentApiLinkerPlayer {
 
     default void resume() {
         try {
-            PlayerLayout playerLayout = getPlayerLayout();
-            if (null == playerLayout)
-                throw new Exception("playerLayout error: null");
-            playerLayout.resume();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.resume();
         } catch (Exception e) {
             MPLogUtil.log("ComponentApiLinkerPlayer => resume => " + e.getMessage());
         }
@@ -85,10 +85,10 @@ public interface ComponentApiLinkerPlayer {
 
     default void pause() {
         try {
-            PlayerLayout playerLayout = getPlayerLayout();
-            if (null == playerLayout)
-                throw new Exception("playerLayout error: null");
-            playerLayout.pause();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.pause();
         } catch (Exception e) {
             MPLogUtil.log("ComponentApiLinkerPlayer => pause => " + e.getMessage());
         }

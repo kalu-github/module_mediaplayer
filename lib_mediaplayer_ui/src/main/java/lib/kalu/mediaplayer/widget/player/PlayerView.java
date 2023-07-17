@@ -20,7 +20,7 @@ import lib.kalu.mediaplayer.core.render.RenderApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-final class PlayerView extends RelativeLayout implements PlayerApi {
+public final class PlayerView extends RelativeLayout implements PlayerApi {
 
     // 解码
     protected KernelApi mKernel;
