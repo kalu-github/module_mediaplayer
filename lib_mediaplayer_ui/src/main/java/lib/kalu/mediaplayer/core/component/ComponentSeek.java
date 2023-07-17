@@ -17,123 +17,12 @@ import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-public class ComponentSeek extends RelativeLayout implements ComponentApi {
+public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
     public ComponentSeek(@NonNull Context context) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_seek, this, true);
     }
-
-//    @Override
-//    protected void onFinishInflate() {
-//        super.onFinishInflate();
-////        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
-////            ProgressBar progressBar = findViewById(R.id.module_mediaplayer_component_seek_pb);
-////            progressBar.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-////        }
-//
-//        try {
-//            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-//            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//                @Override
-//                public final void onStartTrackingTouch(SeekBar seekBar) {
-//                }
-//
-//                @Override
-//                public final void onStopTrackingTouch(SeekBar seekBar) {
-//                }
-//
-//                @Override
-//                public final void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-////                    if (fromUser) {
-////                        onSeekTo(progress);
-////                    } else if (!mTouch) {
-////                        onSeekProgressUpdate(progress, 0);
-////                    }
-//                }
-//            });
-//        } catch (Exception e) {
-//        }
-//    }
-
-//    @Override
-//    public boolean dispatchKeyEventComponent(KeyEvent event) {
-//        // seekForward => start
-//        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-//            try {
-//                PlayerApi playerApi = getPlayerApi();
-//                if (null == playerApi)
-//                    throw new Exception("playerApi error: null");
-//                if (playerApi.isLive())
-//                    throw new Exception("living error: true");
-//                if (!playerApi.isPlaying())
-//                    throw new Exception("isPlaying error: false");
-//                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
-//                seekForward(KeyEvent.ACTION_DOWN);
-//            } catch (Exception e) {
-//                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
-//            }
-//            return true;
-//        }
-//        // seekForward => stop
-//        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-//            try {
-//                PlayerApi playerApi = getPlayerApi();
-//                if (null == playerApi)
-//                    throw new Exception("playerApi error: null");
-//                if (playerApi.isLive())
-//                    throw new Exception("living error: true");
-//                if (!playerApi.isPlaying())
-//                    throw new Exception("isPlaying error: false");
-//                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
-//                seekForward(KeyEvent.ACTION_UP);
-//                if (playerApi.isPlaying())
-//                    throw new Exception("playing waining: true");
-//                playerApi.resume();
-//            } catch (Exception e) {
-//                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
-//            }
-//            return true;
-//        }
-//        // seekRewind => start
-//        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-//            try {
-//                PlayerApi playerApi = getPlayerApi();
-//                if (null == playerApi)
-//                    throw new Exception("playerApi error: null");
-//                if (playerApi.isLive())
-//                    throw new Exception("living error: true");
-//                if (!playerApi.isPlaying())
-//                    throw new Exception("isPlaying error: false");
-//                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
-//                seekRewind(KeyEvent.ACTION_DOWN);
-//            } catch (Exception e) {
-//                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
-//            }
-//            return true;
-//        }
-//        // seekRewind => stop
-//        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-//            try {
-//                PlayerApi playerApi = getPlayerApi();
-//                if (null == playerApi)
-//                    throw new Exception("playerApi error: null");
-//                if (playerApi.isLive())
-//                    throw new Exception("living error: true");
-//                if (!playerApi.isPlaying())
-//                    throw new Exception("isPlaying error: false");
-//                getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
-//                seekForward(KeyEvent.ACTION_UP);
-//                if (playerApi.isPlaying())
-//                    throw new Exception("playing waining: true");
-//                playerApi.resume();
-//            } catch (Exception e) {
-//                MPLogUtil.log("ComponentSeek => dispatchKeyEventComponent => " + e.getMessage());
-//            }
-//            return true;
-//        }
-//        return false;
-//    }
 
     @Override
     public void callPlayerEvent(int playState) {
@@ -152,7 +41,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 break;
             case PlayerType.StateType.STATE_LOADING_STOP:
             case PlayerType.StateType.STATE_BUFFERING_STOP:
-                MPLogUtil.log("ComponentSeek => callPlayerEvent => gone => playState = " + playState);
                 gone();
                 break;
             case PlayerType.StateType.STATE_INIT:
@@ -200,7 +88,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     @Override
     public final void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
         try {
-            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+            SeekBar seekBar = findSeekBar();
             if (null == seekBar)
                 throw new Exception("seekbar error: null");
             Object tag = getTag(R.id.module_mediaplayer_component_seek_sb);
@@ -215,7 +103,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     @Override
     public final void onUpdateSeekProgress(@NonNull long position, @NonNull long duration, @NonNull boolean updateTime) {
         try {
-            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+            SeekBar seekBar = findSeekBar();
             if (null == seekBar)
                 throw new Exception("seekBar error: null");
             seekBar.setProgress((int) position);
@@ -271,15 +159,16 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         }
     }
 
-//    @Override
-//    public final void onSeekTo(@NonNull int position) {
-//        try {
-//            PlayerApi playerApi = getPlayerApi();
-//            if (null == playerApi)
-//                throw new Exception("playerApi error null");
-//            playerApi.seekTo(true, position);
-//        } catch (Exception e) {
-//            MPLogUtil.log("ComponentSeek => onSeekTo => " + e.getMessage());
-//        }
-//    }
+    @Override
+    public SeekBar findSeekBar() {
+        try {
+            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+            if (null == seekBar)
+                throw new Exception("seekBar error: null");
+            return seekBar;
+        } catch (Exception e) {
+            MPLogUtil.log("ComponentSeek => findSeekBar => " + e.getMessage());
+            return null;
+        }
+    }
 }

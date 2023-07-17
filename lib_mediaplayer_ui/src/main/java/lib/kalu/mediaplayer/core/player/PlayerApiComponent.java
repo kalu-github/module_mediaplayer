@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import lib.kalu.mediaplayer.core.component.ComponentApi;
+import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 interface PlayerApiComponent extends PlayerApiBase {
@@ -110,6 +111,26 @@ interface PlayerApiComponent extends PlayerApiBase {
                 if (childAt.getClass() == cls) {
                     return (T) childAt;
                 }
+            }
+            throw new Exception("not find");
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiComponent => callWindowEvent => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default <T extends ComponentApiSeek> T findSeekComponent() {
+        try {
+            ViewGroup viewGroup = getBaseControlViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (childAt instanceof ComponentApiSeek)
+                    return (T) childAt;
             }
             throw new Exception("not find");
         } catch (Exception e) {

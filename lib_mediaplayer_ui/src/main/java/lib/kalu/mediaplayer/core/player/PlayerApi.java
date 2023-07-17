@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
+import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -198,10 +199,10 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
 
     default void seekForward(int action) {
         try {
-            ComponentSeek seekComponent = findComponent(ComponentSeek.class);
+            ComponentApiSeek seekComponent = findSeekComponent();
             if (null == seekComponent)
                 throw new Exception("seekComponent error: null");
-            SeekBar seekBar = seekComponent.findViewById(R.id.module_mediaplayer_component_seek_sb);
+            SeekBar seekBar = seekComponent.findSeekBar();
             if (null == seekBar)
                 throw new Exception("seekbar error: null");
             if (seekBar.getVisibility() != View.VISIBLE)
@@ -240,10 +241,10 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
 
     default void seekRewind(int action) {
         try {
-            ComponentSeek seekComponent = findComponent(ComponentSeek.class);
+            ComponentApiSeek seekComponent = findSeekComponent();
             if (null == seekComponent)
                 throw new Exception("seekComponent error: null");
-            SeekBar seekBar = seekComponent.findViewById(R.id.module_mediaplayer_component_seek_sb);
+            SeekBar seekBar = seekComponent.findSeekBar();
             if (null == seekBar)
                 throw new Exception("seekbar error: null");
             if (seekBar.getVisibility() != View.VISIBLE)
