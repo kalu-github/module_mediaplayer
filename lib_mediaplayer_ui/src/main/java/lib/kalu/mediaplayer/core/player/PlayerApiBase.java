@@ -24,6 +24,15 @@ interface PlayerApiBase {
 
     OnPlayerChangeListener[] mOnPlayerChangeListener = new OnPlayerChangeListener[1];
 
+    default PlayerLayout getPlayerLayout() {
+        try {
+            return (PlayerLayout) ((View) this).getParent();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => getPlayerLayout => " + e.getMessage());
+            return null;
+        }
+    }
+
     default ViewGroup findDecorView(View view) {
         try {
             View parent = (View) view.getParent();
@@ -217,6 +226,11 @@ interface PlayerApiBase {
 
     default void cleanPlayerChangeListener() {
         mOnPlayerChangeListener[0] = null;
+        try {
+            ((View) this).setOnKeyListener(null);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiBase => cleanPlayerChangeListener => " + e.getMessage());
+        }
     }
 
     default void setOnPlayerChangeListener(@NonNull OnPlayerChangeListener l) {

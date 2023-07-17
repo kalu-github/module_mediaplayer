@@ -187,7 +187,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
     default void onSaveBundle() {
         try {
             String url = getUrl();
-            if (null == url || url.length() <= 0)
+            if (null == url || url.length() == 0)
                 throw new Exception("url warning: " + url);
             long position = getPosition();
             long duration = getDuration();
