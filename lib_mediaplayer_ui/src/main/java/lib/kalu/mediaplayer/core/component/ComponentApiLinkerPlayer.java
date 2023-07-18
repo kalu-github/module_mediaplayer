@@ -111,4 +111,33 @@ public interface ComponentApiLinkerPlayer {
             MPLogUtil.log("ComponentApiLinkerPlayer => pause => " + e.getMessage());
         }
     }
+
+    default String getUrl() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            String url = playerView.getUrl();
+            if (null == url || url.length() == 0)
+                throw new Exception("url error: " + url);
+            return url;
+        } catch (Exception e) {
+            MPLogUtil.log("ComponentApiLinkerPlayer => getUrl => " + e.getMessage());
+            return null;
+        }
+    }
+    default String getData() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            String data = playerView.getData();
+            if (null == data || data.length() == 0)
+                throw new Exception("data error: " + data);
+            return data;
+        } catch (Exception e) {
+            MPLogUtil.log("ComponentApiLinkerPlayer => getData => " + e.getMessage());
+            return null;
+        }
+    }
 }
