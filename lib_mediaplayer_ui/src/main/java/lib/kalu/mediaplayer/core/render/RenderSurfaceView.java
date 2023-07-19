@@ -248,9 +248,14 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
      */
     @Override
     public void setRotation(float rotation) {
-        if (rotation != getRotation()) {
+        try {
+            float v = getRotation();
+            if (v == rotation)
+                throw new Exception("rotation warning: " + rotation);
             super.setRotation(rotation);
             requestLayout();
+        } catch (Exception e) {
+            MPLogUtil.log("RenderSurfaceView => setRotation => " + e.getMessage());
         }
     }
 

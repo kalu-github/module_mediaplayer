@@ -29,7 +29,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:focusable="false"
-            android:src="@drawable/module_mediaplayer_ic_resume" />
+            android:src="@drawable/module_mediaplayer_ic_pause" />
 
         <TextView
             android:id="@+id/module_mediaplayer_component_seek_position"

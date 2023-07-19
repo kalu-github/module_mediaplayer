@@ -213,6 +213,7 @@ interface PlayerApiRender extends PlayerApiBase {
             // 2
             PlayerManager.getInstance().getConfig().newBuilder().setScaleType(scaleType).build();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => setVideoScaleType => " + e.getMessage());
         }
     }
 
@@ -221,6 +222,7 @@ interface PlayerApiRender extends PlayerApiBase {
             RenderApi render = getRender();
             render.setVideoSize(width, height);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => setVideoSize => " + e.getMessage());
         }
     }
 
@@ -231,6 +233,7 @@ interface PlayerApiRender extends PlayerApiBase {
             RenderApi render = getRender();
             render.setVideoRotation(rotation);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => setVideoRotation => " + e.getMessage());
         }
     }
 
@@ -244,6 +247,7 @@ interface PlayerApiRender extends PlayerApiBase {
             RenderApi render = getRender();
             render.setScaleX(enable ? -1 : 1);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => setMirrorRotation => " + e.getMessage());
         }
     }
 
@@ -257,6 +261,7 @@ interface PlayerApiRender extends PlayerApiBase {
                 child.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => showReal => " + e.getMessage());
         }
     }
 
@@ -270,6 +275,7 @@ interface PlayerApiRender extends PlayerApiBase {
             }
             viewGroup.setVisibility(View.INVISIBLE);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => hideReal => " + e.getMessage());
         }
     }
 

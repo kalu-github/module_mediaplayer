@@ -120,10 +120,10 @@ public interface RenderApi {
 
         int measureWidth = View.MeasureSpec.getSize(widthMeasureSpec);
         int measureHeight = View.MeasureSpec.getSize(heightMeasureSpec);
+        MPLogUtil.log("RenderApi => doMeasureSpec => measureWidth => step1 => measureWidth = " + measureWidth + ", measureHeight = " + measureHeight);
 
-        try {
-            if (mVideoHeight[0] == 0 || mVideoWidth[0] == 0)
-                throw new Exception("mVideoHeight error: " + mVideoHeight + ", mVideoWidth = " + mVideoWidth);
+        if (mVideoHeight[0] == 0 || mVideoWidth[0] == 0) {
+        } else {
             switch (mVideoScaleType[0]) {
                 // 默认类型
                 default:
@@ -168,11 +168,9 @@ public interface RenderApi {
                     measureHeight = heightMeasureSpec;
                     break;
             }
-            return new int[]{measureWidth, measureHeight};
-        } catch (Exception e) {
-            MPLogUtil.log("RenderApi => doMeasureSpec => " + e.getMessage());
-            return new int[]{measureWidth, measureHeight};
         }
+        MPLogUtil.log("RenderApi => doMeasureSpec => measureWidth => step2 => measureWidth = " + measureWidth + ", measureHeight = " + measureHeight);
+        return new int[]{measureWidth, measureHeight};
     }
 
     default String saveBitmap(@NonNull Context context, @NonNull Bitmap bitmap) {
