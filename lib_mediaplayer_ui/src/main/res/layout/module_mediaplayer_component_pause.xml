@@ -74,9 +74,9 @@
             android:focusable="false"
             android:maxHeight="5dp"
             android:minHeight="5dp"
-            android:paddingStart="8dp"
+            android:paddingStart="20dp"
             android:paddingLeft="0dp"
-            android:paddingEnd="8dp"
+            android:paddingEnd="20dp"
             android:paddingRight="0dp"
             android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress"
             android:thumb="@drawable/module_mediaplayer_shape_seek_thumb" />

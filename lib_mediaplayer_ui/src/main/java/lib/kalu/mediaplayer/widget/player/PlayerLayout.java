@@ -701,6 +701,17 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public final void seekTo(@NonNull boolean force, @NonNull long seek) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.seekTo(force, seek);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => seekTo => " + e.getMessage());
+        }
+    }
+
     public final void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop) {
         try {
             PlayerView playerView = getPlayerView();
