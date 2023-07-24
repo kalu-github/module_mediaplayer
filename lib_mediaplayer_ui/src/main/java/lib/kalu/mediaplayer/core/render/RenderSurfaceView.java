@@ -2,6 +2,8 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,7 +12,6 @@ import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -107,6 +108,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 MPLogUtil.log("RenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + "mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
+//                drawBitmap();
                 if (mKernel != null) {
                     mSurface = holder.getSurface();
                     mKernel.setSurface(mSurface, 0, 0);
@@ -283,4 +285,37 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         setMeasuredDimension(measureSpec[0], measureSpec[1]);
         getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
     }
+
+    /***************/
+
+//    private void drawBitmap() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Canvas canvas = null;
+//                try {
+//                    SurfaceHolder holder = getHolder();
+//                    if (null == holder)
+//                        throw new Exception("holder warning: null");
+//                    canvas = holder.lockCanvas();
+//                    Bitmap bitmap = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
+//                    bitmap.eraseColor(Color.RED);//填充颜色
+//                    canvas.drawBitmap(bitmap, 0, 0, null);
+//                } catch (Exception e) {
+//                    MPLogUtil.log("RenderSurfaceView => drawBitmap => " + e.getMessage());
+//                }
+//                try {
+//                    SurfaceHolder holder = getHolder();
+//                    if (null == holder)
+//                        throw new Exception("holder warning: null");
+//                    if (null == canvas)
+//                        throw new Exception("canvas warning: null");
+//                    //手动try catch一下这个方法，让程序在4.3的手机上不至于崩溃，部分Android13也会崩溃
+//                    getHolder().unlockCanvasAndPost(canvas);
+//                } catch (Exception e) {
+//                    MPLogUtil.log("RenderSurfaceView => drawBitmap => " + e.getMessage());
+//                }
+//            }
+//        }).start();
+//    }
 }

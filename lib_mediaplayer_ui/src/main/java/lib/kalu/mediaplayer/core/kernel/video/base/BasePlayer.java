@@ -35,10 +35,10 @@ public abstract class BasePlayer implements KernelApi {
     public void onUpdateTimeMillis() {
         try {
             if (null == eventApi)
-                throw new Exception("eventApi error: null");
+                throw new Exception("eventApi warning: null");
             boolean playing = isPlaying();
             if (!playing)
-                throw new Exception("playing error: false");
+                throw new Exception("playing warning: false");
             long position = getPosition();
             if (position < 0)
                 position = 0;
