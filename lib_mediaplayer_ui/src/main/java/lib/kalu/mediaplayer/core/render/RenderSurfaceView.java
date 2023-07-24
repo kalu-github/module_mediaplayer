@@ -8,6 +8,7 @@ import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -261,31 +262,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         }
     }
 
-    @Override
-    public void setVideoRotation(int videoRotationDegree) {
-        RenderApi.super.setVideoRotation(videoRotationDegree);
-        requestLayout();
-    }
-
-    @Override
-    public void setVideoScaleType(int scaleType) {
-        RenderApi.super.setVideoScaleType(scaleType);
-        requestLayout();
-    }
-
-    @Override
-    public void setVideoSize(int width, int height) {
-        RenderApi.super.setVideoSize(width, height);
-        requestLayout();
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int[] measureSpec = doMeasureSpec(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(measureSpec[0], measureSpec[1]);
-        getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
-    }
-
     /***************/
 
 //    private void drawBitmap() {
@@ -318,4 +294,43 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 //            }
 //        }).start();
 //    }
+
+    /***************/
+
+    int mVideoWidth = 0;
+    int mVideoHeight = 0;
+    int mVideoScaleType = 0;
+    int mVideoRotation = 0;
+
+    @Override
+    public void setVideoSize(@NonNull int videoWidth, @NonNull int videoHeight) {
+        try {
+            if (videoWidth <= 0 || videoHeight <= 0)
+                throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
+            mVideoWidth = videoWidth;
+            mVideoHeight = videoHeight;
+            requestLayout();
+        } catch (Exception e) {
+            MPLogUtil.log("RenderSurfaceView => setVideoSize => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
+        this.mVideoRotation = videoRotation;
+        requestLayout();
+    }
+
+    @Override
+    public void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
+        this.mVideoScaleType = scaleType;
+        requestLayout();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int[] measureSpec = doMeasureSpec(widthMeasureSpec, heightMeasureSpec, mVideoScaleType, mVideoRotation, mVideoWidth, mVideoHeight);
+        setMeasuredDimension(measureSpec[0], measureSpec[1]);
+        getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
+    }
 }

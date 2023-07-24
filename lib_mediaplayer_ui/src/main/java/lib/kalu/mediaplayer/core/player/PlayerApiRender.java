@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.player;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -207,11 +208,11 @@ interface PlayerApiRender extends PlayerApiBase {
 
     default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
         try {
-            // 1
             RenderApi render = getRender();
+            if (null == render)
+                throw new Exception("render error: null");
             render.setVideoScaleType(scaleType);
-            // 2
-            PlayerManager.getInstance().getConfig().newBuilder().setScaleType(scaleType).build();
+            PlayerManager.getInstance().setVideoScaleType(scaleType);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => setVideoScaleType => " + e.getMessage());
         }

@@ -72,8 +72,9 @@ public final class PlayerManager {
         return this;
     }
 
-    public PlayerManager setScaleType(@PlayerType.ScaleType.Value int v) {
-        mPlayerBuilder.setScaleType(v);
+    public PlayerManager setVideoScaleType(@PlayerType.ScaleType.Value int v) {
+        mPlayerBuilder.setVideoScaleType(v);
+        updateConfig(false);
         return this;
     }
 
@@ -107,10 +108,18 @@ public final class PlayerManager {
     }
 
     public PlayerBuilder getConfig() {
-        if (null == mConfig) {
+        updateConfig(true);
+        return mConfig;
+    }
+
+    private void updateConfig(boolean check) {
+        if (check) {
+            if (null == mConfig) {
+                mConfig = mPlayerBuilder.build();
+            }
+        } else {
             mConfig = mPlayerBuilder.build();
         }
-        return mConfig;
     }
 
     /***************/

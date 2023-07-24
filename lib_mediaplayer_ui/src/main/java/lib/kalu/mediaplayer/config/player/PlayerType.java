@@ -162,19 +162,20 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
     @interface ScaleType {
-        int SCREEN_SCALE_DEFAULT = 4_001; //默认类型
-        int SCREEN_SCALE_16_9 = 4_002; //16：9比例类型，最为常见
-        int SCREEN_SCALE_4_3 = 4_003;  //4：3比例类型，也比较常见
-        int SCREEN_SCALE_MATCH_PARENT = 4_004; //充满整个控件视图
-        int SCREEN_SCALE_ORIGINAL = 4_005; //原始类型，指视频的原始类型
-        int SCREEN_SCALE_CENTER_CROP = 4_006; //剧中裁剪类型
+        int SCREEN_SCALE_SCREEN_CROP = 4_001; // 填充屏幕, 裁剪
+        int SCREEN_SCALE_SCREEN_MATCH = 4_002; // 填充屏幕, 不裁剪, 可能会变形
+        int SCREEN_SCALE_VIDEO_ORIGINAL = 4_003; // 视频尺寸, 可能存在黑边
+        int SCREEN_SCALE_16_9 = 4_004; //16：9比例类型，最为常见
+        int SCREEN_SCALE_4_3 = 4_005;  //4：3比例类型，也比较常见
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({SCREEN_SCALE_DEFAULT, SCREEN_SCALE_16_9,
-                SCREEN_SCALE_4_3, SCREEN_SCALE_MATCH_PARENT,
-                SCREEN_SCALE_ORIGINAL, SCREEN_SCALE_CENTER_CROP})
+        @IntDef({SCREEN_SCALE_SCREEN_CROP,
+                SCREEN_SCALE_SCREEN_MATCH,
+                SCREEN_SCALE_VIDEO_ORIGINAL,
+                SCREEN_SCALE_16_9,
+                SCREEN_SCALE_4_3})
         @Keep
         @interface Value {
         }

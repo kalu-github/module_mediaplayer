@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -21,9 +23,6 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 @Keep
 public interface RenderApi {
 
-    /**
-     *
-     */
     void init();
 
     void addListener();
@@ -76,101 +75,93 @@ public interface RenderApi {
 
     /******************/
 
-    int[] mVideoWidth = new int[1];
-    int[] mVideoHeight = new int[1];
-    int[] mVideoScaleType = new int[1];
-    int[] mVideoRotation = new int[1];
-
     /**
      * 设置视频旋转角度
      *
      * @param videoRotation 角度值
      */
-    default void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
-        mVideoRotation[0] = videoRotation;
-    }
+    void setVideoRotation(@PlayerType.RotationType.Value int videoRotation);
 
-    default void setVideoSize(int videoWidth, int videoHeight) {
-        try {
-            if (videoWidth <= 0 || videoHeight <= 0)
-                throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
-            mVideoWidth[0] = videoWidth;
-            mVideoHeight[0] = videoHeight;
-        } catch (Exception e) {
-            MPLogUtil.log("RenderApi => setVideoSize => " + e.getMessage());
-        }
-    }
+    void setVideoSize(int videoWidth, int videoHeight);
 
-    default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
-        mVideoScaleType[0] = scaleType;
-    }
+    void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType);
 
     /**
      * 注意：VideoView的宽高一定要定死，否者以下算法不成立
      * 借鉴于网络
      */
-    default int[] doMeasureSpec(int widthMeasureSpec, int heightMeasureSpec) {
+    default int[] doMeasureSpec(@NonNull int widthMeasureSpec,
+                                @NonNull int heightMeasureSpec,
+                                @PlayerType.ScaleType.Value int videoScaleType,
+                                @PlayerType.RotationType.Value int videoRotation,
+                                @NonNull int videoWidth,
+                                @NonNull int videoHeight) {
 
-        if (mVideoRotation[0] == 90 || mVideoRotation[0] == 270) {
+        if (videoScaleType == 0) {
+            videoScaleType = PlayerManager.getInstance().getConfig().getVideoScaleType();
+        }
+
+        if (videoRotation == 90 || videoRotation == 270) {
             // 软解码时处理旋转信息，交换宽高
             widthMeasureSpec = widthMeasureSpec + heightMeasureSpec;
             heightMeasureSpec = widthMeasureSpec - heightMeasureSpec;
             widthMeasureSpec = widthMeasureSpec - heightMeasureSpec;
         }
 
-        int measureWidth = View.MeasureSpec.getSize(widthMeasureSpec);
-        int measureHeight = View.MeasureSpec.getSize(heightMeasureSpec);
-        MPLogUtil.log("RenderApi => doMeasureSpec => measureWidth => step1 => measureWidth = " + measureWidth + ", measureHeight = " + measureHeight);
+        int screenWidth = View.MeasureSpec.getSize(widthMeasureSpec);
+        int screenHeight = View.MeasureSpec.getSize(heightMeasureSpec);
+        MPLogUtil.log("RenderApi => doMeasureSpec => measureWidth => screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
 
-        if (mVideoHeight[0] == 0 || mVideoWidth[0] == 0) {
-        } else {
-            switch (mVideoScaleType[0]) {
-                // 默认类型
-                default:
-                    if (mVideoWidth[0] * measureHeight < measureWidth * mVideoHeight[0]) {
-                        measureWidth = measureHeight * mVideoWidth[0] / mVideoHeight[0];
-                    } else if (mVideoWidth[0] * measureHeight > measureWidth * mVideoHeight[0]) {
-                        measureHeight = measureWidth * mVideoHeight[0] / mVideoWidth[0];
-                    }
-                    break;
-                // 裁剪类型
-                case PlayerType.ScaleType.SCREEN_SCALE_CENTER_CROP:
-                    if (mVideoWidth[0] * measureHeight > measureWidth * mVideoHeight[0]) {
-                        measureWidth = measureHeight * mVideoWidth[0] / mVideoHeight[0];
-                    } else {
-                        measureHeight = measureWidth * mVideoHeight[0] / mVideoWidth[0];
-                    }
-                    break;
-                // 4:3
-                case PlayerType.ScaleType.SCREEN_SCALE_4_3:
-                    if (measureHeight > measureWidth / 4 * 3) {
-                        measureHeight = measureWidth / 4 * 3;
-                    } else {
-                        measureWidth = measureHeight / 3 * 4;
-                    }
-                    break;
-                // 16:9
-                case PlayerType.ScaleType.SCREEN_SCALE_16_9:
-                    if (measureHeight > measureWidth / 16 * 9) {
-                        measureHeight = measureWidth / 16 * 9;
-                    } else {
-                        measureWidth = measureHeight / 9 * 16;
-                    }
-                    break;
-                // 原始类型，指视频的原始类型
-                case PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL:
-                    measureWidth = mVideoWidth[0];
-                    measureHeight = mVideoHeight[0];
-                    break;
-                //充满整个控件视图
-                case PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT:
-                    measureWidth = widthMeasureSpec;
-                    measureHeight = heightMeasureSpec;
-                    break;
+        try {
+            // 填充屏幕, 裁剪
+            if (videoWidth > 0 && videoHeight > 0 && videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_SCREEN_CROP) {
+                if (videoWidth * screenHeight > screenWidth * videoHeight) {
+                    int newScreenWidth = screenHeight * videoWidth / videoHeight;
+                    return new int[]{newScreenWidth, screenHeight};
+                } else {
+                    int newScreenHeight = screenWidth * videoHeight / videoWidth;
+                    return new int[]{screenWidth, newScreenHeight};
+                }
             }
+            // 视频尺寸
+            else if (videoWidth > 0 && videoHeight > 0 && videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_VIDEO_ORIGINAL) {
+                return new int[]{videoWidth, videoHeight};
+            }
+            // 16:9
+            else if (videoWidth > 0 && videoHeight > 0 && videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_16_9) {
+                if (screenHeight > screenWidth / 16 * 9) {
+                    int newScreenHeight = screenWidth / 16 * 9;
+                    return new int[]{screenWidth, newScreenHeight};
+                } else {
+                    int newScreenWidth = screenHeight / 9 * 16;
+                    return new int[]{newScreenWidth, screenHeight};
+                }
+            }
+            // 4:3
+            else if (videoWidth > 0 && videoHeight > 0 && videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_4_3) {
+                if (screenHeight > screenWidth / 4 * 3) {
+                    int newScreenHeight = screenWidth / 4 * 3;
+                    return new int[]{screenWidth, newScreenHeight};
+                } else {
+                    int newScreenWidth = screenHeight / 3 * 4;
+                    return new int[]{newScreenWidth, screenHeight};
+                }
+            }
+            // 错误1
+            else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH) {
+                throw new Exception("not need crop");
+            }
+            // 错误2
+            else if (videoWidth < 0 || videoHeight < 0) {
+                throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
+            }
+            // 错误3
+            else {
+                throw new Exception("not find");
+            }
+        } catch (Exception e) {
+            return new int[]{screenWidth, screenHeight};
         }
-        MPLogUtil.log("RenderApi => doMeasureSpec => measureWidth => step2 => measureWidth = " + measureWidth + ", measureHeight = " + measureHeight);
-        return new int[]{measureWidth, measureHeight};
     }
 
     default String saveBitmap(@NonNull Context context, @NonNull Bitmap bitmap) {

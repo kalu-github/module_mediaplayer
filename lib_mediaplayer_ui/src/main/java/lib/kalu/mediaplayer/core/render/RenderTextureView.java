@@ -18,6 +18,7 @@ package lib.kalu.mediaplayer.core.render;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
@@ -25,6 +26,7 @@ import android.view.TextureView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -214,27 +216,42 @@ public class RenderTextureView extends TextureView implements RenderApi {
         }
     }
 
+    /***************/
+
+    int mVideoWidth = 0;
+    int mVideoHeight = 0;
+    int mVideoScaleType = 0;
+    int mVideoRotation = 0;
+
     @Override
-    public void setVideoRotation(int videoRotationDegree) {
-        RenderApi.super.setVideoRotation(videoRotationDegree);
+    public void setVideoSize(@NonNull int videoWidth, @NonNull int videoHeight) {
+        try {
+            if (videoWidth <= 0 || videoHeight <= 0)
+                throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
+            mVideoWidth = videoWidth;
+            mVideoHeight = videoHeight;
+            requestLayout();
+        } catch (Exception e) {
+            MPLogUtil.log("RenderSurfaceView => setVideoSize => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
+        this.mVideoRotation = videoRotation;
         requestLayout();
     }
 
     @Override
-    public void setVideoScaleType(int scaleType) {
-        RenderApi.super.setVideoScaleType(scaleType);
+    public void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
+        this.mVideoScaleType = scaleType;
         requestLayout();
     }
 
-    @Override
-    public void setVideoSize(int width, int height) {
-        RenderApi.super.setVideoSize(width, height);
-        requestLayout();
-    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int[] measureSpec = doMeasureSpec(widthMeasureSpec, heightMeasureSpec);
+        int[] measureSpec = doMeasureSpec(widthMeasureSpec, heightMeasureSpec, mVideoScaleType, mVideoRotation, mVideoWidth, mVideoHeight);
         setMeasuredDimension(measureSpec[0], measureSpec[1]);
     }
 }

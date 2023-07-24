@@ -23,7 +23,7 @@ public final class PlayerBuilder {
     @PlayerType.RenderType.Value
     private int render; // 渲染类型
     @PlayerType.ScaleType
-    private int scaleType; // 视频缩放比例
+    private int videoScaleType; // 视频缩放比例
     private boolean checkMobileNetwork; // 监测手机网络环境
     private boolean fitMobileCutout; // 是否适配手机刘海屏，默认适配
     private boolean checkOrientation;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
@@ -75,8 +75,8 @@ public final class PlayerBuilder {
     }
 
     @PlayerType.ScaleType.Value
-    public int getScaleType() {
-        return scaleType;
+    public int getVideoScaleType() {
+        return videoScaleType;
     }
 
     public boolean isCheckMobileNetwork() {
@@ -108,7 +108,7 @@ public final class PlayerBuilder {
         exoFFmpeg = builder.exoFFmpeg;
         kernel = builder.kernel;
         render = builder.render;
-        scaleType = builder.scaleType;
+        videoScaleType = builder.videoScaleType;
         checkMobileNetwork = builder.checkMobileNetwork;
         fitMobileCutout = builder.fitMobileCutout;
         checkOrientation = builder.checkOrientation;
@@ -127,7 +127,7 @@ public final class PlayerBuilder {
         builder.setExoFFmpeg(this.exoFFmpeg);
         builder.setKernel(this.kernel);
         builder.setRender(this.render);
-        builder.setScaleType(this.scaleType);
+        builder.setVideoScaleType(this.videoScaleType);
         builder.setCheckMobileNetwork(this.checkMobileNetwork);
         builder.setFitMobileCutout(this.fitMobileCutout);
         builder.setCheckOrientation(this.checkOrientation);
@@ -153,7 +153,7 @@ public final class PlayerBuilder {
         @PlayerType.RenderType.Value
         private int render = PlayerType.RenderType.TEXTURE_VIEW; // 渲染类型
         @PlayerType.ScaleType
-        private int scaleType = PlayerType.ScaleType.SCREEN_SCALE_DEFAULT; // 视频缩放比例
+        private int videoScaleType = PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH; // 视频缩放比例
         private boolean checkMobileNetwork = false; // 监测手机网络环境
         private boolean fitMobileCutout = true; // 是否适配手机刘海屏，默认适配
         private boolean checkOrientation = false;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
@@ -213,8 +213,8 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public Builder setScaleType(@PlayerType.ScaleType.Value int v) {
-            scaleType = v;
+        public Builder setVideoScaleType(@PlayerType.ScaleType.Value int v) {
+            videoScaleType = v;
             return this;
         }
 
