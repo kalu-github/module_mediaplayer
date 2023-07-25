@@ -14,7 +14,7 @@
 
     <!-- 快进快退 -->
     <LinearLayout
-        android:id="@+id/module_mediaplayer_component_seek_seekbar"
+        android:id="@+id/module_mediaplayer_component_seek_ui"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_alignParentBottom="true"
