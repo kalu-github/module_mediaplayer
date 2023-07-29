@@ -16,6 +16,7 @@ import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
 import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 @Keep
 public final class VideoAndroidPlayer extends BasePlayer {
@@ -57,9 +58,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
             mMediaPlayer.setOnSeekCompleteListener(null);
             mMediaPlayer.setOnVideoSizeChangedListener(null);
             mMediaPlayer.setSurface(null);
-            mMediaPlayer.pause();
             mMediaPlayer.stop();
-            mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
         } catch (Exception e) {
@@ -73,9 +72,9 @@ public final class VideoAndroidPlayer extends BasePlayer {
         try {
             releaseDecoder(false);
             mMediaPlayer = new MediaPlayer();
+            mMediaPlayer.reset();
             mMediaPlayer.setLooping(false);
             setVolume(1F, 1F);
-            initListener();
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => createDecoder => " + e.getMessage());
         }
@@ -90,6 +89,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
             if (url == null || url.length() == 0)
                 throw new IllegalArgumentException("url error: " + url);
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
+            initListener();
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);
             mMediaPlayer.prepareAsync();
         } catch (IllegalArgumentException e) {
@@ -136,6 +136,17 @@ public final class VideoAndroidPlayer extends BasePlayer {
 //            MPLogUtil.log("VideoAndroidPlayer => " + e.getMessage());
 //        }
 //    }
+
+    public void startPrepared() {
+        try {
+            if (null == mMediaPlayer)
+                throw new Exception("mMediaPlayer error: null");
+            mMediaPlayer.seekTo(0);
+            mMediaPlayer.start();
+        } catch (Exception e) {
+            MPLogUtil.log("VideoAndroidPlayer => startPrepared => " + e.getMessage());
+        }
+    }
 
     /**
      * 播放
@@ -301,11 +312,16 @@ public final class VideoAndroidPlayer extends BasePlayer {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
             try {
-                if (what == -38)
+                if (what == -38) {
                     throw new Exception("what warning: " + what);
-                MPLogUtil.log("VideoAndroidPlayer => onError => what = " + what);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+                } else {
+                    MPLogUtil.log("VideoAndroidPlayer => onError => what = " + what);
+                    if (what == -10005) {
+                    } else {
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+                    }
+                }
             } catch (Exception e) {
                 MPLogUtil.log("VideoAndroidPlayer => onError => " + e.getMessage());
             }
@@ -386,7 +402,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 seekTo(seek, false);
             } catch (Exception e) {
                 MPLogUtil.log("VideoAndroidPlayer => onPrepared => " + e.getMessage());
-                start();
+                startPrepared();
             }
         }
     };

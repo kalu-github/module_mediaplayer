@@ -20,19 +20,25 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 
 interface PlayerApiRender extends PlayerApiBase {
 
-    default void clearSuface() {
+    default void clearCanvas() {
         try {
             RenderApi render = getRender();
+            if (null == render)
+                throw new Exception("render error: null");
             render.clearCanvas();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => clearCanvas => " + e.getMessage());
         }
     }
 
-    default void updateSuface() {
+    default void updateCanvas() {
         try {
             RenderApi render = getRender();
+            if (null == render)
+                throw new Exception("render error: null");
             render.updateCanvas();
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiRender => updateCanvas => " + e.getMessage());
         }
     }
 

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -108,7 +109,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
              */
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                MPLogUtil.log("RenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + "mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
+                MPLogUtil.log("RenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
 //                drawBitmap();
                 if (mKernel != null) {
                     mSurface = holder.getSurface();
@@ -187,6 +188,18 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Override
     public void clearCanvas() {
+        try {
+            SurfaceHolder holder = getHolder();
+            if (null == holder)
+                throw new Exception("holder error: null");
+            Canvas canvas = holder.lockCanvas();
+            if (null == canvas)
+                throw new Exception("canvas error: null");
+            canvas.drawColor(Color.BLACK);
+            holder.unlockCanvasAndPost(canvas);
+        } catch (Exception e) {
+            MPLogUtil.log("RenderSurfaceView => clearCanvas => " + e.getMessage());
+        }
 //        try {
 //            Canvas canvas = mSurface.lockCanvas(null);
 //            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
