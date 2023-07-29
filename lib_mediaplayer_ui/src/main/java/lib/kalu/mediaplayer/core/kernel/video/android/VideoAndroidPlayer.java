@@ -11,6 +11,8 @@ import android.view.SurfaceHolder;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import java.util.Arrays;
+
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
@@ -338,6 +340,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
     };
 
     private MediaPlayer.OnInfoListener onInfoListener = new MediaPlayer.OnInfoListener() {
+
         @Override
         public boolean onInfo(MediaPlayer mp, int what, int extra) {
             MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what);
@@ -355,13 +358,17 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
             }
-            // 开始播放
+            // 开始播放1
             else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
-                if (!mPlayWhenReady) {
-                    pause();
-                }
+//                if (!mPlayWhenReady) {
+//                    pause();
+//                }
+            }
+            // 开始播放2
+            else if (what == PlayerType.EventType.EVENT_VIDEO_START_903) {
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START_903);
             }
             return true;
         }
@@ -383,18 +390,6 @@ public final class VideoAndroidPlayer extends BasePlayer {
     private MediaPlayer.OnPreparedListener mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
-//            try {
-//                if (null == mp)
-//                    throw new Exception("mp error: null");
-//                int videoWidth = mp.getVideoWidth();
-//                int videoHeight = mp.getVideoHeight();
-//                MPLogUtil.log("VideoAndroidPlayer => onPrepared => videoWidth = " + videoWidth+", videoHeight = "+videoHeight);
-//                if (videoWidth < 0 || videoHeight < 0)
-//                    throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
-//                onChanged(PlayerType.KernelType.ANDROID, videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);
-//            } catch (Exception e) {
-//                MPLogUtil.log("VideoAndroidPlayer => onPrepared => " + e.getMessage());
-//            }
             try {
                 long seek = getSeek();
                 if (seek <= 0)

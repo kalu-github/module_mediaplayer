@@ -256,6 +256,7 @@ public @interface PlayerType {
         // 开始渲染视频画面
         int EVENT_VIDEO_END = 7_008;
         int EVENT_VIDEO_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
+        int EVENT_VIDEO_START_903 = 903;
         int EVENT_VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
         //        int EVENT_VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
         //        int EVENT_VIDEO_STOP = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
@@ -287,6 +288,7 @@ public @interface PlayerType {
 //                EVENT_AUDIO_SEEK_RENDERING_START,
 //                EVENT_AUDIO_RENDERING_START,
                 EVENT_VIDEO_START,
+                EVENT_VIDEO_START_903,
                 EVENT_VIDEO_START_SEEK,
                 EVENT_VIDEO_END,
 //                EVENT_VIDEO_STOP,

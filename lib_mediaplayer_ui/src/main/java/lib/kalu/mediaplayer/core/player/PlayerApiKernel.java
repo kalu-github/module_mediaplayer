@@ -687,6 +687,13 @@ interface PlayerApiKernel extends PlayerApiListener,
                             }
                             break;
                         // 播放开始
+                        case PlayerType.EventType.EVENT_VIDEO_START_903:
+                            // step1
+                            showReal();
+                            // step2
+                            checkReal();
+                            break;
+                        // 播放开始
                         case PlayerType.EventType.EVENT_VIDEO_START:
 //                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
