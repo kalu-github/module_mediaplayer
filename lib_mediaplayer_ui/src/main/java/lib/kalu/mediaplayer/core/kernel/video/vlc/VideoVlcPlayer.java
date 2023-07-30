@@ -25,9 +25,10 @@ public final class VideoVlcPlayer extends BasePlayer {
     private boolean mLive = false;
     private boolean mMute = false;
     private boolean mPlayWhenReady = true;
+    private boolean mPrepared = false;
 
-    private lib.kalu.vlc.widget.VlcPlayer mPlayer;
-    private lib.kalu.vlc.widget.OnVlcInfoChangeListener mPlayerListener;
+    private lib.kalu.vlc.widget.VlcPlayer mVlcPlayer;
+    private lib.kalu.vlc.widget.OnVlcInfoChangeListener mVlcPlayerListener;
 
     public VideoVlcPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         super(musicApi, eventApi);
@@ -44,23 +45,13 @@ public final class VideoVlcPlayer extends BasePlayer {
     @Override
     public void releaseDecoder(boolean isFromUser) {
         try {
-            if (null == mPlayer)
-                throw new Exception("mPlayer error: null");
+            if (null == mVlcPlayer)
+                throw new Exception("mVlcPlayer error: null");
             if (isFromUser) {
                 setEvent(null);
             }
+            release();
             stopExternalMusic(true);
-            if (null != mPlayerListener) {
-                if (null != mPlayer) {
-                    mPlayer.setOnVlcInfoChangeListener(null);
-                }
-            }
-            mPlayerListener = null;
-            mPlayer.setSurface(null, 0, 0);
-            mPlayer.pause();
-            mPlayer.stop();
-            mPlayer.release();
-            mPlayer = null;
         } catch (Exception e) {
         }
     }
@@ -69,7 +60,7 @@ public final class VideoVlcPlayer extends BasePlayer {
     public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
         try {
             releaseDecoder(false);
-            mPlayer = new VlcPlayer(context);
+            mVlcPlayer = new VlcPlayer(context);
             setLooping(false);
             setVolume(1F, 1F);
             initListener();
@@ -80,13 +71,13 @@ public final class VideoVlcPlayer extends BasePlayer {
     @Override
     public void startDecoder(@NonNull Context context, @NonNull String url) {
         try {
-            if (null == mPlayer)
-                throw new Exception("mPlayer error: null");
+            if (null == mVlcPlayer)
+                throw new Exception("mVlcPlayer error: null");
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
-            mPlayer.setDataSource(Uri.parse(url), mPlayWhenReady);
-            mPlayer.play();
+            mVlcPlayer.setDataSource(Uri.parse(url), mPlayWhenReady);
+            mVlcPlayer.play();
         } catch (Exception e) {
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_URL);
@@ -103,7 +94,7 @@ public final class VideoVlcPlayer extends BasePlayer {
      */
     private void initListener() {
         MPLogUtil.log("VideoVlcPlayer => initListener =>");
-        mPlayerListener = new OnVlcInfoChangeListener() {
+        mVlcPlayerListener = new OnVlcInfoChangeListener() {
             @Override
             public void onStart() {
                 onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
@@ -141,7 +132,25 @@ public final class VideoVlcPlayer extends BasePlayer {
                 onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_PARSE);
             }
         };
-        mPlayer.setOnVlcInfoChangeListener(mPlayerListener);
+        mVlcPlayer.setOnVlcInfoChangeListener(mVlcPlayerListener);
+    }
+
+    @Override
+    public void release() {
+        try {
+            if (null == mVlcPlayer)
+                throw new Exception("mVlcPlayer error: null");
+            if (null != mVlcPlayerListener) {
+                mVlcPlayer.setOnVlcInfoChangeListener(null);
+            }
+            mVlcPlayerListener = null;
+            mVlcPlayer.setSurface(null, 0, 0);
+            mVlcPlayer.release();
+            mVlcPlayer = null;
+            mPrepared = false;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoVlcPlayer => release => " + e.getMessage());
+        }
     }
 
     /**
@@ -149,8 +158,12 @@ public final class VideoVlcPlayer extends BasePlayer {
      */
     @Override
     public void start() {
-        if (null != mPlayer) {
-            mPlayer.play();
+        try {
+            if (null == mVlcPlayer)
+                throw new Exception("mVlcPlayer error: null");
+            mVlcPlayer.play();
+        } catch (Exception e) {
+            MPLogUtil.log("VideoVlcPlayer => start => " + e.getMessage());
         }
     }
 
@@ -159,8 +172,12 @@ public final class VideoVlcPlayer extends BasePlayer {
      */
     @Override
     public void pause() {
-        if (null != mPlayer) {
-            mPlayer.pause();
+        try {
+            if (null == mVlcPlayer)
+                throw new Exception("mVlcPlayer error: null");
+            mVlcPlayer.pause();
+        } catch (Exception e) {
+            MPLogUtil.log("VideoVlcPlayer => pause => " + e.getMessage());
         }
     }
 
@@ -169,9 +186,12 @@ public final class VideoVlcPlayer extends BasePlayer {
      */
     @Override
     public void stop() {
-        if (null != mPlayer) {
-            mPlayer.pause();
-            mPlayer.stop();
+        try {
+            if (null == mVlcPlayer)
+                throw new Exception("mVlcPlayer error: null");
+            mVlcPlayer.stop();
+        } catch (Exception e) {
+            MPLogUtil.log("VideoVlcPlayer => stop => " + e.getMessage());
         }
     }
 
@@ -180,8 +200,8 @@ public final class VideoVlcPlayer extends BasePlayer {
      */
     @Override
     public boolean isPlaying() {
-        if (null != mPlayer) {
-            return mPlayer.isPlaying();
+        if (null != mVlcPlayer) {
+            return mVlcPlayer.isPlaying();
         } else {
             return false;
         }
@@ -194,7 +214,7 @@ public final class VideoVlcPlayer extends BasePlayer {
     public void seekTo(long time, @NonNull boolean seekHelp) {
 //        setReadying(false);
 //        try {
-//            mPlayer.seekTo((int) time);
+//            mVlcPlayer.seekTo((int) time);
 //        } catch (IllegalStateException e) {
 //        }
     }
@@ -204,8 +224,8 @@ public final class VideoVlcPlayer extends BasePlayer {
      */
     @Override
     public long getPosition() {
-        if (null != mPlayer) {
-            return mPlayer.getPosition();
+        if (null != mVlcPlayer) {
+            return mVlcPlayer.getPosition();
         } else {
             return 0L;
         }
@@ -216,8 +236,8 @@ public final class VideoVlcPlayer extends BasePlayer {
      */
     @Override
     public long getDuration() {
-        if (null != mPlayer) {
-            return mPlayer.getDuration();
+        if (null != mVlcPlayer) {
+            return mVlcPlayer.getDuration();
         } else {
             return 0L;
         }
@@ -225,9 +245,9 @@ public final class VideoVlcPlayer extends BasePlayer {
 
     @Override
     public void setSurface(@NonNull Surface sf, int w, int h) {
-        MPLogUtil.log("VideoVlcPlayer => setSurface => sf = " + sf + ", mPlayer = " + mPlayer + ", w = " + w + ", h = " + h);
-        if (null != sf && null != mPlayer) {
-            mPlayer.setSurface(sf, w, h);
+        MPLogUtil.log("VideoVlcPlayer => setSurface => sf = " + sf + ", mVlcPlayer = " + mVlcPlayer + ", w = " + w + ", h = " + h);
+        if (null != sf && null != mVlcPlayer) {
+            mVlcPlayer.setSurface(sf, w, h);
         }
     }
 
@@ -248,8 +268,8 @@ public final class VideoVlcPlayer extends BasePlayer {
      */
     @Override
     public float getSpeed() {
-        if (null != mPlayer) {
-            return mPlayer.getSpeed();
+        if (null != mVlcPlayer) {
+            return mVlcPlayer.getSpeed();
         } else {
             return 1F;
         }
@@ -262,8 +282,8 @@ public final class VideoVlcPlayer extends BasePlayer {
      */
     @Override
     public void setSpeed(float speed) {
-        if (null != mPlayer) {
-            mPlayer.setSpeed(speed);
+        if (null != mVlcPlayer) {
+            mVlcPlayer.setSpeed(speed);
         }
     }
 
@@ -271,16 +291,16 @@ public final class VideoVlcPlayer extends BasePlayer {
 
     @Override
     public void setVolume(float v1, float v2) {
-        if (null != mPlayer) {
+        if (null != mVlcPlayer) {
             boolean videoMute = isMute();
             if (videoMute) {
-                mPlayer.setVolume(0F, 0F);
+                mVlcPlayer.setVolume(0F, 0F);
             } else {
                 float value = Math.max(v1, v2);
                 if (value > 1f) {
                     value = 1f;
                 }
-                mPlayer.setVolume(value, value);
+                mVlcPlayer.setVolume(value, value);
             }
         }
     }
@@ -338,5 +358,10 @@ public final class VideoVlcPlayer extends BasePlayer {
     @Override
     public boolean isLooping() {
         return mLoop;
+    }
+
+    @Override
+    public boolean isPrepared() {
+        return mPrepared;
     }
 }

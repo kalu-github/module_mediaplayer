@@ -27,6 +27,7 @@ public final class VideoFFmpegPlayer extends BasePlayer {
 
     private FFmpegPlayer mFFmpegPlayer = null;
     private boolean mPlayWhenReady = true;
+    private boolean mPrepared = false;
 
     public VideoFFmpegPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         super(musicApi, eventApi);
@@ -46,18 +47,8 @@ public final class VideoFFmpegPlayer extends BasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
+            release();
             stopExternalMusic(true);
-            mFFmpegPlayer.setOnErrorListener(null);
-            mFFmpegPlayer.setOnCompletionListener(null);
-            mFFmpegPlayer.setOnInfoListener(null);
-            mFFmpegPlayer.setOnBufferingUpdateListener(null);
-            mFFmpegPlayer.setOnPreparedListener(null);
-            mFFmpegPlayer.setOnVideoSizeChangedListener(null);
-            mFFmpegPlayer.setSurface(null);
-            mFFmpegPlayer.pause();
-            mFFmpegPlayer.stop();
-            mFFmpegPlayer.release();
-            mFFmpegPlayer = null;
         } catch (Exception e) {
             MPLogUtil.log("VideoFFmpegPlayer => releaseDecoder => " + e.getMessage());
         }
@@ -127,6 +118,27 @@ public final class VideoFFmpegPlayer extends BasePlayer {
 //        }
 //    }
 
+    @Override
+    public void release() {
+        try {
+            if (null == mFFmpegPlayer)
+                throw new Exception("mFFmpegPlayer error: null");
+            mFFmpegPlayer.setOnErrorListener(null);
+            mFFmpegPlayer.setOnCompletionListener(null);
+            mFFmpegPlayer.setOnInfoListener(null);
+            mFFmpegPlayer.setOnBufferingUpdateListener(null);
+            mFFmpegPlayer.setOnPreparedListener(null);
+            mFFmpegPlayer.setOnVideoSizeChangedListener(null);
+            mFFmpegPlayer.setSurface(null);
+            mFFmpegPlayer.reset();
+            mFFmpegPlayer.release();
+            mFFmpegPlayer = null;
+            mPrepared = false;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoFFmpegPlayer => start => " + e.getMessage());
+        }
+    }
+
     /**
      * 播放
      */
@@ -163,7 +175,6 @@ public final class VideoFFmpegPlayer extends BasePlayer {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
-            mFFmpegPlayer.pause();
             mFFmpegPlayer.stop();
         } catch (Exception e) {
             MPLogUtil.log("VideoFFmpegPlayer => stop => " + e.getMessage());
@@ -340,6 +351,7 @@ public final class VideoFFmpegPlayer extends BasePlayer {
     private FFmpegPlayer.OnPreparedListener onPreparedListener = new FFmpegPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(FFmpegPlayer mp) {
+            mPrepared = true;
             try {
                 long seek = getSeek();
                 if (seek <= 0)
@@ -442,5 +454,10 @@ public final class VideoFFmpegPlayer extends BasePlayer {
     @Override
     public boolean isLooping() {
         return mLoop;
+    }
+
+    @Override
+    public boolean isPrepared() {
+        return mPrepared;
     }
 }

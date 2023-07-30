@@ -63,6 +63,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
     private boolean mLive = false;
     private boolean mMute = false;
     private boolean mPlayWhenReady = true;
+    private boolean mPrepared = false;
     private PlaybackParameters mSpeedPlaybackParameters;
 
     private ExoPlayer mExoPlayer;
@@ -86,16 +87,8 @@ public final class VideoExoPlayer2 extends BasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
+            release();
             stopExternalMusic(true);
-            if (null != mAnalyticsListener) {
-                mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
-            }
-            mAnalyticsListener = null;
-            mSpeedPlaybackParameters = null;
-            mExoPlayer.setVideoSurface(null);
-            mExoPlayer.setPlayWhenReady(false);
-            mExoPlayer.release();
-            mExoPlayer = null;
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer2 => releaseDecoder => " + e.getMessage());
         }
@@ -248,7 +241,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
 
                 @Override
                 public void onVideoSizeChanged(EventTime eventTime, VideoSize videoSize) {
-                    onMeasure(PlayerType.KernelType.EXO_V2, videoSize.width, videoSize.height, videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : -1);
+                    onMeasure(PlayerType.KernelType.EXO_V2, videoSize.width, videoSize.height, videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.Rotation_0);
                 }
 
                 @Override
@@ -277,7 +270,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
                     }
                     // 播放开始
                     else if (state == Player.STATE_READY) {
-
+                        mPrepared = true;
                         MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => onPlaybackStateChanged[播放开始] =>");
                         if (seekHelp) {
                             seekHelp = false;
@@ -564,6 +557,29 @@ public final class VideoExoPlayer2 extends BasePlayer {
         return mLoop;
     }
 
+    @Override
+    public boolean isPrepared() {
+        return mPrepared;
+    }
+
+    @Override
+    public void release() {
+        try {
+            if (null != mAnalyticsListener) {
+                mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
+            }
+            mAnalyticsListener = null;
+            mSpeedPlaybackParameters = null;
+            mExoPlayer.setVideoSurface(null);
+            mExoPlayer.setPlayWhenReady(false);
+            mExoPlayer.release();
+            mExoPlayer = null;
+            mPrepared = false;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer2 => release => " + e.getMessage());
+        }
+    }
+
     /**
      * 播放
      */
@@ -598,7 +614,6 @@ public final class VideoExoPlayer2 extends BasePlayer {
     @Override
     public void stop() {
         try {
-            mExoPlayer.pause();
             mExoPlayer.stop();
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer2 => stop => " + e.getMessage());

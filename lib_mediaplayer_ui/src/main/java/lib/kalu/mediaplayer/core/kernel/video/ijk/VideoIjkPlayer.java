@@ -27,6 +27,7 @@ public final class VideoIjkPlayer extends BasePlayer {
     private boolean mLive = false;
     private boolean mMute = false;
     private boolean mPlayWhenReady = true;
+    private boolean mPrepared = false;
     private boolean isFromUserSeekComplete = false;
     private boolean isFromNetBufferStart = false;
 
@@ -53,34 +54,8 @@ public final class VideoIjkPlayer extends BasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
+            release();
             stopExternalMusic(true);
-
-            // 设置视频错误监听器
-            mIjkPlayer.setOnErrorListener(null);
-            // 设置视频播放完成监听事件
-            mIjkPlayer.setOnCompletionListener(null);
-            // 设置视频信息监听器
-            mIjkPlayer.setOnInfoListener(null);
-            // 设置视频缓冲更新监听事件
-            mIjkPlayer.setOnBufferingUpdateListener(null);
-            // 设置准备视频播放监听事件
-            mIjkPlayer.setOnPreparedListener(null);
-            // 设置视频大小更改监听器
-            mIjkPlayer.setOnVideoSizeChangedListener(null);
-            // 设置视频seek完成监听事件
-            mIjkPlayer.setOnSeekCompleteListener(null);
-            // 设置时间文本监听器
-            mIjkPlayer.setOnTimedTextListener(null);
-            // 缓冲
-            mIjkPlayer.setOnBufferingUpdateListener(null);
-            mIjkPlayer.setOnNativeInvokeListener(null);
-            mIjkPlayer.setSurface(null);
-            mIjkPlayer.pause();
-            mIjkPlayer.stop();
-            mIjkPlayer.reset();
-            mIjkPlayer.release();
-            mIjkPlayer = null;
-            MPLogUtil.log("VideoIjkPlayer => releaseDecoder => succ");
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => releaseDecoder => " + e.getMessage());
         }
@@ -364,12 +339,45 @@ public final class VideoIjkPlayer extends BasePlayer {
     }
 
     @Override
+    public void release() {
+        try {
+            if (null == mIjkPlayer)
+                throw new Exception("mIjkPlayer error: null");
+            // 设置视频错误监听器
+            mIjkPlayer.setOnErrorListener(null);
+            // 设置视频播放完成监听事件
+            mIjkPlayer.setOnCompletionListener(null);
+            // 设置视频信息监听器
+            mIjkPlayer.setOnInfoListener(null);
+            // 设置视频缓冲更新监听事件
+            mIjkPlayer.setOnBufferingUpdateListener(null);
+            // 设置准备视频播放监听事件
+            mIjkPlayer.setOnPreparedListener(null);
+            // 设置视频大小更改监听器
+            mIjkPlayer.setOnVideoSizeChangedListener(null);
+            // 设置视频seek完成监听事件
+            mIjkPlayer.setOnSeekCompleteListener(null);
+            // 设置时间文本监听器
+            mIjkPlayer.setOnTimedTextListener(null);
+            // 缓冲
+            mIjkPlayer.setOnBufferingUpdateListener(null);
+            mIjkPlayer.setOnNativeInvokeListener(null);
+            mIjkPlayer.setSurface(null);
+            mIjkPlayer.reset();
+            mIjkPlayer.release();
+            mIjkPlayer = null;
+            mPrepared = false;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoIjkPlayer => release => " + e.getMessage());
+        }
+    }
+
+    @Override
     public void start() {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.start();
-            MPLogUtil.log("VideoIjkPlayer => start => succ");
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => start => " + e.getMessage());
         }
@@ -381,7 +389,6 @@ public final class VideoIjkPlayer extends BasePlayer {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.stop();
-            MPLogUtil.log("VideoIjkPlayer => stop => succ");
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => stop => " + e.getMessage());
         }
@@ -550,6 +557,11 @@ public final class VideoIjkPlayer extends BasePlayer {
         return mLoop;
     }
 
+    @Override
+    public boolean isPrepared() {
+        return mPrepared;
+    }
+
     public IjkTrackInfo[] getTrackInfo() {
         try {
             if (null == mIjkPlayer)
@@ -664,6 +676,7 @@ public final class VideoIjkPlayer extends BasePlayer {
     private IMediaPlayer.OnPreparedListener onPreparedListener = new IMediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(IMediaPlayer iMediaPlayer) {
+            mPrepared = true;
             try {
                 long seek = getSeek();
                 if (seek <= 0)

@@ -32,10 +32,6 @@ interface KernelApiBase {
 
     void setMax(long max);
 
-//    boolean isReadying();
-//
-//    void setReadying(boolean v);
-
     boolean isLive();
 
     void setLive(@NonNull boolean v);
@@ -44,6 +40,9 @@ interface KernelApiBase {
 
     boolean isLooping();
 
+    boolean isPrepared();
+
+    void release();
     void start();
 
     void pause();

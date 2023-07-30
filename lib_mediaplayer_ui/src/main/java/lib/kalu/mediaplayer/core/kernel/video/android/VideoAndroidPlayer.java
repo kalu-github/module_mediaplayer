@@ -31,6 +31,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
 
     private MediaPlayer mMediaPlayer = null;
     private boolean mPlayWhenReady = true;
+    private boolean mPrepared = false;
 
     public VideoAndroidPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
         super(musicApi, eventApi);
@@ -51,18 +52,8 @@ public final class VideoAndroidPlayer extends BasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
+            release();
             stopExternalMusic(true);
-            mMediaPlayer.setOnErrorListener(null);
-            mMediaPlayer.setOnCompletionListener(null);
-            mMediaPlayer.setOnInfoListener(null);
-            mMediaPlayer.setOnBufferingUpdateListener(null);
-            mMediaPlayer.setOnPreparedListener(null);
-            mMediaPlayer.setOnSeekCompleteListener(null);
-            mMediaPlayer.setOnVideoSizeChangedListener(null);
-            mMediaPlayer.setSurface(null);
-            mMediaPlayer.reset();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => releaseDecoder => " + e.getMessage());
         }
@@ -149,6 +140,28 @@ public final class VideoAndroidPlayer extends BasePlayer {
         }
     }
 
+    @Override
+    public void release() {
+        try {
+            if (null == mMediaPlayer)
+                throw new Exception("mMediaPlayer error: null");
+            mMediaPlayer.setOnErrorListener(null);
+            mMediaPlayer.setOnCompletionListener(null);
+            mMediaPlayer.setOnInfoListener(null);
+            mMediaPlayer.setOnBufferingUpdateListener(null);
+            mMediaPlayer.setOnPreparedListener(null);
+            mMediaPlayer.setOnSeekCompleteListener(null);
+            mMediaPlayer.setOnVideoSizeChangedListener(null);
+            mMediaPlayer.setSurface(null);
+            mMediaPlayer.reset();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+            mPrepared = false;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoAndroidPlayer => release => " + e.getMessage());
+        }
+    }
+
     /**
      * 播放
      */
@@ -185,7 +198,6 @@ public final class VideoAndroidPlayer extends BasePlayer {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
-            mMediaPlayer.pause();
             mMediaPlayer.stop();
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => stop => " + e.getMessage());
@@ -345,11 +357,21 @@ public final class VideoAndroidPlayer extends BasePlayer {
             MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what);
             // 缓冲开始
             if (what == PlayerType.EventType.EVENT_BUFFERING_START) {
-                long position = getPosition();
-                long seek = getSeek();
-                long duration = getDuration();
-                if (duration > 0 && position > seek) {
+                try {
+                    boolean prepared = isPrepared();
+                    if (!prepared)
+                        throw new Exception("prepared warning: false");
+                    long position = getPosition();
+                    if (position < 0)
+                        throw new Exception("position warning: " + position);
+                    long duration = getDuration();
+                    if (duration < 0)
+                        throw new Exception("duration warning: " + duration);
+                    long seek = getSeek();
+                    if (position <= seek)
+                        throw new Exception("position warning: " + position + ", seek warning: " + seek);
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
+                } catch (Exception e) {
                 }
             }
             // 缓冲结束
@@ -389,6 +411,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
     private MediaPlayer.OnPreparedListener mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
+            mPrepared = true;
             try {
                 long seek = getSeek();
                 if (seek <= 0)
@@ -494,5 +517,10 @@ public final class VideoAndroidPlayer extends BasePlayer {
     @Override
     public boolean isLooping() {
         return mLoop;
+    }
+
+    @Override
+    public boolean isPrepared() {
+        return mPrepared;
     }
 }

@@ -28,6 +28,7 @@ public final class VideoExoPlayer extends BasePlayer {
     private boolean mLive = false;
     private boolean mMute = false;
     private boolean mPlayWhenReady = true;
+    private boolean mPrepared = false;
     private DemoPlayer mExoPlayer;
 
     public VideoExoPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
@@ -48,11 +49,8 @@ public final class VideoExoPlayer extends BasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
+            release();
             stopExternalMusic(true);
-            mExoPlayer.setSurface(null);
-            mExoPlayer.setPlayWhenReady(false);
-            mExoPlayer.release();
-            mExoPlayer = null;
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => releaseDecoder => " + e.getMessage());
         }
@@ -319,12 +317,34 @@ public final class VideoExoPlayer extends BasePlayer {
         return mLoop;
     }
 
+    @Override
+    public boolean isPrepared() {
+        return mPrepared;
+    }
+
+    @Override
+    public void release() {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            mExoPlayer.setPlayWhenReady(false);
+            mExoPlayer.release();
+            mExoPlayer.setSurface(null);
+            mExoPlayer = null;
+            mPrepared = false;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer => release => " + e.getMessage());
+        }
+    }
+
     /**
      * 播放
      */
     @Override
     public void start() {
         try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
             boolean externalMusicPlaying = isExternalMusicPlaying();
             setVolume(externalMusicPlaying ? 0F : 1F, externalMusicPlaying ? 0F : 1F);
             mExoPlayer.setPlayWhenReady(true);
@@ -339,6 +359,8 @@ public final class VideoExoPlayer extends BasePlayer {
     @Override
     public void pause() {
         try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
             mExoPlayer.setPlayWhenReady(false);
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => pause => " + e.getMessage());
@@ -351,6 +373,8 @@ public final class VideoExoPlayer extends BasePlayer {
     @Override
     public void stop() {
         try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
             mExoPlayer.setPlayWhenReady(false);
             mExoPlayer.release();
         } catch (Exception e) {

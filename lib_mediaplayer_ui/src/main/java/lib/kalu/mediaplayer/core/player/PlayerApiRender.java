@@ -91,8 +91,8 @@ interface PlayerApiRender extends PlayerApiBase {
             if (render != PlayerType.RenderType.SURFACE_VIEW)
                 throw new Exception("render warning: not SURFACE_VIEW");
             int kernel = config.getKernel();
-            if (kernel != PlayerType.KernelType.IJK_MEDIACODEC && kernel != PlayerType.KernelType.EXO_V1 && kernel != PlayerType.KernelType.EXO_V2)
-                throw new Exception("kernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
+            if (kernel != PlayerType.KernelType.ANDROID && kernel != PlayerType.KernelType.IJK_MEDIACODEC && kernel != PlayerType.KernelType.EXO_V1 && kernel != PlayerType.KernelType.EXO_V2)
+                throw new Exception("kernel waring: not android_mediacodec or ijk_mediacodec or exo_v1 or exo_v2");
             if (!(this instanceof PlayerApiKernel))
                 throw new Exception("render warning: not instanceof PlayerApiKernel");
             createRender(true);
