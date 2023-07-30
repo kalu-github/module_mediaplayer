@@ -140,12 +140,12 @@ public final class VideoVlcPlayer extends BasePlayer {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
+            if (null != mVlcPlayerListener) {
+                mVlcPlayer.setOnVlcInfoChangeListener(null);
+            }
+            mVlcPlayerListener = null;
+            mVlcPlayer.setSurface(null, 0, 0);
             if (isMainThread) {
-                if (null != mVlcPlayerListener) {
-                    mVlcPlayer.setOnVlcInfoChangeListener(null);
-                }
-                mVlcPlayerListener = null;
-                mVlcPlayer.setSurface(null, 0, 0);
                 mVlcPlayer.release();
                 mVlcPlayer = null;
                 mPrepared = false;
@@ -153,11 +153,6 @@ public final class VideoVlcPlayer extends BasePlayer {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if (null != mVlcPlayerListener) {
-                            mVlcPlayer.setOnVlcInfoChangeListener(null);
-                        }
-                        mVlcPlayerListener = null;
-                        mVlcPlayer.setSurface(null, 0, 0);
                         mVlcPlayer.release();
                         mVlcPlayer = null;
                         mPrepared = false;

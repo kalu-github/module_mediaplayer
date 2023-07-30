@@ -327,19 +327,17 @@ public final class VideoExoPlayer extends BasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
+            mExoPlayer.setPlayWhenReady(false);
+            mExoPlayer.setSurface(null);
             if (isMainThread) {
-                mExoPlayer.setPlayWhenReady(false);
                 mExoPlayer.release();
-                mExoPlayer.setSurface(null);
                 mExoPlayer = null;
                 mPrepared = false;
             } else {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mExoPlayer.setPlayWhenReady(false);
                         mExoPlayer.release();
-                        mExoPlayer.setSurface(null);
                         mExoPlayer = null;
                         mPrepared = false;
                     }

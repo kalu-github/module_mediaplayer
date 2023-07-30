@@ -145,15 +145,15 @@ public final class VideoAndroidPlayer extends BasePlayer {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
+            mMediaPlayer.setOnErrorListener(null);
+            mMediaPlayer.setOnCompletionListener(null);
+            mMediaPlayer.setOnInfoListener(null);
+            mMediaPlayer.setOnBufferingUpdateListener(null);
+            mMediaPlayer.setOnPreparedListener(null);
+            mMediaPlayer.setOnSeekCompleteListener(null);
+            mMediaPlayer.setOnVideoSizeChangedListener(null);
+            mMediaPlayer.setSurface(null);
             if (isMainThread) {
-                mMediaPlayer.setOnErrorListener(null);
-                mMediaPlayer.setOnCompletionListener(null);
-                mMediaPlayer.setOnInfoListener(null);
-                mMediaPlayer.setOnBufferingUpdateListener(null);
-                mMediaPlayer.setOnPreparedListener(null);
-                mMediaPlayer.setOnSeekCompleteListener(null);
-                mMediaPlayer.setOnVideoSizeChangedListener(null);
-                mMediaPlayer.setSurface(null);
                 mMediaPlayer.reset();
                 mMediaPlayer.release();
                 mMediaPlayer = null;
@@ -162,14 +162,6 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mMediaPlayer.setOnErrorListener(null);
-                        mMediaPlayer.setOnCompletionListener(null);
-                        mMediaPlayer.setOnInfoListener(null);
-                        mMediaPlayer.setOnBufferingUpdateListener(null);
-                        mMediaPlayer.setOnPreparedListener(null);
-                        mMediaPlayer.setOnSeekCompleteListener(null);
-                        mMediaPlayer.setOnVideoSizeChangedListener(null);
-                        mMediaPlayer.setSurface(null);
                         mMediaPlayer.reset();
                         mMediaPlayer.release();
                         mMediaPlayer = null;

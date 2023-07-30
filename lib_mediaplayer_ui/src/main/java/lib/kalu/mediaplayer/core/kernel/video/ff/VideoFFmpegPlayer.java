@@ -123,14 +123,14 @@ public final class VideoFFmpegPlayer extends BasePlayer {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
+            mFFmpegPlayer.setOnErrorListener(null);
+            mFFmpegPlayer.setOnCompletionListener(null);
+            mFFmpegPlayer.setOnInfoListener(null);
+            mFFmpegPlayer.setOnBufferingUpdateListener(null);
+            mFFmpegPlayer.setOnPreparedListener(null);
+            mFFmpegPlayer.setOnVideoSizeChangedListener(null);
+            mFFmpegPlayer.setSurface(null);
             if (isMainThread) {
-                mFFmpegPlayer.setOnErrorListener(null);
-                mFFmpegPlayer.setOnCompletionListener(null);
-                mFFmpegPlayer.setOnInfoListener(null);
-                mFFmpegPlayer.setOnBufferingUpdateListener(null);
-                mFFmpegPlayer.setOnPreparedListener(null);
-                mFFmpegPlayer.setOnVideoSizeChangedListener(null);
-                mFFmpegPlayer.setSurface(null);
                 mFFmpegPlayer.reset();
                 mFFmpegPlayer.release();
                 mFFmpegPlayer = null;
@@ -139,13 +139,6 @@ public final class VideoFFmpegPlayer extends BasePlayer {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mFFmpegPlayer.setOnErrorListener(null);
-                        mFFmpegPlayer.setOnCompletionListener(null);
-                        mFFmpegPlayer.setOnInfoListener(null);
-                        mFFmpegPlayer.setOnBufferingUpdateListener(null);
-                        mFFmpegPlayer.setOnPreparedListener(null);
-                        mFFmpegPlayer.setOnVideoSizeChangedListener(null);
-                        mFFmpegPlayer.setSurface(null);
                         mFFmpegPlayer.reset();
                         mFFmpegPlayer.release();
                         mFFmpegPlayer = null;

@@ -343,27 +343,27 @@ public final class VideoIjkPlayer extends BasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
+            // 设置视频错误监听器
+            mIjkPlayer.setOnErrorListener(null);
+            // 设置视频播放完成监听事件
+            mIjkPlayer.setOnCompletionListener(null);
+            // 设置视频信息监听器
+            mIjkPlayer.setOnInfoListener(null);
+            // 设置视频缓冲更新监听事件
+            mIjkPlayer.setOnBufferingUpdateListener(null);
+            // 设置准备视频播放监听事件
+            mIjkPlayer.setOnPreparedListener(null);
+            // 设置视频大小更改监听器
+            mIjkPlayer.setOnVideoSizeChangedListener(null);
+            // 设置视频seek完成监听事件
+            mIjkPlayer.setOnSeekCompleteListener(null);
+            // 设置时间文本监听器
+            mIjkPlayer.setOnTimedTextListener(null);
+            // 缓冲
+            mIjkPlayer.setOnBufferingUpdateListener(null);
+            mIjkPlayer.setOnNativeInvokeListener(null);
+            mIjkPlayer.setSurface(null);
             if (isMainThread) {
-                // 设置视频错误监听器
-                mIjkPlayer.setOnErrorListener(null);
-                // 设置视频播放完成监听事件
-                mIjkPlayer.setOnCompletionListener(null);
-                // 设置视频信息监听器
-                mIjkPlayer.setOnInfoListener(null);
-                // 设置视频缓冲更新监听事件
-                mIjkPlayer.setOnBufferingUpdateListener(null);
-                // 设置准备视频播放监听事件
-                mIjkPlayer.setOnPreparedListener(null);
-                // 设置视频大小更改监听器
-                mIjkPlayer.setOnVideoSizeChangedListener(null);
-                // 设置视频seek完成监听事件
-                mIjkPlayer.setOnSeekCompleteListener(null);
-                // 设置时间文本监听器
-                mIjkPlayer.setOnTimedTextListener(null);
-                // 缓冲
-                mIjkPlayer.setOnBufferingUpdateListener(null);
-                mIjkPlayer.setOnNativeInvokeListener(null);
-                mIjkPlayer.setSurface(null);
                 mIjkPlayer.reset();
                 mIjkPlayer.release();
                 mIjkPlayer = null;
@@ -372,26 +372,6 @@ public final class VideoIjkPlayer extends BasePlayer {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        // 设置视频错误监听器
-                        mIjkPlayer.setOnErrorListener(null);
-                        // 设置视频播放完成监听事件
-                        mIjkPlayer.setOnCompletionListener(null);
-                        // 设置视频信息监听器
-                        mIjkPlayer.setOnInfoListener(null);
-                        // 设置视频缓冲更新监听事件
-                        mIjkPlayer.setOnBufferingUpdateListener(null);
-                        // 设置准备视频播放监听事件
-                        mIjkPlayer.setOnPreparedListener(null);
-                        // 设置视频大小更改监听器
-                        mIjkPlayer.setOnVideoSizeChangedListener(null);
-                        // 设置视频seek完成监听事件
-                        mIjkPlayer.setOnSeekCompleteListener(null);
-                        // 设置时间文本监听器
-                        mIjkPlayer.setOnTimedTextListener(null);
-                        // 缓冲
-                        mIjkPlayer.setOnBufferingUpdateListener(null);
-                        mIjkPlayer.setOnNativeInvokeListener(null);
-                        mIjkPlayer.setSurface(null);
                         mIjkPlayer.reset();
                         mIjkPlayer.release();
                         mIjkPlayer = null;

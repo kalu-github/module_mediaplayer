@@ -567,14 +567,14 @@ public final class VideoExoPlayer2 extends BasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
+            if (null != mAnalyticsListener) {
+                mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
+            }
+            mAnalyticsListener = null;
+            mSpeedPlaybackParameters = null;
+            mExoPlayer.setPlayWhenReady(false);
+            mExoPlayer.setVideoSurface(null);
             if (isMainThread) {
-                if (null != mAnalyticsListener) {
-                    mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
-                }
-                mAnalyticsListener = null;
-                mSpeedPlaybackParameters = null;
-                mExoPlayer.setVideoSurface(null);
-                mExoPlayer.setPlayWhenReady(false);
                 mExoPlayer.release();
                 mExoPlayer = null;
                 mPrepared = false;
@@ -582,13 +582,6 @@ public final class VideoExoPlayer2 extends BasePlayer {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if (null != mAnalyticsListener) {
-                            mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
-                        }
-                        mAnalyticsListener = null;
-                        mSpeedPlaybackParameters = null;
-                        mExoPlayer.setVideoSurface(null);
-                        mExoPlayer.setPlayWhenReady(false);
                         mExoPlayer.release();
                         mExoPlayer = null;
                         mPrepared = false;
