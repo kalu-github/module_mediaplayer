@@ -40,14 +40,14 @@ public final class VideoFFmpegPlayer extends BasePlayer {
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser) {
+    public void releaseDecoder(boolean isFromUser, boolean isMainThread) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayerCollects error: null");
             if (isFromUser) {
                 setEvent(null);
             }
-            release();
+            release(isMainThread);
             stopExternalMusic(true);
         } catch (Exception e) {
             MPLogUtil.log("VideoFFmpegPlayer => releaseDecoder => " + e.getMessage());
@@ -57,7 +57,7 @@ public final class VideoFFmpegPlayer extends BasePlayer {
     @Override
     public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
         try {
-            releaseDecoder(false);
+            releaseDecoder(false, true);
             mFFmpegPlayer = new FFmpegPlayer();
             mFFmpegPlayer.setLooping(false);
             setVolume(1F, 1F);
@@ -119,21 +119,40 @@ public final class VideoFFmpegPlayer extends BasePlayer {
 //    }
 
     @Override
-    public void release() {
+    public void release(boolean isMainThread) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
-            mFFmpegPlayer.setOnErrorListener(null);
-            mFFmpegPlayer.setOnCompletionListener(null);
-            mFFmpegPlayer.setOnInfoListener(null);
-            mFFmpegPlayer.setOnBufferingUpdateListener(null);
-            mFFmpegPlayer.setOnPreparedListener(null);
-            mFFmpegPlayer.setOnVideoSizeChangedListener(null);
-            mFFmpegPlayer.setSurface(null);
-            mFFmpegPlayer.reset();
-            mFFmpegPlayer.release();
-            mFFmpegPlayer = null;
-            mPrepared = false;
+            if (isMainThread) {
+                mFFmpegPlayer.setOnErrorListener(null);
+                mFFmpegPlayer.setOnCompletionListener(null);
+                mFFmpegPlayer.setOnInfoListener(null);
+                mFFmpegPlayer.setOnBufferingUpdateListener(null);
+                mFFmpegPlayer.setOnPreparedListener(null);
+                mFFmpegPlayer.setOnVideoSizeChangedListener(null);
+                mFFmpegPlayer.setSurface(null);
+                mFFmpegPlayer.reset();
+                mFFmpegPlayer.release();
+                mFFmpegPlayer = null;
+                mPrepared = false;
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mFFmpegPlayer.setOnErrorListener(null);
+                        mFFmpegPlayer.setOnCompletionListener(null);
+                        mFFmpegPlayer.setOnInfoListener(null);
+                        mFFmpegPlayer.setOnBufferingUpdateListener(null);
+                        mFFmpegPlayer.setOnPreparedListener(null);
+                        mFFmpegPlayer.setOnVideoSizeChangedListener(null);
+                        mFFmpegPlayer.setSurface(null);
+                        mFFmpegPlayer.reset();
+                        mFFmpegPlayer.release();
+                        mFFmpegPlayer = null;
+                        mPrepared = false;
+                    }
+                }).start();
+            }
         } catch (Exception e) {
             MPLogUtil.log("VideoFFmpegPlayer => start => " + e.getMessage());
         }

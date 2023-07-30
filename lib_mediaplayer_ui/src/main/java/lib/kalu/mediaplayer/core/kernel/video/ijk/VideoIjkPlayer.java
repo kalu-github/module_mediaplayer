@@ -47,14 +47,14 @@ public final class VideoIjkPlayer extends BasePlayer {
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser) {
+    public void releaseDecoder(boolean isFromUser, boolean isMainThread) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer warning: null");
             if (isFromUser) {
                 setEvent(null);
             }
-            release();
+            release(isMainThread);
             stopExternalMusic(true);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => releaseDecoder => " + e.getMessage());
@@ -64,7 +64,7 @@ public final class VideoIjkPlayer extends BasePlayer {
     @Override
     public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
         try {
-            releaseDecoder(false);
+            releaseDecoder(false, true);
             mIjkPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
             mIjkPlayer.setLooping(false);
             //处理UA问题
@@ -339,34 +339,66 @@ public final class VideoIjkPlayer extends BasePlayer {
     }
 
     @Override
-    public void release() {
+    public void release(boolean isMainThread) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            // 设置视频错误监听器
-            mIjkPlayer.setOnErrorListener(null);
-            // 设置视频播放完成监听事件
-            mIjkPlayer.setOnCompletionListener(null);
-            // 设置视频信息监听器
-            mIjkPlayer.setOnInfoListener(null);
-            // 设置视频缓冲更新监听事件
-            mIjkPlayer.setOnBufferingUpdateListener(null);
-            // 设置准备视频播放监听事件
-            mIjkPlayer.setOnPreparedListener(null);
-            // 设置视频大小更改监听器
-            mIjkPlayer.setOnVideoSizeChangedListener(null);
-            // 设置视频seek完成监听事件
-            mIjkPlayer.setOnSeekCompleteListener(null);
-            // 设置时间文本监听器
-            mIjkPlayer.setOnTimedTextListener(null);
-            // 缓冲
-            mIjkPlayer.setOnBufferingUpdateListener(null);
-            mIjkPlayer.setOnNativeInvokeListener(null);
-            mIjkPlayer.setSurface(null);
-            mIjkPlayer.reset();
-            mIjkPlayer.release();
-            mIjkPlayer = null;
-            mPrepared = false;
+            if (isMainThread) {
+                // 设置视频错误监听器
+                mIjkPlayer.setOnErrorListener(null);
+                // 设置视频播放完成监听事件
+                mIjkPlayer.setOnCompletionListener(null);
+                // 设置视频信息监听器
+                mIjkPlayer.setOnInfoListener(null);
+                // 设置视频缓冲更新监听事件
+                mIjkPlayer.setOnBufferingUpdateListener(null);
+                // 设置准备视频播放监听事件
+                mIjkPlayer.setOnPreparedListener(null);
+                // 设置视频大小更改监听器
+                mIjkPlayer.setOnVideoSizeChangedListener(null);
+                // 设置视频seek完成监听事件
+                mIjkPlayer.setOnSeekCompleteListener(null);
+                // 设置时间文本监听器
+                mIjkPlayer.setOnTimedTextListener(null);
+                // 缓冲
+                mIjkPlayer.setOnBufferingUpdateListener(null);
+                mIjkPlayer.setOnNativeInvokeListener(null);
+                mIjkPlayer.setSurface(null);
+                mIjkPlayer.reset();
+                mIjkPlayer.release();
+                mIjkPlayer = null;
+                mPrepared = false;
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 设置视频错误监听器
+                        mIjkPlayer.setOnErrorListener(null);
+                        // 设置视频播放完成监听事件
+                        mIjkPlayer.setOnCompletionListener(null);
+                        // 设置视频信息监听器
+                        mIjkPlayer.setOnInfoListener(null);
+                        // 设置视频缓冲更新监听事件
+                        mIjkPlayer.setOnBufferingUpdateListener(null);
+                        // 设置准备视频播放监听事件
+                        mIjkPlayer.setOnPreparedListener(null);
+                        // 设置视频大小更改监听器
+                        mIjkPlayer.setOnVideoSizeChangedListener(null);
+                        // 设置视频seek完成监听事件
+                        mIjkPlayer.setOnSeekCompleteListener(null);
+                        // 设置时间文本监听器
+                        mIjkPlayer.setOnTimedTextListener(null);
+                        // 缓冲
+                        mIjkPlayer.setOnBufferingUpdateListener(null);
+                        mIjkPlayer.setOnNativeInvokeListener(null);
+                        mIjkPlayer.setSurface(null);
+                        mIjkPlayer.reset();
+                        mIjkPlayer.release();
+                        mIjkPlayer = null;
+                        mPrepared = false;
+                    }
+                }).start();
+            }
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => release => " + e.getMessage());
         }
@@ -699,10 +731,10 @@ public final class VideoIjkPlayer extends BasePlayer {
                     throw new Exception("iMediaPlayer error: null");
                 int videoWidth = iMediaPlayer.getVideoWidth();
                 int videoHeight = iMediaPlayer.getVideoHeight();
-                MPLogUtil.log("VideoIjkPlayer => onVideoSizeChanged => videoWidth = " + videoWidth+", videoHeight = "+videoHeight);
+                MPLogUtil.log("VideoIjkPlayer => onVideoSizeChanged => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
                 if (videoWidth <= 0 && videoHeight <= 0)
                     throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
-                onMeasure(PlayerType.KernelType.IJK,  videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);
+                onMeasure(PlayerType.KernelType.IJK, videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);
             } catch (Exception e) {
                 MPLogUtil.log("VideoIjkPlayer => onVideoSizeChanged => " + e.getMessage());
             }

@@ -174,10 +174,14 @@ interface PlayerApiKernel extends PlayerApiListener,
 
 
     default void release() {
-        release(true, true);
+        release(true, true, true);
     }
 
     default void release(@NonNull boolean releaseTag, boolean isFromUser) {
+        release(releaseTag, isFromUser, true);
+    }
+
+    default void release(@NonNull boolean releaseTag, boolean isFromUser, boolean isMainThread) {
         try {
             checkKernel();
             removeRender();
@@ -186,7 +190,7 @@ interface PlayerApiKernel extends PlayerApiListener,
                 releaseTag();
             }
             releaseRender(false);
-            releaseKernel(isFromUser);
+            releaseKernel(isFromUser, isMainThread);
             cleanPlayerChangeListener();
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE);
         } catch (Exception e) {
@@ -505,14 +509,14 @@ interface PlayerApiKernel extends PlayerApiListener,
         }
     }
 
-    default void releaseKernel(boolean isFromUser) {
+    default void releaseKernel(boolean isFromUser, boolean isMainThread) {
         try {
             // 1
             checkKernel();
             // 2
             KernelApi kernel = getKernel();
             MPLogUtil.log("PlayerApiKernel => releaseKernel => kernel = " + kernel);
-            kernel.releaseDecoder(isFromUser);
+            kernel.releaseDecoder(isFromUser, isMainThread);
             setKernel(null);
             setScreenKeep(false);
             MPLogUtil.log("PlayerApiKernel => releaseKernel => succ");

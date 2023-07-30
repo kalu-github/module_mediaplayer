@@ -44,7 +44,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser) {
+    public void releaseDecoder(boolean isFromUser, boolean isMainThread) {
         MPLogUtil.log("VideoAndroidPlayer22 => releaseDecoder => mMediaPlayer = " + mMediaPlayer + ", isFromUser = " + isFromUser);
         try {
             if (null == mMediaPlayer)
@@ -52,7 +52,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
-            release();
+            release(isMainThread);
             stopExternalMusic(true);
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => releaseDecoder => " + e.getMessage());
@@ -63,7 +63,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
     public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
         MPLogUtil.log("VideoAndroidPlayer22 => createDecoder => mMediaPlayer = " + mMediaPlayer);
         try {
-            releaseDecoder(false);
+            releaseDecoder(false, true);
             mMediaPlayer = new MediaPlayer();
             mMediaPlayer.setLooping(false);
             setVolume(1F, 1F);
@@ -141,22 +141,42 @@ public final class VideoAndroidPlayer extends BasePlayer {
     }
 
     @Override
-    public void release() {
+    public void release(boolean isMainThread) {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
-            mMediaPlayer.setOnErrorListener(null);
-            mMediaPlayer.setOnCompletionListener(null);
-            mMediaPlayer.setOnInfoListener(null);
-            mMediaPlayer.setOnBufferingUpdateListener(null);
-            mMediaPlayer.setOnPreparedListener(null);
-            mMediaPlayer.setOnSeekCompleteListener(null);
-            mMediaPlayer.setOnVideoSizeChangedListener(null);
-            mMediaPlayer.setSurface(null);
-            mMediaPlayer.reset();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-            mPrepared = false;
+            if (isMainThread) {
+                mMediaPlayer.setOnErrorListener(null);
+                mMediaPlayer.setOnCompletionListener(null);
+                mMediaPlayer.setOnInfoListener(null);
+                mMediaPlayer.setOnBufferingUpdateListener(null);
+                mMediaPlayer.setOnPreparedListener(null);
+                mMediaPlayer.setOnSeekCompleteListener(null);
+                mMediaPlayer.setOnVideoSizeChangedListener(null);
+                mMediaPlayer.setSurface(null);
+                mMediaPlayer.reset();
+                mMediaPlayer.release();
+                mMediaPlayer = null;
+                mPrepared = false;
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMediaPlayer.setOnErrorListener(null);
+                        mMediaPlayer.setOnCompletionListener(null);
+                        mMediaPlayer.setOnInfoListener(null);
+                        mMediaPlayer.setOnBufferingUpdateListener(null);
+                        mMediaPlayer.setOnPreparedListener(null);
+                        mMediaPlayer.setOnSeekCompleteListener(null);
+                        mMediaPlayer.setOnVideoSizeChangedListener(null);
+                        mMediaPlayer.setSurface(null);
+                        mMediaPlayer.reset();
+                        mMediaPlayer.release();
+                        mMediaPlayer = null;
+                        mPrepared = false;
+                    }
+                }).start();
+            }
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => release => " + e.getMessage());
         }

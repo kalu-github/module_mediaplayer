@@ -17,7 +17,6 @@ interface KernelApiBase {
 
     void setMute(boolean v);
 
-
     void seekTo(@NonNull long position, @NonNull boolean seekHelp);
 
     void setSpeed(float speed);
@@ -42,7 +41,8 @@ interface KernelApiBase {
 
     boolean isPrepared();
 
-    void release();
+    void release(boolean isMainThread);
+
     void start();
 
     void pause();

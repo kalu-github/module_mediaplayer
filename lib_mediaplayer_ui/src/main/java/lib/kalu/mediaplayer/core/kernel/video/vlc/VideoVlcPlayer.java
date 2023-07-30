@@ -43,14 +43,14 @@ public final class VideoVlcPlayer extends BasePlayer {
 
 
     @Override
-    public void releaseDecoder(boolean isFromUser) {
+    public void releaseDecoder(boolean isFromUser, boolean isMainThread) {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
             if (isFromUser) {
                 setEvent(null);
             }
-            release();
+            release(isMainThread);
             stopExternalMusic(true);
         } catch (Exception e) {
         }
@@ -59,7 +59,7 @@ public final class VideoVlcPlayer extends BasePlayer {
     @Override
     public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
         try {
-            releaseDecoder(false);
+            releaseDecoder(false, true);
             mVlcPlayer = new VlcPlayer(context);
             setLooping(false);
             setVolume(1F, 1F);
@@ -136,18 +136,34 @@ public final class VideoVlcPlayer extends BasePlayer {
     }
 
     @Override
-    public void release() {
+    public void release(boolean isMainThread) {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
-            if (null != mVlcPlayerListener) {
-                mVlcPlayer.setOnVlcInfoChangeListener(null);
+            if (isMainThread) {
+                if (null != mVlcPlayerListener) {
+                    mVlcPlayer.setOnVlcInfoChangeListener(null);
+                }
+                mVlcPlayerListener = null;
+                mVlcPlayer.setSurface(null, 0, 0);
+                mVlcPlayer.release();
+                mVlcPlayer = null;
+                mPrepared = false;
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (null != mVlcPlayerListener) {
+                            mVlcPlayer.setOnVlcInfoChangeListener(null);
+                        }
+                        mVlcPlayerListener = null;
+                        mVlcPlayer.setSurface(null, 0, 0);
+                        mVlcPlayer.release();
+                        mVlcPlayer = null;
+                        mPrepared = false;
+                    }
+                }).start();
             }
-            mVlcPlayerListener = null;
-            mVlcPlayer.setSurface(null, 0, 0);
-            mVlcPlayer.release();
-            mVlcPlayer = null;
-            mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoVlcPlayer => release => " + e.getMessage());
         }

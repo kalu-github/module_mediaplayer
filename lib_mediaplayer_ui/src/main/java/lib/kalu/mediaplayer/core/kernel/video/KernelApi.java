@@ -28,7 +28,7 @@ public interface KernelApi extends KernelApiBase,
     @NonNull
     <T extends Object> T getPlayer();
 
-    void releaseDecoder(boolean isFromUser);
+    void releaseDecoder(boolean isFromUser, boolean isMainThread);
 
     void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters);
 

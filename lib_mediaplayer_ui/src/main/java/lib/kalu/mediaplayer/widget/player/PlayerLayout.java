@@ -500,18 +500,22 @@ public class PlayerLayout extends RelativeLayout {
             if (null == playerView)
                 throw new Exception("playerView error: null");
             boolean releaseTag = enableReleaseTag();
-            playerView.release(releaseTag, false);
+            playerView.release(releaseTag, false, true);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => release => " + e.getMessage());
         }
     }
 
     public final void release(boolean releaseTag) {
+        release(releaseTag, true);
+    }
+
+    public final void release(boolean releaseTag, boolean isMainThread) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.release(releaseTag, false);
+            playerView.release(releaseTag, false, isMainThread);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => release => " + e.getMessage());
         }

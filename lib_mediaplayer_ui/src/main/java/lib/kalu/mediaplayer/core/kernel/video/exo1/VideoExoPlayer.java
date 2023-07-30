@@ -42,14 +42,14 @@ public final class VideoExoPlayer extends BasePlayer {
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser) {
+    public void releaseDecoder(boolean isFromUser, boolean isMainThread) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             if (isFromUser) {
                 setEvent(null);
             }
-            release();
+            release(isMainThread);
             stopExternalMusic(true);
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => releaseDecoder => " + e.getMessage());
@@ -323,15 +323,28 @@ public final class VideoExoPlayer extends BasePlayer {
     }
 
     @Override
-    public void release() {
+    public void release(boolean isMainThread) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            mExoPlayer.setPlayWhenReady(false);
-            mExoPlayer.release();
-            mExoPlayer.setSurface(null);
-            mExoPlayer = null;
-            mPrepared = false;
+            if (isMainThread) {
+                mExoPlayer.setPlayWhenReady(false);
+                mExoPlayer.release();
+                mExoPlayer.setSurface(null);
+                mExoPlayer = null;
+                mPrepared = false;
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mExoPlayer.setPlayWhenReady(false);
+                        mExoPlayer.release();
+                        mExoPlayer.setSurface(null);
+                        mExoPlayer = null;
+                        mPrepared = false;
+                    }
+                }).start();
+            }
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => release => " + e.getMessage());
         }

@@ -80,14 +80,14 @@ public final class VideoExoPlayer2 extends BasePlayer {
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser) {
+    public void releaseDecoder(boolean isFromUser, boolean isMainThread) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             if (isFromUser) {
                 setEvent(null);
             }
-            release();
+            release(isMainThread);
             stopExternalMusic(true);
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer2 => releaseDecoder => " + e.getMessage());
@@ -97,7 +97,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
     @Override
     public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
         try {
-            releaseDecoder(false);
+            releaseDecoder(false, true);
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
             builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
             builder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
@@ -563,18 +563,38 @@ public final class VideoExoPlayer2 extends BasePlayer {
     }
 
     @Override
-    public void release() {
+    public void release(boolean isMainThread) {
         try {
-            if (null != mAnalyticsListener) {
-                mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            if (isMainThread) {
+                if (null != mAnalyticsListener) {
+                    mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
+                }
+                mAnalyticsListener = null;
+                mSpeedPlaybackParameters = null;
+                mExoPlayer.setVideoSurface(null);
+                mExoPlayer.setPlayWhenReady(false);
+                mExoPlayer.release();
+                mExoPlayer = null;
+                mPrepared = false;
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (null != mAnalyticsListener) {
+                            mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
+                        }
+                        mAnalyticsListener = null;
+                        mSpeedPlaybackParameters = null;
+                        mExoPlayer.setVideoSurface(null);
+                        mExoPlayer.setPlayWhenReady(false);
+                        mExoPlayer.release();
+                        mExoPlayer = null;
+                        mPrepared = false;
+                    }
+                }).start();
             }
-            mAnalyticsListener = null;
-            mSpeedPlaybackParameters = null;
-            mExoPlayer.setVideoSurface(null);
-            mExoPlayer.setPlayWhenReady(false);
-            mExoPlayer.release();
-            mExoPlayer = null;
-            mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer2 => release => " + e.getMessage());
         }
