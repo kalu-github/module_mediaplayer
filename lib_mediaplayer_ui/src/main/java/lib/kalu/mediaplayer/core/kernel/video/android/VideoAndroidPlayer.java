@@ -60,7 +60,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
             mMediaPlayer.setOnSeekCompleteListener(null);
             mMediaPlayer.setOnVideoSizeChangedListener(null);
             mMediaPlayer.setSurface(null);
-            mMediaPlayer.stop();
+            mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
         } catch (Exception e) {
@@ -74,7 +74,6 @@ public final class VideoAndroidPlayer extends BasePlayer {
         try {
             releaseDecoder(false);
             mMediaPlayer = new MediaPlayer();
-            mMediaPlayer.reset();
             mMediaPlayer.setLooping(false);
             setVolume(1F, 1F);
         } catch (Exception e) {
