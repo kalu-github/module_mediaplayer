@@ -533,15 +533,15 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     public final void stop() {
-        stop(true);
+        stop(true, true);
     }
 
-    public final void stop(boolean isMainThread) {
+    public final void stop(boolean callEvent, boolean isMainThread) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.stop(isMainThread);
+            playerView.stop(callEvent, isMainThread);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => stop => " + e.getMessage());
         }

@@ -229,9 +229,9 @@ interface PlayerApiKernel extends PlayerApiListener,
         pauseKernel(ignore);
     }
 
-    default void stop(boolean isMainThread) {
+    default void stop(boolean callEvent, boolean isMainThread) {
         try {
-            stopKernel(true, isMainThread);
+            stopKernel(callEvent, isMainThread);
         } catch (Exception e) {
         }
     }
