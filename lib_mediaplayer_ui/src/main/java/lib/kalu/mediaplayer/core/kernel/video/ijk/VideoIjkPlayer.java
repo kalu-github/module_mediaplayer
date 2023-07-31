@@ -396,11 +396,20 @@ public final class VideoIjkPlayer extends BasePlayer {
     }
 
     @Override
-    public void stop() {
+    public void stop(boolean isMainThread) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            mIjkPlayer.stop();
+            if (isMainThread) {
+                mIjkPlayer.stop();
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mIjkPlayer.stop();
+                    }
+                }).start();
+            }
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => stop => " + e.getMessage());
         }

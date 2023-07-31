@@ -382,12 +382,22 @@ public final class VideoExoPlayer extends BasePlayer {
      * 停止
      */
     @Override
-    public void stop() {
+    public void stop(boolean isMainThread) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            mExoPlayer.setPlayWhenReady(false);
-            mExoPlayer.release();
+            if (isMainThread) {
+                mExoPlayer.setPlayWhenReady(false);
+                mExoPlayer.release();
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mExoPlayer.setPlayWhenReady(false);
+                        mExoPlayer.release();
+                    }
+                }).start();
+            }
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => stop => " + e.getMessage());
         }

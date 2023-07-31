@@ -183,11 +183,20 @@ public final class VideoFFmpegPlayer extends BasePlayer {
      * 停止
      */
     @Override
-    public void stop() {
+    public void stop(boolean isMainThread) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
-            mFFmpegPlayer.stop();
+            if (isMainThread) {
+                mFFmpegPlayer.stop();
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mFFmpegPlayer.stop();
+                    }
+                }).start();
+            }
         } catch (Exception e) {
             MPLogUtil.log("VideoFFmpegPlayer => stop => " + e.getMessage());
         }

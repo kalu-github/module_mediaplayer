@@ -206,11 +206,20 @@ public final class VideoAndroidPlayer extends BasePlayer {
      * 停止
      */
     @Override
-    public void stop() {
+    public void stop(boolean isMainThread) {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
-            mMediaPlayer.stop();
+            if (isMainThread) {
+                mMediaPlayer.stop();
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMediaPlayer.stop();
+                    }
+                }).start();
+            }
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => stop => " + e.getMessage());
         }

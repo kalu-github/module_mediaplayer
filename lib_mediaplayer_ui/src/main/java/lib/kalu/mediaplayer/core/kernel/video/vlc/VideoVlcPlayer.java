@@ -196,11 +196,20 @@ public final class VideoVlcPlayer extends BasePlayer {
      * 停止
      */
     @Override
-    public void stop() {
+    public void stop(boolean isMainThread) {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
-            mVlcPlayer.stop();
+            if (isMainThread) {
+                mVlcPlayer.stop();
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mVlcPlayer.stop();
+                    }
+                }).start();
+            }
         } catch (Exception e) {
             MPLogUtil.log("VideoVlcPlayer => stop => " + e.getMessage());
         }

@@ -229,13 +229,12 @@ interface PlayerApiKernel extends PlayerApiListener,
         pauseKernel(ignore);
     }
 
-    default void stop() {
+    default void stop(boolean isMainThread) {
         try {
-            stopKernel(true);
+            stopKernel(true, isMainThread);
         } catch (Exception e) {
         }
     }
-
 
     default void restart() {
         try {
@@ -473,14 +472,14 @@ interface PlayerApiKernel extends PlayerApiListener,
         }
     }
 
-    default void stopKernel(@NonNull boolean call) {
+    default void stopKernel(@NonNull boolean call, @NonNull boolean isMainThread) {
         try {
             // 1
             checkKernel();
             // 2
             KernelApi kernel = getKernel();
             MPLogUtil.log("PlayerApiKernel => stopKernel => kernel = " + kernel);
-            kernel.stop();
+            kernel.stop(isMainThread);
             setScreenKeep(false);
             if (!call) return;
             callPlayerEvent(PlayerType.StateType.STATE_KERNEL_STOP);

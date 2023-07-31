@@ -600,7 +600,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
     public void start() {
         try {
             if (null == mExoPlayer)
-                throw new Exception();
+                throw new Exception("mExoPlayer error: null");
             boolean externalMusicPlaying = isExternalMusicPlaying();
             setVolume(externalMusicPlaying ? 0F : 1F, externalMusicPlaying ? 0F : 1F);
             mExoPlayer.play();
@@ -625,9 +625,20 @@ public final class VideoExoPlayer2 extends BasePlayer {
      * 停止
      */
     @Override
-    public void stop() {
+    public void stop(boolean isMainThread) {
         try {
-            mExoPlayer.stop();
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            if (isMainThread) {
+                mExoPlayer.stop();
+            } else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mExoPlayer.stop();
+                    }
+                }).start();
+            }
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer2 => stop => " + e.getMessage());
         }

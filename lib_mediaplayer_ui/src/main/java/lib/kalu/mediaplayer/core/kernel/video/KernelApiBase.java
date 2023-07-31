@@ -47,7 +47,7 @@ interface KernelApiBase {
 
     void pause();
 
-    void stop();
+    void stop(boolean isMainThread);
 
     boolean isPlaying();
 
