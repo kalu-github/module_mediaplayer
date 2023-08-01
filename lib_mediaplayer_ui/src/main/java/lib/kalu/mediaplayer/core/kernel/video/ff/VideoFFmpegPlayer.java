@@ -75,8 +75,9 @@ public final class VideoFFmpegPlayer extends BasePlayer {
             if (url == null || url.length() == 0)
                 throw new IllegalArgumentException("url error: " + url);
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
+            mFFmpegPlayer.reset();
             mFFmpegPlayer.setDataSource(context, Uri.parse(url), null);
-            mFFmpegPlayer.prepareAsync();
+            mFFmpegPlayer.prepare();
         } catch (IllegalArgumentException e) {
             MPLogUtil.log("VideoFFmpegPlayer => startDecoder => " + e.getMessage());
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
@@ -393,7 +394,7 @@ public final class VideoFFmpegPlayer extends BasePlayer {
                 int h = o.getVideoHeight();
                 if (w < 0 || h < 0)
                     throw new Exception("w error: " + w + ", h error: " + h);
-                onMeasure(PlayerType.KernelType.ANDROID, w, h, -1);
+                onMeasure(PlayerType.KernelType.ANDROID, w, h, PlayerType.RotationType.Rotation_0);
             } catch (Exception e) {
                 MPLogUtil.log("VideoFFmpegPlayer => onVideoSizeChanged => " + e.getMessage());
             }

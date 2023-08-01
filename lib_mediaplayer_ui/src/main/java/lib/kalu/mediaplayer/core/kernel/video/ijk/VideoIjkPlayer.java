@@ -94,6 +94,7 @@ public final class VideoIjkPlayer extends BasePlayer {
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
+            mIjkPlayer.reset();
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
             mIjkPlayer.prepareAsync();
         } catch (Exception e) {

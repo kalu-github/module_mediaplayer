@@ -82,8 +82,9 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 throw new IllegalArgumentException("url error: " + url);
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
             initListener();
+            mMediaPlayer.reset();
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);
-            mMediaPlayer.prepareAsync();
+            mMediaPlayer.prepare();
         } catch (IllegalArgumentException e) {
             MPLogUtil.log("VideoAndroidPlayer => startDecoder => " + e.getMessage());
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
