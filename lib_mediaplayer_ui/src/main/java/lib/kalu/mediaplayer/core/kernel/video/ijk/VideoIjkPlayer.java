@@ -287,20 +287,12 @@ public final class VideoIjkPlayer extends BasePlayer {
      * ijk视频播放器监听listener
      */
     private void initListener() {
-        // 设置监听，可以查看ijk中的IMediaPlayer源码监听事件
-        // 设置视频错误监听器
         mIjkPlayer.setOnErrorListener(onErrorListener);
-        // 设置视频播放完成监听事件
         mIjkPlayer.setOnCompletionListener(onCompletionListener);
-        // 设置视频信息监听器
         mIjkPlayer.setOnInfoListener(onInfoListener);
-        // 设置准备视频播放监听事件
         mIjkPlayer.setOnPreparedListener(onPreparedListener);
-        // 设置视频大小更改监听器
         mIjkPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
-        // 设置视频seek完成监听事件
         mIjkPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
-        // 设置时间文本监听器
         mIjkPlayer.setOnTimedTextListener(onTimedTextListener);
         // 设置视频缓冲更新监听事件
         mIjkPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
@@ -593,38 +585,6 @@ public final class VideoIjkPlayer extends BasePlayer {
     }
 
     /**
-     * 设置视频错误监听器
-     * int MEDIA_INFO_VIDEO_RENDERING_START = 3;//视频准备渲染
-     * int MEDIA_INFO_BUFFERING_START = 701;//开始缓冲
-     * int MEDIA_INFO_BUFFERING_END = 702;//缓冲结束
-     * int MEDIA_INFO_VIDEO_ROTATION_CHANGED = 10001;//视频选择信息
-     * int MEDIA_ERROR_SERVER_DIED = 100;//视频中断，一般是视频源异常或者不支持的视频类型。
-     * int MEDIA_ERROR_IJK_PLAYER = -10000,//一般是视频源有问题或者数据格式不支持，比如音频不是AAC之类的
-     * int MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK = 200;//数据错误没有有效的回收
-     */
-    private IMediaPlayer.OnErrorListener onErrorListener = new IMediaPlayer.OnErrorListener() {
-        @Override
-        public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
-            MPLogUtil.log("VideoIjkPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
-            return true;
-        }
-    };
-
-    /**
-     * 设置视频播放完成监听事件
-     */
-    private IMediaPlayer.OnCompletionListener onCompletionListener = new IMediaPlayer.OnCompletionListener() {
-        @Override
-        public void onCompletion(IMediaPlayer iMediaPlayer) {
-            MPLogUtil.log("VideoIjkPlayer => onCompletion =>");
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_END);
-        }
-    };
-
-
-    /**
      * 设置视频信息监听器
      */
     private IMediaPlayer.OnInfoListener onInfoListener = new IMediaPlayer.OnInfoListener() {
@@ -664,29 +624,6 @@ public final class VideoIjkPlayer extends BasePlayer {
         }
     };
 
-    /**
-     * 设置视频缓冲更新监听事件
-     */
-    private IMediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new IMediaPlayer.OnBufferingUpdateListener() {
-        @Override
-        public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int percent) {
-//            try {
-//                if (percent <= 0)
-//                    throw new Exception("percent warning: " + percent);
-//                if (!isFromNetBufferStart)
-//                    throw new Exception("isFromNetBufferStart warning: false");
-//                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-//                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
-//            } catch (Exception e) {
-//                MPLogUtil.log("VideoIjkPlayer => onBufferingUpdate => " + e.getMessage());
-//            }
-        }
-    };
-
-
-    /**
-     * 设置视频大小更改监听器
-     */
     private IMediaPlayer.OnVideoSizeChangedListener onVideoSizeChangedListener = new IMediaPlayer.OnVideoSizeChangedListener() {
         @Override
         public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int width, int height, int sar_num, int sar_den) {
@@ -705,19 +642,6 @@ public final class VideoIjkPlayer extends BasePlayer {
         }
     };
 
-    /**
-     * 设置时间文本监听器
-     */
-    private IMediaPlayer.OnTimedTextListener onTimedTextListener = new IMediaPlayer.OnTimedTextListener() {
-        @Override
-        public void onTimedText(IMediaPlayer iMediaPlayer, IjkTimedText ijkTimedText) {
-            MPLogUtil.log("VideoIjkPlayer => onTimedText => text = " + ijkTimedText.getText());
-        }
-    };
-
-    /**
-     * 设置视频seek完成监听事件
-     */
     private IMediaPlayer.OnSeekCompleteListener onSeekCompleteListener = new IMediaPlayer.OnSeekCompleteListener() {
         @Override
         public void onSeekComplete(IMediaPlayer iMediaPlayer) {
@@ -731,9 +655,6 @@ public final class VideoIjkPlayer extends BasePlayer {
         }
     };
 
-    /**
-     * 设置准备视频播放监听事件
-     */
     private IMediaPlayer.OnPreparedListener onPreparedListener = new IMediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(IMediaPlayer iMediaPlayer) {
@@ -747,6 +668,60 @@ public final class VideoIjkPlayer extends BasePlayer {
                 MPLogUtil.log("VideoIjkPlayer => onPrepared => " + e.getMessage());
                 start();
             }
+        }
+    };
+
+    /**
+     * 设置视频错误监听器
+     * int MEDIA_INFO_VIDEO_RENDERING_START = 3;//视频准备渲染
+     * int MEDIA_INFO_BUFFERING_START = 701;//开始缓冲
+     * int MEDIA_INFO_BUFFERING_END = 702;//缓冲结束
+     * int MEDIA_INFO_VIDEO_ROTATION_CHANGED = 10001;//视频选择信息
+     * int MEDIA_ERROR_SERVER_DIED = 100;//视频中断，一般是视频源异常或者不支持的视频类型。
+     * int MEDIA_ERROR_IJK_PLAYER = -10000,//一般是视频源有问题或者数据格式不支持，比如音频不是AAC之类的
+     * int MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK = 200;//数据错误没有有效的回收
+     */
+    private IMediaPlayer.OnErrorListener onErrorListener = new IMediaPlayer.OnErrorListener() {
+        @Override
+        public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
+            MPLogUtil.log("VideoIjkPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
+            return true;
+        }
+    };
+
+    private IMediaPlayer.OnCompletionListener onCompletionListener = new IMediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(IMediaPlayer iMediaPlayer) {
+            MPLogUtil.log("VideoIjkPlayer => onCompletion =>");
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_END);
+        }
+    };
+
+    private IMediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new IMediaPlayer.OnBufferingUpdateListener() {
+        @Override
+        public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int percent) {
+//            try {
+//                if (percent <= 0)
+//                    throw new Exception("percent warning: " + percent);
+//                if (!isFromNetBufferStart)
+//                    throw new Exception("isFromNetBufferStart warning: false");
+//                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+//                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
+//            } catch (Exception e) {
+//                MPLogUtil.log("VideoIjkPlayer => onBufferingUpdate => " + e.getMessage());
+//            }
+        }
+    };
+
+    /**
+     * 设置时间文本监听器
+     */
+    private IMediaPlayer.OnTimedTextListener onTimedTextListener = new IMediaPlayer.OnTimedTextListener() {
+        @Override
+        public void onTimedText(IMediaPlayer iMediaPlayer, IjkTimedText ijkTimedText) {
+            MPLogUtil.log("VideoIjkPlayer => onTimedText => text = " + ijkTimedText.getText());
         }
     };
 }
