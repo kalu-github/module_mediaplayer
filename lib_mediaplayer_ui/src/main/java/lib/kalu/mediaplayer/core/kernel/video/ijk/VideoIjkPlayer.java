@@ -744,7 +744,7 @@ public final class VideoIjkPlayer extends BasePlayer {
                     throw new Exception("seek warning: " + seek);
                 seekTo(seek, false);
             } catch (Exception e) {
-                MPLogUtil.log("VideoAndroidPlayer => onPrepared => " + e.getMessage());
+                MPLogUtil.log("VideoIjkPlayer => onPrepared => " + e.getMessage());
                 start();
             }
         }
