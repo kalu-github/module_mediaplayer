@@ -110,6 +110,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
             mMediaPlayer.setOnErrorListener(onErrorListener);
             mMediaPlayer.setOnCompletionListener(onCompletionListener);
             mMediaPlayer.setOnInfoListener(onInfoListener);
+            mMediaPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
             mMediaPlayer.setOnPreparedListener(mOnPreparedListener);
             mMediaPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
             mMediaPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
@@ -369,6 +370,14 @@ public final class VideoAndroidPlayer extends BasePlayer {
         public void onCompletion(MediaPlayer mp) {
             MPLogUtil.log("VideoAndroidPlayer => onCompletion =>");
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
+        }
+    };
+
+    private MediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
+
+        @Override
+        public void onBufferingUpdate(MediaPlayer mp, int percent) {
+
         }
     };
 
