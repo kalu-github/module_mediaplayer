@@ -57,13 +57,14 @@
             android:max="0"
             android:maxHeight="5dp"
             android:minHeight="5dp"
-            android:paddingStart="20dp"
+            android:paddingStart="0dp"
             android:paddingLeft="0dp"
-            android:paddingEnd="20dp"
+            android:paddingEnd="0dp"
             android:paddingRight="0dp"
             android:progress="0"
             android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress"
-            android:thumb="@drawable/module_mediaplayer_shape_seek_thumb" />
+            android:thumb="@drawable/module_mediaplayer_shape_seek_thumb"
+            android:thumbOffset="0dp" />
 
         <TextView
             android:id="@+id/module_mediaplayer_component_seek_max"
