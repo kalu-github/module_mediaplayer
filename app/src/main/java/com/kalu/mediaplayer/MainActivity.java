@@ -187,13 +187,10 @@ public class MainActivity extends Activity {
         int scaleTypeId = ((RadioGroup) findViewById(R.id.main_scale)).getCheckedRadioButtonId();
         switch (scaleTypeId) {
             case R.id.main_scale2:
-                scaleType = PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL;
-                break;
-            case R.id.main_scale3:
-                scaleType = PlayerType.ScaleType.SCREEN_SCALE_MATCH_PARENT;
+                scaleType = PlayerType.ScaleType.SCREEN_SCALE_VIDEO_ORIGINAL;
                 break;
             case R.id.main_scale4:
-                scaleType = PlayerType.ScaleType.SCREEN_SCALE_CENTER_CROP;
+                scaleType = PlayerType.ScaleType.SCREEN_SCALE_SCREEN_CROP;
                 break;
             case R.id.main_scale5:
                 scaleType = PlayerType.ScaleType.SCREEN_SCALE_4_3;
@@ -202,7 +199,7 @@ public class MainActivity extends Activity {
                 scaleType = PlayerType.ScaleType.SCREEN_SCALE_16_9;
                 break;
             default:
-                scaleType = PlayerType.ScaleType.SCREEN_SCALE_DEFAULT;
+                scaleType = PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH;
                 break;
         }
 
@@ -212,7 +209,7 @@ public class MainActivity extends Activity {
                 .setKernel(kernelType)
                 .setRender(renderType)
                 .setExoFFmpeg(exoFFmpeg)
-                .setScaleType(scaleType)
+                .setVideoScaleType(scaleType)
                 .setBuriedEvent(new LogBuriedEvent())
                 .build();
     }
