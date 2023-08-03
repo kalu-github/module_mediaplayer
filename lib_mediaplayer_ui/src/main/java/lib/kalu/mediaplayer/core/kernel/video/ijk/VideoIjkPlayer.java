@@ -124,7 +124,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             // 使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
             mIjkPlayer.setOption(player, "opensles", 0);
             mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
-            mIjkPlayer.setOption(player, "framedrop", 2);
+            mIjkPlayer.setOption(player, "framedrop", 4);
             if (mPlayWhenReady) {
                 mIjkPlayer.setOption(player, "start-on-prepared", 1);
             } else {
