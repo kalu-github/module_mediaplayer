@@ -22,7 +22,7 @@ interface PlayerApiRender extends PlayerApiBase {
 
     default void clearCanvas() {
         try {
-            RenderApi render = getRender();
+            RenderApi render = getVideoRender();
             if (null == render)
                 throw new Exception("render error: null");
             render.clearCanvas();
@@ -33,7 +33,7 @@ interface PlayerApiRender extends PlayerApiBase {
 
     default void updateCanvas() {
         try {
-            RenderApi render = getRender();
+            RenderApi render = getVideoRender();
             if (null == render)
                 throw new Exception("render error: null");
             render.updateCanvas();
@@ -44,7 +44,7 @@ interface PlayerApiRender extends PlayerApiBase {
 
     default String screenshot() {
         try {
-            RenderApi render = getRender();
+            RenderApi render = getVideoRender();
             return render.screenshot();
         } catch (Exception e) {
             return null;
@@ -82,25 +82,25 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
-    default boolean resetRender() {
+    default boolean resetVideoRender() {
         try {
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
             if (null == config)
                 throw new Exception("config warning: null");
-            int render = config.getRender();
-            if (render != PlayerType.RenderType.SURFACE_VIEW)
-                throw new Exception("render warning: not SURFACE_VIEW");
-            int kernel = config.getKernel();
-            if (kernel != PlayerType.KernelType.IJK_MEDIACODEC && kernel != PlayerType.KernelType.EXO_V1 && kernel != PlayerType.KernelType.EXO_V2)
-                throw new Exception("kernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
+            int videoRender = config.getVideoRender();
+            if (videoRender != PlayerType.RenderType.SURFACE_VIEW)
+                throw new Exception("videoRender warning: not SURFACE_VIEW");
+            int videoKernel = config.getVideoKernel();
+            if (videoKernel != PlayerType.KernelType.IJK_MEDIACODEC && videoKernel != PlayerType.KernelType.EXO_V1 && videoKernel != PlayerType.KernelType.EXO_V2)
+                throw new Exception("videoKernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
             if (!(this instanceof PlayerApiKernel))
-                throw new Exception("render warning: not instanceof PlayerApiKernel");
-            createRender(true);
-            ((PlayerApiKernel) this).attachRender();
-            updateRenderBuffer(kernel == PlayerType.KernelType.IJK_MEDIACODEC ? 4000 : 400);
+                throw new Exception("videoRender warning: not instanceof PlayerApiKernel");
+            createVideoRender(true);
+            ((PlayerApiKernel) this).attachVideoRender();
+            updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 4000 : 400);
             return true;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => resetRender => " + e.getMessage());
+            MPLogUtil.log("PlayerApiRender => resetVideoRender => " + e.getMessage());
             return false;
         }
     }
@@ -138,7 +138,7 @@ interface PlayerApiRender extends PlayerApiBase {
             requestFocusFull();
             boolean b = switchToDecorView(true);
             if (b) {
-                resetRender();
+                resetVideoRender();
                 callPlayerEvent(PlayerType.StateType.STATE_FULL_START);
                 callWindowEvent(PlayerType.WindowType.FULL);
             }
@@ -160,7 +160,7 @@ interface PlayerApiRender extends PlayerApiBase {
             boolean b = switchToPlayerLayout();
             switchPlaying();
             if (b) {
-                resetRender();
+                resetVideoRender();
                 cleanFocusFull();
                 callPlayerEvent(PlayerType.StateType.STATE_FULL_STOP);
                 callWindowEvent(PlayerType.WindowType.NORMAL);
@@ -179,7 +179,7 @@ interface PlayerApiRender extends PlayerApiBase {
                 throw new Exception("always Float");
             boolean switchToDecorView = switchToDecorView(false);
             if (switchToDecorView) {
-                resetRender();
+                resetVideoRender();
                 callPlayerEvent(PlayerType.StateType.STATE_FLOAT_START);
                 callWindowEvent(PlayerType.WindowType.FLOAT);
             }
@@ -201,7 +201,7 @@ interface PlayerApiRender extends PlayerApiBase {
             boolean switchToPlayerLayout = switchToPlayerLayout();
             switchPlaying();
             if (switchToPlayerLayout) {
-                resetRender();
+                resetVideoRender();
                 callPlayerEvent(PlayerType.StateType.STATE_FLOAT_STOP);
                 callWindowEvent(PlayerType.WindowType.NORMAL);
             }
@@ -214,7 +214,7 @@ interface PlayerApiRender extends PlayerApiBase {
 
     default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
         try {
-            RenderApi render = getRender();
+            RenderApi render = getVideoRender();
             if (null == render)
                 throw new Exception("render error: null");
             render.setVideoScaleType(scaleType);
@@ -226,7 +226,7 @@ interface PlayerApiRender extends PlayerApiBase {
 
     default void setVideoSize(int width, int height) {
         try {
-            RenderApi render = getRender();
+            RenderApi render = getVideoRender();
             render.setVideoSize(width, height);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => setVideoSize => " + e.getMessage());
@@ -237,7 +237,7 @@ interface PlayerApiRender extends PlayerApiBase {
         try {
             if (rotation == -1)
                 return;
-            RenderApi render = getRender();
+            RenderApi render = getVideoRender();
             render.setVideoRotation(rotation);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => setVideoRotation => " + e.getMessage());
@@ -251,14 +251,14 @@ interface PlayerApiRender extends PlayerApiBase {
      */
     default void setMirrorRotation(boolean enable) {
         try {
-            RenderApi render = getRender();
+            RenderApi render = getVideoRender();
             render.setScaleX(enable ? -1 : 1);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => setMirrorRotation => " + e.getMessage());
         }
     }
 
-    default void showReal() {
+    default void showVideoReal() {
         try {
             ViewGroup viewGroup = getBaseVideoViewGroup();
             viewGroup.setVisibility(View.VISIBLE);
@@ -268,7 +268,7 @@ interface PlayerApiRender extends PlayerApiBase {
                 child.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => showReal => " + e.getMessage());
+            MPLogUtil.log("PlayerApiRender => showVideoReal => " + e.getMessage());
         }
     }
 
@@ -286,7 +286,7 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
-    default RenderApi searchRender() {
+    default RenderApi searchVideoRender() {
         try {
             ViewGroup group = getBaseVideoViewGroup();
             int count = group.getChildCount();
@@ -300,97 +300,89 @@ interface PlayerApiRender extends PlayerApiBase {
             }
             throw new Exception("not find");
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => searchRender => " + e.getMessage());
+            MPLogUtil.log("PlayerApiRender => searchVideoRender => " + e.getMessage());
             return null;
         }
     }
 
-    default void setRender(@PlayerType.RenderType int v) {
+    default void setVideoRender(@PlayerType.RenderType int v) {
         try {
-            PlayerManager.getInstance().setRender(v);
+            PlayerManager.getInstance().setVideoRender(v);
         } catch (Exception e) {
         }
     }
 
-    default void createRender(boolean reset) {
+    default void createVideoRender(boolean reset) {
         try {
-            // 1
-            releaseRender(reset);
-            // 2
-            int type = PlayerManager.getInstance().getConfig().getRender();
-            setRender(RenderFactoryManager.createRender(getBaseContext(), type));
-            // 3
-            addRender();
+            releaseVideoRender(reset);
+            int videoRender = PlayerManager.getInstance().getConfig().getVideoRender();
+            setVideoRender(RenderFactoryManager.createRender(getBaseContext(), videoRender));
+            addVideoRender();
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => createRender => " + e.getMessage());
         }
     }
 
-    default void releaseRender(boolean reset) {
+    default void releaseVideoRender(boolean reset) {
         try {
-            // 1
-            releaseRenderListener();
-            // 2
+            releaseVideoRenderListener();
             if (reset)
                 throw new Exception("reset warning: true");
-            removeRender();
+            removeVideoRender();
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => releaseRender => " + e.getMessage());
+            MPLogUtil.log("PlayerApiRender => releaseVideoRender => " + e.getMessage());
         }
     }
 
-    default void updateRenderBuffer(int delayMillis) {
+    default void updateVideoRenderBuffer(int delayMillis) {
         try {
-            RenderApi render = searchRender();
+            RenderApi render = searchVideoRender();
             if (null == render)
                 throw new Exception("render warning: null");
             render.updateBuffer(delayMillis);
-            MPLogUtil.log("PlayerApiRender => updateRenderBuffer => succ");
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => updateRenderBuffer => " + e.getMessage());
+            MPLogUtil.log("PlayerApiRender => updateVideoRenderBuffer => " + e.getMessage());
         }
     }
 
-    default void addRenderListener() {
+    default void addVideoRenderListener() {
         try {
-            // 1
-            RenderApi render = searchRender();
+            RenderApi render = searchVideoRender();
             if (null == render)
                 throw new Exception("render warning: null");
             render.addListener();
-            MPLogUtil.log("PlayerApiRender => addRenderListener => succ");
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => addRenderListener => " + e.getMessage());
+            MPLogUtil.log("PlayerApiRender => addVideoRenderListener => " + e.getMessage());
         }
     }
 
-    default void releaseRenderListener() {
+    default void releaseVideoRenderListener() {
         try {
             // 1
-            RenderApi render = searchRender();
+            RenderApi render = searchVideoRender();
             if (null == render)
                 throw new Exception("render warning: null");
             render.releaseListener();
             MPLogUtil.log("PlayerApiRender => releaseRenderListener => succ");
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => releaseRenderListener => " + e.getMessage());
+            MPLogUtil.log("PlayerApiRender => releaseVideoRenderListener => " + e.getMessage());
         }
     }
 
-    default void addRender() {
+    default void addVideoRender() {
         try {
-            RenderApi render = getRender();
+            RenderApi render = getVideoRender();
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             render.setLayoutParams(params);
             ViewGroup viewGroup = getBaseVideoViewGroup();
             viewGroup.addView((View) render, 0);
             MPLogUtil.log("PlayerApiRender => addRender => succ");
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => addRender => " + e.getMessage());
+            MPLogUtil.log("PlayerApiRender => addVideoRender => " + e.getMessage());
         }
     }
 
-    default void removeRender() {
+    default void removeVideoRender() {
         try {
             ViewGroup group = getBaseVideoViewGroup();
             if (null == group)
@@ -401,13 +393,13 @@ interface PlayerApiRender extends PlayerApiBase {
             group.removeAllViews();
             MPLogUtil.log("PlayerApiRender => removeRender => succ");
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => removeRender => " + e.getMessage());
+            MPLogUtil.log("PlayerApiRender => removeVideoRender => " + e.getMessage());
         }
     }
 
-    RenderApi getRender();
+    RenderApi getVideoRender();
 
-    void setRender(@NonNull RenderApi render);
+    void setVideoRender(@NonNull RenderApi render);
 
-    void checkReal();
+    void checkVideoReal();
 }

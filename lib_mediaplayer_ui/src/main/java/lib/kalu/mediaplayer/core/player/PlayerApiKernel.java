@@ -27,8 +27,7 @@ interface PlayerApiKernel extends PlayerApiListener,
         PlayerApiBuriedEvent,
         PlayerApiComponent,
         PlayerApiRender,
-        PlayerApiDevice,
-        PlayerApiExternalMusic {
+        PlayerApiDevice {
 
     default void setData(@NonNull String data) {
         try {
@@ -66,17 +65,15 @@ interface PlayerApiKernel extends PlayerApiListener,
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
             MPLogUtil.setLogger(config);
             // 5
-            createKernel(builder, config);
+            createVideoKernel(builder, config);
             // 4
-            createRender(false);
+            createVideoRender(false);
             // 6
-            initKernel(builder, playUrl);
+            initVideoKernel(builder, playUrl);
             // 7
-            attachRender();
+            attachVideoRender();
             // 8
             updatePlayerData(builder, playUrl);
-            // 9
-            updateExternalMusicData(builder);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => start => " + e.getMessage());
         }
@@ -106,10 +103,6 @@ interface PlayerApiKernel extends PlayerApiListener,
             builder.setLoop(isLooping());
             builder.setLive(isLive());
             builder.setMute(isMute());
-            builder.setExternalMusicUrl(getExternalMusicPath());
-            builder.setExternalMusicLooping(isExternalMusicLooping());
-            builder.setExternalMusicSeek(isExternalMusicSeek());
-            builder.setExternalMusicPlayWhenReady(isExternalMusicPlayWhenReady());
             builder.setWindowVisibilityChangedRelease(isWindowVisibilityChangedRelease());
             return builder.build();
         } catch (Exception e) {
@@ -119,7 +112,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default long getDuration() {
         try {
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             long duration = kernel.getDuration();
             if (duration < 0L) {
                 duration = 0L;
@@ -133,12 +126,11 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default long getPosition() {
         try {
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             long position = kernel.getPosition();
             if (position < 0L) {
                 position = 0L;
             }
-            MPLogUtil.log("PlayerApiKernel => getPosition => position = " + position);
             return position;
         } catch (Exception e) {
             return 0L;
@@ -148,7 +140,7 @@ interface PlayerApiKernel extends PlayerApiListener,
     default void setVolume(@FloatRange(from = 0f, to = 1f) float left, @FloatRange(from = 0f, to = 1f) float right) {
         try {
             MPLogUtil.log("PlayerApiKernel => setVolume => left = " + left + ", right = " + right);
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             kernel.setVolume(left, right);
         } catch (Exception e) {
         }
@@ -157,7 +149,7 @@ interface PlayerApiKernel extends PlayerApiListener,
     default void setMute(boolean enable) {
         try {
             MPLogUtil.log("PlayerApiKernel => setMute => enable = " + enable);
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             kernel.setMute(enable);
         } catch (Exception e) {
         }
@@ -166,7 +158,7 @@ interface PlayerApiKernel extends PlayerApiListener,
     default void setLooping(boolean looping) {
         try {
             MPLogUtil.log("PlayerApiKernel => setLooping => looping = " + looping);
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             kernel.setLooping(looping);
         } catch (Exception e) {
         }
@@ -183,14 +175,14 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default void release(@NonNull boolean releaseTag, boolean isFromUser, boolean isMainThread) {
         try {
-            checkKernel();
-            removeRender();
+            checkVideoKernel();
+            removeVideoRender();
             if (releaseTag) {
                 setData(null);
                 releaseTag();
             }
-            releaseRender(false);
-            releaseKernel(isFromUser, isMainThread);
+            releaseVideoRender(false);
+            releaseVideoKernel(isFromUser, isMainThread);
             cleanPlayerChangeListener();
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE);
         } catch (Exception e) {
@@ -226,12 +218,12 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default void pause(boolean ignore) {
         setPlayWhenReady(false);
-        pauseKernel(ignore);
+        pauseVideoKernel(ignore);
     }
 
     default void stop(boolean callEvent, boolean isMainThread) {
         try {
-            stopKernel(callEvent, isMainThread);
+            stopVideoKernel(callEvent, isMainThread);
         } catch (Exception e) {
         }
     }
@@ -259,11 +251,8 @@ interface PlayerApiKernel extends PlayerApiListener,
         setPlayWhenReady(true);
         try {
             MPLogUtil.log("PlayerApiKernel => resume => ignore = " + ignore);
-            checkKernel();
-            // 1
-            resumeExternalMusic();
-            // 2
-            resumeKernel(ignore);
+            checkVideoKernel();
+            resumeVideoKernel(ignore);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => resume => " + e.getMessage());
         }
@@ -271,7 +260,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default boolean isLooping() {
         try {
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             return kernel.isLooping();
         } catch (Exception e) {
             return (boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_looping);
@@ -296,7 +285,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default long getSeek() {
         try {
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             Object tag = ((View) this).getTag(R.id.module_mediaplayer_id_player_position);
             if (null != tag) {
                 kernel.setSeek((Long) tag);
@@ -309,7 +298,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default void updateSeek() {
         try {
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             long position = kernel.getPosition();
             ((View) this).setTag(R.id.module_mediaplayer_id_player_position, position);
         } catch (Exception e) {
@@ -318,7 +307,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default long getMax() {
         try {
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             return kernel.getMax();
         } catch (Exception e) {
             return 0L;
@@ -386,22 +375,19 @@ interface PlayerApiKernel extends PlayerApiListener,
     default void seekTo(@NonNull boolean force, @NonNull StartBuilder builder) {
 
         try {
-            // 1
-            checkKernel();
-            // 2
+            checkVideoKernel();
             if (force) {
-                updateKernel(builder);
+                updateVideoKernel(builder);
             }
-            // 3
             long seek = builder.getSeek();
-            seekToKernel(seek);
+            seekToVideoKernel(seek);
         } catch (Exception e) {
         }
     }
 
     default boolean isLive() {
         try {
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             return kernel.isLive();
         } catch (Exception e) {
             return false;
@@ -410,7 +396,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default boolean isPlaying() {
         try {
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             return kernel.isPlaying();
         } catch (Exception e) {
             return false;
@@ -419,7 +405,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default boolean isMute() {
         try {
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             return kernel.isMute();
         } catch (Exception e) {
             return false;
@@ -428,7 +414,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default void setSpeed(float speed) {
         try {
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             kernel.setSpeed(speed);
         } catch (Exception e) {
         }
@@ -436,7 +422,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     default float getSpeed() {
         try {
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             return kernel.getSpeed();
         } catch (Exception e) {
             return 1F;
@@ -445,20 +431,19 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     /*********************/
 
-    default void checkKernel() throws Exception {
-        KernelApi kernel = getKernel();
+    default void checkVideoKernel() throws Exception {
+        KernelApi kernel = getVideoKernel();
         if (null == kernel)
             throw new Exception("check kernel is null");
     }
 
-    default void resumeKernel(@NonNull boolean ignore) {
+    default void resumeVideoKernel(@NonNull boolean ignore) {
         setPlayWhenReady(true);
         try {
             // 1
-            checkKernel();
+            checkVideoKernel();
             // 2
-            KernelApi kernel = getKernel();
-            MPLogUtil.log("PlayerApiKernel => resumeKernel => ignore = " + ignore + ", kernel = " + kernel);
+            KernelApi kernel = getVideoKernel();
             kernel.start();
             setScreenKeep(true);
             if (ignore) {
@@ -468,106 +453,98 @@ interface PlayerApiKernel extends PlayerApiListener,
                 callPlayerEvent(PlayerType.StateType.STATE_KERNEL_RESUME);
             }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => resumeKernel => " + e.getMessage());
+            MPLogUtil.log("PlayerApiKernel => resumeVideoKernel => " + e.getMessage());
         }
     }
 
-    default void stopKernel(@NonNull boolean call, @NonNull boolean isMainThread) {
+    default void stopVideoKernel(@NonNull boolean call, @NonNull boolean isMainThread) {
         try {
             // 1
-            checkKernel();
+            checkVideoKernel();
             // 2
-            KernelApi kernel = getKernel();
-            MPLogUtil.log("PlayerApiKernel => stopKernel => kernel = " + kernel);
+            KernelApi kernel = getVideoKernel();
             kernel.stop(isMainThread);
             setScreenKeep(false);
             if (!call) return;
             callPlayerEvent(PlayerType.StateType.STATE_KERNEL_STOP);
             callPlayerEvent(PlayerType.StateType.STATE_CLOSE);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => stopKernel => " + e.getMessage());
+            MPLogUtil.log("PlayerApiKernel => stopVideoKernel => " + e.getMessage());
         }
     }
 
-    default void pauseKernel(@NonNull boolean ignore) {
+    default void pauseVideoKernel(@NonNull boolean ignore) {
         setPlayWhenReady(false);
         try {
             // 1
-            checkKernel();
-            // 2
-            pauseExternalMusic();
+            checkVideoKernel();
             // 3
-            getKernel().pause();
+            getVideoKernel().pause();
             // 4
             updateSeek();
             // 5
             setScreenKeep(false);
             callPlayerEvent(ignore ? PlayerType.StateType.STATE_PAUSE_IGNORE : PlayerType.StateType.STATE_PAUSE);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => pauseKernel => " + e.getMessage());
+            MPLogUtil.log("PlayerApiKernel => pauseVideoKernel => " + e.getMessage());
         }
     }
 
-    default void releaseKernel(boolean isFromUser, boolean isMainThread) {
+    default void releaseVideoKernel(boolean isFromUser, boolean isMainThread) {
         try {
             // 1
-            checkKernel();
+            checkVideoKernel();
             // 2
-            KernelApi kernel = getKernel();
-            MPLogUtil.log("PlayerApiKernel => releaseKernel => kernel = " + kernel);
+            KernelApi kernel = getVideoKernel();
             kernel.releaseDecoder(isFromUser, isMainThread);
-            setKernel(null);
+            setVideoKernel(null);
             setScreenKeep(false);
-            MPLogUtil.log("PlayerApiKernel => releaseKernel => succ");
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => releaseKernel => " + e.getMessage());
+            MPLogUtil.log("PlayerApiKernel => releaseVideoKernel => " + e.getMessage());
         }
     }
 
-    default void seekToKernel(long milliSeconds) {
+    default void seekToVideoKernel(long milliSeconds) {
         try {
             // 1
-            checkKernel();
+            checkVideoKernel();
             // 2
-            KernelApi kernel = getKernel();
-            MPLogUtil.log("PlayerApiKernel => seekToKernel => milliSeconds = " + milliSeconds + ", kernel = " + kernel);
+            KernelApi kernel = getVideoKernel();
             kernel.seekTo(milliSeconds, false);
             setScreenKeep(true);
             if (milliSeconds <= 0)
                 return;
             callPlayerEvent(PlayerType.StateType.STATE_INIT_SEEK);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => seekToKernel => " + e.getMessage());
+            MPLogUtil.log("PlayerApiKernel => seekToVideoKernel => " + e.getMessage());
         }
     }
 
-    default void updateKernel(@NonNull StartBuilder builder) {
+    default void updateVideoKernel(@NonNull StartBuilder builder) {
         try {
             // 1
-            checkKernel();
+            checkVideoKernel();
             // 2
-            KernelApi kernel = getKernel();
-            MPLogUtil.log("PlayerApiKernel => updateKernel => kernel = " + kernel);
+            KernelApi kernel = getVideoKernel();
             long seek = builder.getSeek();
             long max = builder.getMax();
             boolean loop = builder.isLoop();
             kernel.update(seek, max, loop);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => updateKernel => " + e.getMessage());
+            MPLogUtil.log("PlayerApiKernel => updateVideoKernel => " + e.getMessage());
         }
     }
 
-    default void initKernel(@NonNull StartBuilder bundle, @NonNull String playUrl) {
+    default void initVideoKernel(@NonNull StartBuilder bundle, @NonNull String playUrl) {
         try {
             // 1
-            checkKernel();
+            checkVideoKernel();
             // 2
-            KernelApi kernel = getKernel();
-            MPLogUtil.log("PlayerApiKernel => initKernel => kernel = " + kernel);
+            KernelApi kernel = getVideoKernel();
             kernel.initDecoder(getBaseContext(), playUrl, bundle);
             setScreenKeep(true);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => initKernel => " + e.getMessage());
+            MPLogUtil.log("PlayerApiKernel => initVideoKernel => " + e.getMessage());
         }
     }
 
@@ -578,18 +555,18 @@ interface PlayerApiKernel extends PlayerApiListener,
 
     /***************************/
 
-    default void setKernel(@PlayerType.KernelType.Value int v) {
+    default void setVideoKernel(@PlayerType.KernelType.Value int v) {
         try {
-            PlayerManager.getInstance().setKernel(v);
+            PlayerManager.getInstance().setVideoKernel(v);
         } catch (Exception e) {
         }
     }
 
-    default void createKernel(@NonNull StartBuilder builder, @NonNull PlayerBuilder config) {
+    default void createVideoKernel(@NonNull StartBuilder builder, @NonNull PlayerBuilder config) {
 
         // 1
         try {
-            checkKernel();
+            checkVideoKernel();
             release(false, false);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => createKernel => keenel warning: null");
@@ -597,7 +574,7 @@ interface PlayerApiKernel extends PlayerApiListener,
 
         // 2
         try {
-            int type = PlayerManager.getInstance().getConfig().getKernel();
+            int type = PlayerManager.getInstance().getConfig().getVideoKernel();
             KernelApi kernel = KernelFactoryManager.getKernel((PlayerApi) this, type, new KernelApiEvent() {
 
                 @Override
@@ -624,7 +601,7 @@ interface PlayerApiKernel extends PlayerApiListener,
                             // 2
                             boolean seekHelp = config.isSeekHelp();
                             if (seekHelp) {
-                                seekToKernel(1);
+                                seekToVideoKernel(1);
                             } else {
                                 seekTo(true);
                             }
@@ -665,12 +642,10 @@ interface PlayerApiKernel extends PlayerApiListener,
                             break;
                         // 缓冲开始
                         case PlayerType.EventType.EVENT_BUFFERING_START:
-                            pauseExternalMusic();
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
                             break;
                         // 缓冲结束
                         case PlayerType.EventType.EVENT_BUFFERING_STOP:
-                            resumeExternalMusic();
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
                             break;
                         // 播放开始-快进
@@ -678,11 +653,9 @@ interface PlayerApiKernel extends PlayerApiListener,
                             // step1
                             callPlayerEvent(PlayerType.StateType.STATE_START_SEEK);
                             // step2
-                            showReal();
+                            showVideoReal();
                             // step4
                             resume(true);
-                            // step5
-                            checkExternalMusic(getBaseContext());
                             // step6
                             MPLogUtil.log("PlayerApiKernel => onEvent => event_video_start_seek => playWhenReady = " + isPlayWhenReady());
                             if (!isPlayWhenReady()) {
@@ -692,9 +665,9 @@ interface PlayerApiKernel extends PlayerApiListener,
                         // 播放开始
                         case PlayerType.EventType.EVENT_VIDEO_START_903:
                             // step1
-                            showReal();
+                            showVideoReal();
                             // step2
-                            checkReal();
+                            checkVideoReal();
                             break;
                         // 播放开始
                         case PlayerType.EventType.EVENT_VIDEO_START:
@@ -703,15 +676,11 @@ interface PlayerApiKernel extends PlayerApiListener,
 
                             // 埋点
                             onBuriedEventPlaying();
-
                             callPlayerEvent(PlayerType.StateType.STATE_START);
-
                             // step2
-                            showReal();
+                            showVideoReal();
                             // step3
-                            checkReal();
-                            // step4
-                            checkExternalMusic(getBaseContext());
+                            checkVideoReal();
                             // step5
                             MPLogUtil.log("PlayerApiKernel => onEvent => event_video_start_seek => playWhenReady = " + isPlayWhenReady());
                             if (!isPlayWhenReady()) {
@@ -769,35 +738,33 @@ interface PlayerApiKernel extends PlayerApiListener,
                 }
             });
             // 4
-            setKernel(kernel);
+            setVideoKernel(kernel);
             // 5
-            createDecoder(config);
+            createVideoDecoder(config);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => createKernel => " + e.getMessage());
         }
     }
 
-    default void attachRender() {
+    default void attachVideoRender() {
         try {
-            RenderApi render = getRender();
-            KernelApi kernel = getKernel();
+            RenderApi render = getVideoRender();
+            KernelApi kernel = getVideoKernel();
             render.setKernel(kernel);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => attachRender => " + e.getMessage());
         }
     }
 
-    default void createDecoder(@NonNull PlayerBuilder config) {
+    default void createVideoDecoder(@NonNull PlayerBuilder config) {
         try {
-            // 1
-            checkKernel();
-            // 2
-            KernelApi kernel = getKernel();
+            checkVideoKernel();
+            KernelApi kernel = getVideoKernel();
             boolean log = config.isLog();
             int seekParameters = config.getExoSeekParameters();
             kernel.createDecoder(getBaseContext(), log, seekParameters);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => createDecoder => " + e.getMessage());
+            MPLogUtil.log("PlayerApiKernel => createVideoDecoder => " + e.getMessage());
         }
     }
 

@@ -51,7 +51,6 @@ public final class VideoVlcPlayer extends BasePlayer {
                 setEvent(null);
             }
             release(isMainThread);
-            stopExternalMusic(true);
         } catch (Exception e) {
         }
     }

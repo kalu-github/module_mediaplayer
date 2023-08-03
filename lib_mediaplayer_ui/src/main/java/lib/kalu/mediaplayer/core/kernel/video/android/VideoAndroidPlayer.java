@@ -53,7 +53,6 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 setEvent(null);
             }
             release(isMainThread);
-            stopExternalMusic(true);
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => releaseDecoder => " + e.getMessage());
         }

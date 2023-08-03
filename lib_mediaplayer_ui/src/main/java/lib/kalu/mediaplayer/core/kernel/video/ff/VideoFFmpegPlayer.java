@@ -48,7 +48,6 @@ public final class VideoFFmpegPlayer extends BasePlayer {
                 setEvent(null);
             }
             release(isMainThread);
-            stopExternalMusic(true);
         } catch (Exception e) {
             MPLogUtil.log("VideoFFmpegPlayer => releaseDecoder => " + e.getMessage());
         }

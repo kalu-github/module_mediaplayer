@@ -18,7 +18,6 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
  */
 @Keep
 public interface KernelApi extends KernelApiBase,
-        KernelApiExternalMusic,
         KernelApiEvent {
 
     void onUpdateTimeMillis();

@@ -55,7 +55,6 @@ public final class VideoIjkPlayer extends BasePlayer {
                 setEvent(null);
             }
             release(isMainThread);
-            stopExternalMusic(true);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => releaseDecoder => " + e.getMessage());
         }

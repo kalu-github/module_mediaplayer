@@ -13,7 +13,7 @@ import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender, PlayerApiExternalMusic {
+public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender {
 
     default boolean dispatchKeyEventPlayer(@NonNull KeyEvent event) {
         boolean isFloat = isFloat();

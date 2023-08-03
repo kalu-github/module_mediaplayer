@@ -65,29 +65,28 @@ public final class PlayerView extends RelativeLayout implements PlayerApi {
     }
 
     @Override
-    public RenderApi getRender() {
+    public RenderApi getVideoRender() {
         return mRender;
     }
 
     @Override
-    public void setRender(@NonNull RenderApi render) {
-        MPLogUtil.log("VideoLayout => setRender => render = " + render);
+    public void setVideoRender(@NonNull RenderApi render) {
         mRender = render;
     }
 
     @Override
-    public KernelApi getKernel() {
+    public KernelApi getVideoKernel() {
         return mKernel;
     }
 
     @Override
-    public void setKernel(@NonNull KernelApi kernel) {
-        MPLogUtil.log("VideoLayout => setKernel => kernel = " + kernel);
+    public void setVideoKernel(@NonNull KernelApi kernel) {
+        MPLogUtil.log("VideoLayout => setVideoKernel => kernel = " + kernel);
         mKernel = kernel;
     }
 
     @Override
-    public void checkReal() {
+    public void checkVideoReal() {
         if (getVisibility() == View.VISIBLE)
             return;
         pause();

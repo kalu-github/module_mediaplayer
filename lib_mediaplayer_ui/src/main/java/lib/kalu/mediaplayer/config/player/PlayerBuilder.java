@@ -66,11 +66,11 @@ public final class PlayerBuilder {
         return log;
     }
 
-    public int getKernel() {
+    public int getVideoKernel() {
         return kernel;
     }
 
-    public int getRender() {
+    public int getVideoRender() {
         return render;
     }
 
@@ -125,8 +125,8 @@ public final class PlayerBuilder {
         builder.setSeekHelp(this.seekHelp);
         builder.setExoSeekParameters(this.exoSeekParameters);
         builder.setExoFFmpeg(this.exoFFmpeg);
-        builder.setKernel(this.kernel);
-        builder.setRender(this.render);
+        builder.setVideoKernel(this.kernel);
+        builder.setVideoRender(this.render);
         builder.setVideoScaleType(this.videoScaleType);
         builder.setCheckMobileNetwork(this.checkMobileNetwork);
         builder.setFitMobileCutout(this.fitMobileCutout);
@@ -203,12 +203,12 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public Builder setKernel(@PlayerType.KernelType.Value int v) {
+        public Builder setVideoKernel(@PlayerType.KernelType.Value int v) {
             kernel = v;
             return this;
         }
 
-        public Builder setRender(@PlayerType.RenderType.Value int v) {
+        public Builder setVideoRender(@PlayerType.RenderType.Value int v) {
             render = v;
             return this;
         }

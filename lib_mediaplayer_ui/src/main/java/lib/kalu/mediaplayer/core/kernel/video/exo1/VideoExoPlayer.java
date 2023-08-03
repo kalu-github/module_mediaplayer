@@ -50,7 +50,6 @@ public final class VideoExoPlayer extends BasePlayer {
                 setEvent(null);
             }
             release(isMainThread);
-            stopExternalMusic(true);
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => releaseDecoder => " + e.getMessage());
         }
@@ -356,8 +355,6 @@ public final class VideoExoPlayer extends BasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            boolean externalMusicPlaying = isExternalMusicPlaying();
-            setVolume(externalMusicPlaying ? 0F : 1F, externalMusicPlaying ? 0F : 1F);
             mExoPlayer.setPlayWhenReady(true);
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => start => " + e.getMessage());

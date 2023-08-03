@@ -327,7 +327,7 @@ interface PlayerApiBase {
 
     default void setPlayWhenReady(@NonNull boolean playWhenReady) {
         try {
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("kernel error: null");
             kernel.setPlayWhenReady(playWhenReady);
@@ -338,7 +338,7 @@ interface PlayerApiBase {
 
     default boolean isPlayWhenReady() {
         try {
-            KernelApi kernel = getKernel();
+            KernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("kernel error: null");
             return kernel.isPlayWhenReady();
@@ -348,9 +348,9 @@ interface PlayerApiBase {
         }
     }
 
-    KernelApi getKernel();
+    KernelApi getVideoKernel();
 
-    void setKernel(@NonNull KernelApi kernel);
+    void setVideoKernel(@NonNull KernelApi kernel);
 
     void start(@NonNull String url);
 

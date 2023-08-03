@@ -526,7 +526,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.pauseKernel(ignore);
+            playerView.pauseVideoKernel(ignore);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => pauseKernel => " + e.getMessage());
         }
@@ -630,40 +630,6 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    /**********/
-    public final void stopExternalMusic(@NonNull boolean release) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.stopExternalMusic(release);
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => stopExternalMusic => " + e.getMessage());
-        }
-    }
-
-    public final void startExternalMusic(@NonNull Context context) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.startExternalMusic(context);
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => startExternalMusic => " + e.getMessage());
-        }
-    }
-
-    public final void startExternalMusic(@NonNull Context context, @Nullable StartBuilder bundle) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.startExternalMusic(context, bundle);
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => startExternalMusic => " + e.getMessage());
-        }
-    }
-
     public final void setVolume(@NonNull float left, @NonNull float right) {
         try {
             PlayerView playerView = getPlayerView();
@@ -759,7 +725,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.checkKernel();
+            playerView.checkVideoKernel();
             return true;
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => containsKernel => " + e.getMessage());
@@ -767,12 +733,12 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final <T extends KernelApi> T getKernel() {
+    public final <T extends KernelApi> T getVideoKernel() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            T kernel = (T) playerView.getKernel();
+            T kernel = (T) playerView.getVideoKernel();
             if (null == kernel)
                 throw new Exception("kernel error: null");
             return kernel;
