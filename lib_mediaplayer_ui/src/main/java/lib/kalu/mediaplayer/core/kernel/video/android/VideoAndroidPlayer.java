@@ -64,6 +64,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
         try {
             releaseDecoder(false, true);
             mMediaPlayer = new MediaPlayer();
+            mMediaPlayer.reset();
             mMediaPlayer.setLooping(false);
             setVolume(1F, 1F);
         } catch (Exception e) {
@@ -81,7 +82,6 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 throw new IllegalArgumentException("url error: " + url);
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
             initListener();
-            mMediaPlayer.reset();
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);
             mMediaPlayer.prepare();
         } catch (IllegalArgumentException e) {
@@ -129,17 +129,6 @@ public final class VideoAndroidPlayer extends BasePlayer {
 //            MPLogUtil.log("VideoAndroidPlayer => " + e.getMessage());
 //        }
 //    }
-
-    public void startPrepared() {
-        try {
-            if (null == mMediaPlayer)
-                throw new Exception("mMediaPlayer error: null");
-            mMediaPlayer.seekTo(0);
-            mMediaPlayer.start();
-        } catch (Exception e) {
-            MPLogUtil.log("VideoAndroidPlayer => startPrepared => " + e.getMessage());
-        }
-    }
 
     @Override
     public void release(boolean isMainThread) {
@@ -449,7 +438,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 seekTo(seek, false);
             } catch (Exception e) {
                 MPLogUtil.log("VideoAndroidPlayer => onPrepared => " + e.getMessage());
-                startPrepared();
+                start();
             }
         }
     };
