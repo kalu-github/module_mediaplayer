@@ -124,7 +124,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             // 使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
             mIjkPlayer.setOption(player, "opensles", 0);
             mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
-            mIjkPlayer.setOption(player, "framedrop", 4);
+            mIjkPlayer.setOption(player, "framedrop", 100);
             if (mPlayWhenReady) {
                 mIjkPlayer.setOption(player, "start-on-prepared", 1);
             } else {
@@ -135,7 +135,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             // soundtouch倍速 1：开启 O:关闭
             mIjkPlayer.setOption(player, "soundtouch", 0);
             // 播放错误, 重试次数
-            mIjkPlayer.setOption(player, "reconnect", 4);
+            mIjkPlayer.setOption(player, "reconnect", 10);
             // 字幕; 1显示。0禁止
             mIjkPlayer.setOption(player, "subtitle", 0);
             // 视频, 1黑屏 0原画面
@@ -143,13 +143,13 @@ public final class VideoIjkPlayer extends BasePlayer {
             // 音频, 1静音 0原音
             mIjkPlayer.setOption(player, "an", 0);
             // 暂停输出直到停止后读取足够的数据包
-            mIjkPlayer.setOption(player, "packet-buffering", 0);
+            mIjkPlayer.setOption(player, "packet-buffering", 1);
             // 查询stream_info, 1查询 0不查询
             mIjkPlayer.setOption(player, "find_stream_info", 1);
             // 等待开始之后才绘制
             mIjkPlayer.setOption(player, "render-wait-start", 1);
             // 减小预读取的阀值，这样能更快的打开视频
-            // mIjkPlayer.setOption(player, "max-buffer-size", 20 * 1024 * 1024);// 20M
+            mIjkPlayer.setOption(player, "max-buffer-size", 20 * 1024 * 1024);// 20M
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => setOptions => OPT_CATEGORY_PLAYER => " + e.getMessage());
         }
@@ -161,15 +161,17 @@ public final class VideoIjkPlayer extends BasePlayer {
             // 设置播放前的探测时间 1,达到首屏秒开效果， bug有画面没声音
 //            mIjkPlayer.setOption(format, "analyzeduration", 1); // 100ms
             // 设置最长分析时长
-            mIjkPlayer.setOption(format, "analyzemaxduration", 100); // 100ms
+            mIjkPlayer.setOption(format, "analyzemaxduration", 10 * 1000); // 10000ms
+            // 探测带第一帧后就会数据返回，如果这个值设置过小，会导致流的信息分析不完整，从而导致丢失流，用于秒开
+            mIjkPlayer.setOption(format, "probesize", 20 * 1024 * 1024);// 20M
             // 通过立即清理数据包来减少等待时长, 每处理一个packet以后刷新io上下文
             mIjkPlayer.setOption(format, "flush_packets", 1);
             // 清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频), 有时会造成因为DNS的问题而报10000问题的
             mIjkPlayer.setOption(format, "dns_cache_clear", 1);
             // 若是是rtsp协议，能够优先用tcp(默认是用udp)
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
-            // 超时时间,单位ms => 20s
-            mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000);
+            // 超时时间,单位ms => 10s
+            mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000); // 10s
             // 设置seekTo能够快速seek到指定位置并播放, 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
 //            mIjkPlayer.setOption(format, "fflags", "fastseek");
             mIjkPlayer.setOption(format, "fflags", "nobuffer");  // 起播seek会失效
@@ -178,8 +180,6 @@ public final class VideoIjkPlayer extends BasePlayer {
             // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
             mIjkPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
-            // 探测带第一帧后就会数据返回，如果这个值设置过小，会导致流的信息分析不完整，从而导致丢失流，用于秒开
-            // mIjkPlayer.setOption(format, "probesize", 1 * 1024 * 1024); // 1M
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => setOptions => OPT_CATEGORY_FORMAT => " + e.getMessage());
         }
@@ -193,16 +193,11 @@ public final class VideoIjkPlayer extends BasePlayer {
 //        // player
 //        try {
 //            int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
-//            // 硬解 1：开启 O:关闭
-//            // 丢帧是在视频帧处理不过来的时候丢弃一些帧达到同步的效果
-//            mIjkPlayer.setOption(player, "framedrop", 4); // 4
 //            // sdl渲染
 //            mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
 //            // 直播场景时实时推流，可以开启无限制buffer，这样可以尽可能快的读取数据，避免出现网络拥塞恢复后延迟累积的情况。
 //            // 是否无限读(如果设置了该属性infbuf为1，则设置max-buffer-size无效)
 //            mIjkPlayer.setOption(player, "infbuf", 0);
-//            // 视频帧处理不过来的时候丢弃一些帧达到同步的效果
-//            mIjkPlayer.setOption(player, "framedrop", 5);
 //            // 默认最小帧数
 //            mIjkPlayer.setOption(player, "min-frames", 2);
 //            // 最大缓存时长
