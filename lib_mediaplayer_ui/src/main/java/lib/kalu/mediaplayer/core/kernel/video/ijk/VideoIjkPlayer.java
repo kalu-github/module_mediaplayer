@@ -124,7 +124,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             // 使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
             mIjkPlayer.setOption(player, "opensles", 0);
             mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
-            mIjkPlayer.setOption(player, "framedrop", 100);
+            mIjkPlayer.setOption(player, "framedrop", 30); // 30帧
             if (mPlayWhenReady) {
                 mIjkPlayer.setOption(player, "start-on-prepared", 1);
             } else {
@@ -147,7 +147,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             // 查询stream_info, 1查询 0不查询
             mIjkPlayer.setOption(player, "find_stream_info", 1);
             // 等待开始之后才绘制
-            mIjkPlayer.setOption(player, "render-wait-start", 1);
+            mIjkPlayer.setOption(player, "render-wait-start", 0);
             // 减小预读取的阀值，这样能更快的打开视频
             mIjkPlayer.setOption(player, "max-buffer-size", 20 * 1024 * 1024);// 20M
         } catch (Exception e) {
@@ -159,9 +159,9 @@ public final class VideoIjkPlayer extends BasePlayer {
             int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
             mIjkPlayer.setOption(format, "http-detect-range-support", 0);
             // 设置播放前的探测时间 1,达到首屏秒开效果， bug有画面没声音
-//            mIjkPlayer.setOption(format, "analyzeduration", 1); // 100ms
+            mIjkPlayer.setOption(format, "analyzeduration", 1000); // 1s
             // 设置最长分析时长
-            mIjkPlayer.setOption(format, "analyzemaxduration", 10 * 1000); // 10000ms
+            mIjkPlayer.setOption(format, "analyzemaxduration", 10 * 1000); // 10s
             // 探测带第一帧后就会数据返回，如果这个值设置过小，会导致流的信息分析不完整，从而导致丢失流，用于秒开
             mIjkPlayer.setOption(format, "probesize", 20 * 1024 * 1024);// 20M
             // 通过立即清理数据包来减少等待时长, 每处理一个packet以后刷新io上下文
@@ -173,8 +173,8 @@ public final class VideoIjkPlayer extends BasePlayer {
             // 超时时间,单位ms => 10s
             mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000); // 10s
             // 设置seekTo能够快速seek到指定位置并播放, 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
-//            mIjkPlayer.setOption(format, "fflags", "fastseek");
-            mIjkPlayer.setOption(format, "fflags", "nobuffer");  // 起播seek会失效
+            mIjkPlayer.setOption(format, "fflags", "fastseek");
+//            mIjkPlayer.setOption(format, "fflags", "nobuffer");  // 起播seek会失效
             // 根据媒体类型来配置 => bug => resp aac音频无声音
             mIjkPlayer.setOption(format, "allowed_media_types", "video");
             // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
