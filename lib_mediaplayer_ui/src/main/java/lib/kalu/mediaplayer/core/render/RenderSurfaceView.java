@@ -41,34 +41,36 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     @Nullable
     private KernelApi mKernel;
     @Nullable
-    private Surface mSurface;
-    @Nullable
     private SurfaceHolder.Callback mSurfaceHolderCallback;
 
     private void addHandler() {
-        if (null != mHandler)
-            return;
-        mHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                if (msg.what == 9899) {
-                    if (null != mKernel) {
-                        mKernel.onUpdateTimeMillis();
-                        mHandler.sendEmptyMessageDelayed(9899, 100);
-                    }
-                } else if (msg.what == 9888) {
-                    if (null != mKernel) {
-                        mKernel.onUpdateBuffer(PlayerType.StateType.STATE_BUFFERING_START);
-                        mHandler.sendEmptyMessageDelayed(9877, msg.arg1);
-                    }
-                } else if (msg.what == 9877) {
-                    if (null != mKernel) {
-                        mKernel.onUpdateBuffer(PlayerType.StateType.STATE_BUFFERING_STOP);
+        try {
+            if (null != mHandler)
+                throw new Exception("mHandler warning: " + mHandler);
+            mHandler = new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(@NonNull Message msg) {
+                    super.handleMessage(msg);
+                    if (msg.what == 9899) {
+                        if (null != mKernel) {
+                            mKernel.onUpdateTimeMillis();
+                            mHandler.sendEmptyMessageDelayed(9899, 100);
+                        }
+                    } else if (msg.what == 9888) {
+                        if (null != mKernel) {
+                            mKernel.onUpdateBuffer(PlayerType.StateType.STATE_BUFFERING_START);
+                            mHandler.sendEmptyMessageDelayed(9877, msg.arg1);
+                        }
+                    } else if (msg.what == 9877) {
+                        if (null != mKernel) {
+                            mKernel.onUpdateBuffer(PlayerType.StateType.STATE_BUFFERING_STOP);
+                        }
                     }
                 }
-            }
-        };
+            };
+        } catch (Exception e) {
+            MPLogUtil.log("RenderSurfaceView => addHandler => " + e.getMessage());
+        }
     }
 
     public RenderSurfaceView(Context context) {
@@ -110,11 +112,8 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 MPLogUtil.log("RenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
-//                drawBitmap();
                 if (mKernel != null) {
-                    mSurface = holder.getSurface();
-                    clearSurface(mSurface);
-                    mKernel.setSurface(mSurface, 0, 0);
+                    mKernel.setSurface(getHolder().getSurface(), 0, 0);
                 }
                 if (null == mHandler) {
                     addHandler();
@@ -151,7 +150,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                     mHandler.removeMessages(9888);
                     mHandler.removeMessages(9877);
                     mHandler.removeCallbacksAndMessages(null);
-                    mHandler = null;
                 }
             }
         };
@@ -164,23 +162,19 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         setZOrderMediaOverlay(false);
 
         try {
-            if (null == mHandler)
-                throw new Exception("mHandler error: null");
-            mHandler.removeMessages(9899);
-            mHandler.removeCallbacksAndMessages(null);
-            mHandler = null;
+            SurfaceHolder surfaceHolder = getHolder();
+            if (null == surfaceHolder)
+                throw new Exception("surfaceHolder error: null");
+            Surface surface = surfaceHolder.getSurface();
+            if (null == surface)
+                throw new Exception("surface error: null");
+            clearSurface(surface);
+            surface.release();
+            surface = null;
+            surfaceHolder = null;
+            MPLogUtil.log("RenderSurfaceView => release => Surface => succ");
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => release => " + e.getMessage());
-        }
-
-        try {
-            if (null == mSurface)
-                throw new Exception("mSurface error: null");
-            clearSurface(mSurface);
-            mSurface.release();
-            mSurface = null;
-        } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => release => " + e.getMessage());
+            MPLogUtil.log("RenderSurfaceView => release => Surface => " + e.getMessage());
         }
 
         try {
@@ -188,8 +182,20 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                 throw new Exception("mSurfaceHolderCallback error: null");
             getHolder().removeCallback(mSurfaceHolderCallback);
             mSurfaceHolderCallback = null;
+            MPLogUtil.log("RenderSurfaceView => release => SurfaceHolderCallback => succ");
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => release => " + e.getMessage());
+            MPLogUtil.log("RenderSurfaceView => release => SurfaceHolderCallback => " + e.getMessage());
+        }
+
+        try {
+            if (null == mHandler)
+                throw new Exception("mHandler error: null");
+            mHandler.removeMessages(9899);
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+            MPLogUtil.log("RenderSurfaceView => release => Handler => succ");
+        } catch (Exception e) {
+            MPLogUtil.log("RenderSurfaceView => release => Handler => " + e.getMessage());
         }
     }
 
