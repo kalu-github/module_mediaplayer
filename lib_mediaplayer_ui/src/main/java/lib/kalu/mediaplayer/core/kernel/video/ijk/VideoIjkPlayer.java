@@ -109,51 +109,108 @@ public final class VideoIjkPlayer extends BasePlayer {
         // player
         try {
             int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
-            // 循环次数1次， 不能是0
-            mIjkPlayer.setOption(player, "loop", 1);
-            // 硬解码相关 0关闭
-            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
-            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
-            mIjkPlayer.setOption(player, "mediacodec-all-videos", mUseMediaCodec ? 1 : 0);
-            mIjkPlayer.setOption(player, "mediacodec-avc", mUseMediaCodec ? 1 : 0);
-            mIjkPlayer.setOption(player, "mediacodec-hevc", mUseMediaCodec ? 1 : 0);
-            mIjkPlayer.setOption(player, "mediacodec-mpeg2", mUseMediaCodec ? 1 : 0);
-            mIjkPlayer.setOption(player, "mediacodec-mpeg4", mUseMediaCodec ? 1 : 0);
-            mIjkPlayer.setOption(player, "mediacodec-vp8", mUseMediaCodec ? 1 : 0);
-            mIjkPlayer.setOption(player, "mediacodec-vp9", mUseMediaCodec ? 1 : 0);
-            // 使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
-            mIjkPlayer.setOption(player, "opensles", 0);
-            mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV16);
-            // 丢帧
-            mIjkPlayer.setOption(player, "framedrop", 10); // 10帧
-            if (mPlayWhenReady) {
-                mIjkPlayer.setOption(player, "start-on-prepared", 1);
-            } else {
-                mIjkPlayer.setOption(player, "start-on-prepared", 0);
-            }
-            // 某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
-            mIjkPlayer.setOption(player, "enable-accurate-seek", 1);
-            // soundtouch倍速 1：开启 O:关闭
-            mIjkPlayer.setOption(player, "soundtouch", 0);
-            // 播放错误, 重试次数
-            mIjkPlayer.setOption(player, "reconnect", 10);
-            // 字幕; 1显示。0禁止
-            mIjkPlayer.setOption(player, "subtitle", 0);
-            // 视频, 1黑屏 0原画面
-            mIjkPlayer.setOption(player, "vn", 0);
-            // 音频, 1静音 0原音
+            // 禁用音频
             mIjkPlayer.setOption(player, "an", 0);
-            // 暂停输出直到停止后读取足够的数据包
-            // 如果packet-buffering设置为0，则会收不到buffering的消息,即Stalled,throughOK,Playeble消息？
-            // 如果packet-buffering设置为1，则会增加视频打开的延迟时间？包括播放过程中卡顿后恢复播放的时间？
-            // 如果packet-buffering设置为0，则播放过程中会播放不顺畅？
-            mIjkPlayer.setOption(player, "packet-buffering", 0);
-            // 查询stream_info, 1查询 0不查询
+            // 禁用视频, 不解码不渲染
+            mIjkPlayer.setOption(player, "vn", 0);
+            // 禁用图像, 解码不渲染
+            mIjkPlayer.setOption(player, "nodisp", 0);
+            // 音量
+            mIjkPlayer.setOption(player, "volume", 100);
+            // ??
+            mIjkPlayer.setOption(player, "fast", 1);
+            // 循环播放次数
+            mIjkPlayer.setOption(player, "loop", 1);
+            // 不限制输入缓冲区大小, 对实时流很有用
+            mIjkPlayer.setOption(player, "infbuf", 0);
+            // 以音频帧为时间基准，当视频帧和音频帧不同步时，允许丢弃的视频帧数
+            mIjkPlayer.setOption(player, "framedrop", 100);
+            // 起始播放位置的偏移量，单位毫秒, 例如可以设置从第20秒的位置播放
+            mIjkPlayer.setOption(player, "seek-at-start", 0);
+            // 是否解码字幕数据
+            mIjkPlayer.setOption(player, "subtitle", 0);
+            // ??
+            mIjkPlayer.setOption(player, "rdftspeed", 0);
+            // 读取和解码流以使用启发式方法填充丢失的信息
             mIjkPlayer.setOption(player, "find_stream_info", 1);
-            // 等待开始之后才绘制
-            mIjkPlayer.setOption(player, "render-wait-start", 0);
-            // 减小预读取的阀值，这样能更快的打开视频
-//            mIjkPlayer.setOption(player, "max-buffer-size", 20 * 1024 * 1024);// 20M
+            // 图像颜色空间格式
+            // SDL_FCC_YV12 ---- bpp=12, Planar mode: Y + V + U (3 planes)
+            // SDL_FCC_I420 ---- bpp=12, Planar mode: Y + U + V (3 planes)
+            // SDL_FCC_RV16 ---- bpp=16, RGB565
+            // SDL_FCC_RV24 ---- bpp=24, RGB888
+            // SDL_FCC_RV32 ---- bpp=32, RGBX8888
+            mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV16);
+            // 允许的最大播放帧率，当视频的实际帧率大于这个数值时，将丢弃部分视频帧
+            mIjkPlayer.setOption(player, "max-fps", 16);
+            // 是否播放准备工作完成后自动开始播放
+            mIjkPlayer.setOption(player, "start-on-prepared", mPlayWhenReady ? 1 : 0);
+            // 视频帧队列大小
+            mIjkPlayer.setOption(player, "video-pictq-size", 3);
+            // 预读数据的缓冲区大小
+            mIjkPlayer.setOption(player, "max-buffer-size", 15 * 1024 * 1024);
+            // 停止预读的最小帧数, 即预读帧数大于等于该值时, 将停止预读 => [2,50000]
+            mIjkPlayer.setOption(player, "min-frames", 50000);
+            // 缓冲读取线程的第一次唤醒时间, 单位毫秒 => [100,5000]
+            mIjkPlayer.setOption(player, "first-high-water-mark-ms", 100);
+            // 缓冲读取线程的第二次唤醒时间, 单位毫秒 => [100,5000]
+            mIjkPlayer.setOption(player, "next-high-water-mark-ms", 1000);
+            // 缓冲读取线程的第三次唤醒时间, 单位毫秒 => [100,5000]
+            mIjkPlayer.setOption(player, "last-high-water-mark-ms", 5000);
+            // 暂停输出, 直到停止后读取足够的数据包
+            mIjkPlayer.setOption(player, "packet-buffering", 1);
+            // 播放开始时对音视频进行同步操作
+            mIjkPlayer.setOption(player, "sync-av-start", 1);
+            // 强制使用指定格式，如RTSP, H264,FLV, MKV, MP4, AVI等
+            mIjkPlayer.setOption(player, "iformat", null);
+            // 如果使用实时模式而不是调整模式，则返回流中的位置
+            // 这个用例主要是在使用自定义的不可搜索数据源时，该数据源以不是流开头的缓冲区开始。
+            // 我们希望 get_current_position 返回流中的时间，而不是播放器的内部时间。
+            mIjkPlayer.setOption(player, "no-time-adjust", 0);
+            // 为5.1声道预设中央混合电平
+            mIjkPlayer.setOption(player, "preset-5-1-center-mix-level", (long) (1 / Math.sqrt(2)));
+            // 使用精确寻帧, 例如，拖动播放后，会寻找最近的关键帧进行播放，很有可能关键帧的位置不是拖动后的位置，而是较前的位置。可以设置这个参数来解决问题
+            mIjkPlayer.setOption(player, "enable-accurate-seek", 1);
+            // 设置精确寻帧的超时时间。单位，毫秒
+            mIjkPlayer.setOption(player, "accurate-seek-timeout", 1000);
+            // 不计算真实的帧率
+            mIjkPlayer.setOption(player, "skip-calc-frame-rate", 0);
+            // ??
+            mIjkPlayer.setOption(player, "get-frame-mode", 0);
+            // 异步创建解码器
+            mIjkPlayer.setOption(player, "async-init-decoder", 1);
+            // ??
+            mIjkPlayer.setOption(player, "video-mime-type", null);
+            // Android自动旋转角度
+            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
+            // Android硬解 ??
+            mIjkPlayer.setOption(player, "mediacodec-sync", 1);
+            // Android硬解 ??
+            mIjkPlayer.setOption(player, "mediacodec-default-name", null);
+            // Android硬解
+            mIjkPlayer.setOption(player, "mediacodec-all-videos", mUseMediaCodec ? 1 : 0);
+            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
+            // Android硬解avc
+            mIjkPlayer.setOption(player, "mediacodec-avc", mUseMediaCodec ? 1 : 0);
+            // Android硬解hevc
+            mIjkPlayer.setOption(player, "mediacodec-hevc", mUseMediaCodec ? 1 : 0);
+            // Android硬解mpeg2
+            mIjkPlayer.setOption(player, "mediacodec-mpeg2", mUseMediaCodec ? 1 : 0);
+            // Android硬解mpeg4
+            mIjkPlayer.setOption(player, "mediacodec-mpeg4", mUseMediaCodec ? 1 : 0);
+            // Android硬解vp8
+            mIjkPlayer.setOption(player, "mediacodec-vp8", mUseMediaCodec ? 1 : 0);
+            // Android硬解vp9
+            mIjkPlayer.setOption(player, "mediacodec-vp9", mUseMediaCodec ? 1 : 0);
+            // Android音频解码opensl
+            mIjkPlayer.setOption(player, "opensles", 0);
+            // Android音频倍速
+            mIjkPlayer.setOption(player, "soundtouch", 0);
+            // Android硬解初始化延迟时间
+            mIjkPlayer.setOption(player, "ijkmeta-delay-init", 1);
+            // 播放错误, 重试次数
+//            mIjkPlayer.setOption(player, "reconnect", 10);
+            // Android等待开始绘制
+            mIjkPlayer.setOption(player, "render-wait-start", 1);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => setOptions => OPT_CATEGORY_PLAYER => " + e.getMessage());
         }
@@ -200,8 +257,6 @@ public final class VideoIjkPlayer extends BasePlayer {
 //            // sdl渲染
 //            mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
 //            // 直播场景时实时推流，可以开启无限制buffer，这样可以尽可能快的读取数据，避免出现网络拥塞恢复后延迟累积的情况。
-//            // 是否无限读(如果设置了该属性infbuf为1，则设置max-buffer-size无效)
-//            mIjkPlayer.setOption(player, "infbuf", 0);
 //            // 默认最小帧数
 //            mIjkPlayer.setOption(player, "min-frames", 2);
 //            // 最大缓存时长
@@ -222,8 +277,6 @@ public final class VideoIjkPlayer extends BasePlayer {
 //            int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
 //            // 不清楚 1、允许 0、不允许
 //            mIjkPlayer.setOption(format, "http-detect-range-support", 0);
-//            // 最大帧率 20
-//            mIjkPlayer.setOption(format, "max-fps", 0);
 //            // 缩短播放的rtmp视频延迟在1s内
 //            mIjkPlayer.setOption(format, "fflags", "nobuffer");
 //        } catch (Exception e) {
