@@ -8,6 +8,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -19,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @SuppressLint("AppCompatCustomView")
 @Keep
@@ -35,6 +39,8 @@ public class MPLoadingView extends View {
     private int mColorBackground = Color.TRANSPARENT;
     @ColorInt
     private int mColorRound = Color.GRAY;
+
+    private Handler mHandler = null;
 
     public MPLoadingView(Context context) {
         super(context);
@@ -84,27 +90,35 @@ public class MPLoadingView extends View {
     @Override
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
-        setEnabled(visibility == View.VISIBLE);
-        invalidate();
+        cleanMessage();
+        if (visibility == View.VISIBLE) {
+            startMessageDelayed();
+        } else {
+            releaseMessage();
+        }
     }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
         super.onWindowVisibilityChanged(visibility);
-        setEnabled(visibility == View.VISIBLE);
-        invalidate();
+        cleanMessage();
+        if (visibility == View.VISIBLE) {
+            startMessageDelayed();
+        } else {
+            releaseMessage();
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        cleanMessage();
+        releaseMessage();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        cleanCanvas(canvas);
-        if (!isEnabled())
-            return;
-        drawLoading(canvas);
-    }
-
-    private void cleanCanvas(Canvas canvas) {
         try {
             //  方法一：
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC_OVER);
@@ -117,9 +131,6 @@ public class MPLoadingView extends View {
 //            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
         } catch (Exception e) {
         }
-    }
-
-    private void drawLoading(Canvas canvas) {
         try {
             // 循环次数
             if (mLoop + 1 >= mCount) {
@@ -177,8 +188,66 @@ public class MPLoadingView extends View {
 
             // delay
             mLoop = mLoop + 1;
-            postInvalidateDelayed(120);
         } catch (Exception e) {
+        }
+    }
+
+    private void cleanMessage() {
+        try {
+            if (null == mHandler)
+                throw new Exception("mHandler warning: null");
+            mHandler.removeCallbacksAndMessages(null);
+        } catch (Exception e) {
+            MPLogUtil.log("MPLoadingView => cleanMessage => " + e.getMessage());
+        }
+    }
+
+    private void releaseMessage() {
+        try {
+            if (null == mHandler)
+                throw new Exception("mHandler warning: null");
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        } catch (Exception e) {
+            MPLogUtil.log("MPLoadingView => releaseMessage => " + e.getMessage());
+        }
+    }
+
+    private void initMessage() {
+        try {
+            if (null != mHandler)
+                throw new Exception("mHandler warning: null");
+            mHandler = new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(@NonNull Message msg) {
+                    super.handleMessage(msg);
+                    cleanMessage();
+                    try {
+                        int visibility = getVisibility();
+                        if (visibility != View.VISIBLE)
+                            throw new Exception();
+                        if (msg.what != 9001)
+                            throw new Exception();
+//                        MPLogUtil.log("MPLoadingView => initMessage => handleMessage => " + this);
+                        startMessageDelayed();
+                        postInvalidate();
+                    } catch (Exception e) {
+                    }
+                }
+            };
+        } catch (Exception e) {
+            MPLogUtil.log("MPLoadingView => initMessage => " + e.getMessage());
+        }
+    }
+
+    private void startMessageDelayed() {
+        try {
+            if (null == mHandler) {
+                initMessage();
+            }
+            mHandler.sendEmptyMessageDelayed(9001, 100);
+        } catch (Exception e) {
+            MPLogUtil.log("MPLoadingView => startMessageDelayed => " + e.getMessage());
         }
     }
 

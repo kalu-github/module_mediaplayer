@@ -65,6 +65,7 @@ public final class VideoIjkPlayer extends BasePlayer {
         try {
             releaseDecoder(false, true);
             mIjkPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
+            mIjkPlayer.reset();
             mIjkPlayer.setLooping(false);
             //处理UA问题
             //            if (headers != null) {
@@ -93,7 +94,6 @@ public final class VideoIjkPlayer extends BasePlayer {
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
-            mIjkPlayer.reset();
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
             mIjkPlayer.prepareAsync();
         } catch (Exception e) {
@@ -106,7 +106,7 @@ public final class VideoIjkPlayer extends BasePlayer {
     @Override
     public void setOptions() {
 
-        // player
+        // player => ff_ffplay_options.h
         try {
             int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
             // 禁用音频
@@ -115,7 +115,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             mIjkPlayer.setOption(player, "vn", 0);
             // 禁用图像, 解码不渲染
             mIjkPlayer.setOption(player, "nodisp", 0);
-            // 音量
+            // 音量 => [0,100]
             mIjkPlayer.setOption(player, "volume", 100);
             // ??
             mIjkPlayer.setOption(player, "fast", 1);
@@ -140,22 +140,22 @@ public final class VideoIjkPlayer extends BasePlayer {
             // SDL_FCC_RV24 ---- bpp=24, RGB888
             // SDL_FCC_RV32 ---- bpp=32, RGBX8888
             mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV16);
-            // 允许的最大播放帧率，当视频的实际帧率大于这个数值时，将丢弃部分视频帧
+            // 允许的最大播放帧率，当视频的实际帧率大于这个数值时，将丢弃部分视频帧 => [-1,121]
             mIjkPlayer.setOption(player, "max-fps", 16);
             // 是否播放准备工作完成后自动开始播放
-            mIjkPlayer.setOption(player, "start-on-prepared", mPlayWhenReady ? 1 : 0);
-            // 视频帧队列大小
+            mIjkPlayer.setOption(player, "start-on-prepared", (mPlayWhenReady ? 1 : 0));
+            // 视频帧队列大小 => [3,16]
             mIjkPlayer.setOption(player, "video-pictq-size", 3);
-            // 预读数据的缓冲区大小
+            // 预读数据的缓冲区大小 => [0,15 * 1024 * 1024]
             mIjkPlayer.setOption(player, "max-buffer-size", 15 * 1024 * 1024);
             // 停止预读的最小帧数, 即预读帧数大于等于该值时, 将停止预读 => [2,50000]
-            mIjkPlayer.setOption(player, "min-frames", 50000);
-            // 缓冲读取线程的第一次唤醒时间, 单位毫秒 => [100,5000]
+            mIjkPlayer.setOption(player, "min-frames", 10000);
+            // 缓冲读取线程的第一次唤醒时间, 单位毫秒 => [100,1000]
             mIjkPlayer.setOption(player, "first-high-water-mark-ms", 100);
-            // 缓冲读取线程的第二次唤醒时间, 单位毫秒 => [100,5000]
-            mIjkPlayer.setOption(player, "next-high-water-mark-ms", 1000);
-            // 缓冲读取线程的第三次唤醒时间, 单位毫秒 => [100,5000]
-            mIjkPlayer.setOption(player, "last-high-water-mark-ms", 5000);
+            // 缓冲读取线程的第二次唤醒时间, 单位毫秒 => [100,1000]
+            mIjkPlayer.setOption(player, "next-high-water-mark-ms", 500);
+            // 缓冲读取线程的第三次唤醒时间, 单位毫秒 => [100,1000]
+            mIjkPlayer.setOption(player, "last-high-water-mark-ms", 1000);
             // 暂停输出, 直到停止后读取足够的数据包
             mIjkPlayer.setOption(player, "packet-buffering", 1);
             // 播放开始时对音视频进行同步操作
@@ -170,7 +170,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             mIjkPlayer.setOption(player, "preset-5-1-center-mix-level", (long) (1 / Math.sqrt(2)));
             // 使用精确寻帧, 例如，拖动播放后，会寻找最近的关键帧进行播放，很有可能关键帧的位置不是拖动后的位置，而是较前的位置。可以设置这个参数来解决问题
             mIjkPlayer.setOption(player, "enable-accurate-seek", 1);
-            // 设置精确寻帧的超时时间。单位，毫秒
+            // 设置精确寻帧的超时时间, 单位毫秒 => [0,5000]
             mIjkPlayer.setOption(player, "accurate-seek-timeout", 1000);
             // 不计算真实的帧率
             mIjkPlayer.setOption(player, "skip-calc-frame-rate", 0);
@@ -182,33 +182,32 @@ public final class VideoIjkPlayer extends BasePlayer {
             mIjkPlayer.setOption(player, "video-mime-type", null);
             // Android自动旋转角度
             mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
+            // Android硬解, 是否分辨率变化时解码
+            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
             // Android硬解 ??
             mIjkPlayer.setOption(player, "mediacodec-sync", 1);
             // Android硬解 ??
             mIjkPlayer.setOption(player, "mediacodec-default-name", null);
             // Android硬解
-            mIjkPlayer.setOption(player, "mediacodec-all-videos", mUseMediaCodec ? 1 : 0);
-            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
+            mIjkPlayer.setOption(player, "mediacodec-all-videos", (mUseMediaCodec ? 1 : 0));
             // Android硬解avc
-            mIjkPlayer.setOption(player, "mediacodec-avc", mUseMediaCodec ? 1 : 0);
+            mIjkPlayer.setOption(player, "mediacodec-avc", (mUseMediaCodec ? 1 : 0));
             // Android硬解hevc
-            mIjkPlayer.setOption(player, "mediacodec-hevc", mUseMediaCodec ? 1 : 0);
+            mIjkPlayer.setOption(player, "mediacodec-hevc", (mUseMediaCodec ? 1 : 0));
             // Android硬解mpeg2
-            mIjkPlayer.setOption(player, "mediacodec-mpeg2", mUseMediaCodec ? 1 : 0);
+            mIjkPlayer.setOption(player, "mediacodec-mpeg2", (mUseMediaCodec ? 1 : 0));
             // Android硬解mpeg4
-            mIjkPlayer.setOption(player, "mediacodec-mpeg4", mUseMediaCodec ? 1 : 0);
+            mIjkPlayer.setOption(player, "mediacodec-mpeg4", (mUseMediaCodec ? 1 : 0));
             // Android硬解vp8
-            mIjkPlayer.setOption(player, "mediacodec-vp8", mUseMediaCodec ? 1 : 0);
+            mIjkPlayer.setOption(player, "mediacodec-vp8", (mUseMediaCodec ? 1 : 0));
             // Android硬解vp9
-            mIjkPlayer.setOption(player, "mediacodec-vp9", mUseMediaCodec ? 1 : 0);
+            mIjkPlayer.setOption(player, "mediacodec-vp9", (mUseMediaCodec ? 1 : 0));
             // Android音频解码opensl
             mIjkPlayer.setOption(player, "opensles", 0);
             // Android音频倍速
             mIjkPlayer.setOption(player, "soundtouch", 0);
-            // Android硬解初始化延迟时间
+            // Android初始化延迟时间
             mIjkPlayer.setOption(player, "ijkmeta-delay-init", 1);
-            // 播放错误, 重试次数
-//            mIjkPlayer.setOption(player, "reconnect", 10);
             // Android等待开始绘制
             mIjkPlayer.setOption(player, "render-wait-start", 1);
         } catch (Exception e) {
@@ -222,7 +221,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             // 设置播放前的探测时间 1,达到首屏秒开效果， bug有画面没声音
 //            mIjkPlayer.setOption(format, "analyzeduration", 1000); // 1s
             // 设置最长分析时长
-            mIjkPlayer.setOption(format, "analyzemaxduration", 10 * 1000); // 10s
+            mIjkPlayer.setOption(format, "analyzemaxduration", 1 * 1000); // 1s
             // 探测带第一帧后就会数据返回，如果这个值设置过小，会导致流的信息分析不完整，从而导致丢失流，用于秒开
 //            mIjkPlayer.setOption(format, "probesize", 20 * 1024 * 1024);// 20M
             // 通过立即清理数据包来减少等待时长, 每处理一个packet以后刷新io上下文
@@ -434,6 +433,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.start();
+            MPLogUtil.log("VideoIjkPlayer => start => succ");
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => start => " + e.getMessage());
         }
@@ -444,6 +444,7 @@ public final class VideoIjkPlayer extends BasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
+            MPLogUtil.log("VideoIjkPlayer => stop => succ");
             if (isMainThread) {
                 mIjkPlayer.stop();
             } else {
@@ -478,7 +479,13 @@ public final class VideoIjkPlayer extends BasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             if (seek < 0)
                 throw new Exception("seek error: " + seek);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
+            if (!isPrepared) {
+                long position = getPosition();
+                if (position > 0) {
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
+                }
+            }
+            MPLogUtil.log("VideoIjkPlayer => seekTo => succ");
             mIjkPlayer.seekTo(seek);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => seekTo => " + e.getMessage());
@@ -714,7 +721,7 @@ public final class VideoIjkPlayer extends BasePlayer {
                 long seek = getSeek();
                 if (seek <= 0)
                     throw new Exception("seek warning: " + seek);
-                seekTo(seek, false);
+                seekTo(seek, true);
             } catch (Exception e) {
                 MPLogUtil.log("VideoIjkPlayer => onPrepared => " + e.getMessage());
                 start();
