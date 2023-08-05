@@ -206,10 +206,10 @@ public class MainActivity extends Activity {
         Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", exoFFmpeg = " + exoFFmpeg + ", scaleType = " + scaleType);
         PlayerManager.getInstance()
                 .setLog(true)
-                .setKernel(kernelType)
-                .setRender(renderType)
-                .setExoFFmpeg(exoFFmpeg)
+                .setVideoKernel(kernelType)
+                .setVideoRender(renderType)
                 .setVideoScaleType(scaleType)
+                .setExoFFmpeg(exoFFmpeg)
                 .setBuriedEvent(new LogBuriedEvent())
                 .build();
     }
