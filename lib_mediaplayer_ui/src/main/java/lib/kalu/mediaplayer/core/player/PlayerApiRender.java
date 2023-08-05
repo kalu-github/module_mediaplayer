@@ -20,28 +20,6 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 
 interface PlayerApiRender extends PlayerApiBase {
 
-    default void clearCanvas() {
-        try {
-            RenderApi render = getVideoRender();
-            if (null == render)
-                throw new Exception("render error: null");
-            render.clearCanvas();
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => clearCanvas => " + e.getMessage());
-        }
-    }
-
-    default void updateCanvas() {
-        try {
-            RenderApi render = getVideoRender();
-            if (null == render)
-                throw new Exception("render error: null");
-            render.updateCanvas();
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => updateCanvas => " + e.getMessage());
-        }
-    }
-
     default String screenshot() {
         try {
             RenderApi render = getVideoRender();
@@ -95,7 +73,7 @@ interface PlayerApiRender extends PlayerApiBase {
                 throw new Exception("videoKernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
             if (!(this instanceof PlayerApiKernel))
                 throw new Exception("videoRender warning: not instanceof PlayerApiKernel");
-            createVideoRender(true);
+            createVideoRender();
             ((PlayerApiKernel) this).attachVideoRender();
             updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 4000 : 400);
             return true;
@@ -312,25 +290,14 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
-    default void createVideoRender(boolean reset) {
+    default void createVideoRender() {
         try {
-            releaseVideoRender(reset);
+            releaseVideoRender();
             int videoRender = PlayerManager.getInstance().getConfig().getVideoRender();
             setVideoRender(RenderFactoryManager.createRender(getBaseContext(), videoRender));
             addVideoRender();
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiRender => createRender => " + e.getMessage());
-        }
-    }
-
-    default void releaseVideoRender(boolean reset) {
-        try {
-            releaseVideoRenderListener();
-            if (reset)
-                throw new Exception("reset warning: true");
-            removeVideoRender();
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => releaseVideoRender => " + e.getMessage());
         }
     }
 
@@ -356,19 +323,6 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
-    default void releaseVideoRenderListener() {
-        try {
-            // 1
-            RenderApi render = searchVideoRender();
-            if (null == render)
-                throw new Exception("render warning: null");
-            render.releaseListener();
-            MPLogUtil.log("PlayerApiRender => releaseRenderListener => succ");
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => releaseVideoRenderListener => " + e.getMessage());
-        }
-    }
-
     default void addVideoRender() {
         try {
             RenderApi render = getVideoRender();
@@ -382,7 +336,7 @@ interface PlayerApiRender extends PlayerApiBase {
         }
     }
 
-    default void removeVideoRender() {
+    default void releaseVideoRender() {
         try {
             ViewGroup group = getBaseVideoViewGroup();
             if (null == group)
@@ -390,10 +344,18 @@ interface PlayerApiRender extends PlayerApiBase {
             int childCount = group.getChildCount();
             if (childCount <= 0)
                 throw new Exception("childCount warning: " + childCount);
+            for (int i = 0; i < childCount; i++) {
+                View childAt = group.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof RenderApi))
+                    continue;
+                ((RenderApi) childAt).release();
+            }
             group.removeAllViews();
-            MPLogUtil.log("PlayerApiRender => removeRender => succ");
+            MPLogUtil.log("PlayerApiRender => releaseVideoRender => succ");
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiRender => removeVideoRender => " + e.getMessage());
+            MPLogUtil.log("PlayerApiRender => releaseVideoRender => " + e.getMessage());
         }
     }
 

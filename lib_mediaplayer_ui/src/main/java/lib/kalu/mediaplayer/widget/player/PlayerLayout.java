@@ -187,7 +187,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    private final StartBuilder getStartBuilder() {
+    private StartBuilder getStartBuilder() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -756,28 +756,6 @@ public class PlayerLayout extends RelativeLayout {
             playerView.setBackgroundColor(color);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => setPlayerBackgroundColor => " + e.getMessage());
-        }
-    }
-
-    public final void clearCanvas() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.clearCanvas();
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => clearCanvas => " + e.getMessage());
-        }
-    }
-
-    public final void updateCanvas() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.updateCanvas();
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => updateCanvas => " + e.getMessage());
         }
     }
 

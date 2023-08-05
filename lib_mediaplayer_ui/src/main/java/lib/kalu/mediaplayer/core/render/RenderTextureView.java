@@ -136,7 +136,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
      * 释放资源
      */
     @Override
-    public void releaseListener() {
+    public void release() {
         if (mSurfaceTexture != null) {
             mSurfaceTexture.release();
         }
@@ -158,14 +158,6 @@ public class RenderTextureView extends TextureView implements RenderApi {
         Context context = getContext();
         Bitmap bitmap = getBitmap();
         return saveBitmap(context, bitmap);
-    }
-
-    @Override
-    public void clearCanvas() {
-    }
-
-    @Override
-    public void updateCanvas() {
     }
 
     @Override

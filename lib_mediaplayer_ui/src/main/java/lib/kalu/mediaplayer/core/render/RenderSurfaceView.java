@@ -113,6 +113,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 //                drawBitmap();
                 if (mKernel != null) {
                     mSurface = holder.getSurface();
+                    clearSurface(mSurface);
                     mKernel.setSurface(mSurface, 0, 0);
                 }
                 if (null == mHandler) {
@@ -158,19 +159,37 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     }
 
     @Override
-    public void releaseListener() {
-        MPLogUtil.log("RenderSurfaceView => releaseListener => " + this);
-        if (null != mHandler) {
+    public void release() {
+        setZOrderOnTop(false);
+        setZOrderMediaOverlay(false);
+
+        try {
+            if (null == mHandler)
+                throw new Exception("mHandler error: null");
             mHandler.removeMessages(9899);
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
+        } catch (Exception e) {
+            MPLogUtil.log("RenderSurfaceView => release => " + e.getMessage());
         }
-        if (mSurface != null) {
+
+        try {
+            if (null == mSurface)
+                throw new Exception("mSurface error: null");
+            clearSurface(mSurface);
             mSurface.release();
+            mSurface = null;
+        } catch (Exception e) {
+            MPLogUtil.log("RenderSurfaceView => release => " + e.getMessage());
         }
-        if (mSurfaceHolderCallback != null) {
+
+        try {
+            if (null == mSurfaceHolderCallback)
+                throw new Exception("mSurfaceHolderCallback error: null");
             getHolder().removeCallback(mSurfaceHolderCallback);
             mSurfaceHolderCallback = null;
+        } catch (Exception e) {
+            MPLogUtil.log("RenderSurfaceView => release => " + e.getMessage());
         }
     }
 
@@ -184,32 +203,6 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
         Context context = getContext();
         Bitmap bitmap = getDrawingCache();
         return saveBitmap(context, bitmap);
-    }
-
-    @Override
-    public void clearCanvas() {
-        try {
-            SurfaceHolder holder = getHolder();
-            if (null == holder)
-                throw new Exception("holder error: null");
-            Canvas canvas = holder.lockCanvas();
-            if (null == canvas)
-                throw new Exception("canvas error: null");
-            canvas.drawColor(Color.BLACK);
-            holder.unlockCanvasAndPost(canvas);
-        } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => clearCanvas => " + e.getMessage());
-        }
-//        try {
-//            Canvas canvas = mSurface.lockCanvas(null);
-//            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-//            mSurface.unlockCanvasAndPost(canvas);
-//        } catch (Exception e) {
-//        }
-    }
-
-    @Override
-    public void updateCanvas() {
     }
 
     @Override

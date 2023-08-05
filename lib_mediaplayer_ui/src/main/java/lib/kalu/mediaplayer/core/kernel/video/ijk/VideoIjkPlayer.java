@@ -123,8 +123,9 @@ public final class VideoIjkPlayer extends BasePlayer {
             mIjkPlayer.setOption(player, "mediacodec-vp9", mUseMediaCodec ? 1 : 0);
             // 使用opensles 进行音频的解码播放 1、允许 0、不允许[1音频有稍许延迟]
             mIjkPlayer.setOption(player, "opensles", 0);
-            mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
-            mIjkPlayer.setOption(player, "framedrop", 30); // 30帧
+            mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV16);
+            // 丢帧
+            mIjkPlayer.setOption(player, "framedrop", 10); // 10帧
             if (mPlayWhenReady) {
                 mIjkPlayer.setOption(player, "start-on-prepared", 1);
             } else {
@@ -143,13 +144,16 @@ public final class VideoIjkPlayer extends BasePlayer {
             // 音频, 1静音 0原音
             mIjkPlayer.setOption(player, "an", 0);
             // 暂停输出直到停止后读取足够的数据包
-            mIjkPlayer.setOption(player, "packet-buffering", 1);
+            // 如果packet-buffering设置为0，则会收不到buffering的消息,即Stalled,throughOK,Playeble消息？
+            // 如果packet-buffering设置为1，则会增加视频打开的延迟时间？包括播放过程中卡顿后恢复播放的时间？
+            // 如果packet-buffering设置为0，则播放过程中会播放不顺畅？
+            mIjkPlayer.setOption(player, "packet-buffering", 0);
             // 查询stream_info, 1查询 0不查询
             mIjkPlayer.setOption(player, "find_stream_info", 1);
             // 等待开始之后才绘制
             mIjkPlayer.setOption(player, "render-wait-start", 0);
             // 减小预读取的阀值，这样能更快的打开视频
-            mIjkPlayer.setOption(player, "max-buffer-size", 20 * 1024 * 1024);// 20M
+//            mIjkPlayer.setOption(player, "max-buffer-size", 20 * 1024 * 1024);// 20M
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => setOptions => OPT_CATEGORY_PLAYER => " + e.getMessage());
         }
@@ -159,11 +163,11 @@ public final class VideoIjkPlayer extends BasePlayer {
             int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
             mIjkPlayer.setOption(format, "http-detect-range-support", 0);
             // 设置播放前的探测时间 1,达到首屏秒开效果， bug有画面没声音
-            mIjkPlayer.setOption(format, "analyzeduration", 1000); // 1s
+//            mIjkPlayer.setOption(format, "analyzeduration", 1000); // 1s
             // 设置最长分析时长
             mIjkPlayer.setOption(format, "analyzemaxduration", 10 * 1000); // 10s
             // 探测带第一帧后就会数据返回，如果这个值设置过小，会导致流的信息分析不完整，从而导致丢失流，用于秒开
-            mIjkPlayer.setOption(format, "probesize", 20 * 1024 * 1024);// 20M
+//            mIjkPlayer.setOption(format, "probesize", 20 * 1024 * 1024);// 20M
             // 通过立即清理数据包来减少等待时长, 每处理一个packet以后刷新io上下文
             mIjkPlayer.setOption(format, "flush_packets", 1);
             // 清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频), 有时会造成因为DNS的问题而报10000问题的

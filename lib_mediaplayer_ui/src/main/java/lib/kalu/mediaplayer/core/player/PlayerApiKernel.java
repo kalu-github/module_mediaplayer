@@ -67,7 +67,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             // 5
             createVideoKernel(builder, config);
             // 4
-            createVideoRender(false);
+            createVideoRender();
             // 6
             initVideoKernel(builder, playUrl);
             // 7
@@ -176,12 +176,11 @@ interface PlayerApiKernel extends PlayerApiListener,
     default void release(@NonNull boolean releaseTag, boolean isFromUser, boolean isMainThread) {
         try {
             checkVideoKernel();
-            removeVideoRender();
             if (releaseTag) {
                 setData(null);
                 releaseTag();
             }
-            releaseVideoRender(false);
+            releaseVideoRender();
             releaseVideoKernel(isFromUser, isMainThread);
             cleanPlayerChangeListener();
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE);
