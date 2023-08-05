@@ -73,44 +73,50 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Override
     public void addListener() {
-        mSurfaceHolderCallback = new SurfaceHolder.Callback() {
+        try {
+            if (null != mSurfaceHolderCallback)
+                throw new Exception("mSurfaceHolderCallback warning: " + mSurfaceHolderCallback);
+            mSurfaceHolderCallback = new SurfaceHolder.Callback() {
 
-            /**
-             * 创建的时候调用该方法
-             * @param holder                        holder
-             */
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                MPLogUtil.log("RenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
-                updateSurface(false);
-                addHandler();
-                sendMessage(1000);
-            }
+                /**
+                 * 创建的时候调用该方法
+                 * @param holder                        holder
+                 */
+                @Override
+                public void surfaceCreated(SurfaceHolder holder) {
+                    MPLogUtil.log("RenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
+                    updateSurface(false);
+                    addHandler();
+                    sendMessage(1000);
+                }
 
-            /**
-             * 视图改变的时候调用方法
-             * @param holder
-             * @param format
-             * @param width
-             * @param height
-             */
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                MPLogUtil.log("RenderSurfaceView => addListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
-            }
+                /**
+                 * 视图改变的时候调用方法
+                 * @param holder
+                 * @param format
+                 * @param width
+                 * @param height
+                 */
+                @Override
+                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                    MPLogUtil.log("RenderSurfaceView => addListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
+                }
 
-            /**
-             * 销毁的时候调用该方法
-             * @param holder
-             */
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-                MPLogUtil.log("RenderSurfaceView => addListener => surfaceDestroyed => " + this);
-                clearMessage();
-                updateSurface(true);
-            }
-        };
-        getHolder().addCallback(mSurfaceHolderCallback);
+                /**
+                 * 销毁的时候调用该方法
+                 * @param holder
+                 */
+                @Override
+                public void surfaceDestroyed(SurfaceHolder holder) {
+                    MPLogUtil.log("RenderSurfaceView => addListener => surfaceDestroyed => " + this);
+                    clearMessage();
+                    updateSurface(true);
+                }
+            };
+            getHolder().addCallback(mSurfaceHolderCallback);
+        } catch (Exception e) {
+            MPLogUtil.log("RenderSurfaceView => addListener => " + e.getMessage());
+        }
     }
 
     @Override
