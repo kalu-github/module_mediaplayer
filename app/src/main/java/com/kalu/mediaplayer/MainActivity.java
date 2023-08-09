@@ -203,13 +203,25 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", exoFFmpeg = " + exoFFmpeg + ", scaleType = " + scaleType);
+        boolean exoUseOkhttp;
+        int httpTypeId = ((RadioGroup) findViewById(R.id.main_exo_http)).getCheckedRadioButtonId();
+        switch (httpTypeId) {
+            case R.id.main_exo_http_okhttp:
+                exoUseOkhttp = true;
+                break;
+            default:
+                exoUseOkhttp = false;
+                break;
+        }
+
+        Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", exoFFmpeg = " + exoFFmpeg + ", scaleType = " + scaleType + ", exoUseOkhttp = " + exoUseOkhttp);
         PlayerManager.getInstance()
                 .setLog(true)
                 .setVideoKernel(kernelType)
                 .setVideoRender(renderType)
                 .setVideoScaleType(scaleType)
                 .setExoFFmpeg(exoFFmpeg)
+                .setExoUseOkhttp(exoUseOkhttp)
                 .setBuriedEvent(new LogBuriedEvent())
                 .build();
     }

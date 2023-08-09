@@ -136,6 +136,38 @@
         android:layout_height="20dp"
         android:layout_marginLeft="6dp"
         android:gravity="center_vertical|left"
+        android:text="网络类型 => exoplayer"
+        android:textSize="14sp" />
+
+    <RadioGroup
+        android:id="@+id/main_exo_http"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/main_exo_http_okhttp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="true"
+            android:enabled="true"
+            android:text="exo2_okhttp" />
+
+        <RadioButton
+            android:id="@+id/main_exo_http_sample"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="false"
+            android:enabled="true"
+            android:text="exo2_http" />
+
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="6dp"
+        android:gravity="center_vertical|left"
         android:text="解码类型 => exoplayer"
         android:textSize="14sp" />
 

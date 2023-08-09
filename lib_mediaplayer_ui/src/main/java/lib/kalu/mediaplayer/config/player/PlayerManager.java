@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.config.player;
 
 import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
@@ -29,6 +30,11 @@ public final class PlayerManager {
 
     public PlayerManager setSeekHelp(boolean v) {
         mPlayerBuilder.setSeekHelp(v);
+        return this;
+    }
+
+    public PlayerManager setExoUseOkhttp(@NonNull boolean v) {
+        mPlayerBuilder.setExoUseOkhttp(v);
         return this;
     }
 
