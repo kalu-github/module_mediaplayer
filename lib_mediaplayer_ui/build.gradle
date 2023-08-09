@@ -58,13 +58,14 @@ repositories {
     }
 }
 dependencies {
-    compileOnly('androidx.appcompat:appcompat:1.5.1')
+    compileOnly('androidx.appcompat:appcompat:1.6.1')
+    compileOnly('com.squareup.okhttp3:okhttp:3.14.9')
     // ijk
     compileOnly files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.12_release_20230702.aar')
     // exo1
     compileOnly files('libs/lib_mediaplayer_exo_r1.5.15_release_20230424.aar')
     // exo2
-    compileOnly files('libs/lib_mediaplayer_exo_r2.18.7_full_release_20230625.aar')
+    compileOnly files('libs/lib_mediaplayer_exo_r2.19.0_full_release_20230809.aar')
     // ffplayer
     compileOnly files('libs/lib_mediaplayer_ffplayer_ff3.4.12_release_20230626.aar')
     // vlc

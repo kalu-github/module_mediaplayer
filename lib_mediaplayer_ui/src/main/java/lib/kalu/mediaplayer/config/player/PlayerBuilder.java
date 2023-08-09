@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.config.player;
 
 import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
@@ -18,10 +19,11 @@ public final class PlayerBuilder {
     private int exoSeekParameters = PlayerType.SeekType.EXO_SEEK_DEFAULT;
     @PlayerType.FFmpegType.Value
     private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
+    private boolean exoUseOkhttp;
     @PlayerType.KernelType.Value
-    private int kernel; // 播放器内核
+    private int videoKernel; // 播放器内核
     @PlayerType.RenderType.Value
-    private int render; // 渲染类型
+    private int videoRender; // 渲染类型
     @PlayerType.ScaleType
     private int videoScaleType; // 视频缩放比例
     private boolean checkMobileNetwork; // 监测手机网络环境
@@ -40,6 +42,10 @@ public final class PlayerBuilder {
 
     public boolean isSeekHelp() {
         return seekHelp;
+    }
+
+    public boolean isExoUseOkhttp() {
+        return exoUseOkhttp;
     }
 
     public int getExoFFmpeg() {
@@ -67,11 +73,11 @@ public final class PlayerBuilder {
     }
 
     public int getVideoKernel() {
-        return kernel;
+        return videoKernel;
     }
 
     public int getVideoRender() {
-        return render;
+        return videoRender;
     }
 
     @PlayerType.ScaleType.Value
@@ -106,8 +112,9 @@ public final class PlayerBuilder {
         seekHelp = builder.seekHelp;
         exoSeekParameters = builder.exoSeekParameters;
         exoFFmpeg = builder.exoFFmpeg;
-        kernel = builder.kernel;
-        render = builder.render;
+        exoUseOkhttp = builder.exoUseOkhttp;
+        videoKernel = builder.videoKernel;
+        videoRender = builder.videoRender;
         videoScaleType = builder.videoScaleType;
         checkMobileNetwork = builder.checkMobileNetwork;
         fitMobileCutout = builder.fitMobileCutout;
@@ -125,8 +132,9 @@ public final class PlayerBuilder {
         builder.setSeekHelp(this.seekHelp);
         builder.setExoSeekParameters(this.exoSeekParameters);
         builder.setExoFFmpeg(this.exoFFmpeg);
-        builder.setVideoKernel(this.kernel);
-        builder.setVideoRender(this.render);
+        builder.setExoUseOkhttp(this.exoUseOkhttp);
+        builder.setVideoKernel(this.videoKernel);
+        builder.setVideoRender(this.videoRender);
         builder.setVideoScaleType(this.videoScaleType);
         builder.setCheckMobileNetwork(this.checkMobileNetwork);
         builder.setFitMobileCutout(this.fitMobileCutout);
@@ -148,10 +156,11 @@ public final class PlayerBuilder {
         private int exoSeekParameters = PlayerType.SeekType.EXO_SEEK_DEFAULT;
         @PlayerType.FFmpegType.Value
         private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
+        private boolean exoUseOkhttp = true;
         @PlayerType.KernelType.Value
-        private int kernel = PlayerType.KernelType.ANDROID; // 播放器内核
+        private int videoKernel = PlayerType.KernelType.ANDROID; // 播放器内核
         @PlayerType.RenderType.Value
-        private int render = PlayerType.RenderType.TEXTURE_VIEW; // 渲染类型
+        private int videoRender = PlayerType.RenderType.TEXTURE_VIEW; // 渲染类型
         @PlayerType.ScaleType
         private int videoScaleType = PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH; // 视频缩放比例
         private boolean checkMobileNetwork = false; // 监测手机网络环境
@@ -170,6 +179,11 @@ public final class PlayerBuilder {
 
         public Builder setSeekHelp(boolean v) {
             seekHelp = v;
+            return this;
+        }
+
+        public Builder setExoUseOkhttp(@NonNull boolean v) {
+            exoUseOkhttp = v;
             return this;
         }
 
@@ -204,12 +218,12 @@ public final class PlayerBuilder {
         }
 
         public Builder setVideoKernel(@PlayerType.KernelType.Value int v) {
-            kernel = v;
+            videoKernel = v;
             return this;
         }
 
         public Builder setVideoRender(@PlayerType.RenderType.Value int v) {
-            render = v;
+            videoRender = v;
             return this;
         }
 

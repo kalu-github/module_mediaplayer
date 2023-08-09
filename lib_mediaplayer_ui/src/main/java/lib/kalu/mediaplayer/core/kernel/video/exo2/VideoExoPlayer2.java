@@ -24,6 +24,7 @@ import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
 import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -43,7 +44,15 @@ import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.video.VideoSize;
 
+import java.io.IOException;
+import java.net.Proxy;
+import java.net.ProxySelector;
+import java.net.SocketAddress;
+import java.net.URI;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
@@ -52,6 +61,8 @@ import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
 import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
+import okhttp3.ConnectionPool;
+import okhttp3.OkHttpClient;
 
 @Keep
 public final class VideoExoPlayer2 extends BasePlayer {
@@ -327,8 +338,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
 //        if (mExoPlayer.getTrackSelector() instanceof MappingTrackSelector) {
 //            mExoPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mExoPlayer.getTrackSelector(), "ExoPlayer"));
 //        }
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
         }
 
     }
@@ -727,32 +737,50 @@ public final class VideoExoPlayer2 extends BasePlayer {
 //            return new MergingMediaSource(mediaSource, srtSource);
             }
 
-            // okhttp
-//            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-//            OkHttpClient client = builder.build();
-//            OkHttpDataSource.Factory http = new OkHttpDataSource.Factory(client);
-//            http.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
-
             // head
 //            refreshHeaders(httpFactory, headers);
 
-            // http
-            DefaultHttpDataSource.Factory httpFactory = new DefaultHttpDataSource.Factory();
-            httpFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
-            httpFactory.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS);
-            httpFactory.setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS);
-            httpFactory.setAllowCrossProtocolRedirects(true);
-            httpFactory.setKeepPostFor302Redirects(true);
+            boolean useOkhttp = PlayerManager.getInstance().getConfig().isExoUseOkhttp();
+            DataSource.Factory dataSourceFactory;
+            if (useOkhttp) {
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .readTimeout(10, TimeUnit.SECONDS)
+                        .writeTimeout(10, TimeUnit.SECONDS)
+                        .connectionPool(new ConnectionPool(1000, 30, TimeUnit.MINUTES))
+                        .retryOnConnectionFailure(true)
+                        .proxySelector(new ProxySelector() { // 禁止抓包
+                            @Override
+                            public List<Proxy> select(URI uri) {
+                                return Collections.singletonList(Proxy.NO_PROXY);
+                            }
+
+                            @Override
+                            public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
+                            }
+                        })
+                        .build();
+                OkHttpDataSource.Factory okHttpFactory = new OkHttpDataSource.Factory(okHttpClient);
+                okHttpFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
+                dataSourceFactory = okHttpFactory;
+            } else {
+                DefaultHttpDataSource.Factory httpFactory = new DefaultHttpDataSource.Factory();
+                httpFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
+                httpFactory.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS);
+                httpFactory.setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS);
+                httpFactory.setAllowCrossProtocolRedirects(true);
+                httpFactory.setKeepPostFor302Redirects(true);
+                dataSourceFactory = httpFactory;
+            }
 
             DataSource.Factory dataSource;
             if (cacheType == PlayerType.CacheType.NONE) {
-                dataSource = new DefaultDataSource.Factory(context, httpFactory);
+                dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
             } else {
                 CacheDataSource.Factory cacheFactory = new CacheDataSource.Factory();
                 SimpleCache cache = VideoExoPlayer2Cache.getSimpleCache(context, cacheMax, cacheDir);
                 cacheFactory.setCache(cache);
                 cacheFactory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-                cacheFactory.setUpstreamDataSourceFactory(httpFactory);
+                cacheFactory.setUpstreamDataSourceFactory(dataSourceFactory);
                 dataSource = cacheFactory;
             }
 

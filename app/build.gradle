@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
 
-        minSdkVersion 19
+        minSdkVersion 16
         targetSdkVersion 32
 
         ndk {
@@ -75,19 +75,20 @@ repositories {
     }
 }
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
 //    implementation project(path: ':lib_mediaplayer_ui')
 
     // ui
-    api files('libs/lib_mediaplayer_ui_release_20230806.aar')
+    api files('libs/lib_mediaplayer_ui_release_20230809.aar')
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.12_full_release_20230609.aar')
 //    api files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.12_release_20230702.aar')
     // exo1
     api files('libs/lib_mediaplayer_exo_r1.5.15_release_20230424.aar')
     // exo2
-    api files('libs/lib_mediaplayer_exo_r2.18.7_full_release_20230625.aar')
+    api files('libs/lib_mediaplayer_exo_r2.19.0_full_release_20230809.aar')
     // ffplayer
     api files('libs/lib_mediaplayer_ffplayer_ff3.4.12_release_20230626.aar')
     // vlc
