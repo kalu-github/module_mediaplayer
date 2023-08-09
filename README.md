@@ -12,6 +12,10 @@ https://github.com/kalu-github/ijkplayer-ffmpeg-3.4.12
 
 #### 更新
 ```
+2023-08-09
+1. 新增：exoplayer_r2.19.0
+```
+```
 2023-07-02
 1. 解决：ijk-mediacodec+surfaceview切换大小屏黑屏
 ```
