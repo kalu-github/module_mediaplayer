@@ -304,9 +304,20 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int[] measureSpec = doMeasureSpec(widthMeasureSpec, heightMeasureSpec, mVideoScaleType, mVideoRotation, mVideoWidth, mVideoHeight);
-        setMeasuredDimension(measureSpec[0], measureSpec[1]);
-        getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
+        try {
+            int[] measureSpec = doMeasureSpec(widthMeasureSpec, heightMeasureSpec, mVideoScaleType, mVideoRotation, mVideoWidth, mVideoHeight);
+            if (null == measureSpec || measureSpec.length != 2)
+                throw new Exception("measureSpec error: " + measureSpec);
+            int w = measureSpec[0];
+            int h = measureSpec[1];
+            int specW = MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY);
+            int specH = MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY);
+            super.onMeasure(specW, specH);
+//            setMeasuredDimension(measureSpec[0], measureSpec[1]);
+//            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
+        } catch (Exception e) {
+            MPLogUtil.log("RenderSurfaceView => onMeasure => " + e.getMessage());
+        }
     }
 
     /*****/

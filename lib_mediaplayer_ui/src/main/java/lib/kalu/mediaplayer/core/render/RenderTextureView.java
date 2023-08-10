@@ -18,6 +18,7 @@ package lib.kalu.mediaplayer.core.render;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
+import android.os.Build;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
@@ -25,6 +26,7 @@ import android.view.TextureView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
@@ -79,6 +81,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
              * @param width                     WIDTH
              * @param height                    HEIGHT
              */
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
                 MPLogUtil.log("RenderTextureView => onSurfaceTextureAvailable => " + this);
@@ -243,7 +246,19 @@ public class RenderTextureView extends TextureView implements RenderApi {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int[] measureSpec = doMeasureSpec(widthMeasureSpec, heightMeasureSpec, mVideoScaleType, mVideoRotation, mVideoWidth, mVideoHeight);
-        setMeasuredDimension(measureSpec[0], measureSpec[1]);
+        try {
+            int[] measureSpec = doMeasureSpec(widthMeasureSpec, heightMeasureSpec, mVideoScaleType, mVideoRotation, mVideoWidth, mVideoHeight);
+            if (null == measureSpec || measureSpec.length != 2)
+                throw new Exception("measureSpec error: " + measureSpec);
+            int w = measureSpec[0];
+            int h = measureSpec[1];
+            int specW = MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY);
+            int specH = MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY);
+            super.onMeasure(specW, specH);
+//            setMeasuredDimension(measureSpec[0], measureSpec[1]);
+//            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
+        } catch (Exception e) {
+            MPLogUtil.log("RenderTextureView => onMeasure => " + e.getMessage());
+        }
     }
 }
