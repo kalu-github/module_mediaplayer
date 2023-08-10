@@ -746,8 +746,8 @@ public final class VideoExoPlayer2 extends BasePlayer {
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
                         .readTimeout(10, TimeUnit.SECONDS)
                         .writeTimeout(10, TimeUnit.SECONDS)
-                        .connectionPool(new ConnectionPool(1000, 30, TimeUnit.MINUTES))
-                        .retryOnConnectionFailure(true)
+                        .connectionPool(new ConnectionPool(5, 5, TimeUnit.MINUTES))
+                        .retryOnConnectionFailure(false)
                         .proxySelector(new ProxySelector() { // 禁止抓包
                             @Override
                             public List<Proxy> select(URI uri) {
