@@ -250,10 +250,10 @@ public class RenderTextureView extends TextureView implements RenderApi {
             int[] measureSpec = doMeasureSpec(widthMeasureSpec, heightMeasureSpec, mVideoScaleType, mVideoRotation, mVideoWidth, mVideoHeight);
             if (null == measureSpec || measureSpec.length != 2)
                 throw new Exception("measureSpec error: " + measureSpec);
-            int w = measureSpec[0];
-            int h = measureSpec[1];
-            int specW = MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY);
-            int specH = MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY);
+            int width = measureSpec[0];
+            int height = measureSpec[1];
+            int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+            int specH = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             super.onMeasure(specW, specH);
 //            setMeasuredDimension(measureSpec[0], measureSpec[1]);
 //            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
