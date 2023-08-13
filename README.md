@@ -12,6 +12,11 @@ https://github.com/kalu-github/ijkplayer-ffmpeg-3.4.12
 
 #### 更新
 ```
+2023-08-13
+1. 新增：ijkplayer-ffmpeg3.4.13
+2. 新增：ijkplayer-ffmpeg3.4.13_full
+```
+```
 2023-08-09
 1. 新增：exoplayer_r2.19.0
 ```
