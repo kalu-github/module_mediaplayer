@@ -15,6 +15,7 @@ import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
 import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
 import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
 
@@ -79,7 +80,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             setOptions();
             lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(logger);
             tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogger(logger);
-            tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_ERROR);
+            tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(logger ? tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO : IjkMediaPlayer.IJK_LOG_DEFAULT);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => createDecoder => " + e.getMessage());
         }
