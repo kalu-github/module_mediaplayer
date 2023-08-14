@@ -20,6 +20,7 @@ public final class PlayerBuilder {
     @PlayerType.FFmpegType.Value
     private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
     private boolean exoUseOkhttp;
+    private int exoUseOkhttpTimeoutSeconds;
     @PlayerType.KernelType.Value
     private int videoKernel; // 播放器内核
     @PlayerType.RenderType.Value
@@ -46,6 +47,10 @@ public final class PlayerBuilder {
 
     public boolean isExoUseOkhttp() {
         return exoUseOkhttp;
+    }
+
+    public int getExoUseOkhttpTimeoutSeconds() {
+        return exoUseOkhttpTimeoutSeconds;
     }
 
     public int getExoFFmpeg() {
@@ -113,6 +118,7 @@ public final class PlayerBuilder {
         exoSeekParameters = builder.exoSeekParameters;
         exoFFmpeg = builder.exoFFmpeg;
         exoUseOkhttp = builder.exoUseOkhttp;
+        exoUseOkhttpTimeoutSeconds = builder.exoUseOkhttpTimeoutSeconds;
         videoKernel = builder.videoKernel;
         videoRender = builder.videoRender;
         videoScaleType = builder.videoScaleType;
@@ -133,6 +139,7 @@ public final class PlayerBuilder {
         builder.setExoSeekParameters(this.exoSeekParameters);
         builder.setExoFFmpeg(this.exoFFmpeg);
         builder.setExoUseOkhttp(this.exoUseOkhttp);
+        builder.setExoUseOkhttpTimeoutSeconds(this.exoUseOkhttpTimeoutSeconds);
         builder.setVideoKernel(this.videoKernel);
         builder.setVideoRender(this.videoRender);
         builder.setVideoScaleType(this.videoScaleType);
@@ -157,6 +164,7 @@ public final class PlayerBuilder {
         @PlayerType.FFmpegType.Value
         private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
         private boolean exoUseOkhttp = true;
+        private int exoUseOkhttpTimeoutSeconds = 4;
         @PlayerType.KernelType.Value
         private int videoKernel = PlayerType.KernelType.ANDROID; // 播放器内核
         @PlayerType.RenderType.Value
@@ -179,6 +187,11 @@ public final class PlayerBuilder {
 
         public Builder setSeekHelp(boolean v) {
             seekHelp = v;
+            return this;
+        }
+
+        public Builder setExoUseOkhttpTimeoutSeconds(@NonNull int v) {
+            exoUseOkhttpTimeoutSeconds = v;
             return this;
         }
 

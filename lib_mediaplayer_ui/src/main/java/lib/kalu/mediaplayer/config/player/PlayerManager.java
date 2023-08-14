@@ -38,6 +38,11 @@ public final class PlayerManager {
         return this;
     }
 
+    public PlayerManager setExoUseOkhttpTimeoutSeconds(@NonNull int v) {
+        this.mPlayerBuilder.setExoUseOkhttpTimeoutSeconds(v);
+        return this;
+    }
+
     public PlayerManager setExoFFmpeg(@PlayerType.FFmpegType int v) {
         mPlayerBuilder.setExoFFmpeg(v);
         return this;
