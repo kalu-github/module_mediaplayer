@@ -67,7 +67,7 @@ import okhttp3.OkHttpClient;
 @Keep
 public final class VideoExoPlayer2 extends BasePlayer {
 
-    private boolean seekHelp = false;
+    //    private boolean seekHelp = false;
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
     private boolean mLoop = false; // 循环播放
@@ -183,7 +183,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
             mExoPlayer = builder.build();
             mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
             setVolume(1F, 1F);
-            MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => createDecoder => seekParameters = " + seekParameters);
+            MPLogUtil.log("VideoExoPlayer2 => createDecoder => seekParameters = " + seekParameters);
             // seek model
             if (seekParameters == PlayerType.SeekType.EXO_SEEK_CLOSEST_SYNC) {
                 mExoPlayer.setSeekParameters(SeekParameters.CLOSEST_SYNC);
@@ -210,12 +210,12 @@ public final class VideoExoPlayer2 extends BasePlayer {
             mAnalyticsListener = new AnalyticsListener() {
                 @Override
                 public void onPlayWhenReadyChanged(EventTime eventTime, boolean playWhenReady, int reason) {
-//        MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => onPlayWhenReadyChanged => playWhenReady = " + playWhenReady + ", reason = " + reason);
+//        MPLogUtil.log("VideoExoPlayer2 => onPlayWhenReadyChanged => playWhenReady = " + playWhenReady + ", reason = " + reason);
                 }
 
                 @Override
                 public void onPlayerError(EventTime eventTime, PlaybackException error) {
-                    MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => onPlayerError => error = " + error.getMessage() + ", mExoPlayer = " + mExoPlayer);
+                    MPLogUtil.log("VideoExoPlayer2 => onPlayerError => error = " + error.getMessage() + ", mExoPlayer = " + mExoPlayer);
 
                     if (null == error)
                         return;
@@ -241,7 +241,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
 
                 @Override
                 public void onTimelineChanged(EventTime eventTime, int reason) {
-                    MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => onTimelineChanged => reason = " + reason + ", totalBufferedDurationMs = " + eventTime.totalBufferedDurationMs + ", realtimeMs = " + eventTime.realtimeMs);
+                    MPLogUtil.log("VideoExoPlayer2 => onTimelineChanged => reason = " + reason + ", totalBufferedDurationMs = " + eventTime.totalBufferedDurationMs + ", realtimeMs = " + eventTime.realtimeMs);
                 }
 
                 @Override
@@ -264,67 +264,70 @@ public final class VideoExoPlayer2 extends BasePlayer {
 
                 @Override
                 public void onPlaybackStateChanged(EventTime eventTime, int state) {
-                    MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => onPlaybackStateChanged => state = " + state + ", mute = " + isMute());
+                    MPLogUtil.log("VideoExoPlayer2 => onPlaybackStateChanged => state = " + state + ", mute = " + isMute());
 
                     // 播放错误
                     if (state == Player.STATE_IDLE) {
-                        MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => onPlaybackStateChanged[播放错误] =>");
+                        MPLogUtil.log("VideoExoPlayer2 => onPlaybackStateChanged[播放错误] =>");
                         onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
                         onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_SOURCE);
                     }
                     // 播放结束
                     else if (state == Player.STATE_ENDED) {
-//                    String url = getUrl();
-                        MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => onPlaybackStateChanged[播放结束] =>");
+                        MPLogUtil.log("VideoExoPlayer2 => onPlaybackStateChanged[播放结束] =>");
                         onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_END);
                     }
                     // 播放开始
                     else if (state == Player.STATE_READY) {
-                        mPrepared = true;
-                        MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => onPlaybackStateChanged[播放开始] =>");
-                        if (seekHelp) {
-                            seekHelp = false;
-                            long seek = getSeek();
-                            seekTo(seek, false);
-                        } else {
+                        MPLogUtil.log("VideoExoPlayer2 => onPlaybackStateChanged[播放开始] =>");
+                        try {
+                            if (mPrepared)
+                                throw new Exception("mPrepared warning: true");
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_START);
+                        } catch (Exception e) {
+                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
                         }
+                        mPrepared = true;
                     }
                     // 播放缓冲
                     else if (state == Player.STATE_BUFFERING) {
-                        MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => onPlaybackStateChanged[播放缓冲] =>");
-                        long position = getPosition();
-                        if (position > 0) {
+                        MPLogUtil.log("VideoExoPlayer2 => onPlaybackStateChanged[播放缓冲] =>");
+                        try {
+                            if (!mPrepared)
+                                throw new Exception("mPrepared warning: false");
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_START);
+                        } catch (Exception e) {
+                            MPLogUtil.log("VideoExoPlayer2 => onPlaybackStateChanged => STATE_READY => " + e.getMessage());
                         }
                     }
                     // 未知??
                     else {
-                        MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => onPlaybackStateChanged[未知??] =>");
+                        MPLogUtil.log("VideoExoPlayer2 => onPlaybackStateChanged[未知??] =>");
                     }
                 }
 
                 @Override
                 public void onRenderedFirstFrame(EventTime eventTime, Object output, long renderTimeMs) {
-                    MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => onRenderedFirstFrame =>");
-                }
-
-                @Override
-                public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
-                    long seek = getSeek();
-//                long position = getPosition();
-                    MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => onVideoInputFormatChanged => seek = " + seek);
-                    // 快进 => begin
-                    if (seek > 0) {
-                        seekTo(seek, false);
+                    MPLogUtil.log("VideoExoPlayer2 => onRenderedFirstFrame =>");
+                    try {
+                        long seek = getSeek();
+                        if (seek <= 0)
+                            throw new Exception("seek warning: " + seek);
+                        seekTo(seek);
+                    } catch (Exception e) {
+                        MPLogUtil.log("VideoExoPlayer2 => onRenderedFirstFrame => " + e.getMessage());
                     }
                 }
 
                 @Override
+                public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
+                    MPLogUtil.log("VideoExoPlayer2 => onVideoInputFormatChanged[出画面] =>");
+                }
+
+                @Override
                 public void onAudioInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
-                    MPLogUtil.log("VideoExoPlayer2 => " + "VideoExoPlayer2 => onAudioInputFormatChanged =>");
+                    MPLogUtil.log("VideoExoPlayer2 => onAudioInputFormatChanged =>");
                 }
             };
             mExoPlayer.addAnalyticsListener(mAnalyticsListener);
@@ -421,9 +424,8 @@ public final class VideoExoPlayer2 extends BasePlayer {
     }
 
     @Override
-    public void seekTo(@NonNull long position, @NonNull boolean help) {
+    public void seekTo(@NonNull long position) {
         try {
-            seekHelp = help;
             mExoPlayer.seekTo(position);
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer2 => seekTo => " + e.getMessage());

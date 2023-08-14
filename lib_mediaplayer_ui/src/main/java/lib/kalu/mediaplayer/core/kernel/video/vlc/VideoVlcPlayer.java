@@ -106,7 +106,7 @@ public final class VideoVlcPlayer extends BasePlayer {
 
                 long seek = getSeek();
                 if (seek > 0) {
-                    seekTo(seek, false);
+                    seekTo(seek);
                 }
             }
 
@@ -230,8 +230,7 @@ public final class VideoVlcPlayer extends BasePlayer {
      * 调整进度
      */
     @Override
-    public void seekTo(long time, @NonNull boolean seekHelp) {
-//        setReadying(false);
+    public void seekTo(@NonNull long position) {
 //        try {
 //            mVlcPlayer.seekTo((int) time);
 //        } catch (IllegalStateException e) {

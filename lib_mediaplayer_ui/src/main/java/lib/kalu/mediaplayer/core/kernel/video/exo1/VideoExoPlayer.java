@@ -21,7 +21,6 @@ import tv.kalu.android.exoplayer.player.DemoPlayer;
 @Keep
 public final class VideoExoPlayer extends BasePlayer {
 
-    private boolean seekHelp = false;
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
     private boolean mLoop = false; // 循环播放
@@ -181,9 +180,8 @@ public final class VideoExoPlayer extends BasePlayer {
     }
 
     @Override
-    public void seekTo(@NonNull long position, @NonNull boolean help) {
+    public void seekTo(@NonNull long position) {
         try {
-            seekHelp = help;
             mExoPlayer.seekTo(position);
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => seekTo => " + e.getMessage());

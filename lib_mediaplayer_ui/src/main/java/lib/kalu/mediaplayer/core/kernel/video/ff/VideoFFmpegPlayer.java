@@ -221,7 +221,7 @@ public final class VideoFFmpegPlayer extends BasePlayer {
      * 调整进度
      */
     @Override
-    public void seekTo(long seek, @NonNull boolean seekHelp) {
+    public void seekTo(long seek) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -377,7 +377,7 @@ public final class VideoFFmpegPlayer extends BasePlayer {
                 long seek = getSeek();
                 if (seek <= 0)
                     throw new Exception("seek warning: " + seek);
-                seekTo(seek, false);
+                seekTo(seek);
             } catch (Exception e) {
                 MPLogUtil.log("VideoFFmpegPlayer => onPrepared => " + e.getMessage());
             }

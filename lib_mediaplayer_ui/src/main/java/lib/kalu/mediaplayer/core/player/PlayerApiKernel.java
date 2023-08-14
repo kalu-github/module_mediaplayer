@@ -509,7 +509,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             checkVideoKernel();
             // 2
             KernelApi kernel = getVideoKernel();
-            kernel.seekTo(milliSeconds, false);
+            kernel.seekTo(milliSeconds);
             setScreenKeep(true);
             if (milliSeconds <= 0)
                 return;

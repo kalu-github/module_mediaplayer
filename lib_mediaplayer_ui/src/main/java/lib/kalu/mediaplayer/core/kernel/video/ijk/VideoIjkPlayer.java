@@ -29,9 +29,6 @@ public final class VideoIjkPlayer extends BasePlayer {
     private boolean mMute = false;
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
-//    private boolean isFromUserSeekComplete = false;
-//    private boolean isFromNetBufferStart = false;
-
 
     private boolean mUseMediaCodec;
     private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer = null;
@@ -474,13 +471,13 @@ public final class VideoIjkPlayer extends BasePlayer {
     }
 
     @Override
-    public void seekTo(long seek, @NonNull boolean isPrepared) {
+    public void seekTo(long seek) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             if (seek < 0)
                 throw new Exception("seek error: " + seek);
-            if (!isPrepared) {
+            if (!mPrepared) {
                 long position = getPosition();
                 if (position > 0) {
                     onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
@@ -722,7 +719,7 @@ public final class VideoIjkPlayer extends BasePlayer {
                 long seek = getSeek();
                 if (seek <= 0)
                     throw new Exception("seek warning: " + seek);
-                seekTo(seek, true);
+                seekTo(seek);
             } catch (Exception e) {
                 MPLogUtil.log("VideoIjkPlayer => onPrepared => " + e.getMessage());
                 start();

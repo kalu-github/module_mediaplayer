@@ -234,13 +234,13 @@ public final class VideoAndroidPlayer extends BasePlayer {
      * 调整进度
      */
     @Override
-    public void seekTo(long seek, @NonNull boolean isPrepared) {
+    public void seekTo(long seek) {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
             if (seek < 0)
                 throw new Exception("seek error: " + seek);
-            if (!isPrepared) {
+            if (!mPrepared) {
                 long position = getPosition();
                 if (position > 0) {
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
@@ -440,7 +440,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 long seek = getSeek();
                 if (seek <= 0)
                     throw new Exception("seek warning: " + seek);
-                seekTo(seek, true);
+                seekTo(seek);
             } catch (Exception e) {
                 MPLogUtil.log("VideoAndroidPlayer => onPrepared => " + e.getMessage());
                 start();

@@ -17,7 +17,7 @@ interface KernelApiBase {
 
     void setMute(boolean v);
 
-    void seekTo(@NonNull long position, @NonNull boolean seekHelp);
+    void seekTo(@NonNull long position);
 
     void setSpeed(float speed);
 
