@@ -7,65 +7,38 @@
     android:focusable="false">
 
     <!-- 背景 -->
-    <lib.kalu.mediaplayer.widget.speed.SpeedLinearLayout
-        android:id="@+id/module_mediaplayer_component_net"
+    <ImageView
+        android:id="@+id/module_mediaplayer_component_net_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="false"
+        android:visibility="gone" />
+
+    <!-- 转圈 -->
+    <lib.kalu.mediaplayer.widget.loading.MPLoadingView
+        android:id="@+id/module_mediaplayer_component_net_pb"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        android:focusable="false"
+        android:indeterminateDuration="2000"
+        android:longClickable="false"
+        android:visibility="gone"
+        app:lv_color_round="#ffffff"
+        app:lv_count="8"
+        app:lv_radius="10dp"
+        app:lv_rate="0.9" />
+
+    <!-- 网速 -->
+    <TextView
+        android:id="@+id/module_mediaplayer_component_net_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/module_mediaplayer_shape_speed_bg"
+        android:layout_below="@id/module_mediaplayer_component_net_pb"
+        android:layout_centerHorizontal="true"
         android:focusable="false"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <!-- 转圈 -->
-        <lib.kalu.mediaplayer.widget.loading.MPLoadingViewSpeed
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="2dp"
-            android:focusable="false"
-            android:indeterminateDuration="2000"
-            app:lv_color_round="#ffffff"
-            app:lv_count="8"
-            app:lv_rate="0.9" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:focusable="false"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-            <!-- 网速-数字 -->
-            <TextView
-                android:id="@+id/module_mediaplayer_component_net_txt"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.8"
-                android:focusable="false"
-                android:gravity="bottom|left"
-                android:textColor="#ffffff"
-                android:textSize="16sp" />
-
-            <!-- 网速-单位 -->
-            <TextView
-                android:id="@+id/module_mediaplayer_component_net_unit"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.2"
-                android:focusable="false"
-                android:gravity="top|left"
-                android:textColor="#ffffff"
-                android:textSize="10sp" />
-
-        </LinearLayout>
-
-
-    </lib.kalu.mediaplayer.widget.speed.SpeedLinearLayout>
+        android:textColor="@color/module_mediaplayer_color_ffffff"
+        android:textSize="14sp"
+        android:visibility="gone" />
 
 </RelativeLayout>

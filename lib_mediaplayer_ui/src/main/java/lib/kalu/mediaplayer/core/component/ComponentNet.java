@@ -22,11 +22,25 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
 
     @Override
     public final void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
-        boolean showing = isShowing();
-//        MPLogUtil.log("ComponentNet => onUpdateTimeMillis => showing = " + showing);
-        if (!showing)
-            return;
-        updateSpeed();
+        try {
+            TextView textView = findViewById(R.id.module_mediaplayer_component_net_message);
+            if (null == textView)
+                throw new Exception("textView error: null");
+            int viewVisibility = textView.getVisibility();
+            if (viewVisibility != View.VISIBLE)
+                throw new Exception("viewVisibility warning: " + viewVisibility);
+            String speed = getNetSpeed();
+            textView.setText(speed);
+//            int length = speed.length();
+//            int start = length - 4;
+//            String unit = speed.substring(start, length);
+//            String num = speed.substring(0, start);
+//            v1.setText(num);
+//            TextView v2 = findViewById(R.id.module_mediaplayer_component_net_unit);
+//            v2.setText(unit);
+        } catch (Exception e) {
+            MPLogUtil.log("ComponentNet => onUpdateTimeMillis => " + e.getMessage());
+        }
     }
 
     @Override
@@ -48,33 +62,11 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void callWindowEvent(int state) {
-        switch (state) {
-            case PlayerType.WindowType.FLOAT:
-            case PlayerType.WindowType.NORMAL:
-            case PlayerType.WindowType.FULL:
-                try {
-                    int visibility = findViewById(R.id.module_mediaplayer_component_net).getVisibility();
-                    if (visibility == View.VISIBLE) {
-                        try {
-                            boolean full = isFull();
-                            TextView v1 = findViewById(R.id.module_mediaplayer_component_net_txt);
-                            v1.setVisibility(full ? View.VISIBLE : View.INVISIBLE);
-                            TextView v2 = findViewById(R.id.module_mediaplayer_component_net_unit);
-                            v2.setVisibility(full ? View.VISIBLE : View.INVISIBLE);
-                        } catch (Exception e) {
-                        }
-                    }
-                } catch (Exception e) {
-                }
-                break;
-        }
-    }
-
-    @Override
     public final void gone() {
         try {
-            findViewById(R.id.module_mediaplayer_component_net).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_net_bg).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_net_pb).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_net_message).setVisibility(View.GONE);
         } catch (Exception e) {
         }
     }
@@ -83,39 +75,10 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     public final void show() {
         try {
             bringToFront();
-            findViewById(R.id.module_mediaplayer_component_net).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_net_bg).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_net_pb).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_net_message).setVisibility(View.VISIBLE);
         } catch (Exception e) {
-        }
-        try {
-            boolean full = isFull();
-            TextView v1 = findViewById(R.id.module_mediaplayer_component_net_txt);
-            v1.setVisibility(full ? View.VISIBLE : View.INVISIBLE);
-            TextView v2 = findViewById(R.id.module_mediaplayer_component_net_unit);
-            v2.setVisibility(full ? View.VISIBLE : View.INVISIBLE);
-        } catch (Exception e) {
-        }
-    }
-
-    private void updateSpeed() {
-        try {
-            String speed = getNetSpeed();
-            int length = speed.length();
-            int start = length - 4;
-            String unit = speed.substring(start, length);
-            String num = speed.substring(0, start);
-            TextView v1 = findViewById(R.id.module_mediaplayer_component_net_txt);
-            v1.setText(num);
-            TextView v2 = findViewById(R.id.module_mediaplayer_component_net_unit);
-            v2.setText(unit);
-        } catch (Exception e) {
-        }
-    }
-
-    private boolean isShowing() {
-        try {
-            return findViewById(R.id.module_mediaplayer_component_net).getVisibility() == View.VISIBLE;
-        } catch (Exception e) {
-            return false;
         }
     }
 }
