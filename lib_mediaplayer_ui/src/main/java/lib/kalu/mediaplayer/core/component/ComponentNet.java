@@ -21,7 +21,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
+    public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
         try {
             TextView textView = findViewById(R.id.module_mediaplayer_component_net_message);
             if (null == textView)
