@@ -257,9 +257,6 @@ public final class VideoExoPlayer2 extends BasePlayer {
                 @Override
                 public void onIsPlayingChanged(EventTime eventTime, boolean isPlaying) {
                     MPLogUtil.log("VideoExoPlayer2 => onIsPlayingChanged => isPlaying = " + isPlaying + ", mPlayWhenReady = " + mPlayWhenReady);
-                    if (isPlaying && !mPlayWhenReady) {
-                        pause();
-                    }
                 }
 
                 @Override
@@ -285,6 +282,9 @@ public final class VideoExoPlayer2 extends BasePlayer {
                                 throw new Exception("mPrepared warning: true");
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_START);
+                            if (!mPlayWhenReady) {
+                                pause();
+                            }
                         } catch (Exception e) {
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
                         }
@@ -782,12 +782,13 @@ public final class VideoExoPlayer2 extends BasePlayer {
             if (cacheType == PlayerType.CacheType.NONE) {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
             } else {
-                CacheDataSource.Factory cacheFactory = new CacheDataSource.Factory();
-                SimpleCache cache = VideoExoPlayer2Cache.getSimpleCache(context, cacheMax, cacheDir);
-                cacheFactory.setCache(cache);
-                cacheFactory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-                cacheFactory.setUpstreamDataSourceFactory(dataSourceFactory);
-                dataSource = cacheFactory;
+                dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
+//                CacheDataSource.Factory cacheFactory = new CacheDataSource.Factory();
+//                SimpleCache cache = VideoExoPlayer2Cache.getSimpleCache(context, cacheMax, cacheDir);
+//                cacheFactory.setCache(cache);
+//                cacheFactory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+//                cacheFactory.setUpstreamDataSourceFactory(dataSourceFactory);
+//                dataSource = cacheFactory;
             }
 
             // 3
