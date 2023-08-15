@@ -202,11 +202,13 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 throw new Exception("mMediaPlayer error: null");
             if (isMainThread) {
                 mMediaPlayer.stop();
+                mPrepared = false;
             } else {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         mMediaPlayer.stop();
+                        mPrepared = false;
                     }
                 }).start();
             }
