@@ -341,15 +341,14 @@ public final class VideoAndroidPlayer extends BasePlayer {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
             try {
+                MPLogUtil.log("VideoAndroidPlayer => onError => what = " + what);
                 if (what == -38) {
                     throw new Exception("what warning: " + what);
+                } else if (what == -10005) {
+                    throw new Exception("what warning: " + what);
                 } else {
-                    MPLogUtil.log("VideoAndroidPlayer => onError => what = " + what);
-                    if (what == -10005) {
-                    } else {
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
-                    }
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
                 }
             } catch (Exception e) {
                 MPLogUtil.log("VideoAndroidPlayer => onError => " + e.getMessage());
