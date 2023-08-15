@@ -265,6 +265,8 @@ public final class VideoAndroidPlayer extends BasePlayer {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             return mMediaPlayer.getCurrentPosition();
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => getPosition => " + e.getMessage());
@@ -280,6 +282,8 @@ public final class VideoAndroidPlayer extends BasePlayer {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             return mMediaPlayer.getDuration();
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => getDuration => " + e.getMessage());
