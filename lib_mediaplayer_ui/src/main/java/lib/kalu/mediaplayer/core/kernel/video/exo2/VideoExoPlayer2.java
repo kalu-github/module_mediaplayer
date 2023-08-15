@@ -3,6 +3,9 @@ package lib.kalu.mediaplayer.core.kernel.video.exo2;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -67,7 +70,6 @@ import okhttp3.OkHttpClient;
 @Keep
 public final class VideoExoPlayer2 extends BasePlayer {
 
-    //    private boolean seekHelp = false;
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
     private boolean mLoop = false; // 循环播放
@@ -256,7 +258,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
 
                 @Override
                 public void onIsPlayingChanged(EventTime eventTime, boolean isPlaying) {
-                    MPLogUtil.log("VideoExoPlayer2 => onIsPlayingChanged => isPlaying = " + isPlaying + ", mPlayWhenReady = " + mPlayWhenReady);
+                    MPLogUtil.log("VideoExoPlayer2 => onIsPlayingChanged => isPlaying = " + isPlaying + ", mPlayWhenReady = " + mPlayWhenReady + ", mPrepared = " + mPrepared);
                 }
 
                 @Override
@@ -286,6 +288,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
                                 pause();
                             }
                         } catch (Exception e) {
+                            clearBufferingHandler();
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
                         }
                         mPrepared = true;
@@ -296,6 +299,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
                         try {
                             if (!mPrepared)
                                 throw new Exception("mPrepared warning: false");
+                            startBufferingHandler();
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_START);
                         } catch (Exception e) {
                             MPLogUtil.log("VideoExoPlayer2 => onPlaybackStateChanged => STATE_READY => " + e.getMessage());
@@ -805,6 +809,44 @@ public final class VideoExoPlayer2 extends BasePlayer {
                     extractorsFactory.setConstantBitrateSeekingEnabled(true);
                     return new ProgressiveMediaSource.Factory(dataSource, extractorsFactory).createMediaSource(mediaItem);
             }
+        }
+    }
+
+    /******************/
+
+    private Handler mHandler;
+
+    private void startBufferingHandler() {
+        try {
+            clearBufferingHandler();
+            int bufferingTimeoutSeconds = PlayerManager.getInstance().getConfig().getExoBufferingTimeoutSeconds();
+            if (bufferingTimeoutSeconds <= 0)
+                throw new Exception("bufferingTimeoutSeconds warning: " + bufferingTimeoutSeconds);
+            if (null == mHandler) {
+                mHandler = new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(@NonNull Message msg) {
+                        super.handleMessage(msg);
+                        if (msg.what == 7677) {
+                            onUpdateBufferingUpdate();
+                        }
+                    }
+                };
+            }
+            mHandler.sendEmptyMessageDelayed(7677, bufferingTimeoutSeconds * 1000);
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer2 => startBufferingHandler => " + e.getMessage());
+        }
+    }
+
+    private void clearBufferingHandler() {
+        try {
+            if (null == mHandler)
+                throw new Exception("mHandler warning: null");
+            mHandler.removeMessages(7677);
+            mHandler.removeCallbacksAndMessages(null);
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer2 => clearBufferingHandler => " + e.getMessage());
         }
     }
 }

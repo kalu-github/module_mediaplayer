@@ -4,6 +4,9 @@ import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.View;
 
 import androidx.annotation.FloatRange;
@@ -230,7 +233,7 @@ interface PlayerApiKernel extends PlayerApiListener,
     default void restart() {
         try {
             String url = getUrl();
-            if (null == url || url.length() <= 0)
+            if (null == url || url.length() == 0)
                 throw new Exception("url error: " + url);
             StartBuilder builder = getStartBuilder();
             if (null == builder)

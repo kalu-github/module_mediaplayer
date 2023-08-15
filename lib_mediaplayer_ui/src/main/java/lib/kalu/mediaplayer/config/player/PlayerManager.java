@@ -43,6 +43,11 @@ public final class PlayerManager {
         return this;
     }
 
+    public PlayerManager setExoBufferingTimeoutSeconds(@NonNull int v) {
+        this.mPlayerBuilder.setExoBufferingTimeoutSeconds(v);
+        return this;
+    }
+
     public PlayerManager setExoFFmpeg(@PlayerType.FFmpegType int v) {
         mPlayerBuilder.setExoFFmpeg(v);
         return this;

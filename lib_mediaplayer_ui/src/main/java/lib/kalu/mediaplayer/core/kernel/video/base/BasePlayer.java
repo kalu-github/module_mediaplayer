@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.kernel.video.base;
 
 import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.player.PlayerApi;
@@ -15,6 +16,18 @@ public abstract class BasePlayer implements KernelApi {
     public BasePlayer(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent eventApi) {
         this.playerApi = playerApi;
         this.eventApi = eventApi;
+    }
+
+    @Override
+    public void onUpdateBufferingUpdate() {
+        try {
+            if (null == playerApi)
+                throw new Exception("playerApi error: null");
+            playerApi.release(false, false, false);
+            playerApi.restart();
+        } catch (Exception e) {
+            MPLogUtil.log("BasePlayer => onUpdateBufferingUpdate => " + e.getMessage());
+        }
     }
 
     @Override

@@ -20,6 +20,8 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 public interface KernelApi extends KernelApiBase,
         KernelApiEvent {
 
+    void onUpdateBufferingUpdate();
+
     void onUpdateTimeMillis();
 
     void onUpdateBuffer(@PlayerType.StateType.Value int status);
