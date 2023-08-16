@@ -77,45 +77,50 @@ public @interface PlayerType {
     @Keep
     @interface StateType {
         int STATE_INIT = 3_001; // 播放未开始，即将进行
-        int STATE_INIT_SEEK = 3_002; // 显示进度条
-        int STATE_CLEAN = 3_003; //
-        int STATE_LOADING_START = 3_004; // 开始转圈
-        int STATE_LOADING_STOP = 3_005; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int STATE_KERNEL_STOP = 3_006;
-        int STATE_KERNEL_RESUME = 3_007; // 开始播放
-        int STATE_START = 3_008; // 开始播放
-        int STATE_START_SEEK = 3_009; // 开始播放
-        int STATE_END = 3_010; // 播放完成
-        int STATE_PAUSE = 3_011; // 暂停播放
-        int STATE_PAUSE_IGNORE = 3_012; // 暂停播放
-        int STATE_RESUME = 3_013; // 恢复播放
-        int STATE_RESUME_IGNORE = 3_014; // 恢复播放
-        int STATE_RESTAER = 3_015; // 重播一次
-        int STATE_CLOSE = 3_016; // 暂停播放
-        int STATE_BUFFERING_START = 3_017; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-        int STATE_BUFFERING_STOP = 3_018; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int STATE_START_ABORT = 3_019; // 开始播放中止
-        int STATE_ONCE_LIVE = 3_020; // 即将开播
-        int STATE_FAST_FORWARD_START = 3_021; // 快进
-        int STATE_FAST_FORWARD_STOP = 3_022; // 快进
-        int STATE_FAST_REWIND_START = 3_023; // 快进
-        int STATE_FAST_REWIND_STOP = 3_024; // 快进
+        int STATE_INIT_RETEY_BUFFERING = 3_002; // 显示进度条
+        int STATE_INIT_SEEK = 3_003; // 显示进度条
+        int STATE_CLEAN = 3_004; //
+        int STATE_LOADING_START = 3_005; // 开始转圈
+        int STATE_LOADING_STOP = 3_006; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
+        int STATE_KERNEL_STOP = 3_007;
+        int STATE_KERNEL_RESUME = 3_008; // 开始播放
+        int STATE_START = 3_009; // 开始播放
+        int STATE_START_RETRY = 3_010; // 开始播放
+        int STATE_START_SEEK = 3_011; // 开始播放
+        int STATE_END = 3_012; // 播放完成
+        int STATE_PAUSE = 3_013; // 暂停播放
+        int STATE_PAUSE_IGNORE = 3_014; // 暂停播放
+        int STATE_RESUME = 3_015; // 恢复播放
+        int STATE_RESUME_IGNORE = 3_016; // 恢复播放
+        int STATE_RESTAER = 3_017; // 重播一次
+        int STATE_CLOSE = 3_018; // 暂停播放
+        int STATE_BUFFERING_START = 3_019; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
+        int STATE_BUFFERING_STOP = 3_020; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
+        int STATE_START_ABORT = 3_021; // 开始播放中止
+        int STATE_ONCE_LIVE = 3_022; // 即将开播
+        int STATE_FAST_FORWARD_START = 3_023; // 快进
+        int STATE_FAST_FORWARD_STOP = 3_024; // 快进
+        int STATE_FAST_REWIND_START = 3_025; // 快进
+        int STATE_FAST_REWIND_STOP = 3_026; // 快进
 
-        int STATE_ERROR = 3_025; // 错误
-        int STATE_ERROR_IGNORE = 3_026; // 错误
-        int STATE_COMPONENT_SEEK_SHOW = 3_027; // 显示进度条
-        int STATE_RELEASE = 3_028;
-        int STATE_RELEASE_EXCEPTION = 3_029;
+        int STATE_ERROR = 3_027; // 错误
+        int STATE_ERROR_IGNORE = 3_028; // 错误
+        int STATE_COMPONENT_SEEK_SHOW = 3_029; // 显示进度条
+        int STATE_RELEASE = 3_030;
+        int STATE_RELEASE_EXCEPTION = 3_031;
 
-        int STATE_FULL_START = 3_030;
-        int STATE_FULL_STOP = 3_031;
-        int STATE_FLOAT_START = 3_032;
-        int STATE_FLOAT_STOP = 3_033;
+        int STATE_FULL_START = 3_032;
+        int STATE_FULL_STOP = 3_033;
+        int STATE_FLOAT_START = 3_034;
+        int STATE_FLOAT_STOP = 3_035;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
+                STATE_INIT,
+                STATE_INIT_RETEY_BUFFERING,
+                STATE_INIT_SEEK,
                 STATE_FULL_START,
                 STATE_FULL_STOP,
                 STATE_FLOAT_START,
@@ -124,12 +129,11 @@ public @interface PlayerType {
                 STATE_FAST_FORWARD_STOP,
                 STATE_FAST_REWIND_START,
                 STATE_FAST_REWIND_STOP,
-                STATE_INIT,
-                STATE_INIT_SEEK,
                 STATE_CLEAN,
                 STATE_KERNEL_STOP,
                 STATE_KERNEL_RESUME,
                 STATE_START,
+                STATE_START_RETRY,
                 STATE_START_SEEK,
                 STATE_PAUSE,
                 STATE_PAUSE_IGNORE,
@@ -244,8 +248,10 @@ public @interface PlayerType {
         int EVENT_ERROR_SOURCE = 7_003;
         int EVENT_ERROR_PARSE = 7_004;
         int EVENT_ERROR_NET = 7_005;
-        int EVENT_LOADING_START = 7_006; // 开始转圈
-        int EVENT_LOADING_STOP = 7_007; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放
+        int EVENT_ERROR_IGNORE = 7_006;
+        int EVENT_LOADING_START = 7_007; // 开始转圈
+        int EVENT_LOADING_START_IGNORE = 7_008; // 开始转圈
+        int EVENT_LOADING_STOP = 7_009; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放
         // 播放结束
         //        // 开始渲染视频画面
 //        int EVENT_VIDEO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
@@ -254,8 +260,9 @@ public @interface PlayerType {
 //        // 开始渲染视频画面
 //        int EVENT_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
         // 开始渲染视频画面
-        int EVENT_VIDEO_END = 7_008;
+        int EVENT_VIDEO_END = 7_010;
         int EVENT_VIDEO_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
+        int EVENT_VIDEO_START_RETRY = 7_011;
         int EVENT_VIDEO_START_903 = 903;
         int EVENT_VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
         //        int EVENT_VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
@@ -281,13 +288,16 @@ public @interface PlayerType {
                 EVENT_ERROR_SOURCE,
                 EVENT_ERROR_PARSE,
                 EVENT_ERROR_NET,
+                EVENT_ERROR_IGNORE,
                 EVENT_OPEN_INPUT,
                 EVENT_LOADING_START,
+                EVENT_LOADING_START_IGNORE,
                 EVENT_LOADING_STOP,
 //                EVENT_VIDEO_SEEK_RENDERING_START,
 //                EVENT_AUDIO_SEEK_RENDERING_START,
 //                EVENT_AUDIO_RENDERING_START,
                 EVENT_VIDEO_START,
+                EVENT_VIDEO_START_RETRY,
                 EVENT_VIDEO_START_903,
                 EVENT_VIDEO_START_SEEK,
                 EVENT_VIDEO_END,

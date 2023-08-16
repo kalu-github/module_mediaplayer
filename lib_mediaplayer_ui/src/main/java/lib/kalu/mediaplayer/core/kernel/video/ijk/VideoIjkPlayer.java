@@ -33,8 +33,8 @@ public final class VideoIjkPlayer extends BasePlayer {
     private boolean mUseMediaCodec;
     private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer = null;
 
-    public VideoIjkPlayer(@NonNull boolean useMediaCodec, @NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
-        super(musicApi, eventApi);
+    public VideoIjkPlayer(@NonNull boolean useMediaCodec, @NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi, @NonNull boolean retryBuffering) {
+        super(musicApi, eventApi, retryBuffering);
         mUseMediaCodec = useMediaCodec;
     }
 
@@ -522,6 +522,11 @@ public final class VideoIjkPlayer extends BasePlayer {
     @Override
     public boolean isPlayWhenReady() {
         return mPlayWhenReady;
+    }
+
+    @Override
+    public void setRetryBuffering(@NonNull boolean retryBuffering) {
+
     }
 
     @Override

@@ -30,10 +30,9 @@ public final class VideoVlcPlayer extends BasePlayer {
     private lib.kalu.vlc.widget.VlcPlayer mVlcPlayer;
     private lib.kalu.vlc.widget.OnVlcInfoChangeListener mVlcPlayerListener;
 
-    public VideoVlcPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
-        super(musicApi, eventApi);
+    public VideoVlcPlayer(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent eventApi, @NonNull boolean retryBuffering) {
+        super(playerApi, eventApi, retryBuffering);
     }
-
 
     @NonNull
     @Override
@@ -277,6 +276,11 @@ public final class VideoVlcPlayer extends BasePlayer {
     @Override
     public boolean isPlayWhenReady() {
         return mPlayWhenReady;
+    }
+
+    @Override
+    public void setRetryBuffering(@NonNull boolean retryBuffering) {
+
     }
 
     /**

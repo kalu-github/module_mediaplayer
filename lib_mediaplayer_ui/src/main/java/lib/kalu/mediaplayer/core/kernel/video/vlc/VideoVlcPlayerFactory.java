@@ -18,7 +18,7 @@ public class VideoVlcPlayerFactory implements KernelFactory<VideoVlcPlayer> {
     }
 
     @Override
-    public VideoVlcPlayer createKernel(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent event) {
-        return new VideoVlcPlayer(playerApi, event);
+    public VideoVlcPlayer createKernel(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent event, @NonNull boolean retryBuffering) {
+        return new VideoVlcPlayer(playerApi, event, retryBuffering);
     }
 }

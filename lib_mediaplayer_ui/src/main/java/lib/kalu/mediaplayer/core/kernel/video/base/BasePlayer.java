@@ -16,23 +16,24 @@ public abstract class BasePlayer implements KernelApi {
     private KernelApiEvent eventApi;
     private PlayerApi playerApi;
 
-    public BasePlayer(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent eventApi) {
+    public BasePlayer(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent eventApi, @NonNull boolean retryBuffering) {
         this.playerApi = playerApi;
         this.eventApi = eventApi;
     }
 
-    @SuppressLint("StaticFieldLeak")
-    @Override
-    public void onUpdateBufferingUpdate() {
-        try {
-            if (null == playerApi)
-                throw new Exception("playerApi error: null");
-            playerApi.stop(false, false);
-            playerApi.restart();
-        } catch (Exception e) {
-            MPLogUtil.log("BasePlayer => onUpdateBufferingUpdate => " + e.getMessage());
-        }
-    }
+//    @SuppressLint("StaticFieldLeak")
+//    @Override
+//    public void onUpdateBufferingUpdate() {
+//        try {
+//            if (null == playerApi)
+//                throw new Exception("playerApi error: null");
+//            playerApi.pause();
+//            playerApi.release(false, false, false);
+//            playerApi.restart();
+//        } catch (Exception e) {
+//            MPLogUtil.log("BasePlayer => onUpdateBufferingUpdate => " + e.getMessage());
+//        }
+//    }
 
     @Override
     public void onUpdateBuffer(int status) {

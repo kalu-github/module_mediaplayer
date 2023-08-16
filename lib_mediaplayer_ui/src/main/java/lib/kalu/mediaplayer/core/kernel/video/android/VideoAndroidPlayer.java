@@ -33,9 +33,10 @@ public final class VideoAndroidPlayer extends BasePlayer {
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
 
-    public VideoAndroidPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
-        super(musicApi, eventApi);
+    public VideoAndroidPlayer(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent eventApi, @NonNull boolean retryBuffering) {
+        super(playerApi, eventApi, retryBuffering);
     }
+
 
     @NonNull
     @Override
@@ -314,6 +315,11 @@ public final class VideoAndroidPlayer extends BasePlayer {
     @Override
     public boolean isPlayWhenReady() {
         return mPlayWhenReady;
+    }
+
+    @Override
+    public void setRetryBuffering(@NonNull boolean retryBuffering) {
+
     }
 
     @Override

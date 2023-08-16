@@ -50,7 +50,7 @@ public final class KernelFactoryManager {
         }
     }
 
-    public static KernelApi getKernel(@NonNull PlayerApi playerApi, @PlayerType.KernelType.Value int type, @NonNull KernelApiEvent event) {
-        return getFactory(type).createKernel(playerApi, event);
+    public static KernelApi getKernel(@NonNull PlayerApi playerApi, @NonNull boolean retryBuffering, @PlayerType.KernelType.Value int kernelType, @NonNull KernelApiEvent event) {
+        return getFactory(kernelType).createKernel(playerApi, event, retryBuffering);
     }
 }

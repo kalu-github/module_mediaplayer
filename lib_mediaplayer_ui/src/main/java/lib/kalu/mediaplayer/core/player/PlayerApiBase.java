@@ -354,5 +354,7 @@ interface PlayerApiBase {
 
     void start(@NonNull String url);
 
-    void start(@NonNull StartBuilder builder, @NonNull String url);
+    void start(@NonNull StartBuilder builder, @NonNull String playUrl);
+
+    void start(@NonNull StartBuilder builder, @NonNull String playUrl, @NonNull boolean retryBuffering);
 }

@@ -11,5 +11,5 @@ import lib.kalu.mediaplayer.core.player.PlayerApi;
  */
 @Keep
 public interface KernelFactory<T extends KernelApi> {
-    T createKernel(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent event);
+    T createKernel(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent event,@NonNull boolean retryBuffering);
 }

@@ -7,6 +7,8 @@ import android.view.SurfaceHolder;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import com.google.android.exoplayer2.ExoPlayer;
+
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -20,8 +22,6 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 public interface KernelApi extends KernelApiBase,
         KernelApiEvent {
 
-    void onUpdateBufferingUpdate();
-
     void onUpdateTimeMillis();
 
     void onUpdateBuffer(@PlayerType.StateType.Value int status);
@@ -34,6 +34,9 @@ public interface KernelApi extends KernelApiBase,
     void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters);
 
     void startDecoder(@NonNull Context context, @NonNull String url);
+
+    default void initExoFFmpeg(@NonNull Context context,@NonNull ExoPlayer.Builder exoBuilder) {
+    }
 
     default void setOptions() {
     }
@@ -87,4 +90,6 @@ public interface KernelApi extends KernelApiBase,
     void setPlayWhenReady(boolean playWhenReady);
 
     boolean isPlayWhenReady();
+
+    void setRetryBuffering(@NonNull boolean retryBuffering);
 }

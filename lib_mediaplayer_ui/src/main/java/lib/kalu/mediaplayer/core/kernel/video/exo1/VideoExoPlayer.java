@@ -30,9 +30,10 @@ public final class VideoExoPlayer extends BasePlayer {
     private boolean mPrepared = false;
     private DemoPlayer mExoPlayer;
 
-    public VideoExoPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
-        super(musicApi, eventApi);
+    public VideoExoPlayer(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent eventApi, @NonNull boolean retryBuffering) {
+        super(playerApi, eventApi, retryBuffering);
     }
+
 
     @NonNull
     @Override
@@ -233,6 +234,11 @@ public final class VideoExoPlayer extends BasePlayer {
     @Override
     public boolean isPlayWhenReady() {
         return mPlayWhenReady;
+    }
+
+    @Override
+    public void setRetryBuffering(@NonNull boolean retryBuffering) {
+
     }
 
     /**

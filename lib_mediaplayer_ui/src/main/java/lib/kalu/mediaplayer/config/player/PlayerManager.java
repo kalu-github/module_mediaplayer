@@ -43,8 +43,8 @@ public final class PlayerManager {
         return this;
     }
 
-    public PlayerManager setExoBufferingTimeoutSeconds(@NonNull int v) {
-        this.mPlayerBuilder.setExoBufferingTimeoutSeconds(v);
+    public PlayerManager setBufferingTimeoutSeconds(@NonNull int v) {
+        this.mPlayerBuilder.setBufferingTimeoutSeconds(v);
         return this;
     }
 

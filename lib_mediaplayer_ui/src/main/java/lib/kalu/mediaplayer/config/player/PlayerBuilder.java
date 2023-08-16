@@ -21,7 +21,7 @@ public final class PlayerBuilder {
     private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
     private boolean exoUseOkhttp;
     private int exoUseOkhttpTimeoutSeconds;
-    private int exoBufferingTimeoutSeconds;
+    private int bufferingTimeoutSeconds;
     @PlayerType.KernelType.Value
     private int videoKernel; // 播放器内核
     @PlayerType.RenderType.Value
@@ -54,8 +54,8 @@ public final class PlayerBuilder {
         return exoUseOkhttpTimeoutSeconds;
     }
 
-    public int getExoBufferingTimeoutSeconds() {
-        return exoBufferingTimeoutSeconds;
+    public int getbufferingTimeoutSeconds() {
+        return bufferingTimeoutSeconds;
     }
 
     public int getExoFFmpeg() {
@@ -124,7 +124,7 @@ public final class PlayerBuilder {
         exoFFmpeg = builder.exoFFmpeg;
         exoUseOkhttp = builder.exoUseOkhttp;
         exoUseOkhttpTimeoutSeconds = builder.exoUseOkhttpTimeoutSeconds;
-        exoBufferingTimeoutSeconds = builder.exoBufferingTimeoutSeconds;
+        bufferingTimeoutSeconds = builder.bufferingTimeoutSeconds;
         videoKernel = builder.videoKernel;
         videoRender = builder.videoRender;
         videoScaleType = builder.videoScaleType;
@@ -146,7 +146,7 @@ public final class PlayerBuilder {
         builder.setExoFFmpeg(this.exoFFmpeg);
         builder.setExoUseOkhttp(this.exoUseOkhttp);
         builder.setExoUseOkhttpTimeoutSeconds(this.exoUseOkhttpTimeoutSeconds);
-        builder.setExoBufferingTimeoutSeconds(this.exoBufferingTimeoutSeconds);
+        builder.setBufferingTimeoutSeconds(this.bufferingTimeoutSeconds);
         builder.setVideoKernel(this.videoKernel);
         builder.setVideoRender(this.videoRender);
         builder.setVideoScaleType(this.videoScaleType);
@@ -172,7 +172,7 @@ public final class PlayerBuilder {
         private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
         private boolean exoUseOkhttp = true;
         private int exoUseOkhttpTimeoutSeconds = 10;
-        private int exoBufferingTimeoutSeconds = 0;
+        private int bufferingTimeoutSeconds = 0;
         @PlayerType.KernelType.Value
         private int videoKernel = PlayerType.KernelType.ANDROID; // 播放器内核
         @PlayerType.RenderType.Value
@@ -203,8 +203,8 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public Builder setExoBufferingTimeoutSeconds(@NonNull int v) {
-            exoBufferingTimeoutSeconds = v;
+        public Builder setBufferingTimeoutSeconds(@NonNull int v) {
+            bufferingTimeoutSeconds = v;
             return this;
         }
 

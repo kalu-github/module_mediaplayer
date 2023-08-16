@@ -55,28 +55,37 @@ interface PlayerApiKernel extends PlayerApiListener,
     default void start(@NonNull String url) {
         StartBuilder.Builder builder = new StartBuilder.Builder();
         StartBuilder build = builder.build();
-        start(build, url);
+        start(build, url, false);
     }
 
+
     default void start(@NonNull StartBuilder builder, @NonNull String playUrl) {
+        start(builder, playUrl, false);
+    }
+
+    @Override
+    default void start(@NonNull StartBuilder startBuilder, @NonNull String playUrl, @NonNull boolean retryBuffering) {
         try {
             if (null == playUrl || playUrl.length() == 0)
                 throw new Exception("playUrl error: " + playUrl);
-            MPLogUtil.log("PlayerApiKernel => start = > playUrl = " + playUrl);
-            callPlayerEvent(PlayerType.StateType.STATE_INIT);
+            if (retryBuffering) {
+                callPlayerEvent(PlayerType.StateType.STATE_INIT_RETEY_BUFFERING);
+            } else {
+                callPlayerEvent(PlayerType.StateType.STATE_INIT);
+            }
             // 1
-            PlayerBuilder config = PlayerManager.getInstance().getConfig();
-            MPLogUtil.setLogger(config);
+            PlayerBuilder playerBuilder = PlayerManager.getInstance().getConfig();
+            MPLogUtil.setLogger(playerBuilder);
             // 5
-            createVideoKernel(builder, config);
+            createVideoKernel(startBuilder, playerBuilder, retryBuffering);
             // 4
             createVideoRender();
             // 6
-            initVideoKernel(builder, playUrl);
+            initVideoKernel(startBuilder, playUrl);
             // 7
             attachVideoRender();
             // 8
-            updatePlayerData(builder, playUrl);
+            updatePlayerData(startBuilder, playUrl);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => start => " + e.getMessage());
         }
@@ -231,6 +240,10 @@ interface PlayerApiKernel extends PlayerApiListener,
     }
 
     default void restart() {
+        restart(false);
+    }
+
+    default void restart(@NonNull boolean retryBuffering) {
         try {
             String url = getUrl();
             if (null == url || url.length() == 0)
@@ -239,7 +252,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             if (null == builder)
                 throw new Exception("builder error: null");
             callPlayerEvent(PlayerType.StateType.STATE_RESTAER);
-            start(builder, url);
+            start(builder, url, retryBuffering);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => restart => " + e.getMessage());
         }
@@ -475,6 +488,16 @@ interface PlayerApiKernel extends PlayerApiListener,
         }
     }
 
+    default void setKernelRetryBuffering(boolean retryBuffering) {
+        try {
+            checkVideoKernel();
+            KernelApi kernel = getVideoKernel();
+            kernel.setRetryBuffering(retryBuffering);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiKernel => setKernelRetryBuffering => " + e.getMessage());
+        }
+    }
+
     default void pauseVideoKernel(@NonNull boolean ignore) {
         setPlayWhenReady(false);
         try {
@@ -564,7 +587,7 @@ interface PlayerApiKernel extends PlayerApiListener,
         }
     }
 
-    default void createVideoKernel(@NonNull StartBuilder builder, @NonNull PlayerBuilder config) {
+    default void createVideoKernel(@NonNull StartBuilder builder, @NonNull PlayerBuilder playerBuilder, @NonNull boolean retryBuffering) {
 
         // 1
         try {
@@ -577,7 +600,7 @@ interface PlayerApiKernel extends PlayerApiListener,
         // 2
         try {
             int type = PlayerManager.getInstance().getConfig().getVideoKernel();
-            KernelApi kernel = KernelFactoryManager.getKernel((PlayerApi) this, type, new KernelApiEvent() {
+            KernelApi kernel = KernelFactoryManager.getKernel((PlayerApi) this, retryBuffering, type, new KernelApiEvent() {
 
                 @Override
                 public void onUpdateTimeMillis(@NonNull boolean isLooping, @NonNull long max, @NonNull long seek, @NonNull long position, @NonNull long duration) {
@@ -601,7 +624,7 @@ interface PlayerApiKernel extends PlayerApiListener,
                             // 1
                             hideReal();
                             // 2
-                            boolean seekHelp = config.isSeekHelp();
+                            boolean seekHelp = playerBuilder.isSeekHelp();
                             if (seekHelp) {
                                 seekToVideoKernel(1);
                             } else {
@@ -645,10 +668,12 @@ interface PlayerApiKernel extends PlayerApiListener,
                         // 缓冲开始
                         case PlayerType.EventType.EVENT_BUFFERING_START:
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
+                            startBufferingHandler();
                             break;
                         // 缓冲结束
                         case PlayerType.EventType.EVENT_BUFFERING_STOP:
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
+                            clearBufferingHandler();
                             break;
                         // 播放开始-快进
                         case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
@@ -672,10 +697,19 @@ interface PlayerApiKernel extends PlayerApiListener,
                             checkVideoReal();
                             break;
                         // 播放开始
+                        case PlayerType.EventType.EVENT_VIDEO_START_RETRY:
+                            callPlayerEvent(PlayerType.StateType.STATE_START_RETRY);
+                            // step2
+                            showVideoReal();
+                            // step3
+                            checkVideoReal();
+                            // step5
+                            MPLogUtil.log("PlayerApiKernel => onEvent => event_video_start_retry => playWhenReady = " + isPlayWhenReady());
+                            break;
+                        // 播放开始
                         case PlayerType.EventType.EVENT_VIDEO_START:
 //                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
-
                             // 埋点
                             onBuriedEventPlaying();
                             callPlayerEvent(PlayerType.StateType.STATE_START);
@@ -690,18 +724,22 @@ interface PlayerApiKernel extends PlayerApiListener,
                             }
                             break;
                         // 播放错误
+                        case PlayerType.EventType.EVENT_ERROR_IGNORE:
+                            // 埋点
+                            onBuriedEventError();
+                            setScreenKeep(false);
+                            callPlayerEvent(PlayerType.StateType.STATE_ERROR_IGNORE);
+                            break;
+                        // 播放错误
                         case PlayerType.EventType.EVENT_ERROR_URL:
                         case PlayerType.EventType.EVENT_ERROR_RETRY:
                         case PlayerType.EventType.EVENT_ERROR_SOURCE:
                         case PlayerType.EventType.EVENT_ERROR_PARSE:
                         case PlayerType.EventType.EVENT_ERROR_NET:
-
                             // 埋点
                             onBuriedEventError();
-
                             setScreenKeep(false);
                             callPlayerEvent(PlayerType.StateType.STATE_ERROR);
-
                             break;
                         // 播放结束
                         case PlayerType.EventType.EVENT_VIDEO_END:
@@ -727,7 +765,6 @@ interface PlayerApiKernel extends PlayerApiListener,
                             else {
                                 playEnd();
                             }
-
                             break;
                     }
                 }
@@ -742,7 +779,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             // 4
             setVideoKernel(kernel);
             // 5
-            createVideoDecoder(config);
+            createVideoDecoder(playerBuilder);
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => createKernel => " + e.getMessage());
         }
@@ -801,4 +838,46 @@ interface PlayerApiKernel extends PlayerApiListener,
 //            return null;
 //        }
 //    }
+
+    /*******************/
+
+
+    Handler[] mBufferingHandler = new Handler[1];
+
+    default void startBufferingHandler() {
+        try {
+            clearBufferingHandler();
+            int bufferingTimeoutSeconds = PlayerManager.getInstance().getConfig().getbufferingTimeoutSeconds();
+            if (bufferingTimeoutSeconds <= 0)
+                throw new Exception("bufferingTimeoutSeconds warning: " + bufferingTimeoutSeconds);
+            mBufferingHandler[0] = new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(@NonNull Message msg) {
+                    super.handleMessage(msg);
+                    if (msg.what == 7677) {
+                        setKernelRetryBuffering(true);
+                        pause(true);
+                        stop(false, false);
+                        restart(true);
+                        callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
+                    }
+                }
+            };
+            mBufferingHandler[0].sendEmptyMessageDelayed(7677, bufferingTimeoutSeconds * 1000);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiKernel => startBufferingHandler => " + e.getMessage());
+        }
+    }
+
+    default void clearBufferingHandler() {
+        try {
+            if (null == mBufferingHandler[0])
+                throw new Exception("mHandler warning: null");
+            mBufferingHandler[0].removeMessages(7677);
+            mBufferingHandler[0].removeCallbacksAndMessages(null);
+            mBufferingHandler[0] = null;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiKernel => clearBufferingHandler => " + e.getMessage());
+        }
+    }
 }

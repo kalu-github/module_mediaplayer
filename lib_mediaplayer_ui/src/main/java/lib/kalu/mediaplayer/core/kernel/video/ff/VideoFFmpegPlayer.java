@@ -29,8 +29,8 @@ public final class VideoFFmpegPlayer extends BasePlayer {
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
 
-    public VideoFFmpegPlayer(@NonNull PlayerApi musicApi, @NonNull KernelApiEvent eventApi) {
-        super(musicApi, eventApi);
+    public VideoFFmpegPlayer(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent eventApi, @NonNull boolean retryBuffering) {
+        super(playerApi, eventApi, retryBuffering);
     }
 
     @NonNull
@@ -284,6 +284,11 @@ public final class VideoFFmpegPlayer extends BasePlayer {
     @Override
     public boolean isPlayWhenReady() {
         return mPlayWhenReady;
+    }
+
+    @Override
+    public void setRetryBuffering(@NonNull boolean retryBuffering) {
+
     }
 
     @Override

@@ -18,7 +18,7 @@ public final class VideoExoPlayer2Factory implements KernelFactory<VideoExoPlaye
     }
 
     @Override
-    public VideoExoPlayer2 createKernel(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent event) {
-        return new VideoExoPlayer2(playerApi, event);
+    public VideoExoPlayer2 createKernel(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent event, @NonNull boolean retryBuffering) {
+        return new VideoExoPlayer2(playerApi, event, retryBuffering);
     }
 }

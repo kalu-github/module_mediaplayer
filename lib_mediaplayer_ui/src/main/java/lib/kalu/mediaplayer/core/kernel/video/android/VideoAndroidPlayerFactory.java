@@ -22,7 +22,7 @@ public class VideoAndroidPlayerFactory implements KernelFactory<VideoAndroidPlay
     }
 
     @Override
-    public VideoAndroidPlayer createKernel(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent event) {
-        return new VideoAndroidPlayer(playerApi, event);
+    public VideoAndroidPlayer createKernel(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent event, @NonNull boolean retryBuffering) {
+        return new VideoAndroidPlayer(playerApi, event, retryBuffering);
     }
 }
