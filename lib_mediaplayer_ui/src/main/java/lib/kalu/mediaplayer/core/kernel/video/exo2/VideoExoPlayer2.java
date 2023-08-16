@@ -820,6 +820,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
         try {
             clearBufferingHandler();
             int bufferingTimeoutSeconds = PlayerManager.getInstance().getConfig().getExoBufferingTimeoutSeconds();
+            MPLogUtil.log("VideoExoPlayer2 => startBufferingHandler => bufferingTimeoutSeconds = " + bufferingTimeoutSeconds);
             if (bufferingTimeoutSeconds <= 0)
                 throw new Exception("bufferingTimeoutSeconds warning: " + bufferingTimeoutSeconds);
             mHandler = new Handler(Looper.getMainLooper()) {
@@ -839,6 +840,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
 
     private void clearBufferingHandler() {
         try {
+            MPLogUtil.log("VideoExoPlayer2 => clearBufferingHandler => mHandler = " + mHandler);
             if (null == mHandler)
                 throw new Exception("mHandler warning: null");
             mHandler.removeMessages(7677);
