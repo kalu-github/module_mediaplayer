@@ -589,20 +589,9 @@ public final class VideoExoPlayer2 extends BasePlayer {
             mSpeedPlaybackParameters = null;
             mExoPlayer.setPlayWhenReady(false);
             mExoPlayer.setVideoSurface(null);
-            if (isMainThread) {
-                mExoPlayer.release();
-                mExoPlayer = null;
-                mPrepared = false;
-            } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mExoPlayer.release();
-                        mExoPlayer = null;
-                        mPrepared = false;
-                    }
-                }).start();
-            }
+            mExoPlayer.release();
+            mExoPlayer = null;
+            mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer2 => release => " + e.getMessage());
         }
@@ -642,16 +631,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            if (isMainThread) {
-                mExoPlayer.stop();
-            } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mExoPlayer.stop();
-                    }
-                }).start();
-            }
+            mExoPlayer.stop();
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer2 => stop => " + e.getMessage());
         }
@@ -828,6 +808,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
                 public void handleMessage(@NonNull Message msg) {
                     super.handleMessage(msg);
                     if (msg.what == 7677) {
+                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
                         onUpdateBufferingUpdate();
                     }
                 }

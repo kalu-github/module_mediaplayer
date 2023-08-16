@@ -1,5 +1,8 @@
 package lib.kalu.mediaplayer.core.kernel.video.base;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
+
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -18,12 +21,13 @@ public abstract class BasePlayer implements KernelApi {
         this.eventApi = eventApi;
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     public void onUpdateBufferingUpdate() {
         try {
             if (null == playerApi)
                 throw new Exception("playerApi error: null");
-            playerApi.release(false, false, false);
+            playerApi.stop(false, false);
             playerApi.restart();
         } catch (Exception e) {
             MPLogUtil.log("BasePlayer => onUpdateBufferingUpdate => " + e.getMessage());

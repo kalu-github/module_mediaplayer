@@ -171,8 +171,8 @@ public final class PlayerBuilder {
         @PlayerType.FFmpegType.Value
         private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
         private boolean exoUseOkhttp = true;
-        private int exoUseOkhttpTimeoutSeconds = 4;
-        private int exoBufferingTimeoutSeconds = 20;
+        private int exoUseOkhttpTimeoutSeconds = 10;
+        private int exoBufferingTimeoutSeconds = 0;
         @PlayerType.KernelType.Value
         private int videoKernel = PlayerType.KernelType.ANDROID; // 播放器内核
         @PlayerType.RenderType.Value
