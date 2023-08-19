@@ -139,7 +139,7 @@ public final class VideoIjkPlayer extends BasePlayer {
             // SDL_FCC_RV32 ---- bpp=32, RGBX8888
             mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV16);
             // 允许的最大播放帧率，当视频的实际帧率大于这个数值时，将丢弃部分视频帧 => [-1,121]
-            mIjkPlayer.setOption(player, "max-fps", 16);
+            mIjkPlayer.setOption(player, "max-fps", 30);
             // 是否播放准备工作完成后自动开始播放
             mIjkPlayer.setOption(player, "start-on-prepared", (mPlayWhenReady ? 1 : 0));
             // 视频帧队列大小 => [3,16]
