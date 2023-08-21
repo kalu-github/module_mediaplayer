@@ -304,12 +304,27 @@ interface PlayerApiKernel extends PlayerApiListener,
         }
     }
 
-    default void updateSeek() {
+    default void setSeek(@NonNull long position) {
         try {
-            KernelApi kernel = getVideoKernel();
-            long position = kernel.getPosition();
+            if (position < 0)
+                throw new Exception("position error: " + position);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_position, position);
         } catch (Exception e) {
+            MPLogUtil.log("PlayerApiKernel => setSeek => " + e.getMessage());
+        }
+    }
+
+    default void refeshSeek() {
+        try {
+            KernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("kernel error: null");
+            long position = kernel.getPosition();
+            if (position < 0)
+                throw new Exception("position error: " + position);
+            setSeek(position);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApiKernel => setSeek => " + e.getMessage());
         }
     }
 
@@ -499,7 +514,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             // 3
             getVideoKernel().pause();
             // 4
-            updateSeek();
+            refeshSeek();
             // 5
             setScreenKeep(false);
             callPlayerEvent(ignore ? PlayerType.StateType.STATE_PAUSE_IGNORE : PlayerType.StateType.STATE_PAUSE);
@@ -657,16 +672,17 @@ interface PlayerApiKernel extends PlayerApiListener,
                         // 初始化完成 => loading stop
                         case PlayerType.EventType.EVENT_LOADING_STOP:
                             callPlayerEvent(PlayerType.StateType.STATE_LOADING_STOP);
+                            startCheckBuffering();
                             break;
                         // 缓冲开始
                         case PlayerType.EventType.EVENT_BUFFERING_START:
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
-                            startBufferingHandler();
+                            startCheckBuffering();
                             break;
                         // 缓冲结束
                         case PlayerType.EventType.EVENT_BUFFERING_STOP:
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
-                            clearBufferingHandler();
+                            stopCheckBuffering();
                             break;
                         // 播放开始-快进
                         case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
@@ -835,23 +851,40 @@ interface PlayerApiKernel extends PlayerApiListener,
     /*******************/
 
 
-    Handler[] mBufferingHandler = new Handler[1];
+    Handler[] mHandlerBuffering = new Handler[1];
 
-    default void startBufferingHandler() {
+    default void startCheckBuffering() {
         try {
-            clearBufferingHandler();
+            stopCheckBuffering();
             int bufferingTimeoutSeconds = PlayerManager.getInstance().getConfig().getbufferingTimeoutSeconds();
             if (bufferingTimeoutSeconds <= 0)
                 throw new Exception("bufferingTimeoutSeconds warning: " + bufferingTimeoutSeconds);
-            mBufferingHandler[0] = new Handler(Looper.getMainLooper()) {
+            mHandlerBuffering[0] = new Handler(Looper.getMainLooper()) {
                 @Override
                 public void handleMessage(@NonNull Message msg) {
                     super.handleMessage(msg);
                     if (msg.what == 7677) {
-                        // 点播
-                        if (!isLive()) {
-                            updateSeek();
+//                        long position = getPosition();
+//                        long duration = getDuration();
+
+                        try {
+                            long seek;
+                            // 直播
+                            if (isLive()) {
+                                seek = 0;
+                            }
+                            // 点播
+                            else {
+                                seek = getPosition();
+                            }
+                            if (seek < 0) {
+                                seek = 0;
+                            }
+                            setSeek(seek);
+                        } catch (Exception e) {
+                            MPLogUtil.log("PlayerApiKernel => startCheckBuffering => checkSeek => " + e.getMessage());
                         }
+
                         setKernelRetryBuffering(true);
                         pause(true);
                         stop(false, false);
@@ -860,21 +893,21 @@ interface PlayerApiKernel extends PlayerApiListener,
                     }
                 }
             };
-            mBufferingHandler[0].sendEmptyMessageDelayed(7677, bufferingTimeoutSeconds * 1000);
+            mHandlerBuffering[0].sendEmptyMessageDelayed(7677, bufferingTimeoutSeconds * 1000);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => startBufferingHandler => " + e.getMessage());
+            MPLogUtil.log("PlayerApiKernel => startCheckBuffering => " + e.getMessage());
         }
     }
 
-    default void clearBufferingHandler() {
+    default void stopCheckBuffering() {
         try {
-            if (null == mBufferingHandler[0])
+            if (null == mHandlerBuffering[0])
                 throw new Exception("mHandler warning: null");
-            mBufferingHandler[0].removeMessages(7677);
-            mBufferingHandler[0].removeCallbacksAndMessages(null);
-            mBufferingHandler[0] = null;
+            mHandlerBuffering[0].removeMessages(7677);
+            mHandlerBuffering[0].removeCallbacksAndMessages(null);
+            mHandlerBuffering[0] = null;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiKernel => clearBufferingHandler => " + e.getMessage());
+            MPLogUtil.log("PlayerApiKernel => stopCheckBuffering => " + e.getMessage());
         }
     }
 }
