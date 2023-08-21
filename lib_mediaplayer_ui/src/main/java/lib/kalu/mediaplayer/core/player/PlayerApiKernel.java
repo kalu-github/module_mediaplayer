@@ -1,9 +1,5 @@
 package lib.kalu.mediaplayer.core.player;
 
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -11,8 +7,6 @@ import android.view.View;
 
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
-
-import java.util.HashMap;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
@@ -23,7 +17,6 @@ import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.KernelFactoryManager;
 import lib.kalu.mediaplayer.core.render.RenderApi;
-import lib.kalu.mediaplayer.util.BitmapUtil;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 interface PlayerApiKernel extends PlayerApiListener,
@@ -855,6 +848,10 @@ interface PlayerApiKernel extends PlayerApiListener,
                 public void handleMessage(@NonNull Message msg) {
                     super.handleMessage(msg);
                     if (msg.what == 7677) {
+                        // 点播
+                        if (!isLive()) {
+                            updateSeek();
+                        }
                         setKernelRetryBuffering(true);
                         pause(true);
                         stop(false, false);
