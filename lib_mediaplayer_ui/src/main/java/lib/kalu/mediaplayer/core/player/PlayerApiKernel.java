@@ -672,7 +672,6 @@ interface PlayerApiKernel extends PlayerApiListener,
                         // 初始化完成 => loading stop
                         case PlayerType.EventType.EVENT_LOADING_STOP:
                             callPlayerEvent(PlayerType.StateType.STATE_LOADING_STOP);
-                            startCheckBuffering();
                             break;
                         // 缓冲开始
                         case PlayerType.EventType.EVENT_BUFFERING_START:
