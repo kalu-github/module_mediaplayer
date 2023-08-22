@@ -171,14 +171,18 @@ interface PlayerApiKernel extends PlayerApiListener,
 
 
     default void release() {
-        release(true, true, true);
+        release(true, true, true, true);
     }
 
     default void release(@NonNull boolean releaseTag, boolean isFromUser) {
-        release(releaseTag, isFromUser, true);
+        release(true, releaseTag, isFromUser, true);
     }
 
     default void release(@NonNull boolean releaseTag, boolean isFromUser, boolean isMainThread) {
+        release(true, releaseTag, isFromUser, isMainThread);
+    }
+
+    default void release(@NonNull boolean clearListener, @NonNull boolean releaseTag, boolean isFromUser, boolean isMainThread) {
         try {
             checkVideoKernel();
             if (releaseTag) {
@@ -187,7 +191,9 @@ interface PlayerApiKernel extends PlayerApiListener,
             }
             releaseVideoRender();
             releaseVideoKernel(isFromUser, isMainThread);
-            cleanPlayerChangeListener();
+            if (clearListener) {
+                cleanPlayerChangeListener();
+            }
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE);
         } catch (Exception e) {
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE_EXCEPTION);
@@ -233,14 +239,15 @@ interface PlayerApiKernel extends PlayerApiListener,
     }
 
     default void restart() {
-        restart(false);
+        restart(0, false);
     }
 
-    default void restart(@NonNull boolean retryBuffering) {
+    default void restart(@NonNull long seek, @NonNull boolean retryBuffering) {
         try {
             String url = getUrl();
             if (null == url || url.length() == 0)
                 throw new Exception("url error: " + url);
+            setSeek(seek);
             StartBuilder builder = getStartBuilder();
             if (null == builder)
                 throw new Exception("builder error: null");
@@ -863,31 +870,24 @@ interface PlayerApiKernel extends PlayerApiListener,
                 public void handleMessage(@NonNull Message msg) {
                     super.handleMessage(msg);
                     if (msg.what == 7677) {
-//                        long position = getPosition();
-//                        long duration = getDuration();
-
+                        long seek;
                         try {
-                            long seek;
-                            // 直播
-                            if (isLive()) {
+                            if (isLive()) {   // 直播
                                 seek = 0;
-                            }
-                            // 点播
-                            else {
+                            } else {  // 点播
                                 seek = getPosition();
                             }
-                            if (seek < 0) {
-                                seek = 0;
-                            }
-                            setSeek(seek);
                         } catch (Exception e) {
-                            MPLogUtil.log("PlayerApiKernel => startCheckBuffering => checkSeek => " + e.getMessage());
+                            seek = 0;
+                            MPLogUtil.log("PlayerApiKernel => startCheckBuffering => handleMessage => " + e.getMessage());
                         }
+                        if (seek < 0) {
+                            seek = 0;
+                        }
+                        MPLogUtil.log("PlayerApiKernel => startCheckBuffering => handleMessage => what = " + msg.what + ", seek = " + seek);
 
-                        setKernelRetryBuffering(true);
-                        pause(true);
-                        stop(false, false);
-                        restart(true);
+                        release(false, false, false, false);
+                        restart(seek, true);
                         callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
                     }
                 }
@@ -905,6 +905,7 @@ interface PlayerApiKernel extends PlayerApiListener,
             mHandlerBuffering[0].removeMessages(7677);
             mHandlerBuffering[0].removeCallbacksAndMessages(null);
             mHandlerBuffering[0] = null;
+            MPLogUtil.log("PlayerApiKernel => stopCheckBuffering => succ");
         } catch (Exception e) {
             MPLogUtil.log("PlayerApiKernel => stopCheckBuffering => " + e.getMessage());
         }

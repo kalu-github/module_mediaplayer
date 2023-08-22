@@ -289,7 +289,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
                     }
                     // 播放开始
                     else if (state == Player.STATE_READY) {
-                        MPLogUtil.log("VideoExoPlayer2 => onPlaybackStateChanged[播放开始] =>");
+                        MPLogUtil.log("VideoExoPlayer2 => onPlaybackStateChanged[播放开始] => mPrepared = "+mPrepared+", mRetryBuffering = "+mRetryBuffering);
                         try {
                             if (mPrepared)
                                 throw new Exception("mPrepared warning: true");
