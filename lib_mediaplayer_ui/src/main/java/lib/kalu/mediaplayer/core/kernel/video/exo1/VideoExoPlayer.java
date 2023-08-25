@@ -140,7 +140,7 @@ public final class VideoExoPlayer extends BasePlayer {
 
     @Override
     public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
-        MPLogUtil.log("VideoExoPlayer => startDecoder => mExoPlayer = " + mExoPlayer + ", url = " + url+", prepareAsync = "+prepareAsync);
+        MPLogUtil.log("VideoExoPlayer => startDecoder => mExoPlayer = " + mExoPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_START);
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
@@ -166,24 +166,23 @@ public final class VideoExoPlayer extends BasePlayer {
      */
     @Override
     public boolean isPlaying() {
-        if (mExoPlayer == null) {
+        try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer warning: null");
+            return mExoPlayer.getPlaybackState() == ExoPlayer.STATE_READY && mExoPlayer.getPlayWhenReady();
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer => isPlaying => " + e.getMessage());
             return false;
-        }
-        int state = mExoPlayer.getPlaybackState();
-        switch (state) {
-            case ExoPlayer.STATE_BUFFERING:
-            case ExoPlayer.STATE_READY:
-                return mExoPlayer.getPlayWhenReady();
-            case ExoPlayer.STATE_IDLE:
-            case ExoPlayer.STATE_ENDED:
-            default:
-                return false;
         }
     }
 
     @Override
     public void seekTo(@NonNull long position) {
         try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer warning: null");
             mExoPlayer.seekTo(position);
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => seekTo => " + e.getMessage());
@@ -195,10 +194,19 @@ public final class VideoExoPlayer extends BasePlayer {
      */
     @Override
     public long getPosition() {
-        if (mExoPlayer == null) {
-            return 0L;
+        try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer warning: null");
+            long currentPosition = mExoPlayer.getCurrentPosition();
+            if (currentPosition < 0)
+                throw new Exception("currentPosition warning: " + currentPosition);
+            return currentPosition;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer => getPosition => " + e.getMessage());
+            return -1L;
         }
-        return mExoPlayer.getCurrentPosition();
     }
 
     /**
@@ -206,14 +214,19 @@ public final class VideoExoPlayer extends BasePlayer {
      */
     @Override
     public long getDuration() {
-        if (mExoPlayer == null) {
-            return 0L;
+        try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer warning: null");
+            long duration = mExoPlayer.getDuration();
+            if (duration <= 0)
+                throw new Exception("duration warning: " + duration);
+            return duration;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer => getDuration => " + e.getMessage());
+            return -1L;
         }
-        long duration = mExoPlayer.getDuration();
-        if (duration < 0) {
-            duration = 0L;
-        }
-        return duration;
     }
 
     @Override
@@ -372,6 +385,8 @@ public final class VideoExoPlayer extends BasePlayer {
     @Override
     public void pause() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             mExoPlayer.setPlayWhenReady(false);

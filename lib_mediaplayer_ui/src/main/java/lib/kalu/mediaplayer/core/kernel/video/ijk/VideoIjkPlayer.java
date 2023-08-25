@@ -315,8 +315,6 @@ public final class VideoIjkPlayer extends BasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-//            if (null == surfaceHolder)
-//                throw new Exception("surfaceHolder error: null");
             mIjkPlayer.setDisplay(surfaceHolder);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => setDisplay => " + e.getMessage());
@@ -328,8 +326,6 @@ public final class VideoIjkPlayer extends BasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-//            if (null == surface)
-//                throw new Exception("surface error: null");
             mIjkPlayer.setSurface(surface);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => setSurface => " + e.getMessage());
@@ -375,10 +371,11 @@ public final class VideoIjkPlayer extends BasePlayer {
     @Override
     public void pause() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.pause();
-            MPLogUtil.log("VideoIjkPlayer => pause => succ");
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => pause => " + e.getMessage());
         }
@@ -436,7 +433,6 @@ public final class VideoIjkPlayer extends BasePlayer {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.start();
-            MPLogUtil.log("VideoIjkPlayer => start => succ");
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => start => " + e.getMessage());
         }
@@ -447,7 +443,6 @@ public final class VideoIjkPlayer extends BasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            MPLogUtil.log("VideoIjkPlayer => stop => succ");
             if (isMainThread) {
                 mIjkPlayer.stop();
             } else {
@@ -466,6 +461,8 @@ public final class VideoIjkPlayer extends BasePlayer {
     @Override
     public boolean isPlaying() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             return mIjkPlayer.isPlaying();
@@ -498,24 +495,34 @@ public final class VideoIjkPlayer extends BasePlayer {
     @Override
     public long getPosition() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            return mIjkPlayer.getCurrentPosition();
+            long currentPosition = mIjkPlayer.getCurrentPosition();
+            if (currentPosition < 0)
+                throw new Exception("currentPosition warning: " + currentPosition);
+            return currentPosition;
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => getPosition => " + e.getMessage());
-            return 0L;
+            return -1L;
         }
     }
 
     @Override
     public long getDuration() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            return (int) mIjkPlayer.getDuration();
+            long duration = mIjkPlayer.getDuration();
+            if (duration <= 0)
+                throw new Exception("duration warning: " + duration);
+            return duration;
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => getDuration => " + e.getMessage());
-            return 0L;
+            return -1L;
         }
     }
 

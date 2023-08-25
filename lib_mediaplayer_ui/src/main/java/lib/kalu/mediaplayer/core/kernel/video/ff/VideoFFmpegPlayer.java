@@ -91,7 +91,6 @@ public final class VideoFFmpegPlayer extends BasePlayer {
 
     @Override
     public void setDisplay(SurfaceHolder surfaceHolder) {
-
     }
 
     /**
@@ -172,6 +171,8 @@ public final class VideoFFmpegPlayer extends BasePlayer {
     @Override
     public void pause() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
             mFFmpegPlayer.pause();
@@ -209,6 +210,8 @@ public final class VideoFFmpegPlayer extends BasePlayer {
     @Override
     public boolean isPlaying() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
             return mFFmpegPlayer.isPlaying();
@@ -240,12 +243,17 @@ public final class VideoFFmpegPlayer extends BasePlayer {
     @Override
     public long getPosition() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
-            return mFFmpegPlayer.getCurrentPosition();
+            long currentPosition = mFFmpegPlayer.getCurrentPosition();
+            if (currentPosition < 0)
+                throw new Exception("currentPosition warning: " + currentPosition);
+            return currentPosition;
         } catch (Exception e) {
             MPLogUtil.log("VideoFFmpegPlayer => getPosition => " + e.getMessage());
-            return 0;
+            return -1L;
         }
     }
 
@@ -255,12 +263,17 @@ public final class VideoFFmpegPlayer extends BasePlayer {
     @Override
     public long getDuration() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
-            return mFFmpegPlayer.getDuration();
+            int duration = mFFmpegPlayer.getDuration();
+            if (duration <= 0)
+                throw new Exception("duration warning: " + duration);
+            return duration;
         } catch (Exception e) {
             MPLogUtil.log("VideoFFmpegPlayer => getDuration => " + e.getMessage());
-            return 0;
+            return -1L;
         }
     }
 

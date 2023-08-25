@@ -443,6 +443,8 @@ public final class VideoExoPlayer2 extends BasePlayer {
     @Override
     public boolean isPlaying() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             int state = mExoPlayer.getPlaybackState();
@@ -476,9 +478,14 @@ public final class VideoExoPlayer2 extends BasePlayer {
     @Override
     public long getPosition() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            return mExoPlayer.getCurrentPosition();
+            long currentPosition = mExoPlayer.getCurrentPosition();
+            if (currentPosition < 0)
+                throw new Exception("currentPosition warning: " + currentPosition);
+            return currentPosition;
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer2 => getPosition => " + e.getMessage());
             return -1L;
@@ -491,16 +498,17 @@ public final class VideoExoPlayer2 extends BasePlayer {
     @Override
     public long getDuration() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             long duration = mExoPlayer.getDuration();
-            if (duration < 0) {
-                duration = 0L;
-            }
+            if (duration <= 0)
+                throw new Exception("duration warning: " + duration);
             return duration;
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer2 => getDuration => " + e.getMessage());
-            return 0L;
+            return -1L;
         }
     }
 
@@ -665,6 +673,10 @@ public final class VideoExoPlayer2 extends BasePlayer {
     @Override
     public void pause() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
+            if (null == mExoPlayer)
+                throw new Exception("mMediaPlayer error: null");
             mExoPlayer.pause();
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer2 => pause => " + e.getMessage());

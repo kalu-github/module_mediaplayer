@@ -68,7 +68,7 @@ public final class VideoVlcPlayer extends BasePlayer {
 
     @Override
     public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
-        MPLogUtil.log("VideoVlcPlayer => startDecoder => mVlcPlayer = " + mVlcPlayer + ", url = " + url+", prepareAsync = "+prepareAsync);
+        MPLogUtil.log("VideoVlcPlayer => startDecoder => mVlcPlayer = " + mVlcPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -183,6 +183,8 @@ public final class VideoVlcPlayer extends BasePlayer {
     @Override
     public void pause() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
             mVlcPlayer.pause();
@@ -219,9 +221,14 @@ public final class VideoVlcPlayer extends BasePlayer {
      */
     @Override
     public boolean isPlaying() {
-        if (null != mVlcPlayer) {
+        try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
+            if (null == mVlcPlayer)
+                throw new Exception("mVlcPlayer error: null");
             return mVlcPlayer.isPlaying();
-        } else {
+        } catch (Exception e) {
+            MPLogUtil.log("VideoVlcPlayer => isPlaying => " + e.getMessage());
             return false;
         }
     }
@@ -242,10 +249,18 @@ public final class VideoVlcPlayer extends BasePlayer {
      */
     @Override
     public long getPosition() {
-        if (null != mVlcPlayer) {
-            return mVlcPlayer.getPosition();
-        } else {
-            return 0L;
+        try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
+            if (null == mVlcPlayer)
+                throw new Exception("mVlcPlayer error: null");
+            long position = mVlcPlayer.getPosition();
+            if (position < 0)
+                throw new Exception("position warning: " + position);
+            return position;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoVlcPlayer => getPosition => " + e.getMessage());
+            return -1L;
         }
     }
 
@@ -254,10 +269,18 @@ public final class VideoVlcPlayer extends BasePlayer {
      */
     @Override
     public long getDuration() {
-        if (null != mVlcPlayer) {
-            return mVlcPlayer.getDuration();
-        } else {
-            return 0L;
+        try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
+            if (null == mVlcPlayer)
+                throw new Exception("mVlcPlayer error: null");
+            long duration = mVlcPlayer.getDuration();
+            if (duration <= 0)
+                throw new Exception("duration warning: " + duration);
+            return duration;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoVlcPlayer => getDuration => " + e.getMessage());
+            return -1L;
         }
     }
 

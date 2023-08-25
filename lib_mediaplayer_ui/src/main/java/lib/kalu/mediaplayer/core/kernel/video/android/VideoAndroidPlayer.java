@@ -75,7 +75,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
 
     @Override
     public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
-        MPLogUtil.log("VideoAndroidPlayer => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url+", prepareAsync = "+prepareAsync);
+        MPLogUtil.log("VideoAndroidPlayer => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -189,6 +189,8 @@ public final class VideoAndroidPlayer extends BasePlayer {
     @Override
     public void pause() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
             mMediaPlayer.pause();
@@ -228,6 +230,8 @@ public final class VideoAndroidPlayer extends BasePlayer {
     @Override
     public boolean isPlaying() {
         try {
+            if (!mPrepared)
+                throw new Exception("mPrepared warning: false");
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
             return mMediaPlayer.isPlaying();
@@ -270,14 +274,17 @@ public final class VideoAndroidPlayer extends BasePlayer {
     @Override
     public long getPosition() {
         try {
-            if (null == mMediaPlayer)
-                throw new Exception("mMediaPlayer error: null");
             if (!mPrepared)
                 throw new Exception("mPrepared warning: false");
-            return mMediaPlayer.getCurrentPosition();
+            if (null == mMediaPlayer)
+                throw new Exception("mMediaPlayer error: null");
+            int currentPosition = mMediaPlayer.getCurrentPosition();
+            if (currentPosition < 0)
+                throw new Exception("currentPosition warning: " + currentPosition);
+            return currentPosition;
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => getPosition => " + e.getMessage());
-            return 0;
+            return -1L;
         }
     }
 
@@ -287,14 +294,17 @@ public final class VideoAndroidPlayer extends BasePlayer {
     @Override
     public long getDuration() {
         try {
-            if (null == mMediaPlayer)
-                throw new Exception("mMediaPlayer error: null");
             if (!mPrepared)
                 throw new Exception("mPrepared warning: false");
-            return mMediaPlayer.getDuration();
+            if (null == mMediaPlayer)
+                throw new Exception("mMediaPlayer error: null");
+            int duration = mMediaPlayer.getDuration();
+            if (duration <= 0)
+                throw new Exception("duration warning: " + duration);
+            return duration;
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => getDuration => " + e.getMessage());
-            return 0;
+            return -1L;
         }
     }
 
