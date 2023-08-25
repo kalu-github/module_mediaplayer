@@ -67,7 +67,8 @@ public final class VideoVlcPlayer extends BasePlayer {
     }
 
     @Override
-    public void startDecoder(@NonNull Context context, @NonNull String url) {
+    public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
+        MPLogUtil.log("VideoVlcPlayer => startDecoder => mVlcPlayer = " + mVlcPlayer + ", url = " + url+", prepareAsync = "+prepareAsync);
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");

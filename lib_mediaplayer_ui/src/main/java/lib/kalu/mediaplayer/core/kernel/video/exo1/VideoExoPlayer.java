@@ -139,7 +139,8 @@ public final class VideoExoPlayer extends BasePlayer {
     }
 
     @Override
-    public void startDecoder(@NonNull Context context, @NonNull String url) {
+    public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
+        MPLogUtil.log("VideoExoPlayer => startDecoder => mExoPlayer = " + mExoPlayer + ", url = " + url+", prepareAsync = "+prepareAsync);
         try {
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_START);
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);

@@ -12,6 +12,7 @@ public final class StartBuilder {
     private boolean loopRelease;
     private boolean mute;
     private boolean playWhenReady;
+    private boolean prepareAsync;
 
     private boolean windowVisibilityChangedRelease; // 不可见, release
 
@@ -21,6 +22,10 @@ public final class StartBuilder {
     private boolean externalMusicLoop;
     private boolean externalMusicPlayWhenReady;
     private boolean externalMusicSeek;
+
+    public boolean isPrepareAsync() {
+        return prepareAsync;
+    }
 
     public boolean isMute() {
         return mute;
@@ -80,6 +85,7 @@ public final class StartBuilder {
         this.mute = builder.mute;
         this.live = builder.live;
         this.loop = builder.loop;
+        this.prepareAsync = builder.prepareAsync;
         this.loopRelease = builder.loopRelease;
         this.playWhenReady = builder.playWhenReady;
         this.windowVisibilityChangedRelease = builder.windowVisibilityChangedRelease;
@@ -100,6 +106,7 @@ public final class StartBuilder {
                 ", loop=" + loop +
                 ", loopRelease=" + loopRelease +
                 ", mute=" + mute +
+                ", prepareAsync=" + prepareAsync +
                 ", windowVisibilityChangedRelease=" + windowVisibilityChangedRelease +
                 ", externalEnable='" + externalEnable + '\'' +
                 ", externalMusicUrl='" + externalMusicUrl + '\'' +
@@ -116,6 +123,7 @@ public final class StartBuilder {
         builder.mute = mute;
         builder.live = live;
         builder.loop = loop;
+        builder.prepareAsync = prepareAsync;
         builder.playWhenReady = playWhenReady;
         builder.windowVisibilityChangedRelease = windowVisibilityChangedRelease;
         builder.externalEnable = externalEnable;
@@ -135,7 +143,8 @@ public final class StartBuilder {
         private boolean loop = false;
         private boolean loopRelease = false;
         private boolean mute = false;
-        private boolean playWhenReady = true;
+        private boolean playWhenReady = true; // 默认自动开播
+        private boolean prepareAsync = true; // 默认异步初始化
 
         private boolean windowVisibilityChangedRelease = false; // 不可见, release
 
@@ -146,6 +155,11 @@ public final class StartBuilder {
         private boolean externalMusicSeek = true;
 
         public Builder() {
+        }
+
+        public Builder setPrepareAsync(boolean v) {
+            this.prepareAsync = v;
+            return this;
         }
 
         public Builder setExternalEnable(boolean v) {

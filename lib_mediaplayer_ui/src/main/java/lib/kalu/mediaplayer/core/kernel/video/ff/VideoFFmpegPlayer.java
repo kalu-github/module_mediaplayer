@@ -67,7 +67,8 @@ public final class VideoFFmpegPlayer extends BasePlayer {
     }
 
     @Override
-    public void startDecoder(@NonNull Context context, @NonNull String url) {
+    public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
+        MPLogUtil.log("VideoFFmpegPlayer => startDecoder => mFFmpegPlayer = " + mFFmpegPlayer + ", url = " + url+", prepareAsync = "+prepareAsync);
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");

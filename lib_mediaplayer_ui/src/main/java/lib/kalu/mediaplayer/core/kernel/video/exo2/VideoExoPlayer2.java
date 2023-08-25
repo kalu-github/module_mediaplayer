@@ -367,7 +367,8 @@ public final class VideoExoPlayer2 extends BasePlayer {
     }
 
     @Override
-    public void startDecoder(@NonNull Context context, @NonNull String url) {
+    public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
+        MPLogUtil.log("VideoExoPlayer2 => startDecoder => mExoPlayer = " + mExoPlayer + ", url = " + url+", prepareAsync = "+prepareAsync);
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");

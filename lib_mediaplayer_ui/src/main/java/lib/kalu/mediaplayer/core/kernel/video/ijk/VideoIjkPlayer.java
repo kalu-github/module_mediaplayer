@@ -84,7 +84,8 @@ public final class VideoIjkPlayer extends BasePlayer {
     }
 
     @Override
-    public void startDecoder(@NonNull Context context, @NonNull String url) {
+    public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
+        MPLogUtil.log("VideoIjkPlayer => startDecoder => mIjkPlayer = " + mIjkPlayer + ", url = " + url+", prepareAsync = "+prepareAsync);
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");

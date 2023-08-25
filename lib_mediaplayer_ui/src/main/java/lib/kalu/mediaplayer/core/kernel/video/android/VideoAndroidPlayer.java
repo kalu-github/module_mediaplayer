@@ -46,7 +46,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
 
     @Override
     public void releaseDecoder(boolean isFromUser, boolean isMainThread) {
-        MPLogUtil.log("VideoAndroidPlayer22 => releaseDecoder => mMediaPlayer = " + mMediaPlayer + ", isFromUser = " + isFromUser);
+        MPLogUtil.log("VideoAndroidPlayer => releaseDecoder => mMediaPlayer = " + mMediaPlayer + ", isFromUser = " + isFromUser);
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayerCollects error: null");
@@ -61,7 +61,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
 
     @Override
     public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
-        MPLogUtil.log("VideoAndroidPlayer22 => createDecoder => mMediaPlayer = " + mMediaPlayer);
+        MPLogUtil.log("VideoAndroidPlayer => createDecoder => mMediaPlayer = " + mMediaPlayer);
         try {
             releaseDecoder(false, true);
             mMediaPlayer = new MediaPlayer();
@@ -74,8 +74,8 @@ public final class VideoAndroidPlayer extends BasePlayer {
     }
 
     @Override
-    public void startDecoder(@NonNull Context context, @NonNull String url) {
-        MPLogUtil.log("VideoAndroidPlayer22 => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url);
+    public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
+        MPLogUtil.log("VideoAndroidPlayer => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url+", prepareAsync = "+prepareAsync);
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -84,7 +84,11 @@ public final class VideoAndroidPlayer extends BasePlayer {
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
             initListener();
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);
-            mMediaPlayer.prepare();
+            if (prepareAsync) {
+                mMediaPlayer.prepareAsync();
+            } else {
+                mMediaPlayer.prepare();
+            }
         } catch (IllegalArgumentException e) {
             MPLogUtil.log("VideoAndroidPlayer => startDecoder => " + e.getMessage());
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);

@@ -33,9 +33,9 @@ public interface KernelApi extends KernelApiBase,
 
     void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters);
 
-    void startDecoder(@NonNull Context context, @NonNull String url);
+    void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync);
 
-    default void initExoFFmpeg(@NonNull Context context,@NonNull ExoPlayer.Builder exoBuilder) {
+    default void initExoFFmpeg(@NonNull Context context, @NonNull ExoPlayer.Builder exoBuilder) {
     }
 
     default void setOptions() {
@@ -62,9 +62,9 @@ public interface KernelApi extends KernelApiBase,
         boolean playWhenReady = bundle.isPlayWhenReady();
         MPLogUtil.log("KernelApi => initDecoder => playWhenReady = " + playWhenReady);
         setPlayWhenReady(playWhenReady);
-
-        // 2
-        startDecoder(context, playUrl);
+        boolean prepareAsync = bundle.isPrepareAsync();
+        MPLogUtil.log("KernelApi => initDecoder => prepareAsync = " + prepareAsync);
+        startDecoder(context, playUrl, prepareAsync);
 
 //        String musicUrl = bundle.getExternalMusicUrl();
 //        MPLogUtil.log("KernelApi => update => musicUrl = " + musicUrl);
