@@ -289,7 +289,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
                     }
                     // 播放开始
                     else if (state == Player.STATE_READY) {
-                        MPLogUtil.log("VideoExoPlayer2 => onPlaybackStateChanged[播放开始] => mPrepared = "+mPrepared+", mRetryBuffering = "+mRetryBuffering);
+                        MPLogUtil.log("VideoExoPlayer2 => onPlaybackStateChanged[播放开始] => mPrepared = " + mPrepared + ", mRetryBuffering = " + mRetryBuffering);
                         try {
                             if (mPrepared)
                                 throw new Exception("mPrepared warning: true");
@@ -368,7 +368,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
 
     @Override
     public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
-        MPLogUtil.log("VideoExoPlayer2 => startDecoder => mExoPlayer = " + mExoPlayer + ", url = " + url+", prepareAsync = "+prepareAsync);
+        MPLogUtil.log("VideoExoPlayer2 => startDecoder => mExoPlayer = " + mExoPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -399,7 +399,11 @@ public final class VideoExoPlayer2 extends BasePlayer {
 //            });
             mExoPlayer.setMediaSource(createMediaSource(context, url, null, cacheType, cacheMax, cacheDir));
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
-            mExoPlayer.prepare();
+            if (prepareAsync) {
+                mExoPlayer.prepare();
+            } else {
+                mExoPlayer.prepare();
+            }
         } catch (Exception e) {
             if (mRetryBuffering) {
                 onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_IGNORE);

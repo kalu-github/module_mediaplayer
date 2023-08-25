@@ -85,7 +85,7 @@ public final class VideoIjkPlayer extends BasePlayer {
 
     @Override
     public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
-        MPLogUtil.log("VideoIjkPlayer => startDecoder => mIjkPlayer = " + mIjkPlayer + ", url = " + url+", prepareAsync = "+prepareAsync);
+        MPLogUtil.log("VideoIjkPlayer => startDecoder => mIjkPlayer = " + mIjkPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -94,7 +94,11 @@ public final class VideoIjkPlayer extends BasePlayer {
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
-            mIjkPlayer.prepareAsync();
+            if (prepareAsync) {
+                mIjkPlayer.prepareAsync();
+            } else {
+                mIjkPlayer.prepareAsync();
+            }
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => startDecoder => " + e.getMessage());
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
