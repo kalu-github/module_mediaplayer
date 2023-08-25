@@ -690,20 +690,6 @@ interface PlayerApiKernel extends PlayerApiListener,
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
                             stopCheckBuffering();
                             break;
-                        // 播放开始-快进
-                        case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
-                            // step1
-                            callPlayerEvent(PlayerType.StateType.STATE_START_SEEK);
-                            // step2
-                            showVideoReal();
-                            // step4
-                            resume(true);
-                            // step6
-                            MPLogUtil.log("PlayerApiKernel => onEvent => event_video_start_seek => playWhenReady = " + isPlayWhenReady());
-                            if (!isPlayWhenReady()) {
-                                pause();
-                            }
-                            break;
                         // 播放开始
                         case PlayerType.EventType.EVENT_VIDEO_START_903:
                             // step1
@@ -721,7 +707,24 @@ interface PlayerApiKernel extends PlayerApiListener,
                             // step5
                             MPLogUtil.log("PlayerApiKernel => onEvent => event_video_start_retry => playWhenReady = " + isPlayWhenReady());
                             break;
-                        // 播放开始
+                        // 播放开始-快进
+                        case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
+                            // step1
+                            callPlayerEvent(PlayerType.StateType.STATE_START_SEEK);
+                            // step2
+                            showVideoReal();
+                            // step4
+                            resume(true);
+                            // step6
+                            boolean playWhenReady1 = isPlayWhenReady();
+                            MPLogUtil.log("PlayerApiKernel => onEvent => event_video_start_seek => playWhenReady = " + playWhenReady1);
+                            if (!playWhenReady1) {
+                                pause();
+                                setPlayWhenReady(true);
+                                callPlayerEvent(PlayerType.StateType.STATE_START_PLAY_WHEN_READY_PAUSE);
+                            }
+                            break;
+                        // 播放开始-默认
                         case PlayerType.EventType.EVENT_VIDEO_START:
 //                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
@@ -732,10 +735,13 @@ interface PlayerApiKernel extends PlayerApiListener,
                             showVideoReal();
                             // step3
                             checkVideoReal();
-                            // step5
-                            MPLogUtil.log("PlayerApiKernel => onEvent => event_video_start_seek => playWhenReady = " + isPlayWhenReady());
-                            if (!isPlayWhenReady()) {
+                            // step4
+                            boolean playWhenReady2 = isPlayWhenReady();
+                            MPLogUtil.log("PlayerApiKernel => onEvent => event_video_start_seek => playWhenReady = " + playWhenReady2);
+                            if (!playWhenReady2) {
                                 pause();
+                                setPlayWhenReady(true);
+                                callPlayerEvent(PlayerType.StateType.STATE_START_PLAY_WHEN_READY_PAUSE);
                             }
                             break;
                         // 播放错误

@@ -657,11 +657,6 @@ public final class VideoIjkPlayer extends BasePlayer {
                 // 拉流
                 case IMediaPlayer.MEDIA_INFO_OPEN_INPUT:
                     break;
-                // 首帧画面 => 开播
-                case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-                    onEvent(PlayerType.KernelType.IJK, what);
-                    break;
                 // 缓冲开始
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
                     break;
@@ -675,6 +670,15 @@ public final class VideoIjkPlayer extends BasePlayer {
                     break;
                 case IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START:
                 case IMediaPlayer.MEDIA_INFO_AUDIO_SEEK_RENDERING_START:
+                    break;
+                // 首帧画面 => 开播
+                case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+                    onEvent(PlayerType.KernelType.IJK, what);
+//                    if (!mPlayWhenReady) {
+//                        mPlayWhenReady = true;
+//                        pause();
+//                    }
                     break;
                 // 通知
                 default:

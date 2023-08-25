@@ -419,6 +419,7 @@ public final class VideoAndroidPlayer extends BasePlayer {
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
 //                if (!mPlayWhenReady) {
+//                    mPlayWhenReady = true;
 //                    pause();
 //                }
             }

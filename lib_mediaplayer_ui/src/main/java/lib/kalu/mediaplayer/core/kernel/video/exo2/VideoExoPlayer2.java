@@ -300,9 +300,10 @@ public final class VideoExoPlayer2 extends BasePlayer {
                                 onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_START_RETRY);
                             } else {
                                 onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_START);
-                                if (!mPlayWhenReady) {
-                                    pause();
-                                }
+//                                if (!mPlayWhenReady) {
+//                                    mPlayWhenReady = true;
+//                                    pause();
+//                                }
                             }
                         } catch (Exception e) {
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
