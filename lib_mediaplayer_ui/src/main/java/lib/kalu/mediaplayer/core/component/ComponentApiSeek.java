@@ -9,6 +9,4 @@ import androidx.annotation.Keep;
 public interface ComponentApiSeek extends ComponentApi {
 
     SeekBar findSeekBar();
-
-    boolean isShowing();
 }

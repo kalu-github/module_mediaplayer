@@ -138,6 +138,12 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
 
     /******************/
 
+    default boolean isComponentShowing() {
+        return false;
+    }
+
+    /******************/
+
     default void setComponentBackgroundColorInt(@ColorInt int value) {
     }
 

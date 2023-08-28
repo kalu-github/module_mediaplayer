@@ -56,7 +56,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         }
         // action_down => keycode_dpad_right => seek_forward => start1
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT && event.getRepeatCount() == 0) {
-            MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start1 => repeatCount = " + event.getRepeatCount());
+//            MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start1 => repeatCount = " + event.getRepeatCount());
             try {
                 if (!isPrepared())
                     throw new Exception("isPrepared error: false");
@@ -70,7 +70,6 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         }
         // action_down => keycode_dpad_right => seek_forward => start2
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT && event.getRepeatCount() >= 1) {
-            MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start2 => repeatCount = " + event.getRepeatCount());
             try {
                 if (!isPrepared())
                     throw new Exception("isPrepared error: false");
@@ -85,7 +84,6 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         // seekForward => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             try {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => stop");
                 if (!isPrepared())
                     throw new Exception("isPrepared error: false");
                 if (isLive())
@@ -106,7 +104,6 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         // seekRewind => start1
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT && event.getRepeatCount() == 0) {
             try {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => start1 => repeatCount = " + event.getRepeatCount());
                 if (!isPrepared())
                     throw new Exception("isPrepared error: false");
                 if (isLive())
@@ -120,7 +117,6 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         // seekRewind => start2
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT && event.getRepeatCount() >= 1) {
             try {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => start2 => repeatCount = " + event.getRepeatCount());
                 if (!isPrepared())
                     throw new Exception("isPrepared error: false");
                 if (isLive())
@@ -134,7 +130,6 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         // seekRewind => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             try {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => stop");
                 if (!isPrepared())
                     throw new Exception("isPrepared error: false");
                 if (isLive())
@@ -321,7 +316,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             ComponentApiSeek seekComponent = findSeekComponent();
             if (null == seekComponent)
                 throw new Exception("seekComponent error: null");
-            return seekComponent.isShowing();
+            return seekComponent.isComponentShowing();
         } catch (Exception e) {
             MPLogUtil.log("PlayerApi => checkSeekBar => " + e.getMessage());
             return false;

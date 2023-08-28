@@ -170,13 +170,13 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public boolean isShowing() {
+    public boolean isComponentShowing() {
         try {
             int visibility1 = findViewById(R.id.module_mediaplayer_component_seek_bg).getVisibility();
             int visibility2 = findViewById(R.id.module_mediaplayer_component_seek_ui).getVisibility();
             return visibility1 == View.VISIBLE && visibility2 == View.VISIBLE;
         } catch (Exception e) {
-            MPLogUtil.log("ComponentSeek => isShowing => " + e.getMessage());
+            MPLogUtil.log("ComponentSeek => isComponentShowing => " + e.getMessage());
             return false;
         }
     }
