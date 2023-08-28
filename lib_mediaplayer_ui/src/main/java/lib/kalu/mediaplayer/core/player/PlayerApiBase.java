@@ -239,7 +239,6 @@ interface PlayerApiBase {
     }
 
     default void callPlayerEvent(@PlayerType.StateType.Value int state) {
-        MPLogUtil.log("PlayerApiBase => callPlayerEvent => state = " + state);
         // listener
         try {
             boolean hasListener = hasPlayerChangeListener();
@@ -261,7 +260,6 @@ interface PlayerApiBase {
                 throw new Exception("not find component");
             for (int i = 0; i < childCount; i++) {
                 View childAt = viewGroup.getChildAt(i);
-                MPLogUtil.log("PlayerApiBase => callPlayerEvent => i = " + i + ", childAt = " + childAt);
                 if (null == childAt)
                     continue;
                 if (!(childAt instanceof ComponentApi))

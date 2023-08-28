@@ -308,12 +308,10 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
 
     default boolean checkSeekBar() {
         try {
-            SeekBar seekBar = findSeekBar();
-            if (null == seekBar)
-                throw new Exception("seekbar error: null");
-            if (seekBar.getVisibility() != View.VISIBLE)
-                throw new Exception("visibility error: show");
-            return true;
+            ComponentApiSeek seekComponent = findSeekComponent();
+            if (null == seekComponent)
+                throw new Exception("seekComponent error: null");
+            return seekComponent.isShowing();
         } catch (Exception e) {
             MPLogUtil.log("PlayerApi => checkSeekBar => " + e.getMessage());
             return false;
