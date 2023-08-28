@@ -227,6 +227,11 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         }
     }
 
+    /**
+     * 快进
+     *
+     * @param action
+     */
     default void seekForward(int action) {
         try {
             boolean checkSeekBar = checkSeekBar();
@@ -267,6 +272,11 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
     }
 
 
+    /**
+     * 快退
+     *
+     * @param action
+     */
     default void seekRewind(int action) {
         try {
             boolean checkSeekBar = checkSeekBar();
