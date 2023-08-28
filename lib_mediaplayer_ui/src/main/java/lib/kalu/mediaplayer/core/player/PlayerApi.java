@@ -99,7 +99,6 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                     throw new Exception("playing waining: true");
                 resume();
             } catch (Exception e) {
-                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => stop => " + e.getMessage());
             }
             return true;
@@ -149,7 +148,6 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                     throw new Exception("playing waining: true");
                 resume();
             } catch (Exception e) {
-                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => stop => " + e.getMessage());
             }
             return true;
