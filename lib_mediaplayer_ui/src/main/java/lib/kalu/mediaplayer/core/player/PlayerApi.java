@@ -90,9 +90,9 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                     throw new Exception("isPrepared error: false");
                 if (isLive())
                     throw new Exception("living error: true");
-                boolean seekBarShowing = isSeekBarShowing();
-                if (!seekBarShowing)
-                    throw new Exception("seekBarShowing error: false");
+                boolean checkSeekBar = checkSeekBar();
+                if (!checkSeekBar)
+                    throw new Exception("checkSeekBar error: false");
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 seekForward(KeyEvent.ACTION_UP);
                 if (isPlaying())
@@ -139,11 +139,11 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                     throw new Exception("isPrepared error: false");
                 if (isLive())
                     throw new Exception("living error: true");
-                boolean seekBarShowing = isSeekBarShowing();
-                if (!seekBarShowing)
-                    throw new Exception("seekBarShowing error: false");
+                boolean checkSeekBar = checkSeekBar();
+                if (!checkSeekBar)
+                    throw new Exception("checkSeekBar error: false");
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
-                seekForward(KeyEvent.ACTION_UP);
+                seekRewind(KeyEvent.ACTION_UP);
                 if (isPlaying())
                     throw new Exception("playing waining: true");
                 resume();
@@ -227,33 +227,14 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         }
     }
 
-    default boolean isSeekBarShowing() {
-        try {
-            ComponentApiSeek seekComponent = findSeekComponent();
-            if (null == seekComponent)
-                throw new Exception("seekComponent error: null");
-            SeekBar seekBar = seekComponent.findSeekBar();
-            if (null == seekBar)
-                throw new Exception("seekbar error: null");
-            if (seekBar.getVisibility() != View.VISIBLE)
-                throw new Exception("visabliity error: show");
-            return true;
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerApi => isSeekBarShowing => " + e.getMessage());
-            return false;
-        }
-    }
-
     default void seekForward(int action) {
         try {
-            ComponentApiSeek seekComponent = findSeekComponent();
-            if (null == seekComponent)
-                throw new Exception("seekComponent error: null");
-            SeekBar seekBar = seekComponent.findSeekBar();
+            boolean checkSeekBar = checkSeekBar();
+            if (!checkSeekBar)
+                throw new Exception("checkSeekBar error: false");
+            SeekBar seekBar = findSeekBar();
             if (null == seekBar)
                 throw new Exception("seekbar error: null");
-            if (seekBar.getVisibility() != View.VISIBLE)
-                throw new Exception("visabliity error: show");
             int max = seekBar.getMax();
             int progress = seekBar.getProgress();
             if (max <= 0)
@@ -288,14 +269,12 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
 
     default void seekRewind(int action) {
         try {
-            ComponentApiSeek seekComponent = findSeekComponent();
-            if (null == seekComponent)
-                throw new Exception("seekComponent error: null");
-            SeekBar seekBar = seekComponent.findSeekBar();
+            boolean checkSeekBar = checkSeekBar();
+            if (!checkSeekBar)
+                throw new Exception("checkSeekBar error: false");
+            SeekBar seekBar = findSeekBar();
             if (null == seekBar)
                 throw new Exception("seekbar error: null");
-            if (seekBar.getVisibility() != View.VISIBLE)
-                throw new Exception("visibility error: show");
             int max = seekBar.getMax();
             int progress = seekBar.getProgress();
             if (max <= 0)
@@ -324,6 +303,35 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
 
         } catch (Exception e) {
             MPLogUtil.log("PlayerApi => seekForward => " + e.getMessage());
+        }
+    }
+
+    default boolean checkSeekBar() {
+        try {
+            SeekBar seekBar = findSeekBar();
+            if (null == seekBar)
+                throw new Exception("seekbar error: null");
+            if (seekBar.getVisibility() != View.VISIBLE)
+                throw new Exception("visibility error: show");
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApi => checkSeekBar => " + e.getMessage());
+            return false;
+        }
+    }
+
+    default SeekBar findSeekBar() {
+        try {
+            ComponentApiSeek seekComponent = findSeekComponent();
+            if (null == seekComponent)
+                throw new Exception("seekComponent error: null");
+            SeekBar seekBar = seekComponent.findSeekBar();
+            if (null == seekBar)
+                throw new Exception("seekbar error: null");
+            return seekBar;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApi => findSeekBar => " + e.getMessage());
+            return null;
         }
     }
 }
