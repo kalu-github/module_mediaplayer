@@ -433,6 +433,15 @@ interface PlayerApiKernel extends PlayerApiListener,
         }
     }
 
+    default boolean isPrepared() {
+        try {
+            KernelApi kernel = getVideoKernel();
+            return kernel.isPrepared();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     default boolean isMute() {
         try {
             KernelApi kernel = getVideoKernel();

@@ -8,9 +8,7 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
-import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender {
@@ -56,18 +54,31 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             toggle();
             return true;
         }
-        // action_down => keycode_dpad_right => seek_forward => start
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start");
+        // action_down => keycode_dpad_right => seek_forward => start1
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT && event.getRepeatCount() == 0) {
+            MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start1 => repeatCount = " + event.getRepeatCount());
             try {
+                if (!isPrepared())
+                    throw new Exception("isPrepared error: false");
                 if (isLive())
                     throw new Exception("living error: true");
-                if (!isPlaying())
-                    throw new Exception("isPlaying error: false");
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
+            } catch (Exception e) {
+                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start1 => " + e.getMessage());
+            }
+            return true;
+        }
+        // action_down => keycode_dpad_right => seek_forward => start2
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT && event.getRepeatCount() >= 1) {
+            MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start2 => repeatCount = " + event.getRepeatCount());
+            try {
+                if (!isPrepared())
+                    throw new Exception("isPrepared error: false");
+                if (isLive())
+                    throw new Exception("living error: true");
                 seekForward(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start => " + e.getMessage());
+                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start2 => " + e.getMessage());
             }
             return true;
         }
@@ -75,32 +86,49 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             try {
                 MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => stop");
+                if (!isPrepared())
+                    throw new Exception("isPrepared error: false");
                 if (isLive())
                     throw new Exception("living error: true");
-                if (!isPlaying())
-                    throw new Exception("isPlaying error: false");
+                boolean seekBarShowing = isSeekBarShowing();
+                if (!seekBarShowing)
+                    throw new Exception("seekBarShowing error: false");
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 seekForward(KeyEvent.ACTION_UP);
                 if (isPlaying())
                     throw new Exception("playing waining: true");
                 resume();
             } catch (Exception e) {
+                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => stop => " + e.getMessage());
             }
             return true;
         }
-        // seekRewind => start
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+        // seekRewind => start1
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT && event.getRepeatCount() == 0) {
             try {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => start");
+                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => start1 => repeatCount = " + event.getRepeatCount());
+                if (!isPrepared())
+                    throw new Exception("isPrepared error: false");
                 if (isLive())
                     throw new Exception("living error: true");
-                if (!isPlaying())
-                    throw new Exception("isPlaying error: false");
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
+            } catch (Exception e) {
+                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => start1 => " + e.getMessage());
+            }
+            return true;
+        }
+        // seekRewind => start2
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT && event.getRepeatCount() >= 1) {
+            try {
+                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => start2 => repeatCount = " + event.getRepeatCount());
+                if (!isPrepared())
+                    throw new Exception("isPrepared error: false");
+                if (isLive())
+                    throw new Exception("living error: true");
                 seekRewind(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => start => " + e.getMessage());
+                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => start2 => " + e.getMessage());
             }
             return true;
         }
@@ -108,16 +136,20 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             try {
                 MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => stop");
+                if (!isPrepared())
+                    throw new Exception("isPrepared error: false");
                 if (isLive())
                     throw new Exception("living error: true");
-                if (!isPlaying())
-                    throw new Exception("isPlaying error: false");
+                boolean seekBarShowing = isSeekBarShowing();
+                if (!seekBarShowing)
+                    throw new Exception("seekBarShowing error: false");
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 seekForward(KeyEvent.ACTION_UP);
                 if (isPlaying())
                     throw new Exception("playing waining: true");
                 resume();
             } catch (Exception e) {
+                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => stop => " + e.getMessage());
             }
             return true;
@@ -197,6 +229,23 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         }
     }
 
+    default boolean isSeekBarShowing() {
+        try {
+            ComponentApiSeek seekComponent = findSeekComponent();
+            if (null == seekComponent)
+                throw new Exception("seekComponent error: null");
+            SeekBar seekBar = seekComponent.findSeekBar();
+            if (null == seekBar)
+                throw new Exception("seekbar error: null");
+            if (seekBar.getVisibility() != View.VISIBLE)
+                throw new Exception("visabliity error: show");
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerApi => isSeekBarShowing => " + e.getMessage());
+            return false;
+        }
+    }
+
     default void seekForward(int action) {
         try {
             ComponentApiSeek seekComponent = findSeekComponent();
@@ -234,7 +283,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             }
 
         } catch (Exception e) {
-            MPLogUtil.log("ComponentSeek => seekForward => " + e.getMessage());
+            MPLogUtil.log("PlayerApi => seekForward => " + e.getMessage());
         }
     }
 
@@ -276,7 +325,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             }
 
         } catch (Exception e) {
-            MPLogUtil.log("ComponentSeek => seekForward => " + e.getMessage());
+            MPLogUtil.log("PlayerApi => seekForward => " + e.getMessage());
         }
     }
 }
