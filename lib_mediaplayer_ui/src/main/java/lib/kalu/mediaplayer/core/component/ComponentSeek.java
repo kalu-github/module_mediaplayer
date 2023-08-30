@@ -34,8 +34,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 break;
             case PlayerType.StateType.STATE_FAST_FORWARD_STOP:
             case PlayerType.StateType.STATE_FAST_REWIND_STOP:
-            case PlayerType.StateType.STATE_LOADING_STOP:
-            case PlayerType.StateType.STATE_BUFFERING_STOP:
+//            case PlayerType.StateType.STATE_LOADING_STOP:
+//            case PlayerType.StateType.STATE_BUFFERING_STOP:
                 MPLogUtil.log("ComponentSeek => callPlayerEvent => gone1 => playState = " + playState);
                 gone();
                 break;

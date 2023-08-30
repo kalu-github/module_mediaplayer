@@ -91,8 +91,8 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                 boolean checkSeekBar = checkSeekBar();
                 if (!checkSeekBar)
                     throw new Exception("checkSeekBar error: false");
-                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 seekForward(KeyEvent.ACTION_UP);
+                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 if (isPlaying())
                     throw new Exception("playing waining: true");
                 resume();
@@ -137,8 +137,8 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                 boolean checkSeekBar = checkSeekBar();
                 if (!checkSeekBar)
                     throw new Exception("checkSeekBar error: false");
-                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 seekRewind(KeyEvent.ACTION_UP);
+                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 if (isPlaying())
                     throw new Exception("playing waining: true");
                 resume();
@@ -229,12 +229,12 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
      */
     default void seekForward(int action) {
         try {
-            boolean checkSeekBar = checkSeekBar();
-            if (!checkSeekBar)
-                throw new Exception("checkSeekBar error: false");
             SeekBar seekBar = findSeekBar();
             if (null == seekBar)
                 throw new Exception("seekbar error: null");
+            boolean checkSeekBar = checkSeekBar();
+            if (!checkSeekBar)
+                throw new Exception("checkSeekBar error: false");
             int max = seekBar.getMax();
             int progress = seekBar.getProgress();
             if (max <= 0)
@@ -274,12 +274,12 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
      */
     default void seekRewind(int action) {
         try {
-            boolean checkSeekBar = checkSeekBar();
-            if (!checkSeekBar)
-                throw new Exception("checkSeekBar error: false");
             SeekBar seekBar = findSeekBar();
             if (null == seekBar)
                 throw new Exception("seekbar error: null");
+            boolean checkSeekBar = checkSeekBar();
+            if (!checkSeekBar)
+                throw new Exception("checkSeekBar error: false");
             int max = seekBar.getMax();
             int progress = seekBar.getProgress();
             if (max <= 0)
@@ -316,6 +316,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             ComponentApiSeek seekComponent = findSeekComponent();
             if (null == seekComponent)
                 throw new Exception("seekComponent error: null");
+            MPLogUtil.log("PlayerApi => checkSeekBar => seekComponent = " + seekComponent);
             return seekComponent.isComponentShowing();
         } catch (Exception e) {
             MPLogUtil.log("PlayerApi => checkSeekBar => " + e.getMessage());
