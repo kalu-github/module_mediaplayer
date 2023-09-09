@@ -12,7 +12,7 @@ import lib.kalu.vlc.util.VlcLogUtil;
 public final class MPLogUtil {
 
     private static String mTag = "MP_COMMON";
-    private static boolean mLog = false;
+    private static boolean mLog = true;
 
     public static void setLogger(@NonNull PlayerBuilder config) {
 

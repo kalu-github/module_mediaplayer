@@ -260,12 +260,10 @@ interface PlayerApiBase {
                 throw new Exception("not find component");
             for (int i = 0; i < childCount; i++) {
                 View childAt = viewGroup.getChildAt(i);
-                MPLogUtil.log("PlayerApiBase => callPlayerEvent => state = " + state+", childAt1 = "+childAt);
                 if (null == childAt)
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                MPLogUtil.log("PlayerApiBase => callPlayerEvent => state = " + state+", childAt2 = "+childAt);
                 ((ComponentApi) childAt).callPlayerEvent(state);
             }
         } catch (Exception e) {
