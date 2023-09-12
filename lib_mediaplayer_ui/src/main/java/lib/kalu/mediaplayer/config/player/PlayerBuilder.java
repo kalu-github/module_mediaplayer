@@ -22,6 +22,7 @@ public final class PlayerBuilder {
     private boolean exoUseOkhttp;
     private int exoUseOkhttpTimeoutSeconds;
     private int bufferingTimeoutSeconds;
+    private boolean bufferingTimeoutRetry;
     @PlayerType.KernelType.Value
     private int videoKernel; // 播放器内核
     @PlayerType.RenderType.Value
@@ -54,8 +55,12 @@ public final class PlayerBuilder {
         return exoUseOkhttpTimeoutSeconds;
     }
 
-    public int getbufferingTimeoutSeconds() {
+    public int getBufferingTimeoutSeconds() {
         return bufferingTimeoutSeconds;
+    }
+
+    public boolean getBufferingTimeoutRetry() {
+        return bufferingTimeoutRetry;
     }
 
     public int getExoFFmpeg() {
@@ -125,6 +130,7 @@ public final class PlayerBuilder {
         exoUseOkhttp = builder.exoUseOkhttp;
         exoUseOkhttpTimeoutSeconds = builder.exoUseOkhttpTimeoutSeconds;
         bufferingTimeoutSeconds = builder.bufferingTimeoutSeconds;
+        bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         videoKernel = builder.videoKernel;
         videoRender = builder.videoRender;
         videoScaleType = builder.videoScaleType;
@@ -147,6 +153,7 @@ public final class PlayerBuilder {
         builder.setExoUseOkhttp(this.exoUseOkhttp);
         builder.setExoUseOkhttpTimeoutSeconds(this.exoUseOkhttpTimeoutSeconds);
         builder.setBufferingTimeoutSeconds(this.bufferingTimeoutSeconds);
+        builder.setBufferingTimeoutRetry(this.bufferingTimeoutRetry);
         builder.setVideoKernel(this.videoKernel);
         builder.setVideoRender(this.videoRender);
         builder.setVideoScaleType(this.videoScaleType);
@@ -173,6 +180,7 @@ public final class PlayerBuilder {
         private boolean exoUseOkhttp = true;
         private int exoUseOkhttpTimeoutSeconds = 10;
         private int bufferingTimeoutSeconds = 0;
+        private boolean bufferingTimeoutRetry = false;
         @PlayerType.KernelType.Value
         private int videoKernel = PlayerType.KernelType.ANDROID; // 播放器内核
         @PlayerType.RenderType.Value
@@ -205,6 +213,11 @@ public final class PlayerBuilder {
 
         public Builder setBufferingTimeoutSeconds(@NonNull int v) {
             bufferingTimeoutSeconds = v;
+            return this;
+        }
+
+        public Builder setBufferingTimeoutRetry(@NonNull boolean v) {
+            bufferingTimeoutRetry = v;
             return this;
         }
 

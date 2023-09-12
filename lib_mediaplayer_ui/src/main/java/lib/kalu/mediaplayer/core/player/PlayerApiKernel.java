@@ -877,33 +877,40 @@ interface PlayerApiKernel extends PlayerApiListener,
     default void startCheckBuffering() {
         try {
             stopCheckBuffering();
-            int bufferingTimeoutSeconds = PlayerManager.getInstance().getConfig().getbufferingTimeoutSeconds();
+            int bufferingTimeoutSeconds = PlayerManager.getInstance().getConfig().getBufferingTimeoutSeconds();
             if (bufferingTimeoutSeconds <= 0)
                 throw new Exception("bufferingTimeoutSeconds warning: " + bufferingTimeoutSeconds);
+            boolean bufferingTimeoutRetry = PlayerManager.getInstance().getConfig().getBufferingTimeoutRetry();
             mHandlerBuffering[0] = new Handler(Looper.getMainLooper()) {
                 @Override
                 public void handleMessage(@NonNull Message msg) {
                     super.handleMessage(msg);
                     if (msg.what == 7677) {
-                        long seek;
-                        try {
-                            if (isLive()) {   // 直播
+                        if (bufferingTimeoutRetry) {
+                            long seek;
+                            try {
+                                if (isLive()) {   // 直播
+                                    seek = 0;
+                                } else {  // 点播
+                                    seek = getPosition();
+                                }
+                            } catch (Exception e) {
                                 seek = 0;
-                            } else {  // 点播
-                                seek = getPosition();
+                                MPLogUtil.log("PlayerApiKernel => startCheckBuffering => handleMessage => " + e.getMessage());
                             }
-                        } catch (Exception e) {
-                            seek = 0;
-                            MPLogUtil.log("PlayerApiKernel => startCheckBuffering => handleMessage => " + e.getMessage());
-                        }
-                        if (seek < 0) {
-                            seek = 0;
-                        }
-                        MPLogUtil.log("PlayerApiKernel => startCheckBuffering => handleMessage => what = " + msg.what + ", seek = " + seek);
+                            if (seek < 0) {
+                                seek = 0;
+                            }
+                            MPLogUtil.log("PlayerApiKernel => startCheckBuffering => handleMessage => what = " + msg.what + ", seek = " + seek);
 
-                        release(false, false, false, false);
-                        restart(seek, true);
-                        callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
+                            release(false, false, false, false);
+                            restart(seek, true);
+                            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
+                        } else {
+                            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
+                            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_TIMEOUT);
+                            release(false, false, false, false);
+                        }
                     }
                 }
             };

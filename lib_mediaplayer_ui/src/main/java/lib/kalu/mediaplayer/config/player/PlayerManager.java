@@ -48,6 +48,11 @@ public final class PlayerManager {
         return this;
     }
 
+    public PlayerManager setBufferingTimeoutRetry(@NonNull boolean v) {
+        this.mPlayerBuilder.setBufferingTimeoutRetry(v);
+        return this;
+    }
+
     public PlayerManager setExoFFmpeg(@PlayerType.FFmpegType int v) {
         mPlayerBuilder.setExoFFmpeg(v);
         return this;
