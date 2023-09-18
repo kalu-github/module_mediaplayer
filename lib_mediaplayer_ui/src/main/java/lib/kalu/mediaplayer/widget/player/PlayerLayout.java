@@ -559,6 +559,18 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public final boolean isPrepared() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.isPrepared();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => isPrepared => " + e.getMessage());
+            return false;
+        }
+    }
+
     public final String getUrl() {
         try {
             PlayerView playerView = getPlayerView();

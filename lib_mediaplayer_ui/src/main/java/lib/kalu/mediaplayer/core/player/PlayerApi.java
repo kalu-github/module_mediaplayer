@@ -16,7 +16,6 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
     default boolean dispatchKeyEventPlayer(@NonNull KeyEvent event) {
         boolean isFloat = isFloat();
         boolean isFull = isFull();
-        MPLogUtil.log("PlayerApi => dispatchKeyEventPlayer => action = " + event.getAction() + ", code = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount() + ", isFloat = " + isFloat + ", isFull = " + isFull);
         dispatchKeyEventComponents(event);
         // action_down => keycode_back
         if (isFloat && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
@@ -56,7 +55,6 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
         }
         // action_down => keycode_dpad_right => seek_forward => start1
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT && event.getRepeatCount() == 0) {
-//            MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start1 => repeatCount = " + event.getRepeatCount());
             try {
                 if (!isPrepared())
                     throw new Exception("isPrepared error: false");
