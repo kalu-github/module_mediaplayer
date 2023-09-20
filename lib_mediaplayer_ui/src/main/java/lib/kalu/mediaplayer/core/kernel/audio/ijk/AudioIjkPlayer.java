@@ -94,8 +94,8 @@ public final class AudioIjkPlayer extends AudioBasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
+            onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_LOADING_START);
+            onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
             if (prepareAsync) {
                 mIjkPlayer.prepareAsync();
@@ -104,8 +104,8 @@ public final class AudioIjkPlayer extends AudioBasePlayer {
             }
         } catch (Exception e) {
             MPLogUtil.log("AudioIjkPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_URL);
+            onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_ERROR_URL);
         }
     }
 
@@ -462,7 +462,7 @@ public final class AudioIjkPlayer extends AudioBasePlayer {
             if (!mPrepared) {
                 long position = getPosition();
                 if (position > 0) {
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
+                    onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_BUFFERING_START);
                 }
             }
             MPLogUtil.log("AudioIjkPlayer => seekTo => succ");
@@ -654,19 +654,19 @@ public final class AudioIjkPlayer extends AudioBasePlayer {
                     break;
                 // 缓冲结束
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                    onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
                     break;
                 // 首帧画面 => 快进
                 case IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE:
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                    onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
                     break;
                 case IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START:
                 case IMediaPlayer.MEDIA_INFO_AUDIO_SEEK_RENDERING_START:
                     break;
                 // 首帧画面 => 开播
                 case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-                    onEvent(PlayerType.KernelType.IJK, what);
+                    onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+                    onEvent(PlayerType.AudioKernelType.AUDIO_IJK, what);
 //                    if (!mPlayWhenReady) {
 //                        mPlayWhenReady = true;
 //                        pause();
@@ -674,7 +674,7 @@ public final class AudioIjkPlayer extends AudioBasePlayer {
                     break;
                 // 通知
                 default:
-                    onEvent(PlayerType.KernelType.IJK, what);
+                    onEvent(PlayerType.AudioKernelType.AUDIO_IJK, what);
                     break;
             }
             return true;
@@ -684,7 +684,7 @@ public final class AudioIjkPlayer extends AudioBasePlayer {
     private IMediaPlayer.OnSeekCompleteListener onSeekCompleteListener = new IMediaPlayer.OnSeekCompleteListener() {
         @Override
         public void onSeekComplete(IMediaPlayer iMediaPlayer) {
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
+            onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
             try {
                 MPLogUtil.log("AudioIjkPlayer => onSeekComplete =>");
                 start();
@@ -724,8 +724,8 @@ public final class AudioIjkPlayer extends AudioBasePlayer {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
             MPLogUtil.log("AudioIjkPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
+            onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
             return true;
         }
     };
@@ -734,7 +734,7 @@ public final class AudioIjkPlayer extends AudioBasePlayer {
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
             MPLogUtil.log("AudioIjkPlayer => onCompletion =>");
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_END);
+            onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_VIDEO_END);
         }
     };
 
@@ -746,8 +746,8 @@ public final class AudioIjkPlayer extends AudioBasePlayer {
 //                    throw new Exception("percent warning: " + percent);
 //                if (!isFromNetBufferStart)
 //                    throw new Exception("isFromNetBufferStart warning: false");
-//                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-//                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
+//                onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+//                onEvent(PlayerType.AudioKernelType.AUDIO_IJK, PlayerType.EventType.EVENT_BUFFERING_START);
 //            } catch (Exception e) {
 //                MPLogUtil.log("AudioIjkPlayer => onBufferingUpdate => " + e.getMessage());
 //            }

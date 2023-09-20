@@ -77,18 +77,18 @@ public final class AudioFFmpegPlayer extends AudioBasePlayer {
                 throw new Exception("mFFmpegPlayer error: null");
             if (url == null || url.length() == 0)
                 throw new IllegalArgumentException("url error: " + url);
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
+            onEvent(PlayerType.AudioKernelType.AUDIO_ANDROID, PlayerType.EventType.EVENT_LOADING_START);
             mFFmpegPlayer.reset();
             mFFmpegPlayer.setDataSource(context, Uri.parse(url), null);
             mFFmpegPlayer.prepare();
         } catch (IllegalArgumentException e) {
             MPLogUtil.log("AudioFFmpegPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_URL);
+            onEvent(PlayerType.AudioKernelType.AUDIO_ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.AudioKernelType.AUDIO_ANDROID, PlayerType.EventType.EVENT_ERROR_URL);
         } catch (Exception e) {
             MPLogUtil.log("AudioFFmpegPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+            onEvent(PlayerType.AudioKernelType.AUDIO_ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.AudioKernelType.AUDIO_ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
     }
 
@@ -316,8 +316,8 @@ public final class AudioFFmpegPlayer extends AudioBasePlayer {
             }
             // error
             else {
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+                onEvent(PlayerType.AudioKernelType.AUDIO_ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.AudioKernelType.AUDIO_ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
             }
             return true;
         }
@@ -327,7 +327,7 @@ public final class AudioFFmpegPlayer extends AudioBasePlayer {
         @Override
         public void onCompletion(FFmpegPlayer mp) {
             MPLogUtil.log("AudioFFmpegPlayer => onCompletion =>");
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
+            onEvent(PlayerType.AudioKernelType.AUDIO_ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
         }
     };
 
@@ -341,18 +341,18 @@ public final class AudioFFmpegPlayer extends AudioBasePlayer {
                 long seek = getSeek();
                 long duration = getDuration();
                 if (duration > 0 && position > seek) {
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
+                    onEvent(PlayerType.AudioKernelType.AUDIO_ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
                 }
             }
             // 缓冲结束
             else if (what == PlayerType.EventType.EVENT_BUFFERING_STOP) {
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.AudioKernelType.AUDIO_ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                onEvent(PlayerType.AudioKernelType.AUDIO_ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
             }
             // 开始播放
             else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+                onEvent(PlayerType.AudioKernelType.AUDIO_ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.AudioKernelType.AUDIO_ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
                 if (!mPlayWhenReady) {
                     pause();
                 }

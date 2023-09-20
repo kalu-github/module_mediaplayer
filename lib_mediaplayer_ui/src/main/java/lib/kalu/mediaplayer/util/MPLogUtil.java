@@ -18,7 +18,7 @@ public final class MPLogUtil {
 
         int videoKernel = config.getVideoKernel();
         boolean log = config.isLog();
-        if (videoKernel == PlayerType.KernelType.VLC) {
+        if (videoKernel == PlayerType.VideoKernelType.VIDEO_VLC) {
             try {
                 Class<?> clazz = Class.forName("lib.kalu.vlc.util.VlcLogUtil");
                 if (null != clazz) {
@@ -30,7 +30,7 @@ public final class MPLogUtil {
             } catch (Exception e) {
                 log("setLogger => vlc exception");
             }
-        } else if (videoKernel == PlayerType.KernelType.IJK) {
+        } else if (videoKernel == PlayerType.VideoKernelType.VIDEO_IJK) {
             try {
                 Class<?> clazz = Class.forName("lib.kalu.ijkplayer.util.IjkLogUtil");
                 if (null != clazz) {
@@ -42,7 +42,7 @@ public final class MPLogUtil {
             } catch (Exception e) {
                 log("setLogger => ijk exception");
             }
-        } else if (videoKernel == PlayerType.KernelType.EXO_V1) {
+        } else if (videoKernel == PlayerType.VideoKernelType.VIDEO_EXO_V1) {
             try {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer.util.ExoLogUtil");
                 if (null != clazz) {
@@ -54,7 +54,7 @@ public final class MPLogUtil {
             } catch (Exception e) {
                 log("setLogger => exo exception");
             }
-        } else if (videoKernel == PlayerType.KernelType.EXO_V2) {
+        } else if (videoKernel == PlayerType.VideoKernelType.VIDEO_EXO_V2) {
             try {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.util.ExoLogUtil");
                 if (null != clazz) {

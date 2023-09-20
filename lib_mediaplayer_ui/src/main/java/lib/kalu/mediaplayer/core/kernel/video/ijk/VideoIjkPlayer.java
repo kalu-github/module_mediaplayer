@@ -91,8 +91,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
+            onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_LOADING_START);
+            onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
             if (prepareAsync) {
                 mIjkPlayer.prepareAsync();
@@ -101,8 +101,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             }
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_URL);
+            onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_ERROR_URL);
         }
     }
 
@@ -482,7 +482,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (!mPrepared) {
                 long position = getPosition();
                 if (position > 0) {
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
+                    onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_BUFFERING_START);
                 }
             }
             MPLogUtil.log("VideoIjkPlayer => seekTo => succ");
@@ -674,19 +674,19 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     break;
                 // 缓冲结束
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                    onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
                     break;
                 // 首帧画面 => 快进
                 case IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE:
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                    onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
                     break;
                 case IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START:
                 case IMediaPlayer.MEDIA_INFO_AUDIO_SEEK_RENDERING_START:
                     break;
                 // 首帧画面 => 开播
                 case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-                    onEvent(PlayerType.KernelType.IJK, what);
+                    onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+                    onEvent(PlayerType.VideoKernelType.VIDEO_IJK, what);
 //                    if (!mPlayWhenReady) {
 //                        mPlayWhenReady = true;
 //                        pause();
@@ -694,7 +694,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     break;
                 // 通知
                 default:
-                    onEvent(PlayerType.KernelType.IJK, what);
+                    onEvent(PlayerType.VideoKernelType.VIDEO_IJK, what);
                     break;
             }
             return true;
@@ -712,7 +712,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 MPLogUtil.log("VideoIjkPlayer => onVideoSizeChanged => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
                 if (videoWidth <= 0 && videoHeight <= 0)
                     throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
-                onMeasure(PlayerType.KernelType.IJK, videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);
+                onMeasure(PlayerType.VideoKernelType.VIDEO_IJK, videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);
             } catch (Exception e) {
                 MPLogUtil.log("VideoIjkPlayer => onVideoSizeChanged => " + e.getMessage());
             }
@@ -722,7 +722,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     private IMediaPlayer.OnSeekCompleteListener onSeekCompleteListener = new IMediaPlayer.OnSeekCompleteListener() {
         @Override
         public void onSeekComplete(IMediaPlayer iMediaPlayer) {
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
+            onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
             try {
                 MPLogUtil.log("VideoIjkPlayer => onSeekComplete =>");
                 start();
@@ -762,8 +762,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
             MPLogUtil.log("VideoIjkPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
+            onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
             return true;
         }
     };
@@ -772,7 +772,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
             MPLogUtil.log("VideoIjkPlayer => onCompletion =>");
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_END);
+            onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_VIDEO_END);
         }
     };
 
@@ -784,8 +784,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 //                    throw new Exception("percent warning: " + percent);
 //                if (!isFromNetBufferStart)
 //                    throw new Exception("isFromNetBufferStart warning: false");
-//                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-//                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
+//                onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+//                onEvent(PlayerType.VideoKernelType.VIDEO_IJK, PlayerType.EventType.EVENT_BUFFERING_START);
 //            } catch (Exception e) {
 //                MPLogUtil.log("VideoIjkPlayer => onBufferingUpdate => " + e.getMessage());
 //            }

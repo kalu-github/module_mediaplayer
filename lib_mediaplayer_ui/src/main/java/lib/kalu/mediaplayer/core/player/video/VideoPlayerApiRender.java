@@ -62,16 +62,16 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             if (null == config)
                 throw new Exception("config warning: null");
             int videoRender = config.getVideoRender();
-            if (videoRender != PlayerType.RenderType.SURFACE_VIEW)
+            if (videoRender != PlayerType.VideoRenderType.VIDEO_SURFACE_VIEW)
                 throw new Exception("videoRender warning: not SURFACE_VIEW");
             int videoKernel = config.getVideoKernel();
-            if (videoKernel != PlayerType.KernelType.IJK_MEDIACODEC && videoKernel != PlayerType.KernelType.EXO_V1 && videoKernel != PlayerType.KernelType.EXO_V2)
+            if (videoKernel != PlayerType.VideoKernelType.VIDEO_IJK_MEDIACODEC && videoKernel != PlayerType.VideoKernelType.VIDEO_EXO_V1 && videoKernel != PlayerType.VideoKernelType.VIDEO_EXO_V2)
                 throw new Exception("videoKernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
             if (!(this instanceof VideoPlayerApiKernel))
                 throw new Exception("videoRender warning: not instanceof PlayerApiKernel");
             createVideoRender();
             ((VideoPlayerApiKernel) this).attachVideoRender();
-            updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 4000 : 400);
+            updateVideoRenderBuffer(videoKernel == PlayerType.VideoKernelType.VIDEO_IJK_MEDIACODEC ? 4000 : 400);
             return true;
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiRender => resetVideoRender => " + e.getMessage());
@@ -279,7 +279,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
         }
     }
 
-    default void setVideoRender(@PlayerType.RenderType int v) {
+    default void setVideoRender(@PlayerType.VideoRenderType int v) {
         try {
             PlayerManager.getInstance().setVideoRender(v);
         } catch (Exception e) {

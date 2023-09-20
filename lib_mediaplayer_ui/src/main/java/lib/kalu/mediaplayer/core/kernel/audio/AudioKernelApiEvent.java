@@ -11,6 +11,6 @@ public interface AudioKernelApiEvent {
     default void setEvent(@NonNull AudioKernelApiEvent eventApi) {
     }
 
-    default void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {
+    default void onEvent(@PlayerType.AudioKernelType.Value int kernel, @PlayerType.EventType.Value int event) {
     }
 }

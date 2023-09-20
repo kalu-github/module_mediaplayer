@@ -111,8 +111,8 @@ public final class VideoExoPlayer extends VideoBasePlayer {
 //                            mIsBuffering = true;
 //                            break;
 //                        case ExoPlayer.STATE_READY:
-//                            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
-//                            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_VIDEO_START);
+//                            onEvent(PlayerType.VideoKernelType.VIDEO_EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
+//                            onEvent(PlayerType.VideoKernelType.VIDEO_EXO_V1, PlayerType.EventType.EVENT_VIDEO_START);
 //                            break;
 //                        case ExoPlayer.STATE_ENDED:
 //                            break;
@@ -141,17 +141,17 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
         MPLogUtil.log("VideoExoPlayer => startDecoder => mExoPlayer = " + mExoPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
-            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_START);
+            onEvent(PlayerType.VideoKernelType.VIDEO_EXO_V1, PlayerType.EventType.EVENT_LOADING_START);
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
             mExoPlayer.prepare();
         } catch (IllegalArgumentException e) {
             MPLogUtil.log("VideoExoPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_ERROR_URL);
+            onEvent(PlayerType.VideoKernelType.VIDEO_EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.VideoKernelType.VIDEO_EXO_V1, PlayerType.EventType.EVENT_ERROR_URL);
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_ERROR_PARSE);
+            onEvent(PlayerType.VideoKernelType.VIDEO_EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.VideoKernelType.VIDEO_EXO_V1, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
     }
 

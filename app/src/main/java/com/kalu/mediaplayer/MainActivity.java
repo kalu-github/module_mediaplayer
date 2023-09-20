@@ -54,6 +54,10 @@ public class MainActivity extends Activity {
     }
 
     private void initAudio() {
+        PlayerManager.getInstance()
+                .setLog(true)
+                .setAudioKernel(PlayerType.AudioKernelType.AUDIO_IJK_MEDIACODEC)
+                .build();
         AudioView audioView = findViewById(R.id.player_audio);
         String s = getResources().getString(R.string.url_tencent);
         audioView.start(s);
@@ -143,25 +147,25 @@ public class MainActivity extends Activity {
         int kernelTypeId = ((RadioGroup) findViewById(R.id.main_kernel)).getCheckedRadioButtonId();
         switch (kernelTypeId) {
             case R.id.main_kernel_ijk:
-                kernelType = PlayerType.KernelType.IJK;
+                kernelType = PlayerType.VideoKernelType.VIDEO_IJK;
                 break;
             case R.id.main_kernel_ijk_mediacodec:
-                kernelType = PlayerType.KernelType.IJK_MEDIACODEC;
+                kernelType = PlayerType.VideoKernelType.VIDEO_IJK_MEDIACODEC;
                 break;
             case R.id.main_kernel_exo_v1:
-                kernelType = PlayerType.KernelType.EXO_V1;
+                kernelType = PlayerType.VideoKernelType.VIDEO_EXO_V1;
                 break;
             case R.id.main_kernel_exo_v2:
-                kernelType = PlayerType.KernelType.EXO_V2;
+                kernelType = PlayerType.VideoKernelType.VIDEO_EXO_V2;
                 break;
             case R.id.main_kernel_vlc:
-                kernelType = PlayerType.KernelType.VLC;
+                kernelType = PlayerType.VideoKernelType.VIDEO_VLC;
                 break;
             case R.id.main_kernel_ffplayer:
-                kernelType = PlayerType.KernelType.FFPLAYER;
+                kernelType = PlayerType.VideoKernelType.VIDEO_FFPLAYER;
                 break;
             default:
-                kernelType = PlayerType.KernelType.ANDROID;
+                kernelType = PlayerType.VideoKernelType.VIDEO_ANDROID;
                 break;
         }
 
@@ -186,10 +190,10 @@ public class MainActivity extends Activity {
         int renderTypeId = ((RadioGroup) findViewById(R.id.main_render)).getCheckedRadioButtonId();
         switch (renderTypeId) {
             case R.id.main_render_surfaceview:
-                renderType = PlayerType.RenderType.SURFACE_VIEW;
+                renderType = PlayerType.VideoRenderType.VIDEO_SURFACE_VIEW;
                 break;
             default:
-                renderType = PlayerType.RenderType.TEXTURE_VIEW;
+                renderType = PlayerType.VideoRenderType.VIDEO_TEXTURE_VIEW;
                 break;
         }
 

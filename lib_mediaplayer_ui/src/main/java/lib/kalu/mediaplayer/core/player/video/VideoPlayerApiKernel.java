@@ -604,7 +604,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /***************************/
 
-    default void setVideoKernel(@PlayerType.KernelType.Value int v) {
+    default void setVideoKernel(@PlayerType.VideoKernelType.Value int v) {
         try {
             PlayerManager.getInstance().setVideoKernel(v);
         } catch (Exception e) {

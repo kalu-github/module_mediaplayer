@@ -612,7 +612,7 @@ interface AudioPlayerApiKernel extends AudioPlayerApiListener {
 
     /***************************/
 
-    default void setAudioKernel(@PlayerType.KernelType.Value int v) {
+    default void setAudioKernel(@PlayerType.VideoKernelType.Value int v) {
         PlayerManager.getInstance().setVideoKernel(v);
     }
 

@@ -20,29 +20,29 @@ import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 @Keep
 public final class AudioKernelFactoryManager {
 
-    public static AudioKernelFactory getFactory(@PlayerType.KernelType int type) {
+    public static AudioKernelFactory getFactory(@PlayerType.AudioKernelType int type) {
         // ijk
-        if (type == PlayerType.KernelType.IJK) {
+        if (type == PlayerType.AudioKernelType.AUDIO_IJK) {
             return AudioIjkPlayerFactory.build(false);
         }
         // ijk_mediacodec
-        else if (type == PlayerType.KernelType.IJK_MEDIACODEC) {
+        else if (type == PlayerType.AudioKernelType.AUDIO_IJK_MEDIACODEC) {
             return AudioIjkPlayerFactory.build(true);
         }
         // exo1
-        else if (type == PlayerType.KernelType.EXO_V1) {
+        else if (type == PlayerType.AudioKernelType.AUDIO_EXO_V1) {
             return AudioExoPlayerFactory.build();
         }
         // exo2
-        else if (type == PlayerType.KernelType.EXO_V2) {
+        else if (type == PlayerType.AudioKernelType.AUDIO_EXO_V2) {
             return AudioExoPlayer2Factory.build();
         }
         // vlc
-        else if (type == PlayerType.KernelType.VLC) {
+        else if (type == PlayerType.AudioKernelType.AUDIO_VLC) {
             return AudioVlcPlayerFactory.build();
         }
         // ffplayer
-        else if (type == PlayerType.KernelType.FFPLAYER) {
+        else if (type == PlayerType.AudioKernelType.AUDIO_FFPLAYER) {
             return AudioFFmpegPlayerFactory.build();
         }
         // android
@@ -51,7 +51,7 @@ public final class AudioKernelFactoryManager {
         }
     }
 
-    public static AudioKernelApi getKernel(@NonNull AudioPlayerApi playerApi, @NonNull boolean retryBuffering, @PlayerType.KernelType.Value int kernelType, @NonNull AudioKernelApiEvent event) {
+    public static AudioKernelApi getKernel(@NonNull AudioPlayerApi playerApi, @NonNull boolean retryBuffering, @PlayerType.VideoKernelType.Value int kernelType, @NonNull AudioKernelApiEvent event) {
         return getFactory(kernelType).createKernel(playerApi, event, retryBuffering);
     }
 }

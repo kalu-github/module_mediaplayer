@@ -77,7 +77,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 throw new Exception("mMediaPlayer error: null");
             if (url == null || url.length() == 0)
                 throw new IllegalArgumentException("url error: " + url);
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
+            onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_LOADING_START);
             initListener();
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);
             if (prepareAsync) {
@@ -87,12 +87,12 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             }
         } catch (IllegalArgumentException e) {
             MPLogUtil.log("VideoAndroidPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_URL);
+            onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_ERROR_URL);
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+            onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
     }
 
@@ -250,7 +250,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             if (!mPrepared) {
                 long position = getPosition();
                 if (position > 0) {
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
+                    onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
                 }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -369,8 +369,8 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 } else if (what == -10005) {
                     throw new Exception("what warning: " + what);
                 } else {
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+                    onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                    onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
                 }
             } catch (Exception e) {
                 MPLogUtil.log("VideoAndroidPlayer => onError => " + e.getMessage());
@@ -383,7 +383,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public void onCompletion(MediaPlayer mp) {
             MPLogUtil.log("VideoAndroidPlayer => onCompletion =>");
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
+            onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
         }
     };
 
@@ -415,19 +415,19 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     long seek = getSeek();
                     if (position <= seek)
                         throw new Exception("position warning: " + position + ", seek warning: " + seek);
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
+                    onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
                 } catch (Exception e) {
                 }
             }
             // 缓冲结束
             else if (what == PlayerType.EventType.EVENT_BUFFERING_STOP) {
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
             }
             // 开始播放1
             else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+                onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
 //                if (!mPlayWhenReady) {
 //                    mPlayWhenReady = true;
 //                    pause();
@@ -435,7 +435,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             }
             // 开始播放2
             else if (what == PlayerType.EventType.EVENT_VIDEO_START_903) {
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START_903);
+                onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_VIDEO_START_903);
             }
             return true;
         }
@@ -444,7 +444,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     private MediaPlayer.OnSeekCompleteListener mOnSeekCompleteListener = new MediaPlayer.OnSeekCompleteListener() {
         @Override
         public void onSeekComplete(MediaPlayer mediaPlayer) {
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
+            onEvent(PlayerType.VideoKernelType.VIDEO_ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
             try {
                 MPLogUtil.log("VideoAndroidPlayer => onSeekComplete =>");
                 start();
@@ -481,7 +481,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 MPLogUtil.log("VideoAndroidPlayer => onVideoSizeChanged => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
                 if (videoWidth < 0 || videoHeight < 0)
                     throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
-                onMeasure(PlayerType.KernelType.ANDROID, videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);
+                onMeasure(PlayerType.VideoKernelType.VIDEO_ANDROID, videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);
             } catch (Exception e) {
                 MPLogUtil.log("VideoAndroidPlayer => onVideoSizeChanged => " + e.getMessage());
             }

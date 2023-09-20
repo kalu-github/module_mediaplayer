@@ -83,12 +83,17 @@ public final class PlayerManager {
         return this;
     }
 
-    public PlayerManager setVideoKernel(@PlayerType.KernelType.Value int v) {
+    public PlayerManager setAudioKernel(@PlayerType.AudioKernelType.Value int v) {
         mPlayerBuilder.setVideoKernel(v);
         return this;
     }
 
-    public PlayerManager setVideoRender(@PlayerType.RenderType.Value int v) {
+    public PlayerManager setVideoKernel(@PlayerType.VideoKernelType.Value int v) {
+        mPlayerBuilder.setVideoKernel(v);
+        return this;
+    }
+
+    public PlayerManager setVideoRender(@PlayerType.VideoRenderType.Value int v) {
         mPlayerBuilder.setVideoRender(v);
         return this;
     }

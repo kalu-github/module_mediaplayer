@@ -192,11 +192,11 @@ public final class AudioExoPlayer2 extends AudioBasePlayer {
                             throw new Exception("PlaybackException error: null");
                         if (!(error instanceof ExoPlaybackException))
                             throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
+                        onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
                         if (mRetryBuffering) {
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_IGNORE);
+                            onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_ERROR_IGNORE);
                         } else {
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_SOURCE);
+                            onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_ERROR_SOURCE);
                         }
                     } catch (Exception e) {
                         MPLogUtil.log("AudioExoPlayer2 => onPlayerError => error = " + error.getMessage());
@@ -230,16 +230,16 @@ public final class AudioExoPlayer2 extends AudioBasePlayer {
                     if (state == Player.STATE_IDLE) {
                         MPLogUtil.log("AudioExoPlayer2 => onPlaybackStateChanged[播放错误] =>");
                         if (mRetryBuffering) {
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_IGNORE);
+                            onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_ERROR_IGNORE);
                         } else {
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_SOURCE);
+                            onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_ERROR_SOURCE);
                         }
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
+                        onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
                     }
                     // 播放结束
                     else if (state == Player.STATE_ENDED) {
                         MPLogUtil.log("AudioExoPlayer2 => onPlaybackStateChanged[播放结束] =>");
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_END);
+                        onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_VIDEO_END);
                     }
                     // 播放开始
                     else if (state == Player.STATE_READY) {
@@ -247,20 +247,20 @@ public final class AudioExoPlayer2 extends AudioBasePlayer {
                         try {
                             if (mPrepared)
                                 throw new Exception("mPrepared warning: true");
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
+                            onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
                             if (mRetryBuffering) {
                                 mRetryBuffering = false;
-                                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
-                                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_START_RETRY);
+                                onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                                onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_VIDEO_START_RETRY);
                             } else {
-                                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_START);
+                                onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_VIDEO_START);
 //                                if (!mPlayWhenReady) {
 //                                    mPlayWhenReady = true;
 //                                    pause();
 //                                }
                             }
                         } catch (Exception e) {
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                            onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
                         }
                         mPrepared = true;
                     }
@@ -270,7 +270,7 @@ public final class AudioExoPlayer2 extends AudioBasePlayer {
                         try {
                             if (!mPrepared)
                                 throw new Exception("mPrepared warning: false");
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_START);
+                            onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_BUFFERING_START);
                         } catch (Exception e) {
                             MPLogUtil.log("AudioExoPlayer2 => onPlaybackStateChanged => STATE_READY => " + e.getMessage());
                         }
@@ -329,9 +329,9 @@ public final class AudioExoPlayer2 extends AudioBasePlayer {
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
             if (mRetryBuffering) {
-                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_START_IGNORE);
+                onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_LOADING_START_IGNORE);
             } else {
-                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_START);
+                onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_LOADING_START);
             }
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
             int cacheType = config.getCacheType();
@@ -362,11 +362,11 @@ public final class AudioExoPlayer2 extends AudioBasePlayer {
             }
         } catch (Exception e) {
             if (mRetryBuffering) {
-                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_IGNORE);
+                onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_ERROR_IGNORE);
             } else {
-                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_URL);
+                onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_ERROR_URL);
             }
-            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.AudioKernelType.AUDIO_EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
             MPLogUtil.log("AudioExoPlayer2 => startDecoder => " + e.getMessage());
         }
     }

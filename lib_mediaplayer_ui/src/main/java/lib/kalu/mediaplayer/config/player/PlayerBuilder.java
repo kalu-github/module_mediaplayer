@@ -23,10 +23,12 @@ public final class PlayerBuilder {
     private int exoUseOkhttpTimeoutSeconds;
     private int bufferingTimeoutSeconds;
     private boolean bufferingTimeoutRetry;
-    @PlayerType.KernelType.Value
-    private int videoKernel; // 播放器内核
-    @PlayerType.RenderType.Value
-    private int videoRender; // 渲染类型
+    @PlayerType.AudioKernelType.Value
+    private int audioKernel; // 音频播放器内核
+    @PlayerType.VideoKernelType.Value
+    private int videoKernel; // 视频播放器内核
+    @PlayerType.VideoRenderType.Value
+    private int videoRender; // 视频渲染类型
     @PlayerType.ScaleType
     private int videoScaleType; // 视频缩放比例
     private boolean checkMobileNetwork; // 监测手机网络环境
@@ -87,6 +89,10 @@ public final class PlayerBuilder {
         return log;
     }
 
+    public int getAudioKernel() {
+        return audioKernel;
+    }
+
     public int getVideoKernel() {
         return videoKernel;
     }
@@ -131,6 +137,7 @@ public final class PlayerBuilder {
         exoUseOkhttpTimeoutSeconds = builder.exoUseOkhttpTimeoutSeconds;
         bufferingTimeoutSeconds = builder.bufferingTimeoutSeconds;
         bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
+        audioKernel = builder.audioKernel;
         videoKernel = builder.videoKernel;
         videoRender = builder.videoRender;
         videoScaleType = builder.videoScaleType;
@@ -154,6 +161,7 @@ public final class PlayerBuilder {
         builder.setExoUseOkhttpTimeoutSeconds(this.exoUseOkhttpTimeoutSeconds);
         builder.setBufferingTimeoutSeconds(this.bufferingTimeoutSeconds);
         builder.setBufferingTimeoutRetry(this.bufferingTimeoutRetry);
+        builder.setAudioKernel(this.audioKernel);
         builder.setVideoKernel(this.videoKernel);
         builder.setVideoRender(this.videoRender);
         builder.setVideoScaleType(this.videoScaleType);
@@ -181,10 +189,12 @@ public final class PlayerBuilder {
         private int exoUseOkhttpTimeoutSeconds = 10;
         private int bufferingTimeoutSeconds = 0;
         private boolean bufferingTimeoutRetry = false;
-        @PlayerType.KernelType.Value
-        private int videoKernel = PlayerType.KernelType.ANDROID; // 播放器内核
-        @PlayerType.RenderType.Value
-        private int videoRender = PlayerType.RenderType.TEXTURE_VIEW; // 渲染类型
+        @PlayerType.AudioKernelType.Value
+        private int audioKernel = PlayerType.AudioKernelType.AUDIO_ANDROID; // 音频播放器内核
+        @PlayerType.VideoKernelType.Value
+        private int videoKernel = PlayerType.VideoKernelType.VIDEO_ANDROID; // 视频播放器内核
+        @PlayerType.VideoRenderType.Value
+        private int videoRender = PlayerType.VideoRenderType.VIDEO_TEXTURE_VIEW; // 视频渲染类型
         @PlayerType.ScaleType
         private int videoScaleType = PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH; // 视频缩放比例
         private boolean checkMobileNetwork = false; // 监测手机网络环境
@@ -256,12 +266,17 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public Builder setVideoKernel(@PlayerType.KernelType.Value int v) {
+        public Builder setAudioKernel(@PlayerType.AudioKernelType.Value int v) {
+            audioKernel = v;
+            return this;
+        }
+
+        public Builder setVideoKernel(@PlayerType.VideoKernelType.Value int v) {
             videoKernel = v;
             return this;
         }
 
-        public Builder setVideoRender(@PlayerType.RenderType.Value int v) {
+        public Builder setVideoRender(@PlayerType.VideoRenderType.Value int v) {
             videoRender = v;
             return this;
         }

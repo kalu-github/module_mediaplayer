@@ -218,25 +218,56 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
-    @interface KernelType {
-        int ANDROID = 6_001; // MediaPlayer，基于原生自带的播放器控件
-        int EXO_V1 = 6_002; // exo
-        int EXO_V2 = 6_003; // exo
-        int IJK = 6_004; // ijk
-        int IJK_MEDIACODEC = 6_005; // ijk_mediacodec
-        int VLC = 6_006; // vlc
-        int FFPLAYER = 6_007; // ffplayer
+    @interface VideoKernelType {
+        int VIDEO_ANDROID = 6_001; // MediaPlayer，基于原生自带的播放器控件
+        int VIDEO_EXO_V1 = 6_002; // exo
+        int VIDEO_EXO_V2 = 6_003; // exo
+        int VIDEO_IJK = 6_004; // ijk
+        int VIDEO_IJK_MEDIACODEC = 6_005; // ijk_mediacodec
+        int VIDEO_VLC = 6_006; // vlc
+        int VIDEO_FFPLAYER = 6_007; // ffplayer
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({IJK,
-                IJK_MEDIACODEC,
-                ANDROID,
-                EXO_V1,
-                EXO_V2,
-                VLC,
-                FFPLAYER})
+        @IntDef({VIDEO_IJK,
+                VIDEO_IJK_MEDIACODEC,
+                VIDEO_ANDROID,
+                VIDEO_EXO_V1,
+                VIDEO_EXO_V2,
+                VIDEO_VLC,
+                VIDEO_FFPLAYER})
+        @Keep
+        @interface Value {
+        }
+    }
+
+    /**
+     * 通过注解限定类型
+     */
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @Keep
+    @interface AudioKernelType {
+        int AUDIO_ANDROID = 6_0011; // MediaPlayer，基于原生自带的播放器控件
+        int AUDIO_EXO_V1 = 6_0012; // exo
+        int AUDIO_EXO_V2 = 6_0013; // exo
+        int AUDIO_IJK = 6_0014; // ijk
+        int AUDIO_IJK_MEDIACODEC = 6_0015; // ijk_mediacodec
+        int AUDIO_VLC = 6_0016; // vlc
+        int AUDIO_FFPLAYER = 6_0017; // ffplayer
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef({AUDIO_IJK,
+                AUDIO_IJK_MEDIACODEC,
+                AUDIO_ANDROID,
+                AUDIO_EXO_V1,
+                AUDIO_EXO_V2,
+                AUDIO_VLC,
+                AUDIO_FFPLAYER})
         @Keep
         @interface Value {
         }
@@ -325,12 +356,12 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
-    @interface RenderType {
-        int TEXTURE_VIEW = 8_001;
-        int SURFACE_VIEW = 8_002;
+    @interface VideoRenderType {
+        int VIDEO_TEXTURE_VIEW = 8_001;
+        int VIDEO_SURFACE_VIEW = 8_002;
 
-        @IntDef({TEXTURE_VIEW,
-                SURFACE_VIEW})
+        @IntDef({VIDEO_TEXTURE_VIEW,
+                VIDEO_SURFACE_VIEW})
         @Retention(RetentionPolicy.SOURCE)
         @Keep
         @interface Value {
