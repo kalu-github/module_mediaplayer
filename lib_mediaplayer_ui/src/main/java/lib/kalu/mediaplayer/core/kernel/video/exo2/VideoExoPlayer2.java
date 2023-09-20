@@ -122,10 +122,10 @@ public final class VideoExoPlayer2 extends BasePlayer {
             int exoFFmpeg = playerBuilder.getExoFFmpeg();
             // only_mediacodec
             if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecRenderersFactory");
+                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
                 if (null == clazz)
-                    throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecRenderersFactory");
-                exoBuilder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecRenderersFactory(context));
+                    throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
+                exoBuilder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory(context));
             }
             // only_mediacodec_audio
             else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_AUDIO) {
@@ -143,10 +143,10 @@ public final class VideoExoPlayer2 extends BasePlayer {
             }
             // only_ffmpeg
             if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegRenderersFactory");
+                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory");
                 if (null == clazz)
-                    throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegRenderersFactory");
-                exoBuilder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegRenderersFactory(context));
+                    throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory");
+                exoBuilder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory(context));
             }
             // only_ffmpeg_audio
             else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG_AUDIO) {
@@ -705,11 +705,11 @@ public final class VideoExoPlayer2 extends BasePlayer {
     /************************/
 
     public MediaSource buildMediaSource(@NonNull Context context,
-                                         @NonNull String mediaUrl,
-                                         @Nullable String subtitleUrl,
-                                         @PlayerType.CacheType int cacheType,
-                                         @NonNull int cacheMax,
-                                         @NonNull String cacheDir) {
+                                        @NonNull String mediaUrl,
+                                        @Nullable String subtitleUrl,
+                                        @PlayerType.CacheType int cacheType,
+                                        @NonNull int cacheMax,
+                                        @NonNull String cacheDir) {
 
         MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => mediaUrl = " + mediaUrl);
         MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => subtitleUrl = " + subtitleUrl);
