@@ -79,7 +79,6 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     @Override
     public void setVideoKernel(@NonNull VideoKernelApi kernel) {
-        MPLogUtil.log("VideoLayout => setVideoKernel => kernel = " + kernel);
         mKernel = kernel;
     }
 
