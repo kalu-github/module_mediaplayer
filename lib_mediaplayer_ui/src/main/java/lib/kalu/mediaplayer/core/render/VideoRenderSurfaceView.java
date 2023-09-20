@@ -2,14 +2,9 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -19,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
@@ -34,16 +29,16 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
  * 再unlockCanvasAndPost（canvas）此视图，那么上传的这张canvas将替换原来的frontCanvas作为新的frontCanvas，
  * 原来的frontCanvas将切换到后台作为backCanvas。
  */
-public class RenderSurfaceView extends SurfaceView implements RenderApi {
+public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Nullable
     private Handler mHandler = null;
     @Nullable
-    private KernelApi mKernel;
+    private VideoKernelApi mKernel;
     @Nullable
     private SurfaceHolder.Callback mSurfaceHolderCallback;
 
-    public RenderSurfaceView(Context context) {
+    public VideoRenderSurfaceView(Context context) {
         super(context);
         init();
     }
@@ -51,13 +46,13 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        MPLogUtil.log("RenderSurfaceView => onDetachedFromWindow => " + this);
+        MPLogUtil.log("VideoRenderSurfaceView => onDetachedFromWindow => " + this);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        MPLogUtil.log("RenderSurfaceView => onAttachedToWindow => " + this);
+        MPLogUtil.log("VideoRenderSurfaceView => onAttachedToWindow => " + this);
     }
 
     @Override
@@ -84,7 +79,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                  */
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
-                    MPLogUtil.log("RenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
+                    MPLogUtil.log("VideoRenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
                     updateSurface(false);
                     addHandler();
                     sendMessage(1000);
@@ -99,7 +94,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                  */
                 @Override
                 public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                    MPLogUtil.log("RenderSurfaceView => addListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
+                    MPLogUtil.log("VideoRenderSurfaceView => addListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
                 }
 
                 /**
@@ -108,14 +103,14 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                  */
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
-                    MPLogUtil.log("RenderSurfaceView => addListener => surfaceDestroyed => " + this);
+                    MPLogUtil.log("VideoRenderSurfaceView => addListener => surfaceDestroyed => " + this);
                     clearMessage();
                     updateSurface(true);
                 }
             };
             getHolder().addCallback(mSurfaceHolderCallback);
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => addListener => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => addListener => " + e.getMessage());
         }
     }
 
@@ -135,9 +130,9 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             surface.release();
             surface = null;
             surfaceHolder = null;
-            MPLogUtil.log("RenderSurfaceView => release => Surface => succ");
+            MPLogUtil.log("VideoRenderSurfaceView => release => Surface => succ");
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => release => Surface => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => release => Surface => " + e.getMessage());
         }
 
         try {
@@ -145,9 +140,9 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                 throw new Exception("mSurfaceHolderCallback error: null");
             getHolder().removeCallback(mSurfaceHolderCallback);
             mSurfaceHolderCallback = null;
-            MPLogUtil.log("RenderSurfaceView => release => SurfaceHolderCallback => succ");
+            MPLogUtil.log("VideoRenderSurfaceView => release => SurfaceHolderCallback => succ");
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => release => SurfaceHolderCallback => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => release => SurfaceHolderCallback => " + e.getMessage());
         }
 
         try {
@@ -156,14 +151,14 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             mHandler.removeMessages(9899);
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
-            MPLogUtil.log("RenderSurfaceView => release => Handler => succ");
+            MPLogUtil.log("VideoRenderSurfaceView => release => Handler => succ");
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => release => Handler => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => release => Handler => " + e.getMessage());
         }
     }
 
     @Override
-    public void setKernel(@NonNull KernelApi kernel) {
+    public void setKernel(@NonNull VideoKernelApi kernel) {
         this.mKernel = kernel;
     }
 
@@ -187,7 +182,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             message.arg1 = delayMillis;
             mHandler.sendMessage(message);
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => updateBuffer => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => updateBuffer => " + e.getMessage());
         }
     }
 
@@ -233,7 +228,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             super.setRotation(rotation);
             requestLayout();
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => setRotation => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => setRotation => " + e.getMessage());
         }
     }
 
@@ -253,7 +248,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 //                    bitmap.eraseColor(Color.RED);//填充颜色
 //                    canvas.drawBitmap(bitmap, 0, 0, null);
 //                } catch (Exception e) {
-//                    MPLogUtil.log("RenderSurfaceView => drawBitmap => " + e.getMessage());
+//                    MPLogUtil.log("VideoRenderSurfaceView => drawBitmap => " + e.getMessage());
 //                }
 //                try {
 //                    SurfaceHolder holder = getHolder();
@@ -264,7 +259,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 //                    //手动try catch一下这个方法，让程序在4.3的手机上不至于崩溃，部分Android13也会崩溃
 //                    getHolder().unlockCanvasAndPost(canvas);
 //                } catch (Exception e) {
-//                    MPLogUtil.log("RenderSurfaceView => drawBitmap => " + e.getMessage());
+//                    MPLogUtil.log("VideoRenderSurfaceView => drawBitmap => " + e.getMessage());
 //                }
 //            }
 //        }).start();
@@ -286,7 +281,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             mVideoHeight = videoHeight;
             requestLayout();
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => setVideoSize => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => setVideoSize => " + e.getMessage());
         }
     }
 
@@ -316,7 +311,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
 //            setMeasuredDimension(measureSpec[0], measureSpec[1]);
 //            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => onMeasure => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => onMeasure => " + e.getMessage());
         }
     }
 
@@ -333,7 +328,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                 mKernel.setSurface(getHolder().getSurface(), 0, 0);
             }
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => updateSurface => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => updateSurface => " + e.getMessage());
         }
     }
 
@@ -344,7 +339,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             mHandler.removeMessages(9899);
             mHandler.sendEmptyMessageDelayed(9899, delayMillis);
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => sendMessage => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => sendMessage => " + e.getMessage());
         }
     }
 
@@ -357,7 +352,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
             mHandler.removeMessages(9877);
             mHandler.removeCallbacksAndMessages(null);
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => clearMessage => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => clearMessage => " + e.getMessage());
         }
     }
 
@@ -387,7 +382,7 @@ public class RenderSurfaceView extends SurfaceView implements RenderApi {
                 }
             };
         } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => addHandler => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => addHandler => " + e.getMessage());
         }
     }
 }

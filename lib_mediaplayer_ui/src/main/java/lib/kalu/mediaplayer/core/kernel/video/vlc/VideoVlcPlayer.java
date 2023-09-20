@@ -9,15 +9,15 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
-import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
-import lib.kalu.mediaplayer.core.player.PlayerApi;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
+import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.vlc.widget.OnVlcInfoChangeListener;
 import lib.kalu.vlc.widget.VlcPlayer;
 
 @Keep
-public final class VideoVlcPlayer extends BasePlayer {
+public final class VideoVlcPlayer extends VideoBasePlayer {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
@@ -30,7 +30,7 @@ public final class VideoVlcPlayer extends BasePlayer {
     private lib.kalu.vlc.widget.VlcPlayer mVlcPlayer;
     private lib.kalu.vlc.widget.OnVlcInfoChangeListener mVlcPlayerListener;
 
-    public VideoVlcPlayer(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent eventApi, @NonNull boolean retryBuffering) {
+    public VideoVlcPlayer(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent eventApi, @NonNull boolean retryBuffering) {
         super(playerApi, eventApi, retryBuffering);
     }
 

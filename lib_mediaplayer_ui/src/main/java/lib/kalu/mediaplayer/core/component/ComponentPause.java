@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -12,7 +11,6 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public class ComponentPause extends RelativeLayout implements ComponentApi {

@@ -1,14 +1,9 @@
 package lib.kalu.mediaplayer.widget.player;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.BlendMode;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,21 +12,17 @@ import android.widget.RelativeLayout;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.player.PlayerBuilder;
-import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
-import lib.kalu.mediaplayer.util.SpeedUtil;
 
 @Keep
 public class PlayerLayout extends RelativeLayout {
@@ -745,7 +736,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final <T extends KernelApi> T getVideoKernel() {
+    public final <T extends VideoKernelApi> T getVideoKernel() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)

@@ -1,7 +1,6 @@
-package lib.kalu.mediaplayer.core.player;
+package lib.kalu.mediaplayer.core.player.video;
 
 import android.annotation.SuppressLint;
-import android.os.SystemClock;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-interface PlayerApiComponent extends PlayerApiBase {
+interface VideoPlayerApiComponent extends VideoPlayerApiBase {
 
     default void clearAllComponent() {
         try {
@@ -26,7 +25,7 @@ interface PlayerApiComponent extends PlayerApiBase {
                 throw new Exception("not find component");
             viewGroup.removeAllViews();
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiComponent => clearAllComponent => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiComponent => clearAllComponent => " + e.getMessage());
         }
     }
 
@@ -51,7 +50,7 @@ interface PlayerApiComponent extends PlayerApiBase {
                 viewGroup.removeView(v);
             }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiComponent => clearComponent => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiComponent => clearComponent => " + e.getMessage());
         }
     }
 
@@ -65,7 +64,7 @@ interface PlayerApiComponent extends PlayerApiBase {
                 throw new Exception("viewGroup error: null");
             viewGroup.addView((View) componentApi, 0, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiComponent => addComponent => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiComponent => addComponent => " + e.getMessage());
         }
     }
 
@@ -83,7 +82,7 @@ interface PlayerApiComponent extends PlayerApiBase {
                 addComponent(componentApi);
             }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiComponent => addAllComponent => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiComponent => addAllComponent => " + e.getMessage());
         }
     }
 
@@ -105,7 +104,7 @@ interface PlayerApiComponent extends PlayerApiBase {
             }
             throw new Exception("not find");
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiComponent => callWindowEvent => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiComponent => callWindowEvent => " + e.getMessage());
             return null;
         }
     }
@@ -125,7 +124,7 @@ interface PlayerApiComponent extends PlayerApiBase {
             }
             throw new Exception("not find");
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiComponent => callWindowEvent => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiComponent => callWindowEvent => " + e.getMessage());
             return null;
         }
     }
@@ -145,7 +144,7 @@ interface PlayerApiComponent extends PlayerApiBase {
                 ((ComponentApi) childAt).dispatchKeyEventComponent(event);
             }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiComponent => dispatchKeyEventComponents => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiComponent => dispatchKeyEventComponents => " + e.getMessage());
         }
     }
 
@@ -164,7 +163,7 @@ interface PlayerApiComponent extends PlayerApiBase {
                 ((ComponentApi) childAt).onUpdateTimeMillis(seek, position, duration);
             }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiComponent => callUpdateTimeMillis => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiComponent => callUpdateTimeMillis => " + e.getMessage());
         }
     }
 }

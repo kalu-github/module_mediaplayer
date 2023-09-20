@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.player;
+package lib.kalu.mediaplayer.core.player.video;
 
 import android.content.Context;
 
@@ -16,7 +16,7 @@ import java.io.OutputStreamWriter;
 
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-interface PlayerApiCache {
+interface VideoPlayerApiCache {
 
     default boolean setCache(Context context, String key, String value) {
         FileOutputStream out = null;
@@ -117,7 +117,7 @@ interface PlayerApiCache {
             String s = object.toString();
             setCache(context, "save_bundle", s);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiCache => saveBundle => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBuriedEvent => saveBundle => " + e.getMessage());
         }
     }
 }

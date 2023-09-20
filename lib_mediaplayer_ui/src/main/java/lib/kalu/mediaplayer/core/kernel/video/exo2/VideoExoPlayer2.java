@@ -3,9 +3,6 @@ package lib.kalu.mediaplayer.core.kernel.video.exo2;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -29,7 +26,6 @@ import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
 import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
@@ -42,8 +38,6 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
-import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
-import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.video.VideoSize;
@@ -53,7 +47,6 @@ import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.SocketAddress;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -62,15 +55,15 @@ import java.util.concurrent.TimeUnit;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
-import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
-import lib.kalu.mediaplayer.core.player.PlayerApi;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
+import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 
 @Keep
-public final class VideoExoPlayer2 extends BasePlayer {
+public final class VideoExoPlayer2 extends VideoBasePlayer {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
@@ -85,7 +78,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
     private ExoPlayer mExoPlayer;
     private AnalyticsListener mAnalyticsListener;
 
-    public VideoExoPlayer2(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent eventApi, @NonNull boolean retryBuffering) {
+    public VideoExoPlayer2(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent eventApi, @NonNull boolean retryBuffering) {
         super(playerApi, eventApi, retryBuffering);
         setRetryBuffering(retryBuffering);
     }

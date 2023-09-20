@@ -3,12 +3,12 @@ package lib.kalu.mediaplayer.core.kernel.video.exo2;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
-import lib.kalu.mediaplayer.core.kernel.video.KernelFactory;
-import lib.kalu.mediaplayer.core.player.PlayerApi;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactory;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 
 @Keep
-public final class VideoExoPlayer2Factory implements KernelFactory<VideoExoPlayer2> {
+public final class VideoExoPlayer2Factory implements VideoKernelFactory<VideoExoPlayer2> {
 
     private VideoExoPlayer2Factory() {
     }
@@ -18,7 +18,7 @@ public final class VideoExoPlayer2Factory implements KernelFactory<VideoExoPlaye
     }
 
     @Override
-    public VideoExoPlayer2 createKernel(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent event, @NonNull boolean retryBuffering) {
+    public VideoExoPlayer2 createKernel(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent event, @NonNull boolean retryBuffering) {
         return new VideoExoPlayer2(playerApi, event, retryBuffering);
     }
 }

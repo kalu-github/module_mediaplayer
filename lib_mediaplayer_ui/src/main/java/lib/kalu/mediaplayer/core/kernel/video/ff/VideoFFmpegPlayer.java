@@ -11,13 +11,13 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.ffplayer.FFmpegPlayer;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
-import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
-import lib.kalu.mediaplayer.core.player.PlayerApi;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
+import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-public final class VideoFFmpegPlayer extends BasePlayer {
+public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
@@ -29,7 +29,7 @@ public final class VideoFFmpegPlayer extends BasePlayer {
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
 
-    public VideoFFmpegPlayer(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent eventApi, @NonNull boolean retryBuffering) {
+    public VideoFFmpegPlayer(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent eventApi, @NonNull boolean retryBuffering) {
         super(playerApi, eventApi, retryBuffering);
     }
 

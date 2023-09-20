@@ -19,8 +19,8 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
  * @date: 2021-05-12 09:40
  */
 @Keep
-public interface KernelApi extends KernelApiBase,
-        KernelApiEvent {
+public interface VideoKernelApi extends VideoKernelApiBase,
+        VideoKernelApiEvent {
 
     void onUpdateTimeMillis();
 
@@ -43,37 +43,37 @@ public interface KernelApi extends KernelApiBase,
 
     default void initDecoder(@NonNull Context context, @NonNull String playUrl, @NonNull StartBuilder bundle) {
 
-        MPLogUtil.log("KernelApi => initDecoder => playUrl = " + playUrl);
+        MPLogUtil.log("VideoKernelApi => initDecoder => playUrl = " + playUrl);
         long seek = bundle.getSeek();
-        MPLogUtil.log("KernelApi => initDecoder => seek = " + seek);
+        MPLogUtil.log("VideoKernelApi => initDecoder => seek = " + seek);
         setSeek(seek);
         long max = bundle.getMax();
-        MPLogUtil.log("KernelApi => initDecoder => max = " + max);
+        MPLogUtil.log("VideoKernelApi => initDecoder => max = " + max);
         setMax(max);
         boolean mute = bundle.isMute();
-        MPLogUtil.log("KernelApi => initDecoder => mute = " + mute);
+        MPLogUtil.log("VideoKernelApi => initDecoder => mute = " + mute);
         setMute(mute);
         boolean loop = bundle.isLoop();
-        MPLogUtil.log("KernelApi => initDecoder => loop = " + loop);
+        MPLogUtil.log("VideoKernelApi => initDecoder => loop = " + loop);
         setLooping(loop);
         boolean live = bundle.isLive();
-        MPLogUtil.log("KernelApi => initDecoder => live = " + live);
+        MPLogUtil.log("VideoKernelApi => initDecoder => live = " + live);
         setLive(live);
         boolean playWhenReady = bundle.isPlayWhenReady();
-        MPLogUtil.log("KernelApi => initDecoder => playWhenReady = " + playWhenReady);
+        MPLogUtil.log("VideoKernelApi => initDecoder => playWhenReady = " + playWhenReady);
         setPlayWhenReady(playWhenReady);
         boolean prepareAsync = bundle.isPrepareAsync();
-        MPLogUtil.log("KernelApi => initDecoder => prepareAsync = " + prepareAsync);
+        MPLogUtil.log("VideoKernelApi => initDecoder => prepareAsync = " + prepareAsync);
         startDecoder(context, playUrl, prepareAsync);
 
 //        String musicUrl = bundle.getExternalMusicUrl();
-//        MPLogUtil.log("KernelApi => update => musicUrl = " + musicUrl);
+//        MPLogUtil.log("VideoKernelApi => update => musicUrl = " + musicUrl);
 //        setExternalMusicPath(musicUrl);
 //        boolean musicLoop = bundle.isExternalMusicLoop();
-//        MPLogUtil.log("KernelApi => update => musicLoop = " + musicLoop);
+//        MPLogUtil.log("VideoKernelApi => update => musicLoop = " + musicLoop);
 //        setExternalMusicLooping(musicLoop);
 //        boolean musicPlayWhenReady = bundle.isExternalMusicPlayWhenReady();
-//        MPLogUtil.log("KernelApi => update => musicPlayWhenReady = " + musicPlayWhenReady);
+//        MPLogUtil.log("VideoKernelApi => update => musicPlayWhenReady = " + musicPlayWhenReady);
 //        setisExternalMusicPlayWhenReady(musicPlayWhenReady);
     }
 

@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.video.ijk;
+package lib.kalu.mediaplayer.core.kernel.audio.ijk;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,8 +10,11 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.kernel.audio.AudioBasePlayer;
+import lib.kalu.mediaplayer.core.kernel.audio.AudioKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.core.player.audio.AudioPlayerApi;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -20,7 +23,7 @@ import tv.danmaku.ijk.media.player.IjkTimedText;
 import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
 
 @Keep
-public final class VideoIjkPlayer extends VideoBasePlayer {
+public final class AudioIjkPlayer extends AudioBasePlayer {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
@@ -31,16 +34,16 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     private boolean mPrepared = false;
 
     private boolean mUseMediaCodec;
-    private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer = null;
+    private IjkMediaPlayer mIjkPlayer = null;
 
-    public VideoIjkPlayer(@NonNull boolean useMediaCodec, @NonNull VideoPlayerApi musicApi, @NonNull VideoKernelApiEvent eventApi, @NonNull boolean retryBuffering) {
-        super(musicApi, eventApi, retryBuffering);
+    public AudioIjkPlayer(@NonNull boolean useMediaCodec, @NonNull AudioPlayerApi playerApi, @NonNull AudioKernelApiEvent eventApi) {
+        super(playerApi, eventApi);
         mUseMediaCodec = useMediaCodec;
     }
 
     @NonNull
     @Override
-    public VideoIjkPlayer getPlayer() {
+    public AudioIjkPlayer getPlayer() {
         return this;
     }
 
@@ -54,7 +57,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             }
             release(isMainThread);
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => releaseDecoder => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => releaseDecoder => " + e.getMessage());
         }
     }
 
@@ -62,7 +65,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
         try {
             releaseDecoder(false, true);
-            mIjkPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
+            mIjkPlayer = new IjkMediaPlayer();
             mIjkPlayer.reset();
             mIjkPlayer.setLooping(false);
             //处理UA问题
@@ -76,16 +79,16 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             setVolume(1F, 1F);
             setOptions();
             lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(logger);
-            tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogger(logger);
-            tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(logger ? tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO : IjkMediaPlayer.IJK_LOG_DEFAULT);
+            IjkMediaPlayer.native_setLogger(logger);
+            IjkMediaPlayer.native_setLogLevel(logger ? IjkMediaPlayer.IJK_LOG_INFO : IjkMediaPlayer.IJK_LOG_DEFAULT);
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => createDecoder => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => createDecoder => " + e.getMessage());
         }
     }
 
     @Override
     public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
-        MPLogUtil.log("VideoIjkPlayer => startDecoder => mIjkPlayer = " + mIjkPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
+        MPLogUtil.log("AudioIjkPlayer => startDecoder => mIjkPlayer = " + mIjkPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -100,7 +103,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 mIjkPlayer.prepareAsync();
             }
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => startDecoder => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => startDecoder => " + e.getMessage());
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_URL);
         }
@@ -111,13 +114,13 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
         // player => ff_ffplay_options.h
         try {
-            int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
+            int player = IjkMediaPlayer.OPT_CATEGORY_PLAYER;
             // 禁用音频
             mIjkPlayer.setOption(player, "an", 0);
             // 禁用视频, 不解码不渲染
-            mIjkPlayer.setOption(player, "vn", 0);
+            mIjkPlayer.setOption(player, "vn", 1);
             // 禁用图像, 解码不渲染
-            mIjkPlayer.setOption(player, "nodisp", 0);
+            mIjkPlayer.setOption(player, "nodisp", 1);
             // 音量 => [0,100]
             mIjkPlayer.setOption(player, "volume", 100);
             // ??
@@ -142,7 +145,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // SDL_FCC_RV16 ---- bpp=16, RGB565
             // SDL_FCC_RV24 ---- bpp=24, RGB888
             // SDL_FCC_RV32 ---- bpp=32, RGBX8888
-            mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV16);
+            mIjkPlayer.setOption(player, "overlay-format", IjkMediaPlayer.SDL_FCC_RV16);
             // 允许的最大播放帧率，当视频的实际帧率大于这个数值时，将丢弃部分视频帧 => [-1,121]
             mIjkPlayer.setOption(player, "max-fps", 30);
             // 是否播放准备工作完成后自动开始播放
@@ -214,12 +217,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // Android等待开始绘制
             mIjkPlayer.setOption(player, "render-wait-start", 1);
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => setOptions => OPT_CATEGORY_PLAYER => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => setOptions => OPT_CATEGORY_PLAYER => " + e.getMessage());
         }
 
         // format
         try {
-            int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
+            int format = IjkMediaPlayer.OPT_CATEGORY_FORMAT;
             mIjkPlayer.setOption(format, "http-detect-range-support", 0);
             // 设置播放前的探测时间 1,达到首屏秒开效果， bug有画面没声音
 //            mIjkPlayer.setOption(format, "analyzeduration", 1000); // 1s
@@ -244,13 +247,13 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             mIjkPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => setOptions => OPT_CATEGORY_FORMAT => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => setOptions => OPT_CATEGORY_FORMAT => " + e.getMessage());
         }
         try {
-            int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
+            int codec = IjkMediaPlayer.OPT_CATEGORY_CODEC;
             mIjkPlayer.setOption(codec, "skip_loop_filter", 48);
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => setOptions => OPT_CATEGORY_CODEC => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => setOptions => OPT_CATEGORY_CODEC => " + e.getMessage());
         }
 
 //        // player
@@ -310,28 +313,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 ////            mIjkPlayer.setOption(format, "rtbufsize", 60);
     }
 
-    @Override
-    public void setDisplay(SurfaceHolder surfaceHolder) {
-        try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
-            mIjkPlayer.setDisplay(surfaceHolder);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => setDisplay => " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void setSurface(@NonNull Surface surface, int w, int h) {
-        try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
-            mIjkPlayer.setSurface(surface);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => setSurface => " + e.getMessage());
-        }
-    }
-
     /**
      * ijk视频播放器监听listener
      */
@@ -340,15 +321,14 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         mIjkPlayer.setOnCompletionListener(onCompletionListener);
         mIjkPlayer.setOnInfoListener(onInfoListener);
         mIjkPlayer.setOnPreparedListener(onPreparedListener);
-        mIjkPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
         mIjkPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
         mIjkPlayer.setOnTimedTextListener(onTimedTextListener);
         // 设置视频缓冲更新监听事件
         mIjkPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
-        mIjkPlayer.setOnNativeInvokeListener(new tv.danmaku.ijk.media.player.IjkMediaPlayer.OnNativeInvokeListener() {
+        mIjkPlayer.setOnNativeInvokeListener(new IjkMediaPlayer.OnNativeInvokeListener() {
             @Override
             public boolean onNativeInvoke(int i, Bundle bundle) {
-                MPLogUtil.log("VideoIjkPlayer => onNativeInvoke => i => " + i + ", bundle = " + bundle);
+                MPLogUtil.log("AudioIjkPlayer => onNativeInvoke => i => " + i + ", bundle = " + bundle);
                 return true;
             }
         });
@@ -377,7 +357,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.pause();
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => pause => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => pause => " + e.getMessage());
         }
     }
 
@@ -423,7 +403,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 }).start();
             }
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => release => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => release => " + e.getMessage());
         }
     }
 
@@ -434,7 +414,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.start();
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => start => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => start => " + e.getMessage());
         }
     }
 
@@ -454,7 +434,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 }).start();
             }
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => stop => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => stop => " + e.getMessage());
         }
     }
 
@@ -467,7 +447,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             return mIjkPlayer.isPlaying();
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => isPlaying => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => isPlaying => " + e.getMessage());
             return false;
         }
     }
@@ -485,10 +465,10 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
                 }
             }
-            MPLogUtil.log("VideoIjkPlayer => seekTo => succ");
+            MPLogUtil.log("AudioIjkPlayer => seekTo => succ");
             mIjkPlayer.seekTo(seek);
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => seekTo => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => seekTo => " + e.getMessage());
         }
     }
 
@@ -504,7 +484,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("currentPosition warning: " + currentPosition);
             return currentPosition;
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => getPosition => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => getPosition => " + e.getMessage());
             return -1L;
         }
     }
@@ -521,7 +501,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("duration warning: " + duration);
             return duration;
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => getDuration => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => getDuration => " + e.getMessage());
             return -1L;
         }
     }
@@ -548,7 +528,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.setSpeed(speed);
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => setSpeed => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => setSpeed => " + e.getMessage());
         }
     }
 
@@ -559,7 +539,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             return mIjkPlayer.getSpeed(0);
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => getSpeed => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => getSpeed => " + e.getMessage());
             return 1F;
         }
     }
@@ -582,7 +562,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 mIjkPlayer.setVolume(value, value);
             }
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => setVolume => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => setVolume => " + e.getMessage());
         }
     }
 
@@ -652,7 +632,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             return mIjkPlayer.getTrackInfo();
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => getTrackInfo => " + e.getMessage());
+            MPLogUtil.log("AudioIjkPlayer => getTrackInfo => " + e.getMessage());
             return null;
         }
     }
@@ -663,7 +643,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     private IMediaPlayer.OnInfoListener onInfoListener = new IMediaPlayer.OnInfoListener() {
         @Override
         public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
-            MPLogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", extra = " + extra);
+            MPLogUtil.log("AudioIjkPlayer => onInfo => what = " + what + ", extra = " + extra);
 
             switch (what) {
                 // 拉流
@@ -701,33 +681,15 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         }
     };
 
-    private IMediaPlayer.OnVideoSizeChangedListener onVideoSizeChangedListener = new IMediaPlayer.OnVideoSizeChangedListener() {
-        @Override
-        public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int width, int height, int sar_num, int sar_den) {
-            try {
-                if (null == iMediaPlayer)
-                    throw new Exception("iMediaPlayer error: null");
-                int videoWidth = iMediaPlayer.getVideoWidth();
-                int videoHeight = iMediaPlayer.getVideoHeight();
-                MPLogUtil.log("VideoIjkPlayer => onVideoSizeChanged => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
-                if (videoWidth <= 0 && videoHeight <= 0)
-                    throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
-                onMeasure(PlayerType.KernelType.IJK, videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);
-            } catch (Exception e) {
-                MPLogUtil.log("VideoIjkPlayer => onVideoSizeChanged => " + e.getMessage());
-            }
-        }
-    };
-
     private IMediaPlayer.OnSeekCompleteListener onSeekCompleteListener = new IMediaPlayer.OnSeekCompleteListener() {
         @Override
         public void onSeekComplete(IMediaPlayer iMediaPlayer) {
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
             try {
-                MPLogUtil.log("VideoIjkPlayer => onSeekComplete =>");
+                MPLogUtil.log("AudioIjkPlayer => onSeekComplete =>");
                 start();
             } catch (Exception e) {
-                MPLogUtil.log("VideoIjkPlayer => onSeekComplete => " + e.getMessage());
+                MPLogUtil.log("AudioIjkPlayer => onSeekComplete => " + e.getMessage());
             }
         }
     };
@@ -742,7 +704,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     throw new Exception("seek warning: " + seek);
                 seekTo(seek);
             } catch (Exception e) {
-                MPLogUtil.log("VideoIjkPlayer => onPrepared => " + e.getMessage());
+                MPLogUtil.log("AudioIjkPlayer => onPrepared => " + e.getMessage());
                 start();
             }
         }
@@ -761,7 +723,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     private IMediaPlayer.OnErrorListener onErrorListener = new IMediaPlayer.OnErrorListener() {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
-            MPLogUtil.log("VideoIjkPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
+            MPLogUtil.log("AudioIjkPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
             return true;
@@ -771,7 +733,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     private IMediaPlayer.OnCompletionListener onCompletionListener = new IMediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
-            MPLogUtil.log("VideoIjkPlayer => onCompletion =>");
+            MPLogUtil.log("AudioIjkPlayer => onCompletion =>");
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_END);
         }
     };
@@ -787,7 +749,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 //                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
 //                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
 //            } catch (Exception e) {
-//                MPLogUtil.log("VideoIjkPlayer => onBufferingUpdate => " + e.getMessage());
+//                MPLogUtil.log("AudioIjkPlayer => onBufferingUpdate => " + e.getMessage());
 //            }
         }
     };
@@ -798,7 +760,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     private IMediaPlayer.OnTimedTextListener onTimedTextListener = new IMediaPlayer.OnTimedTextListener() {
         @Override
         public void onTimedText(IMediaPlayer iMediaPlayer, IjkTimedText ijkTimedText) {
-            MPLogUtil.log("VideoIjkPlayer => onTimedText => text = " + ijkTimedText.getText());
+            MPLogUtil.log("AudioIjkPlayer => onTimedText => text = " + ijkTimedText.getText());
         }
     };
 }

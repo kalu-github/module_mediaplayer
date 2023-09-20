@@ -10,16 +10,16 @@ import lib.kalu.mediaplayer.core.kernel.video.exo2.VideoExoPlayer2Factory;
 import lib.kalu.mediaplayer.core.kernel.video.ff.VideoFFmpegPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.ijk.VideoIjkPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.vlc.VideoVlcPlayerFactory;
-import lib.kalu.mediaplayer.core.player.PlayerApi;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 
 /**
  * @description: 工具类
  * @date: 2021-05-12 14:41
  */
 @Keep
-public final class KernelFactoryManager {
+public final class VideoKernelFactoryManager {
 
-    public static KernelFactory getFactory(@PlayerType.KernelType int type) {
+    public static VideoKernelFactory getFactory(@PlayerType.KernelType int type) {
         // ijk
         if (type == PlayerType.KernelType.IJK) {
             return VideoIjkPlayerFactory.build(false);
@@ -50,7 +50,7 @@ public final class KernelFactoryManager {
         }
     }
 
-    public static KernelApi getKernel(@NonNull PlayerApi playerApi, @NonNull boolean retryBuffering, @PlayerType.KernelType.Value int kernelType, @NonNull KernelApiEvent event) {
+    public static VideoKernelApi getKernel(@NonNull VideoPlayerApi playerApi, @NonNull boolean retryBuffering, @PlayerType.KernelType.Value int kernelType, @NonNull VideoKernelApiEvent event) {
         return getFactory(kernelType).createKernel(playerApi, event, retryBuffering);
     }
 }

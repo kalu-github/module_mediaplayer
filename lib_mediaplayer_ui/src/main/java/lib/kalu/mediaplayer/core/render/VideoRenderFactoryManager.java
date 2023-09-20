@@ -5,18 +5,16 @@ import android.content.Context;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import java.util.LinkedList;
-
 import lib.kalu.mediaplayer.config.player.PlayerType;
 
 @Keep
-public final class RenderFactoryManager {
+public final class VideoRenderFactoryManager {
 
-    public static RenderApi createRender(@NonNull Context context, @PlayerType.RenderType int type) {
+    public static VideoRenderApi createRender(@NonNull Context context, @PlayerType.RenderType int type) {
         if (type == PlayerType.RenderType.SURFACE_VIEW) {
-            return SurfaceFactory.build().create(context);
+            return VideoSurfaceFactory.build().create(context);
         } else {
-            return TextureFactory.build().create(context);
+            return VideoTextureFactory.build().create(context);
         }
     }
 }

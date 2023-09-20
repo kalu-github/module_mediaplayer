@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 
 @Keep
-public interface KernelApiEvent {
+public interface VideoKernelApiEvent {
 
     default void onUpdateTimeMillis(@NonNull boolean isLooping, @NonNull long max, @NonNull long seek, @NonNull long position, @NonNull long duration) {
     }

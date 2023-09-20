@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.player;
+package lib.kalu.mediaplayer.core.player.video;
 
 import android.view.KeyEvent;
 import android.view.View;
@@ -6,12 +6,11 @@ import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerApiKernel, PlayerApiDevice, PlayerApiComponent, PlayerApiCache, PlayerApiRender {
+public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerApiBase, VideoPlayerApiKernel, VideoPlayerApiDevice, VideoPlayerApiComponent, VideoPlayerApiCache, VideoPlayerApiRender {
 
     default boolean dispatchKeyEventPlayer(@NonNull KeyEvent event) {
         boolean isFloat = isFloat();
@@ -62,7 +61,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                     throw new Exception("living error: true");
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
             } catch (Exception e) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start1 => " + e.getMessage());
+                MPLogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekForward => start1 => " + e.getMessage());
             }
             return true;
         }
@@ -75,7 +74,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                     throw new Exception("living error: true");
                 seekForward(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => start2 => " + e.getMessage());
+                MPLogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekForward => start2 => " + e.getMessage());
             }
             return true;
         }
@@ -95,7 +94,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                     throw new Exception("playing waining: true");
                 resume();
             } catch (Exception e) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekForward => stop => " + e.getMessage());
+                MPLogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekForward => stop => " + e.getMessage());
             }
             return true;
         }
@@ -108,7 +107,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                     throw new Exception("living error: true");
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
             } catch (Exception e) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => start1 => " + e.getMessage());
+                MPLogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekRewind => start1 => " + e.getMessage());
             }
             return true;
         }
@@ -121,7 +120,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                     throw new Exception("living error: true");
                 seekRewind(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => start2 => " + e.getMessage());
+                MPLogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekRewind => start2 => " + e.getMessage());
             }
             return true;
         }
@@ -141,7 +140,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                     throw new Exception("playing waining: true");
                 resume();
             } catch (Exception e) {
-                MPLogUtil.log("PlayerApi => dispatchKeyEventComponent22 => seekRewind => stop => " + e.getMessage());
+                MPLogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekRewind => stop => " + e.getMessage());
             }
             return true;
         }
@@ -177,7 +176,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                 }
             }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApi => checkOnWindowVisibilityChanged => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApi => checkOnWindowVisibilityChanged => " + e.getMessage());
         }
     }
 
@@ -188,7 +187,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                 throw new Exception("url error: " + url);
             release(releaseTag, false);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApi => checkOnDetachedFromWindow => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApi => checkOnDetachedFromWindow => " + e.getMessage());
         }
     }
 
@@ -198,12 +197,12 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             if (null == url || url.length() <= 0)
                 throw new Exception("url warning: " + url);
             boolean playing = isPlaying();
-            MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => url = " + url + ", playing = " + playing + ", this = " + this);
+            MPLogUtil.log("VideoPlayerApi => checkOnAttachedToWindow => url = " + url + ", playing = " + playing + ", this = " + this);
             if (playing)
                 throw new Exception("playing warning: true");
             restart();
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApi => checkOnAttachedToWindow => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApi => checkOnAttachedToWindow => " + e.getMessage());
         }
     }
 
@@ -216,7 +215,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             long duration = getDuration();
             saveBundle(getBaseContext(), url, position, duration);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApi => onSaveBundle => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApi => onSaveBundle => " + e.getMessage());
         }
     }
 
@@ -260,7 +259,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             }
 
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApi => seekForward => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApi => seekForward => " + e.getMessage());
         }
     }
 
@@ -305,7 +304,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             }
 
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApi => seekForward => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApi => seekForward => " + e.getMessage());
         }
     }
 
@@ -314,10 +313,10 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
             ComponentApiSeek seekComponent = findSeekComponent();
             if (null == seekComponent)
                 throw new Exception("seekComponent error: null");
-            MPLogUtil.log("PlayerApi => checkSeekBar => seekComponent = " + seekComponent);
+            MPLogUtil.log("VideoPlayerApi => checkSeekBar => seekComponent = " + seekComponent);
             return seekComponent.isComponentShowing();
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApi => checkSeekBar => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApi => checkSeekBar => " + e.getMessage());
             return false;
         }
     }
@@ -332,7 +331,7 @@ public interface PlayerApi extends PlayerApiBuriedEvent, PlayerApiBase, PlayerAp
                 throw new Exception("seekbar error: null");
             return seekBar;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApi => findSeekBar => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApi => findSeekBar => " + e.getMessage());
             return null;
         }
     }

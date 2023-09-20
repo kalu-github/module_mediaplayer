@@ -2,7 +2,6 @@
 package lib.kalu.mediaplayer.core.kernel.video.exo1;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -12,14 +11,14 @@ import androidx.annotation.NonNull;
 import com.google.android.exoplayer.ExoPlayer;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
-import lib.kalu.mediaplayer.core.kernel.video.base.BasePlayer;
-import lib.kalu.mediaplayer.core.player.PlayerApi;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
+import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import tv.kalu.android.exoplayer.player.DemoPlayer;
 
 @Keep
-public final class VideoExoPlayer extends BasePlayer {
+public final class VideoExoPlayer extends VideoBasePlayer {
 
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
@@ -30,7 +29,7 @@ public final class VideoExoPlayer extends BasePlayer {
     private boolean mPrepared = false;
     private DemoPlayer mExoPlayer;
 
-    public VideoExoPlayer(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent eventApi, @NonNull boolean retryBuffering) {
+    public VideoExoPlayer(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent eventApi, @NonNull boolean retryBuffering) {
         super(playerApi, eventApi, retryBuffering);
     }
 

@@ -3,12 +3,12 @@ package lib.kalu.mediaplayer.core.kernel.video.android;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
-import lib.kalu.mediaplayer.core.kernel.video.KernelFactory;
-import lib.kalu.mediaplayer.core.player.PlayerApi;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactory;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 
 @Keep
-public class VideoAndroidPlayerFactory implements KernelFactory<VideoAndroidPlayer> {
+public class VideoAndroidPlayerFactory implements VideoKernelFactory<VideoAndroidPlayer> {
 
     private VideoAndroidPlayerFactory() {
     }
@@ -22,7 +22,7 @@ public class VideoAndroidPlayerFactory implements KernelFactory<VideoAndroidPlay
     }
 
     @Override
-    public VideoAndroidPlayer createKernel(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent event, @NonNull boolean retryBuffering) {
+    public VideoAndroidPlayer createKernel(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent event, @NonNull boolean retryBuffering) {
         return new VideoAndroidPlayer(playerApi, event, retryBuffering);
     }
 }

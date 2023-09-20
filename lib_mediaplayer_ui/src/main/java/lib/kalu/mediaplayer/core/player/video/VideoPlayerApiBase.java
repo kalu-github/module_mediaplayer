@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.player;
+package lib.kalu.mediaplayer.core.player.video;
 
 import android.content.Context;
 import android.view.View;
@@ -7,20 +7,16 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
-import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
-interface PlayerApiBase {
+interface VideoPlayerApiBase {
 
     OnPlayerChangeListener[] mOnPlayerChangeListener = new OnPlayerChangeListener[1];
 
@@ -28,7 +24,7 @@ interface PlayerApiBase {
         try {
             return (PlayerLayout) ((View) this).getParent();
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => getPlayerLayout => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => getPlayerLayout => " + e.getMessage());
             return null;
         }
     }
@@ -69,7 +65,7 @@ interface PlayerApiBase {
                 throw new Exception("superclass error: " + superclass);
             return true;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => isParentEqualsPhoneWindow => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => isParentEqualsPhoneWindow => " + e.getMessage());
             return false;
         }
     }
@@ -81,7 +77,7 @@ interface PlayerApiBase {
                 throw new Exception("isPhoneWindow error: false");
             return true;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => isFull => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => isFull => " + e.getMessage());
             return false;
         }
     }
@@ -99,7 +95,7 @@ interface PlayerApiBase {
                 throw new Exception("layoutParams is null");
             return layoutParams.width != ViewGroup.LayoutParams.MATCH_PARENT || layoutParams.height != ViewGroup.LayoutParams.MATCH_PARENT;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => isFloat => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => isFloat => " + e.getMessage());
             return false;
         }
     }
@@ -115,7 +111,7 @@ interface PlayerApiBase {
             playerGroup.setTag(R.id.module_mediaplayer_root, parentGroup);
             return playerGroup;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => removeBasePlayerViewGroupFromParent => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => removeBasePlayerViewGroupFromParent => " + e.getMessage());
             return null;
         }
     }
@@ -141,7 +137,7 @@ interface PlayerApiBase {
             decorView.removeView(playerView);
             return playerView;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => removePlayerViewFromDecorView => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => removePlayerViewFromDecorView => " + e.getMessage());
             return null;
         }
     }
@@ -171,7 +167,7 @@ interface PlayerApiBase {
             decorView.addView(playerView, index);
             return true;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => switchToDecorView => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => switchToDecorView => " + e.getMessage());
             return false;
         }
     }
@@ -190,7 +186,7 @@ interface PlayerApiBase {
             playerGroup.addView(playerView);
             return true;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => switchToPlayerLayout => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => switchToPlayerLayout => " + e.getMessage());
             return false;
         }
     }
@@ -200,7 +196,7 @@ interface PlayerApiBase {
             ViewGroup playerGroup = getBaseViewGroup();
             return playerGroup.findViewById(R.id.module_mediaplayer_video);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => getBaseVideoGroup => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => getBaseVideoGroup => " + e.getMessage());
             return null;
         }
     }
@@ -211,7 +207,7 @@ interface PlayerApiBase {
             ViewGroup playerGroup = getBaseViewGroup();
             return playerGroup.findViewById(R.id.module_mediaplayer_control);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => getBaseControlViewGroup => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => getBaseControlViewGroup => " + e.getMessage());
             return null;
         }
     }
@@ -229,7 +225,7 @@ interface PlayerApiBase {
         try {
             ((View) this).setOnKeyListener(null);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => cleanPlayerChangeListener => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => cleanPlayerChangeListener => " + e.getMessage());
         }
     }
 
@@ -249,7 +245,7 @@ interface PlayerApiBase {
                 throw new Exception("listener error: null");
             listener.onChange(state);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => callPlayerEvent => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => callPlayerEvent => " + e.getMessage());
         }
 
         // component
@@ -267,7 +263,7 @@ interface PlayerApiBase {
                 ((ComponentApi) childAt).callPlayerEvent(state);
             }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => callPlayerEvent => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => callPlayerEvent => " + e.getMessage());
         }
     }
 
@@ -286,7 +282,7 @@ interface PlayerApiBase {
                 ((ComponentApi) childAt).onUpdateSeekProgress(position, max, true);
             }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => callUpdateSeekProgress => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => callUpdateSeekProgress => " + e.getMessage());
         }
     }
 
@@ -302,7 +298,7 @@ interface PlayerApiBase {
                 throw new Exception("listener error: null");
             listener.onWindow(state);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => callWindowEvent => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => callWindowEvent => " + e.getMessage());
         }
 
         // component
@@ -320,36 +316,36 @@ interface PlayerApiBase {
                 ((ComponentApi) childAt).callWindowEvent(state);
             }
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => callWindowEvent => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => callWindowEvent => " + e.getMessage());
         }
     }
 
     default void setPlayWhenReady(@NonNull boolean playWhenReady) {
         try {
-            KernelApi kernel = getVideoKernel();
+            VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("kernel error: null");
             kernel.setPlayWhenReady(playWhenReady);
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => setPlayWhenReady => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => setPlayWhenReady => " + e.getMessage());
         }
     }
 
     default boolean isPlayWhenReady() {
         try {
-            KernelApi kernel = getVideoKernel();
+            VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("kernel error: null");
             return kernel.isPlayWhenReady();
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiBase => isPlayWhenReady => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => isPlayWhenReady => " + e.getMessage());
             return false;
         }
     }
 
-    KernelApi getVideoKernel();
+    VideoKernelApi getVideoKernel();
 
-    void setVideoKernel(@NonNull KernelApi kernel);
+    void setVideoKernel(@NonNull VideoKernelApi kernel);
 
     void start(@NonNull String url);
 

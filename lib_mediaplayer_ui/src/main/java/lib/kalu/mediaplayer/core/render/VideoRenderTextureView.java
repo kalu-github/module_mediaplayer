@@ -19,7 +19,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
@@ -29,7 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
@@ -40,15 +39,15 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
  *             8.必须在硬件加速的窗口中使用，占用内存比SurfaceView高，在5.0以前在主线程渲染，5.0以后有单独的渲染线程。
  * </pre>
  */
-public class RenderTextureView extends TextureView implements RenderApi {
+public class VideoRenderTextureView extends TextureView implements VideoRenderApi {
 
     private SurfaceTexture mSurfaceTexture;
     @Nullable
-    private KernelApi mKernel;
+    private VideoKernelApi mKernel;
     private Surface mSurface;
     private SurfaceTextureListener mSurfaceTextureListener;
 
-    public RenderTextureView(Context context) {
+    public VideoRenderTextureView(Context context) {
         super(context);
         init();
     }
@@ -56,13 +55,13 @@ public class RenderTextureView extends TextureView implements RenderApi {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        MPLogUtil.log("RenderTextureView => onDetachedFromWindow => " + this);
+        MPLogUtil.log("VideoRenderTextureView => onDetachedFromWindow => " + this);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        MPLogUtil.log("RenderTextureView => onAttachedToWindow => " + this);
+        MPLogUtil.log("VideoRenderTextureView => onAttachedToWindow => " + this);
     }
 
     @Override
@@ -84,7 +83,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-                MPLogUtil.log("RenderTextureView => onSurfaceTextureAvailable => " + this);
+                MPLogUtil.log("VideoRenderTextureView => onSurfaceTextureAvailable => " + this);
                 if (mSurfaceTexture != null) {
                     setSurfaceTexture(mSurfaceTexture);
                 } else {
@@ -128,7 +127,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
                         throw new Exception("mKernel error: null");
                     mKernel.onUpdateTimeMillis();
                 } catch (Exception e) {
-                    MPLogUtil.log("RenderTextureView => onSurfaceTextureUpdated => " + e.getMessage());
+                    MPLogUtil.log("VideoRenderTextureView => onSurfaceTextureUpdated => " + e.getMessage());
                 }
             }
         };
@@ -152,7 +151,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
     }
 
     @Override
-    public void setKernel(@NonNull KernelApi player) {
+    public void setKernel(@NonNull VideoKernelApi player) {
         this.mKernel = player;
     }
 
@@ -258,7 +257,7 @@ public class RenderTextureView extends TextureView implements RenderApi {
 //            setMeasuredDimension(measureSpec[0], measureSpec[1]);
 //            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
         } catch (Exception e) {
-            MPLogUtil.log("RenderTextureView => onMeasure => " + e.getMessage());
+            MPLogUtil.log("VideoRenderTextureView => onMeasure => " + e.getMessage());
         }
     }
 }

@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer.widget.player;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -12,20 +11,19 @@ import androidx.annotation.NonNull;
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
-import lib.kalu.mediaplayer.core.player.PlayerApi;
-import lib.kalu.mediaplayer.core.render.RenderApi;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
+import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-public final class PlayerView extends RelativeLayout implements PlayerApi {
+public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     // 解码
-    protected KernelApi mKernel;
+    protected VideoKernelApi mKernel;
     // 渲染
-    protected RenderApi mRender;
+    protected VideoRenderApi mRender;
 
     public PlayerView(Context context) {
         super(context);
@@ -46,12 +44,12 @@ public final class PlayerView extends RelativeLayout implements PlayerApi {
 
     @Override
     public void addComponent(ComponentApi componentApi) {
-        PlayerApi.super.addComponent(componentApi);
+        VideoPlayerApi.super.addComponent(componentApi);
     }
 
     @Override
     public void addAllComponent(List<ComponentApi> componentApis) {
-        PlayerApi.super.addAllComponent(componentApis);
+        VideoPlayerApi.super.addAllComponent(componentApis);
     }
 
     @Override
@@ -65,22 +63,22 @@ public final class PlayerView extends RelativeLayout implements PlayerApi {
     }
 
     @Override
-    public RenderApi getVideoRender() {
+    public VideoRenderApi getVideoRender() {
         return mRender;
     }
 
     @Override
-    public void setVideoRender(@NonNull RenderApi render) {
+    public void setVideoRender(@NonNull VideoRenderApi render) {
         mRender = render;
     }
 
     @Override
-    public KernelApi getVideoKernel() {
+    public VideoKernelApi getVideoKernel() {
         return mKernel;
     }
 
     @Override
-    public void setVideoKernel(@NonNull KernelApi kernel) {
+    public void setVideoKernel(@NonNull VideoKernelApi kernel) {
         MPLogUtil.log("VideoLayout => setVideoKernel => kernel = " + kernel);
         mKernel = kernel;
     }

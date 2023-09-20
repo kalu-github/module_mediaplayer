@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.player.PlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public class ComponentNet extends RelativeLayout implements ComponentApi {

@@ -1,22 +1,16 @@
-package lib.kalu.mediaplayer.core.kernel.video.base;
-
-import android.annotation.SuppressLint;
-import android.os.AsyncTask;
+package lib.kalu.mediaplayer.core.kernel.video;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApiEvent;
-import lib.kalu.mediaplayer.core.player.PlayerApi;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-public abstract class BasePlayer implements KernelApi {
+public abstract class VideoBasePlayer implements VideoKernelApi {
 
-    private KernelApiEvent eventApi;
-    private PlayerApi playerApi;
+    private VideoKernelApiEvent eventApi;
+    private VideoPlayerApi playerApi;
 
-    public BasePlayer(@NonNull PlayerApi playerApi, @NonNull KernelApiEvent eventApi, @NonNull boolean retryBuffering) {
+    public VideoBasePlayer(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent eventApi, @NonNull boolean retryBuffering) {
         this.playerApi = playerApi;
         this.eventApi = eventApi;
     }
@@ -94,7 +88,7 @@ public abstract class BasePlayer implements KernelApi {
         }
     }
 
-    public final void setEvent(@NonNull KernelApiEvent eventApi) {
+    public final void setEvent(@NonNull VideoKernelApiEvent eventApi) {
         this.eventApi = eventApi;
     }
 }

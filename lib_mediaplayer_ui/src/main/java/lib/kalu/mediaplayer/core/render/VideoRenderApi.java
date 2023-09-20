@@ -23,11 +23,11 @@ import java.io.FileOutputStream;
 
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.KernelApi;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-public interface RenderApi {
+public interface VideoRenderApi {
 
     void init();
 
@@ -44,7 +44,7 @@ public interface RenderApi {
      *
      * @param player player
      */
-    void setKernel(@NonNull KernelApi player);
+    void setKernel(@NonNull VideoKernelApi player);
 
     /**
      * 截图
@@ -95,7 +95,7 @@ public interface RenderApi {
 
         int screenWidth = View.MeasureSpec.getSize(widthMeasureSpec);
         int screenHeight = View.MeasureSpec.getSize(heightMeasureSpec);
-        MPLogUtil.log("RenderApi => doMeasureSpec => measureWidth => screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
+        MPLogUtil.log("VideoRenderApi => doMeasureSpec => measureWidth => screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
 
         try {
             // 填充屏幕, 裁剪
@@ -174,7 +174,7 @@ public interface RenderApi {
             String path = file.getAbsolutePath();
             return path;
         } catch (Exception e) {
-            MPLogUtil.log("RenderApi => saveBitmap => " + e.getMessage());
+            MPLogUtil.log("VideoRenderApi => saveBitmap => " + e.getMessage());
             return null;
         }
     }
@@ -192,7 +192,7 @@ public interface RenderApi {
             canvas.drawRect(0, 0, 0 + canvas.getWidth(), 0 + canvas.getHeight(), paint);
             surface.unlockCanvasAndPost(canvas);
         } catch (Exception e) {
-            MPLogUtil.log("RenderApi => clearSurface => " + e.getMessage());
+            MPLogUtil.log("VideoRenderApi => clearSurface => " + e.getMessage());
         }
     }
 
@@ -238,7 +238,7 @@ public interface RenderApi {
             EGL14.eglDestroyContext(display, context);
             EGL14.eglTerminate(display);
         } catch (Exception e) {
-            MPLogUtil.log("RenderApi => clearSurfaceGLES => " + e.getMessage());
+            MPLogUtil.log("VideoRenderApi => clearSurfaceGLES => " + e.getMessage());
         }
     }
 }

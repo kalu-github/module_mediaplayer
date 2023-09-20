@@ -35,7 +35,7 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.core.player.PlayerApi;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.widget.subtitle.engine.DefaultSubtitleEngine;
 import lib.kalu.mediaplayer.widget.subtitle.engine.SubtitleEngine;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;
@@ -125,7 +125,7 @@ public class SimpleSubtitleView extends TextView
     }
 
     @Override
-    public void bindToMediaPlayer(final PlayerApi mediaPlayer) {
+    public void bindToMediaPlayer(final VideoPlayerApi mediaPlayer) {
         if (null != mediaPlayer) {
             mSubtitleEngine.bindToMediaPlayer(mediaPlayer);
         }

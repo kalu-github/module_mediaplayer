@@ -1,19 +1,19 @@
-package lib.kalu.mediaplayer.core.player;
+package lib.kalu.mediaplayer.core.player.video;
 
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.util.SpeedUtil;
 
-interface PlayerApiDevice extends PlayerApiBase {
+interface VideoPlayerApiDevice extends VideoPlayerApiBase {
 
     void setScreenKeep(boolean enable);
 
     default String getNetSpeed() {
         try {
             String speed = SpeedUtil.getNetSpeed(getBaseContext());
-            MPLogUtil.log("PlayerApiDevice => getNetSpeed => speed = " + speed);
+            MPLogUtil.log("VideoPlayerApiDevice => getNetSpeed => speed = " + speed);
             return speed;
         } catch (Exception e) {
-            MPLogUtil.log("PlayerApiDevice => getNetSpeed => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiDevice => getNetSpeed => " + e.getMessage());
             return "0kb/s";
         }
     }
