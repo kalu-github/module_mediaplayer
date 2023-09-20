@@ -9,48 +9,12 @@
         android:allowBackup="false"
         android:supportsRtl="true">
 
-<!--        <provider-->
-<!--            android:name="lib.kalu.mediaplayer.init.InitProvider"-->
-<!--            android:authorities="${applicationId}.mediaplayer"-->
-<!--            android:exported="false"-->
-<!--            android:multiprocess="true" />-->
-
-        <!--        <receiver-->
-        <!--            android:name="lib.kalu.mediaplayer.ui.old.other.BatterReceiver"-->
-        <!--            android:process=":mediaplayer" />-->
-        <!--        <receiver-->
-        <!--            android:name="lib.kalu.mediaplayer.ui.old.other.NetChangedReceiver"-->
-        <!--            android:process=":mediaplayer">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-        <!--            </intent-filter>-->
-        <!--        </receiver>-->
-
-<!--        <service android:name=".core.kernel.music.service.PlayService" />-->
-
-<!--        <receiver-->
-<!--            android:name=".core.kernel.music.receiver.NotificationStatusBarReceiver"-->
-<!--            android:exported="false">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="lib.kalu.status_bar" />-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
-
-<!--        <receiver-->
-<!--            android:name=".core.kernel.music.receiver.EarphoneControlReceiver"-->
-<!--            android:exported="false">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MEDIA_BUTTON" />-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
-
-<!--        <receiver-->
-<!--            android:name=".core.kernel.music.receiver.AudioBroadcastReceiver"-->
-<!--            android:exported="false">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="lib.kalu.lock" />-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
+        <!-- 内容 -->
+        <provider
+            android:name="lib.kalu.mediaplayer.context.PlayerProvider"
+            android:authorities="${applicationId}.provider-player"
+            android:exported="false"
+            android:multiprocess="true" />
 
         <activity
             android:name="lib.kalu.mediaplayer.TestActivity"

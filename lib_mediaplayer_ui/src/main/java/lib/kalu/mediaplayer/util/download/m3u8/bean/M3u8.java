@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.download.m3u8.bean;
+package lib.kalu.mediaplayer.util.download.m3u8.bean;
 
 import androidx.annotation.Keep;
 

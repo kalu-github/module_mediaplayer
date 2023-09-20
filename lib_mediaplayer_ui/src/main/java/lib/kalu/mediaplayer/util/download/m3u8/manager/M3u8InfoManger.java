@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.download.m3u8.manager;
+package lib.kalu.mediaplayer.util.download.m3u8.manager;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
@@ -8,9 +8,9 @@ import androidx.annotation.Keep;
 
 import java.io.IOException;
 
-import lib.kalu.mediaplayer.download.m3u8.bean.M3u8;
-import lib.kalu.mediaplayer.download.m3u8.inter.OnM3u8InfoListener;
-import lib.kalu.mediaplayer.download.m3u8.utils.M3u8FileUtils;
+import lib.kalu.mediaplayer.util.download.m3u8.bean.M3u8;
+import lib.kalu.mediaplayer.util.download.m3u8.inter.OnM3u8InfoListener;
+import lib.kalu.mediaplayer.util.download.m3u8.utils.M3u8FileUtils;
 
 
 /**

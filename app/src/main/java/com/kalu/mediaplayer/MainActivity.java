@@ -21,7 +21,10 @@ import lib.kalu.mediaplayer.TestActivity;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.kernel.audio.AudioKernelFactory;
+import lib.kalu.mediaplayer.core.kernel.audio.AudioKernelFactoryManager;
 import lib.kalu.mediaplayer.util.UdpMulticastUtil;
+import lib.kalu.mediaplayer.widget.audio.AudioView;
 
 /**
  * description:
@@ -33,6 +36,7 @@ public class MainActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initAudio();
         initAsset();
         findViewById(R.id.main_button1).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +51,12 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void initAudio() {
+        AudioView audioView = findViewById(R.id.player_audio);
+        String s = getResources().getString(R.string.url_tencent);
+        audioView.start(s);
     }
 
     private boolean isLive() {
