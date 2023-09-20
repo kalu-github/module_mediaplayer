@@ -78,10 +78,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.squareup.okhttp3:okhttp:3.14.9'
-//    implementation project(path: ':lib_mediaplayer_ui')
 
     // ui
-    api files('libs/lib_mediaplayer_ui_release_20230825.aar')
+    api files('libs/lib_mediaplayer_ui_release_20230920.aar')
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.13_release_20230813.aar')
     // exo1

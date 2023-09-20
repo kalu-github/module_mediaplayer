@@ -29,6 +29,7 @@ import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
 import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
@@ -52,6 +53,7 @@ import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.SocketAddress;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -397,7 +399,9 @@ public final class VideoExoPlayer2 extends BasePlayer {
 //                    MediaLogUtil.log("onEXOLoadCompleted => ");
 //                }
 //            });
-            mExoPlayer.setMediaSource(createMediaSource(context, url, null, cacheType, cacheMax, cacheDir));
+
+            MediaSource mediaSource = buildMediaSource(context, url, null, cacheType, cacheMax, cacheDir);
+            mExoPlayer.setMediaSource(mediaSource);
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
             if (prepareAsync) {
                 mExoPlayer.prepare();
@@ -700,7 +704,7 @@ public final class VideoExoPlayer2 extends BasePlayer {
 
     /************************/
 
-    public MediaSource createMediaSource(@NonNull Context context,
+    public MediaSource buildMediaSource(@NonNull Context context,
                                          @NonNull String mediaUrl,
                                          @Nullable String subtitleUrl,
                                          @PlayerType.CacheType int cacheType,
