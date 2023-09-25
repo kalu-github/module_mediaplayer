@@ -25,7 +25,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-interface AudioPlayerApiKernel extends AudioPlayerApiListener {
+interface AudioPlayerApiKernel extends AudioPlayerApiBase {
 
     default void setData(@NonNull String data) {
         try {

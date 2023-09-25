@@ -27,6 +27,10 @@ public class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     public PlayerView(Context context) {
         super(context);
+        init();
+    }
+
+    protected void init() {
         setId(R.id.module_mediaplayer_root);
         // player
         RelativeLayout layoutPlayer = new RelativeLayout(getContext());

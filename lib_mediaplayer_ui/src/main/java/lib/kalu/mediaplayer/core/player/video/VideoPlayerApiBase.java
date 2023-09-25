@@ -16,9 +16,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
-interface VideoPlayerApiBase {
-
-    OnPlayerChangeListener[] mOnPlayerChangeListener = new OnPlayerChangeListener[1];
+interface VideoPlayerApiBase extends VideoPlayerApiListener {
 
     default PlayerLayout getPlayerLayout() {
         try {
@@ -212,41 +210,29 @@ interface VideoPlayerApiBase {
         }
     }
 
-    default boolean hasPlayerChangeListener() {
-        return null != mOnPlayerChangeListener && null != mOnPlayerChangeListener[0];
-    }
-
-    default OnPlayerChangeListener getPlayerChangeListener() {
-        return mOnPlayerChangeListener[0];
-    }
-
-    default void cleanPlayerChangeListener() {
-        mOnPlayerChangeListener[0] = null;
+    default void callUpdateSeekProgress(@NonNull long position, @NonNull long max) {
         try {
-            ((View) this).setOnKeyListener(null);
+            ViewGroup viewGroup = getBaseControlViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).onUpdateSeekProgress(position, max, true);
+            }
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBase => cleanPlayerChangeListener => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiBase => callUpdateSeekProgress => " + e.getMessage());
         }
-    }
-
-    default void setOnPlayerChangeListener(@NonNull OnPlayerChangeListener l) {
-        mOnPlayerChangeListener[0] = null;
-        mOnPlayerChangeListener[0] = l;
     }
 
     default void callPlayerEvent(@PlayerType.StateType.Value int state) {
+
         // listener
-        try {
-            boolean hasListener = hasPlayerChangeListener();
-            if (!hasListener)
-                throw new Exception("not find PlayerChangeListener");
-            OnPlayerChangeListener listener = getPlayerChangeListener();
-            if (null == listener)
-                throw new Exception("listener error: null");
-            listener.onChange(state);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBase => callPlayerEvent => " + e.getMessage());
-        }
+        callChangeListener(state);
 
         // component
         try {
@@ -267,39 +253,10 @@ interface VideoPlayerApiBase {
         }
     }
 
-    default void callUpdateSeekProgress(@NonNull long position, @NonNull long max) {
-        try {
-            ViewGroup viewGroup = getBaseControlViewGroup();
-            int childCount = viewGroup.getChildCount();
-            if (childCount <= 0)
-                throw new Exception("not find component");
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).onUpdateSeekProgress(position, max, true);
-            }
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBase => callUpdateSeekProgress => " + e.getMessage());
-        }
-    }
-
     default void callWindowEvent(@PlayerType.WindowType.Value int state) {
 
         // listener
-        try {
-            boolean hasListener = hasPlayerChangeListener();
-            if (!hasListener)
-                throw new Exception("not find PlayerChangeListener");
-            OnPlayerChangeListener listener = getPlayerChangeListener();
-            if (null == listener)
-                throw new Exception("listener error: null");
-            listener.onWindow(state);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBase => callWindowEvent => " + e.getMessage());
-        }
+        callWindowListener(state);
 
         // component
         try {
