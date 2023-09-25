@@ -48,7 +48,7 @@ public class PlayerLayout extends RelativeLayout {
         init();
     }
 
-    private void init() {
+    protected void init() {
         cleanPlayerChangeListener();
         try {
             int childCount = getChildCount();

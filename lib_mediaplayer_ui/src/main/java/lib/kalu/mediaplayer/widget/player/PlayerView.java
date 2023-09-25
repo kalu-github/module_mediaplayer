@@ -18,12 +18,12 @@ import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
+public class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     // 解码
-    protected VideoKernelApi mKernel;
+    protected VideoKernelApi mVideoKernelApi;
     // 渲染
-    protected VideoRenderApi mRender;
+    protected VideoRenderApi mVideoRenderApi;
 
     public PlayerView(Context context) {
         super(context);
@@ -64,22 +64,22 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     @Override
     public VideoRenderApi getVideoRender() {
-        return mRender;
+        return mVideoRenderApi;
     }
 
     @Override
     public void setVideoRender(@NonNull VideoRenderApi render) {
-        mRender = render;
+        mVideoRenderApi = render;
     }
 
     @Override
     public VideoKernelApi getVideoKernel() {
-        return mKernel;
+        return mVideoKernelApi;
     }
 
     @Override
     public void setVideoKernel(@NonNull VideoKernelApi kernel) {
-        mKernel = kernel;
+        mVideoKernelApi = kernel;
     }
 
     @Override

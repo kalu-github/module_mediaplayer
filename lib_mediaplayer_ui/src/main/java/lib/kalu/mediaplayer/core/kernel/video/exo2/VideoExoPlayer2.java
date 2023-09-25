@@ -394,12 +394,7 @@ public final class VideoExoPlayer2 extends VideoBasePlayer {
 //                }
 //            });
 
-//            MediaSource mediaSource = buildMediaSource(context, url, null, cacheType, cacheMax, cacheDir);
-
-            MediaSource videoSource = buildMediaSource(context, url, null, cacheType, cacheMax, cacheDir);
-            MediaSource audioSource = buildMediaSource(context, "https://www.cambridgeenglish.org/images/153149-movers-sample-listening-test-vol2.mp3", null, cacheType, cacheMax, cacheDir);
-            MergingMediaSource mediaSource = new MergingMediaSource(videoSource, audioSource);
-
+            MediaSource mediaSource = buildMediaSource(context, url, null, cacheType, cacheMax, cacheDir);
             mExoPlayer.setMediaSource(mediaSource);
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
             if (prepareAsync) {
