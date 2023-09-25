@@ -54,13 +54,13 @@ public class MainActivity extends Activity {
     }
 
     private void initAudio() {
-        PlayerManager.getInstance()
-                .setLog(true)
-                .setAudioKernel(PlayerType.AudioKernelType.AUDIO_IJK_MEDIACODEC)
-                .build();
-        AudioView audioView = findViewById(R.id.player_audio);
-        String s = getResources().getString(R.string.url_tencent);
-        audioView.start(s);
+//        PlayerManager.getInstance()
+//                .setLog(true)
+//                .setAudioKernel(PlayerType.AudioKernelType.AUDIO_IJK_MEDIACODEC)
+//                .build();
+//        AudioView audioView = findViewById(R.id.player_audio);
+//        String s = getResources().getString(R.string.url_tencent);
+//        audioView.start(s);
     }
 
     private boolean isLive() {
