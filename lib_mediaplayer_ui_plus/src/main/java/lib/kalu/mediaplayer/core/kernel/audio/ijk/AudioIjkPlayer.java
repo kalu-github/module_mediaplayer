@@ -82,7 +82,6 @@ public final class AudioIjkPlayer extends AudioBasePlayer {
 
     @Override
     public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
-        MPLogUtil.log("AudioIjkPlayer => startDecoder => mIjkPlayer = " + mIjkPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -111,9 +110,9 @@ public final class AudioIjkPlayer extends AudioBasePlayer {
             // 禁用音频
             mIjkPlayer.setOption(player, "an", 0);
             // 禁用视频, 不解码不渲染
-            mIjkPlayer.setOption(player, "vn", 0);
+            mIjkPlayer.setOption(player, "vn", 1);
             // 禁用图像, 解码不渲染
-            mIjkPlayer.setOption(player, "nodisp", 0);
+            mIjkPlayer.setOption(player, "nodisp", 1);
             // 音量 => [0,100]
             mIjkPlayer.setOption(player, "volume", 100);
             // ??
