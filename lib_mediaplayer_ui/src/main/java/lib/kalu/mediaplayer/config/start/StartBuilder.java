@@ -3,33 +3,17 @@ package lib.kalu.mediaplayer.config.start;
 import androidx.annotation.Keep;
 
 @Keep
-public final class StartBuilder {
+public class StartBuilder {
 
     private long max;
     private long seek;
     private boolean live;
-    private boolean loop;
-    private boolean loopRelease;
+    private boolean looping;
+    private boolean loopingRelease;
     private boolean mute;
     private boolean playWhenReady;
     private boolean prepareAsync;
-
     private boolean windowVisibilityChangedRelease; // 不可见, release
-
-    // 外部背景音
-    private boolean externalEnable;
-    private String externalMusicUrl;
-    private boolean externalMusicLoop;
-    private boolean externalMusicPlayWhenReady;
-    private boolean externalMusicSeek;
-
-    public boolean isPrepareAsync() {
-        return prepareAsync;
-    }
-
-    public boolean isMute() {
-        return mute;
-    }
 
     public long getMax() {
         return max;
@@ -43,77 +27,40 @@ public final class StartBuilder {
         return live;
     }
 
-    public boolean isLoop() {
-        return loop;
+    public boolean isLooping() {
+        return looping;
     }
 
-    public boolean isLoopRelease() {
-        return loopRelease;
+    public boolean isLoopingRelease() {
+        return loopingRelease;
+    }
+
+    public boolean isMute() {
+        return mute;
     }
 
     public boolean isPlayWhenReady() {
         return playWhenReady;
     }
 
+    public boolean isPrepareAsync() {
+        return prepareAsync;
+    }
+
     public boolean isWindowVisibilityChangedRelease() {
         return windowVisibilityChangedRelease;
     }
 
-    public boolean isExternalEnable() {
-        return externalEnable;
-    }
-
-    public String getExternalMusicUrl() {
-        return externalMusicUrl;
-    }
-
-    public boolean isExternalMusicLoop() {
-        return externalMusicLoop;
-    }
-
-    public boolean isExternalMusicPlayWhenReady() {
-        return externalMusicPlayWhenReady;
-    }
-
-    public boolean isExternalMusicSeek() {
-        return externalMusicSeek;
-    }
-
-    public StartBuilder(StartBuilder.Builder builder) {
+    public StartBuilder(Builder builder) {
         this.max = builder.max;
         this.seek = builder.seek;
         this.mute = builder.mute;
         this.live = builder.live;
-        this.loop = builder.loop;
+        this.looping = builder.looping;
+        this.loopingRelease = builder.loopingRelease;
         this.prepareAsync = builder.prepareAsync;
-        this.loopRelease = builder.loopRelease;
         this.playWhenReady = builder.playWhenReady;
         this.windowVisibilityChangedRelease = builder.windowVisibilityChangedRelease;
-        this.externalEnable = builder.externalEnable;
-        this.externalMusicUrl = builder.externalMusicUrl;
-        this.externalMusicLoop = builder.externalMusicLoop;
-        this.externalMusicPlayWhenReady = builder.externalMusicPlayWhenReady;
-        this.externalMusicSeek = builder.externalMusicSeek;
-    }
-
-    @Override
-    public String toString() {
-        return "StartBuilder{" +
-                "playWhenReady=" + playWhenReady +
-                ", max=" + max +
-                ", seek=" + seek +
-                ", live=" + live +
-                ", loop=" + loop +
-                ", loopRelease=" + loopRelease +
-                ", mute=" + mute +
-                ", prepareAsync=" + prepareAsync +
-                ", windowVisibilityChangedRelease=" + windowVisibilityChangedRelease +
-                ", externalEnable='" + externalEnable + '\'' +
-                ", externalMusicUrl='" + externalMusicUrl + '\'' +
-                ", externalMusicLoop=" + externalMusicLoop +
-                ", externalMusicPlayWhenReady=" + externalMusicPlayWhenReady +
-                ", externalMusicSeek=" + externalMusicSeek +
-                '}';
     }
 
     public Builder newBuilder() {
@@ -122,37 +69,27 @@ public final class StartBuilder {
         builder.seek = seek;
         builder.mute = mute;
         builder.live = live;
-        builder.loop = loop;
+        builder.looping = looping;
+        builder.loopingRelease = loopingRelease;
         builder.prepareAsync = prepareAsync;
         builder.playWhenReady = playWhenReady;
         builder.windowVisibilityChangedRelease = windowVisibilityChangedRelease;
-        builder.externalEnable = externalEnable;
-        builder.externalMusicUrl = externalMusicUrl;
-        builder.externalMusicLoop = externalMusicLoop;
-        builder.externalMusicPlayWhenReady = externalMusicPlayWhenReady;
-        builder.externalMusicSeek = externalMusicSeek;
         return builder;
     }
 
     @Keep
-    public final static class Builder {
+    public static class Builder {
 
         private long max = 0;
         private long seek = 0;
         private boolean live = false;
-        private boolean loop = false;
-        private boolean loopRelease = false;
+        private boolean looping = false;
+        private boolean loopingRelease = false;
         private boolean mute = false;
         private boolean playWhenReady = true; // 默认自动开播
         private boolean prepareAsync = true; // 默认异步初始化
 
         private boolean windowVisibilityChangedRelease = false; // 不可见, release
-
-        private boolean externalEnable = false;
-        private String externalMusicUrl = null;
-        private boolean externalMusicLoop = false;
-        private boolean externalMusicPlayWhenReady = false;
-        private boolean externalMusicSeek = true;
 
         public Builder() {
         }
@@ -162,63 +99,38 @@ public final class StartBuilder {
             return this;
         }
 
-        public Builder setExternalEnable(boolean v) {
-            externalEnable = v;
-            return this;
-        }
-
         public Builder setPlayWhenReady(boolean v) {
-            playWhenReady = v;
-            return this;
-        }
-
-        public Builder setExternalMusicPlayWhenReady(boolean v) {
-            externalMusicPlayWhenReady = v;
-            return this;
-        }
-
-        public Builder setExternalMusicLooping(boolean v) {
-            externalMusicLoop = v;
-            return this;
-        }
-
-        public Builder setExternalMusicSeek(boolean v) {
-            externalMusicSeek = v;
-            return this;
-        }
-
-        public Builder setExternalMusicUrl(String v) {
-            externalMusicUrl = v;
+            this.playWhenReady = v;
             return this;
         }
 
         public Builder setMute(boolean v) {
-            mute = v;
+            this.mute = v;
             return this;
         }
 
         public Builder setMax(long v) {
-            max = v;
+            this.max = v;
             return this;
         }
 
         public Builder setSeek(long v) {
-            seek = v;
+            this.seek = v;
             return this;
         }
 
         public Builder setLive(boolean v) {
-            live = v;
+            this.live = v;
             return this;
         }
 
-        public Builder setLoop(boolean v) {
-            loop = v;
+        public Builder setLooping(boolean v) {
+            this.looping = v;
             return this;
         }
 
-        public Builder setLoopRelease(boolean v) {
-            loopRelease = v;
+        public Builder setLoopingRelease(boolean v) {
+            this.loopingRelease = v;
             return this;
         }
 

@@ -29,7 +29,7 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
+import lib.kalu.mediaplayer.core.player.VideoPlayerApi;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;
 
 /**

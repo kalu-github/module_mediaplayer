@@ -12,25 +12,20 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
-import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
+import lib.kalu.mediaplayer.core.kernel.VideoKernelApi;
+import lib.kalu.mediaplayer.core.player.VideoPlayerApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
-import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @Keep
-public class PlayerView extends RelativeLayout implements VideoPlayerApi {
+public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     // 解码
-    protected VideoKernelApi mVideoKernelApi;
+    protected VideoKernelApi mKernel;
     // 渲染
-    protected VideoRenderApi mVideoRenderApi;
+    protected VideoRenderApi mRender;
 
     public PlayerView(Context context) {
         super(context);
-        init();
-    }
-
-    protected void init() {
         setId(R.id.module_mediaplayer_root);
         // player
         RelativeLayout layoutPlayer = new RelativeLayout(getContext());
@@ -68,22 +63,22 @@ public class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     @Override
     public VideoRenderApi getVideoRender() {
-        return mVideoRenderApi;
+        return mRender;
     }
 
     @Override
     public void setVideoRender(@NonNull VideoRenderApi render) {
-        mVideoRenderApi = render;
+        mRender = render;
     }
 
     @Override
     public VideoKernelApi getVideoKernel() {
-        return mVideoKernelApi;
+        return mKernel;
     }
 
     @Override
     public void setVideoKernel(@NonNull VideoKernelApi kernel) {
-        mVideoKernelApi = kernel;
+        mKernel = kernel;
     }
 
     @Override

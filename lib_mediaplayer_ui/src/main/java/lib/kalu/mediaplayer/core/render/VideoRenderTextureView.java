@@ -28,7 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
+import lib.kalu.mediaplayer.core.kernel.VideoKernelApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 

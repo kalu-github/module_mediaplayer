@@ -20,7 +20,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
-import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
+import lib.kalu.mediaplayer.core.kernel.VideoKernelApi;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -48,7 +48,7 @@ public class PlayerLayout extends RelativeLayout {
         init();
     }
 
-    protected void init() {
+    private void init() {
         cleanPlayerChangeListener();
         try {
             int childCount = getChildCount();
