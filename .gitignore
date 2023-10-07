@@ -2,7 +2,9 @@
 /.gradle/
 /.idea
 /app/build
+/app/release/
 /lib_mediaplayer_ui/build
+/lib_mediaplayer_ui_plus/build
 /lib_mediaplayer_ijkplayer_k0.8.8_ff3.4/.cxx/
 /lib_mediaplayer_ijkplayer_k0.8.8_ff3.4/build/
 /lib_mediaplayer_ffplayer_ff4.0_full/
@@ -13,10 +15,8 @@
 /lib_mediaplayer_ijkplayer_k0.8.8_ff3.4/
 /lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12/
 /lib_mediaplayer_exoplayer_r2.18.7_full/
-/app/release/
 /lib_mediaplayer_ffplayer_ff3.4.12_full/
 /lib_mediaplayer_ffplayer_ff3.4.12/
-/lib_mediaplayer_ui_plus/
 /lib_mediaplayer_exoplayer_r2.19.0_full/
 /lib_mediaplayer_exoplayer_r2.19.0/
 /lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13/

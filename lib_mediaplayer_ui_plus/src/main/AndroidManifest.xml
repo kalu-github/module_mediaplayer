@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="false"
+        android:supportsRtl="true">
+
+        <!-- 内容 -->
+        <provider
+            android:name="lib.kalu.mediaplayer.context.PlayerProvider"
+            android:authorities="${applicationId}.provider-player"
+            android:exported="false"
+            android:multiprocess="true" />
+
+        <activity
+            android:name="lib.kalu.mediaplayer.TestActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard|uiMode"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:theme="@style/MediaplayerThemeFull" />
+
+    </application>
+
+</manifest>

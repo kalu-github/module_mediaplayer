@@ -23,9 +23,7 @@ public final class PlayerBuilder {
     private int exoUseOkhttpTimeoutSeconds;
     private int bufferingTimeoutSeconds;
     private boolean bufferingTimeoutRetry;
-    @PlayerType.AudioKernelType.Value
-    private int audioKernel; // 音频播放器内核
-    @PlayerType.VideoKernelType.Value
+    @PlayerType.KernelType.Value
     private int videoKernel; // 视频播放器内核
     @PlayerType.VideoRenderType.Value
     private int videoRender; // 视频渲染类型
@@ -89,10 +87,6 @@ public final class PlayerBuilder {
         return log;
     }
 
-    public int getAudioKernel() {
-        return audioKernel;
-    }
-
     public int getVideoKernel() {
         return videoKernel;
     }
@@ -137,7 +131,6 @@ public final class PlayerBuilder {
         exoUseOkhttpTimeoutSeconds = builder.exoUseOkhttpTimeoutSeconds;
         bufferingTimeoutSeconds = builder.bufferingTimeoutSeconds;
         bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
-        audioKernel = builder.audioKernel;
         videoKernel = builder.videoKernel;
         videoRender = builder.videoRender;
         videoScaleType = builder.videoScaleType;
@@ -161,7 +154,6 @@ public final class PlayerBuilder {
         builder.setExoUseOkhttpTimeoutSeconds(this.exoUseOkhttpTimeoutSeconds);
         builder.setBufferingTimeoutSeconds(this.bufferingTimeoutSeconds);
         builder.setBufferingTimeoutRetry(this.bufferingTimeoutRetry);
-        builder.setAudioKernel(this.audioKernel);
         builder.setVideoKernel(this.videoKernel);
         builder.setVideoRender(this.videoRender);
         builder.setVideoScaleType(this.videoScaleType);
@@ -189,10 +181,10 @@ public final class PlayerBuilder {
         private int exoUseOkhttpTimeoutSeconds = 10;
         private int bufferingTimeoutSeconds = 0;
         private boolean bufferingTimeoutRetry = false;
-        @PlayerType.AudioKernelType.Value
-        private int audioKernel = PlayerType.AudioKernelType.AUDIO_ANDROID; // 音频播放器内核
-        @PlayerType.VideoKernelType.Value
-        private int videoKernel = PlayerType.VideoKernelType.VIDEO_ANDROID; // 视频播放器内核
+        @PlayerType.KernelType.Value
+        private int audioKernel = PlayerType.KernelType.ANDROID; // 音频播放器内核
+        @PlayerType.KernelType.Value
+        private int videoKernel = PlayerType.KernelType.ANDROID; // 视频播放器内核
         @PlayerType.VideoRenderType.Value
         private int videoRender = PlayerType.VideoRenderType.VIDEO_TEXTURE_VIEW; // 视频渲染类型
         @PlayerType.ScaleType
@@ -266,12 +258,12 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public Builder setAudioKernel(@PlayerType.AudioKernelType.Value int v) {
+        public Builder setAudioKernel(@PlayerType.KernelType.Value int v) {
             audioKernel = v;
             return this;
         }
 
-        public Builder setVideoKernel(@PlayerType.VideoKernelType.Value int v) {
+        public Builder setVideoKernel(@PlayerType.KernelType.Value int v) {
             videoKernel = v;
             return this;
         }

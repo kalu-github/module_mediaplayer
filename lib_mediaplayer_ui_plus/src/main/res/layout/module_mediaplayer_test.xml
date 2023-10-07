@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cccccc">
+
+    <lib.kalu.mediaplayer.widget.player.PlayerLayout
+        android:id="@+id/module_mediaplayer_test_video"
+        android:layout_width="320dp"
+        android:layout_height="180dp"
+        android:layout_centerInParent="true"
+        android:background="@android:color/holo_red_dark"
+        android:focusable="true" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/module_mediaplayer_test_button8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="信息" />
+
+        <Button
+            android:id="@+id/module_mediaplayer_test_button0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="跳转" />
+
+        <Button
+            android:id="@+id/module_mediaplayer_test_button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="换台" />
+
+        <Button
+            android:id="@+id/module_mediaplayer_test_button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="全屏" />
+
+        <Button
+            android:id="@+id/module_mediaplayer_test_button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="浮动" />
+
+        <Button
+            android:id="@+id/module_mediaplayer_test_button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="show-component" />
+
+        <Button
+            android:id="@+id/module_mediaplayer_test_button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="gone-component" />
+
+    </LinearLayout>
+
+</RelativeLayout>
