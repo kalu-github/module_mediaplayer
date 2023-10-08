@@ -14,11 +14,12 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.audio.AudioKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
+import lib.kalu.mediaplayer.core.player.audio.AudioPlayerApi;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 
 @Keep
-public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
+public final class PlayerView extends RelativeLayout implements VideoPlayerApi, AudioPlayerApi {
 
     // 音频解码
     private AudioKernelApi mAudioKernelApi;
