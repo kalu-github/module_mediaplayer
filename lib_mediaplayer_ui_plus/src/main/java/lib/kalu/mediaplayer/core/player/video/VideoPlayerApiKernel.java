@@ -394,11 +394,11 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         seekTo(force, seek, getMax(), isLooping());
     }
 
-    default void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop) {
+    default void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean looping) {
         StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setMax(max);
         builder.setSeek(seek);
-        builder.setLooping(isLooping());
+        builder.setLooping(looping);
         builder.setLoopingRelease(isLoopingRelease());
         builder.setLive(isLive());
         builder.setWindowVisibilityChangedRelease(isWindowVisibilityChangedRelease());
@@ -623,25 +623,11 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 @Override
                 public void onUpdateTimeMillis(@NonNull boolean isLooping, @NonNull long max, @NonNull long seek, @NonNull long position, @NonNull long duration) {
 
-                    boolean reset;
-                    if (max > 0) {
-                        long playTime = (position - seek);
-                        if (playTime > max) {
-                            reset = true;
-                        } else {
-                            reset = false;
-                        }
-                    } else {
-                        reset = false;
-                    }
-
-                    // end
-                    if (reset) {
+                    try {
+                        if (max <= 0 || (position - seek) <= max)
+                            throw new Exception("looping warning: max = " + max);
                         // loop
                         if (isLooping) {
-                            // 1
-                            hideReal();
-                            // 2
                             boolean seekHelp = playerBuilder.isSeekHelp();
                             if (seekHelp) {
                                 seekToVideoKernel(1);
@@ -651,18 +637,12 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         }
                         // stop
                         else {
-                            // step1
                             pause(true);
-                            // step2
                             playEnd();
                         }
-                    }
-                    // next
-                    else {
-
-                        // 1
+                    } catch (Exception e) {
+                        MPLogUtil.log("VideoPlayerApiKernel => onUpdateTimeMillis => " + e.getMessage());
                         callUpdateTimeMillis(seek, position, duration);
-                        // 2
                         callProgressListener(position, duration);
                     }
                 }
