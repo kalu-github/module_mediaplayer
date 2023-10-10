@@ -326,10 +326,10 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
     @interface RenderType {
-        int VIDEO_TEXTURE_VIEW = 8_001;
+        int TEXTURE_VIEW = 8_001;
         int SURFACE_VIEW = 8_002;
 
-        @IntDef({VIDEO_TEXTURE_VIEW,
+        @IntDef({TEXTURE_VIEW,
                 SURFACE_VIEW})
         @Retention(RetentionPolicy.SOURCE)
         @Keep
