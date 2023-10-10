@@ -83,7 +83,7 @@ public interface VideoRenderApi {
                                 @NonNull int videoHeight) {
 
         if (videoScaleType == 0) {
-            videoScaleType = PlayerManager.getInstance().getConfig().getVideoScaleType();
+            videoScaleType = PlayerManager.getInstance().getConfig().getScaleType();
         }
 
         if (videoRotation == 90 || videoRotation == 270) {

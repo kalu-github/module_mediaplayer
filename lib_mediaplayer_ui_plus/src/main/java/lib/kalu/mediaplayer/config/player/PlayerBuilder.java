@@ -24,13 +24,13 @@ public final class PlayerBuilder {
     private int bufferingTimeoutSeconds;
     private boolean bufferingTimeoutRetry;
     @PlayerType.KernelType.Value
-    private int audioKernel; // 音频播放器内核
+    private int externalAudioKernel; // 音频播放器内核
     @PlayerType.KernelType.Value
-    private int videoKernel; // 视频播放器内核
+    private int kernel; // 视频播放器内核
     @PlayerType.RenderType.Value
-    private int videoRender; // 视频渲染类型
+    private int render; // 视频渲染类型
     @PlayerType.ScaleType
-    private int videoScaleType; // 视频缩放比例
+    private int scaleType; // 视频缩放比例
     private boolean checkMobileNetwork; // 监测手机网络环境
     private boolean fitMobileCutout; // 是否适配手机刘海屏，默认适配
     private boolean checkOrientation;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
@@ -89,21 +89,21 @@ public final class PlayerBuilder {
         return log;
     }
 
-    public int getAudioKernel() {
-        return audioKernel;
+    public int getExtrAudioKernel() {
+        return externalAudioKernel;
     }
 
-    public int getVideoKernel() {
-        return videoKernel;
+    public int getKernel() {
+        return kernel;
     }
 
-    public int getVideoRender() {
-        return videoRender;
+    public int getRender() {
+        return render;
     }
 
     @PlayerType.ScaleType.Value
-    public int getVideoScaleType() {
-        return videoScaleType;
+    public int getScaleType() {
+        return scaleType;
     }
 
     public boolean isCheckMobileNetwork() {
@@ -137,10 +137,10 @@ public final class PlayerBuilder {
         exoUseOkhttpTimeoutSeconds = builder.exoUseOkhttpTimeoutSeconds;
         bufferingTimeoutSeconds = builder.bufferingTimeoutSeconds;
         bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
-        audioKernel = builder.audioKernel;
-        videoKernel = builder.videoKernel;
-        videoRender = builder.videoRender;
-        videoScaleType = builder.videoScaleType;
+        externalAudioKernel = builder.externalAudioKernel;
+        kernel = builder.kernel;
+        render = builder.render;
+        scaleType = builder.scaleType;
         checkMobileNetwork = builder.checkMobileNetwork;
         fitMobileCutout = builder.fitMobileCutout;
         checkOrientation = builder.checkOrientation;
@@ -161,10 +161,10 @@ public final class PlayerBuilder {
         builder.setExoUseOkhttpTimeoutSeconds(this.exoUseOkhttpTimeoutSeconds);
         builder.setBufferingTimeoutSeconds(this.bufferingTimeoutSeconds);
         builder.setBufferingTimeoutRetry(this.bufferingTimeoutRetry);
-        builder.setAudioKernel(this.audioKernel);
-        builder.setVideoKernel(this.videoKernel);
-        builder.setVideoRender(this.videoRender);
-        builder.setVideoScaleType(this.videoScaleType);
+        builder.setExternalAudioKernel(this.externalAudioKernel);
+        builder.setKernel(this.kernel);
+        builder.setRender(this.render);
+        builder.setScaleType(this.scaleType);
         builder.setCheckMobileNetwork(this.checkMobileNetwork);
         builder.setFitMobileCutout(this.fitMobileCutout);
         builder.setCheckOrientation(this.checkOrientation);
@@ -190,13 +190,13 @@ public final class PlayerBuilder {
         private int bufferingTimeoutSeconds = 0;
         private boolean bufferingTimeoutRetry = false;
         @PlayerType.KernelType.Value
-        private int audioKernel = PlayerType.KernelType.ANDROID; // 音频播放器内核
+        private int externalAudioKernel = PlayerType.KernelType.ANDROID; // 音频播放器内核
         @PlayerType.KernelType.Value
-        private int videoKernel = PlayerType.KernelType.ANDROID; // 视频播放器内核
+        private int kernel = PlayerType.KernelType.ANDROID; // 视频播放器内核
         @PlayerType.RenderType.Value
-        private int videoRender = PlayerType.RenderType.TEXTURE_VIEW; // 视频渲染类型
+        private int render = PlayerType.RenderType.TEXTURE_VIEW; // 视频渲染类型
         @PlayerType.ScaleType
-        private int videoScaleType = PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH; // 视频缩放比例
+        private int scaleType = PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH; // 视频缩放比例
         private boolean checkMobileNetwork = false; // 监测手机网络环境
         private boolean fitMobileCutout = true; // 是否适配手机刘海屏，默认适配
         private boolean checkOrientation = false;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
@@ -266,23 +266,23 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public Builder setAudioKernel(@PlayerType.KernelType.Value int v) {
-            audioKernel = v;
+        public Builder setExternalAudioKernel(@PlayerType.KernelType.Value int v) {
+            externalAudioKernel = v;
             return this;
         }
 
-        public Builder setVideoKernel(@PlayerType.KernelType.Value int v) {
-            videoKernel = v;
+        public Builder setKernel(@PlayerType.KernelType.Value int v) {
+            kernel = v;
             return this;
         }
 
-        public Builder setVideoRender(@PlayerType.RenderType.Value int v) {
-            videoRender = v;
+        public Builder setRender(@PlayerType.RenderType.Value int v) {
+            render = v;
             return this;
         }
 
-        public Builder setVideoScaleType(@PlayerType.ScaleType.Value int v) {
-            videoScaleType = v;
+        public Builder setScaleType(@PlayerType.ScaleType.Value int v) {
+            scaleType = v;
             return this;
         }
 

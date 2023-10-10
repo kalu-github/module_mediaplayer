@@ -599,7 +599,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void setVideoKernel(@PlayerType.KernelType.Value int v) {
         try {
-            PlayerManager.getInstance().setVideoKernel(v);
+            PlayerManager.getInstance().setKernel(v);
         } catch (Exception e) {
         }
     }
@@ -616,7 +616,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
         // 2
         try {
-            int type = PlayerManager.getInstance().getConfig().getVideoKernel();
+            int type = PlayerManager.getInstance().getConfig().getKernel();
             VideoKernelApi kernel = VideoKernelFactoryManager.getKernel((VideoPlayerApi) this, type, new VideoKernelApiEvent() {
 
                 @Override

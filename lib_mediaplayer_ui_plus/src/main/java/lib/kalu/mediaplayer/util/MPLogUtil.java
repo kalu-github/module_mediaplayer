@@ -16,7 +16,7 @@ public final class MPLogUtil {
 
     public static void setLogger(@NonNull PlayerBuilder config) {
 
-        int videoKernel = config.getVideoKernel();
+        int videoKernel = config.getKernel();
         boolean log = config.isLog();
         if (videoKernel == PlayerType.KernelType.VLC) {
             try {

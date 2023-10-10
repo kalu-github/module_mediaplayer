@@ -27,7 +27,7 @@ interface AudioPlayerApiKernel extends AudioPlayerApiBase {
             File audioFile = new File(audioPath);
             if (!audioFile.exists() || audioFile.isDirectory())
                 throw new Exception("audioFile warning: not exists");
-            int audioKernel = PlayerManager.getInstance().getConfig().getAudioKernel();
+            int audioKernel = PlayerManager.getInstance().getConfig().getExtrAudioKernel();
             AudioKernelApi audioKernelApi = AudioKernelFactoryManager.getKernel((AudioPlayerApi) this, audioKernel, new AudioKernelApiEvent() {
             });
             setAudioKernel(audioKernelApi);

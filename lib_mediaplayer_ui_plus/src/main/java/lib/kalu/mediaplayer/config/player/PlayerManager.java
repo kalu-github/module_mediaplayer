@@ -83,23 +83,23 @@ public final class PlayerManager {
         return this;
     }
 
-    public PlayerManager setAudioKernel(@PlayerType.KernelType.Value int v) {
-        mPlayerBuilder.setVideoKernel(v);
+    public PlayerManager setExternalAudioKernel(@PlayerType.KernelType.Value int v) {
+        mPlayerBuilder.setExternalAudioKernel(v);
         return this;
     }
 
-    public PlayerManager setVideoKernel(@PlayerType.KernelType.Value int v) {
-        mPlayerBuilder.setVideoKernel(v);
+    public PlayerManager setKernel(@PlayerType.KernelType.Value int v) {
+        mPlayerBuilder.setKernel(v);
         return this;
     }
 
-    public PlayerManager setVideoRender(@PlayerType.RenderType.Value int v) {
-        mPlayerBuilder.setVideoRender(v);
+    public PlayerManager setRender(@PlayerType.RenderType.Value int v) {
+        mPlayerBuilder.setRender(v);
         return this;
     }
 
-    public PlayerManager setVideoScaleType(@PlayerType.ScaleType.Value int v) {
-        mPlayerBuilder.setVideoScaleType(v);
+    public PlayerManager setScaleType(@PlayerType.ScaleType.Value int v) {
+        mPlayerBuilder.setScaleType(v);
         updateConfig(false);
         return this;
     }

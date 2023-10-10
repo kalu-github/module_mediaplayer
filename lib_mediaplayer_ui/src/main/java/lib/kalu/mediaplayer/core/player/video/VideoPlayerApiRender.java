@@ -61,10 +61,10 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
             if (null == config)
                 throw new Exception("config warning: null");
-            int videoRender = config.getVideoRender();
+            int videoRender = config.getRender();
             if (videoRender != PlayerType.RenderType.SURFACE_VIEW)
                 throw new Exception("videoRender warning: not SURFACE_VIEW");
-            int videoKernel = config.getVideoKernel();
+            int videoKernel = config.getKernel();
             if (videoKernel != PlayerType.KernelType.IJK_MEDIACODEC && videoKernel != PlayerType.KernelType.EXO_V1 && videoKernel != PlayerType.KernelType.EXO_V2)
                 throw new Exception("videoKernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
             if (!(this instanceof VideoPlayerApiKernel))
@@ -192,7 +192,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             if (null == render)
                 throw new Exception("render error: null");
             render.setVideoScaleType(scaleType);
-            PlayerManager.getInstance().setVideoScaleType(scaleType);
+            PlayerManager.getInstance().setScaleType(scaleType);
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiRender => setVideoScaleType => " + e.getMessage());
         }
@@ -281,7 +281,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
 
     default void setVideoRender(@PlayerType.RenderType int v) {
         try {
-            PlayerManager.getInstance().setVideoRender(v);
+            PlayerManager.getInstance().setRender(v);
         } catch (Exception e) {
         }
     }
@@ -289,7 +289,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
     default void createVideoRender() {
         try {
             releaseVideoRender();
-            int videoRender = PlayerManager.getInstance().getConfig().getVideoRender();
+            int videoRender = PlayerManager.getInstance().getConfig().getRender();
             setVideoRender(VideoRenderFactoryManager.createRender(getBaseContext(), videoRender));
             addVideoRender();
         } catch (Exception e) {
