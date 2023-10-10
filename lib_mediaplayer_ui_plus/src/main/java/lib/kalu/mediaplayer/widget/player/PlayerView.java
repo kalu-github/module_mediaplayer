@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.config.player.PlayerBuilder;
+import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.audio.AudioKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
@@ -72,7 +74,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi, 
 
     @Override
     public void setVideoRender(@NonNull VideoRenderApi render) {
-        mVideoRenderApi = render;
+        this.mVideoRenderApi = render;
     }
 
     @Override
@@ -82,7 +84,17 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi, 
 
     @Override
     public void setVideoKernel(@NonNull VideoKernelApi kernel) {
-        mVideoKernelApi = kernel;
+        this.mVideoKernelApi = kernel;
+    }
+
+    @Override
+    public AudioKernelApi getAudioKernel() {
+        return mAudioKernelApi;
+    }
+
+    @Override
+    public void setAudioKernel(@NonNull AudioKernelApi kernel) {
+        this.mAudioKernelApi = kernel;
     }
 
     @Override
@@ -95,5 +107,16 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi, 
     @Override
     public void setScreenKeep(boolean enable) {
         setKeepScreenOn(enable);
+    }
+
+    @Override
+    public boolean switchExternalAudio(@NonNull boolean enable) {
+        try {
+            setMute(enable ? true : false);
+            setMuteAudio(enable ? false : true);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

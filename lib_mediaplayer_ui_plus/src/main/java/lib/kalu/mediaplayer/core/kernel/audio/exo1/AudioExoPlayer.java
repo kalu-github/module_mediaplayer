@@ -21,7 +21,6 @@ public final class AudioExoPlayer extends AudioBasePlayer {
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
     private boolean mLoop = false; // 循环播放
-    private boolean mLive = false;
     private boolean mMute = false;
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;

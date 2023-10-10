@@ -62,7 +62,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             if (null == config)
                 throw new Exception("config warning: null");
             int videoRender = config.getVideoRender();
-            if (videoRender != PlayerType.VideoRenderType.VIDEO_SURFACE_VIEW)
+            if (videoRender != PlayerType.RenderType.SURFACE_VIEW)
                 throw new Exception("videoRender warning: not SURFACE_VIEW");
             int videoKernel = config.getVideoKernel();
             if (videoKernel != PlayerType.KernelType.IJK_MEDIACODEC && videoKernel != PlayerType.KernelType.EXO_V1 && videoKernel != PlayerType.KernelType.EXO_V2)
@@ -279,7 +279,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
         }
     }
 
-    default void setVideoRender(@PlayerType.VideoRenderType int v) {
+    default void setVideoRender(@PlayerType.RenderType int v) {
         try {
             PlayerManager.getInstance().setVideoRender(v);
         } catch (Exception e) {

@@ -325,12 +325,12 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @Keep
-    @interface VideoRenderType {
+    @interface RenderType {
         int VIDEO_TEXTURE_VIEW = 8_001;
-        int VIDEO_SURFACE_VIEW = 8_002;
+        int SURFACE_VIEW = 8_002;
 
         @IntDef({VIDEO_TEXTURE_VIEW,
-                VIDEO_SURFACE_VIEW})
+                SURFACE_VIEW})
         @Retention(RetentionPolicy.SOURCE)
         @Keep
         @interface Value {

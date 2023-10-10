@@ -14,6 +14,11 @@ public class StartBuilder {
     private boolean playWhenReady;
     private boolean prepareAsync;
     private boolean windowVisibilityChangedRelease; // 不可见, release
+    private String externalAudioPath = null; // 额外单独音频文件
+
+    public String getExternalAudioPath() {
+        return externalAudioPath;
+    }
 
     public long getMax() {
         return max;
@@ -61,6 +66,7 @@ public class StartBuilder {
         this.prepareAsync = builder.prepareAsync;
         this.playWhenReady = builder.playWhenReady;
         this.windowVisibilityChangedRelease = builder.windowVisibilityChangedRelease;
+        this.externalAudioPath = builder.externalAudioPath;
     }
 
     public Builder newBuilder() {
@@ -74,6 +80,7 @@ public class StartBuilder {
         builder.prepareAsync = prepareAsync;
         builder.playWhenReady = playWhenReady;
         builder.windowVisibilityChangedRelease = windowVisibilityChangedRelease;
+        builder.externalAudioPath = externalAudioPath;
         return builder;
     }
 
@@ -88,10 +95,15 @@ public class StartBuilder {
         private boolean mute = false;
         private boolean playWhenReady = true; // 默认自动开播
         private boolean prepareAsync = true; // 默认异步初始化
-
         private boolean windowVisibilityChangedRelease = false; // 不可见, release
+        private String externalAudioPath = null; // 额外单独音频文件
 
         public Builder() {
+        }
+
+        public Builder setExternalAudioPath(String v) {
+            this.externalAudioPath = v;
+            return this;
         }
 
         public Builder setPrepareAsync(boolean v) {

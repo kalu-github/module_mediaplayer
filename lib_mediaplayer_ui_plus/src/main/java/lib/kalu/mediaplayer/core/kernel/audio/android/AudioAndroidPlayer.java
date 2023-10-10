@@ -22,7 +22,6 @@ public final class AudioAndroidPlayer extends AudioBasePlayer {
     private long mSeek = 0L; // 快进
     private long mMax = 0L; // 试播时常
     private boolean mLoop = false; // 循环播放
-    private boolean mLive = false;
     private boolean mMute = false;
 
     private MediaPlayer mMediaPlayer = null;

@@ -25,7 +25,7 @@ public final class PlayerBuilder {
     private boolean bufferingTimeoutRetry;
     @PlayerType.KernelType.Value
     private int videoKernel; // 视频播放器内核
-    @PlayerType.VideoRenderType.Value
+    @PlayerType.RenderType.Value
     private int videoRender; // 视频渲染类型
     @PlayerType.ScaleType
     private int videoScaleType; // 视频缩放比例
@@ -185,8 +185,8 @@ public final class PlayerBuilder {
         private int audioKernel = PlayerType.KernelType.ANDROID; // 音频播放器内核
         @PlayerType.KernelType.Value
         private int videoKernel = PlayerType.KernelType.ANDROID; // 视频播放器内核
-        @PlayerType.VideoRenderType.Value
-        private int videoRender = PlayerType.VideoRenderType.VIDEO_TEXTURE_VIEW; // 视频渲染类型
+        @PlayerType.RenderType.Value
+        private int videoRender = PlayerType.RenderType.VIDEO_TEXTURE_VIEW; // 视频渲染类型
         @PlayerType.ScaleType
         private int videoScaleType = PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH; // 视频缩放比例
         private boolean checkMobileNetwork = false; // 监测手机网络环境
@@ -268,7 +268,7 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public Builder setVideoRender(@PlayerType.VideoRenderType.Value int v) {
+        public Builder setVideoRender(@PlayerType.RenderType.Value int v) {
             videoRender = v;
             return this;
         }

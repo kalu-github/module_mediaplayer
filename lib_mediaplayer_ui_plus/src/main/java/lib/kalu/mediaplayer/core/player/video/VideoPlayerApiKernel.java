@@ -16,6 +16,7 @@ import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
+import lib.kalu.mediaplayer.core.player.audio.AudioPlayerApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -23,7 +24,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         VideoPlayerApiBuriedEvent,
         VideoPlayerApiComponent,
         VideoPlayerApiRender,
-        VideoPlayerApiDevice {
+        VideoPlayerApiDevice,
+        AudioPlayerApi {
 
     default void setData(@NonNull String data) {
         try {
@@ -66,18 +68,18 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             } else {
                 callPlayerEvent(PlayerType.StateType.STATE_INIT);
             }
-            // 1
+            // logger
             PlayerBuilder playerBuilder = PlayerManager.getInstance().getConfig();
             MPLogUtil.setLogger(playerBuilder);
-            // 5
-            createVideoKernel(startBuilder, playerBuilder);
-            // 4
+            // audio
+            createAudioKernel(startBuilder, playerBuilder);
+            initAudioKernel(startBuilder);
+            // video
             createVideoRender();
-            // 6
+            createVideoKernel(startBuilder, playerBuilder);
             initVideoKernel(startBuilder, playUrl);
-            // 7
+            // attach
             attachVideoRender();
-            // 8
             updatePlayerData(startBuilder, playUrl);
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());
@@ -693,6 +695,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             break;
                         // 播放开始
                         case PlayerType.EventType.EVENT_VIDEO_START_903:
+                            // step0
+                            startAudio();
                             // step1
                             showVideoReal();
                             // step2
@@ -701,6 +705,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         // 播放开始
                         case PlayerType.EventType.EVENT_VIDEO_START_RETRY:
                             callPlayerEvent(PlayerType.StateType.STATE_START_RETRY);
+                            // step0
+                            startAudio();
                             // step2
                             showVideoReal();
                             // step3
@@ -710,8 +716,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             break;
                         // 播放开始-快进
                         case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
-                            // step1
+                            // step0
                             callPlayerEvent(PlayerType.StateType.STATE_START_SEEK);
+                            // step1
+                            startAudio();
                             // step2
                             showVideoReal();
                             // step4
@@ -732,6 +740,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             // 埋点
                             onBuriedEventPlaying();
                             callPlayerEvent(PlayerType.StateType.STATE_START);
+                            // step0
+                            startAudio();
                             // step2
                             showVideoReal();
                             // step3
@@ -751,6 +761,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             onBuriedEventError();
                             setScreenKeep(false);
                             callPlayerEvent(PlayerType.StateType.STATE_ERROR_IGNORE);
+                            stopAudio();
                             break;
                         // 播放错误
                         case PlayerType.EventType.EVENT_ERROR_URL:
@@ -762,6 +773,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             onBuriedEventError();
                             setScreenKeep(false);
                             callPlayerEvent(PlayerType.StateType.STATE_ERROR);
+                            stopAudio();
                             break;
                         // 播放结束
                         case PlayerType.EventType.EVENT_VIDEO_END:
@@ -775,6 +787,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             MPLogUtil.log("VideoPlayerApiKernel => onEvent = 播放结束 => looping = " + looping + ", loopingRelease = " + loopingRelease);
                             // loop1
                             if (looping && loopingRelease) {
+                                stopAudio();
                                 release(false, false);
                                 restart();
                             }
@@ -785,6 +798,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             }
                             // sample
                             else {
+                                stopAudio();
                                 playEnd();
                             }
                             break;

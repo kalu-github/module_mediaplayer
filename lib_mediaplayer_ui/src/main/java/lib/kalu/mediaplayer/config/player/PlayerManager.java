@@ -93,7 +93,7 @@ public final class PlayerManager {
         return this;
     }
 
-    public PlayerManager setVideoRender(@PlayerType.VideoRenderType.Value int v) {
+    public PlayerManager setVideoRender(@PlayerType.RenderType.Value int v) {
         mPlayerBuilder.setVideoRender(v);
         return this;
     }

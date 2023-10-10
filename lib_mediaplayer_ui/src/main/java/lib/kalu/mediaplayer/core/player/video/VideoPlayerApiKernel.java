@@ -69,15 +69,16 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 1
             PlayerBuilder playerBuilder = PlayerManager.getInstance().getConfig();
             MPLogUtil.setLogger(playerBuilder);
-            // 5
+            //
+            // 3
             createVideoKernel(startBuilder, playerBuilder);
             // 4
             createVideoRender();
-            // 6
+            // 5
             initVideoKernel(startBuilder, playUrl);
-            // 7
+            // 6
             attachVideoRender();
-            // 8
+            // 7
             updatePlayerData(startBuilder, playUrl);
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());

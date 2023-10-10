@@ -807,4 +807,19 @@ public class PlayerLayout extends RelativeLayout {
 //            MPLogUtil.log("PlayerLayout => setInterceptKeycodeDpadDown => " + e.getMessage());
 //        }
 //    }
+
+    /**************/
+
+    public boolean switchExternalAudio(@NonNull boolean enable) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.checkVideoKernel();
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => switchExternalAudio => " + e.getMessage());
+            return false;
+        }
+    }
 }

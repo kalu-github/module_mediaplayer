@@ -187,7 +187,6 @@ public final class AudioExoPlayer2 extends AudioBasePlayer {
 
             mExoPlayer = builder.build();
             mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
-            setVolume(1F, 1F);
             // seek model
             if (seekParameters == PlayerType.SeekType.EXO_SEEK_CLOSEST_SYNC) {
                 mExoPlayer.setSeekParameters(SeekParameters.CLOSEST_SYNC);
