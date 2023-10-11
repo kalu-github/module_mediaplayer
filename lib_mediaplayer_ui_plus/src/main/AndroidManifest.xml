@@ -9,13 +9,6 @@
         android:allowBackup="false"
         android:supportsRtl="true">
 
-        <!-- 内容 -->
-        <provider
-            android:name="lib.kalu.mediaplayer.context.PlayerProvider"
-            android:authorities="${applicationId}.provider-player"
-            android:exported="false"
-            android:multiprocess="true" />
-
         <activity
             android:name="lib.kalu.mediaplayer.TestActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard|uiMode"

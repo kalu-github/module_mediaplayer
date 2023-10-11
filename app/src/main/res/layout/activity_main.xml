@@ -4,12 +4,6 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <lib.kalu.mediaplayer.widget.audio.AudioView
-        android:id="@+id/player_audio"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="音乐播放器" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

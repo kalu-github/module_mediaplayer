@@ -18,13 +18,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import lib.kalu.mediaplayer.TestActivity;
-import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.audio.AudioKernelFactory;
-import lib.kalu.mediaplayer.core.kernel.audio.AudioKernelFactoryManager;
 import lib.kalu.mediaplayer.util.UdpMulticastUtil;
-import lib.kalu.mediaplayer.widget.audio.AudioView;
 
 /**
  * description:
@@ -147,25 +143,25 @@ public class MainActivity extends Activity {
         int kernelTypeId = ((RadioGroup) findViewById(R.id.main_kernel)).getCheckedRadioButtonId();
         switch (kernelTypeId) {
             case R.id.main_kernel_ijk:
-                kernelType = PlayerType.VideoKernelType.VIDEO_IJK;
+                kernelType = PlayerType.KernelType.IJK;
                 break;
             case R.id.main_kernel_ijk_mediacodec:
-                kernelType = PlayerType.VideoKernelType.VIDEO_IJK_MEDIACODEC;
+                kernelType = PlayerType.KernelType.IJK_MEDIACODEC;
                 break;
             case R.id.main_kernel_exo_v1:
-                kernelType = PlayerType.VideoKernelType.VIDEO_EXO_V1;
+                kernelType = PlayerType.KernelType.EXO_V1;
                 break;
             case R.id.main_kernel_exo_v2:
-                kernelType = PlayerType.VideoKernelType.VIDEO_EXO_V2;
+                kernelType = PlayerType.KernelType.EXO_V2;
                 break;
             case R.id.main_kernel_vlc:
-                kernelType = PlayerType.VideoKernelType.VIDEO_VLC;
+                kernelType = PlayerType.KernelType.VLC;
                 break;
             case R.id.main_kernel_ffplayer:
-                kernelType = PlayerType.VideoKernelType.VIDEO_FFPLAYER;
+                kernelType = PlayerType.KernelType.FFPLAYER;
                 break;
             default:
-                kernelType = PlayerType.VideoKernelType.VIDEO_ANDROID;
+                kernelType = PlayerType.KernelType.ANDROID;
                 break;
         }
 
@@ -190,10 +186,10 @@ public class MainActivity extends Activity {
         int renderTypeId = ((RadioGroup) findViewById(R.id.main_render)).getCheckedRadioButtonId();
         switch (renderTypeId) {
             case R.id.main_render_surfaceview:
-                renderType = PlayerType.VideoRenderType.VIDEO_SURFACE_VIEW;
+                renderType = PlayerType.RenderType.SURFACE_VIEW;
                 break;
             default:
-                renderType = PlayerType.VideoRenderType.VIDEO_TEXTURE_VIEW;
+                renderType = PlayerType.RenderType.TEXTURE_VIEW;
                 break;
         }
 
@@ -231,9 +227,9 @@ public class MainActivity extends Activity {
         Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", exoFFmpeg = " + exoFFmpeg + ", scaleType = " + scaleType + ", exoUseOkhttp = " + exoUseOkhttp);
         PlayerManager.getInstance()
                 .setLog(true)
-                .setVideoKernel(kernelType)
-                .setVideoRender(renderType)
-                .setVideoScaleType(scaleType)
+                .setKernel(kernelType)
+                .setRender(renderType)
+                .setScaleType(scaleType)
                 .setExoFFmpeg(exoFFmpeg)
                 .setExoUseOkhttp(exoUseOkhttp)
                 .setBuriedEvent(new LogBuriedEvent())
