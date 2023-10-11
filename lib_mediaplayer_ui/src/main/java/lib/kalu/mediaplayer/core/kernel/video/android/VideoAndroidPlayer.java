@@ -45,7 +45,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         MPLogUtil.log("VideoAndroidPlayer => releaseDecoder => mMediaPlayer = " + mMediaPlayer + ", isFromUser = " + isFromUser);
         try {
             if (null == mMediaPlayer)
-                throw new Exception("mMediaPlayerCollects error: null");
+                throw new Exception("mMediaPlayer error: null");
             if (isFromUser) {
                 setEvent(null);
             }

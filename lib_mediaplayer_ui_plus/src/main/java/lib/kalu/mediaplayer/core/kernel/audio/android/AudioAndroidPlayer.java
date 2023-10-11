@@ -42,7 +42,7 @@ public final class AudioAndroidPlayer extends AudioBasePlayer {
     public void releaseDecoder(boolean isFromUser, boolean isMainThread) {
         try {
             if (null == mMediaPlayer)
-                throw new Exception("mMediaPlayerCollects error: null");
+                throw new Exception("mMediaPlayer error: null");
             if (isFromUser) {
                 setEvent(null);
             }
