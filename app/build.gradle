@@ -81,7 +81,7 @@ dependencies {
 
     // ui
 //    api files('libs/lib_mediaplayer_ui_release_20231011.aar')
-    api files('libs/lib_mediaplayer_ui_plus_release_20231011.aar')
+    api files('libs/lib_mediaplayer_ui_plus_release_20231012.aar')
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.13_release_20230813.aar')
     // exo1

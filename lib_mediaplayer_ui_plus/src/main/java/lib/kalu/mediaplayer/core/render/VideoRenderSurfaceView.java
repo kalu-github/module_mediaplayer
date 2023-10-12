@@ -2,7 +2,12 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Path;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Region;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -55,6 +60,15 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
         super.onAttachedToWindow();
         MPLogUtil.log("VideoRenderSurfaceView => onAttachedToWindow => " + this);
     }
+
+//    @Override
+//    protected void onDraw(Canvas canvas) {
+//        Path path = new Path();
+//        RectF rect = new RectF(0, 0, getWidth(), getHeight());
+//        path.addRoundRect(rect, 200F, 200F, Path.Direction.CCW);
+//        canvas.clipPath(path, Region.Op.REPLACE);
+//        super.onDraw(canvas);
+//    }
 
     @Override
     public void init() {
