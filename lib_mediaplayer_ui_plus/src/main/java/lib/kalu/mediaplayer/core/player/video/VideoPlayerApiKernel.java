@@ -773,7 +773,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             }
                             // loop2
                             else if (looping) {
-                                hideReal();
                                 seekTo(true, builder);
                             }
                             // sample
