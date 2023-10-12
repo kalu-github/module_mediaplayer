@@ -8,7 +8,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
 
     default void callProgressListener(long position, long duration) {
         try {
-            OnPlayerChangeListener listener = getPlayerChangeListener();
+            OnPlayerChangeListener listener = getOnPlayerChangeListener();
             if (null == listener)
                 throw new Exception("listener error: null");
             listener.onProgress(position, duration);

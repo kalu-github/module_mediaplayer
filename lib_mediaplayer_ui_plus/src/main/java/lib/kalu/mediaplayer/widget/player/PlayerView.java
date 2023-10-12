@@ -19,6 +19,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.player.audio.AudioPlayerApi;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
+import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 
 @Keep
 public final class PlayerView extends RelativeLayout implements VideoPlayerApi, AudioPlayerApi {
@@ -118,5 +119,24 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi, 
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**************/
+
+    private OnPlayerChangeListener mOnPlayerChangeListener;
+
+    @Override
+    public OnPlayerChangeListener getOnPlayerChangeListener() {
+        return mOnPlayerChangeListener;
+    }
+
+    @Override
+    public void setOnPlayerChangeListener(@NonNull OnPlayerChangeListener l) {
+        this.mOnPlayerChangeListener = l;
+    }
+
+    @Override
+    public void removeOnPlayerChangeListener() {
+        this.mOnPlayerChangeListener = null;
     }
 }

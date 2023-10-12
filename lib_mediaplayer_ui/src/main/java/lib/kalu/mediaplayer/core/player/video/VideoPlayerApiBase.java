@@ -18,8 +18,6 @@ import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
 interface VideoPlayerApiBase {
 
-    OnPlayerChangeListener[] mOnPlayerChangeListener = new OnPlayerChangeListener[1];
-
     default PlayerLayout getPlayerLayout() {
         try {
             return (PlayerLayout) ((View) this).getParent();
@@ -213,25 +211,17 @@ interface VideoPlayerApiBase {
     }
 
     default boolean hasPlayerChangeListener() {
-        return null != mOnPlayerChangeListener && null != mOnPlayerChangeListener[0];
+        return null != getOnPlayerChangeListener();
     }
 
-    default OnPlayerChangeListener getPlayerChangeListener() {
-        return mOnPlayerChangeListener[0];
+    default OnPlayerChangeListener getOnPlayerChangeListener() {
+        return null;
     }
 
-    default void cleanPlayerChangeListener() {
-        mOnPlayerChangeListener[0] = null;
-        try {
-            ((View) this).setOnKeyListener(null);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBase => cleanPlayerChangeListener => " + e.getMessage());
-        }
+    default void removeOnPlayerChangeListener() {
     }
 
     default void setOnPlayerChangeListener(@NonNull OnPlayerChangeListener l) {
-        mOnPlayerChangeListener[0] = null;
-        mOnPlayerChangeListener[0] = l;
     }
 
     default void callPlayerEvent(@PlayerType.StateType.Value int state) {
@@ -240,7 +230,7 @@ interface VideoPlayerApiBase {
             boolean hasListener = hasPlayerChangeListener();
             if (!hasListener)
                 throw new Exception("not find PlayerChangeListener");
-            OnPlayerChangeListener listener = getPlayerChangeListener();
+            OnPlayerChangeListener listener = getOnPlayerChangeListener();
             if (null == listener)
                 throw new Exception("listener error: null");
             listener.onChange(state);
@@ -293,7 +283,7 @@ interface VideoPlayerApiBase {
             boolean hasListener = hasPlayerChangeListener();
             if (!hasListener)
                 throw new Exception("not find PlayerChangeListener");
-            OnPlayerChangeListener listener = getPlayerChangeListener();
+            OnPlayerChangeListener listener = getOnPlayerChangeListener();
             if (null == listener)
                 throw new Exception("listener error: null");
             listener.onWindow(state);

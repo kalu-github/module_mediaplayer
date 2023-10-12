@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -63,7 +64,6 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
         setWillNotDraw(true); //禁止onDraw
         setZOrderOnTop(true); //画布透明处理
         setZOrderMediaOverlay(true); //画面置顶
-//        getHolder().setFormat(PixelFormat.TRANSLUCENT);
     }
 
     @Override

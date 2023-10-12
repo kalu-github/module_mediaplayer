@@ -49,7 +49,7 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     private void init() {
-        cleanPlayerChangeListener();
+        removeOnPlayerChangeListener();
         try {
             int childCount = getChildCount();
             if (childCount > 0)
@@ -406,14 +406,14 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void cleanPlayerChangeListener() {
+    public final void removeOnPlayerChangeListener() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.cleanPlayerChangeListener();
+            playerView.removeOnPlayerChangeListener();
         } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => cleanPlayerChangeListener => " + e.getMessage());
+            MPLogUtil.log("PlayerLayout => removeOnPlayerChangeListener => " + e.getMessage());
         }
     }
 

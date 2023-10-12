@@ -194,7 +194,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             releaseVideoRender();
             releaseVideoKernel(isFromUser, isMainThread);
             if (clearListener) {
-                cleanPlayerChangeListener();
+                removeOnPlayerChangeListener();
             }
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE);
         } catch (Exception e) {

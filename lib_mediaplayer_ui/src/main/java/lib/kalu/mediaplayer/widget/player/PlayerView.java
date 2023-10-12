@@ -15,6 +15,7 @@ import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
+import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 
 @Keep
 public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
@@ -91,5 +92,24 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     @Override
     public void setScreenKeep(boolean enable) {
         setKeepScreenOn(enable);
+    }
+
+    /**************/
+
+    private OnPlayerChangeListener mOnPlayerChangeListener;
+
+    @Override
+    public OnPlayerChangeListener getOnPlayerChangeListener() {
+        return mOnPlayerChangeListener;
+    }
+
+    @Override
+    public void setOnPlayerChangeListener(@NonNull OnPlayerChangeListener l) {
+        this.mOnPlayerChangeListener = l;
+    }
+
+    @Override
+    public void removeOnPlayerChangeListener() {
+        this.mOnPlayerChangeListener = null;
     }
 }
