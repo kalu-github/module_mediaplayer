@@ -113,8 +113,18 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi, 
     @Override
     public boolean switchExternalAudio(@NonNull boolean enable) {
         try {
+            // step1
+            pause(true);
             setMute(enable ? true : false);
+            // step2
+            pauseAudio();
             setMuteAudio(enable ? false : true);
+            // step3
+            long position = getPosition();
+            seekToAudio(position);
+            // step4
+            resume(false);
+            resumeAudio();
             return true;
         } catch (Exception e) {
             return false;

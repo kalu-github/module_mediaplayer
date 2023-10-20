@@ -33,7 +33,7 @@ interface AudioPlayerApiKernel extends AudioPlayerApiBase {
             setAudioKernel(audioKernelApi);
             createAudioDecoder(playerBuilder);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => createAudioKernel => " + e.getMessage());
+            MPLogUtil.log("AudioPlayerApiKernel => createAudioKernel => " + e.getMessage());
         }
     }
 
@@ -52,7 +52,7 @@ interface AudioPlayerApiKernel extends AudioPlayerApiBase {
                 throw new Exception("audioKernel error: null");
             audioKernel.initDecoder(getBaseContextAudio(), audioPath, builder);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => initAudioKernel => " + e.getMessage());
+            MPLogUtil.log("AudioPlayerApiKernel => initAudioKernel => " + e.getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ interface AudioPlayerApiKernel extends AudioPlayerApiBase {
             int seekParameters = builder.getExoSeekParameters();
             audioKernel.createDecoder(getBaseContextAudio(), log, seekParameters);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => createAudioDecoder => " + e.getMessage());
+            MPLogUtil.log("AudioPlayerApiKernel => createAudioDecoder => " + e.getMessage());
         }
     }
 
@@ -126,6 +126,73 @@ interface AudioPlayerApiKernel extends AudioPlayerApiBase {
             return true;
         } catch (Exception e) {
             MPLogUtil.log("AudioPlayerApiKernel => startAudio => " + e.getMessage());
+            return false;
+        }
+    }
+
+    default boolean pauseAudio() {
+        try {
+            AudioKernelApi audioKernel = getAudioKernel();
+            if (null == audioKernel)
+                throw new Exception("audioKernel error: null");
+            audioKernel.pause();
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("AudioPlayerApiKernel => pauseAudio => " + e.getMessage());
+            return false;
+        }
+    }
+
+    default boolean resumeAudio() {
+        try {
+            AudioKernelApi audioKernel = getAudioKernel();
+            if (null == audioKernel)
+                throw new Exception("audioKernel error: null");
+            audioKernel.start();
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("AudioPlayerApiKernel => resumeAudio => " + e.getMessage());
+            return false;
+        }
+    }
+
+    default long getPositionAudio() {
+        try {
+            AudioKernelApi audioKernel = getAudioKernel();
+            if (null == audioKernel)
+                throw new Exception("audioKernel error: null");
+            return audioKernel.getPosition();
+        } catch (Exception e) {
+            MPLogUtil.log("AudioPlayerApiKernel => getPositionAudio => " + e.getMessage());
+            return -1L;
+        }
+    }
+
+    default long getDurationAudio() {
+        try {
+            AudioKernelApi audioKernel = getAudioKernel();
+            if (null == audioKernel)
+                throw new Exception("audioKernel error: null");
+            return audioKernel.getDuration();
+        } catch (Exception e) {
+            MPLogUtil.log("AudioPlayerApiKernel => getDurationAudio => " + e.getMessage());
+            return -1L;
+        }
+    }
+
+    default boolean seekToAudio(@NonNull long seek) {
+        try {
+            AudioKernelApi audioKernel = getAudioKernel();
+            if (null == audioKernel)
+                throw new Exception("audioKernel error: null");
+            long duration = audioKernel.getDuration();
+            if (seek > duration) {
+                seek = duration;
+            }
+            audioKernel.seekTo(seek);
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("AudioPlayerApiKernel => seekToAudio => " + e.getMessage());
             return false;
         }
     }

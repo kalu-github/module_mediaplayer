@@ -815,8 +815,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.checkVideoKernel();
-            return true;
+            return playerView.switchExternalAudio(enable);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => switchExternalAudio => " + e.getMessage());
             return false;
