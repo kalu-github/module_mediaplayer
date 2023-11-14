@@ -305,30 +305,31 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     @FloatRange(from = 1F, to = 4F)
     public float getSpeed() {
-//        try {
-//            if (null == mFFmpegPlayer)
-//                throw new Exception("mFFmpegPlayer error: null");
+        try {
+            if (null == mFFmpegPlayer)
+                throw new Exception("mFFmpegPlayer error: null");
 //            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
 //                throw new Exception("only support above Android M");
 //            return mFFmpegPlayer.getPlaybackParams().getSpeed();
-//        } catch (Exception e) {
-//            MPLogUtil.log("VideoFFmpegPlayer => getSpeed => " + e.getMessage());
-//            return 1f;
-//        }
-        return 1F;
+            return 1f;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoFFmpegPlayer => getSpeed => " + e.getMessage());
+            return 1f;
+        }
     }
 
     @Override
-    public void setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
-//        try {
-//            if (null == mFFmpegPlayer)
-//                throw new Exception("mFFmpegPlayer error: null");
+    public boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
+        try {
+            if (null == mFFmpegPlayer)
+                throw new Exception("mFFmpegPlayer error: null");
 //            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
 //                throw new Exception("only support above Android M");
-//            mFFmpegPlayer.setPlaybackParams(mFFmpegPlayer.getPlaybackParams().setSpeed(speed));
-//        } catch (Exception e) {
-//            MPLogUtil.log("VideoFFmpegPlayer => setSpeed => " + e.getMessage());
-//        }
+            return false;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoFFmpegPlayer => setSpeed => " + e.getMessage());
+            return false;
+        }
     }
 
     private FFmpegPlayer.OnErrorListener onErrorListener = new FFmpegPlayer.OnErrorListener() {

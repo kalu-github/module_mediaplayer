@@ -538,13 +538,15 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
+    public boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.setSpeed(speed);
+            return true;
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => setSpeed => " + e.getMessage());
+            return false;
         }
     }
 
@@ -554,7 +556,10 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            return (int) mIjkPlayer.getSpeed(1);
+            float speed = mIjkPlayer.getSpeed();
+            if (speed < 1f)
+                throw new Exception("speed error: " + speed);
+            return speed;
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => getSpeed => " + e.getMessage());
             return 1F;

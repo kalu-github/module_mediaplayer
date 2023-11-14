@@ -303,30 +303,32 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
         return mPlayWhenReady;
     }
 
-    /**
-     * 获取播放速度
-     *
-     * @return 播放速度
-     */
     @Override
     @FloatRange(from = 1F, to = 4F)
     public float getSpeed() {
-        if (null != mVlcPlayer) {
-            return mVlcPlayer.getSpeed();
-        } else {
+        try {
+            if (null == mVlcPlayer)
+                throw new Exception("mIjkPlayer error: null");
+            float speed = mVlcPlayer.getSpeed();
+            if (speed < 1f)
+                throw new Exception("speed error: " + speed);
+            return speed;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoVlcPlayer => getSpeed => " + e.getMessage());
             return 1F;
         }
     }
 
-    /**
-     * 设置播放速度
-     *
-     * @param speed 速度
-     */
     @Override
-    public void setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
-        if (null != mVlcPlayer) {
+    public boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
+        try {
+            if (null == mVlcPlayer)
+                throw new Exception("mIjkPlayer error: null");
             mVlcPlayer.setSpeed(speed);
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoVlcPlayer => setSpeed => " + e.getMessage());
+            return false;
         }
     }
 

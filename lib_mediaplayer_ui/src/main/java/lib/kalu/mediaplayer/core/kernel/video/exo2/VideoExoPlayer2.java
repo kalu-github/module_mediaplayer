@@ -73,7 +73,7 @@ public final class VideoExoPlayer2 extends VideoBasePlayer {
     private boolean mMute = false;
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
-    private PlaybackParameters mSpeedPlaybackParameters;
+//    private PlaybackParameters mSpeedPlaybackParameters;
 
     private ExoPlayer mExoPlayer;
     private AnalyticsListener mAnalyticsListener;
@@ -328,9 +328,9 @@ public final class VideoExoPlayer2 extends VideoBasePlayer {
             };
             mExoPlayer.addAnalyticsListener(mAnalyticsListener);
 
-            if (mSpeedPlaybackParameters != null) {
-                mExoPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
-            }
+//            if (mSpeedPlaybackParameters != null) {
+//                mExoPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
+//            }
 //        mIsPreparing = true;
 
             //播放器日志
@@ -496,23 +496,39 @@ public final class VideoExoPlayer2 extends VideoBasePlayer {
      * 设置播放速度
      */
     @Override
-    public void setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
-        PlaybackParameters playbackParameters = new PlaybackParameters(speed);
-        mSpeedPlaybackParameters = playbackParameters;
-        if (mExoPlayer != null) {
+    public boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mMediaPlayer error: null");
+            PlaybackParameters playbackParameters = mExoPlayer.getPlaybackParameters();
+            if (null != playbackParameters) {
+                playbackParameters = playbackParameters.withSpeed(speed);
+            } else {
+                playbackParameters = new PlaybackParameters(speed);
+            }
             mExoPlayer.setPlaybackParameters(playbackParameters);
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer2 => setSpeed => " + e.getMessage());
+            return false;
         }
     }
 
-    /**
-     * 获取播放速度
-     */
     @Override
     @FloatRange(from = 1F, to = 4F)
     public float getSpeed() {
         try {
-            return mSpeedPlaybackParameters.speed;
+            if (null == mExoPlayer)
+                throw new Exception("mMediaPlayer error: null");
+            PlaybackParameters playbackParameters = mExoPlayer.getPlaybackParameters();
+            if (null == playbackParameters)
+                throw new Exception("playbackParameters error: null");
+            float speed = playbackParameters.speed;
+            if (speed < 1f)
+                throw new Exception("speed error: " + speed);
+            return speed;
         } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer2 => getSpeed => " + e.getMessage());
             return 1F;
         }
     }
@@ -607,7 +623,7 @@ public final class VideoExoPlayer2 extends VideoBasePlayer {
                 mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
             }
             mAnalyticsListener = null;
-            mSpeedPlaybackParameters = null;
+            mExoPlayer.setPlaybackParameters(null);
             mExoPlayer.setPlayWhenReady(false);
             mExoPlayer.setVideoSurface(null);
             mExoPlayer.release();

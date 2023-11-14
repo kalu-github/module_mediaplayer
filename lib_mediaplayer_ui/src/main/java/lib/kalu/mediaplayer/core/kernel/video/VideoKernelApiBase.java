@@ -21,7 +21,7 @@ interface VideoKernelApiBase {
 
     void seekTo(@NonNull long position);
 
-    void setSpeed(@FloatRange(from = 1F, to = 4F) float speed);
+    boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed);
 
     @FloatRange(from = 1F, to = 4F)
     float getSpeed();

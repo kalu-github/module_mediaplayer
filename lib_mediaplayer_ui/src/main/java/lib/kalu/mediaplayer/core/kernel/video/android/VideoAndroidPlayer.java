@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.kernel.video.android;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Surface;
@@ -11,6 +12,8 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+
+import com.google.android.exoplayer2.PlaybackParameters;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
@@ -337,7 +340,13 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 throw new Exception("mMediaPlayer error: null");
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
                 throw new Exception("only support above Android M");
-            return mMediaPlayer.getPlaybackParams().getSpeed();
+            PlaybackParams playbackParams = mMediaPlayer.getPlaybackParams();
+            if(null == playbackParams)
+                throw new Exception("playbackParams error: null");
+            float speed = playbackParams.getSpeed();
+            if (speed < 1f)
+                throw new Exception("speed error: " + speed);
+            return speed;
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => getSpeed => " + e.getMessage());
             return 1F;
@@ -345,15 +354,22 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
+    public boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
                 throw new Exception("only support above Android M");
-            mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed(speed));
+            PlaybackParams playbackParams = mMediaPlayer.getPlaybackParams();
+            if (null != playbackParams) {
+                playbackParams = new PlaybackParams();
+            }
+            playbackParams.setSpeed(speed);
+            mMediaPlayer.setPlaybackParams(playbackParams);
+            return true;
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => setSpeed => " + e.getMessage());
+            return false;
         }
     }
 

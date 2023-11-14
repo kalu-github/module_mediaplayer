@@ -253,12 +253,18 @@ public final class VideoExoPlayer extends VideoBasePlayer {
      * 设置播放速度
      */
     @Override
-    public void setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
-//        PlaybackParameters playbackParameters = new PlaybackParameters(speed);
-//        mSpeedPlaybackParameters = playbackParameters;
-//        if (mExoPlayer != null) {
-//            mExoPlayer.setPlaybackParameters(playbackParameters);
-//        }
+    public boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+//            if (speed < 1f)
+//                throw new Exception("speed error: " + speed);
+//            return speed;
+            return false;
+        }catch (Exception e){
+            MPLogUtil.log("VideoExoPlayer => setSpeed => " + e.getMessage());
+            return false;
+        }
     }
 
     /**
@@ -267,7 +273,17 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     @Override
     @FloatRange(from = 1F, to = 4F)
     public float getSpeed() {
-        return 1F;
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+//            if (speed < 1f)
+//                throw new Exception("speed error: " + speed);
+//            return speed;
+            return 1F;
+        }catch (Exception e){
+            MPLogUtil.log("VideoExoPlayer => getSpeed => " + e.getMessage());
+            return 1F;
+        }
     }
 
     @Override
