@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import androidx.annotation.FloatRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -252,7 +253,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
      * 设置播放速度
      */
     @Override
-    public void setSpeed(float speed) {
+    public void setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
 //        PlaybackParameters playbackParameters = new PlaybackParameters(speed);
 //        mSpeedPlaybackParameters = playbackParameters;
 //        if (mExoPlayer != null) {
@@ -264,8 +265,9 @@ public final class VideoExoPlayer extends VideoBasePlayer {
      * 获取播放速度
      */
     @Override
+    @FloatRange(from = 1F, to = 4F)
     public float getSpeed() {
-        return 1;
+        return 1F;
     }
 
     @Override

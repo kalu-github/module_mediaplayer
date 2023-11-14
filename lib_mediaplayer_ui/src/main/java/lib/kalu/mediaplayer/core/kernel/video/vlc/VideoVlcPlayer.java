@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import androidx.annotation.FloatRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -308,6 +309,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
      * @return 播放速度
      */
     @Override
+    @FloatRange(from = 1F, to = 4F)
     public float getSpeed() {
         if (null != mVlcPlayer) {
             return mVlcPlayer.getSpeed();
@@ -322,7 +324,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
      * @param speed 速度
      */
     @Override
-    public void setSpeed(float speed) {
+    public void setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
         if (null != mVlcPlayer) {
             mVlcPlayer.setSpeed(speed);
         }

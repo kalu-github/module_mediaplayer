@@ -7,6 +7,8 @@ import android.os.Build;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import androidx.annotation.FloatRange;
+import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -328,6 +330,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
+    @FloatRange(from = 1F, to = 4F)
     public float getSpeed() {
         try {
             if (null == mMediaPlayer)
@@ -337,12 +340,12 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             return mMediaPlayer.getPlaybackParams().getSpeed();
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => getSpeed => " + e.getMessage());
-            return 1f;
+            return 1F;
         }
     }
 
     @Override
-    public void setSpeed(float speed) {
+    public void setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");

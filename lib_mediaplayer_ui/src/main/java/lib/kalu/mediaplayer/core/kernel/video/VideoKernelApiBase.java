@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
+import androidx.annotation.FloatRange;
+import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -19,8 +21,9 @@ interface VideoKernelApiBase {
 
     void seekTo(@NonNull long position);
 
-    void setSpeed(float speed);
+    void setSpeed(@FloatRange(from = 1F, to = 4F) float speed);
 
+    @FloatRange(from = 1F, to = 4F)
     float getSpeed();
 
     long getSeek();

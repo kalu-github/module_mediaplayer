@@ -3,9 +3,11 @@ package lib.kalu.mediaplayer.core.kernel.video.ff;
 import android.content.Context;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import androidx.annotation.FloatRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -68,7 +70,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
     @Override
     public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
-        MPLogUtil.log("VideoFFmpegPlayer => startDecoder => mFFmpegPlayer = " + mFFmpegPlayer + ", url = " + url+", prepareAsync = "+prepareAsync);
+        MPLogUtil.log("VideoFFmpegPlayer => startDecoder => mFFmpegPlayer = " + mFFmpegPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -301,6 +303,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
+    @FloatRange(from = 1F, to = 4F)
     public float getSpeed() {
 //        try {
 //            if (null == mFFmpegPlayer)
@@ -316,7 +319,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setSpeed(float speed) {
+    public void setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
 //        try {
 //            if (null == mFFmpegPlayer)
 //                throw new Exception("mFFmpegPlayer error: null");

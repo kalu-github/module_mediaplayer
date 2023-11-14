@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import androidx.annotation.FloatRange;
+import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
@@ -536,7 +538,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setSpeed(float speed) {
+    public void setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -547,11 +549,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
+    @FloatRange(from = 1F, to = 4F)
     public float getSpeed() {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            return mIjkPlayer.getSpeed(0);
+            return (int) mIjkPlayer.getSpeed(1);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => getSpeed => " + e.getMessage());
             return 1F;

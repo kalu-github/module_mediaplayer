@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.FloatRange;
+import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -759,6 +761,30 @@ public class PlayerLayout extends RelativeLayout {
             playerView.setBackgroundColor(color);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => setPlayerBackgroundColor => " + e.getMessage());
+        }
+    }
+
+    public final void setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setSpeed(speed);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => setPlayerBackgroundColor => " + e.getMessage());
+        }
+    }
+
+    @FloatRange(from = 1F, to = 4F)
+    public final float getSpeed() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getSpeed();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => setPlayerBackgroundColor => " + e.getMessage());
+            return 1F;
         }
     }
 
