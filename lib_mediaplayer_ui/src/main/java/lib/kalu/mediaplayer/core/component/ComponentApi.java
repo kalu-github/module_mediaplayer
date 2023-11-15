@@ -180,10 +180,10 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
 
     /******************/
 
-    default void onUpdateSeekProgress(@NonNull long position, @NonNull long duration, @NonNull boolean updateTime) {
+    default void onUpdateSeekProgress(@NonNull boolean updateTime, @NonNull long position, @NonNull long duration, @NonNull long max) {
     }
 
-    default void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
+    default void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration, @NonNull long max) {
     }
 
     default boolean dispatchKeyEventComponent(KeyEvent event) {

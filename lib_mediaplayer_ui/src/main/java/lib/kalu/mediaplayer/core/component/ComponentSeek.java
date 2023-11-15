@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 @Keep
 public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
@@ -42,7 +43,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             case PlayerType.StateType.STATE_ERROR_IGNORE:
             case PlayerType.StateType.STATE_END:
                 MPLogUtil.log("ComponentSeek => callPlayerEvent => gone2 => playState = " + playState);
-                onUpdateTimeMillis(0, 0, 0);
+                onUpdateTimeMillis(0, 0, 0, 0);
                 gone();
                 break;
         }
@@ -81,7 +82,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public final void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration) {
+    public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration, @NonNull long max) {
         try {
             SeekBar seekBar = findSeekBar();
             if (null == seekBar)
@@ -89,21 +90,22 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             Object tag = getTag(R.id.module_mediaplayer_component_seek_sb);
             if (null != tag && ((boolean) tag))
                 throw new Exception("seekbar warning: user current action down");
-            onUpdateSeekProgress(position, duration, true);
+            onUpdateSeekProgress(true, position, duration, max);
         } catch (Exception e) {
             MPLogUtil.log("ComponentSeek => onUpdateTimeMillis => " + e.getMessage());
         }
     }
 
     @Override
-    public final void onUpdateSeekProgress(@NonNull long position, @NonNull long duration, @NonNull boolean updateTime) {
+    public void onUpdateSeekProgress(@NonNull boolean updateTime, @NonNull long position, @NonNull long duration, @NonNull long max) {
+
         try {
             SeekBar seekBar = findSeekBar();
             if (null == seekBar)
                 throw new Exception("seekBar error: null");
             seekBar.setProgress((int) position);
             seekBar.setSecondaryProgress((int) position);
-            seekBar.setMax((int) duration);
+            seekBar.setMax((int) (max > 0 ? max : duration));
         } catch (Exception e) {
             MPLogUtil.log("ComponentSeek => onUpdateSeekProgress => " + e.getMessage());
         }
@@ -128,7 +130,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
             // ms => s
             StringBuilder builderDuration = new StringBuilder();
-            long d = duration / 1000;
+            long d = (max > 0 ? max : duration) / 1000;
             long d1 = d / 60;
             long d2 = d % 60;
             if (d1 < 10) {

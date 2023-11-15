@@ -232,24 +232,25 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
             boolean checkSeekBar = checkSeekBar();
             if (!checkSeekBar)
                 throw new Exception("checkSeekBar error: false");
-            int max = seekBar.getMax();
+            int duration = seekBar.getMax();
             int progress = seekBar.getProgress();
-            if (max <= 0)
-                throw new Exception("max error: " + max);
+            if (duration <= 0)
+                throw new Exception("duration error: " + duration);
             // action_down
             if (action == KeyEvent.ACTION_DOWN) {
-                if (progress >= max)
+                if (progress >= duration)
                     throw new Exception("error: not progress>=max");
-                int next = progress + Math.abs(max) / 200;
-                if (next > max) {
-                    next = max;
+                int nextPosition = progress + Math.abs(duration) / 200;
+                if (nextPosition > duration) {
+                    nextPosition = duration;
                 }
-                callUpdateSeekProgress(next, max);
+                long max = getMax();
+                callUpdateSeekProgress(nextPosition, duration, max);
             }
             // action_up
             else if (action == KeyEvent.ACTION_UP) {
-                if (progress >= max) {
-                    progress = max;
+                if (progress >= duration) {
+                    progress = duration;
                 }
                 seekTo(progress);
             }
@@ -277,19 +278,20 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
             boolean checkSeekBar = checkSeekBar();
             if (!checkSeekBar)
                 throw new Exception("checkSeekBar error: false");
-            int max = seekBar.getMax();
+            int duration = seekBar.getMax();
             int progress = seekBar.getProgress();
-            if (max <= 0)
+            if (duration <= 0)
                 throw new Exception("error: max <= 0 || progress <= 0");
             // action_down
             if (action == KeyEvent.ACTION_DOWN) {
                 if (progress <= 0)
                     throw new Exception("progress warning: " + progress);
-                int next = progress - Math.abs(max) / 200;
-                if (next < 0) {
-                    next = 0;
+                int nextPosition = progress - Math.abs(duration) / 200;
+                if (nextPosition < 0) {
+                    nextPosition = 0;
                 }
-                callUpdateSeekProgress(next, max);
+                long max = getMax();
+                callUpdateSeekProgress(nextPosition, duration, max);
             }
             // action_up
             else if (action == KeyEvent.ACTION_UP) {

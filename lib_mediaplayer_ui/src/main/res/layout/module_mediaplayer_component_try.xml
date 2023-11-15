@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00000000">
+
+    <TextView
+        android:id="@+id/module_mediaplayer_component_try_message"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/module_mediaplayer_shape_shandow_down_to_up"
+        android:focusable="false"
+        android:gravity="bottom|right"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:paddingBottom="8dp"
+        android:text="@string/module_mediaplayer_string_try"
+        android:textColor="#ffffff"
+        android:textSize="16sp" />
+
+</RelativeLayout>

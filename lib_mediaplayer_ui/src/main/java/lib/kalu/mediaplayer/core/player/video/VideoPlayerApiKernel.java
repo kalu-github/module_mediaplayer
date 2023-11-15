@@ -622,9 +622,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 @Override
                 public void onUpdateTimeMillis(@NonNull boolean isLooping, @NonNull long max, @NonNull long seek, @NonNull long position, @NonNull long duration) {
                     try {
-                        if (max <= 0 || (position - seek) <= max)
-                            throw new Exception("looping warning: max = " + max);
-                        // loop
+                        if (max <= 0 || position <= max)
+                            throw new Exception("time warning: max = " + max + ", position = " + position + ", seek = " + seek + ", duration = " + duration + ", isLooping = " + isLooping);
+                        callPlayerEvent(PlayerType.StateType.STATE_TRY_COMPLETE);
+                        // 试看1
                         if (isLooping) {
                             boolean seekHelp = playerBuilder.isSeekHelp();
                             if (seekHelp) {
@@ -633,14 +634,14 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 seekTo(true);
                             }
                         }
-                        // stop
+                        // 试看2
                         else {
                             pause(true);
                             playEnd();
                         }
                     } catch (Exception e) {
                         MPLogUtil.log("VideoPlayerApiKernel => onUpdateTimeMillis => " + e.getMessage());
-                        callUpdateTimeMillis(seek, position, duration);
+                        callUpdateTimeMillis(seek, position, duration, max);
                         callProgressListener(position, duration);
                     }
                 }
@@ -690,6 +691,13 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             break;
                         // 播放开始-快进
                         case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
+                            // 试看
+                            if (null != builder) {
+                                long max = builder.getMax();
+                                if (max > 0) {
+                                    callPlayerEvent(PlayerType.StateType.STATE_TRY_BEGIN);
+                                }
+                            }
                             // step1
                             callPlayerEvent(PlayerType.StateType.STATE_START_SEEK);
                             // step2
@@ -711,6 +719,13 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
                             // 埋点
                             onBuriedEventPlaying();
+                            // 试看
+                            if (null != builder) {
+                                long max = builder.getMax();
+                                if (max > 0) {
+                                    callPlayerEvent(PlayerType.StateType.STATE_TRY_BEGIN);
+                                }
+                            }
                             callPlayerEvent(PlayerType.StateType.STATE_START);
                             // step2
                             showVideoReal();

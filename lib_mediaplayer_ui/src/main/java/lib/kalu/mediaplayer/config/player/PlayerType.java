@@ -84,37 +84,39 @@ public @interface PlayerType {
         int STATE_LOADING_STOP = 3_006; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
         int STATE_KERNEL_STOP = 3_007;
         int STATE_KERNEL_RESUME = 3_008; // 开始播放
-        int STATE_START = 3_009; // 开始播放
-        int STATE_START_RETRY = 3_010; // 开始播放
-        int STATE_START_SEEK = 3_011; // 开始播放
-        int STATE_START_PLAY_WHEN_READY_PAUSE = 3_012; // 开始播放
-        int STATE_END = 3_013; // 播放完成
-        int STATE_PAUSE = 3_014; // 暂停播放
-        int STATE_PAUSE_IGNORE = 3_015; // 暂停播放
-        int STATE_RESUME = 3_016; // 恢复播放
-        int STATE_RESUME_IGNORE = 3_017; // 恢复播放
-        int STATE_RESTAER = 3_018; // 重播一次
-        int STATE_CLOSE = 3_019; // 暂停播放
-        int STATE_BUFFERING_TIMEOUT = 3_020; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-        int STATE_BUFFERING_START = 3_021; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-        int STATE_BUFFERING_STOP = 3_022; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int STATE_START_ABORT = 3_023; // 开始播放中止
-        int STATE_ONCE_LIVE = 3_024; // 即将开播
-        int STATE_FAST_FORWARD_START = 3_025; // 快进
-        int STATE_FAST_FORWARD_STOP = 3_026; // 快进
-        int STATE_FAST_REWIND_START = 3_027; // 快进
-        int STATE_FAST_REWIND_STOP = 3_028; // 快进
+        int STATE_TRY_BEGIN = 3_009; // 试看
+        int STATE_START = 3_010; // 开始播放
+        int STATE_START_RETRY = 3_011; // 开始播放
+        int STATE_START_SEEK = 3_012; // 开始播放
+        int STATE_START_PLAY_WHEN_READY_PAUSE = 3_013; // 开始播放
+        int STATE_END = 3_014; // 播放完成
+        int STATE_TRY_COMPLETE = 3_015; // 试看完成
+        int STATE_PAUSE = 3_016; // 暂停播放
+        int STATE_PAUSE_IGNORE = 3_017; // 暂停播放
+        int STATE_RESUME = 3_018; // 恢复播放
+        int STATE_RESUME_IGNORE = 3_019; // 恢复播放
+        int STATE_RESTAER = 3_020; // 重播一次
+        int STATE_CLOSE = 3_021; // 暂停播放
+        int STATE_BUFFERING_TIMEOUT = 3_022; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
+        int STATE_BUFFERING_START = 3_023; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
+        int STATE_BUFFERING_STOP = 3_024; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
+        int STATE_START_ABORT = 3_025; // 开始播放中止
+        int STATE_ONCE_LIVE = 3_026; // 即将开播
+        int STATE_FAST_FORWARD_START = 3_027; // 快进
+        int STATE_FAST_FORWARD_STOP = 3_028; // 快进
+        int STATE_FAST_REWIND_START = 3_029; // 快进
+        int STATE_FAST_REWIND_STOP = 3_030; // 快进
 
-        int STATE_ERROR = 3_029; // 错误
-        int STATE_ERROR_IGNORE = 3_030; // 错误
-        int STATE_COMPONENT_SEEK_SHOW = 3_031; // 显示进度条
-        int STATE_RELEASE = 3_032;
-        int STATE_RELEASE_EXCEPTION = 3_033;
+        int STATE_ERROR = 3_031; // 错误
+        int STATE_ERROR_IGNORE = 3_032; // 错误
+        int STATE_COMPONENT_SEEK_SHOW = 3_033; // 显示进度条
+        int STATE_RELEASE = 3_034;
+        int STATE_RELEASE_EXCEPTION = 3_035;
 
-        int STATE_FULL_START = 3_034;
-        int STATE_FULL_STOP = 3_035;
-        int STATE_FLOAT_START = 3_036;
-        int STATE_FLOAT_STOP = 3_037;
+        int STATE_FULL_START = 3_036;
+        int STATE_FULL_STOP = 3_037;
+        int STATE_FLOAT_START = 3_038;
+        int STATE_FLOAT_STOP = 3_039;
 
         @Documented
         @Retention(CLASS)
@@ -134,6 +136,7 @@ public @interface PlayerType {
                 STATE_CLEAN,
                 STATE_KERNEL_STOP,
                 STATE_KERNEL_RESUME,
+                STATE_TRY_BEGIN,
                 STATE_START,
                 STATE_START_RETRY,
                 STATE_START_SEEK,
@@ -148,6 +151,7 @@ public @interface PlayerType {
                 STATE_BUFFERING_START,
                 STATE_BUFFERING_STOP,
                 STATE_LOADING_STOP,
+                STATE_TRY_COMPLETE,
                 STATE_END,
                 STATE_START_ABORT,
                 STATE_LOADING_START,

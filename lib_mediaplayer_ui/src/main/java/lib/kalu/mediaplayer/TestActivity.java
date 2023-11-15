@@ -24,6 +24,7 @@ import lib.kalu.mediaplayer.core.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.component.ComponentNet;
 import lib.kalu.mediaplayer.core.component.ComponentPause;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
+import lib.kalu.mediaplayer.core.component.ComponentTry;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
@@ -181,6 +182,9 @@ public final class TestActivity extends Activity {
         // pause
         ComponentPause pause = new ComponentPause(getApplicationContext());
         componentApis.add(pause);
+        // try
+        ComponentTry trys = new ComponentTry(getApplicationContext());
+        componentApis.add(trys);
         // insert-component
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
         playerLayout.addAllComponent(componentApis);
@@ -258,7 +262,13 @@ public final class TestActivity extends Activity {
         }
 
         long seek = getIntent().getLongExtra(INTENT_SEEK, 0);
+        if (seek <= 0) {
+            seek = getIntent().getIntExtra(INTENT_SEEK, 0);
+        }
         long max = getIntent().getLongExtra(INTENT_MAX, 0);
+        if (max <= 0) {
+            max = getIntent().getIntExtra(INTENT_MAX, 0);
+        }
         boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
         MPLogUtil.log("TestActivity => onCreate => seek = " + seek + ", max = " + max + ", live = " + live + ", url = " + url);
 

@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
                 intent.putExtra(TestActivity.INTENT_URL, getUrl());
                 intent.putExtra(TestActivity.INTENT_LIVE, isLive());
                 intent.putExtra(TestActivity.INTENT_SEEK, getSeek());
+                intent.putExtra(TestActivity.INTENT_MAX, 60 * 1000L);
                 startActivity(intent);
             }
         });

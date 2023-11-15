@@ -257,7 +257,7 @@ interface VideoPlayerApiBase {
         }
     }
 
-    default void callUpdateSeekProgress(@NonNull long position, @NonNull long max) {
+    default void callUpdateSeekProgress(@NonNull long position, @NonNull long duration,  @NonNull long max) {
         try {
             ViewGroup viewGroup = getBaseControlViewGroup();
             int childCount = viewGroup.getChildCount();
@@ -269,7 +269,7 @@ interface VideoPlayerApiBase {
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).onUpdateSeekProgress(position, max, true);
+                ((ComponentApi) childAt).onUpdateSeekProgress(true, position, duration, max);
             }
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiBase => callUpdateSeekProgress => " + e.getMessage());
