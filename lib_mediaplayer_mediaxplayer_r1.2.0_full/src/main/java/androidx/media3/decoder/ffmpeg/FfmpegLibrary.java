@@ -31,7 +31,7 @@ import lib.kalu.mediax.util.ExoLogUtil;
 public final class FfmpegLibrary {
 
     static {
-        System.loadLibrary("exoplayer-ffmpeg");
+        System.loadLibrary("mediax-ffmpeg");
         MediaLibraryInfo.registerModule("goog.exo.ffmpeg");
     }
 

@@ -14,7 +14,7 @@
 //RTMP *rtmp = NULL;
 
 JNIEXPORT jlong JNICALL
-Java_lib_kalu_exoplayer2_rtmp_RtmpClient_nativeAlloc(JNIEnv* env, jobject thiz) {
+Java_lib_kalu_mediax_rtmp_RtmpClient_nativeAlloc(JNIEnv* env, jobject thiz) {
     RTMP *rtmp = RTMP_Alloc();
     return (jlong)rtmp;
 }
@@ -25,7 +25,7 @@ Java_lib_kalu_exoplayer2_rtmp_RtmpClient_nativeAlloc(JNIEnv* env, jobject thiz) 
  * Signature: (Ljava/lang/String;)I
  */
 JNIEXPORT jint JNICALL
-Java_lib_kalu_exoplayer2_rtmp_RtmpClient_nativeOpen(JNIEnv* env, jobject thiz, jstring url_,
+Java_lib_kalu_mediax_rtmp_RtmpClient_nativeOpen(JNIEnv* env, jobject thiz, jstring url_,
                                                         jboolean isPublishMode, jlong rtmpPointer,
                                                         jint sendTimeoutInMs, jint receiveTimeoutInMs) {
 
@@ -71,7 +71,7 @@ Java_lib_kalu_exoplayer2_rtmp_RtmpClient_nativeOpen(JNIEnv* env, jobject thiz, j
  * Signature: ([CI)I
  */
 JNIEXPORT jint JNICALL
-Java_lib_kalu_exoplayer2_rtmp_RtmpClient_nativeRead(JNIEnv* env, jobject thiz, jbyteArray data_,
+Java_lib_kalu_mediax_rtmp_RtmpClient_nativeRead(JNIEnv* env, jobject thiz, jbyteArray data_,
                                                         jint offset, jint size, jlong rtmpPointer) {
 
     RTMP *rtmp = (RTMP *) rtmpPointer;
@@ -102,7 +102,7 @@ Java_lib_kalu_exoplayer2_rtmp_RtmpClient_nativeRead(JNIEnv* env, jobject thiz, j
  * Signature: ([CI)I
  */
 JNIEXPORT jint JNICALL
-Java_lib_kalu_exoplayer2_rtmp_RtmpClient_nativeWrite(JNIEnv* env, jobject thiz, jbyteArray data,
+Java_lib_kalu_mediax_rtmp_RtmpClient_nativeWrite(JNIEnv* env, jobject thiz, jbyteArray data,
                                                          jint offset, jint size, jlong rtmpPointer) {
 
     RTMP *rtmp = (RTMP *) rtmpPointer;
@@ -129,7 +129,7 @@ Java_lib_kalu_exoplayer2_rtmp_RtmpClient_nativeWrite(JNIEnv* env, jobject thiz, 
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL
-Java_lib_kalu_exoplayer2_rtmp_RtmpClient_seek(JNIEnv* env, jobject thiz, jint seekTime) {
+Java_lib_kalu_mediax_rtmp_RtmpClient_seek(JNIEnv* env, jobject thiz, jint seekTime) {
     return 0;
 }
 
@@ -139,7 +139,7 @@ Java_lib_kalu_exoplayer2_rtmp_RtmpClient_seek(JNIEnv* env, jobject thiz, jint se
  * Signature: (I)I
  */
 JNIEXPORT jint JNICALL
-Java_lib_kalu_exoplayer2_rtmp_RtmpClient_nativePause(JNIEnv* env, jobject thiz, jboolean pause,
+Java_lib_kalu_mediax_rtmp_RtmpClient_nativePause(JNIEnv* env, jobject thiz, jboolean pause,
                                                          jlong rtmpPointer) {
 
     RTMP *rtmp = (RTMP *) rtmpPointer;
@@ -157,7 +157,7 @@ Java_lib_kalu_exoplayer2_rtmp_RtmpClient_nativePause(JNIEnv* env, jobject thiz, 
  * Signature: ()I
  */
 JNIEXPORT void JNICALL
-Java_lib_kalu_exoplayer2_rtmp_RtmpClient_nativeClose(JNIEnv* env, jobject thiz, jlong rtmpPointer) {
+Java_lib_kalu_mediax_rtmp_RtmpClient_nativeClose(JNIEnv* env, jobject thiz, jlong rtmpPointer) {
 
     RTMP *rtmp = (RTMP *) rtmpPointer;
     if (rtmp != NULL) {
@@ -168,7 +168,7 @@ Java_lib_kalu_exoplayer2_rtmp_RtmpClient_nativeClose(JNIEnv* env, jobject thiz, 
 
 
 JNIEXPORT jboolean JNICALL
-Java_lib_kalu_exoplayer2_rtmp_RtmpClient_nativeIsConnected(JNIEnv* env, jobject thiz, jlong rtmpPointer) {
+Java_lib_kalu_mediax_rtmp_RtmpClient_nativeIsConnected(JNIEnv* env, jobject thiz, jlong rtmpPointer) {
     RTMP *rtmp = (RTMP *) rtmpPointer;
     if (rtmp == NULL) {
         return false;

@@ -34,13 +34,13 @@ include_directories(
 )
 
 add_library(
-        exoplayer-ffmpeg
+        mediax-ffmpeg
         SHARED
         ffmpeg_log.c
         ffmpeg_jni.cc)
 
 target_link_libraries(
-        exoplayer-ffmpeg
+        mediax-ffmpeg
 
         # ffmpeg
         ffmpeg-avcodec-lib
