@@ -7,8 +7,6 @@ import android.view.SurfaceHolder;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import com.google.android.exoplayer2.ExoPlayer;
-
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -34,10 +32,10 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
     default void initOptionsIjk() {
     }
 
-    default void initOptionsExo(@NonNull Context context, @NonNull ExoPlayer.Builder exoBuilder) {
+    default void initOptionsExo(@NonNull Context context, @NonNull com.google.android.exoplayer2.ExoPlayer.Builder exoBuilder) {
     }
 
-    default void initOptionsMediax(@NonNull Context context, @NonNull ExoPlayer.Builder exoBuilder) {
+    default void initOptionsMediax(@NonNull Context context, @NonNull androidx.media3.exoplayer.ExoPlayer.Builder exoBuilder) {
     }
 
     default void initDecoder(@NonNull Context context, @NonNull String playUrl, @NonNull StartBuilder bundle) {
