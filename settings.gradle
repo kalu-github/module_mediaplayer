@@ -1,1 +1,2 @@
 include ':lib_mediaplayer_ffplayer_ff3.4.12'
+include ':lib_mediaplayer_ffplayer_ff3.4.12_full'
