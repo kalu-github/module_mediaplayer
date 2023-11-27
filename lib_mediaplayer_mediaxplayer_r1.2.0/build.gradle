@@ -1,0 +1,57 @@
+apply plugin: 'com.android.library'
+
+android {
+
+    namespace 'androidx.media3'
+    compileSdkVersion 34
+    buildToolsVersion "34.0.0"
+    compileOptions.encoding = "UTF-8"
+
+    defaultConfig {
+
+        minSdkVersion 14
+        targetSdkVersion 34
+
+        //添加此行
+        flavorDimensions "default"
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            def type = new String(buildType.name).toLowerCase()
+            def time = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
+            outputFileName = "lib_mediaplayer_mediax_r1.2.0_" + type + "_" + time + ".aar"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+    }
+
+    //jdk1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    compileOnly('androidx.appcompat:appcompat:1.6.1')
+    compileOnly('androidx.exifinterface:exifinterface:1.3.6')
+    compileOnly('com.squareup.okhttp3:okhttp:3.14.9')
+    // tools
+    api files('libs/lib_mediaplayer_mediaxplayer_common.jar')
+}
