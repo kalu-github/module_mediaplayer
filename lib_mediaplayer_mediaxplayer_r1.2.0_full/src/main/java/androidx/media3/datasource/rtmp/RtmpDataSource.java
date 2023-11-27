@@ -15,31 +15,30 @@
  */
 package androidx.media3.datasource.rtmp;
 
-import static com.google.android.exoplayer2.util.Util.castNonNull;
+import static androidx.media3.common.util.Util.castNonNull;
 
 import android.net.Uri;
 
 import androidx.annotation.Nullable;
+import androidx.media3.common.C;
+import androidx.media3.common.MediaLibraryInfo;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.datasource.BaseDataSource;
+import androidx.media3.datasource.DataSource;
+import androidx.media3.datasource.DataSpec;
+import androidx.media3.datasource.TransferListener;
 
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
-import com.google.android.exoplayer2.upstream.BaseDataSource;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DataSpec;
-import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 import java.io.IOException;
 
 import lib.kalu.mediax.rtmp.RtmpClient;
 
-/**
- * A Real-Time Messaging Protocol (RTMP) {@link DataSource}.
- */
+@UnstableApi
 public final class RtmpDataSource extends BaseDataSource {
 
     static {
-        ExoPlayerLibraryInfo.registerModule("goog.exo.rtmp");
+        MediaLibraryInfo.registerModule("goog.exo.rtmp");
     }
 
     /**

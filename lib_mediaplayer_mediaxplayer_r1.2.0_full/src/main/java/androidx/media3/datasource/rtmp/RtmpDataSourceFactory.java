@@ -16,9 +16,8 @@
 package androidx.media3.datasource.rtmp;
 
 import androidx.annotation.Nullable;
-
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.TransferListener;
+import androidx.media3.datasource.DataSource;
+import androidx.media3.datasource.TransferListener;
 
 /**
  * @deprecated Use {@link RtmpDataSource.Factory} instead.

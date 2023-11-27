@@ -16,23 +16,23 @@
 package androidx.media3.decoder.ffmpeg;
 
 import androidx.annotation.Nullable;
-
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
-import com.google.android.exoplayer2.util.MimeTypes;
+import androidx.media3.common.C;
+import androidx.media3.common.MediaLibraryInfo;
+import androidx.media3.common.MimeTypes;
+import androidx.media3.common.util.UnstableApi;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import lib.kalu.mediax.util.ExoLogUtil;
 
-/**
+@UnstableApi /**
  * Configures and queries the underlying native library.
  */
 public final class FfmpegLibrary {
 
     static {
         System.loadLibrary("exoplayer-ffmpeg");
-        ExoPlayerLibraryInfo.registerModule("goog.exo.ffmpeg");
+        MediaLibraryInfo.registerModule("goog.exo.ffmpeg");
     }
 
     private static @MonotonicNonNull String version;

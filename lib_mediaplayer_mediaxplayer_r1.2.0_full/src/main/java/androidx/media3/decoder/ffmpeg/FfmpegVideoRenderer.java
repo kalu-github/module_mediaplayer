@@ -39,6 +39,7 @@ import androidx.media3.decoder.DecoderException;
 import androidx.media3.decoder.DecoderInputBuffer;
 import androidx.media3.decoder.VideoDecoderOutputBuffer;
 import androidx.media3.exoplayer.DecoderReuseEvaluation;
+import androidx.media3.exoplayer.ExoPlaybackException;
 import androidx.media3.exoplayer.RendererCapabilities;
 import androidx.media3.exoplayer.video.DecoderVideoRenderer;
 import androidx.media3.exoplayer.video.VideoRendererEventListener;
@@ -101,11 +102,6 @@ public class FfmpegVideoRenderer extends DecoderVideoRenderer {
                 getRuntime().availableProcessors(),
                 DEFAULT_NUM_OF_INPUT_BUFFERS,
                 DEFAULT_NUM_OF_OUTPUT_BUFFERS);
-    }
-
-    @Override
-    protected Decoder<DecoderInputBuffer, ? extends VideoDecoderOutputBuffer, ? extends DecoderException> createDecoder(Format format, @Nullable CryptoConfig cryptoConfig) throws DecoderException {
-        return null;
     }
 
     /**

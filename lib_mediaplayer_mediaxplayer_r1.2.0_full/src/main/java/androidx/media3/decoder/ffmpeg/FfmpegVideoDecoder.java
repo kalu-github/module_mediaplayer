@@ -18,6 +18,13 @@ package androidx.media3.decoder.ffmpeg;
 import android.view.Surface;
 
 import androidx.annotation.Nullable;
+import androidx.media3.common.C;
+import androidx.media3.common.Format;
+import androidx.media3.common.util.Assertions;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.common.util.Util;
+import androidx.media3.decoder.SimpleDecoder;
+import androidx.media3.decoder.VideoDecoderInputBuffer;
 import androidx.media3.decoder.VideoDecoderOutputBuffer;
 
 import java.nio.ByteBuffer;
@@ -25,12 +32,10 @@ import java.util.List;
 
 import lib.kalu.mediax.util.ExoLogUtil;
 
-/**
+@UnstableApi /**
  * Ffmpeg Video decoder.
  */
-/* package */ final class FfmpegVideoDecoder
-        extends
-        SimpleDecoder<VideoDecoderInputBuffer, VideoDecoderOutputBuffer, FfmpegDecoderException> {
+ final class FfmpegVideoDecoder extends SimpleDecoder<VideoDecoderInputBuffer, VideoDecoderOutputBuffer, FfmpegDecoderException> {
 
     // LINT.IfChange
     private static final int VIDEO_DECODER_SUCCESS = 0;
