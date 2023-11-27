@@ -23,7 +23,9 @@ import androidx.annotation.Nullable;
 import androidx.media3.common.C;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.datasource.BaseDataSource;
+import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DataSpec;
+import androidx.media3.datasource.TransferListener;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
@@ -40,8 +42,21 @@ public final class RtmpDataSource extends BaseDataSource {
         super(/* isNetwork= */ true);
     }
 
+    public static final class Factory implements DataSource.Factory {
+
+        @CanIgnoreReturnValue
+        public Factory setTransferListener(@Nullable TransferListener transferListener) {
+            return this;
+        }
+
+        @Override
+        public RtmpDataSource createDataSource() {
+            return null;
+        }
+    }
+
     @Override
-    public long open(DataSpec dataSpec)  {
+    public long open(DataSpec dataSpec) {
         return C.LENGTH_UNSET;
     }
 
