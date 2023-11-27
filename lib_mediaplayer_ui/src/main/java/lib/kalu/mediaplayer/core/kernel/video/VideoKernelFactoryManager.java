@@ -7,9 +7,9 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.android.VideoAndroidPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.exo1.VideoExoPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.exo2.VideoExoPlayer2Factory;
-import lib.kalu.mediaplayer.core.kernel.video.exo2.VideoMediaxPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.ff.VideoFFmpegPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.ijk.VideoIjkPlayerFactory;
+import lib.kalu.mediaplayer.core.kernel.video.mediax.VideoMediaxPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.vlc.VideoVlcPlayerFactory;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 
