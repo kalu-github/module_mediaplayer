@@ -8,17 +8,17 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactory;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 
 @Keep
-public final class VideoExoPlayer2Factory implements VideoKernelFactory<VideoExoPlayer2> {
+public final class VideoExoPlayer2Factory implements VideoKernelFactory<VideoMediaxPlayer> {
 
     private VideoExoPlayer2Factory() {
     }
 
-    public static VideoExoPlayer2Factory build() {
-        return new VideoExoPlayer2Factory();
+    public static VideoMediaxPlayerFactory build() {
+        return new VideoMediaxPlayerFactory();
     }
 
     @Override
-    public VideoExoPlayer2 createKernel(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent event) {
-        return new VideoExoPlayer2(playerApi, event);
+    public VideoMediaxPlayer createKernel(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent event) {
+        return new VideoMediaxPlayer(playerApi, event);
     }
 }

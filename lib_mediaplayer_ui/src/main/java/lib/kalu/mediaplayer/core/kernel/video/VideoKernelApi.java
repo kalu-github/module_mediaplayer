@@ -37,6 +37,9 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
     default void initOptionsExo(@NonNull Context context, @NonNull ExoPlayer.Builder exoBuilder) {
     }
 
+    default void initOptionsMediax(@NonNull Context context, @NonNull ExoPlayer.Builder exoBuilder) {
+    }
+
     default void initDecoder(@NonNull Context context, @NonNull String playUrl, @NonNull StartBuilder bundle) {
 
         MPLogUtil.log("VideoKernelApi => initDecoder => playUrl = " + playUrl);

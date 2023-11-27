@@ -226,10 +226,11 @@ public @interface PlayerType {
         int ANDROID = 6_001; // MediaPlayer，基于原生自带的播放器控件
         int EXO_V1 = 6_002; // exo
         int EXO_V2 = 6_003; // exo
-        int IJK = 6_004; // ijk
-        int IJK_MEDIACODEC = 6_005; // ijk_mediacodec
-        int VLC = 6_006; // vlc
-        int FFPLAYER = 6_007; // ffplayer
+        int MEDIAX = 6_004; // mediax
+        int IJK = 6_005; // ijk
+        int IJK_MEDIACODEC = 6_006; // ijk_mediacodec
+        int VLC = 6_007; // vlc
+        int FFPLAYER = 6_008; // ffplayer
 
         @Documented
         @Retention(CLASS)
@@ -239,6 +240,7 @@ public @interface PlayerType {
                 ANDROID,
                 EXO_V1,
                 EXO_V2,
+                MEDIAX,
                 VLC,
                 FFPLAYER})
         @Keep
