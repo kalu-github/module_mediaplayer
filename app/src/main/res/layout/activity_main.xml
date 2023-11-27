@@ -245,6 +245,14 @@
                     android:text="android" />
 
                 <RadioButton
+                    android:id="@+id/main_kernel_mediax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="false"
+                    android:enabled="true"
+                    android:text="mediax" />
+
+                <RadioButton
                     android:id="@+id/main_kernel_ijk"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
