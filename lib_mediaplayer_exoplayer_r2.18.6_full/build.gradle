@@ -1,0 +1,76 @@
+apply plugin: 'com.android.library'
+
+android {
+
+    compileSdkVersion 33
+    buildToolsVersion "33.0.1"
+    compileOptions.encoding = "UTF-8"
+
+    defaultConfig {
+
+        minSdkVersion 16
+        targetSdkVersion 33
+
+        externalNativeBuild {
+            cmake {
+                version "3.18.1"
+//                abiFilters 'armeabi-v7a'
+                abiFilters 'armeabi-v7a', 'arm64-v8a'
+//                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            }
+        }
+
+        ndk {
+//            abiFilters 'armeabi-v7a'
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+//            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+
+        //添加此行
+        flavorDimensions "default"
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            def type = new String(buildType.name).toLowerCase()
+            def time = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
+            outputFileName = "lib_mediaplayer_exo_r2.18.6_full_" + type + "_" + time + ".aar"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+    }
+
+    //jdk1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "/src/main/cpp/CMakeLists.txt"
+        }
+    }
+    namespace 'com.google.android.exoplayer2'
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    compileOnly('androidx.appcompat:appcompat:1.5.1')
+    // tools
+    api files('libs/lib_mediaplayer_core_exo_common.jar')
+}
