@@ -1,0 +1,82 @@
+apply plugin: 'com.android.library'
+
+android {
+
+    compileSdkVersion 33
+    buildToolsVersion "33.0.1"
+    compileOptions.encoding = "UTF-8"
+
+    defaultConfig {
+
+        minSdkVersion 14
+        targetSdkVersion 33
+
+        externalNativeBuild {
+            cmake {
+                //-fstack-protector：启用堆栈保护，不过只为局部变量中含有 char 数组的函数插入保护代码。
+                //-fstack-protector-all：启用堆栈保护，为所有函数插入保护代码。
+                //-fno-stack-protector：禁用堆栈保护。
+                cFlags "-fstack-protector-all"
+                cFlags "-fPIE"
+                cppFlags "-std=c++11"
+                cppFlags "-Wl,-Bsymbolic"
+                version "3.18.1"
+//                abiFilters 'armeabi-v7a'
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            }
+        }
+
+        ndk {
+//            abiFilters 'armeabi-v7a'
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+
+        //添加此行
+        flavorDimensions "default"
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            def type = new String(buildType.name).toLowerCase()
+            def time = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
+            outputFileName = "lib_mediaplayer_androidx_r1.2.0_full_" + type + "_" + time + ".aar"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+    }
+
+    //jdk1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "/src/main/cpp/CMakeLists.txt"
+        }
+    }
+    namespace 'com.google.android.exoplayer2'
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    compileOnly('androidx.appcompat:appcompat:1.6.1')
+    compileOnly('com.squareup.okhttp3:okhttp:3.14.9')
+    // tools
+    api files('libs/lib_mediaplayer_androidxplayer_common.jar')
+}
