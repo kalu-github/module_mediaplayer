@@ -1,0 +1,75 @@
+apply plugin: 'com.android.library'
+
+android {
+
+    compileSdkVersion 32
+    buildToolsVersion "32.0.0"
+    namespace 'lib.kalu.ijkplayer'
+
+    defaultConfig {
+
+        minSdkVersion 16
+        targetSdkVersion 32
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11"
+                cppFlags "-Wl,-Bsymbolic"
+                version "3.18.1"
+//                abiFilters 'armeabi-v7a'
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            }
+        }
+
+        ndk {
+//            abiFilters 'armeabi-v7a'
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+
+        //添加此行
+        flavorDimensions "default"
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            def type = new String(buildType.name).toLowerCase()
+            def time = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
+            outputFileName = "lib_mediaplayer_ijk_k0.8.8_ff3.4.0_full_" + type + "_" + time + ".aar"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+    }
+
+
+    //jdk1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "/src/main/cpp/CMakeLists.txt"
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    // implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly('androidx.appcompat:appcompat:1.5.1')
+}
