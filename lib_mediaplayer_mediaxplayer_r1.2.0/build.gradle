@@ -54,4 +54,5 @@ dependencies {
     compileOnly('com.squareup.okhttp3:okhttp:3.14.9')
     // tools
     api files('libs/lib_mediaplayer_mediaxplayer_common.jar')
+//    implementation project(path: ':lib_mediaplayer_mediaxplayer_common')
 }
