@@ -105,7 +105,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
     }
 
     default boolean startFull(boolean rememberPlaying) {
-        return startFull(rememberPlaying, false);
+        return startFull(rememberPlaying, true);
     }
 
     default boolean startFull(boolean rememberPlaying, boolean resetSurface) {
@@ -133,7 +133,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
     }
 
     default boolean stopFull() {
-        return stopFull(false);
+        return stopFull(true);
     }
 
     default boolean stopFull(boolean resetSurface) {

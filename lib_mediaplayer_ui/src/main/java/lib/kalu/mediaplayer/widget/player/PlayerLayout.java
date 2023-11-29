@@ -252,7 +252,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            boolean startFull = playerView.startFull(rememberPlaying, false);
+            boolean startFull = playerView.startFull(rememberPlaying, true);
             MPLogUtil.log("PlayerLayout => startFull => status = " + startFull);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => startFull => " + e.getMessage());
@@ -264,7 +264,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            boolean stopFull = playerView.stopFull(false);
+            boolean stopFull = playerView.stopFull(true);
             MPLogUtil.log("PlayerLayout => stopFull => status = " + stopFull);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => stopFull => " + e.getMessage());
