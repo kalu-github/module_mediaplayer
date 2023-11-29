@@ -1,9 +1,10 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
 import androidx.annotation.FloatRange;
-import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+
+import org.json.JSONArray;
 
 
 /**
@@ -61,4 +62,12 @@ interface VideoKernelApiBase {
     void setPlayWhenReady(boolean playWhenReady);
 
     boolean isPlayWhenReady();
+
+    default JSONArray getTrackInfo() {
+        return null;
+    }
+
+    default boolean switchTrack(@NonNull int trackId) {
+        return false;
+    }
 }

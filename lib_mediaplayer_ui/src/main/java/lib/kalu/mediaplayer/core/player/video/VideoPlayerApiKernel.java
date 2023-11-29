@@ -8,6 +8,8 @@ import android.view.View;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 
+import org.json.JSONArray;
+
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
@@ -820,6 +822,32 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernel.createDecoder(getBaseContext(), log, seekParameters);
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiKernel => createVideoDecoder => " + e.getMessage());
+        }
+    }
+
+    default JSONArray getTrackInfo() {
+        try {
+            checkVideoKernel();
+            VideoKernelApi kernel = getVideoKernel();
+            JSONArray trackInfo = kernel.getTrackInfo();
+            if (null == trackInfo)
+                throw new Exception("trackInfo error: null");
+            return trackInfo;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoPlayerApiKernel => getTrackInfo => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default boolean switchTrack(@NonNull int trackId) {
+        try {
+            checkVideoKernel();
+            VideoKernelApi kernel = getVideoKernel();
+            kernel.switchTrack(trackId);
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoPlayerApiKernel => switchTrack => " + e.getMessage());
+            return false;
         }
     }
 

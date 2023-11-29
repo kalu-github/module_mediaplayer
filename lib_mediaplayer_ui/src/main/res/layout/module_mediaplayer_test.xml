@@ -19,6 +19,23 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/module_mediaplayer_test_button21"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="音轨信息" />
+
+        <Button
+            android:id="@+id/module_mediaplayer_test_button22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="切换音轨2" />
+        <Button
+            android:id="@+id/module_mediaplayer_test_button23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="切换音轨3" />
+
+        <Button
             android:id="@+id/module_mediaplayer_test_button9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

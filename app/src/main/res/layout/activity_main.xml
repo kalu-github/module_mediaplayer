@@ -339,6 +339,38 @@
                 android:layout_height="20dp"
                 android:layout_marginLeft="6dp"
                 android:gravity="center_vertical|left"
+                android:text="试看1分钟"
+                android:textSize="14sp" />
+
+            <RadioGroup
+                android:id="@+id/main_trysee"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/main_trysee_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="false"
+                    android:enabled="true"
+                    android:text="开启试看" />
+
+                <RadioButton
+                    android:id="@+id/main_trysee_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="true"
+                    android:enabled="true"
+                    android:text="关闭试看" />
+
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginLeft="6dp"
+                android:gravity="center_vertical|left"
                 android:text="默认url"
                 android:textSize="14sp" />
 
@@ -476,7 +508,8 @@
                 android:id="@+id/main_edit"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:hint="输入视频地址" />
+                android:hint="输入视频地址"
+                android:text="xinzui.mp4" />
 
             <Button
                 android:id="@+id/main_button1"

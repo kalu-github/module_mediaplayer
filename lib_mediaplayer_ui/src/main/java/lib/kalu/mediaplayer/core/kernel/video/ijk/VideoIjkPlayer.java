@@ -7,9 +7,11 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
-import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
@@ -19,6 +21,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
+import tv.danmaku.ijk.media.player.misc.IMediaFormat;
 import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
 
 @Keep
@@ -648,14 +651,47 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         return mPrepared;
     }
 
-    public IjkTrackInfo[] getTrackInfo() {
+    @Override
+    public JSONArray getTrackInfo() {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            return mIjkPlayer.getTrackInfo();
+            IjkTrackInfo[] ijkTrackInfos = mIjkPlayer.getTrackInfo();
+            if (null == ijkTrackInfos)
+                throw new Exception("ijkTrackInfos error: null");
+            JSONArray data = new JSONArray();
+            for (IjkTrackInfo t : ijkTrackInfos) {
+                if (null == t)
+                    continue;
+                JSONObject o = new JSONObject();
+                o.put("type", t.getTrackType());
+                o.put("launcher", t.getLanguage());
+                o.put("info", t.getInfoInline());
+                IMediaFormat format = t.getFormat();
+                if (null != format) {
+                    o.put("mime", format.getString("mime"));
+                    o.put("width", format.getInteger("width"));
+                    o.put("height", format.getInteger("height"));
+                }
+                data.put(o);
+            }
+            return data;
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => getTrackInfo => " + e.getMessage());
             return null;
+        }
+    }
+
+    @Override
+    public boolean switchTrack(@NonNull int trackId) {
+        try {
+            if (null == mIjkPlayer)
+                throw new Exception("mIjkPlayer error: null");
+            mIjkPlayer.selectTrack(trackId);
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoIjkPlayer => switchTrack => " + e.getMessage());
+            return false;
         }
     }
 

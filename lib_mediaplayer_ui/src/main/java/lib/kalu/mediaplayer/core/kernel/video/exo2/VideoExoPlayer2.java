@@ -35,6 +35,7 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.source.rtsp.RtspMediaSource;
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
@@ -42,6 +43,8 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.video.VideoSize;
+
+import org.json.JSONArray;
 
 import java.io.IOException;
 import java.net.Proxy;
@@ -677,6 +680,23 @@ public final class VideoExoPlayer2 extends VideoBasePlayer {
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer2 => stop => " + e.getMessage());
         }
+    }
+
+    @Override
+    public JSONArray getTrackInfo() {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            return null;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExoPlayer2 => getTrackInfo => " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public boolean switchTrack(@NonNull int trackId) {
+        return super.switchTrack(trackId);
     }
 
     /************************/

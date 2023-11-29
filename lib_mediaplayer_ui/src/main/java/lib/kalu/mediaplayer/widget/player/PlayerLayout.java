@@ -16,6 +16,8 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import org.json.JSONArray;
+
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
@@ -785,6 +787,34 @@ public class PlayerLayout extends RelativeLayout {
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => setPlayerBackgroundColor => " + e.getMessage());
             return 1F;
+        }
+    }
+
+    public final JSONArray getTrackInfo() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            JSONArray trackInfo = playerView.getTrackInfo();
+            if (null == trackInfo)
+                throw new Exception("trackInfo error: null");
+            return trackInfo;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => getTrackInfo => " + e.getMessage());
+            return null;
+        }
+    }
+
+    public final boolean switchTrack(@NonNull int trackId) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.switchTrack(trackId);
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => switchTrack => " + e.getMessage());
+            return false;
         }
     }
 

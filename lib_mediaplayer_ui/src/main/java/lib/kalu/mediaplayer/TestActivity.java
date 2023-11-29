@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Keep;
 
+import org.json.JSONArray;
+
 import java.util.LinkedList;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -86,6 +88,31 @@ public final class TestActivity extends Activity {
         initPlayer();
         startPlayer();
 
+        // 音轨信息
+        findViewById(R.id.module_mediaplayer_test_button21).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+                JSONArray trackInfo = playerLayout.getTrackInfo();
+                MPLogUtil.log("trackInfo = " + trackInfo);
+            }
+        });
+        // 音轨信息2
+        findViewById(R.id.module_mediaplayer_test_button22).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+                playerLayout.switchTrack(2);
+            }
+        });
+        // 音轨信息3
+        findViewById(R.id.module_mediaplayer_test_button23).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+                playerLayout.switchTrack(3);
+            }
+        });
         // 倍速
         findViewById(R.id.module_mediaplayer_test_button9).setOnClickListener(new View.OnClickListener() {
             @Override
