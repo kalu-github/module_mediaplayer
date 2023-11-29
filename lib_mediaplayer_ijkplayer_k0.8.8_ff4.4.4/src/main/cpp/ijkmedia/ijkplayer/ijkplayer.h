@@ -249,4 +249,10 @@ void
 ijkmp_set_frame_at_time(IjkMediaPlayer *mp, const char *path, int64_t start_time, int64_t end_time,
                         int num, int definition);
 
+/* 获取音轨信息 */
+int ijkmp_get_audio_track(IjkMediaPlayer *mp);
+
+/* 切换音轨 */
+void ijkmp_switch_audio_track(IjkMediaPlayer *mp, int tracksNum, int index);
+
 #endif

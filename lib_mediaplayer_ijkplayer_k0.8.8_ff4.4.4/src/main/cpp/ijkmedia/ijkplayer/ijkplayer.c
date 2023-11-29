@@ -216,17 +216,6 @@ void ijkmp_set_playback_volume(IjkMediaPlayer *mp, float volume) {
             MPTRACE("%s()=void\n", __func__);
 }
 
-int ijkmp_set_stream_selected(IjkMediaPlayer *mp, int stream, int selected) {
-    assert(mp);
-
-            MPTRACE("%s(%d, %d)\n", __func__, stream, selected);
-    pthread_mutex_lock(&mp->mutex);
-    int ret = ffp_set_stream_selected(mp->ffplayer, stream, selected);
-    pthread_mutex_unlock(&mp->mutex);
-            MPTRACE("%s(%d, %d)=%d\n", __func__, stream, selected, ret);
-    return ret;
-}
-
 float ijkmp_get_property_float(IjkMediaPlayer *mp, int id, float default_value) {
     assert(mp);
 
@@ -742,4 +731,35 @@ int ijkmp_get_msg(IjkMediaPlayer *mp, AVMessage *msg, int block) {
     }
 
     return -1;
+}
+
+/*  -- 音轨信息----  */
+int ijkmp_get_audio_track(IjkMediaPlayer *mp)
+{
+    assert(mp);
+    pthread_mutex_lock(&mp->mutex);
+    int ret = ffp_get_track_info_l(mp->ffplayer);
+    pthread_mutex_unlock(&mp->mutex);
+
+    return ret;
+}
+
+// 切换音轨
+void ijkmp_switch_audio_track(IjkMediaPlayer *mp, int tracksNum, int index)
+{
+    assert(mp);
+    pthread_mutex_lock(&mp->mutex);
+    ffp_select_track_l(mp->ffplayer, tracksNum, index);
+    pthread_mutex_unlock(&mp->mutex);
+}
+
+int ijkmp_set_stream_selected(IjkMediaPlayer *mp, int stream, int selected) {
+    assert(mp);
+
+            MPTRACE("%s(%d, %d)\n", __func__, stream, selected);
+    pthread_mutex_lock(&mp->mutex);
+    int ret = ffp_set_stream_selected(mp->ffplayer, stream, selected);
+    pthread_mutex_unlock(&mp->mutex);
+            MPTRACE("%s(%d, %d)=%d\n", __func__, stream, selected, ret);
+    return ret;
 }
