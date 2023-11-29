@@ -152,5 +152,4 @@ typedef struct ijkmp_mediacodecinfo_context {
     char codec_name[128];   //< out
 } ijkmp_mediacodecinfo_context;
 
-#define RE_INIT_MEDIA_CODEC 1
 #endif
