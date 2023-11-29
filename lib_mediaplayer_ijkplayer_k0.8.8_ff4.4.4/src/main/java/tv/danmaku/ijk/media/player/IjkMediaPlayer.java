@@ -413,14 +413,14 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
             if (null == trackInfos || trackInfos.length == 0 || trackIndex >= trackInfos.length)
                 throw new Exception("trackInfos error: " + trackInfos);
             pause();
-            _setSelectTrack(trackIndex, enable);
+            _setStreamSelected(trackIndex, enable);
             start();
         } catch (Exception e) {
             IjkLogUtil.log("IjkMediaPlayer => selectTrack => " + e.getMessage());
         }
     }
 
-    private native void _setSelectTrack(int stream, boolean enable);
+    private native void _setStreamSelected(int stream, boolean enable);
 
     @Override
     public int getVideoWidth() {
