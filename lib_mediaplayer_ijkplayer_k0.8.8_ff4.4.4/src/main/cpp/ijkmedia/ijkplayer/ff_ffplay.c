@@ -2968,7 +2968,8 @@ static int stream_component_open(FFPlayer *ffp, int stream_index) {
 
     if (meidiacodec_name && ffmpeg_mediacodec_tryed == 0) {
         codec = avcodec_find_decoder_by_name(meidiacodec_name);
-        av_log(NULL, AV_LOG_ERROR, "查找ffmpeg硬件解码: %s %s\n", meidiacodec_name, codec ? "成功" : "失败");
+        av_log(NULL, AV_LOG_ERROR, "查找ffmpeg硬件解码: %s %s\n", meidiacodec_name,
+               codec ? "成功" : "失败");
         ffmpeg_mediacodec_tryed = (codec != NULL);
     }
     if (!codec) {
@@ -5198,8 +5199,7 @@ IjkMediaMeta *ffp_get_meta_l(FFPlayer *ffp) {
 
 /* 音轨信息 */
 //获取音轨信息
-int ffp_get_track_info_l(FFPlayer *ffp)
-{
+int ffp_get_track_info_l(FFPlayer *ffp) {
     if (!ffp)
         return 0;
 
@@ -5214,12 +5214,11 @@ int ffp_get_track_info_l(FFPlayer *ffp)
     AVStream *st;
     int codec_type = AVMEDIA_TYPE_AUDIO;
 
-    for (stream_index = 0; stream_index < is->ic->nb_streams; stream_index++)
-    {
+    for (stream_index = 0; stream_index < is->ic->nb_streams; stream_index++) {
         st = ic->streams[stream_index];
         if (st->codecpar->codec_type == codec_type) {
             /* check that parameters are OK */
-            switch(codec_type) {
+            switch (codec_type) {
                 case AVMEDIA_TYPE_AUDIO:
                     if (st->codecpar->sample_rate != 0 && st->codecpar->channels != 0)
                         total++;
@@ -5232,15 +5231,15 @@ int ffp_get_track_info_l(FFPlayer *ffp)
 }
 
 
-void ffp_select_track_l(FFPlayer *ffp, int tracksNum, int index) {
+int ffp_select_track_l(FFPlayer *ffp, int tracksNum, int index) {
     if (!ffp)
-        return;
+        return -1;
 
     assert(ffp);
     VideoState *is = ffp->is;
     int total = 0;
     if (!is)
-        return;
+        return -1;
 
     AVFormatContext *ic = is->ic;
     int start_index = 0, stream_index = 0;
@@ -5256,8 +5255,7 @@ void ffp_select_track_l(FFPlayer *ffp, int tracksNum, int index) {
      if (start_index < (codec_type == AVMEDIA_TYPE_SUBTITLE ? -1 : 0))
      return;*/
 
-    for (stream_index = 0; stream_index < is->ic->nb_streams; stream_index++)
-    {
+    for (stream_index = 0; stream_index < is->ic->nb_streams; stream_index++) {
         st = ic->streams[stream_index];
         if (st->codecpar->codec_type == codec_type) {
             /* check that parameters are OK */
@@ -5273,10 +5271,10 @@ void ffp_select_track_l(FFPlayer *ffp, int tracksNum, int index) {
         }
     }
 
-    return;
+    return -1;
 
     the_end:
     stream_component_close(ffp, start_index);
     //传递两个参数tracksNum：音轨的个数，stream_index：第几个音轨
-    ffp_set_stream_selected(ffp, tracksNum, stream_index);
+    return ffp_set_stream_selected(ffp, tracksNum, stream_index);
 }

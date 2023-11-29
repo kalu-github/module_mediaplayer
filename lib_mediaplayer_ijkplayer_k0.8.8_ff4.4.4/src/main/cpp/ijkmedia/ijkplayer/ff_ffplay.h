@@ -175,6 +175,6 @@ struct IjkMediaMeta *ffp_get_meta_l(FFPlayer *ffp);
 // 获取音轨信息
 int ffp_get_track_info_l(FFPlayer *ffp);
 
-void ffp_select_track_l(FFPlayer *ffp, int tracksNum, int index);
+int ffp_select_track_l(FFPlayer *ffp, int tracksNum, int index);
 
 #endif

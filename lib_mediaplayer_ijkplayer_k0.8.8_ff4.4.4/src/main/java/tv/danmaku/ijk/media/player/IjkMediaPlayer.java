@@ -403,18 +403,18 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     }
 
     // experimental, should set DEFAULT_MIN_FRAMES and MAX_MIN_FRAMES to 25
-    // TODO: @Override
     public void selectTrack(int track) {
-        _setStreamSelected(track, true);
+        _setSelectTrack(track, true);
     }
 
-    // experimental, should set DEFAULT_MIN_FRAMES and MAX_MIN_FRAMES to 25
-    // TODO: @Override
-    public void deselectTrack(int track) {
-        _setStreamSelected(track, false);
+    private native void _setSelectTrack(int stream, boolean select);
+
+    public void selectTrack2(int track) {
+        IjkTrackInfo[] ijkTrackInfo = getTrackInfo();
+        _setSelectTrack(ijkTrackInfo.length, track);
     }
 
-    private native void _setStreamSelected(int stream, boolean select);
+    private native void _setSelectTrack(int trackNum, int trackId);
 
     @Override
     public int getVideoWidth() {

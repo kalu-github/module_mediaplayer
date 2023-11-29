@@ -186,8 +186,6 @@ void ijkmp_set_playback_rate(IjkMediaPlayer *mp, float rate);
 
 void ijkmp_set_playback_volume(IjkMediaPlayer *mp, float rate);
 
-int ijkmp_set_stream_selected(IjkMediaPlayer *mp, int stream, int selected);
-
 float ijkmp_get_property_float(IjkMediaPlayer *mp, int id, float default_value);
 
 void ijkmp_set_property_float(IjkMediaPlayer *mp, int id, float value);
@@ -195,9 +193,6 @@ void ijkmp_set_property_float(IjkMediaPlayer *mp, int id, float value);
 int64_t ijkmp_get_property_int64(IjkMediaPlayer *mp, int id, int64_t default_value);
 
 void ijkmp_set_property_int64(IjkMediaPlayer *mp, int id, int64_t value);
-
-// must be freed with free();
-IjkMediaMeta *ijkmp_get_meta_l(IjkMediaPlayer *mp);
 
 // preferred to be called explicity, can be called multiple times
 // NOTE: ijkmp_shutdown may block thread
@@ -250,9 +245,12 @@ ijkmp_set_frame_at_time(IjkMediaPlayer *mp, const char *path, int64_t start_time
                         int num, int definition);
 
 /* 获取音轨信息 */
-int ijkmp_get_audio_track(IjkMediaPlayer *mp);
+// must be freed with free();
+IjkMediaMeta *ijkmp_get_meta_l(IjkMediaPlayer *mp);
+int ijkmp_get_meta_l2(IjkMediaPlayer *mp);
 
 /* 切换音轨 */
-void ijkmp_switch_audio_track(IjkMediaPlayer *mp, int tracksNum, int index);
+int ijkmp_set_stream_selected(IjkMediaPlayer *mp, int stream, int selected);
+int ijkmp_set_stream_selected2(IjkMediaPlayer *mp, int tracksNum, int trackId);
 
 #endif
