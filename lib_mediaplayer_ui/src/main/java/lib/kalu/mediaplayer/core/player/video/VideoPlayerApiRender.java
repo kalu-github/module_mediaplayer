@@ -105,6 +105,10 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
     }
 
     default boolean startFull(boolean rememberPlaying) {
+        return startFull(rememberPlaying, false);
+    }
+
+    default boolean startFull(boolean rememberPlaying, boolean resetSurface) {
         try {
             boolean isPhoneWindow = isParentEqualsPhoneWindow();
             if (isPhoneWindow)
@@ -112,7 +116,9 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             requestFocusFull();
             boolean b = switchToDecorView(true);
             if (b) {
-                resetVideoRender();
+                if (resetSurface) {
+                    resetVideoRender();
+                }
                 callPlayerEvent(PlayerType.StateType.STATE_FULL_START);
                 callWindowEvent(PlayerType.WindowType.FULL);
             }
@@ -127,6 +133,10 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
     }
 
     default boolean stopFull() {
+        return stopFull(false);
+    }
+
+    default boolean stopFull(boolean resetSurface) {
         try {
             boolean isFull = isFull();
             if (!isFull)
@@ -134,7 +144,9 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             boolean b = switchToPlayerLayout();
             switchPlaying();
             if (b) {
-                resetVideoRender();
+                if (resetSurface) {
+                    resetVideoRender();
+                }
                 cleanFocusFull();
                 callPlayerEvent(PlayerType.StateType.STATE_FULL_STOP);
                 callWindowEvent(PlayerType.WindowType.NORMAL);
