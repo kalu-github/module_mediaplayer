@@ -102,7 +102,7 @@ public final class TestActivity extends Activity {
             @Override
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                playerLayout.switchTrack(2);
+                playerLayout.switchTrack(1);
             }
         });
         // 音轨信息3
@@ -110,7 +110,7 @@ public final class TestActivity extends Activity {
             @Override
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                playerLayout.switchTrack(3);
+                playerLayout.switchTrack(2);
             }
         });
         // 倍速

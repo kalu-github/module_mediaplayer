@@ -688,6 +688,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.selectTrack(trackId);
+//            mIjkPlayer.selectTrack2(trackId);
             return true;
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => switchTrack => " + e.getMessage());

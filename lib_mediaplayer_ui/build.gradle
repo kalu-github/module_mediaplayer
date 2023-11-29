@@ -61,7 +61,7 @@ dependencies {
     compileOnly('androidx.appcompat:appcompat:1.6.1')
     compileOnly('com.squareup.okhttp3:okhttp:3.14.9')
     // ijk
-    compileOnly files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.13_release_20231114.aar')
+    compileOnly files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_release_20231129.aar')
     // exo1
     compileOnly files('libs/lib_mediaplayer_exo_r1.5.15_release_20230424.aar')
     // exo2
