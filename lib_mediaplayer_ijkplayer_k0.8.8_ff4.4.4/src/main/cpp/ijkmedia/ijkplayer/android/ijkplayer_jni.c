@@ -488,27 +488,12 @@ ijkMediaPlayer_setPropertyLong(JNIEnv *env, jobject thiz, jint id, jlong value) 
 static void
 ijkMediaPlayer_setStreamSelected(JNIEnv *env, jobject thiz, jint stream, jboolean selected) {
     IjkMediaPlayer *mp = jni_get_media_player(env, thiz);
+    int ret = 0;
     JNI_CHECK_GOTO(mp, env, NULL, "mpjni: setStreamSelected: null mp", LABEL_RETURN);
 
-    int ret = ijkmp_set_stream_selected(mp, stream, selected);
+    ret = ijkmp_set_stream_selected(mp, stream, selected);
     if (ret < 0) {
         PLAYER_ALOGE("failed to %s %d", selected ? "select" : "deselect", stream);
-        goto LABEL_RETURN;
-    }
-
-    LABEL_RETURN:
-    ijkmp_dec_ref_p(&mp);
-    return;
-}
-
-static void
-ijkMediaPlayer_setStreamSelected2(JNIEnv *env, jobject thiz, jint trackNum, jint tractId) {
-    IjkMediaPlayer *mp = jni_get_media_player(env, thiz);
-    JNI_CHECK_GOTO(mp, env, NULL, "mpjni: setStreamSelected2: null mp", LABEL_RETURN);
-
-    int ret = ijkmp_set_stream_selected2(mp, trackNum, tractId);
-    if (ret < 0) {
-        PLAYER_ALOGE("failed to %d %d", trackNum, tractId);
         goto LABEL_RETURN;
     }
 
@@ -1215,8 +1200,7 @@ static JNINativeMethod g_methods[] = {
         {"_setPropertyFloat",     "(IF)V",                                                       (void *) ijkMediaPlayer_setPropertyFloat},
         {"_getPropertyLong",      "(IJ)J",                                                       (void *) ijkMediaPlayer_getPropertyLong},
         {"_setPropertyLong",      "(IJ)V",                                                       (void *) ijkMediaPlayer_setPropertyLong},
-        {"_setSelectTrack",       "(IZ)V",                                                       (void *) ijkMediaPlayer_setStreamSelected},
-        {"_setSelectTrack",       "(II)V",                                                       (void *) ijkMediaPlayer_setStreamSelected2},
+        {"_setStreamSelected",    "(IZ)V",                                                       (void *) ijkMediaPlayer_setStreamSelected},
 
         {"native_profileBegin",   "(Ljava/lang/String;)V",                                       (void *) IjkMediaPlayer_native_profileBegin},
         {"native_profileEnd",     "()V",                                                         (void *) IjkMediaPlayer_native_profileEnd},
