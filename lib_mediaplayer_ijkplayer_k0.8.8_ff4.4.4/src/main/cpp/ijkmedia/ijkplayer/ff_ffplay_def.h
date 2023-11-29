@@ -719,6 +719,7 @@ typedef struct FFPlayer {
     char *mediacodec_default_name;
     int ijkmeta_delay_init;
     int render_wait_start;
+    int forceRequestKeyFrame;
     //add by xzl
     int64_t last_audio_open_tm;
     int channel_config;
@@ -857,6 +858,7 @@ inline static void ffp_reset_internal(FFPlayer *ffp) {
 
     ffp->inject_opaque = NULL;
     ffp->ijkio_inject_opaque = NULL;
+    ffp->forceRequestKeyFrame = 0;
     ffp_reset_statistic(&ffp->stat);
     ffp_reset_demux_cache_control(&ffp->dcc);
     //add by xzl

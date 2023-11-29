@@ -714,7 +714,7 @@ feed_input_buffer2(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, int *enque
             }
         } else {
             SDL_AMediaCodecFake_flushFakeFrames(opaque->acodec);
-
+            ffp->forceRequestKeyFrame  = 0;
             copy_size = SDL_AMediaCodec_writeInputData(opaque->acodec, input_buffer_index,
                                                        d->pkt_temp.data, d->pkt_temp.size);
             if (!copy_size) {
@@ -1059,7 +1059,7 @@ feed_input_buffer(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, int *enqueu
             }
         } else {
             SDL_AMediaCodecFake_flushFakeFrames(opaque->acodec);
-
+            ffp->forceRequestKeyFrame  = 0;
             copy_size = SDL_AMediaCodec_writeInputData(opaque->acodec, input_buffer_index,
                                                        d->pkt_temp.data, d->pkt_temp.size);
             if (!copy_size) {
