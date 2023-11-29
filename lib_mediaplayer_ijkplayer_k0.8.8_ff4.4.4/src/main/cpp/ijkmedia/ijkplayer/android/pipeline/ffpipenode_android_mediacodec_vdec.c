@@ -258,7 +258,8 @@ static int recreate_format_l(JNIEnv *env, IJKFF_Pipenode *node) {
             // Codec specific data
             // SDL_AMediaFormat_setBuffer(opaque->aformat, "csd-0", opaque->codecpar->extradata, opaque->codecpar->extradata_size);
             PLAYER_ALOGE("csd-0: naked\n");
-            if(opaque->codecpar->codec_id == AV_CODEC_ID_H264  && opaque->codecpar->extradata_size > 6){
+            if (opaque->codecpar->codec_id == AV_CODEC_ID_H264 &&
+                opaque->codecpar->extradata_size > 6) {
                 // https://blog.csdn.net/chinabinlang/article/details/78181110
                 // https://blog.csdn.net/dxpqxb/article/details/7631644
                 // AUD+SPS+PPS的情况
@@ -266,38 +267,43 @@ static int recreate_format_l(JNIEnv *env, IJKFF_Pipenode *node) {
                 // 104 代表pps
                 int spsIndex = -1;
                 int ppsIndex = -1;
-                if(opaque->codecpar->extradata[0] == 0 && opaque->codecpar->extradata[1] == 0 && opaque->codecpar->extradata[2] == 0
-                   && opaque->codecpar->extradata[3] == 1 && opaque->codecpar->extradata[4] == 9 && opaque->codecpar->extradata[5] == 240){
-                    for(int i=6;i<opaque->avctx->extradata_size-4;i++){
-                        if(opaque->codecpar->extradata[i] == 0 && opaque->codecpar->extradata[i+1] == 0 && opaque->codecpar->extradata[i+2] == 0
-                           && opaque->codecpar->extradata[i+3] == 1){
-                            if(opaque->codecpar->extradata[i+4] == 103){
+                if (opaque->codecpar->extradata[0] == 0 && opaque->codecpar->extradata[1] == 0 &&
+                    opaque->codecpar->extradata[2] == 0
+                    && opaque->codecpar->extradata[3] == 1 && opaque->codecpar->extradata[4] == 9 &&
+                    opaque->codecpar->extradata[5] == 240) {
+                    for (int i = 6; i < opaque->avctx->extradata_size - 4; i++) {
+                        if (opaque->codecpar->extradata[i] == 0 &&
+                            opaque->codecpar->extradata[i + 1] == 0 &&
+                            opaque->codecpar->extradata[i + 2] == 0
+                            && opaque->codecpar->extradata[i + 3] == 1) {
+                            if (opaque->codecpar->extradata[i + 4] == 103) {
                                 spsIndex = i;
-                                PLAYER_ALOGE("AMediaFormat find sps = %d",spsIndex);
-                            }else if(opaque->codecpar->extradata[i+4] == 104){
+                                PLAYER_ALOGE("AMediaFormat find sps = %d", spsIndex);
+                            } else if (opaque->codecpar->extradata[i + 4] == 104) {
                                 ppsIndex = i;
-                                PLAYER_ALOGE("AMediaFormat find pps = %d",ppsIndex);
+                                PLAYER_ALOGE("AMediaFormat find pps = %d", ppsIndex);
                             }
                         }
                     }
                 }
 
-                if(spsIndex > 0){
+                if (spsIndex > 0) {
                     int length = 0;
-                    if(ppsIndex > 0 && spsIndex < ppsIndex){
-                        length = ppsIndex-spsIndex;
-                    }else{
-                        length = opaque->codecpar->extradata_size-spsIndex;
+                    if (ppsIndex > 0 && spsIndex < ppsIndex) {
+                        length = ppsIndex - spsIndex;
+                    } else {
+                        length = opaque->codecpar->extradata_size - spsIndex;
                     }
 
-                    uint8_t *convert_buffer = (uint8_t *)calloc(1, length);
-                    memcpy( convert_buffer, opaque->codecpar->extradata+spsIndex, length);
+                    uint8_t *convert_buffer = (uint8_t *) calloc(1, length);
+                    memcpy(convert_buffer, opaque->codecpar->extradata + spsIndex, length);
 
-                    SDL_AMediaFormat_setBuffer(opaque->input_aformat, "csd-0", convert_buffer, length);
+                    SDL_AMediaFormat_setBuffer(opaque->input_aformat, "csd-0", convert_buffer,
+                                               length);
                     free(convert_buffer);
-                    PLAYER_ALOGE("AMediaFormat csd-0: length = %d",length);
+                    PLAYER_ALOGE("AMediaFormat csd-0: length = %d", length);
                 }
-            }else{
+            } else {
                 PLAYER_ALOGE("AMediaFormat csd-0: naked\n");
             }
         }
@@ -649,7 +655,7 @@ feed_input_buffer2(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, int *enque
         // NULL surface cause no display
         if (ffpipeline_is_surface_need_reconfigure_l(pipeline)) {
             jobject new_surface = NULL;
-
+            ffp->forceRequestKeyFrame = 1;
             // request reconfigure before lock, or never get mutex
             ffpipeline_lock_surface(pipeline);
             ffpipeline_set_surface_need_reconfigure_l(pipeline, false);
@@ -695,9 +701,14 @@ feed_input_buffer2(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, int *enque
             }
         }
 
+        if (ffp->forceRequestKeyFrame && d->pkt_temp.flags != AV_PKT_FLAG_KEY) {
+            d->packet_pending = 0;
+            return 0;
+        }
+
         queue_flags = 0;
         input_buffer_index = SDL_AMediaCodec_dequeueInputBuffer(opaque->acodec, timeUs);
-        if(opaque->acodec == NULL){
+        if (opaque->acodec == NULL) {
             PLAYER_ALOGE("SDL_AMediaCodec_dequeueInputBuffer acodec is null");
             ret = 0;
             goto fail;
@@ -714,7 +725,7 @@ feed_input_buffer2(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, int *enque
             }
         } else {
             SDL_AMediaCodecFake_flushFakeFrames(opaque->acodec);
-            ffp->forceRequestKeyFrame  = 0;
+            ffp->forceRequestKeyFrame = 0;
             copy_size = SDL_AMediaCodec_writeInputData(opaque->acodec, input_buffer_index,
                                                        d->pkt_temp.data, d->pkt_temp.size);
             if (!copy_size) {
@@ -735,7 +746,7 @@ feed_input_buffer2(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, int *enque
         // PLAYER_ALOGE("queueInputBuffer, %lld\n", time_stamp);
         amc_ret = SDL_AMediaCodec_queueInputBuffer(opaque->acodec, input_buffer_index, 0, copy_size,
                                                    time_stamp, queue_flags);
-        if(opaque->acodec == NULL){
+        if (opaque->acodec == NULL) {
             PLAYER_ALOGE("SDL_AMediaCodec_queueInputBuffer acodec is null");
             ret = 0;
             goto fail;
@@ -975,7 +986,7 @@ feed_input_buffer(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, int *enqueu
         // NULL surface cause no display
         if (ffpipeline_is_surface_need_reconfigure_l(pipeline)) {
             jobject new_surface = NULL;
-
+            ffp->forceRequestKeyFrame = 1;
             // request reconfigure before lock, or never get mutex
             ffpipeline_lock_surface(pipeline);
             ffpipeline_set_surface_need_reconfigure_l(pipeline, false);
@@ -1040,9 +1051,14 @@ feed_input_buffer(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, int *enqueu
         }
 #endif
 
+        if (ffp->forceRequestKeyFrame && d->pkt_temp.flags != AV_PKT_FLAG_KEY) {
+            d->packet_pending = 0;
+            return 0;
+        }
+
         queue_flags = 0;
         input_buffer_index = SDL_AMediaCodec_dequeueInputBuffer(opaque->acodec, timeUs);
-        if(opaque->acodec == NULL){
+        if (opaque->acodec == NULL) {
             PLAYER_ALOGE("SDL_AMediaCodec_dequeueInputBuffer acodec is null");
             ret = 0;
             goto fail;
@@ -1059,7 +1075,7 @@ feed_input_buffer(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, int *enqueu
             }
         } else {
             SDL_AMediaCodecFake_flushFakeFrames(opaque->acodec);
-            ffp->forceRequestKeyFrame  = 0;
+            ffp->forceRequestKeyFrame = 0;
             copy_size = SDL_AMediaCodec_writeInputData(opaque->acodec, input_buffer_index,
                                                        d->pkt_temp.data, d->pkt_temp.size);
             if (!copy_size) {
@@ -1080,7 +1096,7 @@ feed_input_buffer(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, int *enqueu
         // PLAYER_ALOGE("queueInputBuffer, %lld\n", time_stamp);
         amc_ret = SDL_AMediaCodec_queueInputBuffer(opaque->acodec, input_buffer_index, 0, copy_size,
                                                    time_stamp, queue_flags);
-        if(opaque->acodec == NULL){
+        if (opaque->acodec == NULL) {
             PLAYER_ALOGE("SDL_AMediaCodec_queueInputBuffer acodec is null");
             ret = 0;
             goto fail;
@@ -1198,7 +1214,7 @@ drain_output_buffer_l(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, int *de
 
     output_buffer_index = SDL_AMediaCodecFake_dequeueOutputBuffer(opaque->acodec, &bufferInfo,
                                                                   timeUs);
-    if(opaque->acodec == NULL){
+    if (opaque->acodec == NULL) {
         PLAYER_ALOGE("SDL_AMediaCodecFake_dequeueOutputBuffer acodec is null");
         ret = 0;
         goto fail;
@@ -1388,7 +1404,7 @@ drain_output_buffer2_l(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, int *d
 
     output_buffer_index = SDL_AMediaCodecFake_dequeueOutputBuffer(opaque->acodec, &bufferInfo,
                                                                   timeUs);
-    if(opaque->acodec == NULL){
+    if (opaque->acodec == NULL) {
         PLAYER_ALOGE("SDL_AMediaCodecFake_dequeueOutputBuffer acodec is null");
         return 0;
     }
