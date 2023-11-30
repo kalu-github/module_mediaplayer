@@ -67,6 +67,12 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
     }
 
     @Override
+    public void resetSurface() {
+        release();
+        init();
+    }
+
+    @Override
     public void addListener() {
         try {
             if (null != mSurfaceHolderCallback)

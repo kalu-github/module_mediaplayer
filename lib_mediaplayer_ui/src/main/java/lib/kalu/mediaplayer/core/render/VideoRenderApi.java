@@ -29,6 +29,8 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 @Keep
 public interface VideoRenderApi {
 
+    void resetSurface();
+
     void init();
 
     void addListener();

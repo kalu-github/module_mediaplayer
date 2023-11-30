@@ -65,6 +65,10 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
     }
 
     @Override
+    public void resetSurface() {
+    }
+
+    @Override
     public void init() {
         setFocusable(false);
         setFocusableInTouchMode(false);

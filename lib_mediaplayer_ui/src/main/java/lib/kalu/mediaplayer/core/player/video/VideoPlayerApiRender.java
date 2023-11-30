@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.core.player.video;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -69,9 +71,14 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
                 throw new Exception("videoKernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
             if (!(this instanceof VideoPlayerApiKernel))
                 throw new Exception("videoRender warning: not instanceof PlayerApiKernel");
-            createVideoRender();
+            VideoRenderApi videoRenderApi = getVideoRender();
+            if (null == videoRenderApi)
+                throw new Exception("videoRenderApi error: null");
+            videoRenderApi.resetSurface();
             ((VideoPlayerApiKernel) this).attachVideoRender();
-            updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 4000 : 400);
+//            createVideoRender();
+//            ((VideoPlayerApiKernel) this).attachVideoRender();
+//            updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 4000 : 400);
             return true;
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiRender => resetVideoRender => " + e.getMessage());
