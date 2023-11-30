@@ -40,18 +40,19 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 
     public VideoRenderSurfaceView(Context context) {
         super(context);
-        init();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        release();
         MPLogUtil.log("VideoRenderSurfaceView => onDetachedFromWindow => " + this);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        init();
         MPLogUtil.log("VideoRenderSurfaceView => onAttachedToWindow => " + this);
     }
 
@@ -59,17 +60,11 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
     public void init() {
         setFocusable(false);
         setFocusableInTouchMode(false);
-        addListener();
         setWillNotDraw(true); //禁止onDraw
         setZOrderOnTop(true); //画布透明处理
         setZOrderMediaOverlay(true); //画面置顶
 //        getHolder().setFormat(PixelFormat.TRANSLUCENT);
-    }
-
-    @Override
-    public void resetSurface() {
-        release();
-        init();
+        addListener();
     }
 
     @Override
@@ -122,9 +117,8 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 
     @Override
     public void release() {
-        setZOrderOnTop(false);
-        setZOrderMediaOverlay(false);
 
+        // step1
         try {
             SurfaceHolder surfaceHolder = getHolder();
             if (null == surfaceHolder)
@@ -132,25 +126,28 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
             Surface surface = surfaceHolder.getSurface();
             if (null == surface)
                 throw new Exception("surface error: null");
-            clearSurface(surface);
+//            clearSurface(surface);
             surface.release();
-            surface = null;
-            surfaceHolder = null;
-            MPLogUtil.log("VideoRenderSurfaceView => release => Surface => succ");
+            MPLogUtil.log("VideoRenderSurfaceView => release => removeSurface => succ");
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => release => Surface => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => release => removeSurface => " + e.getMessage());
         }
 
+        // step2
         try {
             if (null == mSurfaceHolderCallback)
                 throw new Exception("mSurfaceHolderCallback error: null");
-            getHolder().removeCallback(mSurfaceHolderCallback);
+            SurfaceHolder surfaceHolder = getHolder();
+            if (null == surfaceHolder)
+                throw new Exception("surfaceHolder error: null");
+            surfaceHolder.removeCallback(mSurfaceHolderCallback);
             mSurfaceHolderCallback = null;
-            MPLogUtil.log("VideoRenderSurfaceView => release => SurfaceHolderCallback => succ");
+            MPLogUtil.log("VideoRenderSurfaceView => release => removeCallback => succ");
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => release => SurfaceHolderCallback => " + e.getMessage());
+            MPLogUtil.log("VideoRenderSurfaceView => release => removeCallback => " + e.getMessage());
         }
 
+        // step3
         try {
             if (null == mHandler)
                 throw new Exception("mHandler error: null");

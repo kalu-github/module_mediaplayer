@@ -74,11 +74,9 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             VideoRenderApi videoRenderApi = getVideoRender();
             if (null == videoRenderApi)
                 throw new Exception("videoRenderApi error: null");
-//            videoRenderApi.resetSurface();
-//            ((VideoPlayerApiKernel) this).attachVideoRender();
             createVideoRender();
             ((VideoPlayerApiKernel) this).attachVideoRender();
-            updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 4000 : 400);
+            updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 400 : 400);
             return true;
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiRender => resetVideoRender => " + e.getMessage());
