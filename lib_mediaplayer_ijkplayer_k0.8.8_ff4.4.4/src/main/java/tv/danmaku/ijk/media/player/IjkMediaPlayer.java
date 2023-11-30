@@ -412,9 +412,9 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
             IjkTrackInfo[] trackInfos = getTrackInfo();
             if (null == trackInfos || trackInfos.length == 0 || trackIndex >= trackInfos.length)
                 throw new Exception("trackInfos error: " + trackInfos);
-            pause();
+//            pause();
             _setStreamSelected(trackIndex, enable);
-            start();
+//            start();
         } catch (Exception e) {
             IjkLogUtil.log("IjkMediaPlayer => selectTrack => " + e.getMessage());
         }
