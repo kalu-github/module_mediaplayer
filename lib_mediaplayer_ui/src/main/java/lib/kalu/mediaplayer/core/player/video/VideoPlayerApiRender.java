@@ -74,11 +74,11 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             VideoRenderApi videoRenderApi = getVideoRender();
             if (null == videoRenderApi)
                 throw new Exception("videoRenderApi error: null");
-            videoRenderApi.resetSurface();
-            ((VideoPlayerApiKernel) this).attachVideoRender();
-//            createVideoRender();
+//            videoRenderApi.resetSurface();
 //            ((VideoPlayerApiKernel) this).attachVideoRender();
-//            updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 4000 : 400);
+            createVideoRender();
+            ((VideoPlayerApiKernel) this).attachVideoRender();
+            updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 4000 : 400);
             return true;
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiRender => resetVideoRender => " + e.getMessage());
