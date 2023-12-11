@@ -694,11 +694,11 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                                         @NonNull int cacheMax,
                                         @NonNull String cacheDir) {
 
-        MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => mediaUrl = " + mediaUrl);
-        MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => subtitleUrl = " + subtitleUrl);
-        MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => cacheType = " + cacheType);
-        MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => cacheMax = " + cacheMax);
-        MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => cacheDir = " + cacheDir);
+        MPLogUtil.log("VideoMedia3Player => createMediaSource => mediaUrl = " + mediaUrl);
+        MPLogUtil.log("VideoMedia3Player => createMediaSource => subtitleUrl = " + subtitleUrl);
+        MPLogUtil.log("VideoMedia3Player => createMediaSource => cacheType = " + cacheType);
+        MPLogUtil.log("VideoMedia3Player => createMediaSource => cacheMax = " + cacheMax);
+        MPLogUtil.log("VideoMedia3Player => createMediaSource => cacheDir = " + cacheDir);
 
         String scheme;
         Uri uri = Uri.parse(mediaUrl);
@@ -707,7 +707,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
         } catch (Exception e) {
             scheme = null;
         }
-        MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => scheme = " + scheme);
+        MPLogUtil.log("VideoMedia3Player => createMediaSource => scheme = " + scheme);
 
         // rtmp
         if (PlayerType.SchemeType.RTMP.equals(scheme)) {
@@ -747,7 +747,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             } catch (Exception e) {
                 contentType = C.CONTENT_TYPE_OTHER;
             }
-            MPLogUtil.log("ExoMediaSourceHelper => createMediaSource => contentType = " + contentType);
+            MPLogUtil.log("VideoMedia3Player => createMediaSource => contentType = " + contentType);
 
             // 2
             MediaItem.Builder builder = new MediaItem.Builder();
