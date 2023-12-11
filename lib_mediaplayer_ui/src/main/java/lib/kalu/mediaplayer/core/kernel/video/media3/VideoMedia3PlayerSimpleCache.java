@@ -1,16 +1,17 @@
-package lib.kalu.mediaplayer.core.kernel.video.exo2;
+package lib.kalu.mediaplayer.core.kernel.video.media3;
 
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-
-import com.google.android.exoplayer2.database.StandaloneDatabaseProvider;
-import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
-import com.google.android.exoplayer2.upstream.cache.SimpleCache;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.database.StandaloneDatabaseProvider;
+import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
+import androidx.media3.datasource.cache.SimpleCache;
 
 import java.io.File;
 
-public final class VideoExoPlayer2Cache {
+@UnstableApi
+public final class VideoMedia3PlayerSimpleCache {
 
     private static SimpleCache mSimpleCache;
 
@@ -33,7 +34,7 @@ public final class VideoExoPlayer2Cache {
 
         String name;
         if (null == cacheDir || cacheDir.length() <= 0) {
-            name = "exoV2";
+            name = "mediaV2";
         } else {
             name = cacheDir;
         }

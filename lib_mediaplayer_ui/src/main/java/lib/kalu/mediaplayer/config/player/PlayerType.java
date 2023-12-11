@@ -226,7 +226,7 @@ public @interface PlayerType {
         int ANDROID = 6_001; // MediaPlayer，基于原生自带的播放器控件
         int EXO_V1 = 6_002; // exo
         int EXO_V2 = 6_003; // exo
-        int MEDIAX = 6_004; // mediax
+        int MEDIA_V3 = 6_004; // media3
         int IJK = 6_005; // ijk
         int IJK_MEDIACODEC = 6_006; // ijk_mediacodec
         int VLC = 6_007; // vlc
@@ -240,7 +240,7 @@ public @interface PlayerType {
                 ANDROID,
                 EXO_V1,
                 EXO_V2,
-                MEDIAX,
+                MEDIA_V3,
                 VLC,
                 FFPLAYER})
         @Keep

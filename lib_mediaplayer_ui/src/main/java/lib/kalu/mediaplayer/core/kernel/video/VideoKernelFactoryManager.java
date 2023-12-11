@@ -6,10 +6,10 @@ import androidx.annotation.NonNull;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.android.VideoAndroidPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.exo1.VideoExoPlayerFactory;
-import lib.kalu.mediaplayer.core.kernel.video.exo2.VideoExoPlayer2Factory;
+import lib.kalu.mediaplayer.core.kernel.video.exo2.VideoExo2PlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.ff.VideoFFmpegPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.ijk.VideoIjkPlayerFactory;
-import lib.kalu.mediaplayer.core.kernel.video.mediax.VideoMediaxPlayerFactory;
+import lib.kalu.mediaplayer.core.kernel.video.media3.VideoMedia3PlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.vlc.VideoVlcPlayerFactory;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 
@@ -35,11 +35,11 @@ public final class VideoKernelFactoryManager {
         }
         // exo2
         else if (type == PlayerType.KernelType.EXO_V2) {
-            return VideoExoPlayer2Factory.build();
+            return VideoExo2PlayerFactory.build();
         }
         // meiax
         else if (type == PlayerType.KernelType.MEDIAX) {
-            return VideoMediaxPlayerFactory.build();
+            return VideoMedia3PlayerFactory.build();
         }
         // vlc
         else if (type == PlayerType.KernelType.VLC) {

@@ -55,10 +55,10 @@ import java.util.Map;
  * when possible. When data is not cached it is requested from an upstream {@link DataSource} and
  * written into the cache.
  */
-public final class VideoExoplayer2CacheDataSource implements DataSource {
+public final class VideoExo2PlayerSimpleCacheDataSource implements DataSource {
 
     /**
-     * {@link DataSource.Factory} for {@link VideoExoplayer2CacheDataSource} instances.
+     * {@link DataSource.Factory} for {@link VideoExo2PlayerSimpleCacheDataSource} instances.
      */
     public static final class Factory implements DataSource.Factory {
 
@@ -185,10 +185,10 @@ public final class VideoExoplayer2CacheDataSource implements DataSource {
          * exists a higher priority task then {@link PriorityTaskManager.PriorityTooLowException} will
          * be thrown instead.
          *
-         * <p>Note that requests to {@link VideoExoplayer2CacheDataSource} instances are intended to be used as parts
+         * <p>Note that requests to {@link VideoExo2PlayerSimpleCacheDataSource} instances are intended to be used as parts
          * of (possibly larger) tasks that are registered with the {@link PriorityTaskManager}, and
-         * hence {@link VideoExoplayer2CacheDataSource} does <em>not</em> register a task by itself. This must be done
-         * by the surrounding code that uses the {@link VideoExoplayer2CacheDataSource} instances.
+         * hence {@link VideoExo2PlayerSimpleCacheDataSource} does <em>not</em> register a task by itself. This must be done
+         * by the surrounding code that uses the {@link VideoExo2PlayerSimpleCacheDataSource} instances.
          *
          * <p>The default is {@code null}.
          *
@@ -255,7 +255,7 @@ public final class VideoExoplayer2CacheDataSource implements DataSource {
         }
 
         @Override
-        public VideoExoplayer2CacheDataSource createDataSource() {
+        public VideoExo2PlayerSimpleCacheDataSource createDataSource() {
             return createDataSourceInternal(
                     upstreamDataSourceFactory != null ? upstreamDataSourceFactory.createDataSource() : null,
                     flags,
@@ -273,7 +273,7 @@ public final class VideoExoplayer2CacheDataSource implements DataSource {
          *
          * @return An instance suitable for downloading content.
          */
-        public VideoExoplayer2CacheDataSource createDataSourceForDownloading() {
+        public VideoExo2PlayerSimpleCacheDataSource createDataSourceForDownloading() {
             return createDataSourceInternal(
                     upstreamDataSourceFactory != null ? upstreamDataSourceFactory.createDataSource() : null,
                     flags | FLAG_BLOCK_ON_CACHE,
@@ -294,12 +294,12 @@ public final class VideoExoplayer2CacheDataSource implements DataSource {
          *
          * @return An instance suitable for reading cached content as part of removing a download.
          */
-        public VideoExoplayer2CacheDataSource createDataSourceForRemovingDownload() {
+        public VideoExo2PlayerSimpleCacheDataSource createDataSourceForRemovingDownload() {
             return createDataSourceInternal(
                     /* upstreamDataSource= */ null, flags | FLAG_BLOCK_ON_CACHE, C.PRIORITY_DOWNLOAD);
         }
 
-        private VideoExoplayer2CacheDataSource createDataSourceInternal(
+        private VideoExo2PlayerSimpleCacheDataSource createDataSourceInternal(
                 @Nullable DataSource upstreamDataSource, @Flags int flags, int upstreamPriority) {
             Cache cache = checkNotNull(this.cache);
             @Nullable DataSink cacheWriteDataSink;
@@ -310,7 +310,7 @@ public final class VideoExoplayer2CacheDataSource implements DataSource {
             } else {
                 cacheWriteDataSink = new CacheDataSink.Factory().setCache(cache).createDataSink();
             }
-            return new VideoExoplayer2CacheDataSource(
+            return new VideoExo2PlayerSimpleCacheDataSource(
                     cache,
                     upstreamDataSource,
                     cacheReadDataSourceFactory.createDataSource(),
@@ -324,7 +324,7 @@ public final class VideoExoplayer2CacheDataSource implements DataSource {
     }
 
     /**
-     * Listener of {@link VideoExoplayer2CacheDataSource} events.
+     * Listener of {@link VideoExo2PlayerSimpleCacheDataSource} events.
      */
     public interface EventListener {
 
@@ -459,7 +459,7 @@ public final class VideoExoplayer2CacheDataSource implements DataSource {
      * @param upstreamDataSource A {@link DataSource} for reading data not in the cache. If null,
      *                           reading will fail if a cache miss occurs.
      */
-    public VideoExoplayer2CacheDataSource(Cache cache, @Nullable DataSource upstreamDataSource) {
+    public VideoExo2PlayerSimpleCacheDataSource(Cache cache, @Nullable DataSource upstreamDataSource) {
         this(cache, upstreamDataSource, /* flags= */ 0);
     }
 
@@ -473,7 +473,7 @@ public final class VideoExoplayer2CacheDataSource implements DataSource {
      * @param flags              A combination of {@link #FLAG_BLOCK_ON_CACHE}, {@link #FLAG_IGNORE_CACHE_ON_ERROR}
      *                           and {@link #FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS}, or 0.
      */
-    public VideoExoplayer2CacheDataSource(Cache cache, @Nullable DataSource upstreamDataSource, @Flags int flags) {
+    public VideoExo2PlayerSimpleCacheDataSource(Cache cache, @Nullable DataSource upstreamDataSource, @Flags int flags) {
         this(
                 cache,
                 upstreamDataSource,
@@ -498,7 +498,7 @@ public final class VideoExoplayer2CacheDataSource implements DataSource {
      *                            and {@link #FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS}, or 0.
      * @param eventListener       An optional {@link EventListener} to receive events.
      */
-    public VideoExoplayer2CacheDataSource(
+    public VideoExo2PlayerSimpleCacheDataSource(
             Cache cache,
             @Nullable DataSource upstreamDataSource,
             DataSource cacheReadDataSource,
@@ -531,7 +531,7 @@ public final class VideoExoplayer2CacheDataSource implements DataSource {
      * @param eventListener       An optional {@link EventListener} to receive events.
      * @param cacheKeyFactory     An optional factory for cache keys.
      */
-    public VideoExoplayer2CacheDataSource(
+    public VideoExo2PlayerSimpleCacheDataSource(
             Cache cache,
             @Nullable DataSource upstreamDataSource,
             DataSource cacheReadDataSource,
@@ -551,7 +551,7 @@ public final class VideoExoplayer2CacheDataSource implements DataSource {
                 eventListener);
     }
 
-    private VideoExoplayer2CacheDataSource(
+    private VideoExo2PlayerSimpleCacheDataSource(
             Cache cache,
             @Nullable DataSource upstreamDataSource,
             DataSource cacheReadDataSource,
