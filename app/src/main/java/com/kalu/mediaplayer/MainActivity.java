@@ -79,6 +79,7 @@ public class MainActivity extends Activity {
         }
         return seek;
     }
+
     private long getMax() {
         long max;
         RadioGroup radioGroup = findViewById(R.id.main_trysee);
@@ -242,6 +243,17 @@ public class MainActivity extends Activity {
                 break;
         }
 
+        boolean cacheFlag;
+        int cacheFlagId = ((RadioGroup) findViewById(R.id.main_cache)).getCheckedRadioButtonId();
+        switch (cacheFlagId) {
+            case R.id.main_cache_yes:
+                cacheFlag = true;
+                break;
+            default:
+                cacheFlag = false;
+                break;
+        }
+
         Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", exoFFmpeg = " + exoFFmpeg + ", scaleType = " + scaleType + ", exoUseOkhttp = " + exoUseOkhttp);
         PlayerManager.getInstance()
                 .setLog(true)
@@ -250,6 +262,7 @@ public class MainActivity extends Activity {
                 .setScaleType(scaleType)
                 .setExoFFmpeg(exoFFmpeg)
                 .setExoUseOkhttp(exoUseOkhttp)
+                .setCacheType(cacheFlag ? PlayerType.CacheType.DOWNLOAD : PlayerType.CacheType.NONE)
                 .setBuriedEvent(new LogBuriedEvent())
                 .build();
     }

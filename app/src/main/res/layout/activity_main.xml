@@ -366,6 +366,30 @@
 
             </RadioGroup>
 
+            <RadioGroup
+                android:id="@+id/main_cache"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/main_cache_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="false"
+                    android:enabled="true"
+                    android:text="开启：边看边缓存" />
+
+                <RadioButton
+                    android:id="@+id/main_cache_null"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="true"
+                    android:enabled="true"
+                    android:text="关闭：边看边缓存" />
+
+            </RadioGroup>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"

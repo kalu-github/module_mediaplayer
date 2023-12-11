@@ -80,15 +80,15 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.14.9'
 
     // ui
-    api files('libs/lib_mediaplayer_ui_release_20231130.aar')
+    api files('libs/lib_mediaplayer_ui_release_20231211.aar')
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_release_20231130.aar')
     // exo1
     api files('libs/lib_mediaplayer_exo_r1.5.15_release_20230424.aar')
     // exo2
-//    api files('libs/lib_mediaplayer_exo_r2.19.1_full_release_20230920.aar')
+    api files('libs/lib_mediaplayer_exo_r2.19.1_full_release_20230920.aar')
     // mediax
-    api files('libs/lib_mediaplayer_mediax_r1.2.0_full_release_20231127.aar')
+//    api files('libs/lib_mediaplayer_mediax_r1.2.0_full_release_20231127.aar')
     // ffplayer
     api files('libs/lib_mediaplayer_ffplayer_ff3.4.12_release_20230626.aar')
     // vlc

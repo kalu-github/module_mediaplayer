@@ -36,10 +36,14 @@ import com.google.android.exoplayer2.source.rtsp.RtspMediaSource;
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.upstream.DataSink;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSink;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.video.VideoSize;
@@ -829,12 +833,26 @@ public final class VideoExoPlayer2 extends VideoBasePlayer {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
             } else {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
-//                CacheDataSource.Factory cacheFactory = new CacheDataSource.Factory();
-//                SimpleCache cache = VideoExoPlayer2Cache.getSimpleCache(context, cacheMax, cacheDir);
-//                cacheFactory.setCache(cache);
-//                cacheFactory.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-//                cacheFactory.setUpstreamDataSourceFactory(dataSourceFactory);
-//                dataSource = cacheFactory;
+
+//                // a
+//                SimpleCache simpleCache1 = VideoExoPlayer2Cache.getSimpleCache(context, cacheMax, cacheDir);
+//                VideoExoplayer2CacheDataSource.Factory dataSource1 = new VideoExoplayer2CacheDataSource.Factory();
+//                dataSource1.setCache(simpleCache1);
+//                dataSource1.setFlags(VideoExoplayer2CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+//                dataSource1.setUpstreamDataSourceFactory(dataSourceFactory);
+//                CacheDataSink.Factory sinkFactory1 = new CacheDataSink.Factory().setCache(simpleCache1).setFragmentSize(C.LENGTH_UNSET);
+//                dataSource1.setCacheWriteDataSinkFactory(sinkFactory1);
+//                dataSource = dataSource1;
+
+//                // b
+//                VideoExoplayer2CacheDataSource.Factory dataSource1 = new VideoExoplayer2CacheDataSource.Factory();
+//                dataSource1.setUpstreamDataSourceFactory(dataSourceFactory);
+//                dataSource1.setFlags(VideoExoplayer2CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+//                SimpleCache simpleCache1 = VideoExoPlayer2Cache.getSimpleCache(context, cacheMax, cacheDir);
+//                dataSource1.setCache(simpleCache1);
+//                CacheDataSink.Factory sinkFactory1 = new CacheDataSink.Factory().setCache(simpleCache1).setFragmentSize(C.LENGTH_UNSET);
+//                dataSource1.setCacheWriteDataSinkFactory(sinkFactory1);
+//                dataSource = dataSource1;
             }
 
             // 3
