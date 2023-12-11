@@ -250,7 +250,7 @@
                     android:layout_height="match_parent"
                     android:checked="false"
                     android:enabled="true"
-                    android:text="mediax" />
+                    android:text="media3" />
 
                 <RadioButton
                     android:id="@+id/main_kernel_ijk"

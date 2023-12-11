@@ -38,7 +38,7 @@ public final class VideoKernelFactoryManager {
             return VideoExo2PlayerFactory.build();
         }
         // meiax
-        else if (type == PlayerType.KernelType.MEDIAX) {
+        else if (type == PlayerType.KernelType.MEDIA_V3) {
             return VideoMedia3PlayerFactory.build();
         }
         // vlc

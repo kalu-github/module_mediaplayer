@@ -177,7 +177,7 @@ public class MainActivity extends Activity {
                 kernelType = PlayerType.KernelType.FFPLAYER;
                 break;
             case R.id.main_kernel_mediax:
-                kernelType = PlayerType.KernelType.MEDIAX;
+                kernelType = PlayerType.KernelType.MEDIA_V3;
                 break;
             default:
                 kernelType = PlayerType.KernelType.ANDROID;
