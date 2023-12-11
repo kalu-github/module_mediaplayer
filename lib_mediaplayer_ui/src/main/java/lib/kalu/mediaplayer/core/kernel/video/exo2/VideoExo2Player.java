@@ -10,7 +10,6 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -826,9 +825,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
 
             DataSource.Factory dataSource;
-            if (cacheType == PlayerType.CacheType.NONE || mediaUrl.startsWith("file")) {
+            if (cacheType == PlayerType.CacheType.NONE) {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
-            } else {
+            } else if (null == scheme || scheme.startsWith("file")) {
+                dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
+            }else {
 //                dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
 
 //                // a

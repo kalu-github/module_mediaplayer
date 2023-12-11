@@ -811,7 +811,9 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             }
 
             DataSource.Factory dataSource;
-            if (cacheType == PlayerType.CacheType.NONE || mediaUrl.startsWith("file")) {
+            if (cacheType == PlayerType.CacheType.NONE) {
+                dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
+            } else if (null == scheme || scheme.startsWith("file")) {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
             } else {
 //                dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
