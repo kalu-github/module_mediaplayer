@@ -904,33 +904,33 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
 
             // test
-            ArrayList<MediaItem> mediaItems = new ArrayList<MediaItem>(2);
-            mediaItems.add(builder.build());
-            mediaItems.add(MediaItem.fromUri("http://36.138.99.117:8197/data_source/dub/c4741e9b50dc/2023/02/13/b71f0e9a-9a69-43f8-bf71-fb7feb3f4f9a.mp3"));
-            DefaultMediaSourceFactory mediaSourceFactory = new DefaultMediaSourceFactory(new DefaultDataSource.Factory(context));
-
-            ArrayList<MediaSource> mediaSources = new ArrayList<>(2);
-            for (MediaItem o : mediaItems) {
-                mediaSources.add(mediaSourceFactory.createMediaSource(o));
-            }
-            // 多路流合并
-            return new MergingMediaSource(mediaSources.get(0), mediaSources.get(1));
-
-
-//            // 3
-//            MediaItem mediaItem = builder.build();
-//            switch (contentType) {
-//                case C.CONTENT_TYPE_DASH:
-//                    return new DashMediaSource.Factory(dataSource).createMediaSource(mediaItem);
-//                case C.CONTENT_TYPE_SS:
-//                    return new SsMediaSource.Factory(dataSource).createMediaSource(mediaItem);
-//                case C.CONTENT_TYPE_HLS:
-//                    return new HlsMediaSource.Factory(dataSource).createMediaSource(mediaItem);
-//                default:
-//                    DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-//                    extractorsFactory.setConstantBitrateSeekingEnabled(true);
-//                    return new ProgressiveMediaSource.Factory(dataSource, extractorsFactory).createMediaSource(mediaItem);
+//            ArrayList<MediaItem> mediaItems = new ArrayList<MediaItem>(2);
+//            mediaItems.add(builder.build());
+//            mediaItems.add(MediaItem.fromUri("http://36.138.99.117:8197/data_source/dub/c4741e9b50dc/2023/02/13/b71f0e9a-9a69-43f8-bf71-fb7feb3f4f9a.mp3"));
+//            DefaultMediaSourceFactory mediaSourceFactory = new DefaultMediaSourceFactory(new DefaultDataSource.Factory(context));
+//
+//            ArrayList<MediaSource> mediaSources = new ArrayList<>(2);
+//            for (MediaItem o : mediaItems) {
+//                mediaSources.add(mediaSourceFactory.createMediaSource(o));
 //            }
+//            // 多路流合并
+//            return new MergingMediaSource(mediaSources.get(0), mediaSources.get(1));
+
+
+            // 3
+            MediaItem mediaItem = builder.build();
+            switch (contentType) {
+                case C.CONTENT_TYPE_DASH:
+                    return new DashMediaSource.Factory(dataSource).createMediaSource(mediaItem);
+                case C.CONTENT_TYPE_SS:
+                    return new SsMediaSource.Factory(dataSource).createMediaSource(mediaItem);
+                case C.CONTENT_TYPE_HLS:
+                    return new HlsMediaSource.Factory(dataSource).createMediaSource(mediaItem);
+                default:
+                    DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+                    extractorsFactory.setConstantBitrateSeekingEnabled(true);
+                    return new ProgressiveMediaSource.Factory(dataSource, extractorsFactory).createMediaSource(mediaItem);
+            }
         }
     }
 }
