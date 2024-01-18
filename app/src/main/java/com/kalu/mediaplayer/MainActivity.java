@@ -109,7 +109,7 @@ public class MainActivity extends Activity {
         } catch (Exception e) {
         }
 
-        if ("xinzui.mp4".equals(s) || "v_3_4.mp4".equals(s) || "v_1_1.mkv".equals(s) || "video-h265.mkv".equals(s) || "video-test.rmvb".equals(s)) {
+        if ("test_002.mpeg".equals(s) || "xinzui.mp4".equals(s) || "v_3_4.mp4".equals(s) || "v_1_1.mkv".equals(s) || "video-h265.mkv".equals(s) || "video-test.rmvb".equals(s)) {
             s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
         } else if ("video-h264-adts.m3u8".equals(s)) {
             s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
@@ -128,7 +128,7 @@ public class MainActivity extends Activity {
     }
 
     private void initAsset() {
-        List<String> list = Arrays.asList("xinzui.mp4", "v_3_4.mp4", "v_1_1.mkv", "video-h265.mkv", "video-test.rmvb", "video-h264-adts.m3u8", "video-h264-adts-0000.ts", "video-h264-adts-0001.ts", "video-sxgd.mpeg");
+        List<String> list = Arrays.asList("test_002.mpeg", "xinzui.mp4", "v_3_4.mp4", "v_1_1.mkv", "video-h265.mkv", "video-test.rmvb", "video-h264-adts.m3u8", "video-h264-adts-0000.ts", "video-h264-adts-0001.ts", "video-sxgd.mpeg");
         for (int i = 0; i < list.size(); i++) {
             String fromPath = list.get(i);
             String savePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + fromPath;

@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.video.exo2;
 
 import android.content.Context;
+import android.media.browse.MediaBrowser;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Surface;
@@ -10,6 +11,7 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -21,6 +23,7 @@ import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SeekParameters;
+import com.google.android.exoplayer2.Tracks;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
 import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
@@ -28,12 +31,17 @@ import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.source.rtsp.RtspMediaSource;
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionOverride;
+import com.google.android.exoplayer2.trackselection.TrackSelectionParameters;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
@@ -43,16 +51,20 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.video.VideoSize;
+import com.google.common.collect.ImmutableList;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.SocketAddress;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -687,7 +699,27 @@ public final class VideoExo2Player extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            return null;
+            Tracks currentTracks = mExoPlayer.getCurrentTracks();
+            if (null == currentTracks)
+                throw new Exception("currentTracks error: null");
+            ImmutableList<Tracks.Group> groups = currentTracks.getGroups();
+            if (null == groups)
+                throw new Exception("groups error: null");
+            JSONArray data = new JSONArray();
+            for (Tracks.Group g : groups) {
+                if (null == g)
+                    continue;
+                Format trackFormat = g.getTrackFormat(0);
+                if (null == trackFormat)
+                    continue;
+                JSONObject o = new JSONObject();
+                o.put("type", trackFormat.sampleMimeType);
+                o.put("launcher", trackFormat.language);
+                o.put("id", trackFormat.id);
+                o.put("info", trackFormat.toString());
+                data.put(o);
+            }
+            return data;
         } catch (Exception e) {
             MPLogUtil.log("VideoExo2Player => getTrackInfo => " + e.getMessage());
             return null;
@@ -695,8 +727,28 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public boolean switchTrack(@NonNull int trackId) {
-        return super.switchTrack(trackId);
+    public boolean switchTrack(@NonNull int trackIndex) {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+            if (null == trackSelector)
+                throw new Exception("trackSelector error: null");
+//            Tracks currentTracks = mExoPlayer.getCurrentTracks();
+//            if (null == currentTracks)
+//                throw new Exception("currentTracks error: null");
+//            ImmutableList<Tracks.Group> groups = currentTracks.getGroups();
+//            if (null == groups || groups.size() >= trackIndex)
+//                throw new Exception("groups error: null");
+            TrackGroup trackGroup = mExoPlayer.getCurrentTrackGroups().get(trackIndex);
+            TrackSelectionOverride trackSelectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
+            TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters().buildUpon().setOverrideForType(trackSelectionOverride).build();
+            mExoPlayer.setTrackSelectionParameters(selectionParameters);
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoExo2Player => switchTrack => " + e.getMessage());
+            return false;
+        }
     }
 
     /************************/
@@ -829,7 +881,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
             } else if (null == scheme || scheme.startsWith("file")) {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
-            }else {
+            } else {
 //                dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
 
 //                // a
@@ -851,20 +903,34 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //                dataSource = dataSource1;
             }
 
-            // 3
-            MediaItem mediaItem = builder.build();
-            switch (contentType) {
-                case C.CONTENT_TYPE_DASH:
-                    return new DashMediaSource.Factory(dataSource).createMediaSource(mediaItem);
-                case C.CONTENT_TYPE_SS:
-                    return new SsMediaSource.Factory(dataSource).createMediaSource(mediaItem);
-                case C.CONTENT_TYPE_HLS:
-                    return new HlsMediaSource.Factory(dataSource).createMediaSource(mediaItem);
-                default:
-                    DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-                    extractorsFactory.setConstantBitrateSeekingEnabled(true);
-                    return new ProgressiveMediaSource.Factory(dataSource, extractorsFactory).createMediaSource(mediaItem);
+            // test
+            ArrayList<MediaItem> mediaItems = new ArrayList<MediaItem>(2);
+            mediaItems.add(builder.build());
+            mediaItems.add(MediaItem.fromUri("http://36.138.99.117:8197/data_source/dub/c4741e9b50dc/2023/02/13/b71f0e9a-9a69-43f8-bf71-fb7feb3f4f9a.mp3"));
+            DefaultMediaSourceFactory mediaSourceFactory = new DefaultMediaSourceFactory(new DefaultDataSource.Factory(context));
+
+            ArrayList<MediaSource> mediaSources = new ArrayList<>(2);
+            for (MediaItem o : mediaItems) {
+                mediaSources.add(mediaSourceFactory.createMediaSource(o));
             }
+            // 多路流合并
+            return new MergingMediaSource(mediaSources.get(0), mediaSources.get(1));
+
+
+//            // 3
+//            MediaItem mediaItem = builder.build();
+//            switch (contentType) {
+//                case C.CONTENT_TYPE_DASH:
+//                    return new DashMediaSource.Factory(dataSource).createMediaSource(mediaItem);
+//                case C.CONTENT_TYPE_SS:
+//                    return new SsMediaSource.Factory(dataSource).createMediaSource(mediaItem);
+//                case C.CONTENT_TYPE_HLS:
+//                    return new HlsMediaSource.Factory(dataSource).createMediaSource(mediaItem);
+//                default:
+//                    DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+//                    extractorsFactory.setConstantBitrateSeekingEnabled(true);
+//                    return new ProgressiveMediaSource.Factory(dataSource, extractorsFactory).createMediaSource(mediaItem);
+//            }
         }
     }
 }
