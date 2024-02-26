@@ -11,7 +11,6 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -19,6 +18,7 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.MediaMetadata;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -33,6 +33,7 @@ import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
@@ -64,8 +65,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
@@ -819,12 +822,12 @@ public final class VideoExo2Player extends VideoBasePlayer {
             MediaItem.Builder builder = new MediaItem.Builder();
             builder.setUri(Uri.parse(mediaUrl));
             if (null != subtitleUrl && subtitleUrl.length() > 0) {
-                MediaItem.SubtitleConfiguration.Builder subtitle = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(mediaUrl));
-                subtitle.setMimeType(MimeTypes.APPLICATION_SUBRIP);
-                subtitle.setLanguage("en");
-                subtitle.setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT); // C.SELECTION_FLAG_DEFAULT
-                builder.setSubtitleConfigurations(Arrays.asList(subtitle.build()));
-
+//                MediaItem.SubtitleConfiguration.Builder subtitle = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(mediaUrl));
+//                subtitle.setMimeType(MimeTypes.APPLICATION_SUBRIP);
+//                subtitle.setLanguage("en");
+//                subtitle.setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT); // C.SELECTION_FLAG_DEFAULT
+//                builder.setSubtitleConfigurations(Arrays.asList(subtitle.build()));
+//
 //            MediaItem.SubtitleConfiguration.Builder builder = new MediaItem.SubtitleConfiguration.Builder(srtUri);
 //            builder.setMimeType(MimeTypes.APPLICATION_SUBRIP);
 //            builder.setMimeType(MimeTypes.TEXT_VTT);
@@ -903,18 +906,32 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //                dataSource = dataSource1;
             }
 
-            // test
-//            ArrayList<MediaItem> mediaItems = new ArrayList<MediaItem>(2);
+//            // test 增加音轨
+//            MediaItem.SubtitleConfiguration.Builder subtitle = new MediaItem.SubtitleConfiguration.Builder(Uri.parse("http://36.138.99.117:8197/data_source/dub/c4741e9b50dc/2023/02/13/b71f0e9a-9a69-43f8-bf71-fb7feb3f4f9a.mp3"));
+//            subtitle.setMimeType(MimeTypes.AUDIO_AC3);
+//            subtitle.setLanguage("aaaaa");
+//            subtitle.setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT); // C.SELECTION_FLAG_DEFAULT
+//            builder.setSubtitleConfigurations(Arrays.asList(subtitle.build()));
+
+//            // test
+//            ArrayList<MediaItem> mediaItems = new ArrayList<MediaItem>();
 //            mediaItems.add(builder.build());
-//            mediaItems.add(MediaItem.fromUri("http://36.138.99.117:8197/data_source/dub/c4741e9b50dc/2023/02/13/b71f0e9a-9a69-43f8-bf71-fb7feb3f4f9a.mp3"));
+//
+//            // test 增加音轨
+//            MediaItem mediaItem = new MediaItem.Builder()
+//                    .setUri("http://36.138.99.117:8197/data_source/dub/c4741e9b50dc/2023/02/13/b71f0e9a-9a69-43f8-bf71-fb7feb3f4f9a.mp3")
+//                    .build();
+//            mediaItems.add(mediaItem);
+//
 //            DefaultMediaSourceFactory mediaSourceFactory = new DefaultMediaSourceFactory(new DefaultDataSource.Factory(context));
 //
-//            ArrayList<MediaSource> mediaSources = new ArrayList<>(2);
+//            MediaSource[] mediaSources = new MediaSource[mediaItems.size()];
 //            for (MediaItem o : mediaItems) {
-//                mediaSources.add(mediaSourceFactory.createMediaSource(o));
+//                int i = mediaItems.indexOf(o);
+//                mediaSources[i] = mediaSourceFactory.createMediaSource(o);
 //            }
 //            // 多路流合并
-//            return new MergingMediaSource(mediaSources.get(0), mediaSources.get(1));
+//            return new MergingMediaSource(mediaSources);
 
 
             // 3
