@@ -1,12 +1,12 @@
 package lib.kalu.mediaplayer.config.player;
 
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
 
-@Keep
+
 public final class PlayerManager {
 
     private PlayerBuilder mConfig = null;
@@ -33,22 +33,22 @@ public final class PlayerManager {
         return this;
     }
 
-    public PlayerManager setExoUseOkhttp(@NonNull boolean v) {
+    public PlayerManager setExoUseOkhttp( boolean v) {
         mPlayerBuilder.setExoUseOkhttp(v);
         return this;
     }
 
-    public PlayerManager setExoUseOkhttpTimeoutSeconds(@NonNull int v) {
+    public PlayerManager setExoUseOkhttpTimeoutSeconds( int v) {
         this.mPlayerBuilder.setExoUseOkhttpTimeoutSeconds(v);
         return this;
     }
 
-    public PlayerManager setBufferingTimeoutSeconds(@NonNull int v) {
+    public PlayerManager setBufferingTimeoutSeconds( int v) {
         this.mPlayerBuilder.setBufferingTimeoutSeconds(v);
         return this;
     }
 
-    public PlayerManager setBufferingTimeoutRetry(@NonNull boolean v) {
+    public PlayerManager setBufferingTimeoutRetry( boolean v) {
         this.mPlayerBuilder.setBufferingTimeoutRetry(v);
         return this;
     }

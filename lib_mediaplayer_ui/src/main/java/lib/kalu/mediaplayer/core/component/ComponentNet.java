@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -20,7 +20,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration, @NonNull long max) {
+    public void onUpdateTimeMillis( long seek,  long position,  long duration,  long max) {
         try {
             TextView textView = findViewById(R.id.module_mediaplayer_component_net_message);
             if (null == textView)

@@ -12,8 +12,8 @@ import android.widget.RelativeLayout;
 import androidx.annotation.ColorInt;
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 import androidx.annotation.RequiresApi;
 
 import org.json.JSONArray;
@@ -28,7 +28,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-@Keep
+
 public class PlayerLayout extends RelativeLayout {
 
     public PlayerLayout(Context context) {
@@ -350,7 +350,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void addComponent(@NonNull ComponentApi componentApi) {
+    public final void addComponent( ComponentApi componentApi) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -361,7 +361,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void addAllComponent(@NonNull List<ComponentApi> componentApis) {
+    public final void addAllComponent( List<ComponentApi> componentApis) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -421,7 +421,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void setOnPlayerChangeListener(@NonNull OnPlayerChangeListener listener) {
+    public final void setOnPlayerChangeListener( OnPlayerChangeListener listener) {
         try {
             if (null == listener)
                 throw new Exception("listener error: null");
@@ -589,7 +589,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public void setData(@NonNull String playerUrl) {
+    public void setData( String playerUrl) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -615,7 +615,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public void start(@NonNull String playerUrl) {
+    public void start( String playerUrl) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -626,7 +626,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public void start(@NonNull StartBuilder data, @NonNull String playerUrl) {
+    public void start( StartBuilder data,  String playerUrl) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -637,7 +637,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void setVolume(@NonNull float left, @NonNull float right) {
+    public final void setVolume( float left,  float right) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -648,7 +648,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void setMute(@NonNull boolean enable) {
+    public final void setMute( boolean enable) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -683,7 +683,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void seekTo(@NonNull boolean force, @NonNull long seek) {
+    public final void seekTo( boolean force,  long seek) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -694,7 +694,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void seekTo(@NonNull boolean force, @NonNull long seek, @NonNull long max, @NonNull boolean loop) {
+    public final void seekTo( boolean force,  long seek,  long max,  boolean loop) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -716,7 +716,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void setPlayWhenReady(@NonNull boolean playWhenReady) {
+    public final void setPlayWhenReady( boolean playWhenReady) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -805,7 +805,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final boolean switchTrack(@NonNull int trackId) {
+    public final boolean switchTrack( int trackId) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)

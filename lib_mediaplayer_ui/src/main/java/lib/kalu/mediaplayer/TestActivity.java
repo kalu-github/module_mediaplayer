@@ -10,7 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.Keep;
+
 
 import org.json.JSONArray;
 
@@ -37,23 +37,23 @@ import lib.kalu.mediaplayer.widget.player.PlayerLayout;
  */
 public final class TestActivity extends Activity {
 
-    @Keep
+    
     public static final int RESULT_CODE = 31001;
-    @Keep
+    
     public static final String INTENT_LIVE = "intent_live"; // live
-    @Keep
+    
     public static final String INTENT_MAX = "intent_max"; // max
-    @Keep
+    
     public static final String INTENT_SEEK = "intent_seek"; // 快进
-    @Keep
+    
     public static final String INTENT_DATA = "intent_data"; // 外部传入DATA
-    @Keep
+    
     public static final String INTENT_URL = "intent_url"; // 视频Url
-    @Keep
+    
     public static final String INTENT_SRT = "intent_srt"; // 字幕Url
-    @Keep
+    
     public static final String INTENT_TIME_BROWSING = "intent_time_browsing"; // 视频浏览时长
-    @Keep
+    
     public static final String INTENT_TIME_LENGTH = "intent_time_length"; // 视频总时长
 
     @Override

@@ -8,8 +8,8 @@ import static java.lang.annotation.ElementType.PACKAGE;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.CLASS;
 
+
 import androidx.annotation.IntDef;
-import androidx.annotation.Keep;
 import androidx.annotation.StringDef;
 
 import java.lang.annotation.Documented;
@@ -22,13 +22,12 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 @Documented
 @Retention(CLASS)
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-@Keep
+
 public @interface PlayerType {
 
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @Keep
     @interface CacheType {
 
         int DOWNLOAD = 1_001;
@@ -38,7 +37,6 @@ public @interface PlayerType {
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {CacheType.DOWNLOAD, CacheType.NONE})
-        @Keep
         @interface Value {
         }
     }
@@ -50,7 +48,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @Keep
     @interface WindowType {
         //普通模式
         int NORMAL = 2_001;
@@ -63,7 +60,6 @@ public @interface PlayerType {
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({NORMAL, FULL, FLOAT})
-        @Keep
         @interface Value {
         }
     }
@@ -74,7 +70,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @Keep
     @interface StateType {
         int STATE_INIT = 3_001; // 播放未开始，即将进行
         int STATE_INIT_RETEY_BUFFERING = 3_002; // 显示进度条
@@ -161,7 +156,6 @@ public @interface PlayerType {
                 STATE_RELEASE,
                 STATE_RELEASE_EXCEPTION,
                 STATE_COMPONENT_SEEK_SHOW})
-        @Keep
         @interface Value {
         }
     }
@@ -172,7 +166,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @Keep
     @interface ScaleType {
         int SCREEN_SCALE_SCREEN_CROP = 4_001; // 填充屏幕, 裁剪
         int SCREEN_SCALE_SCREEN_MATCH = 4_002; // 填充屏幕, 不裁剪, 可能会变形
@@ -188,7 +181,6 @@ public @interface PlayerType {
                 SCREEN_SCALE_VIDEO_ORIGINAL,
                 SCREEN_SCALE_16_9,
                 SCREEN_SCALE_4_3})
-        @Keep
         @interface Value {
         }
     }
@@ -196,7 +188,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @Keep
     @interface RotationType {
         int Rotation_0 = 5_001;
         int Rotation_90 = 5_002;
@@ -210,7 +201,6 @@ public @interface PlayerType {
                 Rotation_90,
                 Rotation_180,
                 Rotation_270})
-        @Keep
         @interface Value {
         }
     }
@@ -221,7 +211,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @Keep
     @interface KernelType {
         int ANDROID = 6_001; // MediaPlayer，基于原生自带的播放器控件
         int EXO_V1 = 6_002; // exo
@@ -243,7 +232,6 @@ public @interface PlayerType {
                 MEDIA_V3,
                 VLC,
                 FFPLAYER})
-        @Keep
         @interface Value {
         }
     }
@@ -251,7 +239,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @Keep
     @interface EventType {
         int EVENT_ERROR_URL = 7_001;
         int EVENT_ERROR_RETRY = 7_002;
@@ -319,7 +306,6 @@ public @interface PlayerType {
 //                EVENT_AUDIO_DECODED_START,
 //                EVENT_VIDEO_DECODED_START
         })
-        @Keep
         @interface Value {
         }
     }
@@ -330,7 +316,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @Keep
     @interface RenderType {
         int TEXTURE_VIEW = 8_001;
         int SURFACE_VIEW = 8_002;
@@ -338,7 +323,6 @@ public @interface PlayerType {
         @IntDef({TEXTURE_VIEW,
                 SURFACE_VIEW})
         @Retention(RetentionPolicy.SOURCE)
-        @Keep
         @interface Value {
         }
     }
@@ -346,7 +330,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @Keep
     @interface SeekType {
 
         int EXO_SEEK_DEFAULT = 9_001;
@@ -362,7 +345,6 @@ public @interface PlayerType {
                 SeekType.EXO_SEEK_CLOSEST_SYNC,
                 SeekType.EXO_SEEK_PREVIOUS_SYNC,
                 SeekType.EXO_SEEK_NEXT_SYNC})
-        @Keep
         @interface Value {
         }
     }
@@ -370,7 +352,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @Keep
     @interface FFmpegType {
         int EXO_RENDERER_ONLY_MEDIACODEC = 10_001;
         int EXO_RENDERER_ONLY_MEDIACODEC_AUDIO = 10_002;
@@ -393,7 +374,6 @@ public @interface PlayerType {
                 FFmpegType.EXO_RENDERER_ONLY_FFMPEG_VIDEO,
                 FFmpegType.EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG,
                 FFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC})
-        @Keep
         @interface Value {
         }
     }
@@ -401,7 +381,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @Keep
     @interface SchemeType {
 
         String RTMP = "rtmp";
@@ -421,7 +400,6 @@ public @interface PlayerType {
                 SchemeType._M3U,
                 SchemeType._M3U8,
                 SchemeType._MATCHES})
-        @Keep
         @interface Value {
         }
     }

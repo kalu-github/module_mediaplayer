@@ -7,7 +7,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -15,7 +15,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public class ComponentPause extends RelativeLayout implements ComponentApi {
 
-    public ComponentPause(@NonNull Context context) {
+    public ComponentPause( Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_pause, this, true);
     }
@@ -62,12 +62,12 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration, @NonNull long max) {
+    public void onUpdateTimeMillis( long seek,  long position,  long duration,  long max) {
         onUpdateSeekProgress(true, position, duration, max);
     }
 
     @Override
-    public void onUpdateSeekProgress(@NonNull boolean updateTime, @NonNull long position, @NonNull long duration, @NonNull long max) {
+    public void onUpdateSeekProgress( boolean updateTime,  long position,  long duration,  long max) {
         try {
             if (position < 0 || duration < 0)
                 throw new Exception();
@@ -150,7 +150,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void setComponentImageUrl(@NonNull String url) {
+    public final void setComponentImageUrl( String url) {
         try {
             setImageUrl(this, R.id.module_mediaplayer_component_pause_icon, url);
         } catch (Exception e) {
@@ -164,7 +164,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
         }
     }
 
-    public final void setComponentTitleText(@NonNull String value) {
+    public final void setComponentTitleText( String value) {
         try {
             setText(this, R.id.module_mediaplayer_component_pause_title, value);
         } catch (Exception e) {

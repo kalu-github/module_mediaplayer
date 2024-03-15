@@ -10,8 +10,8 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 
 import com.google.android.exoplayer2.PlaybackParameters;
 
@@ -21,7 +21,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-@Keep
+
 public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     private long mSeek = 0L; // 快进
@@ -34,12 +34,12 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
 
-    public VideoAndroidPlayer(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent eventApi) {
+    public VideoAndroidPlayer( VideoPlayerApi playerApi,  VideoKernelApiEvent eventApi) {
         super(playerApi, eventApi);
     }
 
 
-    @NonNull
+    
     @Override
     public VideoAndroidPlayer getPlayer() {
         return this;
@@ -61,7 +61,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
+    public void createDecoder( Context context,  boolean logger,  int seekParameters) {
         MPLogUtil.log("VideoAndroidPlayer => createDecoder => mMediaPlayer = " + mMediaPlayer);
         try {
             releaseDecoder(false, true);
@@ -75,7 +75,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
+    public void startDecoder( Context context,  String url,  boolean prepareAsync) {
         MPLogUtil.log("VideoAndroidPlayer => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mMediaPlayer)
@@ -310,7 +310,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setSurface(@NonNull Surface surface, int w, int h) {
+    public void setSurface( Surface surface, int w, int h) {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -565,7 +565,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setLive(@NonNull boolean live) {
+    public void setLive( boolean live) {
         this.mLive = live;
     }
 

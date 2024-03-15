@@ -13,17 +13,17 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
-@Keep
+
 public interface ComponentApi extends ComponentApiLinkerPlayer {
 
-    default void callPlayerEvent(@NonNull int playState) {
+    default void callPlayerEvent( int playState) {
     }
 
     default void callWindowEvent(int state) {
@@ -31,7 +31,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
 
     /*************/
 
-    default void setImageResource(@NonNull View layout, @IdRes int id, @DrawableRes int value) {
+    default void setImageResource( View layout, @IdRes int id, @DrawableRes int value) {
         try {
             ImageView imageView = layout.findViewById(id);
             imageView.setImageResource(value);
@@ -40,7 +40,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
         }
     }
 
-    default void setImageUrl(@NonNull View layout, @IdRes int id, @NonNull String url) {
+    default void setImageUrl( View layout, @IdRes int id,  String url) {
         try {
             ImageView imageView = layout.findViewById(id);
             imageView.setImageURI(Uri.parse(url));
@@ -49,7 +49,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
         }
     }
 
-    default void setTextColor(@NonNull View layout, @IdRes int id, @ColorInt int value) {
+    default void setTextColor( View layout, @IdRes int id, @ColorInt int value) {
         try {
             TextView view = layout.findViewById(id);
             view.setTextColor(value);
@@ -58,7 +58,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
         }
     }
 
-    default void setTextSize(@NonNull View layout, @IdRes int id, @DimenRes int value) {
+    default void setTextSize( View layout, @IdRes int id, @DimenRes int value) {
         try {
             TextView view = layout.findViewById(id);
             int offset = layout.getResources().getDimensionPixelOffset(value);
@@ -68,7 +68,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
         }
     }
 
-    default void setText(@NonNull View layout, @IdRes int id, @StringRes int value) {
+    default void setText( View layout, @IdRes int id, @StringRes int value) {
         try {
             TextView view = layout.findViewById(id);
             view.setText(value);
@@ -77,7 +77,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
         }
     }
 
-    default void setText(@NonNull View layout, @IdRes int id, @NonNull String value) {
+    default void setText( View layout, @IdRes int id,  String value) {
         try {
             TextView view = layout.findViewById(id);
             view.setText(value);
@@ -86,7 +86,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
         }
     }
 
-    default void setCompoundDrawablesWithIntrinsicBounds(@NonNull View layout, @IdRes int id, @DrawableRes int left, @DrawableRes int top, @DrawableRes int right, @DrawableRes int bottom) {
+    default void setCompoundDrawablesWithIntrinsicBounds( View layout, @IdRes int id, @DrawableRes int left, @DrawableRes int top, @DrawableRes int right, @DrawableRes int bottom) {
         try {
             TextView view = layout.findViewById(id);
             view.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
@@ -95,7 +95,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
         }
     }
 
-    default void setDimens(@NonNull View layout, @IdRes int id, @DimenRes int value) {
+    default void setDimens( View layout, @IdRes int id, @DimenRes int value) {
         try {
             View view = layout.findViewById(id);
             ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
@@ -108,7 +108,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
         }
     }
 
-    default void setBackgroundColorInt(@NonNull View layout, @IdRes int id, @ColorInt int value) {
+    default void setBackgroundColorInt( View layout, @IdRes int id, @ColorInt int value) {
         try {
             View view = layout.findViewById(id);
             view.setBackgroundColor(value);
@@ -117,7 +117,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
         }
     }
 
-    default void setBackgroundColorRes(@NonNull View layout, @IdRes int id, @ColorRes int resId) {
+    default void setBackgroundColorRes( View layout, @IdRes int id, @ColorRes int resId) {
         try {
             View view = layout.findViewById(id);
             int color = view.getResources().getColor(resId);
@@ -127,7 +127,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
         }
     }
 
-    default void setBackgroundDrawableRes(@NonNull View layout, @IdRes int id, @DrawableRes int resId) {
+    default void setBackgroundDrawableRes( View layout, @IdRes int id, @DrawableRes int resId) {
         try {
             View view = layout.findViewById(id);
             view.setBackgroundResource(resId);
@@ -153,12 +153,12 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
     default void setComponentImageResource(@DrawableRes int resid) {
     }
 
-    default void setComponentImageUrl(@NonNull String url) {
+    default void setComponentImageUrl( String url) {
     }
 
     /******************/
 
-    default void setComponentText(@NonNull String value) {
+    default void setComponentText( String value) {
     }
 
     default void setComponentText(@StringRes int value) {
@@ -180,10 +180,10 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
 
     /******************/
 
-    default void onUpdateSeekProgress(@NonNull boolean updateTime, @NonNull long position, @NonNull long duration, @NonNull long max) {
+    default void onUpdateSeekProgress( boolean updateTime,  long position,  long duration,  long max) {
     }
 
-    default void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration, @NonNull long max) {
+    default void onUpdateTimeMillis( long seek,  long position,  long duration,  long max) {
     }
 
     default boolean dispatchKeyEventComponent(KeyEvent event) {

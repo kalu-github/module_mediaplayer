@@ -2,59 +2,57 @@ package com.kalu.mediaplayer;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 
 public class LogBuriedEvent implements BuriedEvent {
 
     @Override
-    public void onPlaying(@NonNull String url, @NonNull long position, @NonNull long duration) {
+    public void onPlaying(String url, long position, long duration) {
         Log.e("LogBuriedEvent", "onPlaying => position = " + position + ", duration = " + duration + ", url = " + url);
     }
 
     @Override
-    public void onExit(@NonNull String url, @NonNull long position, @NonNull long duration) {
+    public void onExit(String url, long position, long duration) {
 
     }
 
     @Override
-    public void onCompletion(@NonNull String url, @NonNull long position, @NonNull long duration) {
+    public void onCompletion(String url, long position, long duration) {
         Log.e("LogBuriedEvent", "onCompletion => position = " + position + ", duration = " + duration + ", url = " + url);
     }
 
     @Override
-    public void onError(@NonNull String url, @NonNull long position, @NonNull long duration) {
+    public void onError(String url, long position, long duration) {
         Log.e("LogBuriedEvent", "onError => position = " + position + ", duration = " + duration + ", url = " + url);
     }
 
     @Override
-    public void onPause(@NonNull String url, @NonNull long position, @NonNull long duration) {
+    public void onPause(String url, long position, long duration) {
 
     }
 
     @Override
-    public void onResume(@NonNull String url, @NonNull long position, @NonNull long duration) {
+    public void onResume(String url, long position, long duration) {
 
     }
 
     @Override
-    public void onSeek(@NonNull String url, @NonNull long position, @NonNull long duration) {
+    public void onSeek(String url, long position, long duration) {
 
     }
 
     @Override
-    public void onWindowFull(@NonNull String url, @NonNull long position, @NonNull long duration) {
+    public void onWindowFull(String url, long position, long duration) {
 
     }
 
     @Override
-    public void onWindowFloat(@NonNull String url, @NonNull long position, @NonNull long duration) {
+    public void onWindowFloat(String url, long position, long duration) {
 
     }
 
     @Override
-    public void onWindowSimple(@NonNull String url, @NonNull long position, @NonNull long duration) {
+    public void onWindowSimple(String url, long position, long duration) {
 
     }
 }

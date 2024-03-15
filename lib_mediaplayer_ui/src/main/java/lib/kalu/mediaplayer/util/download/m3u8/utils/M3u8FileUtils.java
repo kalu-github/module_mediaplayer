@@ -1,6 +1,6 @@
 package lib.kalu.mediaplayer.util.download.m3u8.utils;
 
-import androidx.annotation.Keep;
+
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -24,7 +24,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 /**
  * desc  : M3u8工具类
  */
-@Keep
+
 public final class M3u8FileUtils {
 
     /**

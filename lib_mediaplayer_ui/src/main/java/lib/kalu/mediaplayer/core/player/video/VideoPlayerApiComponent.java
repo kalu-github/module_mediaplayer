@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
+
 
 import java.util.LinkedList;
 import java.util.List;
@@ -129,7 +129,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
         }
     }
 
-    default void dispatchKeyEventComponents(@NonNull KeyEvent event) {
+    default void dispatchKeyEventComponents( KeyEvent event) {
         try {
             ViewGroup viewGroup = getBaseControlViewGroup();
             int childCount = viewGroup.getChildCount();
@@ -148,7 +148,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
         }
     }
 
-    default void callUpdateTimeMillis(long seek, long position, long duration, @NonNull long max) {
+    default void callUpdateTimeMillis(long seek, long position, long duration,  long max) {
         try {
             ViewGroup viewGroup = getBaseControlViewGroup();
             int childCount = viewGroup.getChildCount();

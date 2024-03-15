@@ -75,15 +75,12 @@ repositories {
     }
 }
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.squareup.okhttp3:okhttp:3.14.9'
 
     // ui
-    api files('libs/classes2.jar')
-    api files('libs/lib_mediaplayer_ui_release_20240119.aar')
+    api files('libs/lib_mediaplayer_ui_release_20240315.aar')
     // ijk
-    api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_full_release_20230609.aar')
+    api files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.13_release_20240315.aar')
     // exo1
     api files('libs/lib_mediaplayer_exo_r1.5.15_release_20230424.aar')
     // exo2

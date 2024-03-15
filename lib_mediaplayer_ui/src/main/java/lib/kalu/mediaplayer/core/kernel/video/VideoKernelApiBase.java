@@ -1,8 +1,8 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
 import androidx.annotation.FloatRange;
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 
 import org.json.JSONArray;
 
@@ -11,7 +11,7 @@ import org.json.JSONArray;
  * @description: 播放器 - 抽象接口
  * @date: 2021-05-12 09:40
  */
-@Keep
+
 interface VideoKernelApiBase {
 
     void setVolume(float left, float right);
@@ -20,7 +20,7 @@ interface VideoKernelApiBase {
 
     void setMute(boolean v);
 
-    void seekTo(@NonNull long position);
+    void seekTo( long position);
 
     boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed);
 
@@ -37,7 +37,7 @@ interface VideoKernelApiBase {
 
     boolean isLive();
 
-    void setLive(@NonNull boolean v);
+    void setLive( boolean v);
 
     void setLooping(boolean loop);
 
@@ -67,7 +67,7 @@ interface VideoKernelApiBase {
         return null;
     }
 
-    default boolean switchTrack(@NonNull int trackId) {
+    default boolean switchTrack( int trackId) {
         return false;
     }
 }

@@ -16,8 +16,8 @@ import android.view.View;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DimenRes;
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
@@ -25,7 +25,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @SuppressLint("AppCompatCustomView")
-@Keep
+
 public class MPLoadingView extends View {
 
     private int mDelayMillis = 120;
@@ -92,7 +92,7 @@ public class MPLoadingView extends View {
     }
 
     @Override
-    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+    protected void onVisibilityChanged( View changedView, int visibility) {
         setEnabled(visibility == View.VISIBLE);
         super.onVisibilityChanged(changedView, visibility);
         MPLogUtil.log("MPLoadingView => onVisibilityChanged => visibility = " + visibility);
@@ -133,7 +133,7 @@ public class MPLoadingView extends View {
         drawLoading(canvas);
     }
 
-    private void clearLoading(@NonNull Canvas canvas) {
+    private void clearLoading( Canvas canvas) {
         try {
             mPaint.reset();
             mPaint.setColor(Color.TRANSPARENT);
@@ -155,7 +155,7 @@ public class MPLoadingView extends View {
         }
     }
 
-    private void drawLoading(@NonNull Canvas canvas) {
+    private void drawLoading( Canvas canvas) {
         try {
             boolean enabled = isEnabled();
             if (!enabled)
@@ -243,7 +243,7 @@ public class MPLoadingView extends View {
                 throw new Exception("mHandler warning: null");
             mHandler = new Handler(Looper.getMainLooper()) {
                 @Override
-                public void handleMessage(@NonNull Message msg) {
+                public void handleMessage( Message msg) {
                     super.handleMessage(msg);
                     cleanMessage();
                     try {
@@ -286,22 +286,22 @@ public class MPLoadingView extends View {
 
     /*************/
 
-    @Keep
-    public void setDelayMillis(@NonNull int delayMillis) {
+    
+    public void setDelayMillis( int delayMillis) {
         this.mDelayMillis = delayMillis;
     }
 
-    @Keep
-    public void setCount(@NonNull int count) {
+    
+    public void setCount( int count) {
         this.mCount = count;
     }
 
-    @Keep
-    public void setRate(@NonNull float rate) {
+    
+    public void setRate( float rate) {
         this.mRate = rate;
     }
 
-    @Keep
+    
     public void setRadius(@DimenRes int resId) {
         try {
             float dimension = getResources().getDimension(resId);

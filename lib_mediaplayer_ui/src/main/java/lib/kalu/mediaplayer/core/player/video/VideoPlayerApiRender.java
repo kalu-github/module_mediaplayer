@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
+
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
@@ -374,7 +374,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
 
     VideoRenderApi getVideoRender();
 
-    void setVideoRender(@NonNull VideoRenderApi render);
+    void setVideoRender( VideoRenderApi render);
 
     void checkVideoReal();
 }

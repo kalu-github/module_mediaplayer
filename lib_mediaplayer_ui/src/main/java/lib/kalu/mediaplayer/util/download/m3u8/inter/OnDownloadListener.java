@@ -1,12 +1,12 @@
 package lib.kalu.mediaplayer.util.download.m3u8.inter;
 
 
-import androidx.annotation.Keep;
+
 
 /**
  * desc  : 下载监听
  */
-@Keep
+
 public interface OnDownloadListener extends BaseListener {
     /**
      * 下载m3u8文件.

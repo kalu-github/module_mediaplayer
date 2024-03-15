@@ -4,7 +4,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 
-import androidx.annotation.Keep;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,7 +29,7 @@ import lib.kalu.mediaplayer.util.download.m3u8.utils.M3u8FileUtils;
 /**
  * desc  : M3U8下载管理器
  */
-@Keep
+
 public class M3u8DownloadTask {
     private OnDownloadListener onDownloadListener;
     private static final int WHAT_ON_ERROR = 1001;

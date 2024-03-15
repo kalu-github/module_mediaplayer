@@ -1,7 +1,7 @@
 package lib.kalu.mediaplayer.config.player;
 
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
@@ -10,7 +10,7 @@ import lib.kalu.mediaplayer.keycode.KeycodeApi;
  * @description: 播放器全局配置
  * @date: 2021-05-12 14:43
  */
-@Keep
+
 public final class PlayerBuilder {
 
     private boolean log;// 日志log
@@ -176,7 +176,7 @@ public final class PlayerBuilder {
         return builder;
     }
 
-    @Keep
+    
     public final static class Builder {
 
         private boolean log = false;// 日志log
@@ -216,22 +216,22 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public Builder setExoUseOkhttpTimeoutSeconds(@NonNull int v) {
+        public Builder setExoUseOkhttpTimeoutSeconds( int v) {
             exoUseOkhttpTimeoutSeconds = v;
             return this;
         }
 
-        public Builder setBufferingTimeoutSeconds(@NonNull int v) {
+        public Builder setBufferingTimeoutSeconds( int v) {
             bufferingTimeoutSeconds = v;
             return this;
         }
 
-        public Builder setBufferingTimeoutRetry(@NonNull boolean v) {
+        public Builder setBufferingTimeoutRetry( boolean v) {
             bufferingTimeoutRetry = v;
             return this;
         }
 
-        public Builder setExoUseOkhttp(@NonNull boolean v) {
+        public Builder setExoUseOkhttp( boolean v) {
             exoUseOkhttp = v;
             return this;
         }

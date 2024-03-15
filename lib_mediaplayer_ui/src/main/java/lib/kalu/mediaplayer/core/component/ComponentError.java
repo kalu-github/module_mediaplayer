@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import androidx.annotation.ColorInt;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
@@ -91,7 +91,7 @@ public class ComponentError extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void setComponentImageUrl(@NonNull String url) {
+    public final void setComponentImageUrl( String url) {
         try {
             setImageUrl(this, R.id.module_mediaplayer_component_error_icon, url);
         } catch (Exception e) {
@@ -107,7 +107,7 @@ public class ComponentError extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void setComponentText(@NonNull String value) {
+    public final void setComponentText( String value) {
         try {
             setText(this, R.id.module_mediaplayer_component_error_message, value);
         } catch (Exception e) {

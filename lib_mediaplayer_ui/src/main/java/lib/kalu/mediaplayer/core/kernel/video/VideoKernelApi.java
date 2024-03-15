@@ -4,8 +4,8 @@ import android.content.Context;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -15,30 +15,30 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
  * @description: 播放器 - 抽象接口
  * @date: 2021-05-12 09:40
  */
-@Keep
+
 public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent {
 
     void onUpdateTimeMillis();
 
-    @NonNull
+    
     <T extends Object> T getPlayer();
 
     void releaseDecoder(boolean isFromUser, boolean isMainThread);
 
-    void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters);
+    void createDecoder( Context context,  boolean logger,  int seekParameters);
 
-    void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync);
+    void startDecoder( Context context,  String url,  boolean prepareAsync);
 
     default void initOptionsIjk() {
     }
 
-    default void initOptionsExo(@NonNull Context context, @NonNull com.google.android.exoplayer2.ExoPlayer.Builder exoBuilder) {
+    default void initOptionsExo( Context context,  com.google.android.exoplayer2.ExoPlayer.Builder exoBuilder) {
     }
 
-    default void initOptionsMediax(@NonNull Context context, @NonNull androidx.media3.exoplayer.ExoPlayer.Builder exoBuilder) {
+    default void initOptionsMediax( Context context,  androidx.media3.exoplayer.ExoPlayer.Builder exoBuilder) {
     }
 
-    default void initDecoder(@NonNull Context context, @NonNull String playUrl, @NonNull StartBuilder bundle) {
+    default void initDecoder( Context context,  String playUrl,  StartBuilder bundle) {
 
         MPLogUtil.log("VideoKernelApi => initDecoder => playUrl = " + playUrl);
         long seek = bundle.getSeek();
@@ -74,7 +74,7 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 //        setisExternalMusicPlayWhenReady(musicPlayWhenReady);
     }
 
-    default void update(@NonNull long seek, @NonNull long max, @NonNull boolean loop) {
+    default void update( long seek,  long max,  boolean loop) {
         setSeek(seek);
         setMax(max);
         setLooping(loop);
@@ -82,5 +82,5 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 
     void setDisplay(SurfaceHolder surfaceHolder);
 
-    void setSurface(@NonNull Surface surface, int w, int h);
+    void setSurface( Surface surface, int w, int h);
 }

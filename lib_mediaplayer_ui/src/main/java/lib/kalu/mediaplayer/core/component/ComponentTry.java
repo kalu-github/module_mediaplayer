@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -14,7 +14,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public class ComponentTry extends RelativeLayout implements ComponentApi {
 
-    public ComponentTry(@NonNull Context context) {
+    public ComponentTry( Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_try, this, true);
     }
@@ -63,7 +63,7 @@ public class ComponentTry extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void setComponentText(@NonNull String value) {
+    public final void setComponentText( String value) {
         try {
             setText(this, R.id.module_mediaplayer_component_try_message, value);
         } catch (Exception e) {

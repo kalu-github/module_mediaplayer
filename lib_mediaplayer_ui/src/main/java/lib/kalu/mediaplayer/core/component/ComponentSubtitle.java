@@ -5,13 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
+
 
 import lib.kalu.mediaplayer.R;
 
 public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
 
-    public ComponentSubtitle(@NonNull Context context) {
+    public ComponentSubtitle( Context context) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_subtitle, this, true);
     }

@@ -10,8 +10,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -29,7 +27,7 @@ import lib.kalu.mediaplayer.util.UdpMulticastUtil;
 public class MainActivity extends Activity {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initAudio();

@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.util;
 
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
+
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -11,7 +11,7 @@ import java.net.MulticastSocket;
 
 public final class UdpMulticastUtil {
 
-    public static boolean checkUdpJoinGroup(@NonNull String s) {
+    public static boolean checkUdpJoinGroup( String s) {
         try {
             // 1
             Uri uri = Uri.parse(s);

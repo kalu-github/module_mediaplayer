@@ -6,12 +6,12 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 
-import androidx.annotation.Keep;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 @SuppressLint("AppCompatCustomView")
-@Keep
+
 public class MPLoadingViewSpeed extends MPLoadingView {
 
     public MPLoadingViewSpeed(Context context) {

@@ -1,6 +1,6 @@
 package lib.kalu.mediaplayer.util.download.m3u8.bean;
 
-import androidx.annotation.NonNull;
+
 
 /**
  * desc  : m3u8切片类
@@ -61,7 +61,7 @@ public class M3u8Ts implements Comparable<M3u8Ts> {
     }
 
     @Override
-    public int compareTo(@NonNull M3u8Ts o) {
+    public int compareTo( M3u8Ts o) {
         return file.compareTo(o.file);
     }
 }

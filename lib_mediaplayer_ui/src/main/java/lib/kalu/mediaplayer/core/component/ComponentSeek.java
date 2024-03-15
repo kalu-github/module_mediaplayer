@@ -7,18 +7,18 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 
-@Keep
+
 public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
-    public ComponentSeek(@NonNull Context context) {
+    public ComponentSeek( Context context) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_seek, this, true);
     }
@@ -82,7 +82,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public void onUpdateTimeMillis(@NonNull long seek, @NonNull long position, @NonNull long duration, @NonNull long max) {
+    public void onUpdateTimeMillis( long seek,  long position,  long duration,  long max) {
         try {
             SeekBar seekBar = findSeekBar();
             if (null == seekBar)
@@ -97,7 +97,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public void onUpdateSeekProgress(@NonNull boolean updateTime, @NonNull long position, @NonNull long duration, @NonNull long max) {
+    public void onUpdateSeekProgress( boolean updateTime,  long position,  long duration,  long max) {
 
         try {
             SeekBar seekBar = findSeekBar();

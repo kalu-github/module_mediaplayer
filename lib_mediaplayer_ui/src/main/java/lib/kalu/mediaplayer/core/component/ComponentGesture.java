@@ -4,13 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
+
 
 import lib.kalu.mediaplayer.R;
 
 public class ComponentGesture extends RelativeLayout implements ComponentApi {
 
-    public ComponentGesture(@NonNull Context context) {
+    public ComponentGesture( Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_gesture, this, true);
     }

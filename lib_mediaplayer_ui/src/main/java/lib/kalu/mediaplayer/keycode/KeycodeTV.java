@@ -2,9 +2,9 @@ package lib.kalu.mediaplayer.keycode;
 
 import android.view.KeyEvent;
 
-import androidx.annotation.Keep;
 
-@Keep
+
+
 public class KeycodeTV implements KeycodeApi {
 
     @Override

@@ -7,8 +7,8 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,7 +24,7 @@ import tv.danmaku.ijk.media.player.IjkTimedText;
 import tv.danmaku.ijk.media.player.misc.IMediaFormat;
 import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
 
-@Keep
+
 public final class VideoIjkPlayer extends VideoBasePlayer {
 
     private long mSeek = 0L; // 快进
@@ -38,12 +38,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     private boolean mUseMediaCodec;
     private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer = null;
 
-    public VideoIjkPlayer(@NonNull boolean useMediaCodec, @NonNull VideoPlayerApi musicApi, @NonNull VideoKernelApiEvent eventApi) {
+    public VideoIjkPlayer( boolean useMediaCodec,  VideoPlayerApi musicApi,  VideoKernelApiEvent eventApi) {
         super(musicApi, eventApi);
         mUseMediaCodec = useMediaCodec;
     }
 
-    @NonNull
+    
     @Override
     public VideoIjkPlayer getPlayer() {
         return this;
@@ -64,7 +64,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
+    public void createDecoder( Context context,  boolean logger,  int seekParameters) {
         try {
             releaseDecoder(false, true);
             mIjkPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
@@ -89,7 +89,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
+    public void startDecoder( Context context,  String url,  boolean prepareAsync) {
         MPLogUtil.log("VideoIjkPlayer => startDecoder => mIjkPlayer = " + mIjkPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mIjkPlayer)
@@ -326,7 +326,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setSurface(@NonNull Surface surface, int w, int h) {
+    public void setSurface( Surface surface, int w, int h) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -632,7 +632,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setLive(@NonNull boolean live) {
+    public void setLive( boolean live) {
         this.mLive = live;
     }
 
@@ -683,7 +683,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public boolean switchTrack(@NonNull int trackId) {
+    public boolean switchTrack( int trackId) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");

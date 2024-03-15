@@ -1,7 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.android.VideoAndroidPlayerFactory;
@@ -17,7 +17,7 @@ import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
  * @description: 工具类
  * @date: 2021-05-12 14:41
  */
-@Keep
+
 public final class VideoKernelFactoryManager {
 
     public static VideoKernelFactory getFactory(@PlayerType.KernelType int type) {
@@ -55,7 +55,7 @@ public final class VideoKernelFactoryManager {
         }
     }
 
-    public static VideoKernelApi getKernel(@NonNull VideoPlayerApi playerApi, @PlayerType.KernelType.Value int kernelType, @NonNull VideoKernelApiEvent event) {
+    public static VideoKernelApi getKernel( VideoPlayerApi playerApi, @PlayerType.KernelType.Value int kernelType,  VideoKernelApiEvent event) {
         return getFactory(kernelType).createKernel(playerApi, event);
     }
 }

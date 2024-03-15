@@ -5,8 +5,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
 
-@Keep
+
 public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     // 视频解码
@@ -68,7 +68,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     }
 
     @Override
-    public void setVideoRender(@NonNull VideoRenderApi render) {
+    public void setVideoRender( VideoRenderApi render) {
         mVideoRenderApi = render;
     }
 
@@ -78,7 +78,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     }
 
     @Override
-    public void setVideoKernel(@NonNull VideoKernelApi kernel) {
+    public void setVideoKernel( VideoKernelApi kernel) {
         mVideoKernelApi = kernel;
     }
 
@@ -104,7 +104,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     }
 
     @Override
-    public void setOnPlayerChangeListener(@NonNull OnPlayerChangeListener l) {
+    public void setOnPlayerChangeListener( OnPlayerChangeListener l) {
         this.mOnPlayerChangeListener = l;
     }
 

@@ -1,11 +1,11 @@
 package lib.kalu.mediaplayer.util.download.m3u8.utils;
 
-import androidx.annotation.Keep;
+
 
 /**
  * 网速工具
  */
-@Keep
+
 public class NetSpeedUtils {
     private static NetSpeedUtils mNetSpeedUtils;
 

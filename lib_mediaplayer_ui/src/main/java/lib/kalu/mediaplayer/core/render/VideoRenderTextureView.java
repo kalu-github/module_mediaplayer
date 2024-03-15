@@ -23,7 +23,7 @@ import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
 
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
@@ -113,7 +113,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
              * @param surface                   surface
              */
             @Override
-            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+            public boolean onSurfaceTextureDestroyed( SurfaceTexture surface) {
                 return false;
             }
 
@@ -152,7 +152,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
     }
 
     @Override
-    public void setKernel(@NonNull VideoKernelApi player) {
+    public void setKernel( VideoKernelApi player) {
         this.mKernel = player;
     }
 
@@ -219,7 +219,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
     int mVideoRotation = 0;
 
     @Override
-    public void setVideoSize(@NonNull int videoWidth, @NonNull int videoHeight) {
+    public void setVideoSize( int videoWidth,  int videoHeight) {
         try {
             if (videoWidth <= 0 || videoHeight <= 0)
                 throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);

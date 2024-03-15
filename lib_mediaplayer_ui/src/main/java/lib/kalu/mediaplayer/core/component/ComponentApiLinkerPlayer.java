@@ -3,14 +3,14 @@ package lib.kalu.mediaplayer.core.component;
 import android.view.View;
 import android.view.ViewParent;
 
-import androidx.annotation.Keep;
+
 
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 
-@Keep
+
 public interface ComponentApiLinkerPlayer {
 
     default PlayerLayout getPlayerLayout() {

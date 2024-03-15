@@ -8,8 +8,8 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -81,7 +81,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 
-@Keep
+
 public final class VideoExo2Player extends VideoBasePlayer {
 
     private long mSeek = 0L; // 快进
@@ -96,11 +96,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
     private ExoPlayer mExoPlayer;
     private AnalyticsListener mAnalyticsListener;
 
-    public VideoExo2Player(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent eventApi) {
+    public VideoExo2Player( VideoPlayerApi playerApi,  VideoKernelApiEvent eventApi) {
         super(playerApi, eventApi);
     }
 
-    @NonNull
+    
     @Override
     public ExoPlayer getPlayer() {
         return mExoPlayer;
@@ -121,7 +121,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void initOptionsExo(@NonNull Context context, @NonNull ExoPlayer.Builder exoBuilder) {
+    public void initOptionsExo( Context context,  ExoPlayer.Builder exoBuilder) {
         try {
             if (null == exoBuilder)
                 throw new Exception("exoBuilder error: null");
@@ -192,7 +192,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
+    public void createDecoder( Context context,  boolean logger,  int seekParameters) {
         try {
             // 1
             releaseDecoder(false, true);
@@ -361,7 +361,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
+    public void startDecoder( Context context,  String url,  boolean prepareAsync) {
         MPLogUtil.log("VideoExo2Player => startDecoder => mExoPlayer = " + mExoPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mExoPlayer)
@@ -408,7 +408,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void setSurface(@NonNull Surface surface, int w, int h) {
+    public void setSurface( Surface surface, int w, int h) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -450,7 +450,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void seekTo(@NonNull long position) {
+    public void seekTo( long position) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -613,7 +613,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void setLive(@NonNull boolean live) {
+    public void setLive( boolean live) {
         this.mLive = live;
     }
 
@@ -730,7 +730,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public boolean switchTrack(@NonNull int trackIndex) {
+    public boolean switchTrack( int trackIndex) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -756,12 +756,12 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
     /************************/
 
-    public MediaSource buildMediaSource(@NonNull Context context,
-                                        @NonNull String mediaUrl,
+    public MediaSource buildMediaSource( Context context,
+                                         String mediaUrl,
                                         @Nullable String subtitleUrl,
                                         @PlayerType.CacheType int cacheType,
-                                        @NonNull int cacheMax,
-                                        @NonNull String cacheDir) {
+                                         int cacheMax,
+                                         String cacheDir) {
 
         MPLogUtil.log("VideoExo2Player => createMediaSource => mediaUrl = " + mediaUrl);
         MPLogUtil.log("VideoExo2Player => createMediaSource => subtitleUrl = " + subtitleUrl);

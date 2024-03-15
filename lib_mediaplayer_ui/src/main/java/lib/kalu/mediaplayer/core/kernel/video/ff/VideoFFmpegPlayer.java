@@ -8,8 +8,8 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 
 import lib.kalu.ffplayer.FFmpegPlayer;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -18,7 +18,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-@Keep
+
 public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
     private long mSeek = 0L; // 快进
@@ -31,11 +31,11 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
 
-    public VideoFFmpegPlayer(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent eventApi) {
+    public VideoFFmpegPlayer( VideoPlayerApi playerApi,  VideoKernelApiEvent eventApi) {
         super(playerApi, eventApi);
     }
 
-    @NonNull
+    
     @Override
     public VideoFFmpegPlayer getPlayer() {
         return this;
@@ -56,7 +56,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
+    public void createDecoder( Context context,  boolean logger,  int seekParameters) {
         try {
             releaseDecoder(false, true);
             mFFmpegPlayer = new FFmpegPlayer();
@@ -69,7 +69,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
+    public void startDecoder( Context context,  String url,  boolean prepareAsync) {
         MPLogUtil.log("VideoFFmpegPlayer => startDecoder => mFFmpegPlayer = " + mFFmpegPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mFFmpegPlayer)
@@ -280,7 +280,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setSurface(@NonNull Surface surface, int w, int h) {
+    public void setSurface( Surface surface, int w, int h) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -481,7 +481,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setLive(@NonNull boolean live) {
+    public void setLive( boolean live) {
         this.mLive = live;
     }
 

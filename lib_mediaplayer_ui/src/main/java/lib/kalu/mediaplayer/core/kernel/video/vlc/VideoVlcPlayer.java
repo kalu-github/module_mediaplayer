@@ -6,8 +6,8 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
@@ -17,7 +17,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.vlc.widget.OnVlcInfoChangeListener;
 import lib.kalu.vlc.widget.VlcPlayer;
 
-@Keep
+
 public final class VideoVlcPlayer extends VideoBasePlayer {
 
     private long mSeek = 0L; // 快进
@@ -31,11 +31,11 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     private lib.kalu.vlc.widget.VlcPlayer mVlcPlayer;
     private lib.kalu.vlc.widget.OnVlcInfoChangeListener mVlcPlayerListener;
 
-    public VideoVlcPlayer(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent eventApi) {
+    public VideoVlcPlayer( VideoPlayerApi playerApi,  VideoKernelApiEvent eventApi) {
         super(playerApi, eventApi);
     }
 
-    @NonNull
+    
     @Override
     public VideoVlcPlayer getPlayer() {
         return this;
@@ -56,7 +56,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(@NonNull Context context, @NonNull boolean logger, @NonNull int seekParameters) {
+    public void createDecoder( Context context,  boolean logger,  int seekParameters) {
         try {
             releaseDecoder(false, true);
             mVlcPlayer = new VlcPlayer(context);
@@ -68,7 +68,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(@NonNull Context context, @NonNull String url, @NonNull boolean prepareAsync) {
+    public void startDecoder( Context context,  String url,  boolean prepareAsync) {
         MPLogUtil.log("VideoVlcPlayer => startDecoder => mVlcPlayer = " + mVlcPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mVlcPlayer)
@@ -238,7 +238,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
      * 调整进度
      */
     @Override
-    public void seekTo(@NonNull long position) {
+    public void seekTo( long position) {
 //        try {
 //            mVlcPlayer.seekTo((int) time);
 //        } catch (IllegalStateException e) {
@@ -286,7 +286,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setSurface(@NonNull Surface sf, int w, int h) {
+    public void setSurface( Surface sf, int w, int h) {
         MPLogUtil.log("VideoVlcPlayer => setSurface => sf = " + sf + ", mVlcPlayer = " + mVlcPlayer + ", w = " + w + ", h = " + h);
         if (null != sf && null != mVlcPlayer) {
             mVlcPlayer.setSurface(sf, w, h);
@@ -391,7 +391,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setLive(@NonNull boolean live) {
+    public void setLive( boolean live) {
         this.mLive = live;
     }
 

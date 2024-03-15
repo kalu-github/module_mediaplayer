@@ -6,13 +6,13 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+
 
 import lib.kalu.mediaplayer.R;
 
 public class ComponentTitle extends RelativeLayout implements ComponentApi {
 
-    public ComponentTitle(@NonNull Context context) {
+    public ComponentTitle( Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_title, this, true);
     }
@@ -48,7 +48,7 @@ public class ComponentTitle extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void setComponentText(@NonNull String value) {
+    public final void setComponentText( String value) {
         try {
             setText(this, R.id.module_mediaplayer_controller_title_name, value);
         } catch (Exception e) {

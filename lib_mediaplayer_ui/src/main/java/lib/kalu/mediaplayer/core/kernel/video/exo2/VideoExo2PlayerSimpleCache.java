@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.core.kernel.video.exo2;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
+
 
 import com.google.android.exoplayer2.database.StandaloneDatabaseProvider;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
@@ -15,9 +15,9 @@ public final class VideoExo2PlayerSimpleCache {
     private static SimpleCache mSimpleCache;
 
     public static SimpleCache getSimpleCache(
-            @NonNull Context context,
-            @NonNull int cacheMax,
-            @NonNull String cacheDir) {
+             Context context,
+             int cacheMax,
+             String cacheDir) {
 
         if (null != mSimpleCache) {
             mSimpleCache.release();

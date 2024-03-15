@@ -1,6 +1,6 @@
 package lib.kalu.mediaplayer.util.download.m3u8.bean;
 
-import androidx.annotation.Keep;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * desc  : M3U8实体类
  */
-@Keep
+
 public class M3u8 implements Serializable {
 
     private String basepath;

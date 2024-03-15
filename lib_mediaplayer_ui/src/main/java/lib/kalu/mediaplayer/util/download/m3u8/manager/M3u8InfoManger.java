@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
 
-import androidx.annotation.Keep;
+
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ import lib.kalu.mediaplayer.util.download.m3u8.utils.M3u8FileUtils;
 /**
  * desc  : 获取M3U8信息的管理器
  */
-@Keep
+
 public class M3u8InfoManger {
 
     private static M3u8InfoManger mM3U8InfoManger;

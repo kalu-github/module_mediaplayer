@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.core.player.video;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
+
 
 import org.json.JSONObject;
 
@@ -105,7 +105,7 @@ interface VideoPlayerApiCache {
         return value;
     }
 
-    default void saveBundle(@NonNull Context context, @NonNull String url, @NonNull long position, @NonNull long duration) {
+    default void saveBundle( Context context,  String url,  long position,  long duration) {
 
         try {
             if (null == url || url.length() == 0)

@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
+
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -13,7 +13,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public class ComponentLoading extends RelativeLayout implements ComponentApi {
 
-    public ComponentLoading(@NonNull Context context) {
+    public ComponentLoading( Context context) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_loading, this, true);
     }
@@ -107,7 +107,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void setComponentImageUrl(@NonNull String url) {
+    public final void setComponentImageUrl( String url) {
         try {
             setImageUrl(this, R.id.module_mediaplayer_component_loading_bg, url);
         } catch (Exception e) {
@@ -123,7 +123,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void setComponentText(@NonNull String value) {
+    public final void setComponentText( String value) {
         try {
             setText(this, R.id.module_mediaplayer_component_loading_message, value);
         } catch (Exception e) {

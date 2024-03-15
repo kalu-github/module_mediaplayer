@@ -1,8 +1,6 @@
 package lib.kalu.mediaplayer.config.start;
 
-import androidx.annotation.Keep;
 
-@Keep
 public class StartBuilder {
 
     private long max;
@@ -77,7 +75,7 @@ public class StartBuilder {
         return builder;
     }
 
-    @Keep
+    
     public static class Builder {
 
         private long max = 0;

@@ -5,14 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
-import androidx.annotation.NonNull;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
 
 public final class BitmapUtil {
 
-    public static String saveDrawable(@NonNull Context context, @NonNull Drawable drawable) {
+    public static String saveDrawable( Context context,  Drawable drawable) {
         try {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
             Bitmap bitmap = bitmapDrawable.getBitmap();
@@ -23,7 +23,7 @@ public final class BitmapUtil {
         }
     }
 
-    public static String saveBitmap(@NonNull Context context, @NonNull Bitmap bitmap) {
+    public static String saveBitmap( Context context,  Bitmap bitmap) {
         try {
             // 1
             File dir = context.getFilesDir();
@@ -53,7 +53,7 @@ public final class BitmapUtil {
         }
     }
 
-    public static String saveScreenshot(@NonNull Context context, @NonNull Bitmap bitmap) {
+    public static String saveScreenshot( Context context,  Bitmap bitmap) {
         try {
             // 1
             File dir = context.getFilesDir();

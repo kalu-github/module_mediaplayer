@@ -1,28 +1,25 @@
 package lib.kalu.mediaplayer.buried;
 
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
 
-@Keep
 public interface BuriedEvent {
 
-    void onPlaying(@NonNull String url, @NonNull long position, @NonNull long duration);
+    void onPlaying(String url, long position, long duration);
 
-    void onExit(@NonNull String url, @NonNull long position, @NonNull long duration);
+    void onExit(String url, long position, long duration);
 
-    void onCompletion(@NonNull String url, @NonNull long position, @NonNull long duration);
+    void onCompletion(String url, long position, long duration);
 
-    void onError(@NonNull String url, @NonNull long position, @NonNull long duration);
+    void onError(String url, long position, long duration);
 
-    void onPause(@NonNull String url, @NonNull long position, @NonNull long duration);
+    void onPause(String url, long position, long duration);
 
-    void onResume(@NonNull String url, @NonNull long position, @NonNull long duration);
+    void onResume(String url, long position, long duration);
 
-    void onSeek(@NonNull String url, @NonNull long position, @NonNull long duration);
+    void onSeek(String url, long position, long duration);
 
-    void onWindowFull(@NonNull String url, @NonNull long position, @NonNull long duration);
+    void onWindowFull(String url, long position, long duration);
 
-    void onWindowFloat(@NonNull String url, @NonNull long position, @NonNull long duration);
+    void onWindowFloat(String url, long position, long duration);
 
-    void onWindowSimple(@NonNull String url, @NonNull long position, @NonNull long duration);
+    void onWindowSimple(String url, long position, long duration);
 }

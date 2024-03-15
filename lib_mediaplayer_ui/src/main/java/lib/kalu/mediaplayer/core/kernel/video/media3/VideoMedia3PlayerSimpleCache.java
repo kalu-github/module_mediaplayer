@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.core.kernel.video.media3;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
+
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.database.StandaloneDatabaseProvider;
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
@@ -16,9 +16,9 @@ public final class VideoMedia3PlayerSimpleCache {
     private static SimpleCache mSimpleCache;
 
     public static SimpleCache getSimpleCache(
-            @NonNull Context context,
-            @NonNull int cacheMax,
-            @NonNull String cacheDir) {
+             Context context,
+             int cacheMax,
+             String cacheDir) {
 
         if (null != mSimpleCache) {
             mSimpleCache.release();

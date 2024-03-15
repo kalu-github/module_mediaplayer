@@ -10,7 +10,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -161,7 +161,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
     }
 
     @Override
-    public void setKernel(@NonNull VideoKernelApi kernel) {
+    public void setKernel( VideoKernelApi kernel) {
         this.mKernel = kernel;
     }
 
@@ -276,7 +276,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
     int mVideoRotation = 0;
 
     @Override
-    public void setVideoSize(@NonNull int videoWidth, @NonNull int videoHeight) {
+    public void setVideoSize( int videoWidth,  int videoHeight) {
         try {
             if (videoWidth <= 0 || videoHeight <= 0)
                 throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
@@ -365,7 +365,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
                 throw new Exception("mHandler warning: " + mHandler);
             mHandler = new Handler(Looper.getMainLooper()) {
                 @Override
-                public void handleMessage(@NonNull Message msg) {
+                public void handleMessage( Message msg) {
                     super.handleMessage(msg);
                     if (msg.what == 9899) {
                         if (null != mKernel) {

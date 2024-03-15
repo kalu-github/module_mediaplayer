@@ -2,13 +2,13 @@ package lib.kalu.mediaplayer.keycode;
 
 import android.view.KeyEvent;
 
-import androidx.annotation.Keep;
+
 
 /**
  * description: test
  * created by kalu on 2021/9/27
  */
-@Keep
+
 public class KeycodeSimulator extends KeycodeTV {
 
     @Override

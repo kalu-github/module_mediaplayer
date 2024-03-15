@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import androidx.annotation.Keep;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,7 +29,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 /**
  * desc  : 直播管理器
  */
-@Keep
+
 public class M3u8LiveManger {
 
     private static M3u8LiveManger mM3U8LiveManger;

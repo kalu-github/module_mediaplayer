@@ -58,7 +58,7 @@ repositories {
     }
 }
 dependencies {
-    compileOnly('androidx.appcompat:appcompat:1.6.1')
+    compileOnly 'androidx.annotation:annotation:1.7.1'
     compileOnly('com.squareup.okhttp3:okhttp:3.14.9')
     // ijk
     compileOnly files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_release_20231129.aar')

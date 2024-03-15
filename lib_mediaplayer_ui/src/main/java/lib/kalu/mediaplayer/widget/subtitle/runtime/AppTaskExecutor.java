@@ -25,7 +25,7 @@
 
 package lib.kalu.mediaplayer.widget.subtitle.runtime;
 
-import androidx.annotation.NonNull;
+
 
 import java.util.concurrent.Executor;
 
@@ -40,7 +40,7 @@ public class AppTaskExecutor extends TaskExecutor {
 
     private static AppTaskExecutor sInstance;
 
-    @NonNull
+    
     public static TaskExecutor getInstance() {
         if (sInstance == null) {
             synchronized (AppTaskExecutor.class) {
@@ -81,14 +81,14 @@ public class AppTaskExecutor extends TaskExecutor {
 
     private static Executor sDeskIO = new Executor() {
         @Override
-        public void execute(@NonNull final Runnable command) {
+        public void execute( final Runnable command) {
             getInstance().executeOnDeskIO(command);
         }
     };
 
     private static Executor sMainThread = new Executor() {
         @Override
-        public void execute(@NonNull final Runnable command) {
+        public void execute( final Runnable command) {
             getInstance().executeOnMainThread(command);
         }
     };

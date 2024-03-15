@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
+
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -221,7 +221,7 @@ interface VideoPlayerApiBase {
     default void removeOnPlayerChangeListener() {
     }
 
-    default void setOnPlayerChangeListener(@NonNull OnPlayerChangeListener l) {
+    default void setOnPlayerChangeListener( OnPlayerChangeListener l) {
     }
 
     default void callPlayerEvent(@PlayerType.StateType.Value int state) {
@@ -257,7 +257,7 @@ interface VideoPlayerApiBase {
         }
     }
 
-    default void callUpdateSeekProgress(@NonNull long position, @NonNull long duration,  @NonNull long max) {
+    default void callUpdateSeekProgress( long position,  long duration,   long max) {
         try {
             ViewGroup viewGroup = getBaseControlViewGroup();
             int childCount = viewGroup.getChildCount();
@@ -310,7 +310,7 @@ interface VideoPlayerApiBase {
         }
     }
 
-    default void setPlayWhenReady(@NonNull boolean playWhenReady) {
+    default void setPlayWhenReady( boolean playWhenReady) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -335,11 +335,11 @@ interface VideoPlayerApiBase {
 
     VideoKernelApi getVideoKernel();
 
-    void setVideoKernel(@NonNull VideoKernelApi kernel);
+    void setVideoKernel( VideoKernelApi kernel);
 
-    void start(@NonNull String url);
+    void start( String url);
 
-    void start(@NonNull StartBuilder builder, @NonNull String playUrl);
+    void start( StartBuilder builder,  String playUrl);
 
-    void start(@NonNull StartBuilder builder, @NonNull String playUrl, @NonNull boolean retryBuffering);
+    void start( StartBuilder builder,  String playUrl,  boolean retryBuffering);
 }

@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.util;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
@@ -14,7 +14,7 @@ public final class MPLogUtil {
     private static String mTag = "MP_COMMON";
     private static boolean mLog = true;
 
-    public static void setLogger(@NonNull PlayerBuilder config) {
+    public static void setLogger( PlayerBuilder config) {
 
         int videoKernel = config.getKernel();
         boolean log = config.isLog();
@@ -75,11 +75,11 @@ public final class MPLogUtil {
         return mLog;
     }
 
-    public static void log(@NonNull String message) {
+    public static void log( String message) {
         log(message, null);
     }
 
-    public static void log(@NonNull String message, @Nullable Throwable throwable) {
+    public static void log( String message, @Nullable Throwable throwable) {
 
         if (!mLog)
             return;

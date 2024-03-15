@@ -15,8 +15,8 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,7 +26,7 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-@Keep
+
 public interface VideoRenderApi {
 
     void init();
@@ -35,7 +35,7 @@ public interface VideoRenderApi {
 
     void release();
 
-    void setLayoutParams(@NonNull ViewGroup.LayoutParams params);
+    void setLayoutParams( ViewGroup.LayoutParams params);
 
     void setScaleX(float v);
 
@@ -44,7 +44,7 @@ public interface VideoRenderApi {
      *
      * @param player player
      */
-    void setKernel(@NonNull VideoKernelApi player);
+    void setKernel( VideoKernelApi player);
 
     /**
      * 截图
@@ -75,12 +75,12 @@ public interface VideoRenderApi {
      * 注意：VideoView的宽高一定要定死，否者以下算法不成立
      * 借鉴于网络
      */
-    default int[] doMeasureSpec(@NonNull int widthMeasureSpec,
-                                @NonNull int heightMeasureSpec,
+    default int[] doMeasureSpec( int widthMeasureSpec,
+                                 int heightMeasureSpec,
                                 @PlayerType.ScaleType.Value int videoScaleType,
                                 @PlayerType.RotationType.Value int videoRotation,
-                                @NonNull int videoWidth,
-                                @NonNull int videoHeight) {
+                                 int videoWidth,
+                                 int videoHeight) {
 
         if (videoScaleType == 0) {
             videoScaleType = PlayerManager.getInstance().getConfig().getScaleType();
@@ -149,7 +149,7 @@ public interface VideoRenderApi {
         }
     }
 
-    default String saveBitmap(@NonNull Context context, @NonNull Bitmap bitmap) {
+    default String saveBitmap( Context context,  Bitmap bitmap) {
         try {
             // 1
             File dir = context.getFilesDir();

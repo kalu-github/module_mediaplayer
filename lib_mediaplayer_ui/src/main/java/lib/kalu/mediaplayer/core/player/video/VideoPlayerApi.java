@@ -4,7 +4,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.SeekBar;
 
-import androidx.annotation.NonNull;
+
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
@@ -12,7 +12,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerApiBase, VideoPlayerApiKernel, VideoPlayerApiDevice, VideoPlayerApiComponent, VideoPlayerApiCache, VideoPlayerApiRender {
 
-    default boolean dispatchKeyEventPlayer(@NonNull KeyEvent event) {
+    default boolean dispatchKeyEventPlayer( KeyEvent event) {
         boolean isFloat = isFloat();
         boolean isFull = isFull();
         dispatchKeyEventComponents(event);
@@ -180,7 +180,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
         }
     }
 
-    default void checkOnDetachedFromWindow(@NonNull boolean releaseTag) {
+    default void checkOnDetachedFromWindow( boolean releaseTag) {
         try {
             String url = getUrl();
             if (null == url || url.length() <= 0)

@@ -1,14 +1,14 @@
 package lib.kalu.mediaplayer.core.kernel.video.ijk;
 
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
+
+
 
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactory;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 
 
-@Keep
+
 public class VideoIjkPlayerFactory implements VideoKernelFactory<VideoIjkPlayer> {
 
     private boolean mUseMediaCodec;
@@ -22,7 +22,7 @@ public class VideoIjkPlayerFactory implements VideoKernelFactory<VideoIjkPlayer>
     }
 
     @Override
-    public VideoIjkPlayer createKernel(@NonNull VideoPlayerApi playerApi, @NonNull VideoKernelApiEvent event) {
+    public VideoIjkPlayer createKernel( VideoPlayerApi playerApi,  VideoKernelApiEvent event) {
         return new VideoIjkPlayer(mUseMediaCodec, playerApi, event);
     }
 }
