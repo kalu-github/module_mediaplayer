@@ -642,7 +642,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             playEnd();
                         }
                     } catch (Exception e) {
-                        MPLogUtil.log("VideoPlayerApiKernel => onUpdateTimeMillis => " + e.getMessage());
+//                        MPLogUtil.log("VideoPlayerApiKernel => onUpdateTimeMillis => " + e.getMessage());
                         callUpdateTimeMillis(seek, position, duration, max);
                         callProgressListener(position, duration);
                     }

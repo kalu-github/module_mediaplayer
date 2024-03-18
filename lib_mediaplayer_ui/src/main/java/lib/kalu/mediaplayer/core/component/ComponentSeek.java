@@ -92,7 +92,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 throw new Exception("seekbar warning: user current action down");
             onUpdateSeekProgress(true, position, duration, max);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentSeek => onUpdateTimeMillis => " + e.getMessage());
+//            MPLogUtil.log("ComponentSeek => onUpdateTimeMillis => " + e.getMessage());
         }
     }
 

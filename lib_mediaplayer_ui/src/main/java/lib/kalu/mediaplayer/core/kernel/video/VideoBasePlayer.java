@@ -49,7 +49,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
             boolean looping = isLooping();
             eventApi.onUpdateTimeMillis(looping, max, seek, position, duration);
         } catch (Exception e) {
-            MPLogUtil.log("VideoBasePlayer => onUpdateTimeMillis => " + e.getMessage());
+//            MPLogUtil.log("VideoBasePlayer => onUpdateTimeMillis => " + e.getMessage());
         }
     }
 

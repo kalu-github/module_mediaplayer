@@ -38,7 +38,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
 //            TextView v2 = findViewById(R.id.module_mediaplayer_component_net_unit);
 //            v2.setText(unit);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentNet => onUpdateTimeMillis => " + e.getMessage());
+//            MPLogUtil.log("ComponentNet => onUpdateTimeMillis => " + e.getMessage());
         }
     }
 
