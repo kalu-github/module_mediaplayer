@@ -9,7 +9,6 @@ import android.view.SurfaceHolder;
 import androidx.annotation.FloatRange;
 
 
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -38,12 +37,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     private boolean mUseMediaCodec;
     private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer = null;
 
-    public VideoIjkPlayer( boolean useMediaCodec,  VideoPlayerApi musicApi,  VideoKernelApiEvent eventApi) {
+    public VideoIjkPlayer(boolean useMediaCodec, VideoPlayerApi musicApi, VideoKernelApiEvent eventApi) {
         super(musicApi, eventApi);
         mUseMediaCodec = useMediaCodec;
     }
 
-    
+
     @Override
     public VideoIjkPlayer getPlayer() {
         return this;
@@ -64,7 +63,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder( Context context,  boolean logger,  int seekParameters) {
+    public void createDecoder(Context context, boolean logger, int seekParameters) {
         try {
             releaseDecoder(false, true);
             mIjkPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
@@ -89,7 +88,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder( Context context,  String url,  boolean prepareAsync) {
+    public void startDecoder(Context context, String url, boolean prepareAsync) {
         MPLogUtil.log("VideoIjkPlayer => startDecoder => mIjkPlayer = " + mIjkPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mIjkPlayer)
@@ -326,7 +325,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setSurface( Surface surface, int w, int h) {
+    public void setSurface(Surface surface, int w, int h) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -632,7 +631,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setLive( boolean live) {
+    public void setLive(boolean live) {
         this.mLive = live;
     }
 
@@ -683,7 +682,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public boolean switchTrack( int trackId) {
+    public boolean switchTrack(int trackId) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -709,26 +708,25 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     break;
                 // 缓冲开始
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
                     break;
                 // 缓冲结束
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
                     onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
-                    break;
-                // 首帧画面 => 快进
-                case IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE:
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
-                    break;
-                case IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START:
-                case IMediaPlayer.MEDIA_INFO_AUDIO_SEEK_RENDERING_START:
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
                     break;
                 // 首帧画面 => 开播
                 case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
                     onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
                     onEvent(PlayerType.KernelType.IJK, what);
-//                    if (!mPlayWhenReady) {
-//                        mPlayWhenReady = true;
-//                        pause();
-//                    }
+                    break;
+                // 首帧画面 => 快进
+                case IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE:
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+                    break;
+                case IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START:
+                case IMediaPlayer.MEDIA_INFO_AUDIO_SEEK_RENDERING_START:
                     break;
                 // 通知
                 default:
