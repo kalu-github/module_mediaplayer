@@ -379,6 +379,15 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+                try {
+                    long seek = getSeek();
+                    if (seek <= 0)
+                        throw new Exception("seek warning: " + seek);
+                    setSeek(0);
+                    seekTo(seek);
+                } catch (Exception e) {
+                    MPLogUtil.log("VideoFFmpegPlayer => onInfo => " + e.getMessage());
+                }
                 if (!mPlayWhenReady) {
                     pause();
                 }
@@ -391,14 +400,6 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         @Override
         public void onPrepared(FFmpegPlayer mp) {
             mPrepared = true;
-            try {
-                long seek = getSeek();
-                if (seek <= 0)
-                    throw new Exception("seek warning: " + seek);
-                seekTo(seek);
-            } catch (Exception e) {
-                MPLogUtil.log("VideoFFmpegPlayer => onPrepared => " + e.getMessage());
-            }
             start();
         }
     };

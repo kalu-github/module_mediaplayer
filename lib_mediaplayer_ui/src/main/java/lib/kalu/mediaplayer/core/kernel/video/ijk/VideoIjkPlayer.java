@@ -720,6 +720,15 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
                     onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
                     onEvent(PlayerType.KernelType.IJK, what);
+                    try {
+                        long seek = getSeek();
+                        if (seek <= 0)
+                            throw new Exception("seek warning: " + seek);
+                        setSeek(0);
+                        seekTo(seek);
+                    } catch (Exception e) {
+                        MPLogUtil.log("VideoIjkPlayer => onInfo => " + e.getMessage());
+                    }
                     break;
                 // 首帧画面 => 快进
                 case IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE:
@@ -772,15 +781,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public void onPrepared(IMediaPlayer iMediaPlayer) {
             mPrepared = true;
-            try {
-                long seek = getSeek();
-                if (seek <= 0)
-                    throw new Exception("seek warning: " + seek);
-                seekTo(seek);
-            } catch (Exception e) {
-                MPLogUtil.log("VideoIjkPlayer => onPrepared => " + e.getMessage());
-                start();
-            }
+            start();
         }
     };
 

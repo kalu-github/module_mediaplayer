@@ -299,6 +299,15 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //                                    mPlayWhenReady = true;
 //                                    pause();
 //                                }
+                            try {
+                                long seek = getSeek();
+                                if (seek <= 0)
+                                    throw new Exception("seek warning: " + seek);
+                                setSeek(0);
+                                seekTo(seek);
+                            } catch (Exception e) {
+                                MPLogUtil.log("VideoExo2Player => onPlaybackStateChanged => " + e.getMessage());
+                            }
                         } catch (Exception e) {
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
                         }
@@ -324,14 +333,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 @Override
                 public void onRenderedFirstFrame(EventTime eventTime, Object output, long renderTimeMs) {
                     MPLogUtil.log("VideoExo2Player => onRenderedFirstFrame =>");
-                    try {
-                        long seek = getSeek();
-                        if (seek <= 0)
-                            throw new Exception("seek warning: " + seek);
-                        seekTo(seek);
-                    } catch (Exception e) {
-                        MPLogUtil.log("VideoExo2Player => onRenderedFirstFrame => " + e.getMessage());
-                    }
                 }
 
                 @Override

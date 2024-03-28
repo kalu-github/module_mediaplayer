@@ -6,14 +6,13 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 
-
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public class ComponentLoading extends RelativeLayout implements ComponentApi {
 
-    public ComponentLoading( Context context) {
+    public ComponentLoading(Context context) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_loading, this, true);
     }
@@ -58,9 +57,17 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
 
     @Override
     public final void show() {
+        long duration;
+        try {
+            duration = getPlayerView().getDuration();
+        } catch (Exception e) {
+            duration = 0;
+        }
         try {
             bringToFront();
-            findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
+            if (duration <= 0) {
+                findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.VISIBLE);
+            }
             findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.VISIBLE);
             boolean full = isFull();
             findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(full ? View.VISIBLE : View.INVISIBLE);
@@ -107,7 +114,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void setComponentImageUrl( String url) {
+    public final void setComponentImageUrl(String url) {
         try {
             setImageUrl(this, R.id.module_mediaplayer_component_loading_bg, url);
         } catch (Exception e) {
@@ -123,7 +130,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void setComponentText( String value) {
+    public final void setComponentText(String value) {
         try {
             setText(this, R.id.module_mediaplayer_component_loading_message, value);
         } catch (Exception e) {

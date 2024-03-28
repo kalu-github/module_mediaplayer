@@ -442,10 +442,15 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
-//                if (!mPlayWhenReady) {
-//                    mPlayWhenReady = true;
-//                    pause();
-//                }
+                try {
+                    long seek = getSeek();
+                    if (seek <= 0)
+                        throw new Exception("seek warning: " + seek);
+                    setSeek(0);
+                    seekTo(seek);
+                } catch (Exception e) {
+                    MPLogUtil.log("VideoAndroidPlayer => onInfo => " + e.getMessage());
+                }
             }
             // 开始播放2
             else if (what == PlayerType.EventType.EVENT_VIDEO_START_903) {
@@ -472,15 +477,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public void onPrepared(MediaPlayer mp) {
             mPrepared = true;
-            try {
-                long seek = getSeek();
-                if (seek <= 0)
-                    throw new Exception("seek warning: " + seek);
-                seekTo(seek);
-            } catch (Exception e) {
-                MPLogUtil.log("VideoAndroidPlayer => onPrepared => " + e.getMessage());
-                start();
-            }
+            start();
         }
     };
 

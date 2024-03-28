@@ -540,7 +540,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:hint="输入视频地址"
-                android:text="test_002.mpeg" />
+                android:text="http://qcloudcdn.a311.ottcn.com/data_center/videos/LIB/TELEPLAY/2023/09/21/08def05d-cd33-40cd-9783-465d1042e1d0_transcode_1137860.m3u8" />
 
             <Button
                 android:id="@+id/main_button1"

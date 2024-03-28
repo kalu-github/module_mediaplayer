@@ -283,10 +283,15 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                                 throw new Exception("mPrepared warning: true");
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_START);
-//                                if (!mPlayWhenReady) {
-//                                    mPlayWhenReady = true;
-//                                    pause();
-//                                }
+                            try {
+                                long seek = getSeek();
+                                if (seek <= 0)
+                                    throw new Exception("seek warning: " + seek);
+                                setSeek(0);
+                                seekTo(seek);
+                            } catch (Exception e) {
+                                MPLogUtil.log("VideoMedia3Player => onPlaybackStateChanged => " + e.getMessage());
+                            }
                         } catch (Exception e) {
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
                         }
@@ -312,14 +317,6 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 @Override
                 public void onRenderedFirstFrame(EventTime eventTime, Object output, long renderTimeMs) {
                     MPLogUtil.log("VideoMedia3Player => onRenderedFirstFrame =>");
-                    try {
-                        long seek = getSeek();
-                        if (seek <= 0)
-                            throw new Exception("seek warning: " + seek);
-                        seekTo(seek);
-                    } catch (Exception e) {
-                        MPLogUtil.log("VideoMedia3Player => onRenderedFirstFrame => " + e.getMessage());
-                    }
                 }
 
                 @Override
