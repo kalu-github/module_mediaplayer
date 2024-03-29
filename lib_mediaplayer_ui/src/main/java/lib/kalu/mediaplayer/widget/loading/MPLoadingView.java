@@ -18,6 +18,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.DimenRes;
 
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
@@ -25,7 +26,6 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 @SuppressLint("AppCompatCustomView")
-
 public class MPLoadingView extends View {
 
     private int mDelayMillis = 120;
@@ -41,8 +41,6 @@ public class MPLoadingView extends View {
     private int mColorBackground = Color.TRANSPARENT;
     @ColorInt
     private int mColorRound = Color.GRAY;
-
-    private Handler mHandler = null;
 
     public MPLoadingView(Context context) {
         super(context);
@@ -83,85 +81,38 @@ public class MPLoadingView extends View {
     }
 
     @Override
-    public final void setVisibility(int visibility) {
-        setEnabled(visibility == View.VISIBLE);
-        super.setVisibility(visibility);
-        if (visibility != View.VISIBLE) {
-            cleanMessage();
-        }
-    }
-
-    @Override
-    protected void onVisibilityChanged( View changedView, int visibility) {
-        setEnabled(visibility == View.VISIBLE);
-        super.onVisibilityChanged(changedView, visibility);
+    protected void onVisibilityChanged(View changedView, int visibility) {
         MPLogUtil.log("MPLoadingView => onVisibilityChanged => visibility = " + visibility);
-        if (visibility != View.VISIBLE) {
-            cleanMessage();
-        }
+        clearMsg();
+        super.onVisibilityChanged(changedView, visibility);
     }
 
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
-        setEnabled(visibility == View.VISIBLE);
-        super.onWindowVisibilityChanged(visibility);
         MPLogUtil.log("MPLoadingView => onWindowVisibilityChanged => visibility = " + visibility);
-        if (visibility != View.VISIBLE) {
-            cleanMessage();
-        }
+        clearMsg();
+        super.onWindowVisibilityChanged(visibility);
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        setEnabled(false);
+        clearMsg();
         super.onDetachedFromWindow();
-        clearHandler();
     }
 
 
     @Override
     protected void onAttachedToWindow() {
-        setEnabled(true);
+        clearMsg();
         super.onAttachedToWindow();
-        checkHandler();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        clearLoading(canvas);
-        drawLoading(canvas);
-    }
+//        super.onDraw(canvas);
 
-    private void clearLoading( Canvas canvas) {
         try {
-            mPaint.reset();
-            mPaint.setColor(Color.TRANSPARENT);
-            int width = getWidth();
-            int height = getHeight();
-            mRect.set(0, 0, width, height);
-            canvas.drawRect(mRect, mPaint);
-//            // 方法一：
-//            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC_OVER);
-//            //  方法二：
-//            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-//            //  方法三：
-//            Paint paint = new Paint();
-//            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-//            canvas.drawPaint(paint);
-//            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
-        } catch (Exception e) {
-            MPLogUtil.log("MPLoadingView => clearLoading => " + e.getMessage());
-        }
-    }
-
-    private void drawLoading( Canvas canvas) {
-        try {
-            boolean enabled = isEnabled();
-            if (!enabled)
-                throw new Exception("enabled warning: false");
             int visibility = getVisibility();
-            MPLogUtil.log("MPLoadingView => onDraw => mLoop = " + mLoop + ", mCount = " + mCount + ", visibility = " + visibility);
             if (visibility != View.VISIBLE)
                 throw new Exception("visibility warning: " + visibility);
             // 循环次数
@@ -220,88 +171,86 @@ public class MPLoadingView extends View {
 
             // delay
             mLoop = mLoop + 1;
-            // update
-            updateMessage();
+            // looping
+            loopingMsg();
         } catch (Exception e) {
-            MPLogUtil.log("MPLoadingView => drawLoading => " + e.getMessage());
+            MPLogUtil.log("MPLoadingView => onDraw => " + e.getMessage());
+            try {
+                mPaint.reset();
+                mPaint.setColor(Color.TRANSPARENT);
+                int width = getWidth();
+                int height = getHeight();
+                mRect.set(0, 0, width, height);
+                canvas.drawRect(mRect, mPaint);
+//            // 方法一：
+//            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.SRC_OVER);
+//            //  方法二：
+//            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+//            //  方法三：
+//            Paint paint = new Paint();
+//            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+//            canvas.drawPaint(paint);
+//            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+            } catch (Exception e1) {
+                MPLogUtil.log("MPLoadingView => onDraw => " + e.getMessage());
+            }
         }
     }
 
-    private void cleanMessage() {
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            try {
+                int visibility = getVisibility();
+                if (visibility != View.VISIBLE)
+                    throw new Exception();
+                if (msg.what != 9001)
+                    throw new Exception("msg.what error: " + msg.what);
+                invalidate();
+            } catch (Exception e) {
+                MPLogUtil.log("MPLoadingView => handleMessage => " + e.getMessage());
+            }
+        }
+    };
+
+    private void clearMsg() {
         try {
             if (null == mHandler)
-                throw new Exception("mHandler warning: null");
+                throw new Exception("error: null == mHandler");
             mHandler.removeCallbacksAndMessages(null);
         } catch (Exception e) {
-            MPLogUtil.log("MPLoadingView => cleanMessage => " + e.getMessage());
+            MPLogUtil.log("MPLoadingView => clearMsg => " + e.getMessage());
         }
     }
 
-    private void checkHandler() {
-        try {
-            if (null != mHandler)
-                throw new Exception("mHandler warning: null");
-            mHandler = new Handler(Looper.getMainLooper()) {
-                @Override
-                public void handleMessage( Message msg) {
-                    super.handleMessage(msg);
-                    cleanMessage();
-                    try {
-                        int visibility = getVisibility();
-                        if (visibility != View.VISIBLE)
-                            throw new Exception();
-                        if (msg.what != 9001)
-                            throw new Exception("msg.what error: " + msg.what);
-                        postInvalidate();
-                    } catch (Exception e) {
-                        MPLogUtil.log("MPLoadingView => checkHandler => handleMessage => " + e.getMessage());
-                    }
-                }
-            };
-        } catch (Exception e) {
-            MPLogUtil.log("MPLoadingView => checkHandler => " + e.getMessage());
-        }
-    }
-
-    private void clearHandler() {
+    private void loopingMsg() {
         try {
             if (null == mHandler)
-                throw new Exception("mHandler warning: null");
-            mHandler.removeCallbacksAndMessages(null);
-            mHandler = null;
-        } catch (Exception e) {
-            MPLogUtil.log("MPLoadingView => clearHandler => " + e.getMessage());
-        }
-    }
-
-    private void updateMessage() {
-        checkHandler();
-        try {
+                throw new Exception("error: null == mHandler");
             mHandler.sendEmptyMessageDelayed(9001, mDelayMillis);
-            MPLogUtil.log("MPLoadingView => updateMessage => succ");
         } catch (Exception e) {
-            MPLogUtil.log("MPLoadingView => updateMessage => " + e.getMessage());
+            MPLogUtil.log("MPLoadingView => loopingMsg => " + e.getMessage());
         }
     }
 
     /*************/
 
-    
-    public void setDelayMillis( int delayMillis) {
+
+    public void setDelayMillis(int delayMillis) {
         this.mDelayMillis = delayMillis;
     }
 
-    
-    public void setCount( int count) {
+
+    public void setCount(int count) {
         this.mCount = count;
     }
 
-    
-    public void setRate( float rate) {
+
+    public void setRate(float rate) {
         this.mRate = rate;
     }
 
-    
+
     public void setRadius(@DimenRes int resId) {
         try {
             float dimension = getResources().getDimension(resId);
