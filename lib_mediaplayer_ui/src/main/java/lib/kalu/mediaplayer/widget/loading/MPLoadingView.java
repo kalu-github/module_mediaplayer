@@ -28,7 +28,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 @SuppressLint("AppCompatCustomView")
 public class MPLoadingView extends View {
 
-    private int mDelayMillis = 120;
+    private int mDelayMillis = 200;
     private int mLoop = 0;
 
     private int mCount = 8;
@@ -83,8 +83,8 @@ public class MPLoadingView extends View {
     @Override
     protected void onVisibilityChanged(View changedView, int visibility) {
         MPLogUtil.log("MPLoadingView => onVisibilityChanged => visibility = " + visibility);
-        clearMsg();
         super.onVisibilityChanged(changedView, visibility);
+        loopingMsg();
     }
 
     @Override
@@ -171,8 +171,6 @@ public class MPLoadingView extends View {
 
             // delay
             mLoop = mLoop + 1;
-            // looping
-            loopingMsg();
         } catch (Exception e) {
             MPLogUtil.log("MPLoadingView => onDraw => " + e.getMessage());
             try {
@@ -207,6 +205,8 @@ public class MPLoadingView extends View {
                 if (msg.what != 9001)
                     throw new Exception("msg.what error: " + msg.what);
                 invalidate();
+                // looping
+                loopingMsg();
             } catch (Exception e) {
                 MPLogUtil.log("MPLoadingView => handleMessage => " + e.getMessage());
             }
@@ -224,6 +224,7 @@ public class MPLoadingView extends View {
     }
 
     private void loopingMsg() {
+        clearMsg();
         try {
             if (null == mHandler)
                 throw new Exception("error: null == mHandler");
