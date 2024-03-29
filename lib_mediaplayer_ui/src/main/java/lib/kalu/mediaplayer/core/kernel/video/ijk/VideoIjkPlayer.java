@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.widget.Toast;
 
 import androidx.annotation.FloatRange;
 
@@ -488,8 +489,16 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
                 }
             }
-            MPLogUtil.log("VideoIjkPlayer => seekTo => succ");
-            mIjkPlayer.seekTo(seek);
+            long duration = getDuration();
+            if (seek > duration) {
+                MPLogUtil.log("VideoIjkPlayer => seekTo => seek = " + seek + ", duration = " + duration);
+                stop(true);
+                release(true);
+                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_SEEK_TIME);
+            } else {
+                MPLogUtil.log("VideoIjkPlayer => seekTo => succ");
+                mIjkPlayer.seekTo(seek);
+            }
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => seekTo => " + e.getMessage());
         }

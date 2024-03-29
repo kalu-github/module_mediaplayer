@@ -240,6 +240,7 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface EventType {
+        int EVENT_ERROR_SEEK_TIME = 7_000;
         int EVENT_ERROR_URL = 7_001;
         int EVENT_ERROR_RETRY = 7_002;
         int EVENT_ERROR_SOURCE = 7_003;
@@ -280,6 +281,7 @@ public @interface PlayerType {
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
+                EVENT_ERROR_SEEK_TIME,
                 EVENT_ERROR_URL,
                 EVENT_ERROR_RETRY,
                 EVENT_ERROR_SOURCE,

@@ -258,11 +258,21 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
                 }
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_CLOSEST);
-                mMediaPlayer.seekTo((int) seek);
+
+            long duration = getDuration();
+            if (seek > duration) {
+                MPLogUtil.log("VideoAndroidPlayer => seekTo => seek = " + seek + ", duration = " + duration);
+                stop(true);
+                release(true);
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_SEEK_TIME);
             } else {
-                mMediaPlayer.seekTo((int) seek);
+                MPLogUtil.log("VideoAndroidPlayer => seekTo => succ");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_CLOSEST);
+                    mMediaPlayer.seekTo((int) seek);
+                } else {
+                    mMediaPlayer.seekTo((int) seek);
+                }
             }
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => seekTo => " + e.getMessage());

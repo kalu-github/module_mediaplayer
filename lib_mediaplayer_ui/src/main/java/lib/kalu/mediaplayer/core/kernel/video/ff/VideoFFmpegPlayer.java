@@ -233,7 +233,16 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("mFFmpegPlayer error: null");
             if (seek < 0)
                 throw new Exception("seek error: " + seek);
-            mFFmpegPlayer.seekTo((int) seek);
+            long duration = getDuration();
+            if (seek > duration) {
+                MPLogUtil.log("VideoFFmpegPlayer => seekTo => seek = " + seek + ", duration = " + duration);
+                stop(true);
+                release(true);
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_SEEK_TIME);
+            } else {
+                MPLogUtil.log("VideoFFmpegPlayer => seekTo => succ");
+                mFFmpegPlayer.seekTo((int) seek);
+            }
         } catch (Exception e) {
             MPLogUtil.log("VideoFFmpegPlayer => seekTo => " + e.getMessage());
         }

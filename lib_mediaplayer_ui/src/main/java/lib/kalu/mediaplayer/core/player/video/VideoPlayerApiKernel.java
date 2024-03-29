@@ -27,7 +27,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         VideoPlayerApiRender,
         VideoPlayerApiDevice {
 
-    default void setData( String data) {
+    default void setData(String data) {
         try {
             ((View) this).setTag(R.id.module_mediaplayer_id_player_data, data);
         } catch (Exception e) {
@@ -47,19 +47,19 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void start( String url) {
+    default void start(String url) {
         StartBuilder.Builder builder = new StartBuilder.Builder();
         StartBuilder build = builder.build();
         start(build, url, false);
     }
 
 
-    default void start( StartBuilder builder,  String playUrl) {
+    default void start(StartBuilder builder, String playUrl) {
         start(builder, playUrl, false);
     }
 
     @Override
-    default void start( StartBuilder startBuilder,  String playUrl,  boolean retryBuffering) {
+    default void start(StartBuilder startBuilder, String playUrl, boolean retryBuffering) {
         try {
             if (null == playUrl || playUrl.length() == 0)
                 throw new Exception("playUrl error: " + playUrl);
@@ -87,7 +87,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void updatePlayerData( StartBuilder data,  String playUrl) {
+    default void updatePlayerData(StartBuilder data, String playUrl) {
         try {
             if (null == data)
                 throw new Exception("data error: null");
@@ -177,15 +177,15 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         release(true, true, true, true);
     }
 
-    default void release( boolean releaseTag, boolean isFromUser) {
+    default void release(boolean releaseTag, boolean isFromUser) {
         release(true, releaseTag, isFromUser, true);
     }
 
-    default void release( boolean releaseTag, boolean isFromUser, boolean isMainThread) {
+    default void release(boolean releaseTag, boolean isFromUser, boolean isMainThread) {
         release(true, releaseTag, isFromUser, isMainThread);
     }
 
-    default void release( boolean clearListener,  boolean releaseTag, boolean isFromUser, boolean isMainThread) {
+    default void release(boolean clearListener, boolean releaseTag, boolean isFromUser, boolean isMainThread) {
         try {
             checkVideoKernel();
             if (releaseTag) {
@@ -245,7 +245,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         restart(0, false);
     }
 
-    default void restart( long seek,  boolean retryBuffering) {
+    default void restart(long seek, boolean retryBuffering) {
         try {
             String url = getUrl();
             if (null == url || url.length() == 0)
@@ -314,7 +314,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void setSeek( long position) {
+    default void setSeek(long position) {
         try {
             if (position < 0)
                 throw new Exception("position error: " + position);
@@ -370,7 +370,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void seekTo( boolean force) {
+    default void seekTo(boolean force) {
         StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setMax(getMax());
         builder.setSeek(getSeek());
@@ -383,19 +383,19 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         seekTo(force, build);
     }
 
-    default void seekTo( long seek) {
+    default void seekTo(long seek) {
         seekTo(false, seek, getMax(), isLooping());
     }
 
-    default void seekTo( long seek,  long max) {
+    default void seekTo(long seek, long max) {
         seekTo(false, seek, max, isLooping());
     }
 
-    default void seekTo( boolean force,  long seek) {
+    default void seekTo(boolean force, long seek) {
         seekTo(force, seek, getMax(), isLooping());
     }
 
-    default void seekTo( boolean force,  long seek,  long max,  boolean looping) {
+    default void seekTo(boolean force, long seek, long max, boolean looping) {
         StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setMax(max);
         builder.setSeek(seek);
@@ -407,7 +407,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         seekTo(force, build);
     }
 
-    default void seekTo( boolean force,  StartBuilder builder) {
+    default void seekTo(boolean force, StartBuilder builder) {
 
         try {
             checkVideoKernel();
@@ -481,7 +481,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             throw new Exception("check kernel is null");
     }
 
-    default void resumeVideoKernel( boolean ignore) {
+    default void resumeVideoKernel(boolean ignore) {
         setPlayWhenReady(true);
         try {
             // 1
@@ -501,7 +501,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void stopVideoKernel( boolean call,  boolean isMainThread) {
+    default void stopVideoKernel(boolean call, boolean isMainThread) {
         try {
             // 1
             checkVideoKernel();
@@ -517,7 +517,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void pauseVideoKernel( boolean ignore) {
+    default void pauseVideoKernel(boolean ignore) {
         setPlayWhenReady(false);
         try {
             // 1
@@ -564,7 +564,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void updateVideoKernel( StartBuilder builder) {
+    default void updateVideoKernel(StartBuilder builder) {
         try {
             // 1
             checkVideoKernel();
@@ -579,7 +579,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void initVideoKernel( StartBuilder bundle,  String playUrl) {
+    default void initVideoKernel(StartBuilder bundle, String playUrl) {
         try {
             // 1
             checkVideoKernel();
@@ -606,7 +606,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void createVideoKernel( StartBuilder builder,  PlayerBuilder playerBuilder) {
+    default void createVideoKernel(StartBuilder builder, PlayerBuilder playerBuilder) {
 
         // 1
         try {
@@ -622,7 +622,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             VideoKernelApi kernel = VideoKernelFactoryManager.getKernel((VideoPlayerApi) this, type, new VideoKernelApiEvent() {
 
                 @Override
-                public void onUpdateTimeMillis( boolean isLooping,  long max,  long seek,  long position,  long duration) {
+                public void onUpdateTimeMillis(boolean isLooping, long max, long seek, long position, long duration) {
                     try {
                         if (max <= 0 || position <= max)
                             throw new Exception("time warning: max = " + max + ", position = " + position + ", seek = " + seek + ", duration = " + duration + ", isLooping = " + isLooping);
@@ -750,6 +750,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             callPlayerEvent(PlayerType.StateType.STATE_ERROR_IGNORE);
                             break;
                         // 播放错误
+                        case PlayerType.EventType.EVENT_ERROR_SEEK_TIME:
                         case PlayerType.EventType.EVENT_ERROR_URL:
                         case PlayerType.EventType.EVENT_ERROR_RETRY:
                         case PlayerType.EventType.EVENT_ERROR_SOURCE:
@@ -813,7 +814,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void createVideoDecoder( PlayerBuilder config) {
+    default void createVideoDecoder(PlayerBuilder config) {
         try {
             checkVideoKernel();
             VideoKernelApi kernel = getVideoKernel();
@@ -839,7 +840,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default boolean switchTrack( int trackId) {
+    default boolean switchTrack(int trackId) {
         try {
             checkVideoKernel();
             VideoKernelApi kernel = getVideoKernel();
@@ -897,7 +898,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             boolean bufferingTimeoutRetry = PlayerManager.getInstance().getConfig().getBufferingTimeoutRetry();
             mHandlerBuffering[0] = new Handler(Looper.getMainLooper()) {
                 @Override
-                public void handleMessage( Message msg) {
+                public void handleMessage(Message msg) {
                     super.handleMessage(msg);
                     if (msg.what == 7677) {
                         if (bufferingTimeoutRetry) {
