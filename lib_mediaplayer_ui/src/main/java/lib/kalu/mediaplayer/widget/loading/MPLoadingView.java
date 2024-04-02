@@ -90,21 +90,21 @@ public class MPLoadingView extends View {
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
         MPLogUtil.log("MPLoadingView => onWindowVisibilityChanged => visibility = " + visibility);
-        clearMsg();
         super.onWindowVisibilityChanged(visibility);
+        loopingMsg();
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        clearMsg();
         super.onDetachedFromWindow();
+        clearMsg();
     }
 
 
     @Override
     protected void onAttachedToWindow() {
-        clearMsg();
         super.onAttachedToWindow();
+        clearMsg();
     }
 
     @Override
