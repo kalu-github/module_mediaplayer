@@ -21,13 +21,15 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_START:
+            case PlayerType.StateType.STATE_BUFFERING_START:
                 MPLogUtil.log("ComponentLoading => callPlayerEvent => show => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.STATE_BUFFERING_START:
             case PlayerType.StateType.STATE_LOADING_STOP:
+            case PlayerType.StateType.STATE_BUFFERING_STOP:
             case PlayerType.StateType.STATE_RELEASE:
             case PlayerType.StateType.STATE_RELEASE_EXCEPTION:
+//            default:
                 MPLogUtil.log("ComponentLoading => callPlayerEvent => gone => playState = " + playState);
                 gone();
                 break;
