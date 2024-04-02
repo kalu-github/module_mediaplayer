@@ -483,7 +483,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             if (seek < 0)
                 throw new Exception("seek error: " + seek);
-            if (!mPrepared) {
+            if (mPrepared) {
+                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
+            } else {
                 long position = getPosition();
                 if (position > 0) {
                     onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);

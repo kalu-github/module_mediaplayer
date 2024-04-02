@@ -26,7 +26,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
                 show();
                 break;
             case PlayerType.StateType.STATE_LOADING_STOP:
-            case PlayerType.StateType.STATE_BUFFERING_STOP:
+//            case PlayerType.StateType.STATE_BUFFERING_STOP:
             case PlayerType.StateType.STATE_RELEASE:
             case PlayerType.StateType.STATE_RELEASE_EXCEPTION:
 //            default:
