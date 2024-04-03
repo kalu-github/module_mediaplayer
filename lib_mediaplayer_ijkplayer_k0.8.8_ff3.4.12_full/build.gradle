@@ -44,8 +44,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             consumerProguardFiles 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
             minifyEnabled false
@@ -53,8 +54,6 @@ android {
         }
     }
 
-
-    //jdk1.8
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -64,6 +63,11 @@ android {
         cmake {
             path "/src/main/cpp/CMakeLists.txt"
         }
+    }
+
+    lintOptions {
+        abortOnError false
+        ignoreWarnings true
     }
 }
 

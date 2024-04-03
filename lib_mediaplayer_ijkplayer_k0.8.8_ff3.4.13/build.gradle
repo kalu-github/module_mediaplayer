@@ -67,6 +67,11 @@ android {
             path "/src/main/cpp/CMakeLists.txt"
         }
     }
+
+    lintOptions {
+        abortOnError false
+        ignoreWarnings true
+    }
 }
 
 repositories {

@@ -14,9 +14,9 @@ set(common_sources
         ijkmedia/ijkj4a/j4a/class/java/nio/Buffer.c
         ijkmedia/ijkj4a/j4a/class/java/nio/ByteBuffer.c
         ijkmedia/ijkj4a/j4a/class/java/util/ArrayList.c
-        ijkmedia/ijkj4a/j4a/class/tv/danmaku/ijk/media/player/misc/IMediaDataSource.c
-        ijkmedia/ijkj4a/j4a/class/tv/danmaku/ijk/media/player/misc/IAndroidIO.c
-        ijkmedia/ijkj4a/j4a/class/tv/danmaku/ijk/media/player/IjkMediaPlayer.c
+        ijkmedia/ijkj4a/j4a/class/lib/kalu/ijkplayer/misc/IMediaDataSource.c
+        ijkmedia/ijkj4a/j4a/class/lib/kalu/ijkplayer/misc/IAndroidIO.c
+        ijkmedia/ijkj4a/j4a/class/lib/kalu/ijkplayer/IjkMediaPlayer.c
         ijkmedia/ijkj4a/j4au/class/android/media/AudioTrack.util.c
         ijkmedia/ijkj4a/j4au/class/java/nio/ByteBuffer.util.c
 
@@ -30,7 +30,6 @@ set(common_sources
         ijkmedia/ijksdl/ijksdl_thread.c
         ijkmedia/ijksdl/ijksdl_timer.c
         ijkmedia/ijksdl/ijksdl_vout.c
-        ijkmedia/ijksdl/ijksdl_extra_log.c
         ijkmedia/ijksdl/gles2/color.c
         ijkmedia/ijksdl/gles2/common.c
         ijkmedia/ijksdl/gles2/renderer.c
@@ -165,14 +164,14 @@ set(arm64_v8a_sources
 
 if (${ANDROID_ABI} STREQUAL armeabi-v7a)
     add_library( # Sets the name of the library.
-            ijkplayer
+            ijkplayer2
             SHARED
             ${common_sources}
             ${armeabi_v7a_sources}
             )
 else ()
     add_library( # Sets the name of the library.
-            ijkplayer
+            ijkplayer2
             SHARED
             ${common_sources}
             ${arm64_v8a_sources}
@@ -225,41 +224,12 @@ set_target_properties(ffmpeg-swscale-lib
         PROPERTIES IMPORTED_LOCATION
         libswscale.a)
 
-# open-ssl-lib
-configure_file(${CMAKE_SOURCE_DIR}/openssl/${ANDROID_ABI}/lib/libssl.a ${Project_BINARY_DIR}/libssl.a COPYONLY)
-add_library(open-ssl-lib STATIC IMPORTED)
-set_target_properties(
-        open-ssl-lib
-        PROPERTIES IMPORTED_LOCATION
-        libssl.a)
-
-# open-crypto-lib
-configure_file(${CMAKE_SOURCE_DIR}/openssl/${ANDROID_ABI}/lib/libcrypto.a ${Project_BINARY_DIR}/libcrypto.a COPYONLY)
-add_library(open-crypto-lib
-        STATIC
-        IMPORTED)
-set_target_properties(
-        open-crypto-lib
-        PROPERTIES IMPORTED_LOCATION
-        libcrypto.a)
-
-# xml2-lib
-configure_file(${CMAKE_SOURCE_DIR}/xml2/${ANDROID_ABI}/lib/libxml2.a ${Project_BINARY_DIR}/libxml2.a COPYONLY)
-add_library(xml2-lib
-        STATIC
-        IMPORTED)
-set_target_properties(
-        xml2-lib
-        PROPERTIES IMPORTED_LOCATION
-        libxml2.a)
 
 include_directories(
         ffmpeg3/${ANDROID_ABI}/include
-        openssl/${ANDROID_ABI}/include
-        xml2/${ANDROID_ABI}/include
         ijkmedia
-        ijkmedia/ijkplayer
         ijkmedia/ijklog
+        ijkmedia/ijkplayer
         ijkmedia/ijkj4a
         ijkmedia/ijksdl
         ijkmedia/ijksoundtouch
@@ -270,7 +240,7 @@ include_directories(
 
 target_link_libraries(
         # Specifies the target library.
-        ijkplayer
+        ijkplayer2
 
         # ffmpeg
         ffmpeg-avcodec-lib
@@ -278,13 +248,6 @@ target_link_libraries(
         ffmpeg-avutil-lib
         ffmpeg-swresample-lib
         ffmpeg-swscale-lib
-
-        # openssl => https
-        open-ssl-lib
-        open-crypto-lib
-
-        # xml2 => dash
-        xml2-lib
 
         # Links the target library to the log library
         log

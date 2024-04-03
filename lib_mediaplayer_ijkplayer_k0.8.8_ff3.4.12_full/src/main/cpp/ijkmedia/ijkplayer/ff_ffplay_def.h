@@ -66,19 +66,19 @@
 #include "ff_ffpipenode.h"
 #include "ijkmeta.h"
 
-#define DEFAULT_HIGH_WATER_MARK_IN_BYTES        (256 * 1024)
+#define DEFAULT_HIGH_WATER_MARK_IN_BYTES        (30 * 1024) //(256 * 1024)
 
 /*
  * START: buffering after prepared/seeked
  * NEXT:  buffering for the second time after START
  * MAX:   ...
  */
-#define DEFAULT_FIRST_HIGH_WATER_MARK_IN_MS     (100)
-#define DEFAULT_NEXT_HIGH_WATER_MARK_IN_MS      (1 * 1000)
-#define DEFAULT_LAST_HIGH_WATER_MARK_IN_MS      (5 * 1000)
+#define DEFAULT_FIRST_HIGH_WATER_MARK_IN_MS     (100) // 网络差时首次去唤醒read_thread函数去读取数据
+#define DEFAULT_NEXT_HIGH_WATER_MARK_IN_MS      (1 * 1000) // 第二次去唤醒read_thread函数去读取数据。
+#define DEFAULT_LAST_HIGH_WATER_MARK_IN_MS      (1 * 1000) //  (5 * 1000) 这个宏的意思是最后的机会去唤醒read_thread函数去读取数据, 也即缓冲1秒后开始通知缓冲完成去读取数据，默认是5秒，如果过大，会让用户等太久，那么每次读取的bytes也可以少些
 
 #define BUFFERING_CHECK_PER_BYTES               (512)
-#define BUFFERING_CHECK_PER_MILLISECONDS        (500)
+#define BUFFERING_CHECK_PER_MILLISECONDS        (50) // 500
 #define FAST_BUFFERING_CHECK_PER_MILLISECONDS   (50)
 #define MAX_RETRY_CONVERT_IMAGE                 (3)
 

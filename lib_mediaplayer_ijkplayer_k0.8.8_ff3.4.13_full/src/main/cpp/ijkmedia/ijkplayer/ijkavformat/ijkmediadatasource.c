@@ -31,7 +31,7 @@
 #include "ijkavformat/ijkavformat.h"
 #include "ijkplayer/ijkavutil/opt.h"
 
-#include "j4a/class/tv/danmaku/ijk/media/player/misc/IMediaDataSource.h"
+#include "j4a/class/lib/kalu/ijkplayer/misc/IMediaDataSource.h"
 #include "ijksdl/android/ijksdl_android_jni.h"
 
 typedef struct Context {

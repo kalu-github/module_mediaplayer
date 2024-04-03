@@ -14,9 +14,9 @@ set(common_sources
         ijkmedia/ijkj4a/j4a/class/java/nio/Buffer.c
         ijkmedia/ijkj4a/j4a/class/java/nio/ByteBuffer.c
         ijkmedia/ijkj4a/j4a/class/java/util/ArrayList.c
-        ijkmedia/ijkj4a/j4a/class/tv/danmaku/ijk/media/player/misc/IMediaDataSource.c
-        ijkmedia/ijkj4a/j4a/class/tv/danmaku/ijk/media/player/misc/IAndroidIO.c
-        ijkmedia/ijkj4a/j4a/class/tv/danmaku/ijk/media/player/IjkMediaPlayer.c
+        ijkmedia/ijkj4a/j4a/class/lib/kalu/ijkplayer/misc/IMediaDataSource.c
+        ijkmedia/ijkj4a/j4a/class/lib/kalu/ijkplayer/misc/IAndroidIO.c
+        ijkmedia/ijkj4a/j4a/class/lib/kalu/ijkplayer/IjkMediaPlayer.c
         ijkmedia/ijkj4a/j4au/class/android/media/AudioTrack.util.c
         ijkmedia/ijkj4a/j4au/class/java/nio/ByteBuffer.util.c
 
@@ -165,14 +165,14 @@ set(arm64_v8a_sources
 
 if (${ANDROID_ABI} STREQUAL armeabi-v7a)
     add_library( # Sets the name of the library.
-            ijkplayer
+            ijkplayer2
             SHARED
             ${common_sources}
             ${armeabi_v7a_sources}
             )
 else ()
     add_library( # Sets the name of the library.
-            ijkplayer
+            ijkplayer2
             SHARED
             ${common_sources}
             ${arm64_v8a_sources}
@@ -270,7 +270,7 @@ include_directories(
 
 target_link_libraries(
         # Specifies the target library.
-        ijkplayer
+        ijkplayer2
 
         # ffmpeg
         ffmpeg-avcodec-lib

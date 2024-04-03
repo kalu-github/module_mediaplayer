@@ -14,9 +14,9 @@ set(common_sources
         ijkmedia/ijkj4a/j4a/class/java/nio/Buffer.c
         ijkmedia/ijkj4a/j4a/class/java/nio/ByteBuffer.c
         ijkmedia/ijkj4a/j4a/class/java/util/ArrayList.c
-        ijkmedia/ijkj4a/j4a/class/tv/danmaku/ijk/media/player/misc/IMediaDataSource.c
-        ijkmedia/ijkj4a/j4a/class/tv/danmaku/ijk/media/player/misc/IAndroidIO.c
-        ijkmedia/ijkj4a/j4a/class/tv/danmaku/ijk/media/player/IjkMediaPlayer.c
+        ijkmedia/ijkj4a/j4a/class/lib/kalu/ijkplayer/misc/IMediaDataSource.c
+        ijkmedia/ijkj4a/j4a/class/lib/kalu/ijkplayer/misc/IAndroidIO.c
+        ijkmedia/ijkj4a/j4a/class/lib/kalu/ijkplayer/IjkMediaPlayer.c
         ijkmedia/ijkj4a/j4au/class/android/media/AudioTrack.util.c
         ijkmedia/ijkj4a/j4au/class/java/nio/ByteBuffer.util.c
 

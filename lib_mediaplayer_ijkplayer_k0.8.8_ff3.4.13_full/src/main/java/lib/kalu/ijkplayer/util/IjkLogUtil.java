@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 @Keep
 public final class IjkLogUtil {
 
-    private static String mTag = "MP_IJK";
+    private static String mTag = "MP_IJK_JAVA";
     private static boolean mLog = false;
 
     public static void setLogger(boolean enable) {
@@ -28,6 +28,10 @@ public final class IjkLogUtil {
         if (null == message || message.length() == 0)
             return;
 
-        Log.e(mTag, message, throwable);
+        if (null == throwable) {
+            Log.e(mTag, message);
+        } else {
+            Log.e(mTag, message, throwable);
+        }
     }
 }

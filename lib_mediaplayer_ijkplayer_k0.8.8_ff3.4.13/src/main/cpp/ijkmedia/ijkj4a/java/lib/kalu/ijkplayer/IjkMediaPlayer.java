@@ -1,4 +1,4 @@
-package tv.danmaku.ijk.media.player;
+package lib.kalu.ijkplayer;
 
 import android.os.Bundle;
 

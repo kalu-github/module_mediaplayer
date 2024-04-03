@@ -82,8 +82,14 @@ static int aout_thread_n(JNIEnv *env, SDL_Aout *aout) {
 
     SDL_SetThreadPriority(SDL_THREAD_PRIORITY_HIGH);
 
-    if (!opaque->abort_request && !opaque->pause_on)
+
+//    if (!opaque->abort_request && !opaque->pause_on)
+//        SDL_Android_AudioTrack_play(env, atrack);
+    bool isPlaying = false;
+    if (!opaque->abort_request && !opaque->pause_on){
         SDL_Android_AudioTrack_play(env, atrack);
+        isPlaying = true;
+    }
 
     while (!opaque->abort_request) {
         SDL_LockMutex(opaque->wakeup_mutex);
@@ -100,8 +106,15 @@ static int aout_thread_n(JNIEnv *env, SDL_Aout *aout) {
                     SDL_Android_AudioTrack_flush(env, atrack);
                 }
                 SDL_Android_AudioTrack_play(env, atrack);
+                isPlaying = true;
             }
         }
+
+        if(!opaque->abort_request && !isPlaying){
+            isPlaying = true;
+            SDL_Android_AudioTrack_play(env, atrack);
+        }
+
         if (opaque->need_flush) {
             opaque->need_flush = 0;
             SDL_Android_AudioTrack_flush(env, atrack);

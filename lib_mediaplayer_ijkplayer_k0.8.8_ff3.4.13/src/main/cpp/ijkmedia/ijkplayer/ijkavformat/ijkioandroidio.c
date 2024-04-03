@@ -29,7 +29,7 @@
 #include "ijkplayer/ijkavutil/opt.h"
 #include "ijkplayer/ijkavutil/ijkutils.h"
 
-#include "j4a/class/tv/danmaku/ijk/media/player/misc/IAndroidIO.h"
+#include "j4a/class/lib/kalu/ijkplayer/misc/IAndroidIO.h"
 #include "ijksdl/android/ijksdl_android_jni.h"
 #include <assert.h>
 
