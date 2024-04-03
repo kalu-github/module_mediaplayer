@@ -17,7 +17,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import tv.danmaku.ijk.media.player.IMediaPlayer;
+import lib.kalu.ijkplayer.IMediaPlayer;
 
 @Documented
 @Retention(CLASS)
