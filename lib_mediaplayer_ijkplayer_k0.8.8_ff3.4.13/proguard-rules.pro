@@ -17,5 +17,6 @@
 -keep class lib.kalu.ijkplayer.IMediaPlayer$OnTimedTextListener{*;}
 -keep class lib.kalu.ijkplayer.IMediaPlayer$OnVideoSizeChangedListener{*;}
 -keep class lib.kalu.ijkplayer.IjkMediaPlayer{*;}
+-keep class lib.kalu.ijkplayer.IjkMediaPlayer$OnNativeInvokeListener{*;}
 -keep class lib.kalu.ijkplayer.IjkTimedText{*;}
 -keep class lib.kalu.ijkplayer.IjkMediaMeta{*;}
