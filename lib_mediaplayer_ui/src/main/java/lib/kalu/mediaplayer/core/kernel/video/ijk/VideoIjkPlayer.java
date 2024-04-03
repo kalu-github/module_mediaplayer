@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Surface;
 import android.view.SurfaceHolder;
-import android.widget.Toast;
-
 import androidx.annotation.FloatRange;
 
 
@@ -18,11 +16,11 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
-import tv.danmaku.ijk.media.player.IMediaPlayer;
-import tv.danmaku.ijk.media.player.IjkMediaPlayer;
-import tv.danmaku.ijk.media.player.IjkTimedText;
-import tv.danmaku.ijk.media.player.misc.IMediaFormat;
-import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
+import lib.kalu.ijkplayer.IMediaPlayer;
+import lib.kalu.ijkplayer.IjkMediaPlayer;
+import lib.kalu.ijkplayer.IjkTimedText;
+import lib.kalu.ijkplayer.misc.IMediaFormat;
+import lib.kalu.ijkplayer.misc.IjkTrackInfo;
 
 
 public final class VideoIjkPlayer extends VideoBasePlayer {
@@ -36,7 +34,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     private boolean mPrepared = false;
 
     private boolean mUseMediaCodec;
-    private tv.danmaku.ijk.media.player.IjkMediaPlayer mIjkPlayer = null;
+    private IjkMediaPlayer mIjkPlayer = null;
 
     public VideoIjkPlayer(boolean useMediaCodec, VideoPlayerApi musicApi, VideoKernelApiEvent eventApi) {
         super(musicApi, eventApi);
@@ -67,22 +65,22 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     public void createDecoder(Context context, boolean logger, int seekParameters) {
         try {
             releaseDecoder(false, true);
-            mIjkPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
+            mIjkPlayer = new IjkMediaPlayer();
             mIjkPlayer.reset();
             mIjkPlayer.setLooping(false);
             //处理UA问题
             //            if (headers != null) {
             //                String userAgent = headers.get("User-Agent");
             //                if (!TextUtils.isEmpty(userAgent)) {
-            //                    mIjkPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
+            //                    mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
             //                }
             //            }
             initOptionsIjk();
             initListener();
             setVolume(1F, 1F);
             lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(logger);
-            tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogger(logger);
-            tv.danmaku.ijk.media.player.IjkMediaPlayer.native_setLogLevel(logger ? tv.danmaku.ijk.media.player.IjkMediaPlayer.IJK_LOG_INFO : IjkMediaPlayer.IJK_LOG_DEFAULT);
+            IjkMediaPlayer.native_setLogger(logger);
+            IjkMediaPlayer.native_setLogLevel(logger ? IjkMediaPlayer.IJK_LOG_INFO : IjkMediaPlayer.IJK_LOG_DEFAULT);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => createDecoder => " + e.getMessage());
         }
@@ -115,7 +113,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     public void initOptionsIjk() {
         // player => ff_ffplay_options.h
         try {
-            int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
+            int player = IjkMediaPlayer.OPT_CATEGORY_PLAYER;
             // 禁用音频
             mIjkPlayer.setOption(player, "an", 0);
             // 禁用视频, 不解码不渲染
@@ -146,7 +144,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // SDL_FCC_RV16 ---- bpp=16, RGB565
             // SDL_FCC_RV24 ---- bpp=24, RGB888
             // SDL_FCC_RV32 ---- bpp=32, RGBX8888
-            mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV16);
+            mIjkPlayer.setOption(player, "overlay-format", IjkMediaPlayer.SDL_FCC_RV16);
             // 允许的最大播放帧率，当视频的实际帧率大于这个数值时，将丢弃部分视频帧 => [-1,121]
             mIjkPlayer.setOption(player, "max-fps", 30);
             // 是否播放准备工作完成后自动开始播放
@@ -223,7 +221,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
         // format
         try {
-            int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
+            int format = IjkMediaPlayer.OPT_CATEGORY_FORMAT;
             mIjkPlayer.setOption(format, "http-detect-range-support", 0);
             // 设置播放前的探测时间 1,达到首屏秒开效果， bug有画面没声音
 //            mIjkPlayer.setOption(format, "analyzeduration", 1000); // 1s
@@ -251,7 +249,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             MPLogUtil.log("VideoIjkPlayer => initOptionsIjk => OPT_CATEGORY_FORMAT => " + e.getMessage());
         }
         try {
-            int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
+            int codec = IjkMediaPlayer.OPT_CATEGORY_CODEC;
             mIjkPlayer.setOption(codec, "skip_loop_filter", 48);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => initOptionsIjk => OPT_CATEGORY_CODEC => " + e.getMessage());
@@ -259,9 +257,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
 //        // player
 //        try {
-//            int player = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER;
+//            int player = IjkMediaPlayer.OPT_CATEGORY_PLAYER;
 //            // sdl渲染
-//            mIjkPlayer.setOption(player, "overlay-format", tv.danmaku.ijk.media.player.IjkMediaPlayer.SDL_FCC_RV32);
+//            mIjkPlayer.setOption(player, "overlay-format", IjkMediaPlayer.SDL_FCC_RV32);
 //            // 直播场景时实时推流，可以开启无限制buffer，这样可以尽可能快的读取数据，避免出现网络拥塞恢复后延迟累积的情况。
 //            // 默认最小帧数
 //            mIjkPlayer.setOption(player, "min-frames", 2);
@@ -280,7 +278,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 //
 //        // format
 //        try {
-//            int format = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT;
+//            int format = IjkMediaPlayer.OPT_CATEGORY_FORMAT;
 //            // 不清楚 1、允许 0、不允许
 //            mIjkPlayer.setOption(format, "http-detect-range-support", 0);
 //            // 缩短播放的rtmp视频延迟在1s内
@@ -296,7 +294,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 //            // IJK_AVDISCARD_BIDIR   = 16, ///< 抛弃B帧
 //            // IJK_AVDISCARD_NONKEY  = 32, ///< 抛弃除关键帧以外的，比如B，P帧
 //            // IJK_AVDISCARD_ALL     = 48, ///< 抛弃所有的帧
-//            int codec = tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_CODEC;
+//            int codec = IjkMediaPlayer.OPT_CATEGORY_CODEC;
 //            // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
 //            mIjkPlayer.setOption(codec, "skip_loop_filter", 48L);
 //            // 跳过帧
@@ -349,7 +347,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         mIjkPlayer.setOnTimedTextListener(onTimedTextListener);
         // 设置视频缓冲更新监听事件
         mIjkPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
-        mIjkPlayer.setOnNativeInvokeListener(new tv.danmaku.ijk.media.player.IjkMediaPlayer.OnNativeInvokeListener() {
+        mIjkPlayer.setOnNativeInvokeListener(new IjkMediaPlayer.OnNativeInvokeListener() {
             @Override
             public boolean onNativeInvoke(int i, Bundle bundle) {
                 MPLogUtil.log("VideoIjkPlayer => onNativeInvoke => i => " + i + ", bundle = " + bundle);
