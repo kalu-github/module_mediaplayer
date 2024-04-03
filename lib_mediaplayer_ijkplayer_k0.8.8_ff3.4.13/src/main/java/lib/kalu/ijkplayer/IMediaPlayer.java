@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tv.danmaku.ijk.media.player;
+package lib.kalu.ijkplayer;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -28,8 +28,8 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.Map;
 
-import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
-import tv.danmaku.ijk.media.player.misc.ITrackInfo;
+import lib.kalu.ijkplayer.misc.IMediaDataSource;
+import lib.kalu.ijkplayer.misc.ITrackInfo;
 
 public interface IMediaPlayer {
     /*

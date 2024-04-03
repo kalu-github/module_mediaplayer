@@ -15,21 +15,15 @@
  * limitations under the License.
  */
 
-package tv.danmaku.ijk.media.player.misc;
+package lib.kalu.ijkplayer.misc;
 
-public interface ITrackInfo {
-    int MEDIA_TRACK_TYPE_AUDIO = 2;
-    int MEDIA_TRACK_TYPE_METADATA = 5;
-    int MEDIA_TRACK_TYPE_SUBTITLE = 4;
-    int MEDIA_TRACK_TYPE_TIMEDTEXT = 3;
-    int MEDIA_TRACK_TYPE_UNKNOWN = 0;
-    int MEDIA_TRACK_TYPE_VIDEO = 1;
+import java.io.IOException;
 
-    IMediaFormat getFormat();
+@SuppressWarnings("RedundantThrows")
+public interface IMediaDataSource {
+    int	 readAt(long position, byte[] buffer, int offset, int size) throws IOException;
 
-    String getLanguage();
+    long getSize() throws IOException;
 
-    int getTrackType();
-
-    String getInfoInline();
+    void close() throws IOException;
 }

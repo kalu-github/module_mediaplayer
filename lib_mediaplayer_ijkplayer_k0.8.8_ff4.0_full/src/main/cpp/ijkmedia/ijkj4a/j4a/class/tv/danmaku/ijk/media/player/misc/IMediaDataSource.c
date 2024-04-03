@@ -108,7 +108,7 @@ int J4A_loadClass__J4AC_tv_danmaku_ijk_media_player_misc_IMediaDataSource(JNIEnv
     if (class_J4AC_tv_danmaku_ijk_media_player_misc_IMediaDataSource.method_close == NULL)
         goto fail;
 
-    J4A_ALOGD("J4ALoader: OK: '%s' loaded\n", "tv.danmaku.ijk.media.player.misc.IMediaDataSource");
+    J4A_ALOGD("J4ALoader: OK: '%s' loaded\n", "lib.kalu.ijkplayer.misc.IMediaDataSource");
     ret = 0;
 fail:
     return ret;

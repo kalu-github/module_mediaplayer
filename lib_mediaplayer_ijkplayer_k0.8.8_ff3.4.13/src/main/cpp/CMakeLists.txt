@@ -164,14 +164,14 @@ set(arm64_v8a_sources
 
 if (${ANDROID_ABI} STREQUAL armeabi-v7a)
     add_library( # Sets the name of the library.
-            ijkplayer
+            ijkplayer2
             SHARED
             ${common_sources}
             ${armeabi_v7a_sources}
             )
 else ()
     add_library( # Sets the name of the library.
-            ijkplayer
+            ijkplayer2
             SHARED
             ${common_sources}
             ${arm64_v8a_sources}
@@ -240,7 +240,7 @@ include_directories(
 
 target_link_libraries(
         # Specifies the target library.
-        ijkplayer
+        ijkplayer2
 
         # ffmpeg
         ffmpeg-avcodec-lib

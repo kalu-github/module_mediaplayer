@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tv.danmaku.ijk.media.player.misc;
+package lib.kalu.ijkplayer.misc;
 
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import tv.danmaku.ijk.media.player.IjkMediaMeta;
+import lib.kalu.ijkplayer.IjkMediaMeta;
 
 public class IjkMediaFormat implements IMediaFormat {
     // Common

@@ -21,26 +21,26 @@
 
 #include "IAndroidIO.h"
 
-typedef struct J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO {
+typedef struct J4AC_lib_kalu_ijkplayer_misc_IAndroidIO {
     jclass id;
 
     jmethodID method_open;
     jmethodID method_read;
     jmethodID method_seek;
     jmethodID method_close;
-} J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO;
-static J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO;
+} J4AC_lib_kalu_ijkplayer_misc_IAndroidIO;
+static J4AC_lib_kalu_ijkplayer_misc_IAndroidIO class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO;
 
 jint
-J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__open(JNIEnv *env, jobject thiz, jstring url) {
+J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__open(JNIEnv *env, jobject thiz, jstring url) {
     return (*env)->CallIntMethod(env, thiz,
-                                 class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.method_open,
+                                 class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.method_open,
                                  url);
 }
 
-jint J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__open__catchAll(JNIEnv *env, jobject thiz,
+jint J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__open__catchAll(JNIEnv *env, jobject thiz,
                                                                       jstring url) {
-    jint ret_value = J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__open(env, thiz, url);
+    jint ret_value = J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__open(env, thiz, url);
     if (J4A_ExceptionCheck__catchAll(env)) {
         return 0;
     }
@@ -48,7 +48,7 @@ jint J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__open__catchAll(JNIEnv *en
     return ret_value;
 }
 
-jint J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__open__withCString(JNIEnv *env, jobject thiz,
+jint J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__open__withCString(JNIEnv *env, jobject thiz,
                                                                          const char *url_cstr__) {
     jint ret_value = 0;
     jstring url = NULL;
@@ -57,7 +57,7 @@ jint J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__open__withCString(JNIEnv 
     if (J4A_ExceptionCheck__throwAny(env) || !url)
         goto fail;
 
-    ret_value = J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__open(env, thiz, url);
+    ret_value = J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__open(env, thiz, url);
     if (J4A_ExceptionCheck__throwAny(env)) {
         ret_value = 0;
         goto fail;
@@ -68,7 +68,7 @@ jint J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__open__withCString(JNIEnv 
     return ret_value;
 }
 
-jint J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__open__withCString__catchAll(JNIEnv *env,
+jint J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__open__withCString__catchAll(JNIEnv *env,
                                                                                    jobject thiz,
                                                                                    const char *url_cstr__) {
     jint ret_value = 0;
@@ -78,7 +78,7 @@ jint J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__open__withCString__catchA
     if (J4A_ExceptionCheck__catchAll(env) || !url)
         goto fail;
 
-    ret_value = J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__open__catchAll(env, thiz, url);
+    ret_value = J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__open__catchAll(env, thiz, url);
     if (J4A_ExceptionCheck__catchAll(env)) {
         ret_value = 0;
         goto fail;
@@ -90,17 +90,17 @@ jint J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__open__withCString__catchA
 }
 
 jint
-J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__read(JNIEnv *env, jobject thiz, jbyteArray buffer,
+J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__read(JNIEnv *env, jobject thiz, jbyteArray buffer,
                                                        jint size) {
     return (*env)->CallIntMethod(env, thiz,
-                                 class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.method_read,
+                                 class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.method_read,
                                  buffer, size);
 }
 
-jint J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__read__catchAll(JNIEnv *env, jobject thiz,
+jint J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__read__catchAll(JNIEnv *env, jobject thiz,
                                                                       jbyteArray buffer,
                                                                       jint size) {
-    jint ret_value = J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__read(env, thiz, buffer,
+    jint ret_value = J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__read(env, thiz, buffer,
                                                                             size);
     if (J4A_ExceptionCheck__catchAll(env)) {
         return 0;
@@ -110,16 +110,16 @@ jint J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__read__catchAll(JNIEnv *en
 }
 
 jlong
-J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__seek(JNIEnv *env, jobject thiz, jlong offset,
+J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__seek(JNIEnv *env, jobject thiz, jlong offset,
                                                        jint whence) {
     return (*env)->CallLongMethod(env, thiz,
-                                  class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.method_seek,
+                                  class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.method_seek,
                                   offset, whence);
 }
 
-jlong J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__seek__catchAll(JNIEnv *env, jobject thiz,
+jlong J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__seek__catchAll(JNIEnv *env, jobject thiz,
                                                                        jlong offset, jint whence) {
-    jlong ret_value = J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__seek(env, thiz, offset,
+    jlong ret_value = J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__seek(env, thiz, offset,
                                                                              whence);
     if (J4A_ExceptionCheck__catchAll(env)) {
         return 0;
@@ -128,13 +128,13 @@ jlong J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__seek__catchAll(JNIEnv *e
     return ret_value;
 }
 
-jint J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__close(JNIEnv *env, jobject thiz) {
+jint J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__close(JNIEnv *env, jobject thiz) {
     return (*env)->CallIntMethod(env, thiz,
-                                 class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.method_close);
+                                 class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.method_close);
 }
 
-jint J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__close__catchAll(JNIEnv *env, jobject thiz) {
-    jint ret_value = J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__close(env, thiz);
+jint J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__close__catchAll(JNIEnv *env, jobject thiz) {
+    jint ret_value = J4AC_lib_kalu_ijkplayer_misc_IAndroidIO__close(env, thiz);
     if (J4A_ExceptionCheck__catchAll(env)) {
         return 0;
     }
@@ -142,7 +142,7 @@ jint J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO__close__catchAll(JNIEnv *e
     return ret_value;
 }
 
-int J4A_loadClass__J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO(JNIEnv *env) {
+int J4A_loadClass__J4AC_lib_kalu_ijkplayer_misc_IAndroidIO(JNIEnv *env) {
     int ret = -1;
     const char *J4A_UNUSED(name)      = NULL;
     const char *J4A_UNUSED(sign)      = NULL;
@@ -150,48 +150,48 @@ int J4A_loadClass__J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO(JNIEnv *env)
     J4A_UNUSED(class_id) = NULL;
     int J4A_UNUSED(api_level) = 0;
 
-    if (class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.id != NULL)
+    if (class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.id != NULL)
         return 0;
 
     sign = "tv/danmaku/ijk/media/player/misc/IAndroidIO";
-    class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.id = J4A_FindClass__asGlobalRef__catchAll(
+    class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.id = J4A_FindClass__asGlobalRef__catchAll(
             env, sign);
-    if (class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.id == NULL)
+    if (class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.id == NULL)
         goto fail;
 
-    class_id = class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.id;
+    class_id = class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.id;
     name = "open";
     sign = "(Ljava/lang/String;)I";
-    class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.method_open = J4A_GetMethodID__catchAll(
+    class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.method_open = J4A_GetMethodID__catchAll(
             env, class_id, name, sign);
-    if (class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.method_open == NULL)
+    if (class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.method_open == NULL)
         goto fail;
 
-    class_id = class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.id;
+    class_id = class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.id;
     name = "read";
     sign = "([BI)I";
-    class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.method_read = J4A_GetMethodID__catchAll(
+    class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.method_read = J4A_GetMethodID__catchAll(
             env, class_id, name, sign);
-    if (class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.method_read == NULL)
+    if (class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.method_read == NULL)
         goto fail;
 
-    class_id = class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.id;
+    class_id = class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.id;
     name = "seek";
     sign = "(JI)J";
-    class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.method_seek = J4A_GetMethodID__catchAll(
+    class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.method_seek = J4A_GetMethodID__catchAll(
             env, class_id, name, sign);
-    if (class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.method_seek == NULL)
+    if (class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.method_seek == NULL)
         goto fail;
 
-    class_id = class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.id;
+    class_id = class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.id;
     name = "close";
     sign = "()I";
-    class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.method_close = J4A_GetMethodID__catchAll(
+    class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.method_close = J4A_GetMethodID__catchAll(
             env, class_id, name, sign);
-    if (class_J4AC_tv_danmaku_ijk_media_player_misc_IAndroidIO.method_close == NULL)
+    if (class_J4AC_lib_kalu_ijkplayer_misc_IAndroidIO.method_close == NULL)
         goto fail;
 
-    J4A_ALOGD("J4ALoader: OK: '%s' loaded\n", "tv.danmaku.ijk.media.player.misc.IAndroidIO");
+    J4A_ALOGD("J4ALoader: OK: '%s' loaded\n", "lib.kalu.ijkplayer.misc.IAndroidIO");
     ret = 0;
     fail:
     return ret;

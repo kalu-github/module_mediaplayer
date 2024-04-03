@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-package tv.danmaku.ijk.media.player.misc;
+package lib.kalu.ijkplayer.misc;
 
 import android.text.TextUtils;
 
-import tv.danmaku.ijk.media.player.IjkMediaMeta;
+import lib.kalu.ijkplayer.IjkMediaMeta;
 
 public class IjkTrackInfo implements ITrackInfo {
     private int mTrackType = MEDIA_TRACK_TYPE_UNKNOWN;

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package tv.danmaku.ijk.media.player;
+package lib.kalu.ijkplayer;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -48,15 +48,14 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
 import lib.kalu.ijkplayer.util.IjkLogUtil;
-import tv.danmaku.ijk.media.player.misc.IAndroidIO;
-import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
-import tv.danmaku.ijk.media.player.misc.ITrackInfo;
-import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
+import lib.kalu.ijkplayer.misc.IAndroidIO;
+import lib.kalu.ijkplayer.misc.IMediaDataSource;
+import lib.kalu.ijkplayer.misc.ITrackInfo;
+import lib.kalu.ijkplayer.misc.IjkTrackInfo;
 
 /**
  * @author bbcallen
@@ -170,7 +169,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     private String mDataSource;
 
     public IjkMediaPlayer() {
-        System.loadLibrary("ijkplayer");
+        System.loadLibrary("ijkplayer2");
         Looper looper;
         if ((looper = Looper.myLooper()) != null) {
             mEventHandler = new EventHandler(this, looper);

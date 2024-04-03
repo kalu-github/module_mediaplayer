@@ -52,10 +52,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import lib.kalu.ijkplayer.util.IjkLogUtil;
-import tv.danmaku.ijk.media.player.misc.IAndroidIO;
-import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
-import tv.danmaku.ijk.media.player.misc.ITrackInfo;
-import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
+import lib.kalu.ijkplayer.misc.IAndroidIO;
+import lib.kalu.ijkplayer.misc.IMediaDataSource;
+import lib.kalu.ijkplayer.misc.ITrackInfo;
+import lib.kalu.ijkplayer.misc.IjkTrackInfo;
 
 /**
  * @author bbcallen

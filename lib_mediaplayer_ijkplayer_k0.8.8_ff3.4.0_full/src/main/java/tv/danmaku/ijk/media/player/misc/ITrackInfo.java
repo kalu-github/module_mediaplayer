@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package tv.danmaku.ijk.media.player.misc;
+package lib.kalu.ijkplayer.misc;
 
 public interface ITrackInfo {
     int MEDIA_TRACK_TYPE_AUDIO = 2;

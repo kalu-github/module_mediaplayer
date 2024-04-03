@@ -17,7 +17,7 @@
 
 package tv.danmaku.ijk.media.player;
 
-import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
+import lib.kalu.ijkplayer.misc.IMediaDataSource;
 
 @SuppressWarnings("WeakerAccess")
 public abstract class AbstractMediaPlayer implements IMediaPlayer {

@@ -1,4 +1,4 @@
-package tv.danmaku.ijk.media.player;
+package lib.kalu.ijkplayer;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 @SuppressWarnings("SameParameterValue")
-public class IjkMediaMeta {
+public final class IjkMediaMeta {
     // media meta
     public static final String IJKM_KEY_FORMAT = "format";
     public static final String IJKM_KEY_DURATION_US = "duration_us";

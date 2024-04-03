@@ -1,8 +1,10 @@
-# ijkplayer-log
+# 1
 -dontwarn lib.kalu.ijkplayer.util.**
 -keep class lib.kalu.ijkplayer.util.** { *; }
--keep interface lib.kalu.ijkplayer.util.** { *; }
-# ijkplayer-jni
--dontwarn tv.danmaku.ijk.media.player.**
--keep class tv.danmaku.ijk.media.player.** { *; }
--keep interface tv.danmaku.ijk.media.player.** { *; }
+# 2
+-dontwarn lib.kalu.ijkplayer.misc.**
+-keep class lib.kalu.ijkplayer.misc.** { *; }
+# 3
+-keep class lib.kalu.ijkplayer.IjkMediaPlayer{*;}
+-keep class lib.kalu.ijkplayer.IjkTimedText{*;}
+-keep class lib.kalu.ijkplayer.IjkMediaMeta{*;}

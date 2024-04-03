@@ -28,8 +28,8 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.Map;
 
-import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
-import tv.danmaku.ijk.media.player.misc.ITrackInfo;
+import lib.kalu.ijkplayer.misc.IMediaDataSource;
+import lib.kalu.ijkplayer.misc.ITrackInfo;
 
 public interface IMediaPlayer {
     /*

@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2016 Bilibili
- * Copyright (C) 2016 Raymond Zheng <raymondzheng1412@gmail.com>
+ * Copyright (C) 2015 Bilibili
+ * Copyright (C) 2015 Zhang Rui <bbcallen@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,17 @@
  * limitations under the License.
  */
 
-package tv.danmaku.ijk.media.player.misc;
+package lib.kalu.ijkplayer.misc;
 
-import java.io.IOException;
+public interface IMediaFormat {
+    // Common keys
+    String KEY_MIME = "mime";
 
-@SuppressWarnings("RedundantThrows")
-public interface IAndroidIO {
-    int  open(String url) throws IOException;
-    int  read(byte[] buffer, int size) throws IOException;
-    long seek(long offset, int whence) throws IOException;
-    int  close() throws IOException;
+    // Video Keys
+    String KEY_WIDTH = "width";
+    String KEY_HEIGHT = "height";
+
+    String getString(String name);
+
+    int getInteger(String name);
 }
