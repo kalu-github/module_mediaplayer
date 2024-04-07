@@ -16,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
-
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -35,7 +33,7 @@ public interface VideoRenderApi {
 
     void release();
 
-    void setLayoutParams( ViewGroup.LayoutParams params);
+    void setLayoutParams(ViewGroup.LayoutParams params);
 
     void setScaleX(float v);
 
@@ -44,7 +42,7 @@ public interface VideoRenderApi {
      *
      * @param player player
      */
-    void setKernel( VideoKernelApi player);
+    void setKernel(VideoKernelApi player);
 
     /**
      * 截图
@@ -75,12 +73,12 @@ public interface VideoRenderApi {
      * 注意：VideoView的宽高一定要定死，否者以下算法不成立
      * 借鉴于网络
      */
-    default int[] doMeasureSpec( int widthMeasureSpec,
-                                 int heightMeasureSpec,
+    default int[] doMeasureSpec(int widthMeasureSpec,
+                                int heightMeasureSpec,
                                 @PlayerType.ScaleType.Value int videoScaleType,
                                 @PlayerType.RotationType.Value int videoRotation,
-                                 int videoWidth,
-                                 int videoHeight) {
+                                int videoWidth,
+                                int videoHeight) {
 
         if (videoScaleType == 0) {
             videoScaleType = PlayerManager.getInstance().getConfig().getScaleType();
@@ -132,9 +130,33 @@ public interface VideoRenderApi {
                     return new int[]{newScreenWidth, screenHeight};
                 }
             }
-            // 错误1
+            // 填充屏幕 => 水平方向拉伸至屏幕
+            else if (screenWidth > screenHeight && videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH) {
+                return new int[]{screenWidth, screenHeight};
+            }
+            // 填充屏幕 => 竖直方向拉伸至屏幕
             else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH) {
-                throw new Exception("not need crop");
+                float v1 = (screenWidth / screenHeight);
+                float v2 = (videoWidth / videoHeight);
+                if (v1 > v2 && screenWidth > videoWidth) {
+                    int realH = screenHeight;
+                    int realW = (screenHeight / videoHeight) * videoWidth;
+                    return new int[]{realW, realH};
+                } else if (v1 > v2 && screenWidth < videoWidth) {
+                    int realH = videoHeight;
+                    int realW = (screenHeight / videoHeight) * videoWidth;
+                    return new int[]{realW, realH};
+                } else if (v1 < v2 && screenWidth > videoWidth) {
+                    int realW = screenWidth;
+                    int realH = (screenWidth / videoWidth) * videoHeight;
+                    return new int[]{realW, realH};
+                } else if (v1 < v2 && screenWidth < videoWidth) {
+                    int realW = videoWidth;
+                    int realH = (screenWidth / videoWidth) * videoHeight;
+                    return new int[]{realW, realH};
+                } else {
+                    return new int[]{screenHeight, screenWidth};
+                }
             }
             // 错误2
             else if (videoWidth < 0 || videoHeight < 0) {
@@ -149,7 +171,7 @@ public interface VideoRenderApi {
         }
     }
 
-    default String saveBitmap( Context context,  Bitmap bitmap) {
+    default String saveBitmap(Context context, Bitmap bitmap) {
         try {
             // 1
             File dir = context.getFilesDir();
