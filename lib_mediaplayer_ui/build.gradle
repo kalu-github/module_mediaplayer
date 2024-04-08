@@ -33,22 +33,27 @@ android {
     }
 
     buildTypes {
-        buildTypes {
-            release {
-                minifyEnabled false
-                consumerProguardFiles 'proguard-rules.pro'
-            }
-            debug {
-                minifyEnabled false
-                consumerProguardFiles 'proguard-rules.pro'
-            }
+        release {
+            minifyEnabled true
+            consumerProguardFiles 'consumer-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'consumer-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            consumerProguardFiles 'consumer-rules.pro'
         }
     }
 
-    //jdk1.8
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        buildConfig true
+    }
+    // aar方法参数名被混淆问题
+    tasks.withType(JavaCompile) {
+        options.compilerArgs += ["-g", "-parameters"]
     }
 }
 

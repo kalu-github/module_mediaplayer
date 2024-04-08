@@ -1,0 +1,11 @@
+-dontwarn lib.kalu.**
+-dontwarn com.google.**
+-dontwarn org.apache.commons.io.**
+
+-keep class lib.kalu.mediaplayer.widget.** {*;}
+-keep class lib.kalu.mediaplayer.buried.** {*;}
+-keep class lib.kalu.mediaplayer.config.** {*;}
+-keep class lib.kalu.mediaplayer.listener.** {*;}
+-keep class lib.kalu.mediaplayer.core.component.** {*;}
+-keep class lib.kalu.mediaplayer.TestActivity {*;}
+-keep class lib.kalu.mediaplayer.util.UdpMulticastUtil {*;}
