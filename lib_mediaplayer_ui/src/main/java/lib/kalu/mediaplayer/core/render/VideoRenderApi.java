@@ -11,6 +11,7 @@ import android.opengl.EGLContext;
 import android.opengl.EGLDisplay;
 import android.opengl.EGLSurface;
 import android.opengl.GLES20;
+import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,39 +131,61 @@ public interface VideoRenderApi {
                     return new int[]{newScreenWidth, screenHeight};
                 }
             }
-            // 填充屏幕 => 水平方向拉伸至屏幕
-            else if (screenWidth > screenHeight && videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH) {
-                return new int[]{screenWidth, screenHeight};
-            }
+//            // 填充屏幕 => 水平方向拉伸至屏幕
+//            else if (screenWidth > screenHeight && videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH) {
+//                return new int[]{screenWidth, screenHeight};
+//            }
             // 填充屏幕 => 竖直方向拉伸至屏幕
             else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH) {
-                float v1 = (screenWidth / screenHeight);
-                float v2 = (videoWidth / videoHeight);
-                if (v1 > v2 && screenWidth > videoWidth) {
-                    int realH = screenHeight;
-                    int realW = (screenHeight / videoHeight) * videoWidth;
-                    return new int[]{realW, realH};
-                } else if (v1 > v2 && screenWidth < videoWidth) {
-                    int realH = videoHeight;
-                    int realW = (screenHeight / videoHeight) * videoWidth;
-                    return new int[]{realW, realH};
-                } else if (v1 < v2 && screenWidth > videoWidth) {
-                    int realW = screenWidth;
-                    int realH = (screenWidth / videoWidth) * videoHeight;
-                    return new int[]{realW, realH};
-                } else if (v1 < v2 && screenWidth < videoWidth) {
-                    int realW = videoWidth;
-                    int realH = (screenWidth / videoWidth) * videoHeight;
-                    return new int[]{realW, realH};
-                } else {
+                double v1 = ((double) screenWidth) / ((double) screenHeight);
+                double v2 = ((double) videoWidth) / ((double) videoWidth);
+
+                // 视频宽高比>屏幕宽高比, 以屏幕宽度为基准缩放
+                if (v2 > v1) {
+                    double realW = ((double) screenWidth);
+                    double realH = (((double) screenWidth) / ((double) videoWidth)) * ((double) videoHeight);
+                    return new int[]{(int) realW, (int) realH};
+                }
+                // 视频宽高比<屏幕宽高比, 以屏幕高度为基准缩放
+                else if (v2 < v1) {
+                    double realH = ((double) screenHeight);
+                    double realW = (((double) screenHeight) / ((double) videoHeight)) * ((double) videoWidth);
+                    return new int[]{(int) realW, (int) realH};
+                }
+                // 比例相同,
+                else {
                     return new int[]{screenHeight, screenWidth};
                 }
+
+
+//                double v1 = ((double) screenWidth) / ((double) screenHeight);
+//                double v2 = ((double) videoWidth) / ((double) videoHeight);
+//                Log.e("uyfgRRR", "v1 = " + v1 + ", v2 = " + v2 + ", screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
+//                if (v1 > v2 && screenWidth > videoWidth) {
+//                    int realH = videoHeight;
+//                    int realW = (screenHeight / videoHeight) * videoWidth;
+//                    Log.e("uyfgRRR", "no1 => realH = " + realH + ", realW = " + realW);
+//                    return new int[]{realW, realH};
+//                } else if (v1 > v2 && screenWidth < videoWidth) {
+//                    int realH = videoHeight;
+//                    int realW = (screenHeight / videoHeight) * videoWidth;
+//                    Log.e("uyfgRRR", "no2 => realH = " + realH + ", realW = " + realW);
+//                    return new int[]{realW, realH};
+//                } else if (v1 < v2 && screenWidth > videoWidth) {
+//                    int realW = screenWidth;
+//                    int realH = (screenWidth / videoWidth) * videoHeight;
+//                    Log.e("uyfgRRR", "no3 => realH = " + realH + ", realW = " + realW);
+//                    return new int[]{realW, realH};
+//                } else if (v1 < v2 && screenWidth < videoWidth) {
+//                    int realW = videoWidth;
+//                    int realH = (screenWidth / videoWidth) * videoHeight;
+//                    Log.e("uyfgRRR", "no4 => realH = " + realH + ", realW = " + realW);
+//                    return new int[]{realW, realH};
+//                } else {
+//                    return new int[]{screenHeight, screenWidth};
+//                }
             }
-            // 错误2
-            else if (videoWidth < 0 || videoHeight < 0) {
-                throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
-            }
-            // 错误3
+            // 错误
             else {
                 throw new Exception("not find");
             }
