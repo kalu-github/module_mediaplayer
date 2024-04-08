@@ -156,34 +156,6 @@ public interface VideoRenderApi {
                 else {
                     return new int[]{screenHeight, screenWidth};
                 }
-
-
-//                double v1 = ((double) screenWidth) / ((double) screenHeight);
-//                double v2 = ((double) videoWidth) / ((double) videoHeight);
-//                Log.e("uyfgRRR", "v1 = " + v1 + ", v2 = " + v2 + ", screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
-//                if (v1 > v2 && screenWidth > videoWidth) {
-//                    int realH = videoHeight;
-//                    int realW = (screenHeight / videoHeight) * videoWidth;
-//                    Log.e("uyfgRRR", "no1 => realH = " + realH + ", realW = " + realW);
-//                    return new int[]{realW, realH};
-//                } else if (v1 > v2 && screenWidth < videoWidth) {
-//                    int realH = videoHeight;
-//                    int realW = (screenHeight / videoHeight) * videoWidth;
-//                    Log.e("uyfgRRR", "no2 => realH = " + realH + ", realW = " + realW);
-//                    return new int[]{realW, realH};
-//                } else if (v1 < v2 && screenWidth > videoWidth) {
-//                    int realW = screenWidth;
-//                    int realH = (screenWidth / videoWidth) * videoHeight;
-//                    Log.e("uyfgRRR", "no3 => realH = " + realH + ", realW = " + realW);
-//                    return new int[]{realW, realH};
-//                } else if (v1 < v2 && screenWidth < videoWidth) {
-//                    int realW = videoWidth;
-//                    int realH = (screenWidth / videoWidth) * videoHeight;
-//                    Log.e("uyfgRRR", "no4 => realH = " + realH + ", realW = " + realW);
-//                    return new int[]{realW, realH};
-//                } else {
-//                    return new int[]{screenHeight, screenWidth};
-//                }
             }
             // 错误
             else {
