@@ -94,35 +94,32 @@ public class MainActivity extends Activity {
     }
 
     private String getUrl() {
-        String s = null;
+
+        String videoUrl;
         try {
             EditText editText = findViewById(R.id.main_edit);
-            s = editText.getText().toString();
-            if (null == s || s.length() <= 0) {
-                RadioGroup radioGroup = findViewById(R.id.main_radio);
-                int id = radioGroup.getCheckedRadioButtonId();
-                RadioButton radioButton = radioGroup.findViewById(id);
-                s = radioButton.getTag().toString();
-            }
+            String string = editText.getText().toString();
+            if (null == string || string.length() == 0)
+                throw new Exception();
+            videoUrl = string;
         } catch (Exception e) {
+            RadioGroup radioGroup = findViewById(R.id.main_radio);
+            int id = radioGroup.getCheckedRadioButtonId();
+            RadioButton radioButton = radioGroup.findViewById(id);
+            videoUrl = radioButton.getTag().toString();
         }
 
-        if ("test_002.mpeg".equals(s) || "xinzui.mp4".equals(s) || "v_3_4.mp4".equals(s) || "v_1_1.mkv".equals(s) || "video-h265.mkv".equals(s) || "video-test.rmvb".equals(s)) {
-            s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
-        } else if ("video-h264-adts.m3u8".equals(s)) {
-            s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
-        } else if ("video-sxgd.mpeg".equals(s)) {
-            s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
-        } else if ("test_1920~960.mp4".equals(s) || "test_540~960.mp4".equals(s) ) {
-            s = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + s;
+        if ("test_1920~960.mp4".equals(videoUrl)) {
+            videoUrl = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + videoUrl;
+        } else if ("test_540~960.mp4".equals(videoUrl)) {
+            videoUrl = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + videoUrl;
         }
 
-        if (s.startsWith("udp")) {
-            boolean checkUdpJoinGroup = UdpMulticastUtil.checkUdpJoinGroup(s);
-            Toast.makeText(getApplicationContext(), "checkUdpJoinGroup = " + checkUdpJoinGroup + ", udp = " + s, Toast.LENGTH_SHORT).show();
+        if (videoUrl.startsWith("udp")) {
+            boolean checkUdpJoinGroup = UdpMulticastUtil.checkUdpJoinGroup(videoUrl);
+            Toast.makeText(getApplicationContext(), "checkUdpJoinGroup = " + checkUdpJoinGroup + ", udp = " + videoUrl, Toast.LENGTH_SHORT).show();
         }
-
-        return s;
+        return videoUrl;
 //        return "http://zteres.sn.chinamobile.com:6060/ystxds/32/movie62ff2023041019270000?AuthInfo=XtytY6od2CoxL3Ece34qrDut5VCPsz5XztCLvxBRpErVaX%2F0PpXSHHk8ZrK18wSwUcPUBpKvvT33aM%2FbcRBNJw%3D%3D&version=v1.0&BreakPoint=0&virtualDomain=ystxds.vod_hpd.zte.com&mescid=00000050280009590769&programid=&contentid=movie62ff2023041019270000&videoid=00000050280009590769&recommendtype=0&userid=A089E4CA0921&boid=&stbid=&terminalflag=1&profilecode=&usersessionid=755219691";
 //        return "http://ottrrs.hl.chinamobile.com/88888888/16/20230427/276732502/276732502.ts?rrsip=ottrrs.hl.chinamobile.com&zoneoffset=0&servicetype=0&icpid=&limitflux=-1&limitdur=-1&tenantId=8601&accountinfo=%2C3918822%2C61.185.224.115%2C20230515181603%2C10019232542%2C3918822%2C0.0%2C1%2C0%2C-1%2C4%2C1%2C%2C%2C377747652%2C1%2C%2C377747857%2CEND&GuardEncType=2&it=H4sIAAAAAAAAAE2OQQuCMBzFv82Ow2kWO-xUBEFYoHWNf9tzidPVpkHfPg0PHd_j93u8IZDGYacImckTIIPA6p5L0nWaybVYZWkKWecs4lV4lTJNzjW9LbyZtWu5vYmECyG53HCxFqyaB_eOrEp-bDF2d4QlTGKJ8G40lIk1f1PkZG2ApaHxPT87-lyCWxCGajnXj86xYQ4VxXYq2IPi1ndPCjBHb3-cqslFsCfpliwK6vDnnYKZTnwBm4g0x-0AAAA";
     }

@@ -247,7 +247,9 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         try {
-            int[] measureSpec = doMeasureSpec(widthMeasureSpec, heightMeasureSpec, mVideoScaleType, mVideoRotation, mVideoWidth, mVideoHeight);
+            int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
+            int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
+            int[] measureSpec = doMeasureSpec(screenWidth, screenHeight, mVideoWidth, mVideoHeight, mVideoScaleType, mVideoRotation);
             if (null == measureSpec || measureSpec.length != 2)
                 throw new Exception("measureSpec error: " + measureSpec);
             int width = measureSpec[0];
@@ -255,7 +257,6 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             int specH = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             super.onMeasure(specW, specH);
-//            setMeasuredDimension(measureSpec[0], measureSpec[1]);
 //            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
         } catch (Exception e) {
             MPLogUtil.log("VideoRenderTextureView => onMeasure => " + e.getMessage());

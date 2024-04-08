@@ -10,7 +10,6 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -161,7 +160,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
     }
 
     @Override
-    public void setKernel( VideoKernelApi kernel) {
+    public void setKernel(VideoKernelApi kernel) {
         this.mKernel = kernel;
     }
 
@@ -276,7 +275,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
     int mVideoRotation = 0;
 
     @Override
-    public void setVideoSize( int videoWidth,  int videoHeight) {
+    public void setVideoSize(int videoWidth, int videoHeight) {
         try {
             if (videoWidth <= 0 || videoHeight <= 0)
                 throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
@@ -303,7 +302,9 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         try {
-            int[] measureSpec = doMeasureSpec(widthMeasureSpec, heightMeasureSpec, mVideoScaleType, mVideoRotation, mVideoWidth, mVideoHeight);
+            int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
+            int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
+            int[] measureSpec = doMeasureSpec(screenWidth, screenHeight, mVideoWidth, mVideoHeight, mVideoScaleType, mVideoRotation);
             if (null == measureSpec || measureSpec.length != 2)
                 throw new Exception("measureSpec error: " + measureSpec);
             int width = measureSpec[0];
@@ -311,7 +312,6 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             int specH = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             super.onMeasure(specW, specH);
-//            setMeasuredDimension(measureSpec[0], measureSpec[1]);
 //            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
         } catch (Exception e) {
             MPLogUtil.log("VideoRenderSurfaceView => onMeasure => " + e.getMessage());
@@ -365,7 +365,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
                 throw new Exception("mHandler warning: " + mHandler);
             mHandler = new Handler(Looper.getMainLooper()) {
                 @Override
-                public void handleMessage( Message msg) {
+                public void handleMessage(Message msg) {
                     super.handleMessage(msg);
                     if (msg.what == 9899) {
                         if (null != mKernel) {

@@ -253,7 +253,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
                 @Override
                 public void onVideoSizeChanged(EventTime eventTime, VideoSize videoSize) {
-                    onMeasure(PlayerType.KernelType.EXO_V2, videoSize.width, videoSize.height, videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.Rotation_0);
+                    onUpdateSizeChanged(PlayerType.KernelType.EXO_V2, videoSize.width, videoSize.height, videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.Rotation_0);
                 }
 
                 @Override

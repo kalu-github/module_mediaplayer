@@ -74,67 +74,69 @@ public interface VideoRenderApi {
      * 注意：VideoView的宽高一定要定死，否者以下算法不成立
      * 借鉴于网络
      */
-    default int[] doMeasureSpec(int widthMeasureSpec,
-                                int heightMeasureSpec,
+    default int[] doMeasureSpec(int screenWidth, int screenHeight, int videoWidth, int videoHeight,
                                 @PlayerType.ScaleType.Value int videoScaleType,
-                                @PlayerType.RotationType.Value int videoRotation,
-                                int videoWidth,
-                                int videoHeight) {
+                                @PlayerType.RotationType.Value int videoRotation) {
+        MPLogUtil.log("VideoRenderApi => doMeasureSpec => screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
 
         if (videoScaleType == 0) {
             videoScaleType = PlayerManager.getInstance().getConfig().getScaleType();
         }
 
+        // 软解码时处理旋转信息，交换宽高
         if (videoRotation == 90 || videoRotation == 270) {
-            // 软解码时处理旋转信息，交换宽高
-            widthMeasureSpec = widthMeasureSpec + heightMeasureSpec;
-            heightMeasureSpec = widthMeasureSpec - heightMeasureSpec;
-            widthMeasureSpec = widthMeasureSpec - heightMeasureSpec;
+//            widthMeasureSpec = widthMeasureSpec + heightMeasureSpec;
+//            heightMeasureSpec = widthMeasureSpec - heightMeasureSpec;
+//            widthMeasureSpec = widthMeasureSpec - heightMeasureSpec;
         }
 
-        int screenWidth = View.MeasureSpec.getSize(widthMeasureSpec);
-        int screenHeight = View.MeasureSpec.getSize(heightMeasureSpec);
-        MPLogUtil.log("VideoRenderApi => doMeasureSpec => measureWidth => screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
-
         try {
-            // 填充屏幕, 裁剪
-            if (videoWidth > 0 && videoHeight > 0 && videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_SCREEN_CROP) {
-                if (videoWidth * screenHeight > screenWidth * videoHeight) {
-                    int newScreenWidth = screenHeight * videoWidth / videoHeight;
-                    return new int[]{newScreenWidth, screenHeight};
-                } else {
-                    int newScreenHeight = screenWidth * videoHeight / videoWidth;
-                    return new int[]{screenWidth, newScreenHeight};
+            // 裁剪显示
+            if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_SCREEN_CROP) {
+                if (videoWidth > 0 && videoHeight > 0) {
+                    int v1 = videoWidth * screenHeight;
+                    int v2 = screenWidth * videoHeight;
+                    if (v1 > v2) {
+                        int realH = screenHeight;
+                        int realW = screenHeight * videoWidth / videoHeight;
+                        return new int[]{realW, realH};
+                    } else {
+                        int realW = screenWidth;
+                        int realH = screenWidth * videoHeight / videoWidth;
+                        return new int[]{realW, realH};
+                    }
                 }
             }
             // 视频尺寸
-            else if (videoWidth > 0 && videoHeight > 0 && videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_VIDEO_ORIGINAL) {
-                return new int[]{videoWidth, videoHeight};
+            else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_VIDEO_ORIGINAL) {
+                if (videoWidth > 0 && videoHeight > 0) {
+                    return new int[]{videoWidth, videoHeight};
+                }
             }
             // 16:9
-            else if (videoWidth > 0 && videoHeight > 0 && videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_16_9) {
-                if (screenHeight > screenWidth / 16 * 9) {
-                    int newScreenHeight = screenWidth / 16 * 9;
-                    return new int[]{screenWidth, newScreenHeight};
-                } else {
-                    int newScreenWidth = screenHeight / 9 * 16;
-                    return new int[]{newScreenWidth, screenHeight};
+            else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_16_9) {
+                if (videoWidth > 0 && videoHeight > 0) {
+                    double realH = ((double) screenWidth) / 16 * 9;
+                    if (screenHeight > realH) {
+                        return new int[]{screenWidth, (int) realH};
+                    } else {
+                        double realW = ((double) screenHeight) / 9 * 16;
+                        return new int[]{(int) realW, screenHeight};
+                    }
                 }
             }
             // 4:3
             else if (videoWidth > 0 && videoHeight > 0 && videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_4_3) {
-                if (screenHeight > screenWidth / 4 * 3) {
-                    int newScreenHeight = screenWidth / 4 * 3;
-                    return new int[]{screenWidth, newScreenHeight};
-                } else {
-                    int newScreenWidth = screenHeight / 3 * 4;
-                    return new int[]{newScreenWidth, screenHeight};
+                if (videoWidth > 0 && videoHeight > 0) {
+                    double realH = ((double) screenWidth) / 4 * 3;
+                    if (screenHeight > realH) {
+                        return new int[]{screenWidth, (int) realH};
+                    } else {
+                        double realW = ((double) screenHeight) / 3 * 4;
+                        return new int[]{(int) realW, screenHeight};
+                    }
                 }
             }
-//            // 填充屏幕 => 水平方向拉伸至屏幕
-//            else if (screenWidth > screenHeight && videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH) {
-//                return new int[]{screenWidth, screenHeight};
-//            }
             // 填充屏幕 => 竖直方向拉伸至屏幕
             else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH) {
                 double v1 = ((double) screenWidth) / ((double) screenHeight);
@@ -152,15 +154,8 @@ public interface VideoRenderApi {
                     double realW = (((double) screenHeight) / ((double) videoHeight)) * ((double) videoWidth);
                     return new int[]{(int) realW, (int) realH};
                 }
-                // 比例相同,
-                else {
-                    return new int[]{screenHeight, screenWidth};
-                }
             }
-            // 错误
-            else {
-                throw new Exception("not find");
-            }
+            throw new Exception();
         } catch (Exception e) {
             return new int[]{screenWidth, screenHeight};
         }

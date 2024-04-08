@@ -502,7 +502,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 MPLogUtil.log("VideoAndroidPlayer => onVideoSizeChanged => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
                 if (videoWidth < 0 || videoHeight < 0)
                     throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
-                onMeasure(PlayerType.KernelType.ANDROID, videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);
+                onUpdateSizeChanged(PlayerType.KernelType.ANDROID, videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);
             } catch (Exception e) {
                 MPLogUtil.log("VideoAndroidPlayer => onVideoSizeChanged => " + e.getMessage());
             }

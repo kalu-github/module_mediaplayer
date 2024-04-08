@@ -13,7 +13,7 @@
             android:name="lib.kalu.mediaplayer.TestActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard|uiMode"
             android:exported="false"
-            android:screenOrientation="landscape"
+            android:screenOrientation="portrait"
             android:theme="@style/MediaplayerThemeFull" />
 
     </application>

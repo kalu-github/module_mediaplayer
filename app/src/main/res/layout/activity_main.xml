@@ -398,134 +398,142 @@
                 android:text="默认url"
                 android:textSize="14sp" />
 
-            <RadioGroup
-                android:id="@+id/main_radio"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:orientation="horizontal">
+                android:fillViewport="true">
 
-                <RadioButton
-                    android:id="@+id/main_radio0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tag="v_3_4.mp4"
-                    android:text="mkv" />
+                <RadioGroup
+                    android:id="@+id/main_radio"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/main_radio1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tag="video-test.rmvb"
-                    android:text="rmvb" />
+                    <RadioButton
+                        android:id="@+id/main_radio0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:tag="test_540~960.mp4"
+                        android:text="540*960.mp4[h264]" />
 
-                <RadioButton
-                    android:id="@+id/main_radio2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tag="video-h265.mkv"
-                    android:text="h265" />
+                    <RadioButton
+                        android:id="@+id/main_radio1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:tag="test_1920~960.mp4"
+                        android:text="1920*960.mp4[h265]" />
 
-                <RadioButton
-                    android:id="@+id/main_radio3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tag="@string/url_mp4"
-                    android:text="mp4" />
+                    <RadioButton
+                        android:id="@+id/main_radio2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:tag="video-h265.mkv"
+                        android:text="h265" />
 
-                <RadioButton
-                    android:id="@+id/main_radio4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tag="@string/url_m3u8"
-                    android:text="m3u8" />
+                    <RadioButton
+                        android:id="@+id/main_radio3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:tag="@string/url_mp4"
+                        android:text="mp4" />
 
-                <RadioButton
-                    android:id="@+id/main_radio5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tag="@string/url_rtsp"
-                    android:text="rtsp" />
+                    <RadioButton
+                        android:id="@+id/main_radio4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:tag="@string/url_m3u8"
+                        android:text="m3u8" />
 
-                <RadioButton
-                    android:id="@+id/main_radio6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tag="@string/url_rtmp"
-                    android:text="rtmp" />
+                    <RadioButton
+                        android:id="@+id/main_radio5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:tag="@string/url_rtsp"
+                        android:text="rtsp" />
 
-                <RadioButton
-                    android:id="@+id/main_radio7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tag="@string/url_udp"
-                    android:text="udp" />
+                    <RadioButton
+                        android:id="@+id/main_radio6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:tag="@string/url_rtmp"
+                        android:text="rtmp" />
 
-                <RadioButton
-                    android:id="@+id/main_radio8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tag="@string/url_tencent"
-                    android:text="test" />
+                    <RadioButton
+                        android:id="@+id/main_radio7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:tag="@string/url_udp"
+                        android:text="udp" />
 
-                <RadioButton
-                    android:id="@+id/main_radio9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tag="@string/url_https"
-                    android:text="https" />
-                <!--        <RadioButton-->
-                <!--            android:id="@+id/main_radio9"-->
-                <!--            android:layout_width="wrap_content"-->
-                <!--            android:layout_height="match_parent"-->
-                <!--            android:tag="https://media.w3.org/2010/05/sintel/trailer.mp4"-->
-                <!--            android:text="https" />-->
+                    <RadioButton
+                        android:id="@+id/main_radio8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:tag="@string/url_tencent"
+                        android:text="test" />
 
-                <RadioButton
-                    android:id="@+id/main_radio10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tag="@string/url_dash1"
-                    android:text="dash1" />
+                    <RadioButton
+                        android:id="@+id/main_radio9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:tag="@string/url_https"
+                        android:text="https" />
+                    <!--        <RadioButton-->
+                    <!--            android:id="@+id/main_radio9"-->
+                    <!--            android:layout_width="wrap_content"-->
+                    <!--            android:layout_height="match_parent"-->
+                    <!--            android:tag="https://media.w3.org/2010/05/sintel/trailer.mp4"-->
+                    <!--            android:text="https" />-->
 
-                <RadioButton
-                    android:id="@+id/main_radio11"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:tag="@string/url_dash2"
-                    android:text="dash2" />
+                    <RadioButton
+                        android:id="@+id/main_radio10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:tag="@string/url_dash1"
+                        android:text="dash1" />
 
-                <RadioButton
-                    android:id="@+id/main_radio12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true"
-                    android:tag="@string/url_sx1"
-                    android:text="m3u8-sn1" />
+                    <RadioButton
+                        android:id="@+id/main_radio11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:tag="@string/url_dash2"
+                        android:text="dash2" />
 
-                <RadioButton
-                    android:id="@+id/main_radio13"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true"
-                    android:tag="@string/url_sx2"
-                    android:text="m3u8-sn2" />
+                    <RadioButton
+                        android:id="@+id/main_radio12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:checked="true"
+                        android:tag="@string/url_sx1"
+                        android:text="m3u8-sn1" />
 
-                <RadioButton
-                    android:id="@+id/main_radio14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true"
-                    android:tag="@string/url_sx3"
-                    android:text="m3u8-sn3" />
-                <RadioButton
-                    android:id="@+id/main_radio15"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true"
-                    android:tag="@string/url_track"
-                    android:text="track" />
+                    <RadioButton
+                        android:id="@+id/main_radio13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:checked="true"
+                        android:tag="@string/url_sx2"
+                        android:text="m3u8-sn2" />
 
-            </RadioGroup>
+                    <RadioButton
+                        android:id="@+id/main_radio14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:checked="true"
+                        android:tag="@string/url_sx3"
+                        android:text="m3u8-sn3" />
+
+                    <RadioButton
+                        android:id="@+id/main_radio15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:checked="true"
+                        android:tag="@string/url_track"
+                        android:text="track" />
+
+                </RadioGroup>
+
+            </HorizontalScrollView>
 
             <TextView
                 android:layout_width="match_parent"
@@ -539,8 +547,7 @@
                 android:id="@+id/main_edit"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:hint="输入视频地址"
-                android:text="test_540~960.mp4" />
+                android:hint="输入视频地址" />
 
             <Button
                 android:id="@+id/main_button1"
