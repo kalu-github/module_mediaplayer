@@ -113,6 +113,8 @@ public class MainActivity extends Activity {
             videoUrl = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + videoUrl;
         } else if ("test_540~960.mp4".equals(videoUrl)) {
             videoUrl = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + videoUrl;
+        } else if ("test_544*960.mp4".equals(videoUrl)) {
+            videoUrl = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + videoUrl;
         }
 
         if (videoUrl.startsWith("udp")) {
@@ -125,7 +127,7 @@ public class MainActivity extends Activity {
     }
 
     private void initAsset() {
-        List<String> list = Arrays.asList("test_1920~960.mp4", "test_540~960.mp4", "test_002.mpeg", "xinzui.mp4", "v_3_4.mp4", "v_1_1.mkv", "video-h265.mkv", "video-test.rmvb", "video-h264-adts.m3u8", "video-h264-adts-0000.ts", "video-h264-adts-0001.ts", "video-sxgd.mpeg");
+        List<String> list = Arrays.asList("test_544*960.mp4", "test_1920~960.mp4", "test_540~960.mp4", "test_002.mpeg", "xinzui.mp4", "v_3_4.mp4", "v_1_1.mkv", "video-h265.mkv", "video-test.rmvb", "video-h264-adts.m3u8", "video-h264-adts-0000.ts", "video-h264-adts-0001.ts", "video-sxgd.mpeg");
         for (int i = 0; i < list.size(); i++) {
             String fromPath = list.get(i);
             String savePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + fromPath;

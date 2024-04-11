@@ -427,8 +427,8 @@
                         android:id="@+id/main_radio2"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:tag="video-h265.mkv"
-                        android:text="h265" />
+                        android:tag="test_544~960.mp4"
+                        android:text="544*960.mp4[h264]" />
 
                     <RadioButton
                         android:id="@+id/main_radio3"
