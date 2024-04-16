@@ -716,16 +716,19 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             switch (what) {
                 // 拉流
                 case IMediaPlayer.MEDIA_INFO_OPEN_INPUT:
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
                     break;
                 // 缓冲开始
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
+                    if (mPrepared) {
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
+                    }
                     break;
                 // 缓冲结束
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+                    if (mPrepared) {
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                    }
                     break;
                 // 首帧画面 => 开播
                 case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
