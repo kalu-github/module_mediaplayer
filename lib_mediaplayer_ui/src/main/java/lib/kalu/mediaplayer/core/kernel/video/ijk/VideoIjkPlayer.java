@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+
 import androidx.annotation.FloatRange;
 
 
@@ -129,7 +130,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // 不限制输入缓冲区大小, 对实时流很有用
             mIjkPlayer.setOption(player, "infbuf", 0);
             // 以音频帧为时间基准，当视频帧和音频帧不同步时，允许丢弃的视频帧数
-            mIjkPlayer.setOption(player, "framedrop", 100);
+            mIjkPlayer.setOption(player, "framedrop", 1000);
             // 起始播放位置的偏移量，单位毫秒, 例如可以设置从第20秒的位置播放
             mIjkPlayer.setOption(player, "seek-at-start", 0);
             // 是否解码字幕数据
@@ -150,17 +151,17 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // 是否播放准备工作完成后自动开始播放
             mIjkPlayer.setOption(player, "start-on-prepared", (mPlayWhenReady ? 1 : 0));
             // 视频帧队列大小 => [3,16]
-            mIjkPlayer.setOption(player, "video-pictq-size", 3);
-            // 预读数据的缓冲区大小 => [0,15 * 1024 * 1024]
-            mIjkPlayer.setOption(player, "max-buffer-size", 15 * 1024 * 1024);
+            mIjkPlayer.setOption(player, "video-pictq-size", 16);
+            // 预读数据的缓冲区大小 => [0, 15 * 1024 * 1024]
+            mIjkPlayer.setOption(player, "max-buffer-size", 5 * 1024 * 1024);
             // 停止预读的最小帧数, 即预读帧数大于等于该值时, 将停止预读 => [2,50000]
-            mIjkPlayer.setOption(player, "min-frames", 10000);
+            mIjkPlayer.setOption(player, "min-frames", 1000);
             // 缓冲读取线程的第一次唤醒时间, 单位毫秒 => [100,1000]
             mIjkPlayer.setOption(player, "first-high-water-mark-ms", 100);
             // 缓冲读取线程的第二次唤醒时间, 单位毫秒 => [100,1000]
-            mIjkPlayer.setOption(player, "next-high-water-mark-ms", 500);
+            mIjkPlayer.setOption(player, "next-high-water-mark-ms", 100);
             // 缓冲读取线程的第三次唤醒时间, 单位毫秒 => [100,1000]
-            mIjkPlayer.setOption(player, "last-high-water-mark-ms", 1000);
+            mIjkPlayer.setOption(player, "last-high-water-mark-ms", 100);
             // 暂停输出, 直到停止后读取足够的数据包
             mIjkPlayer.setOption(player, "packet-buffering", 1);
             // 播放开始时对音视频进行同步操作
@@ -176,7 +177,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // 使用精确寻帧, 例如，拖动播放后，会寻找最近的关键帧进行播放，很有可能关键帧的位置不是拖动后的位置，而是较前的位置。可以设置这个参数来解决问题
             mIjkPlayer.setOption(player, "enable-accurate-seek", 1);
             // 设置精确寻帧的超时时间, 单位毫秒 => [0,5000]
-            mIjkPlayer.setOption(player, "accurate-seek-timeout", 1000);
+            mIjkPlayer.setOption(player, "accurate-seek-timeout", 100);
             // 不计算真实的帧率
             mIjkPlayer.setOption(player, "skip-calc-frame-rate", 0);
             // ??
@@ -226,7 +227,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // 设置播放前的探测时间 1,达到首屏秒开效果， bug有画面没声音
 //            mIjkPlayer.setOption(format, "analyzeduration", 1000); // 1s
             // 设置最长分析时长
-            mIjkPlayer.setOption(format, "analyzemaxduration", 1 * 1000); // 1s
+            mIjkPlayer.setOption(format, "analyzemaxduration", 100); // 100ms
             // 探测带第一帧后就会数据返回，如果这个值设置过小，会导致流的信息分析不完整，从而导致丢失流，用于秒开
 //            mIjkPlayer.setOption(format, "probesize", 20 * 1024 * 1024);// 20M
             // 通过立即清理数据包来减少等待时长, 每处理一个packet以后刷新io上下文
@@ -236,7 +237,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // 若是是rtsp协议，能够优先用tcp(默认是用udp)
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
             // 超时时间,单位ms => 10s
-            mIjkPlayer.setOption(format, "timeout", 10 * 1000 * 1000); // 10s
+            mIjkPlayer.setOption(format, "timeout", 10000); // 10s
             // 设置seekTo能够快速seek到指定位置并播放, 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
             mIjkPlayer.setOption(format, "fflags", "fastseek");
 //            mIjkPlayer.setOption(format, "fflags", "nobuffer");  // 起播seek会失效
@@ -248,9 +249,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => initOptionsIjk => OPT_CATEGORY_FORMAT => " + e.getMessage());
         }
+
+        // codec
         try {
             int codec = IjkMediaPlayer.OPT_CATEGORY_CODEC;
             mIjkPlayer.setOption(codec, "skip_loop_filter", 48);
+            mIjkPlayer.setOption(codec, "skip_frame", 0); // // 跳过帧
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => initOptionsIjk => OPT_CATEGORY_CODEC => " + e.getMessage());
         }
@@ -297,8 +301,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 //            int codec = IjkMediaPlayer.OPT_CATEGORY_CODEC;
 //            // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
 //            mIjkPlayer.setOption(codec, "skip_loop_filter", 48L);
-//            // 跳过帧
-//            mIjkPlayer.setOption(codec, "skip_frame", 0);
 //        } catch (Exception e) {
 //        }
 //
