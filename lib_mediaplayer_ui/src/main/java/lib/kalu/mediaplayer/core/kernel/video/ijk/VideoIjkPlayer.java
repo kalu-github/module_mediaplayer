@@ -130,9 +130,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // 不限制输入缓冲区大小, 对实时流很有用
             mIjkPlayer.setOption(player, "infbuf", 0);
             // 以音频帧为时间基准，当视频帧和音频帧不同步时，允许丢弃的视频帧数
-            mIjkPlayer.setOption(player, "framedrop", 1000);
-            // 起始播放位置的偏移量，单位毫秒, 例如可以设置从第20秒的位置播放
-            mIjkPlayer.setOption(player, "seek-at-start", 0);
+            mIjkPlayer.setOption(player, "framedrop", 100);
             // 是否解码字幕数据
             mIjkPlayer.setOption(player, "subtitle", 0);
             // ??
@@ -151,11 +149,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // 是否播放准备工作完成后自动开始播放
             mIjkPlayer.setOption(player, "start-on-prepared", (mPlayWhenReady ? 1 : 0));
             // 视频帧队列大小 => [3,16]
-            mIjkPlayer.setOption(player, "video-pictq-size", 16);
+            mIjkPlayer.setOption(player, "video-pictq-size", 3);
             // 预读数据的缓冲区大小 => [0, 15 * 1024 * 1024]
-            mIjkPlayer.setOption(player, "max-buffer-size", 5 * 1024 * 1024);
+            mIjkPlayer.setOption(player, "max-buffer-size", 1 * 1024 * 1024);
             // 停止预读的最小帧数, 即预读帧数大于等于该值时, 将停止预读 => [2,50000]
-            mIjkPlayer.setOption(player, "min-frames", 1000);
+            mIjkPlayer.setOption(player, "min-frames", 100);
             // 缓冲读取线程的第一次唤醒时间, 单位毫秒 => [100,1000]
             mIjkPlayer.setOption(player, "first-high-water-mark-ms", 100);
             // 缓冲读取线程的第二次唤醒时间, 单位毫秒 => [100,1000]
@@ -177,7 +175,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // 使用精确寻帧, 例如，拖动播放后，会寻找最近的关键帧进行播放，很有可能关键帧的位置不是拖动后的位置，而是较前的位置。可以设置这个参数来解决问题
             mIjkPlayer.setOption(player, "enable-accurate-seek", 1);
             // 设置精确寻帧的超时时间, 单位毫秒 => [0,5000]
-            mIjkPlayer.setOption(player, "accurate-seek-timeout", 100);
+            mIjkPlayer.setOption(player, "accurate-seek-timeout", 5000);
+            // 起始播放位置的偏移量，单位毫秒, 例如可以设置从第20秒的位置播放
+            mIjkPlayer.setOption(player, "seek-at-start", 9);
             // 不计算真实的帧率
             mIjkPlayer.setOption(player, "skip-calc-frame-rate", 0);
             // ??
@@ -225,11 +225,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             int format = IjkMediaPlayer.OPT_CATEGORY_FORMAT;
             mIjkPlayer.setOption(format, "http-detect-range-support", 0);
             // 设置播放前的探测时间 1,达到首屏秒开效果， bug有画面没声音
-            mIjkPlayer.setOption(format, "analyzeduration", 400); // 400ms
+            mIjkPlayer.setOption(format, "analyzeduration", 100); // 100ms
             // 设置最长分析时长
-            mIjkPlayer.setOption(format, "analyzemaxduration", 400); // 400ms
+            mIjkPlayer.setOption(format, "analyzemaxduration", 4000); // 4000ms
             // 探测带第一帧后就会数据返回，如果这个值设置过小，会导致流的信息分析不完整，从而导致丢失流，用于秒开
-//            mIjkPlayer.setOption(format, "probesize", 20 * 1024 * 1024);// 20M
+            mIjkPlayer.setOption(format, "probesize", 1 * 1024 * 1024);// 1M
             // 通过立即清理数据包来减少等待时长, 每处理一个packet以后刷新io上下文
             mIjkPlayer.setOption(format, "flush_packets", 1);
             // 清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频), 有时会造成因为DNS的问题而报10000问题的
@@ -254,7 +254,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             int codec = IjkMediaPlayer.OPT_CATEGORY_CODEC;
             mIjkPlayer.setOption(codec, "skip_loop_filter", 48);
-            mIjkPlayer.setOption(codec, "skip_frame", 0); // // 跳过帧
+//            mIjkPlayer.setOption(codec, "skip_frame", 100); // // 跳过帧
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => initOptionsIjk => OPT_CATEGORY_CODEC => " + e.getMessage());
         }
