@@ -225,9 +225,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             int format = IjkMediaPlayer.OPT_CATEGORY_FORMAT;
             mIjkPlayer.setOption(format, "http-detect-range-support", 0);
             // 设置播放前的探测时间 1,达到首屏秒开效果， bug有画面没声音
-//            mIjkPlayer.setOption(format, "analyzeduration", 1000); // 1s
+            mIjkPlayer.setOption(format, "analyzeduration", 400); // 400ms
             // 设置最长分析时长
-            mIjkPlayer.setOption(format, "analyzemaxduration", 100); // 100ms
+            mIjkPlayer.setOption(format, "analyzemaxduration", 400); // 400ms
             // 探测带第一帧后就会数据返回，如果这个值设置过小，会导致流的信息分析不完整，从而导致丢失流，用于秒开
 //            mIjkPlayer.setOption(format, "probesize", 20 * 1024 * 1024);// 20M
             // 通过立即清理数据包来减少等待时长, 每处理一个packet以后刷新io上下文
