@@ -22,6 +22,8 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     @Override
     public void onUpdateTimeMillis( long seek,  long position,  long duration,  long max) {
         try {
+            if(!showSpeed)
+                throw new Exception();
             TextView textView = findViewById(R.id.module_mediaplayer_component_net_message);
             if (null == textView)
                 throw new Exception("textView error: null");
@@ -54,7 +56,11 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
 //            case PlayerType.StateType.STATE_BUFFERING_STOP:
 //            case PlayerType.StateType.STATE_FAST_FORWARD_START:
 //            case PlayerType.StateType.STATE_FAST_REWIND_START:
-            default:
+            case PlayerType.StateType.STATE_BUFFERING_STOP:
+            case PlayerType.StateType.STATE_ERROR:
+            case PlayerType.StateType.STATE_ERROR_IGNORE:
+            case PlayerType.StateType.STATE_RELEASE:
+            case PlayerType.StateType.STATE_RELEASE_EXCEPTION:
                 MPLogUtil.log("ComponentNet => onPlayStateChanged => playState = " + playState);
                 gone();
                 break;
@@ -80,5 +86,11 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
             findViewById(R.id.module_mediaplayer_component_net_message).setVisibility(View.VISIBLE);
         } catch (Exception e) {
         }
+    }
+
+    private boolean showSpeed = false;
+
+    public void enableSpeed(boolean enable) {
+        showSpeed = enable;
     }
 }

@@ -735,7 +735,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             checkVideoReal();
                             // step4
                             boolean playWhenReady2 = isPlayWhenReady();
-                            MPLogUtil.log("VideoPlayerApiKernel => onEvent => event_video_start_seek => playWhenReady = " + playWhenReady2);
+                            MPLogUtil.log("VideoPlayerApiKernel => onEvent => event_video_start => playWhenReady = " + playWhenReady2);
                             if (!playWhenReady2) {
                                 pause();
                                 setPlayWhenReady(true);

@@ -12,7 +12,6 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
 
 
-
 import com.google.android.exoplayer2.PlaybackParameters;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -34,12 +33,11 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
 
-    public VideoAndroidPlayer( VideoPlayerApi playerApi,  VideoKernelApiEvent eventApi) {
+    public VideoAndroidPlayer(VideoPlayerApi playerApi, VideoKernelApiEvent eventApi) {
         super(playerApi, eventApi);
     }
 
 
-    
     @Override
     public VideoAndroidPlayer getPlayer() {
         return this;
@@ -61,7 +59,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder( Context context,  boolean logger,  int seekParameters) {
+    public void createDecoder(Context context, boolean logger, int seekParameters) {
         MPLogUtil.log("VideoAndroidPlayer => createDecoder => mMediaPlayer = " + mMediaPlayer);
         try {
             releaseDecoder(false, true);
@@ -75,7 +73,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder( Context context,  String url,  boolean prepareAsync) {
+    public void startDecoder(Context context, String url, boolean prepareAsync) {
         MPLogUtil.log("VideoAndroidPlayer => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mMediaPlayer)
@@ -320,7 +318,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setSurface( Surface surface, int w, int h) {
+    public void setSurface(Surface surface, int w, int h) {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -351,7 +349,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
                 throw new Exception("only support above Android M");
             PlaybackParams playbackParams = mMediaPlayer.getPlaybackParams();
-            if(null == playbackParams)
+            if (null == playbackParams)
                 throw new Exception("playbackParams error: null");
             float speed = playbackParams.getSpeed();
             if (speed < 1f)
@@ -451,7 +449,13 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             // 开始播放1
             else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+
+                if (mPrepared) {
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START_SEEK);
+                } else {
+                    mPrepared = true;
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+                }
                 try {
                     long seek = getSeek();
                     if (seek <= 0)
@@ -486,7 +490,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     private MediaPlayer.OnPreparedListener mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
-            mPrepared = true;
             start();
         }
     };
@@ -572,7 +575,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setLive( boolean live) {
+    public void setLive(boolean live) {
         this.mLive = live;
     }
 
