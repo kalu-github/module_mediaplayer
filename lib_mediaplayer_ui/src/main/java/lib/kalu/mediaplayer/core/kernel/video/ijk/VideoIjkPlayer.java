@@ -179,7 +179,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // ??
             mIjkPlayer.setOption(player, "get-frame-mode", 0);
             // 异步创建解码器
-            mIjkPlayer.setOption(player, "async-init-decoder", 1);
+            mIjkPlayer.setOption(player, "async-init-decoder", 0);
             // ??
             mIjkPlayer.setOption(player, "video-mime-type", null);
             // Android自动旋转角度
@@ -209,9 +209,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // Android音频倍速
             mIjkPlayer.setOption(player, "soundtouch", 0);
             // Android初始化延迟时间
-            mIjkPlayer.setOption(player, "ijkmeta-delay-init", 1);
+            mIjkPlayer.setOption(player, "ijkmeta-delay-init", 0);
             // Android等待开始绘制
-            mIjkPlayer.setOption(player, "render-wait-start", 1);
+            mIjkPlayer.setOption(player, "render-wait-start", 0);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => initOptionsIjk => OPT_CATEGORY_PLAYER => " + e.getMessage());
         }

@@ -40,7 +40,7 @@ public class ComponentError extends RelativeLayout implements ComponentApi {
             case PlayerType.StateType.STATE_RESUME_IGNORE:
             case PlayerType.StateType.STATE_RESTAER:
                 MPLogUtil.log("ComponentError[gone] => playState = " + playState);
-                gone();
+                hide();
                 break;
         }
     }
@@ -56,8 +56,9 @@ public class ComponentError extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void gone() {
+    public final void hide() {
         try {
+            bringToFront();
             findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_error_ui).setVisibility(View.GONE);
         } catch (Exception e) {

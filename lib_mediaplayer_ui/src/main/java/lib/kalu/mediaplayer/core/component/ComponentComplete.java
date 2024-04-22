@@ -27,7 +27,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
                 break;
             case PlayerType.StateType.STATE_INIT:
                 MPLogUtil.log("ComponentComplete[gone] => playState = " + playState);
-                gone();
+                hide();
                 break;
         }
     }
@@ -43,8 +43,9 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void gone() {
+    public final void hide() {
         try {
+            bringToFront();
             findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_complete_message).setVisibility(View.GONE);
         } catch (Exception e) {

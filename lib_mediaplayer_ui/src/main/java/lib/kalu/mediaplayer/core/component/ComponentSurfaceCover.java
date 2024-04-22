@@ -21,7 +21,7 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
         switch (playState) {
             case PlayerType.StateType.STATE_START:
                 MPLogUtil.log("ComponentSurfaceCover => callPlayerEvent => show => playState = " + playState);
-                gone();
+                hide();
                 break;
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_RELEASE:
@@ -44,12 +44,12 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
     }
 
     @Override
-    public final void gone() {
+    public final void hide() {
         try {
             bringToFront();
             findViewById(R.id.module_mediaplayer_component_surface_cover_bg).setVisibility(View.GONE);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentSurfaceCover => gone => " + e.getMessage());
+            MPLogUtil.log("ComponentSurfaceCover => hide => " + e.getMessage());
         }
     }
 }

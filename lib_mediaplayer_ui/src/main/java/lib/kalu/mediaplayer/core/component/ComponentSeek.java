@@ -36,7 +36,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             case PlayerType.StateType.STATE_LOADING_STOP:
             case PlayerType.StateType.STATE_BUFFERING_STOP:
                 MPLogUtil.log("ComponentSeek => callPlayerEvent => gone1 => playState = " + playState);
-                gone();
+                hide();
                 break;
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_ERROR:
@@ -44,7 +44,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             case PlayerType.StateType.STATE_END:
                 MPLogUtil.log("ComponentSeek => callPlayerEvent => gone2 => playState = " + playState);
                 onUpdateTimeMillis(0, 0, 0, 0);
-                gone();
+                hide();
                 break;
         }
     }
@@ -53,7 +53,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     public void callWindowEvent(int windowState) {
         switch (windowState) {
             default:
-                gone();
+                hide();
                 break;
         }
     }
@@ -71,13 +71,13 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public final void gone() {
+    public final void hide() {
         try {
+            bringToFront();
             setTag(R.id.module_mediaplayer_component_seek_sb, false);
             findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_seek_ui).setVisibility(View.GONE);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentSeek => gone => " + e.getMessage());
         }
     }
 

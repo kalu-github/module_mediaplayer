@@ -62,14 +62,15 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
             case PlayerType.StateType.STATE_RELEASE:
             case PlayerType.StateType.STATE_RELEASE_EXCEPTION:
                 MPLogUtil.log("ComponentNet => onPlayStateChanged => playState = " + playState);
-                gone();
+                hide();
                 break;
         }
     }
 
     @Override
-    public final void gone() {
+    public final void hide() {
         try {
+            bringToFront();
             findViewById(R.id.module_mediaplayer_component_net_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_net_pb).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_net_message).setVisibility(View.GONE);

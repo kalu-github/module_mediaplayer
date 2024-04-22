@@ -29,11 +29,11 @@ public class ComponentTry extends RelativeLayout implements ComponentApi {
             case PlayerType.StateType.STATE_TRY_COMPLETE:
                 Toast.makeText(getContext(), "试看结束", Toast.LENGTH_SHORT).show();
                 MPLogUtil.log("ComponentTry[gone] => playState = " + playState);
-                gone();
+                hide();
                 break;
             case PlayerType.StateType.STATE_INIT:
                 MPLogUtil.log("ComponentTry[gone] => playState = " + playState);
-                gone();
+                hide();
                 break;
         }
     }
@@ -41,14 +41,16 @@ public class ComponentTry extends RelativeLayout implements ComponentApi {
     @Override
     public final void show() {
         try {
+            bringToFront();
             findViewById(R.id.module_mediaplayer_component_try_message).setVisibility(View.VISIBLE);
         } catch (Exception e) {
         }
     }
 
     @Override
-    public final void gone() {
+    public final void hide() {
         try {
+            bringToFront();
             findViewById(R.id.module_mediaplayer_component_try_message).setVisibility(View.GONE);
         } catch (Exception e) {
         }

@@ -31,7 +31,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
             case PlayerType.StateType.STATE_RELEASE_EXCEPTION:
 //            default:
                 MPLogUtil.log("ComponentLoading => callPlayerEvent => gone => playState = " + playState);
-                gone();
+                hide();
                 break;
         }
     }
@@ -80,8 +80,9 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void gone() {
+    public final void hide() {
         try {
+            bringToFront();
             findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);

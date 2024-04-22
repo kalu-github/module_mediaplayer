@@ -26,8 +26,9 @@ public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void gone() {
+    public final void hide() {
         try {
+            bringToFront();
             findViewById(R.id.module_mediaplayer_component_subtitle).setVisibility(View.GONE);
         } catch (Exception e) {
         }

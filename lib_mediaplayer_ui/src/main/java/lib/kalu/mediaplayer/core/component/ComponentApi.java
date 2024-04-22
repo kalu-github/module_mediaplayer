@@ -174,7 +174,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
     default void show() {
     }
 
-    default void gone() {
+    default void hide() {
     }
 
     /******************/

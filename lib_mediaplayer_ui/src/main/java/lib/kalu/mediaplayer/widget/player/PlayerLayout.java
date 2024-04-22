@@ -402,7 +402,7 @@ public class PlayerLayout extends RelativeLayout {
             ComponentApi component = findComponent(cls);
             if (null == component)
                 throw new Exception("component error: null");
-            component.gone();
+            component.hide();
             return true;
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => hideComponent => " + e.getMessage());

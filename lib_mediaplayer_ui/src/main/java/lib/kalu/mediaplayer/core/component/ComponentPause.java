@@ -35,14 +35,15 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
             case PlayerType.StateType.STATE_FAST_FORWARD_START:
             case PlayerType.StateType.STATE_FAST_REWIND_START:
                 MPLogUtil.log("ComponentPause[gone] => playState = " + playState);
-                gone();
+                hide();
                 break;
         }
     }
 
     @Override
-    public final void gone() {
+    public final void hide() {
         try {
+            bringToFront();
             findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_pause_title).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_pause_seekbar).setVisibility(View.GONE);
