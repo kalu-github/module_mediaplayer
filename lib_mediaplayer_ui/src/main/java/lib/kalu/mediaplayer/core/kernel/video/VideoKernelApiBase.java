@@ -45,13 +45,13 @@ interface VideoKernelApiBase {
 
     boolean isPrepared();
 
-    void release(boolean isMainThread);
-
     void start();
 
     void pause();
 
-    void stop(boolean isMainThread);
+    void stop();
+
+    void release();
 
     boolean isPlaying();
 

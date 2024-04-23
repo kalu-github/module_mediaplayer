@@ -10,7 +10,6 @@ import android.view.SurfaceHolder;
 import androidx.annotation.FloatRange;
 
 
-
 import lib.kalu.ffplayer.FFmpegPlayer;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
@@ -31,34 +30,34 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
 
-    public VideoFFmpegPlayer( VideoPlayerApi playerApi,  VideoKernelApiEvent eventApi) {
+    public VideoFFmpegPlayer(VideoPlayerApi playerApi, VideoKernelApiEvent eventApi) {
         super(playerApi, eventApi);
     }
 
-    
+
     @Override
     public VideoFFmpegPlayer getPlayer() {
         return this;
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser, boolean isMainThread) {
+    public void releaseDecoder(boolean isFromUser) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayerCollects error: null");
             if (isFromUser) {
                 setEvent(null);
             }
-            release(isMainThread);
+            release();
         } catch (Exception e) {
             MPLogUtil.log("VideoFFmpegPlayer => releaseDecoder => " + e.getMessage());
         }
     }
 
     @Override
-    public void createDecoder( Context context,  boolean logger,  int seekParameters) {
+    public void createDecoder(Context context, boolean logger, int seekParameters) {
         try {
-            releaseDecoder(false, true);
+            releaseDecoder(false);
             mFFmpegPlayer = new FFmpegPlayer();
             mFFmpegPlayer.setLooping(false);
             setVolume(1F, 1F);
@@ -69,7 +68,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder( Context context,  String url,  boolean prepareAsync) {
+    public void startDecoder(Context context, String url, boolean prepareAsync) {
         MPLogUtil.log("VideoFFmpegPlayer => startDecoder => mFFmpegPlayer = " + mFFmpegPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mFFmpegPlayer)
@@ -121,7 +120,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 //    }
 
     @Override
-    public void release(boolean isMainThread) {
+    public void release() {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -132,22 +131,10 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             mFFmpegPlayer.setOnPreparedListener(null);
             mFFmpegPlayer.setOnVideoSizeChangedListener(null);
             mFFmpegPlayer.setSurface(null);
-            if (isMainThread) {
-                mFFmpegPlayer.reset();
-                mFFmpegPlayer.release();
-                mFFmpegPlayer = null;
-                mPrepared = false;
-            } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mFFmpegPlayer.reset();
-                        mFFmpegPlayer.release();
-                        mFFmpegPlayer = null;
-                        mPrepared = false;
-                    }
-                }).start();
-            }
+            mFFmpegPlayer.reset();
+            mFFmpegPlayer.release();
+            mFFmpegPlayer = null;
+            mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoFFmpegPlayer => start => " + e.getMessage());
         }
@@ -187,20 +174,11 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
      * 停止
      */
     @Override
-    public void stop(boolean isMainThread) {
+    public void stop() {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
-            if (isMainThread) {
-                mFFmpegPlayer.stop();
-            } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mFFmpegPlayer.stop();
-                    }
-                }).start();
-            }
+            mFFmpegPlayer.stop();
         } catch (Exception e) {
             MPLogUtil.log("VideoFFmpegPlayer => stop => " + e.getMessage());
         }
@@ -236,8 +214,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             long duration = getDuration();
             if (seek > duration) {
                 MPLogUtil.log("VideoFFmpegPlayer => seekTo => seek = " + seek + ", duration = " + duration);
-                stop(true);
-                release(true);
+                pause();
+                stop();
+                release();
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_SEEK_TIME);
             } else {
                 MPLogUtil.log("VideoFFmpegPlayer => seekTo => succ");
@@ -289,7 +268,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setSurface( Surface surface, int w, int h) {
+    public void setSurface(Surface surface, int w, int h) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -491,7 +470,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setLive( boolean live) {
+    public void setLive(boolean live) {
         this.mLive = live;
     }
 

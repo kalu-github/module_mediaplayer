@@ -95,14 +95,14 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser, boolean isMainThread) {
+    public void releaseDecoder(boolean isFromUser) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             if (isFromUser) {
                 setEvent(null);
             }
-            release(isMainThread);
+            release();
         } catch (Exception e) {
             MPLogUtil.log("VideoMedia3Player => releaseDecoder => " + e.getMessage());
         }
@@ -183,7 +183,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     public void createDecoder( Context context,  boolean logger,  int seekParameters) {
         try {
             // 1
-            releaseDecoder(false, true);
+            releaseDecoder(false);
             // 2
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
             builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
@@ -442,8 +442,9 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             long duration = getDuration();
             if (seek > duration) {
                 MPLogUtil.log("VideoMedia3Player => seekTo => seek = " + seek + ", duration = " + duration);
-                stop(true);
-                release(true);
+                pause();
+                stop();
+                release();
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_SEEK_TIME);
             } else {
                 MPLogUtil.log("VideoMedia3Player => seekTo => succ");
@@ -627,7 +628,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void release(boolean isMainThread) {
+    public void release() {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -680,7 +681,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
      * 停止
      */
     @Override
-    public void stop(boolean isMainThread) {
+    public void stop() {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");

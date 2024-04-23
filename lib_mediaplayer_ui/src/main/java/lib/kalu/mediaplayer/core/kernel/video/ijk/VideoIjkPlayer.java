@@ -49,14 +49,14 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser, boolean isMainThread) {
+    public void releaseDecoder(boolean isFromUser) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer warning: null");
             if (isFromUser) {
                 setEvent(null);
             }
-            release(isMainThread);
+            release();
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => releaseDecoder => " + e.getMessage());
         }
@@ -65,7 +65,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void createDecoder(Context context, boolean logger, int seekParameters) {
         try {
-            releaseDecoder(false, true);
+            releaseDecoder(false);
             mIjkPlayer = new IjkMediaPlayer();
             mIjkPlayer.reset();
             mIjkPlayer.setLooping(false);
@@ -336,7 +336,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void release(boolean isMainThread) {
+    public void release() {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -360,22 +360,10 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             mIjkPlayer.setOnBufferingUpdateListener(null);
             mIjkPlayer.setOnNativeInvokeListener(null);
             mIjkPlayer.setSurface(null);
-            if (isMainThread) {
-                mIjkPlayer.reset();
-                mIjkPlayer.release();
-                mIjkPlayer = null;
-                mPrepared = false;
-            } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mIjkPlayer.reset();
-                        mIjkPlayer.release();
-                        mIjkPlayer = null;
-                        mPrepared = false;
-                    }
-                }).start();
-            }
+            mIjkPlayer.reset();
+            mIjkPlayer.release();
+            mIjkPlayer = null;
+            mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => release => " + e.getMessage());
         }
@@ -393,20 +381,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void stop(boolean isMainThread) {
+    public void stop() {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            if (isMainThread) {
-                mIjkPlayer.stop();
-            } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mIjkPlayer.stop();
-                    }
-                }).start();
-            }
+            mIjkPlayer.stop();
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => stop => " + e.getMessage());
         }
@@ -436,8 +415,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             long duration = getDuration();
             if (seek > duration) {
                 MPLogUtil.log("VideoIjkPlayer => seekTo => seek = " + seek + ", duration = " + duration);
-                stop(true);
-                release(true);
+                pause();
+                stop();
+                release();
                 onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_SEEK_TIME);
             } else {
                 MPLogUtil.log("VideoIjkPlayer => seekTo => succ");

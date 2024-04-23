@@ -174,18 +174,14 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
 
     default void release() {
-        release(true, true, true, true);
+        release(true, true, true);
     }
 
     default void release(boolean releaseTag, boolean isFromUser) {
-        release(true, releaseTag, isFromUser, true);
+        release(true, releaseTag, isFromUser);
     }
 
-    default void release(boolean releaseTag, boolean isFromUser, boolean isMainThread) {
-        release(true, releaseTag, isFromUser, isMainThread);
-    }
-
-    default void release(boolean clearListener, boolean releaseTag, boolean isFromUser, boolean isMainThread) {
+    default void release(boolean clearListener, boolean releaseTag, boolean isFromUser) {
         try {
             checkVideoKernel();
             if (releaseTag) {
@@ -193,7 +189,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 releaseTag();
             }
             releaseVideoRender();
-            releaseVideoKernel(isFromUser, isMainThread);
+            releaseVideoKernel(isFromUser);
             if (clearListener) {
                 removeOnPlayerChangeListener();
             }
@@ -234,9 +230,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         pauseVideoKernel(ignore);
     }
 
-    default void stop(boolean callEvent, boolean isMainThread) {
+    default void stop(boolean callEvent) {
         try {
-            stopVideoKernel(callEvent, isMainThread);
+            stopVideoKernel(callEvent);
         } catch (Exception e) {
         }
     }
@@ -501,13 +497,13 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void stopVideoKernel(boolean call, boolean isMainThread) {
+    default void stopVideoKernel(boolean call) {
         try {
             // 1
             checkVideoKernel();
             // 2
             VideoKernelApi kernel = getVideoKernel();
-            kernel.stop(isMainThread);
+            kernel.stop();
             setScreenKeep(false);
             if (!call) return;
             callPlayerEvent(PlayerType.StateType.STATE_KERNEL_STOP);
@@ -534,13 +530,13 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void releaseVideoKernel(boolean isFromUser, boolean isMainThread) {
+    default void releaseVideoKernel(boolean isFromUser) {
         try {
             // 1
             checkVideoKernel();
             // 2
             VideoKernelApi kernel = getVideoKernel();
-            kernel.releaseDecoder(isFromUser, isMainThread);
+            kernel.releaseDecoder(isFromUser);
             setVideoKernel(null);
             setScreenKeep(false);
         } catch (Exception e) {
@@ -918,13 +914,13 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             }
                             MPLogUtil.log("VideoPlayerApiKernel => startCheckBuffering => handleMessage => what = " + msg.what + ", seek = " + seek);
 
-                            release(false, false, false, false);
+                            release(false, false, false);
                             restart(seek, true);
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
                         } else {
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_TIMEOUT);
-                            release(false, false, false, false);
+                            release(false, false, false);
                         }
                     }
                 }

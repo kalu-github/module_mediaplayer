@@ -46,7 +46,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser, boolean isMainThread) {
+    public void releaseDecoder(boolean isFromUser) {
         MPLogUtil.log("VideoAndroidPlayer => releaseDecoder => mMediaPlayer = " + mMediaPlayer + ", isFromUser = " + isFromUser);
         try {
             if (null == mMediaPlayer)
@@ -54,7 +54,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
-            release(isMainThread);
+            release();
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => releaseDecoder => " + e.getMessage());
         }
@@ -64,7 +64,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     public void createDecoder(Context context, boolean logger, int seekParameters) {
         MPLogUtil.log("VideoAndroidPlayer => createDecoder => mMediaPlayer = " + mMediaPlayer);
         try {
-            releaseDecoder(false, true);
+            releaseDecoder(false);
             mMediaPlayer = new MediaPlayer();
             mMediaPlayer.reset();
             mMediaPlayer.setLooping(false);
@@ -137,7 +137,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 //    }
 
     @Override
-    public void release(boolean isMainThread) {
+    public void release() {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -149,22 +149,10 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             mMediaPlayer.setOnSeekCompleteListener(null);
             mMediaPlayer.setOnVideoSizeChangedListener(null);
             mMediaPlayer.setSurface(null);
-            if (isMainThread) {
-                mMediaPlayer.reset();
-                mMediaPlayer.release();
-                mMediaPlayer = null;
-                mPrepared = false;
-            } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mMediaPlayer.reset();
-                        mMediaPlayer.release();
-                        mMediaPlayer = null;
-                        mPrepared = false;
-                    }
-                }).start();
-            }
+            mMediaPlayer.reset();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+            mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => release => " + e.getMessage());
         }
@@ -204,22 +192,12 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
      * 停止
      */
     @Override
-    public void stop(boolean isMainThread) {
+    public void stop() {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
-            if (isMainThread) {
-                mMediaPlayer.stop();
-                mPrepared = false;
-            } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mMediaPlayer.stop();
-                        mPrepared = false;
-                    }
-                }).start();
-            }
+            mMediaPlayer.stop();
+            mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => stop => " + e.getMessage());
         }
@@ -262,8 +240,9 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             long duration = getDuration();
             if (seek > duration) {
                 MPLogUtil.log("VideoAndroidPlayer => seekTo => seek = " + seek + ", duration = " + duration);
-                stop(true);
-                release(true);
+                pause();
+                stop();
+                release();
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_SEEK_TIME);
             } else {
                 MPLogUtil.log("VideoAndroidPlayer => seekTo => succ");
@@ -473,7 +452,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
         @Override
         public void onBufferingUpdate(MediaPlayer mp, int percent) {
-            MPLogUtil.log("VideoAndroidPlayer => onBufferingUpdate => percent = "+percent);
+            MPLogUtil.log("VideoAndroidPlayer => onBufferingUpdate => percent = " + percent);
         }
     };
 

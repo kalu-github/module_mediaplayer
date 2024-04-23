@@ -8,7 +8,6 @@ import android.view.SurfaceHolder;
 import androidx.annotation.FloatRange;
 
 
-
 import com.google.android.exoplayer.ExoPlayer;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
@@ -30,32 +29,32 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     private boolean mPrepared = false;
     private DemoPlayer mExoPlayer;
 
-    public VideoExoPlayer( VideoPlayerApi playerApi,  VideoKernelApiEvent eventApi) {
+    public VideoExoPlayer(VideoPlayerApi playerApi, VideoKernelApiEvent eventApi) {
         super(playerApi, eventApi);
     }
 
-    
+
     @Override
     public DemoPlayer getPlayer() {
         return mExoPlayer;
     }
 
     @Override
-    public void releaseDecoder(boolean isFromUser, boolean isMainThread) {
+    public void releaseDecoder(boolean isFromUser) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             if (isFromUser) {
                 setEvent(null);
             }
-            release(isMainThread);
+            release();
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => releaseDecoder => " + e.getMessage());
         }
     }
 
     @Override
-    public void createDecoder( Context context,  boolean logger,  int seekParameters) {
+    public void createDecoder(Context context, boolean logger, int seekParameters) {
 //        try {
 //            Uri contentUri = Uri.parse(url);
 //            String lastPathSegment = contentUri.getLastPathSegment();
@@ -138,7 +137,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder( Context context,  String url,  boolean prepareAsync) {
+    public void startDecoder(Context context, String url, boolean prepareAsync) {
         MPLogUtil.log("VideoExoPlayer => startDecoder => mExoPlayer = " + mExoPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_START);
@@ -178,7 +177,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void seekTo( long position) {
+    public void seekTo(long position) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer warning: null");
@@ -229,7 +228,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setSurface( Surface surface, int w, int h) {
+    public void setSurface(Surface surface, int w, int h) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -261,7 +260,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
 //                throw new Exception("speed error: " + speed);
 //            return speed;
             return false;
-        }catch (Exception e){
+        } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => setSpeed => " + e.getMessage());
             return false;
         }
@@ -280,7 +279,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
 //                throw new Exception("speed error: " + speed);
 //            return speed;
             return 1F;
-        }catch (Exception e){
+        } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => getSpeed => " + e.getMessage());
             return 1F;
         }
@@ -331,7 +330,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void setLive( boolean live) {
+    public void setLive(boolean live) {
         this.mLive = live;
     }
 
@@ -351,26 +350,15 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void release(boolean isMainThread) {
+    public void release() {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             mExoPlayer.setPlayWhenReady(false);
             mExoPlayer.setSurface(null);
-            if (isMainThread) {
-                mExoPlayer.release();
-                mExoPlayer = null;
-                mPrepared = false;
-            } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mExoPlayer.release();
-                        mExoPlayer = null;
-                        mPrepared = false;
-                    }
-                }).start();
-            }
+            mExoPlayer.release();
+            mExoPlayer = null;
+            mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => release => " + e.getMessage());
         }
@@ -410,22 +398,12 @@ public final class VideoExoPlayer extends VideoBasePlayer {
      * 停止
      */
     @Override
-    public void stop(boolean isMainThread) {
+    public void stop() {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            if (isMainThread) {
-                mExoPlayer.setPlayWhenReady(false);
-                mExoPlayer.release();
-            } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mExoPlayer.setPlayWhenReady(false);
-                        mExoPlayer.release();
-                    }
-                }).start();
-            }
+            mExoPlayer.setPlayWhenReady(false);
+            mExoPlayer.release();
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => stop => " + e.getMessage());
         }

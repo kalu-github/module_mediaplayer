@@ -23,7 +23,7 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
     
     <T extends Object> T getPlayer();
 
-    void releaseDecoder(boolean isFromUser, boolean isMainThread);
+    void releaseDecoder(boolean isFromUser);
 
     void createDecoder( Context context,  boolean logger,  int seekParameters);
 
