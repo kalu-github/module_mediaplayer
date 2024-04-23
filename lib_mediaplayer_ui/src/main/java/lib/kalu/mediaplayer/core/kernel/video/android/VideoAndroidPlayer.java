@@ -414,22 +414,18 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             // 开始播放1
             else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
 
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                if (mPrepared) {
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START_SEEK);
-                } else {
-                    mPrepared = true;
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
-                }
-
+                mPrepared = true;
                 try {
                     long seek = getSeek();
                     if (seek <= 0)
                         throw new Exception("seek warning: " + seek);
-                    setSeek(0);
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+                    // 起播快进
                     seekTo(seek);
                 } catch (Exception e) {
                     MPLogUtil.log("VideoAndroidPlayer => onInfo => " + e.getMessage());
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
                 }
             }
             // 开始播放2
@@ -448,11 +444,29 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         }
     };
 
+
     private MediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
+
 
         @Override
         public void onBufferingUpdate(MediaPlayer mp, int percent) {
             MPLogUtil.log("VideoAndroidPlayer => onBufferingUpdate => percent = " + percent);
+            try {
+                long seek = getSeek();
+                if (seek <= 0)
+                    throw new Exception("warning: seek <= 0");
+                long position = getPosition();
+                if (position <= seek)
+                    throw new Exception("warning: position <= seek, position = " + position + ", seek = " + seek);
+                long abs = Math.abs(position - seek);
+                if (abs < 100)
+                    throw new Exception("warning: abs < 100");
+                setSeek(0);
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+            } catch (Exception e) {
+                MPLogUtil.log("VideoAndroidPlayer => onBufferingUpdate => " + e.getMessage());
+            }
         }
     };
 

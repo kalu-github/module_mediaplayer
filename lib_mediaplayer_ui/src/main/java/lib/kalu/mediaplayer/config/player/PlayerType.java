@@ -262,6 +262,7 @@ public @interface PlayerType {
         int EVENT_VIDEO_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
         int EVENT_VIDEO_START_RETRY = 7_011;
         int EVENT_VIDEO_START_903 = 903;
+        int EVENT_VIDEO_RENDERING_START = 333;
         int EVENT_VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE;
         //        int EVENT_VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
         //        int EVENT_VIDEO_STOP = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
@@ -299,6 +300,7 @@ public @interface PlayerType {
                 EVENT_VIDEO_START_RETRY,
                 EVENT_VIDEO_START_903,
                 EVENT_VIDEO_START_SEEK,
+                EVENT_VIDEO_RENDERING_START,
                 EVENT_VIDEO_END,
 //                EVENT_VIDEO_STOP,
 //                EVENT_VIDEO_END,
