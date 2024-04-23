@@ -1,20 +1,29 @@
 package lib.kalu.mediaplayer.core.kernel.video.android;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.media.AsyncPlayer;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
+import android.os.SystemClock;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
 
 
 import com.google.android.exoplayer2.PlaybackParameters;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
@@ -34,6 +43,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     private MediaPlayer mMediaPlayer = null;
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
+    private ExecutorService mExecutor = null;
 
     public VideoAndroidPlayer(VideoPlayerApi playerApi, VideoKernelApiEvent eventApi) {
         super(playerApi, eventApi);
@@ -138,6 +148,12 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
+
+        if (null != mExecutor) {
+            mExecutor.shutdown();
+            mExecutor = null;
+        }
+
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -384,6 +400,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     private MediaPlayer.OnInfoListener onInfoListener = new MediaPlayer.OnInfoListener() {
 
+        @SuppressLint("StaticFieldLeak")
         @Override
         public boolean onInfo(MediaPlayer mp, int what, int extra) {
             MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", extra = " + extra);
@@ -422,6 +439,42 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
                     // 起播快进
                     seekTo(seek);
+                    // 轮询起播快进画面
+                    if (null == mExecutor) {
+                        mExecutor = Executors.newSingleThreadExecutor();
+                    }
+                    mExecutor.execute(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            // 1.轮询
+                            while (true) {
+                                SystemClock.sleep(10);
+                                if (null == mMediaPlayer)
+                                    break;
+                                long seek = getSeek();
+                                if (seek <= 0)
+                                    break;
+                                long position = getPosition();
+                                if (position <= seek)
+                                    continue;
+                                long abs = Math.abs(position - seek);
+                                if (abs < 100)
+                                    continue;
+                                setSeek(0);
+                                break;
+                            }
+
+                            // 2.通知
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+                                }
+                            });
+                        }
+                    });
                 } catch (Exception e) {
                     MPLogUtil.log("VideoAndroidPlayer => onInfo => " + e.getMessage());
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
@@ -436,6 +489,32 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         }
     };
 
+//    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
+//        @Override
+//        public void handleMessage(@NonNull Message msg) {
+//            if (msg.what == 1000) {
+//                try {
+//                    long seek = getSeek();
+//                    long position = getPosition();
+//                    if (position <= seek)
+//                        throw new Exception("warning: position <= seek");
+//                    long abs = Math.abs(position - seek);
+//                    if (abs < 100)
+//                        throw new Exception("warning: abs < 100");
+//                    // 轮询起播快进画面
+//                    mHandler.removeCallbacksAndMessages(null);
+//                    setSeek(0);
+//                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+//                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+//                } catch (Exception e) {
+//                    MPLogUtil.log("VideoAndroidPlayer => handleMessage => " + e.getMessage());
+//                    // 轮询起播快进画面
+//                    mHandler.sendEmptyMessageDelayed(1000, 10);
+//                }
+//            }
+//        }
+//    };
+
     private MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
@@ -447,26 +526,9 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     private MediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
 
-
         @Override
         public void onBufferingUpdate(MediaPlayer mp, int percent) {
             MPLogUtil.log("VideoAndroidPlayer => onBufferingUpdate => percent = " + percent);
-            try {
-                long seek = getSeek();
-                if (seek <= 0)
-                    throw new Exception("warning: seek <= 0");
-                long position = getPosition();
-                if (position <= seek)
-                    throw new Exception("warning: position <= seek, position = " + position + ", seek = " + seek);
-                long abs = Math.abs(position - seek);
-                if (abs < 100)
-                    throw new Exception("warning: abs < 100");
-                setSeek(0);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
-            } catch (Exception e) {
-                MPLogUtil.log("VideoAndroidPlayer => onBufferingUpdate => " + e.getMessage());
-            }
         }
     };
 
