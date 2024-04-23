@@ -2,6 +2,10 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -57,6 +61,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 
     @Override
     public void init() {
+        setDrawingCacheEnabled(true);
         setFocusable(false);
         setFocusableInTouchMode(false);
         setWillNotDraw(true); //禁止onDraw
@@ -164,11 +169,20 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
         this.mKernel = kernel;
     }
 
+
     @Override
     public String screenshot() {
-        Context context = getContext();
-        Bitmap bitmap = getDrawingCache();
-        return saveBitmap(context, bitmap);
+
+        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint();
+        paint.setColor(Color.YELLOW);
+        canvas.drawRect(new RectF(100, 100, 1000, 500), paint);
+        return saveBitmap(getContext().getApplicationContext(), bitmap);
+
+//        Context context = getContext();
+//        Bitmap bitmap = getDrawingCache();
+//        return saveBitmap(context, bitmap);
     }
 
     @Override

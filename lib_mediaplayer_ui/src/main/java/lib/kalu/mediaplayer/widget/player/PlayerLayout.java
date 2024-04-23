@@ -350,7 +350,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void addComponent( ComponentApi componentApi) {
+    public final void addComponent(ComponentApi componentApi) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -361,7 +361,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void addAllComponent( List<ComponentApi> componentApis) {
+    public final void addAllComponent(List<ComponentApi> componentApis) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -421,7 +421,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void setOnPlayerChangeListener( OnPlayerChangeListener listener) {
+    public final void setOnPlayerChangeListener(OnPlayerChangeListener listener) {
         try {
             if (null == listener)
                 throw new Exception("listener error: null");
@@ -589,7 +589,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public void setData( String playerUrl) {
+    public void setData(String playerUrl) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -615,7 +615,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public void start( String playerUrl) {
+    public void start(String playerUrl) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -626,7 +626,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public void start( StartBuilder data,  String playerUrl) {
+    public void start(StartBuilder data, String playerUrl) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -637,7 +637,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void setVolume( float left,  float right) {
+    public final void setVolume(float left, float right) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -648,7 +648,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void setMute( boolean enable) {
+    public final void setMute(boolean enable) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -683,7 +683,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void seekTo( boolean force,  long seek) {
+    public final void seekTo(boolean force, long seek) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -694,7 +694,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void seekTo( boolean force,  long seek,  long max,  boolean loop) {
+    public final void seekTo(boolean force, long seek, long max, boolean loop) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -716,7 +716,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void setPlayWhenReady( boolean playWhenReady) {
+    public final void setPlayWhenReady(boolean playWhenReady) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -805,7 +805,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final boolean switchTrack( int trackId) {
+    public final boolean switchTrack(int trackId) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -815,6 +815,21 @@ public class PlayerLayout extends RelativeLayout {
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => switchTrack => " + e.getMessage());
             return false;
+        }
+    }
+
+    public final String screenshot() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            String screenshot = playerView.screenshot();
+            if (null == screenshot || screenshot.length() == 0)
+                throw new Exception("error: null == screenshot || screenshot.length() == 0");
+            return screenshot;
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => screenshot => " + e.getMessage());
+            return null;
         }
     }
 

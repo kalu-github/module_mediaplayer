@@ -169,22 +169,36 @@ public interface VideoRenderApi {
                 dir.mkdirs();
             }
             // 2
-            File file = new File(dir, "screenshot.jpg");
-            if (file.exists()) {
-                file.delete();
+            File screenshotDir = new File(dir, "mp_screenshot");
+            if (!screenshotDir.exists()) {
+                screenshotDir.mkdirs();
             }
-            file.createNewFile();
             // 3
-            FileOutputStream fos = new FileOutputStream(file);
+            File[] files = screenshotDir.listFiles();
+            for (File file : files) {
+                if (null == file)
+                    continue;
+                if (file.exists()) {
+                    file.delete();
+                }
+            }
+            // 4
+            String screenshotName = System.nanoTime() + ".jpg";
+            File screenshotFile = new File(screenshotDir, screenshotName);
+            if (screenshotFile.exists()) {
+                screenshotFile.delete();
+            }
+            screenshotFile.createNewFile();
+            // 5
+            FileOutputStream fos = new FileOutputStream(screenshotFile);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
-            // 4
+            // 6
             bitmap.recycle();
             bitmap = null;
             // 5
-            String path = file.getAbsolutePath();
-            return path;
+            return screenshotFile.getAbsolutePath();
         } catch (Exception e) {
             MPLogUtil.log("VideoRenderApi => saveBitmap => " + e.getMessage());
             return null;
