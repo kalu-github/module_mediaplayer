@@ -21,7 +21,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
     default String screenshot() {
         try {
             VideoRenderApi render = getVideoRender();
-            return render.screenshot();
+            return render.screenshot(getPlayerLayout().getUrl(), getPlayerLayout().getPosition());
         } catch (Exception e) {
             return null;
         }

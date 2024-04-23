@@ -5,6 +5,8 @@ import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -401,27 +403,11 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         }
     };
 
-    private MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
-        @Override
-        public void onCompletion(MediaPlayer mp) {
-            MPLogUtil.log("VideoAndroidPlayer => onCompletion =>");
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
-        }
-    };
-
-    private MediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
-
-        @Override
-        public void onBufferingUpdate(MediaPlayer mp, int percent) {
-
-        }
-    };
-
     private MediaPlayer.OnInfoListener onInfoListener = new MediaPlayer.OnInfoListener() {
 
         @Override
         public boolean onInfo(MediaPlayer mp, int what, int extra) {
-            MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what);
+            MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", extra = " + extra);
             // 缓冲开始
             if (what == PlayerType.EventType.EVENT_BUFFERING_START) {
                 try {
@@ -448,14 +434,15 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             }
             // 开始播放1
             else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
 
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
                 if (mPrepared) {
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START_SEEK);
                 } else {
                     mPrepared = true;
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
                 }
+
                 try {
                     long seek = getSeek();
                     if (seek <= 0)
@@ -474,22 +461,33 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         }
     };
 
+    private MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            MPLogUtil.log("VideoAndroidPlayer => onCompletion =>");
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
+        }
+    };
+
+    private MediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new MediaPlayer.OnBufferingUpdateListener() {
+
+        @Override
+        public void onBufferingUpdate(MediaPlayer mp, int percent) {
+            MPLogUtil.log("VideoAndroidPlayer => onBufferingUpdate => percent = "+percent);
+        }
+    };
+
     private MediaPlayer.OnSeekCompleteListener mOnSeekCompleteListener = new MediaPlayer.OnSeekCompleteListener() {
         @Override
         public void onSeekComplete(MediaPlayer mediaPlayer) {
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
-            try {
-                MPLogUtil.log("VideoAndroidPlayer => onSeekComplete =>");
-                start();
-            } catch (Exception e) {
-                MPLogUtil.log("VideoAndroidPlayer => onSeekComplete => " + e.getMessage());
-            }
+            MPLogUtil.log("VideoAndroidPlayer => onSeekComplete =>");
         }
     };
 
     private MediaPlayer.OnPreparedListener mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
+            MPLogUtil.log("VideoAndroidPlayer => onPrepared =>");
             start();
         }
     };

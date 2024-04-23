@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.core.component;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -16,6 +18,8 @@ import androidx.annotation.IdRes;
 
 
 import androidx.annotation.StringRes;
+
+import java.io.File;
 
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -45,6 +49,19 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
             imageView.setImageURI(Uri.parse(url));
         } catch (Exception e) {
             MPLogUtil.log("ComponentApi => setImageUrl => " + e.getMessage());
+        }
+    }
+
+    default void setImageFile(View layout, @IdRes int id, String filepath) {
+        try {
+            File file = new File(filepath);
+            if (!file.exists())
+                throw new Exception("error: file not exists");
+            Bitmap bitmap = BitmapFactory.decodeFile(filepath);
+            ImageView imageView = layout.findViewById(id);
+            imageView.setImageBitmap(bitmap);
+        } catch (Exception e) {
+            MPLogUtil.log("ComponentApi => setImageFile => " + e.getMessage());
         }
     }
 
@@ -153,6 +170,9 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
     }
 
     default void setComponentImageUrl(String url) {
+    }
+
+    default void setComponentImageFile(String filepath) {
     }
 
     /******************/

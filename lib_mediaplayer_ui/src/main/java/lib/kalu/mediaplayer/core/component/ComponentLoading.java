@@ -126,6 +126,14 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     }
 
     @Override
+    public void setComponentImageFile(String filepath) {
+        try {
+            setImageFile(this, R.id.module_mediaplayer_component_loading_bg, filepath);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
     public final void setComponentText(int value) {
         try {
             setText(this, R.id.module_mediaplayer_component_loading_message, value);

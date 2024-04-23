@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.media.MediaMetadataRetriever;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -61,7 +62,6 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 
     @Override
     public void init() {
-        setDrawingCacheEnabled(true);
         setFocusable(false);
         setFocusableInTouchMode(false);
         setWillNotDraw(true); //禁止onDraw
@@ -171,14 +171,29 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 
 
     @Override
-    public String screenshot() {
+    public String screenshot(String url, long position) {
+        return null;
+//        try {
+//            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+//            mediaMetadataRetriever.setDataSource(url);
+//            Bitmap bitmap = mediaMetadataRetriever.getFrameAtTime(position);
+//            mediaMetadataRetriever.release();
+//            return saveBitmap(getContext().getApplicationContext(), bitmap);
+//        } catch (Exception e) {
+//            return null;
+//        }
 
-        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        Paint paint = new Paint();
-        paint.setColor(Color.YELLOW);
-        canvas.drawRect(new RectF(100, 100, 1000, 500), paint);
-        return saveBitmap(getContext().getApplicationContext(), bitmap);
+//        Canvas canvasH = getHolder().lockCanvas(null);//获取画布
+//
+//        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+//        Canvas canvas = new Canvas(bitmap);
+//        Paint paint = new Paint();
+//        paint.setColor(Color.BLUE);
+//        canvas.drawRect(new RectF(0, 0, getWidth(), getHeight()), paint);
+//
+//        getHolder().unlockCanvasAndPost(canvasH);//解锁画布，提交画好的图像
+
+//        return saveBitmap(getContext().getApplicationContext(), bitmap);
 
 //        Context context = getContext();
 //        Bitmap bitmap = getDrawingCache();

@@ -67,6 +67,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
 
     @Override
     public void init() {
+//        setDrawingCacheEnabled(true);
         setFocusable(false);
         setFocusableInTouchMode(false);
         addListener();
@@ -113,7 +114,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
              * @param surface                   surface
              */
             @Override
-            public boolean onSurfaceTextureDestroyed( SurfaceTexture surface) {
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
                 return false;
             }
 
@@ -152,14 +153,20 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
     }
 
     @Override
-    public void setKernel( VideoKernelApi player) {
+    public void setKernel(VideoKernelApi player) {
         this.mKernel = player;
     }
 
     @Override
-    public String screenshot() {
+    public String screenshot(String url, long position) {
         Context context = getContext();
         Bitmap bitmap = getBitmap();
+//        //设置缓存
+//        setDrawingCacheEnabled(true);
+//        buildDrawingCache();
+//        //从缓存中获取当前屏幕的图片
+//        Context context = getContext();
+//        Bitmap bitmap = getDrawingCache();
         return saveBitmap(context, bitmap);
     }
 
@@ -219,7 +226,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
     int mVideoRotation = 0;
 
     @Override
-    public void setVideoSize( int videoWidth,  int videoHeight) {
+    public void setVideoSize(int videoWidth, int videoHeight) {
         try {
             if (videoWidth <= 0 || videoHeight <= 0)
                 throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);

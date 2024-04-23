@@ -50,7 +50,7 @@ public interface VideoRenderApi {
      *
      * @return
      */
-    String screenshot();
+    String screenshot(String url, long position);
 
     /**
      *
