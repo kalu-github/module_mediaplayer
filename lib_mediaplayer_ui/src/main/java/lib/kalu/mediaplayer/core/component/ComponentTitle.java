@@ -19,7 +19,7 @@ public class ComponentTitle extends RelativeLayout implements ComponentApi {
 
     @Override
     public final void show() {
-        bringToFront();
+        
         try {
             findViewById(R.id.module_mediaplayer_controller_title).setVisibility(View.VISIBLE);
         } catch (Exception e) {
@@ -35,7 +35,7 @@ public class ComponentTitle extends RelativeLayout implements ComponentApi {
     @Override
     public final void hide() {
         try {
-            bringToFront();
+            
             findViewById(R.id.module_mediaplayer_controller_title).setVisibility(View.GONE);
         } catch (Exception e) {
         }

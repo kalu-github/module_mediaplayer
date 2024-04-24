@@ -48,7 +48,7 @@ public class ComponentError extends RelativeLayout implements ComponentApi {
     @Override
     public final void show() {
         try {
-            bringToFront();
+            
             findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_error_ui).setVisibility(View.VISIBLE);
         } catch (Exception e) {
@@ -58,7 +58,7 @@ public class ComponentError extends RelativeLayout implements ComponentApi {
     @Override
     public final void hide() {
         try {
-            bringToFront();
+            
             findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_error_ui).setVisibility(View.GONE);
         } catch (Exception e) {

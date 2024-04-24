@@ -70,7 +70,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     @Override
     public final void hide() {
         try {
-            bringToFront();
+            
             findViewById(R.id.module_mediaplayer_component_net_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_net_pb).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_net_message).setVisibility(View.GONE);
@@ -81,7 +81,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     @Override
     public final void show() {
         try {
-            bringToFront();
+            
             findViewById(R.id.module_mediaplayer_component_net_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_net_pb).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_net_message).setVisibility(View.VISIBLE);

@@ -1,4 +1,3 @@
-
 package lib.kalu.mediaplayer.core.kernel.video.exo1;
 
 import android.content.Context;
@@ -16,7 +15,6 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import tv.kalu.android.exoplayer.player.DemoPlayer;
-
 
 public final class VideoExoPlayer extends VideoBasePlayer {
 

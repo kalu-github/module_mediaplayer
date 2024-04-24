@@ -62,7 +62,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     public final void show() {
         try {
             setTag(R.id.module_mediaplayer_component_seek_sb, true);
-            bringToFront();
+            
             findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_seek_ui).setVisibility(View.VISIBLE);
         } catch (Exception e) {
@@ -73,7 +73,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     @Override
     public final void hide() {
         try {
-            bringToFront();
+            
             setTag(R.id.module_mediaplayer_component_seek_sb, false);
             findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_seek_ui).setVisibility(View.GONE);

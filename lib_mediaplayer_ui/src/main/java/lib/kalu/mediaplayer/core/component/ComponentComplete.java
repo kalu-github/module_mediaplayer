@@ -35,7 +35,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     @Override
     public final void show() {
         try {
-            bringToFront();
+            
             findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_complete_message).setVisibility(View.VISIBLE);
         } catch (Exception e) {
@@ -45,7 +45,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     @Override
     public final void hide() {
         try {
-            bringToFront();
+            
             findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_complete_message).setVisibility(View.GONE);
         } catch (Exception e) {

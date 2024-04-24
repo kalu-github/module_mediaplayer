@@ -43,7 +43,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     @Override
     public final void hide() {
         try {
-            bringToFront();
+            
             findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_pause_title).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_pause_seekbar).setVisibility(View.GONE);
@@ -54,7 +54,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     @Override
     public final void show() {
         try {
-            bringToFront();
+            
             findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_pause_title).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_pause_seekbar).setVisibility(View.VISIBLE);

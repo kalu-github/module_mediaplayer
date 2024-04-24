@@ -397,52 +397,65 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public boolean onInfo(MediaPlayer mp, int what, int extra) {
             MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", extra = " + extra);
-            // 缓冲开始
-            if (what == PlayerType.EventType.EVENT_BUFFERING_START) {
-                try {
-                    boolean prepared = isPrepared();
-                    if (!prepared)
-                        throw new Exception("prepared warning: false");
-                    long position = getPosition();
-                    if (position < 0)
-                        throw new Exception("position warning: " + position);
-                    long duration = getDuration();
-                    if (duration < 0)
-                        throw new Exception("duration warning: " + duration);
-                    long seek = getSeek();
-                    if (position <= seek)
-                        throw new Exception("position warning: " + position + ", seek warning: " + seek);
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
-                } catch (Exception e) {
-                }
-            }
-            // 缓冲结束
-            else if (what == PlayerType.EventType.EVENT_BUFFERING_STOP) {
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-            }
-            // 开始播放1
-            else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
-
-                mPrepared = true;
-                try {
-                    long seek = getSeek();
-                    if (seek <= 0)
-                        throw new Exception("seek warning: " + seek);
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
-                    // 起播快进
-                    seekTo(seek);
-                } catch (Exception e) {
-                    MPLogUtil.log("VideoAndroidPlayer => onInfo => " + e.getMessage());
+            switch (what) {
+                // 缓冲开始
+                case PlayerType.EventType.EVENT_BUFFERING_START:
+                    if (mPrepared) {
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
+                    } else {
+                        MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", mPrepared = false");
+                    }
+                    break;
+                // 缓冲结束
+                case PlayerType.EventType.EVENT_BUFFERING_STOP:
+                    if (mPrepared) {
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                    } else {
+                        MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", mPrepared = false");
+                    }
+                    break;
+                // 开始播放
+                case 903:
+                case PlayerType.EventType.EVENT_VIDEO_START:
+                    mPrepared = true;
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
-                }
-            }
-            // 开始播放2
-            else if (what == PlayerType.EventType.EVENT_VIDEO_START_903) {
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START_903);
+                    try {
+                        long seek = getSeek();
+                        if (seek <= 0)
+                            throw new Exception("seek warning: " + seek);
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+                        // 起播快进
+                        seekTo(seek);
+                    } catch (Exception e) {
+                        MPLogUtil.log("VideoAndroidPlayer => onInfo => " + e.getMessage());
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+                    }
+                    break;
             }
             return true;
+        }
+    };
+
+    private MediaPlayer.OnSeekCompleteListener mOnSeekCompleteListener = new MediaPlayer.OnSeekCompleteListener() {
+        @Override
+        public void onSeekComplete(MediaPlayer mediaPlayer) {
+            MPLogUtil.log("VideoAndroidPlayer => onSeekComplete =>");
+            try {
+                long seek = getSeek();
+                if (seek <= 0)
+                    throw new Exception();
+                setSeek(0);
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+            } catch (Exception e) {
+            }
+        }
+    };
+
+    private MediaPlayer.OnPreparedListener mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
+        @Override
+        public void onPrepared(MediaPlayer mp) {
+            MPLogUtil.log("VideoAndroidPlayer => onPrepared =>");
+            start();
         }
     };
 
@@ -460,30 +473,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public void onBufferingUpdate(MediaPlayer mp, int percent) {
             MPLogUtil.log("VideoAndroidPlayer => onBufferingUpdate => percent = " + percent);
-        }
-    };
-
-    private MediaPlayer.OnSeekCompleteListener mOnSeekCompleteListener = new MediaPlayer.OnSeekCompleteListener() {
-        @Override
-        public void onSeekComplete(MediaPlayer mediaPlayer) {
-            MPLogUtil.log("VideoAndroidPlayer => onSeekComplete =>");
-            try {
-                long seek = getSeek();
-                if (seek <= 0)
-                    throw new Exception();
-                setSeek(0);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
-            } catch (Exception e) {
-            }
-        }
-    };
-
-    private MediaPlayer.OnPreparedListener mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
-        @Override
-        public void onPrepared(MediaPlayer mp) {
-            MPLogUtil.log("VideoAndroidPlayer => onPrepared =>");
-            start();
         }
     };
 

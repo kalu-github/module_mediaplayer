@@ -259,18 +259,19 @@ public @interface PlayerType {
 //        int EVENT_AUDIO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_SEEK_RENDERING_START;
 //        // 开始渲染视频画面
 //        int EVENT_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
-        // 开始渲染视频画面
-        int EVENT_VIDEO_END = 7_010;
+        // 首帧画面
+        int EVENT_VIDEO_RENDERING_START = 7010;
+        // 视频开播
         int EVENT_VIDEO_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
-        int EVENT_VIDEO_START_RETRY = 7_011;
-        int EVENT_VIDEO_START_903 = 903;
-        int EVENT_VIDEO_RENDERING_START = 333;
-        int EVENT_VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE;
+        int EVENT_VIDEO_END = 7_012;
+//        int EVENT_VIDEO_START_RETRY = 7_011;
+//        int EVENT_VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE;
         //        int EVENT_VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
         //        int EVENT_VIDEO_STOP = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
 //        int EVENT_VIDEO_END = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
+
         // 缓冲开始
-        int EVENT_OPEN_INPUT = IMediaPlayer.MEDIA_INFO_OPEN_INPUT;
+//        int EVENT_OPEN_INPUT = IMediaPlayer.MEDIA_INFO_OPEN_INPUT;
         // 缓冲开始
         int EVENT_BUFFERING_START = IMediaPlayer.MEDIA_INFO_BUFFERING_START;
         // 缓冲结束
@@ -291,18 +292,17 @@ public @interface PlayerType {
                 EVENT_ERROR_PARSE,
                 EVENT_ERROR_NET,
                 EVENT_ERROR_IGNORE,
-                EVENT_OPEN_INPUT,
+//                EVENT_OPEN_INPUT,
                 EVENT_LOADING_START,
                 EVENT_LOADING_START_IGNORE,
                 EVENT_LOADING_STOP,
 //                EVENT_VIDEO_SEEK_RENDERING_START,
 //                EVENT_AUDIO_SEEK_RENDERING_START,
 //                EVENT_AUDIO_RENDERING_START,
-                EVENT_VIDEO_START,
-                EVENT_VIDEO_START_RETRY,
-                EVENT_VIDEO_START_903,
-                EVENT_VIDEO_START_SEEK,
                 EVENT_VIDEO_RENDERING_START,
+                EVENT_VIDEO_START,
+//                EVENT_VIDEO_START_RETRY,
+//                EVENT_VIDEO_START_SEEK,
                 EVENT_VIDEO_END,
 //                EVENT_VIDEO_STOP,
 //                EVENT_VIDEO_END,

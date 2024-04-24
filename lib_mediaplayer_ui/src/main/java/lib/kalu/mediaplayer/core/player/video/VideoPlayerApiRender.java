@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 
-
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
@@ -249,7 +248,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
         }
     }
 
-    default void showVideoReal() {
+    default void showVideoView() {
         try {
             ViewGroup viewGroup = getBaseVideoViewGroup();
             viewGroup.setVisibility(View.VISIBLE);
@@ -259,21 +258,21 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
                 child.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => showVideoReal => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiRender => showVideoView => " + e.getMessage());
         }
     }
 
-    default void hideReal() {
+    default void hideVideoView() {
         try {
             ViewGroup viewGroup = getBaseVideoViewGroup();
             int count = viewGroup.getChildCount();
             for (int i = 0; i < count; i++) {
                 View child = viewGroup.getChildAt(i);
-                child.setVisibility(View.INVISIBLE);
+                child.setVisibility(View.GONE);
             }
-            viewGroup.setVisibility(View.INVISIBLE);
+            viewGroup.setVisibility(View.GONE);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => hideReal => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiRender => hideVideoView => " + e.getMessage());
         }
     }
 
@@ -374,7 +373,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
 
     VideoRenderApi getVideoRender();
 
-    void setVideoRender( VideoRenderApi render);
+    void setVideoRender(VideoRenderApi render);
 
-    void checkVideoReal();
+    void checkVideoView();
 }

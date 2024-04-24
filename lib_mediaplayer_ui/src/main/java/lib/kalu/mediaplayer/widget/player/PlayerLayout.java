@@ -728,7 +728,9 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.checkVideoKernel();
+            VideoKernelApi videoKernel = playerView.getVideoKernel();
+            if (null == videoKernel)
+                throw new Exception("error: videoKernel null");
             return true;
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => containsKernel => " + e.getMessage());

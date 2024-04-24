@@ -36,7 +36,7 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
     @Override
     public final void show() {
         try {
-            bringToFront();
+            
             findViewById(R.id.module_mediaplayer_component_surface_cover_bg).setVisibility(View.VISIBLE);
         } catch (Exception e) {
             MPLogUtil.log("ComponentSurfaceCover => show => " + e.getMessage());
@@ -46,7 +46,7 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
     @Override
     public final void hide() {
         try {
-            bringToFront();
+            
             findViewById(R.id.module_mediaplayer_component_surface_cover_bg).setVisibility(View.GONE);
         } catch (Exception e) {
             MPLogUtil.log("ComponentSurfaceCover => hide => " + e.getMessage());

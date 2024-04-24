@@ -71,16 +71,19 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 1
             PlayerBuilder playerBuilder = PlayerManager.getInstance().getConfig();
             MPLogUtil.setLogger(playerBuilder);
-            //
+            // 2
+            hideVideoView();
             // 3
-            createVideoKernel(startBuilder, playerBuilder);
+            releaseVideoKernel();
             // 4
-            createVideoRender();
+            createVideoKernel(startBuilder, playerBuilder);
             // 5
-            initVideoKernel(startBuilder, playUrl);
+            createVideoRender();
             // 6
-            attachVideoRender();
+            initVideoKernel(startBuilder, playUrl);
             // 7
+            attachVideoRender();
+            // 8
             updatePlayerData(startBuilder, playUrl);
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());
@@ -183,7 +186,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void release(boolean clearListener, boolean releaseTag, boolean isFromUser) {
         try {
-            checkVideoKernel();
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
             if (releaseTag) {
                 setData(null);
                 releaseTag();
@@ -264,8 +269,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void resume(boolean ignore) {
         setPlayWhenReady(true);
         try {
-            MPLogUtil.log("VideoPlayerApiKernel => resume => ignore = " + ignore);
-            checkVideoKernel();
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
             resumeVideoKernel(ignore);
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiKernel => resume => " + e.getMessage());
@@ -404,9 +410,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void seekTo(boolean force, StartBuilder builder) {
-
         try {
-            checkVideoKernel();
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
             if (force) {
                 updateVideoKernel(builder);
             }
@@ -471,19 +478,23 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /*********************/
 
-    default void checkVideoKernel() throws Exception {
-        VideoKernelApi kernel = getVideoKernel();
-        if (null == kernel)
-            throw new Exception("check kernel is null");
+    default void releaseVideoKernel() {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("check kernel is null");
+            release(false, false);
+        } catch (Exception e) {
+            MPLogUtil.log("VideoPlayerApiKernel => releaseVideoKernel => " + e.getMessage());
+        }
     }
 
     default void resumeVideoKernel(boolean ignore) {
         setPlayWhenReady(true);
         try {
-            // 1
-            checkVideoKernel();
-            // 2
             VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
             kernel.start();
             setScreenKeep(true);
             if (ignore) {
@@ -499,10 +510,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void stopVideoKernel(boolean call) {
         try {
-            // 1
-            checkVideoKernel();
-            // 2
             VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
             kernel.stop();
             setScreenKeep(false);
             if (!call) return;
@@ -516,10 +526,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void pauseVideoKernel(boolean ignore) {
         setPlayWhenReady(false);
         try {
-            // 1
-            checkVideoKernel();
-            // 3
-            getVideoKernel().pause();
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            kernel.pause();
             // 4
             refeshSeek();
             // 5
@@ -532,10 +542,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void releaseVideoKernel(boolean isFromUser) {
         try {
-            // 1
-            checkVideoKernel();
-            // 2
             VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
             kernel.releaseDecoder(isFromUser);
             setVideoKernel(null);
             setScreenKeep(false);
@@ -546,10 +555,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void seekToVideoKernel(long milliSeconds) {
         try {
-            // 1
-            checkVideoKernel();
-            // 2
             VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
             kernel.seekTo(milliSeconds);
             setScreenKeep(true);
             if (milliSeconds <= 0)
@@ -562,10 +570,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void updateVideoKernel(StartBuilder builder) {
         try {
-            // 1
-            checkVideoKernel();
-            // 2
             VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
             long seek = builder.getSeek();
             long max = builder.getMax();
             boolean loop = builder.isLooping();
@@ -577,10 +584,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void initVideoKernel(StartBuilder bundle, String playUrl) {
         try {
-            // 1
-            checkVideoKernel();
-            // 2
             VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
             kernel.initDecoder(getBaseContext(), playUrl, bundle);
             setScreenKeep(true);
         } catch (Exception e) {
@@ -589,7 +595,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void playEnd() {
-        hideReal();
+        hideVideoView();
         setScreenKeep(false);
     }
 
@@ -603,16 +609,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void createVideoKernel(StartBuilder builder, PlayerBuilder playerBuilder) {
-
-        // 1
-        try {
-            checkVideoKernel();
-            release(false, false);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => createKernel => keenel warning: null");
-        }
-
-        // 2
         try {
             int type = PlayerManager.getInstance().getConfig().getKernel();
             VideoKernelApi kernel = VideoKernelFactoryManager.getKernel((VideoPlayerApi) this, type, new VideoKernelApiEvent() {
@@ -649,9 +645,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     MPLogUtil.log("VideoPlayerApiKernel => onEvent = " + kernel + ", event = " + event);
                     switch (event) {
                         // 网络拉流开始
-                        case PlayerType.EventType.EVENT_OPEN_INPUT:
-                            hideReal();
-                            break;
+//                        case PlayerType.EventType.EVENT_OPEN_INPUT:
+//                            hideVideoView();
+//                            break;
                         // 初始化开始 => loading start
                         case PlayerType.EventType.EVENT_LOADING_START:
                             callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
@@ -670,47 +666,47 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
                             stopCheckBuffering();
                             break;
-                        // 播放开始
-                        case PlayerType.EventType.EVENT_VIDEO_START_903:
-                            // step1
-                            showVideoReal();
-                            // step2
-                            checkVideoReal();
-                            break;
-                        // 播放开始
-                        case PlayerType.EventType.EVENT_VIDEO_START_RETRY:
-                            callPlayerEvent(PlayerType.StateType.STATE_START_RETRY);
-                            // step2
-                            showVideoReal();
-                            // step3
-                            checkVideoReal();
-                            // step5
-                            MPLogUtil.log("VideoPlayerApiKernel => onEvent => event_video_start_retry => playWhenReady = " + isPlayWhenReady());
-                            break;
-                        // 播放开始-快进
-                        case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
-                            // 试看
-                            if (null != builder) {
-                                long max = builder.getMax();
-                                if (max > 0) {
-                                    callPlayerEvent(PlayerType.StateType.STATE_TRY_BEGIN);
-                                }
-                            }
-                            // step1
-                            callPlayerEvent(PlayerType.StateType.STATE_START_SEEK);
-                            // step2
-                            showVideoReal();
-                            // step4
-                            resume(true);
-                            // step6
-                            boolean playWhenReady1 = isPlayWhenReady();
-                            MPLogUtil.log("VideoPlayerApiKernel => onEvent => event_video_start_seek => playWhenReady = " + playWhenReady1);
-                            if (!playWhenReady1) {
-                                pause();
-                                setPlayWhenReady(true);
-                                callPlayerEvent(PlayerType.StateType.STATE_START_PLAY_WHEN_READY_PAUSE);
-                            }
-                            break;
+//                        // 播放开始
+//                        case PlayerType.EventType.EVENT_VIDEO_START_903:
+//                            // step1
+//                            showVideoReal();
+//                            // step2
+//                            checkVideoReal();
+//                            break;
+//                        // 播放开始
+//                        case PlayerType.EventType.EVENT_VIDEO_START_RETRY:
+//                            callPlayerEvent(PlayerType.StateType.STATE_START_RETRY);
+//                            // step2
+//                            showVideoReal();
+//                            // step3
+//                            checkVideoReal();
+//                            // step5
+//                            MPLogUtil.log("VideoPlayerApiKernel => onEvent => event_video_start_retry => playWhenReady = " + isPlayWhenReady());
+//                            break;
+//                        // 播放开始-快进
+//                        case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
+//                            // 试看
+//                            if (null != builder) {
+//                                long max = builder.getMax();
+//                                if (max > 0) {
+//                                    callPlayerEvent(PlayerType.StateType.STATE_TRY_BEGIN);
+//                                }
+//                            }
+//                            // step1
+//                            callPlayerEvent(PlayerType.StateType.STATE_START_SEEK);
+//                            // step2
+//                            showVideoReal();
+//                            // step4
+//                            resume(true);
+//                            // step6
+//                            boolean playWhenReady1 = isPlayWhenReady();
+//                            MPLogUtil.log("VideoPlayerApiKernel => onEvent => event_video_start_seek => playWhenReady = " + playWhenReady1);
+//                            if (!playWhenReady1) {
+//                                pause();
+//                                setPlayWhenReady(true);
+//                                callPlayerEvent(PlayerType.StateType.STATE_START_PLAY_WHEN_READY_PAUSE);
+//                            }
+//                            break;
                         // 视频首帧
                         case PlayerType.EventType.EVENT_VIDEO_RENDERING_START:
                             callPlayerEvent(PlayerType.StateType.STATE_VIDEO_RENDERING_START);
@@ -730,9 +726,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             }
                             callPlayerEvent(PlayerType.StateType.STATE_START);
                             // step2
-                            showVideoReal();
+                            showVideoView();
                             // step3
-                            checkVideoReal();
+                            checkVideoView();
                             // step4
                             boolean playWhenReady2 = isPlayWhenReady();
                             MPLogUtil.log("VideoPlayerApiKernel => onEvent => event_video_start => playWhenReady = " + playWhenReady2);
@@ -816,8 +812,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void createVideoDecoder(PlayerBuilder config) {
         try {
-            checkVideoKernel();
             VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
             boolean log = config.isLog();
             int seekParameters = config.getExoSeekParameters();
             kernel.createDecoder(getBaseContext(), log, seekParameters);
@@ -828,8 +825,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default JSONArray getTrackInfo() {
         try {
-            checkVideoKernel();
             VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
             JSONArray trackInfo = kernel.getTrackInfo();
             if (null == trackInfo)
                 throw new Exception("trackInfo error: null");
@@ -842,8 +840,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default boolean switchTrack(int trackId) {
         try {
-            checkVideoKernel();
             VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
             kernel.switchTrack(trackId);
             return true;
         } catch (Exception e) {
