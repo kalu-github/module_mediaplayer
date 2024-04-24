@@ -711,6 +711,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 callPlayerEvent(PlayerType.StateType.STATE_START_PLAY_WHEN_READY_PAUSE);
                             }
                             break;
+                        // 视频首帧
+                        case PlayerType.EventType.EVENT_VIDEO_RENDERING_START:
+                            callPlayerEvent(PlayerType.StateType.STATE_VIDEO_RENDERING_START);
+                            break;
                         // 播放开始-默认
                         case PlayerType.EventType.EVENT_VIDEO_START:
 //                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染

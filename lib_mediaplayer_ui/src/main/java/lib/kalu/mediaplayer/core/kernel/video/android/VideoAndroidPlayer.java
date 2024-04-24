@@ -43,7 +43,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     private MediaPlayer mMediaPlayer = null;
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
-    private ExecutorService mExecutor = null;
 
     public VideoAndroidPlayer(VideoPlayerApi playerApi, VideoKernelApiEvent eventApi) {
         super(playerApi, eventApi);
@@ -148,12 +147,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-
-        if (null != mExecutor) {
-            mExecutor.shutdown();
-            mExecutor = null;
-        }
-
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -439,42 +432,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
                     // 起播快进
                     seekTo(seek);
-                    // 轮询起播快进画面
-                    if (null == mExecutor) {
-                        mExecutor = Executors.newSingleThreadExecutor();
-                    }
-                    mExecutor.execute(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            // 1.轮询
-                            while (true) {
-                                SystemClock.sleep(10);
-                                if (null == mMediaPlayer)
-                                    break;
-                                long seek = getSeek();
-                                if (seek <= 0)
-                                    break;
-                                long position = getPosition();
-                                if (position <= seek)
-                                    continue;
-                                long abs = Math.abs(position - seek);
-                                if (abs < 100)
-                                    continue;
-                                setSeek(0);
-                                break;
-                            }
-
-                            // 2.通知
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
-                                }
-                            });
-                        }
-                    });
                 } catch (Exception e) {
                     MPLogUtil.log("VideoAndroidPlayer => onInfo => " + e.getMessage());
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
@@ -488,32 +445,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             return true;
         }
     };
-
-//    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
-//        @Override
-//        public void handleMessage(@NonNull Message msg) {
-//            if (msg.what == 1000) {
-//                try {
-//                    long seek = getSeek();
-//                    long position = getPosition();
-//                    if (position <= seek)
-//                        throw new Exception("warning: position <= seek");
-//                    long abs = Math.abs(position - seek);
-//                    if (abs < 100)
-//                        throw new Exception("warning: abs < 100");
-//                    // 轮询起播快进画面
-//                    mHandler.removeCallbacksAndMessages(null);
-//                    setSeek(0);
-//                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-//                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
-//                } catch (Exception e) {
-//                    MPLogUtil.log("VideoAndroidPlayer => handleMessage => " + e.getMessage());
-//                    // 轮询起播快进画面
-//                    mHandler.sendEmptyMessageDelayed(1000, 10);
-//                }
-//            }
-//        }
-//    };
 
     private MediaPlayer.OnCompletionListener onCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
@@ -536,6 +467,15 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public void onSeekComplete(MediaPlayer mediaPlayer) {
             MPLogUtil.log("VideoAndroidPlayer => onSeekComplete =>");
+            try {
+                long seek = getSeek();
+                if (seek <= 0)
+                    throw new Exception();
+                setSeek(0);
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+            } catch (Exception e) {
+            }
         }
     };
 
