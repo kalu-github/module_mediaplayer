@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.kernel.video.ff;
 
 import android.content.Context;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Surface;
@@ -75,18 +76,18 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("mFFmpegPlayer error: null");
             if (url == null || url.length() == 0)
                 throw new IllegalArgumentException("url error: " + url);
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_START);
             mFFmpegPlayer.reset();
             mFFmpegPlayer.setDataSource(context, Uri.parse(url), null);
             mFFmpegPlayer.prepare();
         } catch (IllegalArgumentException e) {
             MPLogUtil.log("VideoFFmpegPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_URL);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_ERROR_URL);
         } catch (Exception e) {
             MPLogUtil.log("VideoFFmpegPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
     }
 
@@ -102,9 +103,10 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         mFFmpegPlayer.setOnErrorListener(onErrorListener);
         mFFmpegPlayer.setOnCompletionListener(onCompletionListener);
         mFFmpegPlayer.setOnInfoListener(onInfoListener);
-//        mFFmpegPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
+        mFFmpegPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
         mFFmpegPlayer.setOnPreparedListener(onPreparedListener);
         mFFmpegPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
+        mFFmpegPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
     }
 
 //    /**
@@ -130,6 +132,8 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             mFFmpegPlayer.setOnBufferingUpdateListener(null);
             mFFmpegPlayer.setOnPreparedListener(null);
             mFFmpegPlayer.setOnVideoSizeChangedListener(null);
+            mFFmpegPlayer.setOnSeekCompleteListener(null);
+            mFFmpegPlayer.setOnBufferingUpdateListener(null);
             mFFmpegPlayer.setSurface(null);
             mFFmpegPlayer.reset();
             mFFmpegPlayer.release();
@@ -217,7 +221,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 pause();
                 stop();
                 release();
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_SEEK_TIME);
+                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_ERROR_SEEK_TIME);
             } else {
                 MPLogUtil.log("VideoFFmpegPlayer => seekTo => succ");
                 mFFmpegPlayer.seekTo((int) seek);
@@ -320,6 +324,76 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         }
     }
 
+    private FFmpegPlayer.OnInfoListener onInfoListener = new FFmpegPlayer.OnInfoListener() {
+        @Override
+        public boolean onInfo(FFmpegPlayer mp, int what, int extra) {
+            MPLogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what);
+            // 缓冲开始
+            if (what == PlayerType.EventType.EVENT_BUFFERING_START) {
+                if (mPrepared) {
+                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_BUFFERING_START);
+                } else {
+                    MPLogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what + ", mPrepared = false");
+                }
+            }
+            // 缓冲结束
+            else if (what == PlayerType.EventType.EVENT_BUFFERING_STOP) {
+                if (mPrepared) {
+                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                } else {
+                    MPLogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what + ", mPrepared = false");
+                }
+            }
+            // 开始播放
+            else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
+                mPrepared = true;
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                try {
+                    long seek = getSeek();
+                    if (seek <= 0)
+                        throw new Exception("seek warning: " + seek);
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+                    // 起播快进
+                    seekTo(seek);
+                } catch (Exception e) {
+                    MPLogUtil.log("VideoAndroidPlayer => onInfo => " + e.getMessage());
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+                }
+            }
+            return true;
+        }
+    };
+
+    private FFmpegPlayer.OnSeekCompleteListener mOnSeekCompleteListener = new FFmpegPlayer.OnSeekCompleteListener() {
+        @Override
+        public void onSeekComplete(FFmpegPlayer mediaPlayer) {
+            MPLogUtil.log("VideoFFmpegPlayer => onSeekComplete =>");
+            try {
+                long seek = getSeek();
+                if (seek <= 0)
+                    throw new Exception();
+                setSeek(0);
+                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_VIDEO_START);
+            } catch (Exception e) {
+            }
+        }
+    };
+
+    private FFmpegPlayer.OnPreparedListener onPreparedListener = new FFmpegPlayer.OnPreparedListener() {
+        @Override
+        public void onPrepared(FFmpegPlayer mp) {
+            MPLogUtil.log("VideoFFmpegPlayer => onPrepared =>");
+            start();
+        }
+    };
+
+    private FFmpegPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new FFmpegPlayer.OnBufferingUpdateListener() {
+        @Override
+        public void onBufferingUpdate(FFmpegPlayer mp, int percent) {
+            MPLogUtil.log("VideoFFmpegPlayer => onBufferingUpdate => percent = " + percent);
+        }
+    };
+
     private FFmpegPlayer.OnErrorListener onErrorListener = new FFmpegPlayer.OnErrorListener() {
         @Override
         public boolean onError(FFmpegPlayer mp, int what, int extra) {
@@ -330,8 +404,8 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             }
             // error
             else {
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
+                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_ERROR_PARSE);
             }
             return true;
         }
@@ -341,54 +415,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         @Override
         public void onCompletion(FFmpegPlayer mp) {
             MPLogUtil.log("VideoFFmpegPlayer => onCompletion =>");
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_END);
-        }
-    };
-
-    private FFmpegPlayer.OnInfoListener onInfoListener = new FFmpegPlayer.OnInfoListener() {
-        @Override
-        public boolean onInfo(FFmpegPlayer mp, int what, int extra) {
-            MPLogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what);
-            // 缓冲开始
-            if (what == PlayerType.EventType.EVENT_BUFFERING_START) {
-                long position = getPosition();
-                long seek = getSeek();
-                long duration = getDuration();
-                if (duration > 0 && position > seek) {
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
-                }
-            }
-            // 缓冲结束
-            else if (what == PlayerType.EventType.EVENT_BUFFERING_STOP) {
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-            }
-            // 开始播放
-            else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
-                try {
-                    long seek = getSeek();
-                    if (seek <= 0)
-                        throw new Exception("seek warning: " + seek);
-                    setSeek(0);
-                    seekTo(seek);
-                } catch (Exception e) {
-                    MPLogUtil.log("VideoFFmpegPlayer => onInfo => " + e.getMessage());
-                }
-                if (!mPlayWhenReady) {
-                    pause();
-                }
-            }
-            return true;
-        }
-    };
-
-    private FFmpegPlayer.OnPreparedListener onPreparedListener = new FFmpegPlayer.OnPreparedListener() {
-        @Override
-        public void onPrepared(FFmpegPlayer mp) {
-            mPrepared = true;
-            start();
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_VIDEO_END);
         }
     };
 
@@ -400,7 +427,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 int h = o.getVideoHeight();
                 if (w < 0 || h < 0)
                     throw new Exception("w error: " + w + ", h error: " + h);
-                onUpdateSizeChanged(PlayerType.KernelType.ANDROID, w, h, PlayerType.RotationType.Rotation_0);
+                onUpdateSizeChanged(PlayerType.KernelType.FFPLAYER, w, h, PlayerType.RotationType.Rotation_0);
             } catch (Exception e) {
                 MPLogUtil.log("VideoFFmpegPlayer => onVideoSizeChanged => " + e.getMessage());
             }

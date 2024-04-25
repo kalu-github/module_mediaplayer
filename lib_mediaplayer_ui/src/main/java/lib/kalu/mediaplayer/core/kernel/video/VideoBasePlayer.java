@@ -1,7 +1,5 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
-
-
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
