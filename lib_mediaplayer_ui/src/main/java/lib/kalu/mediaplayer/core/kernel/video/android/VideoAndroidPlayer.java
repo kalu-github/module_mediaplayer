@@ -434,18 +434,21 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 // 开始播放
                 case 903:
                 case PlayerType.EventType.EVENT_VIDEO_START:
-                    mPrepared = true;
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
                     try {
+                        if (mPrepared)
+                            throw new Exception("warning: mPrepared true");
+                        mPrepared = true;
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
                         long seek = getSeek();
-                        if (seek <= 0)
-                            throw new Exception("seek warning: " + seek);
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
-                        // 起播快进
-                        seekTo(seek);
+                        if (seek <= 0) {
+                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+                        } else {
+                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+                            // 起播快进
+                            seekTo(seek);
+                        }
                     } catch (Exception e) {
-                        MPLogUtil.log("VideoAndroidPlayer => onInfo => " + e.getMessage());
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+                        MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", msg = " + e.getMessage());
                     }
                     break;
             }
