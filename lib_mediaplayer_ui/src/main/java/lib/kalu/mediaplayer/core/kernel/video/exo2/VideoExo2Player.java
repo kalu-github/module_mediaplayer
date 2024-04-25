@@ -831,12 +831,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
             MPLogUtil.log("VideoExo2Player => createMediaSource => useOkhttp = " + useOkhttp);
             DataSource.Factory dataSourceFactory;
             if (useOkhttp) {
-                int okhttpTimeoutSeconds = PlayerManager.getInstance().getConfig().getExoUseOkhttpTimeoutSeconds();
-                MPLogUtil.log("VideoExo2Player => createMediaSource => okhttpTimeoutSeconds = " + okhttpTimeoutSeconds);
+                int connectTimeoutSeconds = PlayerManager.getInstance().getConfig().getConnectTimeoutSeconds();
+                MPLogUtil.log("VideoExo2Player => createMediaSource => connectTimeoutSeconds = " + connectTimeoutSeconds);
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                        .readTimeout(okhttpTimeoutSeconds, TimeUnit.SECONDS)
-                        .writeTimeout(okhttpTimeoutSeconds, TimeUnit.SECONDS)
-                        .callTimeout(okhttpTimeoutSeconds, TimeUnit.SECONDS)
+                        .connectTimeout(connectTimeoutSeconds, TimeUnit.SECONDS)
                         .connectionPool(new ConnectionPool(10, 60, TimeUnit.MINUTES))
                         .retryOnConnectionFailure(true)
                         .proxySelector(new ProxySelector() { // 禁止抓包

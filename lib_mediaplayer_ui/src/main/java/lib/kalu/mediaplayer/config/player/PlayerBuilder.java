@@ -1,8 +1,6 @@
 package lib.kalu.mediaplayer.config.player;
 
 
-
-
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
 
@@ -20,7 +18,7 @@ public final class PlayerBuilder {
     @PlayerType.FFmpegType.Value
     private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
     private boolean exoUseOkhttp;
-    private int exoUseOkhttpTimeoutSeconds;
+    private int connectTimeoutSeconds;
     private int bufferingTimeoutSeconds;
     private boolean bufferingTimeoutRetry;
     @PlayerType.KernelType.Value
@@ -53,8 +51,8 @@ public final class PlayerBuilder {
         return exoUseOkhttp;
     }
 
-    public int getExoUseOkhttpTimeoutSeconds() {
-        return exoUseOkhttpTimeoutSeconds;
+    public int getConnectTimeoutSeconds() {
+        return connectTimeoutSeconds;
     }
 
     public int getBufferingTimeoutSeconds() {
@@ -134,7 +132,7 @@ public final class PlayerBuilder {
         exoSeekParameters = builder.exoSeekParameters;
         exoFFmpeg = builder.exoFFmpeg;
         exoUseOkhttp = builder.exoUseOkhttp;
-        exoUseOkhttpTimeoutSeconds = builder.exoUseOkhttpTimeoutSeconds;
+        connectTimeoutSeconds = builder.connectTimeoutSeconds;
         bufferingTimeoutSeconds = builder.bufferingTimeoutSeconds;
         bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         externalAudioKernel = builder.externalAudioKernel;
@@ -158,7 +156,7 @@ public final class PlayerBuilder {
         builder.setExoSeekParameters(this.exoSeekParameters);
         builder.setExoFFmpeg(this.exoFFmpeg);
         builder.setExoUseOkhttp(this.exoUseOkhttp);
-        builder.setExoUseOkhttpTimeoutSeconds(this.exoUseOkhttpTimeoutSeconds);
+        builder.setConnectTimeoutSeconds(this.connectTimeoutSeconds);
         builder.setBufferingTimeoutSeconds(this.bufferingTimeoutSeconds);
         builder.setBufferingTimeoutRetry(this.bufferingTimeoutRetry);
         builder.setExternalAudioKernel(this.externalAudioKernel);
@@ -176,7 +174,7 @@ public final class PlayerBuilder {
         return builder;
     }
 
-    
+
     public final static class Builder {
 
         private boolean log = false;// 日志log
@@ -186,7 +184,7 @@ public final class PlayerBuilder {
         @PlayerType.FFmpegType.Value
         private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
         private boolean exoUseOkhttp = true;
-        private int exoUseOkhttpTimeoutSeconds = 10;
+        private int connectTimeoutSeconds = 10;
         private int bufferingTimeoutSeconds = 0;
         private boolean bufferingTimeoutRetry = false;
         @PlayerType.KernelType.Value
@@ -216,22 +214,22 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public Builder setExoUseOkhttpTimeoutSeconds( int v) {
-            exoUseOkhttpTimeoutSeconds = v;
+        public Builder setConnectTimeoutSeconds(int v) {
+            connectTimeoutSeconds = v;
             return this;
         }
 
-        public Builder setBufferingTimeoutSeconds( int v) {
+        public Builder setBufferingTimeoutSeconds(int v) {
             bufferingTimeoutSeconds = v;
             return this;
         }
 
-        public Builder setBufferingTimeoutRetry( boolean v) {
+        public Builder setBufferingTimeoutRetry(boolean v) {
             bufferingTimeoutRetry = v;
             return this;
         }
 
-        public Builder setExoUseOkhttp( boolean v) {
+        public Builder setExoUseOkhttp(boolean v) {
             exoUseOkhttp = v;
             return this;
         }

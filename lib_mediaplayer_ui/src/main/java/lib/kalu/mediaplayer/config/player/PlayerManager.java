@@ -38,8 +38,8 @@ public final class PlayerManager {
         return this;
     }
 
-    public PlayerManager setExoUseOkhttpTimeoutSeconds( int v) {
-        this.mPlayerBuilder.setExoUseOkhttpTimeoutSeconds(v);
+    public PlayerManager setConnectTimeoutSeconds( int v) {
+        this.mPlayerBuilder.setConnectTimeoutSeconds(v);
         return this;
     }
 

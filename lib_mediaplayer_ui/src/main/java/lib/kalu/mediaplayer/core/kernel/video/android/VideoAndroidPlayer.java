@@ -25,6 +25,7 @@ import com.google.android.exoplayer2.PlaybackParameters;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
@@ -43,6 +44,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     private MediaPlayer mMediaPlayer = null;
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
+    private Handler mHander = null;
 
     public VideoAndroidPlayer(VideoPlayerApi playerApi, VideoKernelApiEvent eventApi) {
         super(playerApi, eventApi);
@@ -99,6 +101,21 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             } else {
                 mMediaPlayer.prepare();
             }
+            // 监测网络超时
+            if (null == mHander) {
+                mHander = new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(@NonNull Message msg) {
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_NET);
+                        stop();
+                        release();
+                    }
+                };
+            }
+            int seconds = PlayerManager.getInstance().getConfig().getConnectTimeoutSeconds();
+            long delayMillis = seconds * 1000L;
+            mHander.sendEmptyMessageDelayed(1000, delayMillis);
         } catch (IllegalArgumentException e) {
             MPLogUtil.log("VideoAndroidPlayer => startDecoder => " + e.getMessage());
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
@@ -455,6 +472,10 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public void onPrepared(MediaPlayer mp) {
             MPLogUtil.log("VideoAndroidPlayer => onPrepared =>");
+            if (null != mHander) {
+                mHander.removeMessages(1000);
+                mHander = null;
+            }
             start();
         }
     };
