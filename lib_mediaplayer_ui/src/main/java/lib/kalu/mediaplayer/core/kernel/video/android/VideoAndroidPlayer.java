@@ -44,12 +44,11 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     private MediaPlayer mMediaPlayer = null;
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
-    private Handler mHander = null;
+    private Handler mH = null;
 
     public VideoAndroidPlayer(VideoPlayerApi playerApi, VideoKernelApiEvent eventApi) {
         super(playerApi, eventApi);
     }
-
 
     @Override
     public VideoAndroidPlayer getPlayer() {
@@ -85,6 +84,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     public void startDecoder(Context context, String url, boolean prepareAsync) {
         MPLogUtil.log("VideoAndroidPlayer => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
@@ -93,6 +93,27 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 throw new Exception("mMediaPlayer error: null");
             if (url == null || url.length() == 0)
                 throw new IllegalArgumentException("url error: " + url);
+            int seconds = PlayerManager.getInstance().getConfig().getConnectTimeoutSeconds();
+            long connectTimeout = seconds * 1000L;
+            if (null == mH) {
+                mH = new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(@NonNull Message msg) {
+                        if (msg.what == 1010) {
+                            MPLogUtil.log("VideoAndroidPlayer => startDecoder => handleMessage => mPrepared = " + mPrepared + ", mMediaPlayer = " + mMediaPlayer);
+                            if (null != mMediaPlayer && !mPrepared) {
+                                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_NET);
+                                pause();
+                                stop();
+                                release();
+                            }
+                        }
+                    }
+                };
+            }
+            mH.sendEmptyMessageDelayed(1010, connectTimeout);
+            MPLogUtil.log("VideoAndroidPlayer => startDecoder => connectTimeout = " + connectTimeout);
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
             initListener();
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);
@@ -101,21 +122,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             } else {
                 mMediaPlayer.prepare();
             }
-            // 监测网络超时
-            if (null == mHander) {
-                mHander = new Handler(Looper.getMainLooper()) {
-                    @Override
-                    public void handleMessage(@NonNull Message msg) {
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_NET);
-                        stop();
-                        release();
-                    }
-                };
-            }
-            int seconds = PlayerManager.getInstance().getConfig().getConnectTimeoutSeconds();
-            long delayMillis = seconds * 1000L;
-            mHander.sendEmptyMessageDelayed(1000, delayMillis);
+            // 监测网络连接超时
         } catch (IllegalArgumentException e) {
             MPLogUtil.log("VideoAndroidPlayer => startDecoder => " + e.getMessage());
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
@@ -164,6 +171,11 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
+        if (null != mH) {
+            MPLogUtil.log("VideoAndroidPlayer => release => 移除网络超时监听");
+            mH.removeMessages(1010);
+            mH = null;
+        }
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -475,11 +487,12 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public void onPrepared(MediaPlayer mp) {
             MPLogUtil.log("VideoAndroidPlayer => onPrepared =>");
-            if (null != mHander) {
-                mHander.removeMessages(1000);
-                mHander = null;
-            }
             start();
+            if (null != mH) {
+                MPLogUtil.log("VideoAndroidPlayer => onPrepared => 移除网络超时监听");
+                mH.removeMessages(1010);
+                mH = null;
+            }
         }
     };
 
