@@ -662,18 +662,21 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     break;
                 // 出画面 => 起播
                 case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
-                    mPrepared = true;
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
                     try {
+                        if (mPrepared)
+                            throw new Exception("warning: mPrepared true");
+                        mPrepared = true;
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
                         long seek = getSeek();
-                        if (seek <= 0)
-                            throw new Exception("seek warning: " + seek);
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
-                        // 起播快进
-                        seekTo(seek);
+                        if (seek <= 0) {
+                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_START);
+                        } else {
+                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+                            // 起播快进
+                            seekTo(seek);
+                        }
                     } catch (Exception e) {
-                        MPLogUtil.log("VideoIjkPlayer => onInfo => " + e.getMessage());
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_START);
+                        MPLogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", msg = " + e.getMessage());
                     }
                     break;
 //                // 出画面 => 快进起播
