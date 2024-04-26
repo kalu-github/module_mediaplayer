@@ -268,9 +268,9 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             int count = viewGroup.getChildCount();
             for (int i = 0; i < count; i++) {
                 View child = viewGroup.getChildAt(i);
-                child.setVisibility(View.GONE);
+                child.setVisibility(View.INVISIBLE);
             }
-            viewGroup.setVisibility(View.GONE);
+            viewGroup.setVisibility(View.INVISIBLE);
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiRender => hideVideoView => " + e.getMessage());
         }

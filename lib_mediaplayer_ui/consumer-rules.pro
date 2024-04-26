@@ -1,4 +1,4 @@
--dontwarn lib.kalu.**
+-dontwarn lib.kalu.mediaplayer.**
 -dontwarn com.google.**
 -dontwarn org.apache.commons.io.**
 
@@ -11,9 +11,27 @@
 
 
 # 自定义view
--keep class lib.kalu.mediaplayer.widget.loading.MPLoadingView
--keep class lib.kalu.mediaplayer.widget.loading.MPLoadingViewSpeed
--keep class lib.kalu.mediaplayer.widget.player.PlayerLayout
--keep class lib.kalu.mediaplayer.widget.player.PlayerView
--keep class lib.kalu.mediaplayer.widget.speed.SpeedLinearLayout
--keep class lib.kalu.mediaplayer.widget.subtitle.SimpleSubtitleView
+-keep class lib.kalu.mediaplayer.widget.player.PlayerLayout {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.widget.player.PlayerView{
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.widget.loading.MPLoadingView{
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.widget.loading.MPLoadingViewSpeed{
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.widget.speed.SpeedLinearLayout{
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.widget.subtitle.SimpleSubtitleView{
+    public <fields>;
+    public <methods>;
+}
