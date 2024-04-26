@@ -3,14 +3,33 @@
 -dontwarn org.apache.commons.io.**
 
 -keep class lib.kalu.mediaplayer.buried.** {*;}
--keep class lib.kalu.mediaplayer.config.** {*;}
 -keep class lib.kalu.mediaplayer.listener.** {*;}
--keep class lib.kalu.mediaplayer.core.component.** {*;}
--keep class lib.kalu.mediaplayer.TestActivity {*;}
--keep class lib.kalu.mediaplayer.util.UdpMulticastUtil {*;}
 
+# util
+-keep class lib.kalu.mediaplayer.util.UdpMulticastUtil {
+    public <fields>;
+    public <methods>;
+}
 
-# 自定义view
+# test
+-keep class lib.kalu.mediaplayer.TestActivity {
+    public <fields>;
+    public <methods>;
+}
+
+# config
+-keep class lib.kalu.mediaplayer.config.** {
+    public <fields>;
+    public <methods>;
+}
+
+# component
+-keep class lib.kalu.mediaplayer.core.component.** {
+    public <fields>;
+    public <methods>;
+}
+
+# view
 -keep class lib.kalu.mediaplayer.widget.player.PlayerLayout {
     public <fields>;
     public <methods>;
