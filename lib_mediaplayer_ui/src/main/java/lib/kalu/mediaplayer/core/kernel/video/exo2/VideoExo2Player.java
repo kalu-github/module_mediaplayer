@@ -354,9 +354,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_START);
             PlayerBuilder config = PlayerManager.getInstance().getConfig();
-            int cacheType = config.getCacheType();
-            int cacheMax = config.getCacheMax();
-            String cacheDir = config.getCacheDir();
+            int cacheType = config.getExoCacheType();
+            int cacheMax = config.getExoCacheMax();
+            String cacheDir = config.getExoCacheDir();
             if (isLive()) {
                 cacheType = PlayerType.CacheType.NONE;
             }

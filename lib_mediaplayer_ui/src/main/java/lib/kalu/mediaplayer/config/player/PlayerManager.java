@@ -28,11 +28,6 @@ public final class PlayerManager {
         mPlayerBuilder = new PlayerBuilder.Builder();
     }
 
-    public PlayerManager setSeekHelp(boolean v) {
-        mPlayerBuilder.setSeekHelp(v);
-        return this;
-    }
-
     public PlayerManager setExoUseOkhttp( boolean v) {
         mPlayerBuilder.setExoUseOkhttp(v);
         return this;
@@ -40,11 +35,6 @@ public final class PlayerManager {
 
     public PlayerManager setConnectTimeoutSeconds( int v) {
         this.mPlayerBuilder.setConnectTimeoutSeconds(v);
-        return this;
-    }
-
-    public PlayerManager setBufferingTimeoutSeconds( int v) {
-        this.mPlayerBuilder.setBufferingTimeoutSeconds(v);
         return this;
     }
 
@@ -63,18 +53,18 @@ public final class PlayerManager {
         return this;
     }
 
-    public PlayerManager setCacheType(@PlayerType.CacheType int v) {
-        mPlayerBuilder.setCacheType(v);
+    public PlayerManager setExoCacheType(@PlayerType.CacheType int v) {
+        mPlayerBuilder.setExoCacheType(v);
         return this;
     }
 
-    public PlayerManager setCacheMax(int v) {
-        mPlayerBuilder.setCacheMax(v);
+    public PlayerManager setExoCacheMax(int v) {
+        mPlayerBuilder.setExoCacheMax(v);
         return this;
     }
 
-    public PlayerManager setCacheDir(String v) {
-        mPlayerBuilder.setCacheDir(v);
+    public PlayerManager setExoCacheDir(String v) {
+        mPlayerBuilder.setExoCacheDir(v);
         return this;
     }
 

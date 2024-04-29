@@ -12,14 +12,7 @@ import lib.kalu.mediaplayer.keycode.KeycodeApi;
 public final class PlayerBuilder {
 
     private boolean log;// 日志log
-    private boolean seekHelp = false; // 解决seek不准确
-    @PlayerType.SeekType.Value
-    private int exoSeekParameters = PlayerType.SeekType.EXO_SEEK_DEFAULT;
-    @PlayerType.FFmpegType.Value
-    private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
-    private boolean exoUseOkhttp;
     private int connectTimeoutSeconds;
-    private int bufferingTimeoutSeconds;
     private boolean bufferingTimeoutRetry;
     @PlayerType.KernelType.Value
     private int externalAudioKernel; // 音频播放器内核
@@ -35,17 +28,15 @@ public final class PlayerBuilder {
     private BuriedEvent buriedEvent;  // 埋点事件log
     private KeycodeApi keycodeApi; // 遥控code
 
-    /**
-     * 本地视频缓存
-     */
+    @PlayerType.SeekType.Value
+    private int exoSeekParameters = PlayerType.SeekType.EXO_SEEK_DEFAULT;
+    @PlayerType.FFmpegType.Value
+    private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
+    private boolean exoUseOkhttp;
     @PlayerType.CacheType
-    private int cacheType = PlayerType.CacheType.NONE;
-    private int cacheMax = 0;
-    private String cacheDir = null;
-
-    public boolean isSeekHelp() {
-        return seekHelp;
-    }
+    private int exoCacheType = PlayerType.CacheType.NONE;
+    private int exoCacheMax = 0;
+    private String exoCacheDir = null;
 
     public boolean isExoUseOkhttp() {
         return exoUseOkhttp;
@@ -53,10 +44,6 @@ public final class PlayerBuilder {
 
     public int getConnectTimeoutSeconds() {
         return connectTimeoutSeconds;
-    }
-
-    public int getBufferingTimeoutSeconds() {
-        return bufferingTimeoutSeconds;
     }
 
     public boolean getBufferingTimeoutRetry() {
@@ -71,16 +58,16 @@ public final class PlayerBuilder {
         return exoSeekParameters;
     }
 
-    public int getCacheType() {
-        return cacheType;
+    public int getExoCacheType() {
+        return exoCacheType;
     }
 
-    public int getCacheMax() {
-        return cacheMax;
+    public int getExoCacheMax() {
+        return exoCacheMax;
     }
 
-    public String getCacheDir() {
-        return cacheDir;
+    public String getExoCacheDir() {
+        return exoCacheDir;
     }
 
     public boolean isLog() {
@@ -128,12 +115,7 @@ public final class PlayerBuilder {
 
     private PlayerBuilder(Builder builder) {
         log = builder.log;
-        seekHelp = builder.seekHelp;
-        exoSeekParameters = builder.exoSeekParameters;
-        exoFFmpeg = builder.exoFFmpeg;
-        exoUseOkhttp = builder.exoUseOkhttp;
         connectTimeoutSeconds = builder.connectTimeoutSeconds;
-        bufferingTimeoutSeconds = builder.bufferingTimeoutSeconds;
         bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         externalAudioKernel = builder.externalAudioKernel;
         kernel = builder.kernel;
@@ -144,20 +126,19 @@ public final class PlayerBuilder {
         checkOrientation = builder.checkOrientation;
         buriedEvent = builder.buriedEvent;
         keycodeApi = builder.keycodeApi;
-        cacheType = builder.cacheType;
-        cacheDir = builder.cacheDir;
-        cacheMax = builder.cacheMax;
+
+        exoSeekParameters = builder.exoSeekParameters;
+        exoFFmpeg = builder.exoFFmpeg;
+        exoUseOkhttp = builder.exoUseOkhttp;
+        exoCacheType = builder.exoCacheType;
+        exoCacheDir = builder.exoCacheDir;
+        exoCacheMax = builder.exoCacheMax;
     }
 
     public Builder newBuilder() {
         Builder builder = new Builder();
         builder.setLog(this.log);
-        builder.setSeekHelp(this.seekHelp);
-        builder.setExoSeekParameters(this.exoSeekParameters);
-        builder.setExoFFmpeg(this.exoFFmpeg);
-        builder.setExoUseOkhttp(this.exoUseOkhttp);
         builder.setConnectTimeoutSeconds(this.connectTimeoutSeconds);
-        builder.setBufferingTimeoutSeconds(this.bufferingTimeoutSeconds);
         builder.setBufferingTimeoutRetry(this.bufferingTimeoutRetry);
         builder.setExternalAudioKernel(this.externalAudioKernel);
         builder.setKernel(this.kernel);
@@ -168,9 +149,12 @@ public final class PlayerBuilder {
         builder.setCheckOrientation(this.checkOrientation);
         builder.setBuriedEvent(this.buriedEvent);
         builder.setKeycodeApi(this.keycodeApi);
-        builder.setCacheType(this.cacheType);
-        builder.setCacheDir(this.cacheDir);
-        builder.setCacheMax(this.cacheMax);
+        builder.setExoSeekParameters(this.exoSeekParameters);
+        builder.setExoFFmpeg(this.exoFFmpeg);
+        builder.setExoUseOkhttp(this.exoUseOkhttp);
+        builder.setExoCacheType(this.exoCacheType);
+        builder.setExoCacheDir(this.exoCacheDir);
+        builder.setExoCacheMax(this.exoCacheMax);
         return builder;
     }
 
@@ -178,15 +162,8 @@ public final class PlayerBuilder {
     public final static class Builder {
 
         private boolean log = false;// 日志log
-        private boolean seekHelp = false; // 解决seek不准确
-        @PlayerType.SeekType.Value
-        private int exoSeekParameters = PlayerType.SeekType.EXO_SEEK_DEFAULT;
-        @PlayerType.FFmpegType.Value
-        private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
-        private boolean exoUseOkhttp = true;
-        private int connectTimeoutSeconds = 10;
-        private int bufferingTimeoutSeconds = 0;
-        private boolean bufferingTimeoutRetry = false;
+        private int connectTimeoutSeconds = 10;  // 连接超时
+        private boolean bufferingTimeoutRetry = false; // 缓冲失败重试
         @PlayerType.KernelType.Value
         private int externalAudioKernel = PlayerType.KernelType.ANDROID; // 音频播放器内核
         @PlayerType.KernelType.Value
@@ -201,26 +178,23 @@ public final class PlayerBuilder {
         private BuriedEvent buriedEvent = null;  // 埋点事件log
         private KeycodeApi keycodeApi = null; // 遥控code
 
+
+        @PlayerType.SeekType.Value
+        private int exoSeekParameters = PlayerType.SeekType.EXO_SEEK_DEFAULT;
+        @PlayerType.FFmpegType.Value
+        private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
         /**
          * 本地视频缓存
          */
         @PlayerType.CacheType
-        private int cacheType = PlayerType.CacheType.NONE;
-        private int cacheMax = 0;
-        private String cacheDir = null;
+        private int exoCacheType = PlayerType.CacheType.NONE;
+        private int exoCacheMax = 0;
+        private String exoCacheDir = null;
+        private boolean exoUseOkhttp = true;
 
-        public Builder setSeekHelp(boolean v) {
-            seekHelp = v;
-            return this;
-        }
 
         public Builder setConnectTimeoutSeconds(int v) {
             connectTimeoutSeconds = v;
-            return this;
-        }
-
-        public Builder setBufferingTimeoutSeconds(int v) {
-            bufferingTimeoutSeconds = v;
             return this;
         }
 
@@ -244,18 +218,18 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public Builder setCacheType(@PlayerType.CacheType int v) {
-            cacheType = v;
+        public Builder setExoCacheType(@PlayerType.CacheType int v) {
+            exoCacheType = v;
             return this;
         }
 
-        public Builder setCacheMax(int v) {
-            cacheMax = v;
+        public Builder setExoCacheMax(int v) {
+            exoCacheMax = v;
             return this;
         }
 
-        public Builder setCacheDir(String v) {
-            cacheDir = v;
+        public Builder setExoCacheDir(String v) {
+            exoCacheDir = v;
             return this;
         }
 

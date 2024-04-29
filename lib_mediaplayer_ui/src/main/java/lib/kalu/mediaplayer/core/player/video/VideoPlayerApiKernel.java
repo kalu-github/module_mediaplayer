@@ -621,12 +621,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         callPlayerEvent(PlayerType.StateType.STATE_TRY_COMPLETE);
                         // 试看1
                         if (isLooping) {
-                            boolean seekHelp = playerBuilder.isSeekHelp();
-                            if (seekHelp) {
-                                seekToVideoKernel(1);
-                            } else {
-                                seekTo(true);
-                            }
+                            seekTo(true);
                         }
                         // 试看2
                         else {
@@ -891,10 +886,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void startCheckBuffering() {
         try {
             stopCheckBuffering();
-            int bufferingTimeoutSeconds = PlayerManager.getInstance().getConfig().getBufferingTimeoutSeconds();
-            if (bufferingTimeoutSeconds <= 0)
-                throw new Exception("bufferingTimeoutSeconds warning: " + bufferingTimeoutSeconds);
             boolean bufferingTimeoutRetry = PlayerManager.getInstance().getConfig().getBufferingTimeoutRetry();
+            if (!bufferingTimeoutRetry)
+                throw new Exception("bufferingTimeoutRetry warning: false");
+            int connectTimeoutSeconds = PlayerManager.getInstance().getConfig().getConnectTimeoutSeconds();
             mHandlerBuffering[0] = new Handler(Looper.getMainLooper()) {
                 @Override
                 public void handleMessage(Message msg) {
@@ -928,7 +923,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     }
                 }
             };
-            mHandlerBuffering[0].sendEmptyMessageDelayed(7677, bufferingTimeoutSeconds * 1000);
+            mHandlerBuffering[0].sendEmptyMessageDelayed(7677, connectTimeoutSeconds * 1000);
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiKernel => startCheckBuffering => " + e.getMessage());
         }
