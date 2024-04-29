@@ -12,6 +12,15 @@ import androidx.annotation.FloatRange;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import lib.kalu.ijkplayer.IMediaPlayer$OnBufferingUpdateListener;
+import lib.kalu.ijkplayer.IMediaPlayer$OnCompletionListener;
+import lib.kalu.ijkplayer.IMediaPlayer$OnErrorListener;
+import lib.kalu.ijkplayer.IMediaPlayer$OnInfoListener;
+import lib.kalu.ijkplayer.IMediaPlayer$OnPreparedListener;
+import lib.kalu.ijkplayer.IMediaPlayer$OnSeekCompleteListener;
+import lib.kalu.ijkplayer.IMediaPlayer$OnTimedTextListener;
+import lib.kalu.ijkplayer.IMediaPlayer$OnVideoSizeChangedListener;
+import lib.kalu.ijkplayer.IjkMediaPlayer.OnNativeInvokeListener;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
@@ -299,13 +308,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         mIjkPlayer.setOnTimedTextListener(onTimedTextListener);
         // 设置视频缓冲更新监听事件
         mIjkPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
-        mIjkPlayer.setOnNativeInvokeListener(new IjkMediaPlayer.OnNativeInvokeListener() {
-            @Override
-            public boolean onNativeInvoke(int i, Bundle bundle) {
-                MPLogUtil.log("VideoIjkPlayer => onNativeInvoke => i => " + i + ", bundle = " + bundle);
-                return true;
-            }
-        });
+        mIjkPlayer.setOnNativeInvokeListener(onNativeInvokeListener);
     }
 
     //    /**
@@ -630,7 +633,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     /**
      * 设置视频信息监听器
      */
-    private IMediaPlayer.OnInfoListener onInfoListener = new IMediaPlayer.OnInfoListener() {
+    private IMediaPlayer$OnInfoListener onInfoListener = new IMediaPlayer$OnInfoListener() {
         @Override
         public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
             MPLogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", extra = " + extra);
@@ -698,7 +701,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         }
     };
 
-    private IMediaPlayer.OnSeekCompleteListener onSeekCompleteListener = new IMediaPlayer.OnSeekCompleteListener() {
+    private IMediaPlayer$OnSeekCompleteListener onSeekCompleteListener = new IMediaPlayer$OnSeekCompleteListener() {
         @Override
         public void onSeekComplete(IMediaPlayer iMediaPlayer) {
             MPLogUtil.log("VideoIjkPlayer => onSeekComplete =>");
@@ -713,7 +716,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         }
     };
 
-    private IMediaPlayer.OnPreparedListener onPreparedListener = new IMediaPlayer.OnPreparedListener() {
+    private IMediaPlayer$OnPreparedListener onPreparedListener = new IMediaPlayer$OnPreparedListener() {
         @Override
         public void onPrepared(IMediaPlayer iMediaPlayer) {
             MPLogUtil.log("VideoIjkPlayer => onPrepared =>");
@@ -721,7 +724,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         }
     };
 
-    private IMediaPlayer.OnVideoSizeChangedListener onVideoSizeChangedListener = new IMediaPlayer.OnVideoSizeChangedListener() {
+    private IMediaPlayer$OnVideoSizeChangedListener onVideoSizeChangedListener = new IMediaPlayer$OnVideoSizeChangedListener() {
         @Override
         public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int width, int height, int sar_num, int sar_den) {
             try {
@@ -749,7 +752,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
      * int MEDIA_ERROR_IJK_PLAYER = -10000,//一般是视频源有问题或者数据格式不支持，比如音频不是AAC之类的
      * int MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK = 200;//数据错误没有有效的回收
      */
-    private IMediaPlayer.OnErrorListener onErrorListener = new IMediaPlayer.OnErrorListener() {
+    private IMediaPlayer$OnErrorListener onErrorListener = new IMediaPlayer$OnErrorListener() {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
             MPLogUtil.log("VideoIjkPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
@@ -760,7 +763,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         }
     };
 
-    private IMediaPlayer.OnCompletionListener onCompletionListener = new IMediaPlayer.OnCompletionListener() {
+    private IMediaPlayer$OnCompletionListener onCompletionListener = new IMediaPlayer$OnCompletionListener() {
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
             MPLogUtil.log("VideoIjkPlayer => onCompletion =>");
@@ -768,7 +771,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         }
     };
 
-    private IMediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new IMediaPlayer.OnBufferingUpdateListener() {
+    private IMediaPlayer$OnBufferingUpdateListener onBufferingUpdateListener = new IMediaPlayer$OnBufferingUpdateListener() {
         @Override
         public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int percent) {
         }
@@ -777,10 +780,17 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     /**
      * 设置时间文本监听器
      */
-    private IMediaPlayer.OnTimedTextListener onTimedTextListener = new IMediaPlayer.OnTimedTextListener() {
+    private IMediaPlayer$OnTimedTextListener onTimedTextListener = new IMediaPlayer$OnTimedTextListener() {
         @Override
         public void onTimedText(IMediaPlayer iMediaPlayer, IjkTimedText ijkTimedText) {
             MPLogUtil.log("VideoIjkPlayer => onTimedText => text = " + ijkTimedText.getText());
+        }
+    };
+    private IjkMediaPlayer.OnNativeInvokeListener onNativeInvokeListener = new IjkMediaPlayer.OnNativeInvokeListener() {
+        @Override
+        public boolean onNativeInvoke(int i, Bundle bundle) {
+            MPLogUtil.log("VideoIjkPlayer => onNativeInvoke => i => " + i + ", bundle = " + bundle);
+            return true;
         }
     };
 }
