@@ -21,30 +21,60 @@
     public <methods>;
 }
 -keep class lib.kalu.ijkplayer.IMediaPlayer {
-    public *;
-#    public <fields>;
-#    public <methods>;
+    public <fields>;
+    public <methods>;
 }
-#-keep class lib.kalu.ijkplayer.IMediaPlayer$OnBufferingUpdateListener {*;}
-#-keep class lib.kalu.ijkplayer.IMediaPlayer$OnCompletionListener {*;}
-#-keep class lib.kalu.ijkplayer.IMediaPlayer$OnErrorListener {*;}
-#-keep class lib.kalu.ijkplayer.IMediaPlayer$OnInfoListener {*;}
-#-keep class lib.kalu.ijkplayer.IMediaPlayer$OnPreparedListener {*;}
-#-keep class lib.kalu.ijkplayer.IMediaPlayer$OnSeekCompleteListener {*;}
-#-keep class lib.kalu.ijkplayer.IMediaPlayer$OnTimedTextListener {*;}
-#-keep class lib.kalu.ijkplayer.IMediaPlayer$OnVideoSizeChangedListener {*;}
 -keep class lib.kalu.ijkplayer.IjkMediaPlayer {
-    public *;
-#    public <fields>;
+    public <fields>;
     native <methods>;
-#    public <methods>;
+    public <methods>;
 }
-#-keep public interface lib.kalu.ijkplayer.IjkMediaPlayer$OnNativeInvokeListener {*;}
 -keep class lib.kalu.ijkplayer.IjkTimedText {
     public <fields>;
     public <methods>;
 }
 -keep class lib.kalu.ijkplayer.IjkMediaMeta {
+    public <fields>;
+    public <methods>;
+}
+
+-keep class lib.kalu.ijkplayer.inter.OnBufferingUpdateListener {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.ijkplayer.inter.OnCompletionListener {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.ijkplayer.inter.OnControlMessageListener {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.ijkplayer.inter.OnErrorListener {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.ijkplayer.inter.OnInfoListener {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.ijkplayer.inter.OnNativeInvokeListener {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.ijkplayer.inter.OnPreparedListener {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.ijkplayer.inter.OnSeekCompleteListener {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.ijkplayer.inter.OnTimedTextListener {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.ijkplayer.inter.OnVideoSizeChangedListener {
     public <fields>;
     public <methods>;
 }
