@@ -843,16 +843,6 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
         String onControlResolveSegmentUrl(int segment);
     }
 
-    /*
-     * NativeInvoke
-     */
-
-    private OnNativeInvokeListener mOnNativeInvokeListener;
-
-    public void setOnNativeInvokeListener(OnNativeInvokeListener listener) {
-        mOnNativeInvokeListener = listener;
-    }
-
     public interface OnNativeInvokeListener {
 
         int CTRL_WILL_TCP_OPEN = 0x20001;               // NO ARGS
@@ -886,6 +876,15 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
          * @throws Exception on any error
          */
         boolean onNativeInvoke(int what, Bundle args);
+    }
+
+    /*
+     * NativeInvoke
+     */
+    private OnNativeInvokeListener mOnNativeInvokeListener;
+
+    public void setOnNativeInvokeListener(OnNativeInvokeListener listener) {
+        mOnNativeInvokeListener = listener;
     }
 
     private static boolean onNativeInvoke(Object weakThiz, int what, Bundle args) {

@@ -24,56 +24,20 @@
     public <fields>;
     public <methods>;
 }
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnBufferingUpdateListener
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnBufferingUpdateListener {
-    public <fields>;
-    public <methods>;
-}
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnCompletionListener
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnCompletionListener {
-    public <fields>;
-    public <methods>;
-}
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnErrorListener
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnErrorListener {
-    public <fields>;
-    public <methods>;
-}
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnInfoListener
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnInfoListener {
-    public <fields>;
-    public <methods>;
-}
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnPreparedListener
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnPreparedListener {
-    public <fields>;
-    public <methods>;
-}
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnSeekCompleteListener
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnSeekCompleteListener {
-    public <fields>;
-    public <methods>;
-}
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnTimedTextListener
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnTimedTextListener {
-    public <fields>;
-    public <methods>;
-}
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnVideoSizeChangedListener
--keep class lib.kalu.ijkplayer.IMediaPlayer$OnVideoSizeChangedListener {
-    public <fields>;
-    public <methods>;
-}
+-keep class lib.kalu.ijkplayer.IMediaPlayer$OnBufferingUpdateListener {*;}
+-keep class lib.kalu.ijkplayer.IMediaPlayer$OnCompletionListener {*;}
+-keep class lib.kalu.ijkplayer.IMediaPlayer$OnErrorListener {*;}
+-keep class lib.kalu.ijkplayer.IMediaPlayer$OnInfoListener {*;}
+-keep class lib.kalu.ijkplayer.IMediaPlayer$OnPreparedListener {*;}
+-keep class lib.kalu.ijkplayer.IMediaPlayer$OnSeekCompleteListener {*;}
+-keep class lib.kalu.ijkplayer.IMediaPlayer$OnTimedTextListener {*;}
+-keep class lib.kalu.ijkplayer.IMediaPlayer$OnVideoSizeChangedListener {*;}
 -keep class lib.kalu.ijkplayer.IjkMediaPlayer {
     public <fields>;
     native <methods>;
     public <methods>;
 }
--keep class lib.kalu.ijkplayer.IjkMediaPlayer$OnNativeInvokeListener
--keep class lib.kalu.ijkplayer.IjkMediaPlayer$OnNativeInvokeListener {
-    public <fields>;
-    public <methods>;
-}
+-keep public interface lib.kalu.ijkplayer.IjkMediaPlayer$OnNativeInvokeListener {*;}
 -keep class lib.kalu.ijkplayer.IjkTimedText {
     public <fields>;
     public <methods>;
