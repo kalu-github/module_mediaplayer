@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.util.download.m3u8.inter;
+package lib.kalu.mediaplayer.util.m3u8.inter;
 
 
 /**

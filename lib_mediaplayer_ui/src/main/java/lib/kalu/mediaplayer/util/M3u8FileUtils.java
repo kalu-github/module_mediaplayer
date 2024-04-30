@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.util.download.m3u8.utils;
+package lib.kalu.mediaplayer.util;
 
 
 
@@ -16,8 +16,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.kalu.mediaplayer.util.download.m3u8.bean.M3u8;
-import lib.kalu.mediaplayer.util.download.m3u8.bean.M3u8Ts;
+import lib.kalu.mediaplayer.util.m3u8.bean.M3u8;
+import lib.kalu.mediaplayer.util.m3u8.bean.M3u8Ts;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 

@@ -1,8 +1,8 @@
-package lib.kalu.mediaplayer.util.download.m3u8.inter;
+package lib.kalu.mediaplayer.util.m3u8.inter;
 
 
 
-import lib.kalu.mediaplayer.util.download.m3u8.bean.M3u8;
+import lib.kalu.mediaplayer.util.m3u8.bean.M3u8;
 
 /**
  * desc  : 获取M3U8信息

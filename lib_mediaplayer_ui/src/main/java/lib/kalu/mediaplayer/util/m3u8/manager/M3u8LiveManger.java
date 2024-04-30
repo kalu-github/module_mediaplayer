@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.util.download.m3u8.manager;
+package lib.kalu.mediaplayer.util.m3u8.manager;
 
 import android.os.Handler;
 import android.os.Message;
@@ -20,10 +20,10 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import lib.kalu.mediaplayer.util.download.m3u8.bean.M3u8;
-import lib.kalu.mediaplayer.util.download.m3u8.bean.M3u8Ts;
-import lib.kalu.mediaplayer.util.download.m3u8.inter.OnDownloadListener;
-import lib.kalu.mediaplayer.util.download.m3u8.utils.M3u8FileUtils;
+import lib.kalu.mediaplayer.util.m3u8.bean.M3u8;
+import lib.kalu.mediaplayer.util.m3u8.bean.M3u8Ts;
+import lib.kalu.mediaplayer.util.m3u8.inter.OnDownloadListener;
+import lib.kalu.mediaplayer.util.M3u8FileUtils;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 /**
