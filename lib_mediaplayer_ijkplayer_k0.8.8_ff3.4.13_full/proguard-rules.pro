@@ -1,8 +1,6 @@
-# ijkplayer-log
--dontwarn lib.kalu.ijkplayer.util.**
--keep class lib.kalu.ijkplayer.util.** { *; }
--keep interface lib.kalu.ijkplayer.util.** { *; }
-# ijkplayer-jni
--dontwarn tv.danmaku.ijk.media.player.**
--keep class tv.danmaku.ijk.media.player.** { *; }
--keep interface tv.danmaku.ijk.media.player.** { *; }
+# 指定外部模糊字典
+-obfuscationdictionary proguard-rules-dict-mini.txt
+# 指定class模糊字典
+-classobfuscationdictionary proguard-rules-dict-mini.txt
+# 指定package模糊字典
+-packageobfuscationdictionary proguard-rules-dict-mini.txt

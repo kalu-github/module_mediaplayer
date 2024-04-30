@@ -17,10 +17,18 @@
 
 package lib.kalu.ijkplayer;
 
+import lib.kalu.ijkplayer.inter.OnBufferingUpdateListener;
+import lib.kalu.ijkplayer.inter.OnCompletionListener;
+import lib.kalu.ijkplayer.inter.OnErrorListener;
+import lib.kalu.ijkplayer.inter.OnInfoListener;
+import lib.kalu.ijkplayer.inter.OnPreparedListener;
+import lib.kalu.ijkplayer.inter.OnSeekCompleteListener;
+import lib.kalu.ijkplayer.inter.OnTimedTextListener;
+import lib.kalu.ijkplayer.inter.OnVideoSizeChangedListener;
 import lib.kalu.ijkplayer.misc.IMediaDataSource;
 
 @SuppressWarnings("WeakerAccess")
-public abstract class AbstractMediaPlayer implements IMediaPlayer {
+public abstract class BaseMediaPlayer implements IMediaPlayer {
     private OnPreparedListener mOnPreparedListener;
     private OnCompletionListener mOnCompletionListener;
     private OnBufferingUpdateListener mOnBufferingUpdateListener;
