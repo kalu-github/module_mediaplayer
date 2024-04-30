@@ -28,6 +28,14 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.Map;
 
+import lib.kalu.ijkplayer.inter.OnBufferingUpdateListener;
+import lib.kalu.ijkplayer.inter.OnCompletionListener;
+import lib.kalu.ijkplayer.inter.OnErrorListener;
+import lib.kalu.ijkplayer.inter.OnInfoListener;
+import lib.kalu.ijkplayer.inter.OnPreparedListener;
+import lib.kalu.ijkplayer.inter.OnSeekCompleteListener;
+import lib.kalu.ijkplayer.inter.OnTimedTextListener;
+import lib.kalu.ijkplayer.inter.OnVideoSizeChangedListener;
 import lib.kalu.ijkplayer.misc.IMediaDataSource;
 import lib.kalu.ijkplayer.misc.ITrackInfo;
 
@@ -121,56 +129,17 @@ public interface IMediaPlayer {
 
     void setOnCompletionListener(OnCompletionListener listener);
 
-    void setOnBufferingUpdateListener(
-            OnBufferingUpdateListener listener);
+    void setOnBufferingUpdateListener(OnBufferingUpdateListener listener);
 
-    void setOnSeekCompleteListener(
-            OnSeekCompleteListener listener);
+    void setOnSeekCompleteListener(OnSeekCompleteListener listener);
 
-    void setOnVideoSizeChangedListener(
-            OnVideoSizeChangedListener listener);
+    void setOnVideoSizeChangedListener(OnVideoSizeChangedListener listener);
 
     void setOnErrorListener(OnErrorListener listener);
 
     void setOnInfoListener(OnInfoListener listener);
 
     void setOnTimedTextListener(OnTimedTextListener listener);
-
-    /*--------------------
-     * Listeners
-     */
-    interface OnPreparedListener {
-        void onPrepared(IMediaPlayer mp);
-    }
-
-    interface OnCompletionListener {
-        void onCompletion(IMediaPlayer mp);
-    }
-
-    interface OnBufferingUpdateListener {
-        void onBufferingUpdate(IMediaPlayer mp, int percent);
-    }
-
-    interface OnSeekCompleteListener {
-        void onSeekComplete(IMediaPlayer mp);
-    }
-
-    interface OnVideoSizeChangedListener {
-        void onVideoSizeChanged(IMediaPlayer mp, int width, int height,
-                                int sar_num, int sar_den);
-    }
-
-    interface OnErrorListener {
-        boolean onError(IMediaPlayer mp, int what, int extra);
-    }
-
-    interface OnInfoListener {
-        boolean onInfo(IMediaPlayer mp, int what, int extra);
-    }
-
-    interface OnTimedTextListener {
-        void onTimedText(IMediaPlayer mp, IjkTimedText text);
-    }
 
     /*--------------------
      * Optional
