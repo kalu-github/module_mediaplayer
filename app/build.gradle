@@ -78,8 +78,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.14.9'
 
     // ui
-    implementation project(path: ':lib_mediaplayer_ui')
-//     api files('libs/lib_mediaplayer_ui_release_20240430.aar')
+//    implementation project(path: ':lib_mediaplayer_ui')
+     api files('libs/lib_mediaplayer_ui_release_20240430.aar')
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.13_mini_release_20240430.aar')
     // exo1
