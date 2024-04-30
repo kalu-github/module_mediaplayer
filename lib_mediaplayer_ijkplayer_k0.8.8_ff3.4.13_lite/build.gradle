@@ -39,7 +39,7 @@ android {
         variant.outputs.all {
             def type = new String(buildType.name).toLowerCase()
             def time = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
-            outputFileName = "lib_mediaplayer_ijk_k0.8.8_ff3.4.13_mini_openssl" + type + "_" + time + ".aar"
+            outputFileName = "lib_mediaplayer_ijk_k0.8.8_ff3.4.13_lite_" + type + "_" + time + ".aar"
         }
     }
 
