@@ -1,0 +1,27 @@
+{
+  "buildFiles": [
+    "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\\src\\main\\cpp\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\\.cxx\\RelWithDebInfo\\6t5a63lf\\armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\\.cxx\\RelWithDebInfo\\6t5a63lf\\armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "ijkplayer2::@6890427a1f51a3e7e1df": {
+      "artifactName": "ijkplayer2",
+      "abi": "armeabi-v7a",
+      "output": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\\build\\intermediates\\cxx\\RelWithDebInfo\\6t5a63lf\\obj\\armeabi-v7a\\libijkplayer2.so",
+      "runtimeFiles": []
+    }
+  }
+}

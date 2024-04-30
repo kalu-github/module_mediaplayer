@@ -1,0 +1,174 @@
+{
+  "abi": "X86_64",
+  "info": {
+    "abi": "X86_64",
+    "bitness": 64,
+    "deprecated": false,
+    "default": true
+  },
+  "cxxBuildFolder": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\.cxx\\RelWithDebInfo\\6j3p3c3q\\x86_64",
+  "soFolder": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\build\\intermediates\\cxx\\RelWithDebInfo\\6j3p3c3q\\obj\\x86_64",
+  "soRepublishFolder": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\build\\intermediates\\cmake\\release\\obj\\x86_64",
+  "abiPlatformVersion": 19,
+  "cmake": {
+    "effectiveConfiguration": {
+      "inheritEnvironments": [],
+      "variables": []
+    }
+  },
+  "variant": {
+    "buildSystemArgumentList": [],
+    "cFlagsList": [
+      "-fstack-protector-all"
+    ],
+    "cppFlagsList": [
+      "-std\u003dc++11",
+      "-Wl,-Bsymbolic"
+    ],
+    "variantName": "release",
+    "isDebuggableEnabled": false,
+    "validAbiList": [
+      "ARMEABI_V7A",
+      "ARM64_V8A",
+      "X86",
+      "X86_64"
+    ],
+    "buildTargetSet": [],
+    "implicitBuildTargetSet": [],
+    "cmakeSettingsConfiguration": "android-gradle-plugin-predetermined-name",
+    "module": {
+      "cxxFolder": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\.cxx",
+      "intermediatesBaseFolder": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\build\\intermediates",
+      "intermediatesFolder": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\build\\intermediates\\cxx",
+      "gradleModulePathName": ":lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full",
+      "moduleRootFolder": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full",
+      "moduleBuildFile": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\build.gradle",
+      "makeFile": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\src\\main\\cpp\\CMakeLists.txt",
+      "buildSystem": "CMAKE",
+      "ndkFolder": "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\25.2.9519653",
+      "ndkVersion": "25.2.9519653",
+      "ndkSupportedAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "ndkDefaultAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "ndkDefaultStl": "LIBCXX_STATIC",
+      "ndkMetaPlatforms": {
+        "min": 19,
+        "max": 33,
+        "aliases": {
+          "20": 19,
+          "25": 24,
+          "J": 16,
+          "J-MR1": 17,
+          "J-MR2": 18,
+          "K": 19,
+          "L": 21,
+          "L-MR1": 22,
+          "M": 23,
+          "N": 24,
+          "N-MR1": 24,
+          "O": 26,
+          "O-MR1": 27,
+          "P": 28,
+          "Q": 29,
+          "R": 30,
+          "S": 31,
+          "Sv2": 32,
+          "Tiramisu": 33
+        }
+      },
+      "ndkMetaAbiList": [
+        {
+          "abi": "ARMEABI_V7A",
+          "bitness": 32,
+          "deprecated": false,
+          "default": true
+        },
+        {
+          "abi": "ARM64_V8A",
+          "bitness": 64,
+          "deprecated": false,
+          "default": true
+        },
+        {
+          "abi": "X86",
+          "bitness": 32,
+          "deprecated": false,
+          "default": true
+        },
+        {
+          "abi": "X86_64",
+          "bitness": 64,
+          "deprecated": false,
+          "default": true
+        }
+      ],
+      "cmakeToolchainFile": "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\25.2.9519653\\build\\cmake\\android.toolchain.cmake",
+      "cmake": {
+        "cmakeExe": "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\cmake.exe"
+      },
+      "stlSharedObjectMap": {
+        "LIBCXX_SHARED": {
+          "ARMEABI_V7A": "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\25.2.9519653\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\arm-linux-androideabi\\libc++_shared.so",
+          "ARM64_V8A": "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\25.2.9519653\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\aarch64-linux-android\\libc++_shared.so",
+          "X86": "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\25.2.9519653\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\i686-linux-android\\libc++_shared.so",
+          "X86_64": "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\25.2.9519653\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\x86_64-linux-android\\libc++_shared.so"
+        },
+        "LIBCXX_STATIC": {},
+        "NONE": {},
+        "SYSTEM": {}
+      },
+      "project": {
+        "rootBuildGradleFolder": "D:\\Android\\Huan_Component\\module_mediaplayer",
+        "sdkFolder": "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk",
+        "isBuildOnlyTargetAbiEnabled": true,
+        "isCmakeBuildCohabitationEnabled": false,
+        "isPrefabEnabled": false
+      },
+      "outputOptions": [],
+      "ninjaExe": "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "hasBuildTimeInformation": true
+    },
+    "prefabClassPaths": [],
+    "prefabPackages": [],
+    "prefabPackageConfigurations": [],
+    "stlType": "c++_static",
+    "optimizationTag": "RelWithDebInfo"
+  },
+  "buildSettings": {
+    "environmentVariables": []
+  },
+  "prefabFolder": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\.cxx\\RelWithDebInfo\\6j3p3c3q\\prefab\\x86_64",
+  "isActiveAbi": true,
+  "fullConfigurationHash": "6j3p3c3q6370391g386w301k3a3m5w6n42426l5z2c4x03jm56y2f136l1n36",
+  "fullConfigurationHashKey": "# Values used to calculate the hash in this folder name.\n# Should not depend on the absolute path of the project itself.\n#   - AGP: 8.0.2.\n#   - $NDK is the path to NDK 25.2.9519653.\n#   - $PROJECT is the path to the parent folder of the root Gradle build file.\n#   - $ABI is the ABI to be built with. The specific value doesn\u0027t contribute to the value of the hash.\n#   - $HASH is the hash value computed from this text.\n#   - $CMAKE is the path to CMake 3.22.1.\n#   - $NINJA is the path to Ninja.\n-H$PROJECT/lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full/src/main/cpp\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_SYSTEM_VERSION\u003d19\n-DANDROID_PLATFORM\u003dandroid-19\n-DANDROID_ABI\u003d$ABI\n-DCMAKE_ANDROID_ARCH_ABI\u003d$ABI\n-DANDROID_NDK\u003d$NDK\n-DCMAKE_ANDROID_NDK\u003d$NDK\n-DCMAKE_TOOLCHAIN_FILE\u003d$NDK/build/cmake/android.toolchain.cmake\n-DCMAKE_MAKE_PROGRAM\u003d$NINJA\n-DCMAKE_C_FLAGS\u003d-fstack-protector-all\n-DCMAKE_CXX_FLAGS\u003d-std\u003dc++11 -Wl,-Bsymbolic\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003d$PROJECT/lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full/build/intermediates/cxx/RelWithDebInfo/$HASH/obj/$ABI\n-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003d$PROJECT/lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full/build/intermediates/cxx/RelWithDebInfo/$HASH/obj/$ABI\n-DCMAKE_BUILD_TYPE\u003dRelWithDebInfo\n-B$PROJECT/lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full/.cxx/RelWithDebInfo/$HASH/$ABI\n-GNinja",
+  "configurationArguments": [
+    "-HD:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\src\\main\\cpp",
+    "-DCMAKE_SYSTEM_NAME\u003dAndroid",
+    "-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON",
+    "-DCMAKE_SYSTEM_VERSION\u003d19",
+    "-DANDROID_PLATFORM\u003dandroid-19",
+    "-DANDROID_ABI\u003dx86_64",
+    "-DCMAKE_ANDROID_ARCH_ABI\u003dx86_64",
+    "-DANDROID_NDK\u003dC:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\25.2.9519653",
+    "-DCMAKE_ANDROID_NDK\u003dC:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\25.2.9519653",
+    "-DCMAKE_TOOLCHAIN_FILE\u003dC:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\25.2.9519653\\build\\cmake\\android.toolchain.cmake",
+    "-DCMAKE_MAKE_PROGRAM\u003dC:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-DCMAKE_C_FLAGS\u003d-fstack-protector-all",
+    "-DCMAKE_CXX_FLAGS\u003d-std\u003dc++11 -Wl,-Bsymbolic",
+    "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dD:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\build\\intermediates\\cxx\\RelWithDebInfo\\6j3p3c3q\\obj\\x86_64",
+    "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dD:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\build\\intermediates\\cxx\\RelWithDebInfo\\6j3p3c3q\\obj\\x86_64",
+    "-DCMAKE_BUILD_TYPE\u003dRelWithDebInfo",
+    "-BD:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\.cxx\\RelWithDebInfo\\6j3p3c3q\\x86_64",
+    "-GNinja"
+  ],
+  "intermediatesParentFolder": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.12_full\\build\\intermediates\\cxx\\RelWithDebInfo\\6j3p3c3q"
+}

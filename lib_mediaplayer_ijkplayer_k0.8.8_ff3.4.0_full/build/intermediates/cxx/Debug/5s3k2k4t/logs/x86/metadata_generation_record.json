@@ -1,0 +1,106 @@
+[
+  {
+    "level_": 0,
+    "message_": "Start JSON generation. Platform version: 19 min SDK version: x86",
+    "file_": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\src\\main\\cpp\\CMakeLists.txt",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 0
+  },
+  {
+    "level_": 0,
+    "message_": "rebuilding JSON D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\.cxx\\Debug\\5s3k2k4t\\x86\\android_gradle_build.json due to:",
+    "file_": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\src\\main\\cpp\\CMakeLists.txt",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 0
+  },
+  {
+    "level_": 0,
+    "message_": "- no fingerprint file, will remove stale configuration folder",
+    "file_": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\src\\main\\cpp\\CMakeLists.txt",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 0
+  },
+  {
+    "level_": 0,
+    "message_": "removing stale contents from \u0027D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\.cxx\\Debug\\5s3k2k4t\\x86\u0027",
+    "file_": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\src\\main\\cpp\\CMakeLists.txt",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 0
+  },
+  {
+    "level_": 0,
+    "message_": "created folder \u0027D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\.cxx\\Debug\\5s3k2k4t\\x86\u0027",
+    "file_": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\src\\main\\cpp\\CMakeLists.txt",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 0
+  },
+  {
+    "level_": 0,
+    "message_": "executing cmake @echo off\n\"C:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\cmake.exe\" ^\n  \"-HD:\\\\Android\\\\Huan_Component\\\\module_mediaplayer\\\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\\\src\\\\main\\\\cpp\" ^\n  \"-DCMAKE_SYSTEM_NAME\u003dAndroid\" ^\n  \"-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\" ^\n  \"-DCMAKE_SYSTEM_VERSION\u003d19\" ^\n  \"-DANDROID_PLATFORM\u003dandroid-19\" ^\n  \"-DANDROID_ABI\u003dx86\" ^\n  \"-DCMAKE_ANDROID_ARCH_ABI\u003dx86\" ^\n  \"-DANDROID_NDK\u003dC:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\25.2.9519653\" ^\n  \"-DCMAKE_ANDROID_NDK\u003dC:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\25.2.9519653\" ^\n  \"-DCMAKE_TOOLCHAIN_FILE\u003dC:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\25.2.9519653\\\\build\\\\cmake\\\\android.toolchain.cmake\" ^\n  \"-DCMAKE_MAKE_PROGRAM\u003dC:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\ninja.exe\" ^\n  \"-DCMAKE_CXX_FLAGS\u003d-std\u003dc++11 -Wl,-Bsymbolic\" ^\n  \"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dD:\\\\Android\\\\Huan_Component\\\\module_mediaplayer\\\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\5s3k2k4t\\\\obj\\\\x86\" ^\n  \"-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dD:\\\\Android\\\\Huan_Component\\\\module_mediaplayer\\\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\5s3k2k4t\\\\obj\\\\x86\" ^\n  \"-DCMAKE_BUILD_TYPE\u003dDebug\" ^\n  \"-BD:\\\\Android\\\\Huan_Component\\\\module_mediaplayer\\\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\\\.cxx\\\\Debug\\\\5s3k2k4t\\\\x86\" ^\n  -GNinja\n",
+    "file_": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\src\\main\\cpp\\CMakeLists.txt",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 0
+  },
+  {
+    "level_": 0,
+    "message_": "@echo off\n\"C:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\cmake.exe\" ^\n  \"-HD:\\\\Android\\\\Huan_Component\\\\module_mediaplayer\\\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\\\src\\\\main\\\\cpp\" ^\n  \"-DCMAKE_SYSTEM_NAME\u003dAndroid\" ^\n  \"-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\" ^\n  \"-DCMAKE_SYSTEM_VERSION\u003d19\" ^\n  \"-DANDROID_PLATFORM\u003dandroid-19\" ^\n  \"-DANDROID_ABI\u003dx86\" ^\n  \"-DCMAKE_ANDROID_ARCH_ABI\u003dx86\" ^\n  \"-DANDROID_NDK\u003dC:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\25.2.9519653\" ^\n  \"-DCMAKE_ANDROID_NDK\u003dC:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\25.2.9519653\" ^\n  \"-DCMAKE_TOOLCHAIN_FILE\u003dC:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\25.2.9519653\\\\build\\\\cmake\\\\android.toolchain.cmake\" ^\n  \"-DCMAKE_MAKE_PROGRAM\u003dC:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\ninja.exe\" ^\n  \"-DCMAKE_CXX_FLAGS\u003d-std\u003dc++11 -Wl,-Bsymbolic\" ^\n  \"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dD:\\\\Android\\\\Huan_Component\\\\module_mediaplayer\\\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\5s3k2k4t\\\\obj\\\\x86\" ^\n  \"-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dD:\\\\Android\\\\Huan_Component\\\\module_mediaplayer\\\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\5s3k2k4t\\\\obj\\\\x86\" ^\n  \"-DCMAKE_BUILD_TYPE\u003dDebug\" ^\n  \"-BD:\\\\Android\\\\Huan_Component\\\\module_mediaplayer\\\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\\\.cxx\\\\Debug\\\\5s3k2k4t\\\\x86\" ^\n  -GNinja\n",
+    "file_": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\src\\main\\cpp\\CMakeLists.txt",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 0
+  },
+  {
+    "level_": 0,
+    "message_": "JSON generation completed with problem. Exception: com.android.ide.common.process.ProcessException: -- The C compiler identification is Clang 14.0.7\n-- The CXX compiler identification is Clang 14.0.7\n-- Detecting C compiler ABI info\n-- Detecting C compiler ABI info - done\n-- Check for working C compiler: C:/Users/kalu/AppData/Local/Android/Sdk/ndk/25.2.9519653/toolchains/llvm/prebuilt/windows-x86_64/bin/clang.exe - skipped\n-- Detecting C compile features\n-- Detecting C compile features - done\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: C:/Users/kalu/AppData/Local/Android/Sdk/ndk/25.2.9519653/toolchains/llvm/prebuilt/windows-x86_64/bin/clang++.exe - skipped\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\n-- Configuring incomplete, errors occurred!\nSee also \"D:/Android/Huan_Component/module_mediaplayer/lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full/.cxx/Debug/5s3k2k4t/x86/CMakeFiles/CMakeOutput.log\".\n\nC++ build system [configure] failed while executing:\n    @echo off\n    \"C:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\cmake.exe\" ^\n      \"-HD:\\\\Android\\\\Huan_Component\\\\module_mediaplayer\\\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\\\src\\\\main\\\\cpp\" ^\n      \"-DCMAKE_SYSTEM_NAME\u003dAndroid\" ^\n      \"-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\" ^\n      \"-DCMAKE_SYSTEM_VERSION\u003d19\" ^\n      \"-DANDROID_PLATFORM\u003dandroid-19\" ^\n      \"-DANDROID_ABI\u003dx86\" ^\n      \"-DCMAKE_ANDROID_ARCH_ABI\u003dx86\" ^\n      \"-DANDROID_NDK\u003dC:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\25.2.9519653\" ^\n      \"-DCMAKE_ANDROID_NDK\u003dC:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\25.2.9519653\" ^\n      \"-DCMAKE_TOOLCHAIN_FILE\u003dC:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\25.2.9519653\\\\build\\\\cmake\\\\android.toolchain.cmake\" ^\n      \"-DCMAKE_MAKE_PROGRAM\u003dC:\\\\Users\\\\kalu\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\ninja.exe\" ^\n      \"-DCMAKE_CXX_FLAGS\u003d-std\u003dc++11 -Wl,-Bsymbolic\" ^\n      \"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dD:\\\\Android\\\\Huan_Component\\\\module_mediaplayer\\\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\5s3k2k4t\\\\obj\\\\x86\" ^\n      \"-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dD:\\\\Android\\\\Huan_Component\\\\module_mediaplayer\\\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\5s3k2k4t\\\\obj\\\\x86\" ^\n      \"-DCMAKE_BUILD_TYPE\u003dDebug\" ^\n      \"-BD:\\\\Android\\\\Huan_Component\\\\module_mediaplayer\\\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\\\.cxx\\\\Debug\\\\5s3k2k4t\\\\x86\" ^\n      -GNinja\n  from D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\nCMake Warning (dev) in CMakeLists.txt:\n  No project() command is present.  The top-level CMakeLists.txt file must\n  contain a literal, direct call to the project() command.  Add a line of\n  code such as\n\n    project(ProjectName)\n\n  near the top of the file, but after cmake_minimum_required().\n\n  CMake is pretending there is a \"project(Project)\" command on the first\n  line.\nThis warning is for project developers.  Use -Wno-dev to suppress it.\n\nCMake Error: File D:/Android/Huan_Component/module_mediaplayer/lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full/src/main/cpp/ffmpeg3/x86/lib/libavcodec.a does not exist.\nCMake Error at CMakeLists.txt:184 (configure_file):\n  configure_file Problem configuring file\n\n\nCMake Error: File D:/Android/Huan_Component/module_mediaplayer/lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full/src/main/cpp/ffmpeg3/x86/lib/libavformat.a does not exist.\nCMake Error at CMakeLists.txt:193 (configure_file):\n  configure_file Problem configuring file\n\n\nCMake Error: File D:/Android/Huan_Component/module_mediaplayer/lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full/src/main/cpp/ffmpeg3/x86/lib/libavutil.a does not exist.\nCMake Error at CMakeLists.txt:202 (configure_file):\n  configure_file Problem configuring file\n\n\nCMake Error: File D:/Android/Huan_Component/module_mediaplayer/lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full/src/main/cpp/ffmpeg3/x86/lib/libswresample.a does not exist.\nCMake Error at CMakeLists.txt:211 (configure_file):\n  configure_file Problem configuring file\n\n\nCMake Error: File D:/Android/Huan_Component/module_mediaplayer/lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full/src/main/cpp/ffmpeg3/x86/lib/libswscale.a does not exist.\nCMake Error at CMakeLists.txt:220 (configure_file):\n  configure_file Problem configuring file",
+    "file_": "D:\\Android\\Huan_Component\\module_mediaplayer\\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.0_full\\src\\main\\cpp\\CMakeLists.txt",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 0
+  }
+]

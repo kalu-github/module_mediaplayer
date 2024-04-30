@@ -1,0 +1,19 @@
+                        -HD:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\cpp
+-DCMAKE_SYSTEM_NAME=Android
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-DCMAKE_SYSTEM_VERSION=19
+-DANDROID_PLATFORM=android-19
+-DANDROID_ABI=arm64-v8a
+-DCMAKE_ANDROID_ARCH_ABI=arm64-v8a
+-DANDROID_NDK=C:\Users\kalu\AppData\Local\Android\Sdk\ndk\25.2.9519653
+-DCMAKE_ANDROID_NDK=C:\Users\kalu\AppData\Local\Android\Sdk\ndk\25.2.9519653
+-DCMAKE_TOOLCHAIN_FILE=C:\Users\kalu\AppData\Local\Android\Sdk\ndk\25.2.9519653\build\cmake\android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=C:\Users\kalu\AppData\Local\Android\Sdk\cmake\3.22.1\bin\ninja.exe
+-DCMAKE_CXX_FLAGS=-std=c++11 -Wl,-Bsymbolic
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\build\intermediates\cxx\RelWithDebInfo\1204o5o5\obj\arm64-v8a
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\build\intermediates\cxx\RelWithDebInfo\1204o5o5\obj\arm64-v8a
+-DCMAKE_BUILD_TYPE=RelWithDebInfo
+-BD:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\.cxx\RelWithDebInfo\1204o5o5\arm64-v8a
+-GNinja
+                        Build command args: []
+                        Version: 2

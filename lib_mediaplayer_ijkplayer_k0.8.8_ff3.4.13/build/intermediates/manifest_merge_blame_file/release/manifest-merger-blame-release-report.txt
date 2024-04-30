@@ -1,0 +1,15 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="lib.kalu.ijkplayer" >
+4
+5    <uses-sdk android:minSdkVersion="14" />
+5-->D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\src\main\AndroidManifest.xml
+6
+7    <application
+7-->D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\src\main\AndroidManifest.xml:4:5-6:50
+8        android:allowBackup="true"
+8-->D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\src\main\AndroidManifest.xml:5:9-35
+9        android:supportsRtl="true" />
+9-->D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\src\main\AndroidManifest.xml:6:9-35
+10
+11</manifest>

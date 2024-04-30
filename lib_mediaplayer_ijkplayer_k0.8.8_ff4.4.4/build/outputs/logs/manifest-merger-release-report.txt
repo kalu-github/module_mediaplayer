@@ -1,0 +1,31 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml:2:1-8:12
+INJECTED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml:2:1-8:12
+INJECTED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml:2:1-8:12
+	package
+		INJECTED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml
+		ADDED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml:2:1-8:12
+		INJECTED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml:2:11-69
+application
+ADDED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml:4:5-6:50
+	android:supportsRtl
+		ADDED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml:6:9-35
+	android:allowBackup
+		ADDED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml:5:9-35
+uses-sdk
+INJECTED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml
+INJECTED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml
+INJECTED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml
+INJECTED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml
+		ADDED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml
+		INJECTED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml
+		ADDED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml
+		INJECTED from D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff4.4.4\src\main\AndroidManifest.xml
