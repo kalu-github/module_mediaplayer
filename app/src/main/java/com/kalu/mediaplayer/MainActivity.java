@@ -260,8 +260,7 @@ public class MainActivity extends Activity {
                 .setRender(renderType)
                 .setScaleType(scaleType)
                 .setExoFFmpeg(exoFFmpeg)
-                .setExoUseOkhttp(exoUseOkhttp)
-                .setCacheType(cacheFlag ? PlayerType.CacheType.DOWNLOAD : PlayerType.CacheType.NONE)
+                .setExoUseOkhttp(exoUseOkhttp).setExoCacheType(cacheFlag ? PlayerType.CacheType.DOWNLOAD : PlayerType.CacheType.NONE)
                 .setBuriedEvent(new LogBuriedEvent())
                 .build();
     }
