@@ -490,7 +490,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:tag="@string/url_dash"
-                        android:text="dash1" />
+                        android:text="dash" />
 
                     <RadioButton
                         android:id="@+id/main_radio12"
