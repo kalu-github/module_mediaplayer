@@ -489,15 +489,8 @@
                         android:id="@+id/main_radio10"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:tag="@string/url_dash1"
+                        android:tag="@string/url_dash"
                         android:text="dash1" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio11"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="@string/url_dash2"
-                        android:text="dash2" />
 
                     <RadioButton
                         android:id="@+id/main_radio12"
