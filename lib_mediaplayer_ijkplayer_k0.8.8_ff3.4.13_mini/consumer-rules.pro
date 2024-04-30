@@ -25,6 +25,11 @@
     public <methods>;
 }
 -keep class lib.kalu.ijkplayer.IjkMediaPlayer {
+    private long mNativeMediaPlayer;
+    private long mNativeMediaDataSource;
+    private long mNativeAndroidIO;
+    private int mNativeSurfaceTexture;
+    private static void postEventFromNative(java.lang.Object, int, int, int, java.lang.Object);
     public <fields>;
     native <methods>;
     public <methods>;
