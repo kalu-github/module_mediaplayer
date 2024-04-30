@@ -30,6 +30,7 @@ set(common_sources
         ijkmedia/ijksdl/ijksdl_thread.c
         ijkmedia/ijksdl/ijksdl_timer.c
         ijkmedia/ijksdl/ijksdl_vout.c
+        ijkmedia/ijksdl/ijksdl_extra_log.c
         ijkmedia/ijksdl/gles2/color.c
         ijkmedia/ijksdl/gles2/common.c
         ijkmedia/ijksdl/gles2/renderer.c
@@ -146,21 +147,21 @@ set(common_sources
 
         #ijklog
         ijkmedia/ijklog/log_base.c
-        )
+)
 
 set(armeabi_v7a_sources
         ijkmedia/ijkyuv/source/compare_neon.cc
         ijkmedia/ijkyuv/source/rotate_neon.cc
         ijkmedia/ijkyuv/source/row_neon.cc
         ijkmedia/ijkyuv/source/scale_neon.cc
-        )
+)
 
 set(arm64_v8a_sources
         ijkmedia/ijkyuv/source/compare_neon64.cc
         ijkmedia/ijkyuv/source/rotate_neon64.cc
         ijkmedia/ijkyuv/source/row_neon64.cc
         ijkmedia/ijkyuv/source/scale_neon64.cc
-        )
+)
 
 if (${ANDROID_ABI} STREQUAL armeabi-v7a)
     add_library( # Sets the name of the library.
@@ -168,19 +169,19 @@ if (${ANDROID_ABI} STREQUAL armeabi-v7a)
             SHARED
             ${common_sources}
             ${armeabi_v7a_sources}
-            )
+    )
 else ()
     add_library( # Sets the name of the library.
             ijkplayer2
             SHARED
             ${common_sources}
             ${arm64_v8a_sources}
-            )
+    )
 endif ()
 
 
 # ffmpeg-avcodec-lib
-configure_file(${CMAKE_SOURCE_DIR}/ffmpeg3/${ANDROID_ABI}/lib/libavcodec.a ${Project_BINARY_DIR}/libavcodec.a COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/ffmpeg/${ANDROID_ABI}/lib/libavcodec.a ${Project_BINARY_DIR}/libavcodec.a COPYONLY)
 add_library(ffmpeg-avcodec-lib
         STATIC
         IMPORTED)
@@ -189,7 +190,7 @@ set_target_properties(ffmpeg-avcodec-lib
         libavcodec.a)
 
 # ffmpeg-avformat-lib
-configure_file(${CMAKE_SOURCE_DIR}/ffmpeg3/${ANDROID_ABI}/lib/libavformat.a ${Project_BINARY_DIR}/libavformat.a COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/ffmpeg/${ANDROID_ABI}/lib/libavformat.a ${Project_BINARY_DIR}/libavformat.a COPYONLY)
 add_library(ffmpeg-avformat-lib
         STATIC
         IMPORTED)
@@ -198,7 +199,7 @@ set_target_properties(ffmpeg-avformat-lib
         libavformat.a)
 
 # ffmpeg-avutil-lib
-configure_file(${CMAKE_SOURCE_DIR}/ffmpeg3/${ANDROID_ABI}/lib/libavutil.a ${Project_BINARY_DIR}/libavutil.a COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/ffmpeg/${ANDROID_ABI}/lib/libavutil.a ${Project_BINARY_DIR}/libavutil.a COPYONLY)
 add_library(ffmpeg-avutil-lib
         STATIC
         IMPORTED)
@@ -207,7 +208,7 @@ set_target_properties(ffmpeg-avutil-lib
         libavutil.a)
 
 # ffmpeg-swresample-lib
-configure_file(${CMAKE_SOURCE_DIR}/ffmpeg3/${ANDROID_ABI}/lib/libswresample.a ${Project_BINARY_DIR}/libswresample.a COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/ffmpeg/${ANDROID_ABI}/lib/libswresample.a ${Project_BINARY_DIR}/libswresample.a COPYONLY)
 add_library(ffmpeg-swresample-lib
         STATIC
         IMPORTED)
@@ -216,7 +217,7 @@ set_target_properties(ffmpeg-swresample-lib
         libswresample.a)
 
 # ffmpeg-swscale-lib
-configure_file(${CMAKE_SOURCE_DIR}/ffmpeg3/${ANDROID_ABI}/lib/libswscale.a ${Project_BINARY_DIR}/libswscale.a COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/ffmpeg/${ANDROID_ABI}/lib/libswscale.a ${Project_BINARY_DIR}/libswscale.a COPYONLY)
 add_library(ffmpeg-swscale-lib
         STATIC
         IMPORTED)
@@ -224,12 +225,41 @@ set_target_properties(ffmpeg-swscale-lib
         PROPERTIES IMPORTED_LOCATION
         libswscale.a)
 
+# open-ssl-lib
+configure_file(${CMAKE_SOURCE_DIR}/openssl/${ANDROID_ABI}/lib/libssl.a ${Project_BINARY_DIR}/libssl.a COPYONLY)
+add_library(open-ssl-lib STATIC IMPORTED)
+set_target_properties(
+        open-ssl-lib
+        PROPERTIES IMPORTED_LOCATION
+        libssl.a)
+
+# open-crypto-lib
+configure_file(${CMAKE_SOURCE_DIR}/openssl/${ANDROID_ABI}/lib/libcrypto.a ${Project_BINARY_DIR}/libcrypto.a COPYONLY)
+add_library(open-crypto-lib
+        STATIC
+        IMPORTED)
+set_target_properties(
+        open-crypto-lib
+        PROPERTIES IMPORTED_LOCATION
+        libcrypto.a)
+
+# xml2-lib
+configure_file(${CMAKE_SOURCE_DIR}/xml2/${ANDROID_ABI}/lib/libxml2.a ${Project_BINARY_DIR}/libxml2.a COPYONLY)
+add_library(xml2-lib
+        STATIC
+        IMPORTED)
+set_target_properties(
+        xml2-lib
+        PROPERTIES IMPORTED_LOCATION
+        libxml2.a)
 
 include_directories(
-        ffmpeg3/${ANDROID_ABI}/include
+        ffmpeg/${ANDROID_ABI}/include
+        openssl/${ANDROID_ABI}/include
+        xml2/${ANDROID_ABI}/include
         ijkmedia
-        ijkmedia/ijklog
         ijkmedia/ijkplayer
+        ijkmedia/ijklog
         ijkmedia/ijkj4a
         ijkmedia/ijksdl
         ijkmedia/ijksoundtouch
@@ -243,11 +273,18 @@ target_link_libraries(
         ijkplayer2
 
         # ffmpeg
-        ffmpeg-avcodec-lib
         ffmpeg-avformat-lib
+        ffmpeg-avcodec-lib
         ffmpeg-avutil-lib
         ffmpeg-swresample-lib
         ffmpeg-swscale-lib
+
+        # openssl => https
+        open-ssl-lib
+        open-crypto-lib
+
+        # xml2 => dash
+        xml2-lib
 
         # Links the target library to the log library
         log
