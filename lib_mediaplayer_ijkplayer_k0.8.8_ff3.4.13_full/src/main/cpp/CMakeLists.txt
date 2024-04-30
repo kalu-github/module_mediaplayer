@@ -273,8 +273,8 @@ target_link_libraries(
         ijkplayer2
 
         # ffmpeg
-        ffmpeg-avcodec-lib
         ffmpeg-avformat-lib
+        ffmpeg-avcodec-lib
         ffmpeg-avutil-lib
         ffmpeg-swresample-lib
         ffmpeg-swscale-lib
