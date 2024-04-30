@@ -250,8 +250,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
             mIjkPlayer.setOption(format, "rtsp_flags", "prefer_tcp");
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
-            // ??
-            mIjkPlayer.setOption(format, "http-detect-range-support", 0);
+            // 如果项目中同时使用了HTTP和HTTPS的视频源的话，要注意如果视频源刚好是相同域名，
+            mIjkPlayer.setOption(format, "http-detect-range-support", 1);
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => initOptionsIjk => OPT_CATEGORY_FORMAT => " + e.getMessage());
         }
