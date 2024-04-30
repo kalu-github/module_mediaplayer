@@ -1,3 +1,0 @@
--- Configuring done
--- Generating done
--- Build files have been written to: D:/Android/Huan_Component/module_mediaplayer/lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13/.cxx/Debug/376v6o5v/x86

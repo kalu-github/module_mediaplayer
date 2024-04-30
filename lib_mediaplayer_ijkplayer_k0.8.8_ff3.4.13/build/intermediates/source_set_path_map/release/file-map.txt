@@ -1,7 +1,0 @@
-lib.kalu.ijkplayer.lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13-pngs-0 D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\build\generated\res\pngs\release
-lib.kalu.ijkplayer.lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13-resValues-1 D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\build\generated\res\resValues\release
-lib.kalu.ijkplayer.lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13-mergeReleaseResources-2 D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\build\intermediates\incremental\release\mergeReleaseResources\merged.dir
-lib.kalu.ijkplayer.lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13-mergeReleaseResources-3 D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\build\intermediates\incremental\release\mergeReleaseResources\stripped.dir
-lib.kalu.ijkplayer.lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13-merged_res-4 D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\build\intermediates\merged_res\release
-lib.kalu.ijkplayer.lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13-main-5 D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\src\main\res
-lib.kalu.ijkplayer.lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13-release-6 D:\Android\Huan_Component\module_mediaplayer\lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13\src\release\res
