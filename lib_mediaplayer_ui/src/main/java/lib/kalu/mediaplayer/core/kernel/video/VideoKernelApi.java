@@ -5,8 +5,6 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 
-
-
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
@@ -20,47 +18,40 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 
     void onUpdateTimeMillis();
 
-    
+
     <T extends Object> T getPlayer();
 
     void releaseDecoder(boolean isFromUser);
 
-    void createDecoder( Context context,  boolean logger,  int seekParameters);
+    void createDecoder(Context context, boolean logger, int seekParameters);
 
-    void startDecoder( Context context,  String url,  boolean prepareAsync);
+    void startDecoder(Context context, String url, boolean prepareAsync);
 
     default void initOptionsIjk() {
     }
 
-    default void initOptionsExo( Context context,  com.google.android.exoplayer2.ExoPlayer.Builder exoBuilder) {
+    default void initOptionsExo(Context context, com.google.android.exoplayer2.ExoPlayer.Builder exoBuilder) {
     }
 
-    default void initOptionsMediax( Context context,  androidx.media3.exoplayer.ExoPlayer.Builder exoBuilder) {
+    default void initOptionsMediax(Context context, androidx.media3.exoplayer.ExoPlayer.Builder exoBuilder) {
     }
 
-    default void initDecoder( Context context,  String playUrl,  StartBuilder bundle) {
+    default void initDecoder(Context context, String playUrl, StartBuilder bundle) {
 
-        MPLogUtil.log("VideoKernelApi => initDecoder => playUrl = " + playUrl);
         long seek = bundle.getSeek();
-        MPLogUtil.log("VideoKernelApi => initDecoder => seek = " + seek);
         setSeek(seek);
         long max = bundle.getMax();
-        MPLogUtil.log("VideoKernelApi => initDecoder => max = " + max);
         setMax(max);
         boolean mute = bundle.isMute();
-        MPLogUtil.log("VideoKernelApi => initDecoder => mute = " + mute);
         setMute(mute);
         boolean loop = bundle.isLooping();
-        MPLogUtil.log("VideoKernelApi => initDecoder => loop = " + loop);
         setLooping(loop);
         boolean live = bundle.isLive();
-        MPLogUtil.log("VideoKernelApi => initDecoder => live = " + live);
         setLive(live);
         boolean playWhenReady = bundle.isPlayWhenReady();
-        MPLogUtil.log("VideoKernelApi => initDecoder => playWhenReady = " + playWhenReady);
         setPlayWhenReady(playWhenReady);
         boolean prepareAsync = bundle.isPrepareAsync();
-        MPLogUtil.log("VideoKernelApi => initDecoder => prepareAsync = " + prepareAsync);
+        MPLogUtil.log("VideoKernelApi => initDecoder => prepareAsync = " + prepareAsync + ", playWhenReady = " + playWhenReady + ", live = " + live + ", loop = " + loop + ", mute = " + mute + ", max = " + max + ", seek = " + seek + ", playUrl = " + playUrl);
         startDecoder(context, playUrl, prepareAsync);
 
 //        String musicUrl = bundle.getExternalMusicUrl();
@@ -74,7 +65,7 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 //        setisExternalMusicPlayWhenReady(musicPlayWhenReady);
     }
 
-    default void update( long seek,  long max,  boolean loop) {
+    default void update(long seek, long max, boolean loop) {
         setSeek(seek);
         setMax(max);
         setLooping(loop);
@@ -82,5 +73,5 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 
     void setDisplay(SurfaceHolder surfaceHolder);
 
-    void setSurface( Surface surface, int w, int h);
+    void setSurface(Surface surface, int w, int h);
 }

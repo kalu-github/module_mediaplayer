@@ -78,15 +78,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             mIjkPlayer = new IjkMediaPlayer();
             mIjkPlayer.reset();
             mIjkPlayer.setLooping(false);
-            //处理UA问题
-            //            if (headers != null) {
-            //                String userAgent = headers.get("User-Agent");
-            //                if (!TextUtils.isEmpty(userAgent)) {
-            //                    mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
-            //                }
-            //            }
-            initOptionsIjk();
-            initListener();
+            // initOptionsIjk();
             setVolume(1F, 1F);
             lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(logger);
             IjkMediaPlayer.native_setLogger(logger);
@@ -104,6 +96,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
+            initListener();
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
             if (prepareAsync) {
                 mIjkPlayer.prepareAsync();
@@ -179,8 +173,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             mIjkPlayer.setOption(player, "preset-5-1-center-mix-level", (long) (1 / Math.sqrt(2)));
             // 起始播放位置的偏移量，单位毫秒, 例如可以设置从第20秒的位置播放
             mIjkPlayer.setOption(player, "seek-at-start", 0);
-            // 使用精确寻帧, 例如，拖动播放后，会寻找最近的关键帧进行播放，很有可能关键帧的位置不是拖动后的位置，而是较前的位置。可以设置这个参数来解决问题
-            mIjkPlayer.setOption(player, "enable-accurate-seek", 0);
+            // 某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，通俗一点就是FFMPEG不兼容，视频压缩过于厉害，seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
+            mIjkPlayer.setOption(player, "enable-accurate-seek", 1);
             // 设置精确寻帧的超时时间, 单位毫秒 => [0,5000]
             mIjkPlayer.setOption(player, "accurate-seek-timeout", 100); // 100ms
             // 不计算真实的帧率
@@ -192,11 +186,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // ??
             mIjkPlayer.setOption(player, "video-mime-type", null);
             // Android自动旋转角度
-            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", 0);
+            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", (mUseMediaCodec ? 1 : 0));
             // Android硬解, 是否分辨率变化时解码
-            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", 0);
+            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", (mUseMediaCodec ? 1 : 0));
             // Android硬解 ??
-            mIjkPlayer.setOption(player, "mediacodec-sync", 1);
+            mIjkPlayer.setOption(player, "mediacodec-sync", (mUseMediaCodec ? 1 : 0));
             // Android硬解 ??
             mIjkPlayer.setOption(player, "mediacodec-default-name", null);
             // Android硬解
@@ -236,12 +230,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             mIjkPlayer.setOption(format, "probesize", 200 * 1024);// 200Kb
             // 通过立即清理数据包来减少等待时长, 每处理一个packet以后刷新io上下文
             mIjkPlayer.setOption(format, "flush_packets", 1);
-            // 清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频), 有时会造成因为DNS的问题而报10000问题的
-            mIjkPlayer.setOption(format, "dns_cache_clear", 1);
             // 若是是rtsp协议，能够优先用tcp(默认是用udp)
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
             // 超时时间,单位ms => 10s
-            mIjkPlayer.setOption(format, "timeout", 10 * 1000); // 10s
+            mIjkPlayer.setOption(format, "timeout", 100 * 1000); // 10s
+            // 重连次数
+            mIjkPlayer.setOption(format, "reconnect", 0);
             // 设置seekTo能够快速seek到指定位置并播放, 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
             mIjkPlayer.setOption(format, "fflags", "fastseek");
 //            mIjkPlayer.setOption(format, "fflags", "nobuffer");  // 起播seek会失效
@@ -252,6 +246,10 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
             // 如果项目中同时使用了HTTP和HTTPS的视频源的话，要注意如果视频源刚好是相同域名，
             mIjkPlayer.setOption(format, "http-detect-range-support", 1);
+            // 清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频), 有时会造成因为DNS的问题而报10000问题的
+            mIjkPlayer.setOption(format, "dns_cache_clear", 1);
+            // user_agent
+            mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", "ijkplayer");
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => initOptionsIjk => OPT_CATEGORY_FORMAT => " + e.getMessage());
         }
@@ -641,7 +639,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             switch (what) {
                 // 拉流开始
                 case IMediaPlayer.MEDIA_INFO_OPEN_INPUT:
-                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
                     break;
                 // 拉流成功
                 case IMediaPlayer.MEDIA_INFO_COMPONENT_OPEN:
