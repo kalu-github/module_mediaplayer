@@ -3,6 +3,7 @@
     private long mNativeContext;
     private int mNativeSurfaceTexture;
     private int mListenerContext;
+    private static void postEventFromNative(java.lang.Object, int, int, int, java.lang.Object);
     public <fields>;
     public <methods>;
     native <methods>;
