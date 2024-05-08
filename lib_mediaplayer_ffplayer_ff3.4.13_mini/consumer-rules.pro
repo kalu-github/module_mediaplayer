@@ -1,5 +1,8 @@
 -dontwarn lib.kalu.ffplayer.**
 -keep class lib.kalu.ffplayer.FFmpegPlayer {
+    private long mNativeContext;
+    private int mNativeSurfaceTexture;
+    private int mListenerContext;
     public <fields>;
     public <methods>;
     native <methods>;

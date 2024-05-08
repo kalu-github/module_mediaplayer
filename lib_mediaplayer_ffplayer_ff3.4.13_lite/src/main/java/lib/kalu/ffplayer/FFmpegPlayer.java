@@ -90,7 +90,7 @@ public class FFmpegPlayer {
     // Name of the remote interface for the media player. Must be kept
     // in sync with the 2nd parameter of the IMPLEMENT_META_INTERFACE
     // macro invocation in IMediaPlayer.cpp
-    private final static String IMEDIA_PLAYER = "wseemann.media.IMediaPlayer";
+    private final static String IMEDIA_PLAYER = "lib.kalu.ffplayer.FFmpegPlayer";
 
     private long mNativeContext; // accessed by native methods
     private int mNativeSurfaceTexture;  // accessed by native methods
@@ -529,14 +529,14 @@ public class FFmpegPlayer {
      *
      * <p>This function has the MediaPlayer access the low-level power manager
      * service to control the device's power usage while playing is occurring.
-     * The parameter is a combination of {@link android.os.PowerManager} wake flags.
+     * The parameter is a combination of {@link PowerManager} wake flags.
      * Use of this method requires {@link android.Manifest.permission#WAKE_LOCK}
      * permission.
      * By default, no attempt is made to keep the device awake during playback.
      *
      * @param context the Context to use
      * @param mode    the power/wake mode to set
-     * @see android.os.PowerManager
+     * @see PowerManager
      */
     public void setWakeMode(Context context, int mode) {
         boolean washeld = false;
@@ -649,13 +649,6 @@ public class FFmpegPlayer {
     /**
      * Gets the media metadata.
      *
-     * @param update_only  controls whether the full set of available
-     *                     metadata is returned or just the set that changed since the
-     *                     last call. See {@see #METADATA_UPDATE_ONLY} and {@see
-     *                     #METADATA_ALL}.
-     * @param apply_filter if true only metadata that matches the
-     *                     filter is returned. See {@see #APPLY_METADATA_FILTER} and {@see
-     *                     #BYPASS_METADATA_FILTER}.
      * @return The metadata, possibly empty. null if an error occured.
      * // FIXME: unhide.
      * {@hide}
@@ -787,7 +780,7 @@ public class FFmpegPlayer {
      * thereafter.
      *
      * @param streamtype the audio stream type
-     * @see android.media.AudioManager
+     * @see AudioManager
      */
     public native void setAudioStreamType(int streamtype);
 
@@ -1008,7 +1001,7 @@ public class FFmpegPlayer {
      * @param request    Parcel destinated to the media player. The
      *                   Interface token must be set to the IMediaPlayer
      *                   one to be routed correctly through the system.
-     * @param reply[out] Parcel that will contain the reply.
+     * @param reply Parcel that will contain the reply.
      * @return The status code.
      */
     private native final int native_invoke(Parcel request, Parcel reply);
@@ -1023,14 +1016,14 @@ public class FFmpegPlayer {
      *                     time. If false, all the metadatas are considered.
      * @param apply_filter If true, once the metadata set has been built based on
      *                     the value update_only, the current filter is applied.
-     * @param reply[out]   On return contains the serialized
+     * @param reply   On return contains the serialized
      *                     metadata. Valid only if the call was successful.
      * @return The status code.
      */
     private native final HashMap<String, String> native_getMetadata(boolean update_only, boolean apply_filter, HashMap<String, String> reply);
 
     /**
-     * @param request Parcel with the 2 serialized lists of allowed
+     * @param blocked Parcel with the 2 serialized lists of allowed
      *                metadata types followed by the one to be
      *                dropped. Each list starts with an integer
      *                indicating the number of metadata type elements.
