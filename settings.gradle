@@ -1,2 +1,3 @@
-include ':lib_mediaplayer_ffplayer_ff3.4.12'
-include ':lib_mediaplayer_ffplayer_ff3.4.12_full'
+include ':lib_mediaplayer_ffplayer_ff3.4.13_mini'
+include ':lib_mediaplayer_ffplayer_ff3.4.13_lite'
+include ':lib_mediaplayer_ffplayer_ff3.4.13_full'

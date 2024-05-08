@@ -1,0 +1,66 @@
+apply plugin: 'com.android.library'
+
+android {
+    namespace 'lib.kalu.ffplayer'
+    compileSdkVersion 32
+    buildToolsVersion "32.0.0"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 32
+        versionCode 1
+        versionName "1.0.0"
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11"
+                cppFlags "-Wl,-Bsymbolic"
+                version "3.18.1"
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            }
+        }
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "/src/main/cpp/CMakeLists.txt"
+        }
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            def type = new String(buildType.name).toLowerCase()
+            def time = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
+            outputFileName = "lib_mediaplayer_ffplayer_ff3.4.13_full_" + type + "_" + time + ".aar"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            consumerProguardFiles 'consumer-rules.pro'
+            proguardFiles 'proguard-rules.pro', 'consumer-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            consumerProguardFiles 'consumer-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        buildConfig true
+    }
+    // aar方法参数名被混淆问题
+    tasks.withType(JavaCompile) {
+        options.compilerArgs += ["-g", "-parameters"]
+    }
+}
+
+dependencies {
+    compileOnly 'androidx.appcompat:appcompat:1.5.1'
+}
