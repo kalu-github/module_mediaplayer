@@ -74,7 +74,7 @@ dependencies {
     // mediax
     compileOnly files('libs/lib_mediaplayer_mediax_r1.2.0_full_release_20231127.aar')
     // ffplayer
-    compileOnly files('libs/lib_mediaplayer_ffplayer_ff3.4.12_release_20230626.aar')
+    compileOnly files('libs/lib_mediaplayer_ffplayer_ff3.4.13_mini_release_20240508.aar')
     // vlc
     compileOnly files('libs/lib_mediaplayer_vlc_r3.5.1_release_20230420.aar')
 }
