@@ -26,6 +26,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import lib.kalu.ffplayer.inter.OnBufferingUpdateListener;
+import lib.kalu.ffplayer.inter.OnCompletionListener;
+import lib.kalu.ffplayer.inter.OnErrorListener;
+import lib.kalu.ffplayer.inter.OnInfoListener;
+import lib.kalu.ffplayer.inter.OnPreparedListener;
+import lib.kalu.ffplayer.inter.OnSeekCompleteListener;
+import lib.kalu.ffplayer.inter.OnTimedTextListener;
+import lib.kalu.ffplayer.inter.OnVideoSizeChangedListener;
+
 @Keep
 public class FFmpegPlayer {
 
@@ -1199,19 +1208,6 @@ public class FFmpegPlayer {
     }
 
     /**
-     * Interface definition for a callback to be invoked when the media
-     * source is ready for playback.
-     */
-    public interface OnPreparedListener {
-        /**
-         * Called when the media file is ready for playback.
-         *
-         * @param mp the MediaPlayer that is ready for playback
-         */
-        void onPrepared(FFmpegPlayer mp);
-    }
-
-    /**
      * Register a callback to be invoked when the media source is ready
      * for playback.
      *
@@ -1222,19 +1218,6 @@ public class FFmpegPlayer {
     }
 
     private OnPreparedListener mOnPreparedListener;
-
-    /**
-     * Interface definition for a callback to be invoked when playback of
-     * a media source has completed.
-     */
-    public interface OnCompletionListener {
-        /**
-         * Called when the end of a media source is reached during playback.
-         *
-         * @param mp the MediaPlayer that reached the end of the file
-         */
-        void onCompletion(FFmpegPlayer mp);
-    }
 
     /**
      * Register a callback to be invoked when the end of a media source
@@ -1249,26 +1232,6 @@ public class FFmpegPlayer {
     private OnCompletionListener mOnCompletionListener;
 
     /**
-     * Interface definition of a callback to be invoked indicating buffering
-     * status of a media resource being streamed over the network.
-     */
-    public interface OnBufferingUpdateListener {
-        /**
-         * Called to update status in buffering a media stream received through
-         * progressive HTTP download. The received buffering percentage
-         * indicates how much of the content has been buffered or played.
-         * For example a buffering update of 80 percent when half the content
-         * has already been played indicates that the next 30 percent of the
-         * content to play has been buffered.
-         *
-         * @param mp      the MediaPlayer the update pertains to
-         * @param percent the percentage (0-100) of the content
-         *                that has been buffered or played thus far
-         */
-        void onBufferingUpdate(FFmpegPlayer mp, int percent);
-    }
-
-    /**
      * Register a callback to be invoked when the status of a network
      * stream's buffer has changed.
      *
@@ -1280,18 +1243,6 @@ public class FFmpegPlayer {
 
     private OnBufferingUpdateListener mOnBufferingUpdateListener;
 
-    /**
-     * Interface definition of a callback to be invoked indicating
-     * the completion of a seek operation.
-     */
-    public interface OnSeekCompleteListener {
-        /**
-         * Called to indicate the completion of a seek operation.
-         *
-         * @param mp the MediaPlayer that issued the seek operation
-         */
-        void onSeekComplete(FFmpegPlayer mp);
-    }
 
     /**
      * Register a callback to be invoked when a seek operation has been
@@ -1306,21 +1257,6 @@ public class FFmpegPlayer {
     private OnSeekCompleteListener mOnSeekCompleteListener;
 
     /**
-     * Interface definition of a callback to be invoked when the
-     * video size is first known or updated
-     */
-    public interface OnVideoSizeChangedListener {
-        /**
-         * Called to indicate the video size
-         *
-         * @param mp     the MediaPlayer associated with this callback
-         * @param width  the width of the video
-         * @param height the height of the video
-         */
-        void onVideoSizeChanged(FFmpegPlayer mp, int width, int height);
-    }
-
-    /**
      * Register a callback to be invoked when the video size is
      * known or updated.
      *
@@ -1331,23 +1267,6 @@ public class FFmpegPlayer {
     }
 
     private OnVideoSizeChangedListener mOnVideoSizeChangedListener;
-
-    /**
-     * Interface definition of a callback to be invoked when a
-     * timed text is available for display.
-     * {@hide}
-     */
-    public interface OnTimedTextListener {
-        /**
-         * Called to indicate an avaliable timed text
-         *
-         * @param mp   the MediaPlayer associated with this callback
-         * @param text the timed text sample which contains the text
-         *             needed to be displayed and the display format.
-         *             {@hide}
-         */
-        public void onTimedText(FFmpegPlayer mp, TimedText text);
-    }
 
     /**
      * Register a callback to be invoked when a timed text is available
@@ -1389,30 +1308,6 @@ public class FFmpegPlayer {
      * @see android.media.MediaPlayer.OnErrorListener
      */
     public static final int MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK = 200;
-
-    /**
-     * Interface definition of a callback to be invoked when there
-     * has been an error during an asynchronous operation (other errors
-     * will throw exceptions at method call time).
-     */
-    public interface OnErrorListener {
-        /**
-         * Called to indicate an error.
-         *
-         * @param mp    the MediaPlayer the error pertains to
-         * @param what  the type of error that has occurred:
-         *              <ul>
-         *              <li>{@link #MEDIA_ERROR_UNKNOWN}
-         *              <li>{@link #MEDIA_ERROR_SERVER_DIED}
-         *              </ul>
-         * @param extra an extra code, specific to the error. Typically
-         *              implementation dependant.
-         * @return True if the method handled the error, false if it didn't.
-         * Returning false, or not having an OnErrorListener at all, will
-         * cause the OnCompletionListener to be called.
-         */
-        boolean onError(FFmpegPlayer mp, int what, int extra);
-    }
 
     /**
      * Register a callback to be invoked when an error has happened
@@ -1487,30 +1382,6 @@ public class FFmpegPlayer {
      * Interface definition of a callback to be invoked to communicate some
      * info and/or warning about the media or its playback.
      */
-    public interface OnInfoListener {
-        /**
-         * Called to indicate an info or a warning.
-         *
-         * @param mp    the MediaPlayer the info pertains to.
-         * @param what  the type of info or warning.
-         *              <ul>
-         *              <li>{@link #MEDIA_INFO_UNKNOWN}
-         *              <li>{@link #MEDIA_INFO_VIDEO_TRACK_LAGGING}
-         *              <li>{@link #MEDIA_INFO_BUFFERING_START}
-         *              <li>{@link #MEDIA_INFO_BUFFERING_END}
-         *              <li>{@link #MEDIA_INFO_BAD_INTERLEAVING}
-         *              <li>{@link #MEDIA_INFO_NOT_SEEKABLE}
-         *              <li>{@link #MEDIA_INFO_METADATA_UPDATE}
-         *              </ul>
-         * @param extra an extra code, specific to the info. Typically
-         *              implementation dependant.
-         * @return True if the method handled the info, false if it didn't.
-         * Returning false, or not having an OnErrorListener at all, will
-         * cause the info to be discarded.
-         */
-        boolean onInfo(FFmpegPlayer mp, int what, int extra);
-
-    }
 
     /**
      * Register a callback to be invoked when an info/warning is available.
