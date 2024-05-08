@@ -12,6 +12,13 @@ import androidx.annotation.FloatRange;
 
 
 import lib.kalu.ffplayer.FFmpegPlayer;
+import lib.kalu.ffplayer.inter.OnBufferingUpdateListener;
+import lib.kalu.ffplayer.inter.OnCompletionListener;
+import lib.kalu.ffplayer.inter.OnErrorListener;
+import lib.kalu.ffplayer.inter.OnInfoListener;
+import lib.kalu.ffplayer.inter.OnPreparedListener;
+import lib.kalu.ffplayer.inter.OnSeekCompleteListener;
+import lib.kalu.ffplayer.inter.OnVideoSizeChangedListener;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
@@ -324,7 +331,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         }
     }
 
-    private FFmpegPlayer.OnInfoListener onInfoListener = new FFmpegPlayer.OnInfoListener() {
+    private OnInfoListener onInfoListener = new OnInfoListener() {
         @Override
         public boolean onInfo(FFmpegPlayer mp, int what, int extra) {
             MPLogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what);
@@ -367,7 +374,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         }
     };
 
-    private FFmpegPlayer.OnSeekCompleteListener mOnSeekCompleteListener = new FFmpegPlayer.OnSeekCompleteListener() {
+    private OnSeekCompleteListener mOnSeekCompleteListener = new OnSeekCompleteListener() {
         @Override
         public void onSeekComplete(FFmpegPlayer mediaPlayer) {
             MPLogUtil.log("VideoFFmpegPlayer => onSeekComplete =>");
@@ -382,7 +389,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         }
     };
 
-    private FFmpegPlayer.OnPreparedListener onPreparedListener = new FFmpegPlayer.OnPreparedListener() {
+    private OnPreparedListener onPreparedListener = new OnPreparedListener() {
         @Override
         public void onPrepared(FFmpegPlayer mp) {
             MPLogUtil.log("VideoFFmpegPlayer => onPrepared =>");
@@ -390,14 +397,14 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         }
     };
 
-    private FFmpegPlayer.OnBufferingUpdateListener onBufferingUpdateListener = new FFmpegPlayer.OnBufferingUpdateListener() {
+    private OnBufferingUpdateListener onBufferingUpdateListener = new OnBufferingUpdateListener() {
         @Override
         public void onBufferingUpdate(FFmpegPlayer mp, int percent) {
             MPLogUtil.log("VideoFFmpegPlayer => onBufferingUpdate => percent = " + percent);
         }
     };
 
-    private FFmpegPlayer.OnErrorListener onErrorListener = new FFmpegPlayer.OnErrorListener() {
+    private OnErrorListener onErrorListener = new OnErrorListener() {
         @Override
         public boolean onError(FFmpegPlayer mp, int what, int extra) {
             MPLogUtil.log("VideoFFmpegPlayer => onError => what = " + what);
@@ -414,7 +421,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         }
     };
 
-    private FFmpegPlayer.OnCompletionListener onCompletionListener = new FFmpegPlayer.OnCompletionListener() {
+    private OnCompletionListener onCompletionListener = new OnCompletionListener() {
         @Override
         public void onCompletion(FFmpegPlayer mp) {
             MPLogUtil.log("VideoFFmpegPlayer => onCompletion =>");
@@ -422,7 +429,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         }
     };
 
-    private FFmpegPlayer.OnVideoSizeChangedListener onVideoSizeChangedListener = new FFmpegPlayer.OnVideoSizeChangedListener() {
+    private OnVideoSizeChangedListener onVideoSizeChangedListener = new OnVideoSizeChangedListener() {
         @Override
         public void onVideoSizeChanged(FFmpegPlayer o, int width, int height) {
             try {
