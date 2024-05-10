@@ -36,7 +36,7 @@ android {
         release {
             minifyEnabled true
             consumerProguardFiles 'consumer-rules.pro'
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'consumer-rules.pro'
+            proguardFiles 'proguard-rules.pro', 'consumer-rules.pro'
         }
         debug {
             minifyEnabled false
