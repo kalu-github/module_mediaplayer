@@ -429,7 +429,6 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
             mHandler = new Handler(Looper.getMainLooper()) {
                 @Override
                 public void handleMessage(Message msg) {
-                    super.handleMessage(msg);
                     if (msg.what == 9899) {
                         if (null != mKernel) {
                             mKernel.onUpdateTimeMillis();

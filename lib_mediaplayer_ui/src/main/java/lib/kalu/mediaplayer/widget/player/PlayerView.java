@@ -6,8 +6,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 
-
-
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
@@ -15,7 +13,9 @@ import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
-import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
+import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
+import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
 
 
 public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
@@ -68,7 +68,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     }
 
     @Override
-    public void setVideoRender( VideoRenderApi render) {
+    public void setVideoRender(VideoRenderApi render) {
         mVideoRenderApi = render;
     }
 
@@ -78,7 +78,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     }
 
     @Override
-    public void setVideoKernel( VideoKernelApi kernel) {
+    public void setVideoKernel(VideoKernelApi kernel) {
         mVideoKernelApi = kernel;
     }
 
@@ -96,20 +96,57 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     /**************/
 
-    private OnPlayerChangeListener mOnPlayerChangeListener;
+    private OnPlayerEventListener mOnPlayerEventListener;
 
     @Override
-    public OnPlayerChangeListener getOnPlayerChangeListener() {
-        return mOnPlayerChangeListener;
+    public OnPlayerEventListener getOnPlayerEventListener() {
+        return this.mOnPlayerEventListener;
     }
 
     @Override
-    public void setOnPlayerChangeListener( OnPlayerChangeListener l) {
-        this.mOnPlayerChangeListener = l;
+    public void setOnPlayerEventListener(OnPlayerEventListener l) {
+        this.mOnPlayerEventListener = l;
     }
 
     @Override
-    public void removeOnPlayerChangeListener() {
-        this.mOnPlayerChangeListener = null;
+    public void removeOnPlayerEventListener() {
+        this.mOnPlayerEventListener = null;
+    }
+
+    /**************/
+
+    private OnPlayerProgressListener mOnPlayerProgressListener;
+
+    @Override
+    public OnPlayerProgressListener getOnPlayerProgressListener() {
+        return this.mOnPlayerProgressListener;
+    }
+
+    @Override
+    public void setOnPlayerProgressListener(OnPlayerProgressListener l) {
+        this.mOnPlayerProgressListener = l;
+    }
+
+    @Override
+    public void removeOnPlayerProgressListener() {
+        this.mOnPlayerProgressListener = null;
+    }
+
+    /**************/
+    private OnPlayerWindowListener mOnPlayerWindowListener;
+
+    @Override
+    public OnPlayerWindowListener getOnPlayerWindowListener() {
+        return this.mOnPlayerWindowListener;
+    }
+
+    @Override
+    public void setOnPlayerWindowListener(OnPlayerWindowListener l) {
+        this.mOnPlayerWindowListener = l;
+    }
+
+    @Override
+    public void removeOnPlayerWindowListener() {
+        this.mOnPlayerWindowListener = null;
     }
 }

@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.FloatRange;
-import androidx.annotation.IntRange;
 
 
 import androidx.annotation.RequiresApi;
@@ -25,7 +24,9 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
-import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
+import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
+import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
@@ -53,7 +54,9 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     private void init() {
-        removeOnPlayerChangeListener();
+        removeOnPlayerEventListener();
+        removeOnPlayerWindowListener();
+        removeOnPlayerProgressListener();
         try {
             int childCount = getChildCount();
             if (childCount > 0)
@@ -407,30 +410,6 @@ public class PlayerLayout extends RelativeLayout {
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => hideComponent => " + e.getMessage());
             return false;
-        }
-    }
-
-    public final void removeOnPlayerChangeListener() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.removeOnPlayerChangeListener();
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => removeOnPlayerChangeListener => " + e.getMessage());
-        }
-    }
-
-    public final void setOnPlayerChangeListener(OnPlayerChangeListener listener) {
-        try {
-            if (null == listener)
-                throw new Exception("listener error: null");
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.setOnPlayerChangeListener(listener);
-        } catch (Exception e) {
-            MPLogUtil.log("PlayerLayout => setOnPlayerChangeListener => " + e.getMessage());
         }
     }
 
@@ -876,4 +855,111 @@ public class PlayerLayout extends RelativeLayout {
 //            MPLogUtil.log("PlayerLayout => setInterceptKeycodeDpadDown => " + e.getMessage());
 //        }
 //    }
+    public final OnPlayerEventListener getOnPlayerEventListener() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getOnPlayerEventListener();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => getOnPlayerEventListener => " + e.getMessage());
+            return null;
+        }
+    }
+
+    public final void removeOnPlayerEventListener() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.removeOnPlayerEventListener();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => removeOnPlayerEventListener => " + e.getMessage());
+        }
+    }
+
+    public final void setOnPlayerEventListener(OnPlayerEventListener listener) {
+        try {
+            if (null == listener)
+                throw new Exception("listener error: null");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setOnPlayerEventListener(listener);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => setOnPlayerEventListener => " + e.getMessage());
+        }
+    }
+
+    public final OnPlayerProgressListener getOnPlayerProgressListener() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getOnPlayerProgressListener();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => getOnPlayerProgressListener => " + e.getMessage());
+            return null;
+        }
+    }
+
+    public final void removeOnPlayerProgressListener() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.removeOnPlayerProgressListener();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => removeOnPlayerProgressListener => " + e.getMessage());
+        }
+    }
+
+    public final void setOnPlayerProgressListener(OnPlayerProgressListener listener) {
+        try {
+            if (null == listener)
+                throw new Exception("listener error: null");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setOnPlayerProgressListener(listener);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => setOnPlayerProgressListener => " + e.getMessage());
+        }
+    }
+
+    public final OnPlayerWindowListener getOnPlayerWindowListener() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getOnPlayerWindowListener();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => getOnPlayerWindowListener => " + e.getMessage());
+            return null;
+        }
+    }
+
+    public final void removeOnPlayerWindowListener() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.removeOnPlayerWindowListener();
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => removeOnPlayerWindowListener => " + e.getMessage());
+        }
+    }
+
+    public final void setOnPlayerWindowListener(OnPlayerWindowListener listener) {
+        try {
+            if (null == listener)
+                throw new Exception("listener error: null");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setOnPlayerWindowListener(listener);
+        } catch (Exception e) {
+            MPLogUtil.log("PlayerLayout => setOnPlayerWindowListener => " + e.getMessage());
+        }
+    }
 }

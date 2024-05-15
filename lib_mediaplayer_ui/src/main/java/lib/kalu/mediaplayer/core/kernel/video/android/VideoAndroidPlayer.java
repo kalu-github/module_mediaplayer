@@ -44,7 +44,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     private MediaPlayer mMediaPlayer = null;
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
-    private Handler mH = null;
 
     public VideoAndroidPlayer(VideoPlayerApi playerApi, VideoKernelApiEvent eventApi) {
         super(playerApi, eventApi);
@@ -93,27 +92,37 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 throw new Exception("mMediaPlayer error: null");
             if (url == null || url.length() == 0)
                 throw new IllegalArgumentException("url error: " + url);
-            int seconds = PlayerManager.getInstance().getConfig().getConnectTimeoutSeconds();
-            long connectTimeout = seconds * 1000L;
-            if (null == mH) {
-                mH = new Handler(Looper.getMainLooper()) {
-                    @Override
-                    public void handleMessage(@NonNull Message msg) {
-                        if (msg.what == 1010) {
-                            MPLogUtil.log("VideoAndroidPlayer => startDecoder => handleMessage => mPrepared = " + mPrepared + ", mMediaPlayer = " + mMediaPlayer);
-                            if (null != mMediaPlayer && !mPrepared) {
-                                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_NET);
-                                pause();
-                                stop();
-                                release();
-                            }
+            // 监测拉流超时
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int timeoutSeconds = PlayerManager.getInstance().getConfig().getConnectTimeoutSeconds();
+                    long maxTime = timeoutSeconds * 1000;
+                    long startTime = System.currentTimeMillis();
+                    while (true) {
+                        MPLogUtil.log("VideoAndroidPlayer => startDecoder => mPrepared = " + mPrepared + ", mMediaPlayer = " + mMediaPlayer);
+                        if (null == mMediaPlayer || mPrepared)
+                            break;
+                        long currtTime = System.currentTimeMillis();
+                        long castTime = currtTime - startTime;
+                        MPLogUtil.log("VideoAndroidPlayer => startDecoder => currtTime = " + currtTime + ", startTime = " + startTime + ", castTime = " + castTime + ", maxTime = " + maxTime);
+                        if (castTime > maxTime) {
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_NET);
+                                    pause();
+                                    stop();
+                                    release();
+                                }
+                            });
+                            break;
                         }
+                        SystemClock.sleep(100);
                     }
-                };
-            }
-            mH.sendEmptyMessageDelayed(1010, connectTimeout);
-            MPLogUtil.log("VideoAndroidPlayer => startDecoder => connectTimeout = " + connectTimeout);
+                }
+            }).start();
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
             initListener();
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);
@@ -171,11 +180,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        if (null != mH) {
-            MPLogUtil.log("VideoAndroidPlayer => release => 移除网络超时监听");
-            mH.removeMessages(1010);
-            mH = null;
-        }
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -332,7 +336,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             return duration;
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => getDuration => " + e.getMessage());
-            return -1L;
+            return 0;
         }
     }
 
@@ -443,26 +447,26 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                         MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", mPrepared = false");
                     }
                     break;
-                // 开始播放
-                case 903:
-                case PlayerType.EventType.EVENT_VIDEO_START:
-                    try {
-                        if (mPrepared)
-                            throw new Exception("warning: mPrepared true");
-                        mPrepared = true;
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                        long seek = getSeek();
-                        if (seek <= 0) {
-                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
-                        } else {
-                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
-                            // 起播快进
-                            seekTo(seek);
-                        }
-                    } catch (Exception e) {
-                        MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", msg = " + e.getMessage());
-                    }
-                    break;
+//                // 开始播放
+//                case 903:
+//                case PlayerType.EventType.EVENT_VIDEO_START:
+//                    try {
+//                        if (mPrepared)
+//                            throw new Exception("warning: mPrepared true");
+//                        mPrepared = true;
+//                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+//                        long seek = getSeek();
+//                        if (seek <= 0) {
+//                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+//                        } else {
+//                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+//                            // 起播快进
+//                            seekTo(seek);
+//                        }
+//                    } catch (Exception e) {
+//                        MPLogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", msg = " + e.getMessage());
+//                    }
+//                    break;
             }
             return true;
         }
@@ -472,14 +476,14 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public void onSeekComplete(MediaPlayer mediaPlayer) {
             MPLogUtil.log("VideoAndroidPlayer => onSeekComplete =>");
-            try {
-                long seek = getSeek();
-                if (seek <= 0)
-                    throw new Exception();
-                setSeek(0);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
-            } catch (Exception e) {
-            }
+//            try {
+//                long seek = getSeek();
+//                if (seek <= 0)
+//                    throw new Exception();
+//                setSeek(0);
+//                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+//            } catch (Exception e) {
+//            }
         }
     };
 
@@ -487,11 +491,47 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public void onPrepared(MediaPlayer mp) {
             MPLogUtil.log("VideoAndroidPlayer => onPrepared =>");
+//            start();
+            mPrepared = true;
             start();
-            if (null != mH) {
-                MPLogUtil.log("VideoAndroidPlayer => onPrepared => 移除网络超时监听");
-                mH.removeMessages(1010);
-                mH = null;
+            try {
+
+                long seek = getSeek();
+                // 起播快进
+                if (seek > 0) {
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+                    setSeek(0);
+                    seekTo(seek);
+                }
+
+                // 监听播放状态
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        long position = getPosition();
+                        long olds = Math.max(position, seek);
+                        while (true) {
+                            if (null == mMediaPlayer || !mPrepared)
+                                break;
+                            long news = getPosition();
+                            MPLogUtil.log("VideoAndroidPlayer => onPrepared => olds = " + olds + ", news = " + news);
+                            if (news > olds) {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+                                    }
+                                });
+                                break;
+                            }
+                            SystemClock.sleep(100);
+                        }
+                    }
+                }).start();
+
+            } catch (Exception e) {
+                MPLogUtil.log("VideoAndroidPlayer => onPrepared => " + e.getMessage());
             }
         }
     };

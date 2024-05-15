@@ -193,7 +193,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //            }
             releaseVideoKernel(isFromUser);
             if (clearListener) {
-                removeOnPlayerChangeListener();
+                removeOnPlayerEventListener();
+                removeOnPlayerProgressListener();
+                removeOnPlayerWindowListener();
             }
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE);
         } catch (Exception e) {
@@ -627,7 +629,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     } catch (Exception e) {
 //                        MPLogUtil.log("VideoPlayerApiKernel => onUpdateTimeMillis => " + e.getMessage());
                         callUpdateTimeMillis(seek, position, duration, max);
-                        callProgressListener(position, duration);
+                        callPlayerProgress(position, duration);
                     }
                 }
 

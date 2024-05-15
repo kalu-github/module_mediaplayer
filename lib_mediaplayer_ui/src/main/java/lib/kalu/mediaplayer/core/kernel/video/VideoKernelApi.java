@@ -18,7 +18,6 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 
     void onUpdateTimeMillis();
 
-
     <T extends Object> T getPlayer();
 
     void releaseDecoder(boolean isFromUser);

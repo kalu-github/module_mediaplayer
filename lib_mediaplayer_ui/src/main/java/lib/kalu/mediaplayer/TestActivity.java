@@ -2,8 +2,6 @@ package lib.kalu.mediaplayer;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,7 +24,9 @@ import lib.kalu.mediaplayer.core.component.ComponentNet;
 import lib.kalu.mediaplayer.core.component.ComponentPause;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.component.ComponentTry;
-import lib.kalu.mediaplayer.listener.OnPlayerChangeListener;
+import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
+import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
+import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
@@ -217,10 +217,10 @@ public final class TestActivity extends Activity {
     private void initPlayer() {
         // playerLayout
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.setOnPlayerChangeListener(new OnPlayerChangeListener() {
+        playerLayout.setOnPlayerWindowListener(new OnPlayerWindowListener() {
             @Override
-            public void onWindow(int playerState) {
-                switch (playerState) {
+            public void onWindow(int state) {
+                switch (state) {
                     case PlayerType.WindowType.NORMAL:
                         //普通模式
                         break;
@@ -232,12 +232,18 @@ public final class TestActivity extends Activity {
                         break;
                 }
             }
-
+        });
+        playerLayout.setOnPlayerProgressListener(new OnPlayerProgressListener() {
             @Override
-            public void onChange(int playState) {
-                MPLogUtil.log("onPlayStateChanged => playState = " + playState);
+            public void onProgress(long position, long duration) {
+            }
+        });
+        playerLayout.setOnPlayerEventListener(new OnPlayerEventListener() {
+            @Override
+            public void onEvent(int state) {
+                MPLogUtil.log("onPlayStateChanged => state = " + state);
 
-                switch (playState) {
+                switch (state) {
                     case PlayerType.StateType.STATE_INIT:
                         //播放未开始，初始化
                         break;

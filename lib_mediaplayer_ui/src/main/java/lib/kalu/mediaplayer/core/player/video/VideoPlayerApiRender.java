@@ -1,11 +1,8 @@
 package lib.kalu.mediaplayer.core.player.video;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
@@ -16,7 +13,7 @@ import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderFactoryManager;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-interface VideoPlayerApiRender extends VideoPlayerApiBase {
+interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListener {
 
     default String screenshot() {
         try {
@@ -99,7 +96,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
                     toogleVideoRender();
                 }
                 callPlayerEvent(PlayerType.StateType.STATE_FULL_START);
-                callWindowEvent(PlayerType.WindowType.FULL);
+                callPlayerWindow(PlayerType.WindowType.FULL);
             }
             if (rememberPlaying) {
                 checkPlaying();
@@ -128,7 +125,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
                 }
                 cleanFocusFull();
                 callPlayerEvent(PlayerType.StateType.STATE_FULL_STOP);
-                callWindowEvent(PlayerType.WindowType.NORMAL);
+                callPlayerWindow(PlayerType.WindowType.NORMAL);
             }
             return b;
         } catch (Exception e) {
@@ -146,7 +143,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             if (switchToDecorView) {
                 toogleVideoRender();
                 callPlayerEvent(PlayerType.StateType.STATE_FLOAT_START);
-                callWindowEvent(PlayerType.WindowType.FLOAT);
+                callPlayerWindow(PlayerType.WindowType.FLOAT);
             }
             if (rememberPlaying) {
                 checkPlaying();
@@ -168,7 +165,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             if (switchToPlayerLayout) {
                 toogleVideoRender();
                 callPlayerEvent(PlayerType.StateType.STATE_FLOAT_STOP);
-                callWindowEvent(PlayerType.WindowType.NORMAL);
+                callPlayerWindow(PlayerType.WindowType.NORMAL);
             }
             return switchToPlayerLayout;
         } catch (Exception e) {
