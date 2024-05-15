@@ -796,16 +796,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void attachVideoRenderKernel() {
-        try {
-            VideoRenderApi render = getVideoRender();
-            VideoKernelApi kernel = getVideoKernel();
-            render.setKernel(kernel);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => attachVideoRenderKernel => " + e.getMessage());
-        }
-    }
-
     default void createVideoDecoder(PlayerBuilder config) {
         try {
             VideoKernelApi kernel = getVideoKernel();

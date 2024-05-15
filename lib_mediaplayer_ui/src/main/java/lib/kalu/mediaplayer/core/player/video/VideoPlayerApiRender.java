@@ -11,6 +11,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderFactoryManager;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -57,33 +58,6 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
         }
     }
 
-    default boolean resetVideoRender() {
-        try {
-            PlayerBuilder config = PlayerManager.getInstance().getConfig();
-            if (null == config)
-                throw new Exception("config warning: null");
-            int videoRender = config.getRender();
-            if (videoRender != PlayerType.RenderType.SURFACE_VIEW)
-                throw new Exception("videoRender warning: not SURFACE_VIEW");
-            int videoKernel = config.getKernel();
-            if (videoKernel != PlayerType.KernelType.IJK_MEDIACODEC && videoKernel != PlayerType.KernelType.EXO_V1 && videoKernel != PlayerType.KernelType.EXO_V2)
-                throw new Exception("videoKernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
-            if (!(this instanceof VideoPlayerApiKernel))
-                throw new Exception("videoRender warning: not instanceof PlayerApiKernel");
-            VideoRenderApi videoRenderApi = getVideoRender();
-            if (null == videoRenderApi)
-                throw new Exception("videoRenderApi error: null");
-            // TODO: 2024/5/15
-//            initVideoRender();
-            ((VideoPlayerApiKernel) this).attachVideoRender();
-            updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 400 : 400);
-            return true;
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => resetVideoRender => " + e.getMessage());
-            return false;
-        }
-    }
-
     default void checkPlaying() {
         try {
             if (!(this instanceof VideoPlayerApiKernel))
@@ -122,7 +96,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             boolean b = switchToDecorView(true);
             if (b) {
                 if (resetSurface) {
-                    resetVideoRender();
+                    toogleVideoRender();
                 }
                 callPlayerEvent(PlayerType.StateType.STATE_FULL_START);
                 callWindowEvent(PlayerType.WindowType.FULL);
@@ -150,7 +124,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             switchPlaying();
             if (b) {
                 if (resetSurface) {
-                    resetVideoRender();
+                    toogleVideoRender();
                 }
                 cleanFocusFull();
                 callPlayerEvent(PlayerType.StateType.STATE_FULL_STOP);
@@ -170,7 +144,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
                 throw new Exception("always Float");
             boolean switchToDecorView = switchToDecorView(false);
             if (switchToDecorView) {
-                resetVideoRender();
+                toogleVideoRender();
                 callPlayerEvent(PlayerType.StateType.STATE_FLOAT_START);
                 callWindowEvent(PlayerType.WindowType.FLOAT);
             }
@@ -192,7 +166,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             boolean switchToPlayerLayout = switchToPlayerLayout();
             switchPlaying();
             if (switchToPlayerLayout) {
-                resetVideoRender();
+                toogleVideoRender();
                 callPlayerEvent(PlayerType.StateType.STATE_FLOAT_STOP);
                 callWindowEvent(PlayerType.WindowType.NORMAL);
             }
@@ -381,17 +355,49 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             videoRender.setLayoutParams(layoutParams);
             ViewGroup viewGroup = getBaseVideoViewGroup();
             viewGroup.addView((View) videoRender, 0);
-
-//            int childCount = group.getChildCount();
-//            if (childCount <= 0)
-//                throw new Exception("error: childCount <= 0");
-//            View childAt = group.getChildAt(0);
-//            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-//            childAt.setLayoutParams(layoutParams);
-//            group.requestLayout();
             MPLogUtil.log("VideoPlayerApiRender => formatVideoRender => succ");
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiRender => formatVideoRender => " + e.getMessage());
+        }
+    }
+
+    default void attachVideoRenderKernel() {
+        try {
+            VideoRenderApi videoRender = getVideoRender();
+            if (null == videoRender)
+                throw new Exception("error: null == videoRender");
+            VideoKernelApi videoKernel = getVideoKernel();
+            if (null == videoKernel)
+                throw new Exception("error: null == videoKernel");
+            videoRender.setKernel(videoKernel);
+        } catch (Exception e) {
+            MPLogUtil.log("VideoPlayerApiRender => attachVideoRenderKernel => " + e.getMessage());
+        }
+    }
+
+    default boolean toogleVideoRender() {
+        try {
+            PlayerBuilder config = PlayerManager.getInstance().getConfig();
+            if (null == config)
+                throw new Exception("config warning: null");
+            int videoRender = config.getRender();
+            if (videoRender != PlayerType.RenderType.SURFACE_VIEW)
+                throw new Exception("videoRender warning: not SURFACE_VIEW");
+            int videoKernel = config.getKernel();
+            if (videoKernel != PlayerType.KernelType.IJK_MEDIACODEC && videoKernel != PlayerType.KernelType.EXO_V1 && videoKernel != PlayerType.KernelType.EXO_V2)
+                throw new Exception("videoKernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
+            if (!(this instanceof VideoPlayerApiKernel))
+                throw new Exception("videoRender warning: not instanceof PlayerApiKernel");
+            VideoRenderApi videoRenderApi = getVideoRender();
+            if (null == videoRenderApi)
+                throw new Exception("videoRenderApi error: null");
+            // TODO: 2024/5/15
+            attachVideoRenderKernel();
+            updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 400 : 400);
+            return true;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoPlayerApiRender => toogleVideoRender => " + e.getMessage());
+            return false;
         }
     }
 
