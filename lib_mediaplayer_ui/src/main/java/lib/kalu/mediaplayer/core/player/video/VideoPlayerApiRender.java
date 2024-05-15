@@ -355,9 +355,9 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             videoRender.setLayoutParams(layoutParams);
             ViewGroup viewGroup = getBaseVideoViewGroup();
             viewGroup.addView((View) videoRender, 0);
-            MPLogUtil.log("VideoPlayerApiRender => formatVideoRender => succ");
+            MPLogUtil.log("VideoPlayerApiRender => attachVideoRender => succ");
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => formatVideoRender => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiRender => attachVideoRender => " + e.getMessage());
         }
     }
 
