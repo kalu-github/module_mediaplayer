@@ -71,16 +71,14 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 1
             PlayerBuilder playerBuilder = PlayerManager.getInstance().getConfig();
             MPLogUtil.setLogger(playerBuilder);
-            // 2
-            hideVideoView();
             // 3
             releaseVideoKernel();
             // 4
-            createVideoKernel(startBuilder, playerBuilder);
+            initVideoRender();
             // 5
-            createVideoRender();
+            initVideoKernel(startBuilder, playerBuilder);
             // 6
-            initVideoKernel(startBuilder, playUrl);
+            initVideoDecoder(startBuilder, playUrl);
             // 7
             attachVideoRender();
             // 8
@@ -193,7 +191,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 setData(null);
                 releaseTag();
             }
-            releaseVideoRender();
+//            boolean renderAutoRelease = PlayerManager.getInstance().getConfig().isRenderAutoRelease();
+//            if (renderAutoRelease) {
+//                releaseVideoRender1();
+//            }
             releaseVideoKernel(isFromUser);
             if (clearListener) {
                 removeOnPlayerChangeListener();
@@ -582,7 +583,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void initVideoKernel(StartBuilder bundle, String playUrl) {
+    default void initVideoDecoder(StartBuilder bundle, String playUrl) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -590,12 +591,11 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernel.initDecoder(getBaseContext(), playUrl, bundle);
             setScreenKeep(true);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => initVideoKernel => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiKernel => initVideoDecoder => " + e.getMessage());
         }
     }
 
     default void playEnd() {
-        hideVideoView();
         setScreenKeep(false);
     }
 
@@ -608,7 +608,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void createVideoKernel(StartBuilder builder, PlayerBuilder playerBuilder) {
+    default void initVideoKernel(StartBuilder builder, PlayerBuilder playerBuilder) {
         try {
             int type = PlayerManager.getInstance().getConfig().getKernel();
             VideoKernelApi kernel = VideoKernelFactoryManager.getKernel((VideoPlayerApi) this, type, new VideoKernelApiEvent() {
@@ -720,8 +720,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 }
                             }
                             callPlayerEvent(PlayerType.StateType.STATE_START);
-                            // step2
-                            showVideoView();
+                            // step1
+                            formatVideoRender();
                             // step3
                             checkVideoView();
                             // step4
@@ -791,7 +791,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 5
             createVideoDecoder(playerBuilder);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => createKernel => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiKernel => initVideoKernel => " + e.getMessage());
         }
     }
 

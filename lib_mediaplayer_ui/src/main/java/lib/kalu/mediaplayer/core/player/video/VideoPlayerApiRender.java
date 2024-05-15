@@ -73,7 +73,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
             VideoRenderApi videoRenderApi = getVideoRender();
             if (null == videoRenderApi)
                 throw new Exception("videoRenderApi error: null");
-            createVideoRender();
+            initVideoRender();
             ((VideoPlayerApiKernel) this).attachVideoRender();
             updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 400 : 400);
             return true;
@@ -248,33 +248,33 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
         }
     }
 
-    default void showVideoView() {
-        try {
-            ViewGroup viewGroup = getBaseVideoViewGroup();
-            viewGroup.setVisibility(View.VISIBLE);
-            int count = viewGroup.getChildCount();
-            for (int i = 0; i < count; i++) {
-                View child = viewGroup.getChildAt(i);
-                child.setVisibility(View.VISIBLE);
-            }
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => showVideoView => " + e.getMessage());
-        }
-    }
-
-    default void hideVideoView() {
-        try {
-            ViewGroup viewGroup = getBaseVideoViewGroup();
-            int count = viewGroup.getChildCount();
-            for (int i = 0; i < count; i++) {
-                View child = viewGroup.getChildAt(i);
-                child.setVisibility(View.INVISIBLE);
-            }
-            viewGroup.setVisibility(View.INVISIBLE);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => hideVideoView => " + e.getMessage());
-        }
-    }
+//    default void showVideoView() {
+//        try {
+//            ViewGroup viewGroup = getBaseVideoViewGroup();
+//            viewGroup.setVisibility(View.VISIBLE);
+//            int count = viewGroup.getChildCount();
+//            for (int i = 0; i < count; i++) {
+//                View child = viewGroup.getChildAt(i);
+//                child.setVisibility(View.VISIBLE);
+//            }
+//        } catch (Exception e) {
+//            MPLogUtil.log("VideoPlayerApiRender => showVideoView => " + e.getMessage());
+//        }
+//    }
+//
+//    default void hideVideoView() {
+//        try {
+//            ViewGroup viewGroup = getBaseVideoViewGroup();
+//            int count = viewGroup.getChildCount();
+//            for (int i = 0; i < count; i++) {
+//                View child = viewGroup.getChildAt(i);
+//                child.setVisibility(View.INVISIBLE);
+//            }
+//            viewGroup.setVisibility(View.INVISIBLE);
+//        } catch (Exception e) {
+//            MPLogUtil.log("VideoPlayerApiRender => hideVideoView => " + e.getMessage());
+//        }
+//    }
 
     default VideoRenderApi searchVideoRender() {
         try {
@@ -302,17 +302,6 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
         }
     }
 
-    default void createVideoRender() {
-        try {
-            releaseVideoRender();
-            int videoRender = PlayerManager.getInstance().getConfig().getRender();
-            setVideoRender(VideoRenderFactoryManager.createRender(getBaseContext(), videoRender));
-            addVideoRender();
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => createRender => " + e.getMessage());
-        }
-    }
-
     default void updateVideoRenderBuffer(int delayMillis) {
         try {
             VideoRenderApi render = searchVideoRender();
@@ -335,45 +324,55 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase {
         }
     }
 
-    default void addVideoRender() {
+    VideoRenderApi getVideoRender();
+
+    void setVideoRender(VideoRenderApi render);
+
+    default void initVideoRender() {
         try {
+            // 1
+            int videoRender = PlayerManager.getInstance().getConfig().getRender();
+            setVideoRender(VideoRenderFactoryManager.createRender(getBaseContext(), videoRender));
+            // 2
             VideoRenderApi render = getVideoRender();
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(0, 0);
             render.setLayoutParams(params);
             ViewGroup viewGroup = getBaseVideoViewGroup();
             viewGroup.addView((View) render, 0);
-            MPLogUtil.log("VideoPlayerApiRender => addRender => succ");
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => addVideoRender => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiRender => initVideoRender => " + e.getMessage());
         }
     }
 
-    default void releaseVideoRender() {
+    default void formatVideoRender() {
         try {
             ViewGroup group = getBaseVideoViewGroup();
             if (null == group)
                 throw new Exception("group error: null");
-            int childCount = group.getChildCount();
-            if (childCount <= 0)
-                throw new Exception("childCount warning: " + childCount);
-            for (int i = 0; i < childCount; i++) {
-                View childAt = group.getChildAt(i);
+            while (true) {
+                int childCount = group.getChildCount();
+                if (childCount <= 1)
+                    break;
+                int index = childCount - 1;
+                View childAt = group.getChildAt(index);
                 if (null == childAt)
                     continue;
                 if (!(childAt instanceof VideoRenderApi))
                     continue;
                 ((VideoRenderApi) childAt).release();
+                group.removeView(childAt);
             }
-            group.removeAllViews();
-            MPLogUtil.log("VideoPlayerApiRender => releaseVideoRender => succ");
+            int childCount = group.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("error: childCount <= 0");
+            View childAt = group.getChildAt(0);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            childAt.setLayoutParams(layoutParams);
+            MPLogUtil.log("VideoPlayerApiRender => formatVideoRender => succ");
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => releaseVideoRender => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiRender => formatVideoRender => " + e.getMessage());
         }
     }
-
-    VideoRenderApi getVideoRender();
-
-    void setVideoRender(VideoRenderApi render);
 
     void checkVideoView();
 }

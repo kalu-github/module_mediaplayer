@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 
-
 import org.json.JSONArray;
 
 import java.util.LinkedList;
@@ -37,23 +36,23 @@ import lib.kalu.mediaplayer.widget.player.PlayerLayout;
  */
 public final class TestActivity extends Activity {
 
-    
+
     public static final int RESULT_CODE = 31001;
-    
+
     public static final String INTENT_LIVE = "intent_live"; // live
-    
+
     public static final String INTENT_MAX = "intent_max"; // max
-    
+
     public static final String INTENT_SEEK = "intent_seek"; // 快进
-    
+
     public static final String INTENT_DATA = "intent_data"; // 外部传入DATA
-    
+
     public static final String INTENT_URL = "intent_url"; // 视频Url
-    
+
     public static final String INTENT_SRT = "intent_srt"; // 字幕Url
-    
+
     public static final String INTENT_TIME_BROWSING = "intent_time_browsing"; // 视频浏览时长
-    
+
     public static final String INTENT_TIME_LENGTH = "intent_time_length"; // 视频总时长
 
     @Override
@@ -187,8 +186,7 @@ public final class TestActivity extends Activity {
         LinkedList<ComponentApi> componentApis = new LinkedList<>();
         // loading
         ComponentLoading loading = new ComponentLoading(getApplicationContext());
-        loading.setComponentText("加载中...");
-        loading.setComponentBackgroundColorInt(Color.parseColor("#000000"));
+        loading.setComponentText(R.string.module_mediaplayer_string_load);
         componentApis.add(loading);
         // seek
         ComponentSeek seek = new ComponentSeek(getApplicationContext());

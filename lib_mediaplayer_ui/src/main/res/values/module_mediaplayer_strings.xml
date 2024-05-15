@@ -8,5 +8,6 @@
     <string name="module_mediaplayer_string_end">播放结束</string>
     <string name="module_mediaplayer_string_init">初始化</string>
     <string name="module_mediaplayer_string_try">试看1分钟</string>
+    <string name="module_mediaplayer_string_load">加载中...</string>
 
 </resources>

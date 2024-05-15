@@ -2,8 +2,26 @@
 -dontwarn com.google.**
 -dontwarn org.apache.commons.io.**
 
--keep class lib.kalu.mediaplayer.buried.** {*;}
--keep class lib.kalu.mediaplayer.listener.** {*;}
+
+-keepattributes *Annotation*
+-keepattributes InnerClasses,EnclosingMethod
+#-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
+
+# buried
+-keep class lib.kalu.mediaplayer.buried.BuriedEvent {
+    public <fields>;
+    public <methods>;
+}
+
+# listener
+-keep class lib.kalu.mediaplayer.listener.OnPlayerAudioChangeListener {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.listener.OnPlayerChangeListener {
+    public <fields>;
+    public <methods>;
+}
 
 # util
 -keep class lib.kalu.mediaplayer.util.UdpMulticastUtil {
@@ -18,7 +36,8 @@
 }
 
 # config
--keep class lib.kalu.mediaplayer.config.** {
+-keep class lib.kalu.mediaplayer.config.player.PlayerType{*;}
+-keep class lib.kalu.mediaplayer.config.player.** {
     public <fields>;
     public <methods>;
 }
@@ -54,3 +73,8 @@
     public <fields>;
     public <methods>;
 }
+
+#-keep class com.yuanxuzhen.bean.*   本包下的类名保持
+#-keep class com.yuanxuzhen.bean.**  把本包和所含子包下的类名都保持
+#-keep class com.yuanxuzhen.bean.** {*;} 把本包和所含子包下的类名都保持，同时保持里面的内容不被混淆
+#-keep class lib.kalu.kv.KVContentProvider{*;} 保持类名，同时保持里面的内容不被混淆
