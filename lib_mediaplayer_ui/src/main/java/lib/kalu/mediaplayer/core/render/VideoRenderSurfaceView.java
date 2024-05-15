@@ -304,28 +304,62 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
     int mVideoRotation = 0;
 
     @Override
-    public void setVideoSize(int videoWidth, int videoHeight) {
-        try {
-            if (videoWidth <= 0 || videoHeight <= 0)
-                throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
-            mVideoWidth = videoWidth;
-            mVideoHeight = videoHeight;
+    public void setVideoFormat(int videoWidth, int videoHeight, int videoRotation) {
+        MPLogUtil.log("VideoRenderSurfaceView => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation);
+
+        boolean update = false;
+        if (mVideoRotation != videoRotation) {
+            update = true;
+            this.mVideoRotation = videoRotation;
+        }
+
+        if (videoWidth != 0 && mVideoWidth != videoWidth) {
+            update = true;
+            this.mVideoWidth = videoWidth;
+        }
+        if (videoHeight != 0 && mVideoHeight != videoHeight) {
+            update = true;
+            this.mVideoHeight = videoHeight;
+        }
+        if (update) {
             requestLayout();
-        } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => setVideoSize => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void setVideoSize(int videoWidth, int videoHeight) {
+        MPLogUtil.log("VideoRenderSurfaceView => setVideoSize => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
+
+        boolean update = false;
+        if (videoWidth != 0 && mVideoWidth != videoWidth) {
+            update = true;
+            this.mVideoWidth = videoWidth;
+        }
+        if (videoHeight != 0 && mVideoHeight != videoHeight) {
+            update = true;
+            this.mVideoHeight = videoHeight;
+        }
+        if (update) {
+            requestLayout();
         }
     }
 
     @Override
     public void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
-        this.mVideoRotation = videoRotation;
-        requestLayout();
+        MPLogUtil.log("VideoRenderSurfaceView => setVideoRotation => videoRotation = " + videoRotation);
+        if (mVideoRotation != videoRotation) {
+            this.mVideoRotation = videoRotation;
+            requestLayout();
+        }
     }
 
     @Override
     public void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
-        this.mVideoScaleType = scaleType;
-        requestLayout();
+        MPLogUtil.log("VideoRenderSurfaceView => setVideoScaleType => scaleType = " + scaleType);
+        if (mVideoScaleType != scaleType) {
+            this.mVideoScaleType = scaleType;
+            requestLayout();
+        }
     }
 
     @Override

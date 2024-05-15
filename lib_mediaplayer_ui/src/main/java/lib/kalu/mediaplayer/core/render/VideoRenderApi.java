@@ -59,11 +59,9 @@ public interface VideoRenderApi {
 
     /******************/
 
-    /**
-     * 设置视频旋转角度
-     *
-     * @param videoRotation 角度值
-     */
+
+    void setVideoFormat(int videoWidth, int videoHeight, @PlayerType.RotationType.Value int videoRotation);
+
     void setVideoRotation(@PlayerType.RotationType.Value int videoRotation);
 
     void setVideoSize(int videoWidth, int videoHeight);
@@ -74,7 +72,8 @@ public interface VideoRenderApi {
      * 注意：VideoView的宽高一定要定死，否者以下算法不成立
      * 借鉴于网络
      */
-    default int[] doMeasureSpec(int screenWidth, int screenHeight, int videoWidth, int videoHeight,
+    default int[] doMeasureSpec(int screenWidth, int screenHeight,
+                                int videoWidth, int videoHeight,
                                 @PlayerType.ScaleType.Value int videoScaleType,
                                 @PlayerType.RotationType.Value int videoRotation) {
         MPLogUtil.log("VideoRenderApi => doMeasureSpec => screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);

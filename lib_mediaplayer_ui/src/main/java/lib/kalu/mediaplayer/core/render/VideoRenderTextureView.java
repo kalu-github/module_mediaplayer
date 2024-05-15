@@ -125,8 +125,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
             @Override
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
                 try {
-                    if (null == mKernel)
-                        throw new Exception("mKernel error: null");
+                    if (null == mKernel) throw new Exception("mKernel error: null");
                     mKernel.onUpdateTimeMillis();
                 } catch (Exception e) {
                     MPLogUtil.log("VideoRenderTextureView => onSurfaceTextureUpdated => " + e.getMessage());
@@ -226,30 +225,63 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
     int mVideoRotation = 0;
 
     @Override
-    public void setVideoSize(int videoWidth, int videoHeight) {
-        try {
-            if (videoWidth <= 0 || videoHeight <= 0)
-                throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
-            mVideoWidth = videoWidth;
-            mVideoHeight = videoHeight;
+    public void setVideoFormat(int videoWidth, int videoHeight, int videoRotation) {
+        MPLogUtil.log("VideoRenderTextureView => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation);
+
+        boolean update = false;
+        if (mVideoRotation != videoRotation) {
+            update = true;
+            this.mVideoRotation = videoRotation;
+        }
+
+        if (videoWidth != 0 && mVideoWidth != videoWidth) {
+            update = true;
+            this.mVideoWidth = videoWidth;
+        }
+        if (videoHeight != 0 && mVideoHeight != videoHeight) {
+            update = true;
+            this.mVideoHeight = videoHeight;
+        }
+        if (update) {
             requestLayout();
-        } catch (Exception e) {
-            MPLogUtil.log("RenderSurfaceView => setVideoSize => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void setVideoSize(int videoWidth, int videoHeight) {
+        MPLogUtil.log("VideoRenderTextureView => setVideoSize => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
+
+        boolean update = false;
+        if (videoWidth != 0 && mVideoWidth != videoWidth) {
+            update = true;
+            this.mVideoWidth = videoWidth;
+        }
+        if (videoHeight != 0 && mVideoHeight != videoHeight) {
+            update = true;
+            this.mVideoHeight = videoHeight;
+        }
+        if (update) {
+            requestLayout();
         }
     }
 
     @Override
     public void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
-        this.mVideoRotation = videoRotation;
-        requestLayout();
+        MPLogUtil.log("VideoRenderTextureView => setVideoRotation => videoRotation = " + videoRotation);
+        if (mVideoRotation != videoRotation) {
+            this.mVideoRotation = videoRotation;
+            requestLayout();
+        }
     }
 
     @Override
     public void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
-        this.mVideoScaleType = scaleType;
-        requestLayout();
+        MPLogUtil.log("VideoRenderTextureView => setVideoScaleType => scaleType = " + scaleType);
+        if (mVideoScaleType != scaleType) {
+            this.mVideoScaleType = scaleType;
+            requestLayout();
+        }
     }
-
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -261,6 +293,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
                 throw new Exception("measureSpec error: " + measureSpec);
             int width = measureSpec[0];
             int height = measureSpec[1];
+            MPLogUtil.log("VideoRenderTextureView => onMeasure => width = " + width+", height = "+height);
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             int specH = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             super.onMeasure(specW, specH);
