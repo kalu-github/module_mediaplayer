@@ -119,7 +119,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             }).start();
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
             initListener();
-            mMediaPlayer.stop();
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);
             if (prepareAsync) {
                 mMediaPlayer.prepareAsync();
@@ -234,6 +233,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
             mMediaPlayer.stop();
+            mMediaPlayer.reset();
             mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoAndroidPlayer => stop => " + e.getMessage());

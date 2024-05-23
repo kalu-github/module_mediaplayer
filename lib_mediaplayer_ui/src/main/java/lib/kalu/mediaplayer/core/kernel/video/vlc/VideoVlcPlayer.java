@@ -71,7 +71,6 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
-            mVlcPlayer.stop();
             mVlcPlayer.setDataSource(Uri.parse(url), mPlayWhenReady);
             mVlcPlayer.play();
         } catch (Exception e) {
@@ -188,6 +187,8 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
             mVlcPlayer.stop();
+//            mVlcPlayer.reset();
+            mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoVlcPlayer => stop => " + e.getMessage());
         }

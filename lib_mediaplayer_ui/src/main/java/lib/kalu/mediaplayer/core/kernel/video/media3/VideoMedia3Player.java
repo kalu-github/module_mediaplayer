@@ -368,8 +368,6 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 //                }
 //            });
 
-            mExoPlayer.stop();
-
             MediaSource mediaSource = buildMediaSource(context, url, null, cacheType, cacheMax, cacheDir);
             mExoPlayer.setMediaSource(mediaSource);
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
@@ -683,6 +681,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             mExoPlayer.stop();
+//            mExoPlayer.reset();
             mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoMedia3Player => stop => " + e.getMessage());

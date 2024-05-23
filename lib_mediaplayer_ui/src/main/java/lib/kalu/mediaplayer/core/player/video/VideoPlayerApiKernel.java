@@ -74,7 +74,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 2
             setScreenKeep(true);
             // 3
-            pause(true);
+            stop(false);
             // 4
             int kernelType = playerBuilder.getKernel();
             boolean log = playerBuilder.isLog();
@@ -86,7 +86,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 6
             attachRenderKernel();
             // 7
-            setEvent(startBuilder);
+            setKernelEvent(startBuilder, kernelType, renderType);
             // 4
             startDecoder(startBuilder, playUrl);
             // 8
@@ -599,12 +599,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /***************************/
 
-//    default void setVideoKernelType(@PlayerType.KernelType.Value int v) {
-//        try {
-//            PlayerManager.getInstance().setKernel(v);
-//        } catch (Exception e) {
-//        }
-//    }
     default void checkKernelNull(boolean enableLogger, int kernelType, int seekParameters) {
         try {
             VideoKernelApi videoKernel = getVideoKernel();
@@ -618,7 +612,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void setEvent(StartBuilder builder) {
+    default void setKernelEvent(StartBuilder builder, int kernelType, int renderType) {
+
         try {
             VideoKernelApi videoKernel = getVideoKernel();
             if (null == videoKernel)
@@ -650,7 +645,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                 @Override
                 public void onEvent(int kernel, int event) {
-                    MPLogUtil.log("VideoPlayerApiKernel => onEvent = " + kernel + ", event = " + event);
+                    MPLogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
                     switch (event) {
                         // 网络拉流开始
 //                        case PlayerType.EventType.EVENT_OPEN_INPUT:
@@ -733,6 +728,17 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 }
                             }
                             callPlayerEvent(PlayerType.StateType.STATE_START);
+
+                            if (kernelType == PlayerType.KernelType.IJK) {
+                                releaseRender();
+                                checkRenderNull(renderType);
+                                attachRenderKernel();
+                            } else if (kernelType == PlayerType.KernelType.IJK_MEDIACODEC) {
+                                releaseRender();
+                                checkRenderNull(renderType);
+                                attachRenderKernel();
+                            }
+
 //                            // step1
 //                            formatVideoRender();
 //                            // 4
@@ -745,7 +751,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             checkVideoView();
                             // step4
                             boolean playWhenReady2 = isPlayWhenReady();
-                            MPLogUtil.log("VideoPlayerApiKernel => onEvent => event_video_start => playWhenReady = " + playWhenReady2);
                             if (!playWhenReady2) {
                                 pause();
                                 setPlayWhenReady(true);
@@ -780,7 +785,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                             boolean looping = isLooping();
                             boolean loopingRelease = isLoopingRelease();
-                            MPLogUtil.log("VideoPlayerApiKernel => onEvent = 播放结束 => looping = " + looping + ", loopingRelease = " + loopingRelease);
                             // loop1
                             if (looping && loopingRelease) {
                                 release(false, false);
@@ -800,12 +804,12 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                 @Override
                 public void onUpdateSizeChanged(int kernel, int videoWidth, int videoHeight, @PlayerType.RotationType.Value int rotation) {
-                    MPLogUtil.log("VideoPlayerApiKernel => onUpdateSizeChanged = kernel = " + kernel + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", rotation = " + rotation);
+                    MPLogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateSizeChanged = kernel = " + kernel + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", rotation = " + rotation);
                     setVideoFormat(videoWidth, videoHeight, rotation);
                 }
             });
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => initVideoKernel => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiKernel => setKernelEvent => " + e.getMessage());
         }
     }
 

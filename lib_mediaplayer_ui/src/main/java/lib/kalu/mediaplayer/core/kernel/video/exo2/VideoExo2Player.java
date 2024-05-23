@@ -341,7 +341,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
     @Override
     public void startDecoder(Context context, String url, boolean prepareAsync) {
-        MPLogUtil.log("VideoExo2Player => startDecoder => mExoPlayer = " + mExoPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -366,10 +365,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //                    MediaLogUtil.log("onEXOLoadCompleted => ");
 //                }
 //            });
-
-            MediaSource mediaSource = buildMediaSource(context, url, null, cacheType, cacheMax, cacheDir);
-            mExoPlayer.stop();
-            mExoPlayer.setMediaSource(mediaSource);
+            mExoPlayer.setMediaSource(buildMediaSource(context, url, null, cacheType, cacheMax, cacheDir));
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
             if (prepareAsync) {
                 mExoPlayer.prepare();
@@ -671,6 +667,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             mExoPlayer.stop();
+//            mExoPlayer.reset();
             mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoExo2Player => stop => " + e.getMessage());
@@ -826,7 +823,12 @@ public final class VideoExo2Player extends VideoBasePlayer {
             boolean useOkhttp = PlayerManager.getInstance().getConfig().isExoUseOkhttp();
             MPLogUtil.log("VideoExo2Player => createMediaSource => useOkhttp = " + useOkhttp);
             DataSource.Factory dataSourceFactory;
-            if (useOkhttp) {
+            try {
+                if(!useOkhttp)
+                    throw new Exception();
+                Class<?> clazz = Class.forName("okhttp3.OkHttpClient");
+                if (null == clazz)
+                    throw new Exception();
                 int connectTimeoutSeconds = PlayerManager.getInstance().getConfig().getConnectTimeoutSeconds();
                 MPLogUtil.log("VideoExo2Player => createMediaSource => connectTimeoutSeconds = " + connectTimeoutSeconds);
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -847,7 +849,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 OkHttpDataSource.Factory okHttpFactory = new OkHttpDataSource.Factory(okHttpClient);
                 okHttpFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
                 dataSourceFactory = okHttpFactory;
-            } else {
+            } catch (Exception e) {
                 DefaultHttpDataSource.Factory httpFactory = new DefaultHttpDataSource.Factory();
                 httpFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
                 httpFactory.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS);

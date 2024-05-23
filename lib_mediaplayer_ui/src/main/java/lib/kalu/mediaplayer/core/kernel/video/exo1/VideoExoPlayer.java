@@ -131,10 +131,8 @@ public final class VideoExoPlayer extends VideoBasePlayer {
 
     @Override
     public void startDecoder(Context context, String url, boolean prepareAsync) {
-        MPLogUtil.log("VideoExoPlayer => startDecoder => mExoPlayer = " + mExoPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_START);
-            mExoPlayer.setPlayWhenReady(false);
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
             mExoPlayer.prepare();
         } catch (IllegalArgumentException e) {
@@ -397,7 +395,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             mExoPlayer.setPlayWhenReady(false);
-            mExoPlayer.release();
+            mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoExoPlayer => stop => " + e.getMessage());
         }

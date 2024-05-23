@@ -1,11 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.video.exo2;
 
 
-
-
-import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactory;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 
 
 public final class VideoExo2PlayerFactory implements VideoKernelFactory<VideoExo2Player> {

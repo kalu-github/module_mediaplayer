@@ -329,6 +329,28 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
 //        }
 //    }
 
+    default void releaseRender() {
+        try {
+            ViewGroup renderGroup = getBaseVideoViewGroup();
+            if (null == renderGroup)
+                throw new Exception("warning: null renderGroup");
+            int childCount = renderGroup.getChildCount();
+            if (childCount == 0)
+                throw new Exception("warning: childCount == 0");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = renderGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof VideoRenderApi))
+                    continue;
+                ((VideoRenderApi) childAt).release();
+            }
+            renderGroup.removeAllViews();
+        } catch (Exception e) {
+            MPLogUtil.log("VideoPlayerApiRender => releaseRender => " + e.getMessage());
+        }
+    }
+
     default void checkRenderNull(int renderType) {
         try {
             ViewGroup renderGroup = getBaseVideoViewGroup();
@@ -343,20 +365,6 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             videoRender.setLayoutParams(layoutParams);
             renderGroup.addView((View) videoRender, 0);
             MPLogUtil.log("VideoPlayerApiRender => checkRenderNull => succ");
-//            // 1
-//            while (true) {
-//                int childCount = renderGroup.getChildCount();
-//                if (childCount == 0)
-//                    break;
-//                int index = childCount - 1;
-//                View childAt = renderGroup.getChildAt(index);
-//                if (null == childAt)
-//                    continue;
-//                if (!(childAt instanceof VideoRenderApi))
-//                    continue;
-//                ((VideoRenderApi) childAt).release();
-//                renderGroup.removeView(childAt);
-//            }
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiRender => attachVideoRender => " + e.getMessage());
         }

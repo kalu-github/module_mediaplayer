@@ -73,14 +73,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
     @Override
     public void startDecoder(Context context, String url, boolean prepareAsync) {
-        MPLogUtil.log("VideoFFmpegPlayer => startDecoder => mFFmpegPlayer = " + mFFmpegPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
             if (url == null || url.length() == 0)
                 throw new IllegalArgumentException("url error: " + url);
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_START);
-            mFFmpegPlayer.stop();
             mFFmpegPlayer.setDataSource(context, Uri.parse(url), null);
             mFFmpegPlayer.prepare();
         } catch (IllegalArgumentException e) {

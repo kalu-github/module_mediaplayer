@@ -75,7 +75,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (null != mIjkPlayer)
                 throw new Exception("warning: null != mIjkPlayer");
             mIjkPlayer = new IjkMediaPlayer();
-            mIjkPlayer.reset();
             mIjkPlayer.setLooping(false);
             // initOptionsIjk();
             setVolume(1F, 1F);
@@ -97,7 +96,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("url error: " + url);
             initListener();
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
-            mIjkPlayer.stop();
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
             if (prepareAsync) {
                 mIjkPlayer.prepareAsync();
@@ -387,6 +385,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.stop();
+            mIjkPlayer.reset();
+            mPrepared = false;
         } catch (Exception e) {
             MPLogUtil.log("VideoIjkPlayer => stop => " + e.getMessage());
         }
