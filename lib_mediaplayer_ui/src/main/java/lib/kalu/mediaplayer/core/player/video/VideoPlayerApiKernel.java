@@ -74,6 +74,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 2
             setScreenKeep(true);
             // 3
+            pause(true);
             stop(false);
             // 4
             int kernelType = playerBuilder.getKernel();
