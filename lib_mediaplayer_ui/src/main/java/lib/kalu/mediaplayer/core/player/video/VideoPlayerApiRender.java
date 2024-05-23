@@ -360,10 +360,10 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             if (childCount > 0)
                 throw new Exception("error: renderGroup childCount > 0");
             VideoRenderApi videoRender = VideoRenderFactoryManager.createRender(getBaseContext(), renderType);
-            setVideoRender(videoRender);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             videoRender.setLayoutParams(layoutParams);
             renderGroup.addView((View) videoRender, 0);
+            setVideoRender(videoRender);
             MPLogUtil.log("VideoPlayerApiRender => checkRenderNull => succ");
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiRender => attachVideoRender => " + e.getMessage());
