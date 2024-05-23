@@ -49,20 +49,20 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
 
     public VideoRenderTextureView(Context context) {
         super(context);
+        init();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         MPLogUtil.log("VideoRenderTextureView => onDetachedFromWindow => " + this);
         super.onDetachedFromWindow();
-        release();
+//        release();
     }
 
     @Override
     protected void onAttachedToWindow() {
         MPLogUtil.log("VideoRenderTextureView => onAttachedToWindow => " + this);
         super.onAttachedToWindow();
-        init();
     }
 
     @Override

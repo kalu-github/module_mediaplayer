@@ -44,19 +44,19 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 
     public VideoRenderSurfaceView(Context context) {
         super(context);
+        init();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        release();
+//        release();
         MPLogUtil.log("VideoRenderSurfaceView => onDetachedFromWindow => " + this);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        init();
         MPLogUtil.log("VideoRenderSurfaceView => onAttachedToWindow => " + this);
     }
 
