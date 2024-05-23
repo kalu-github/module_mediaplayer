@@ -6,6 +6,7 @@ import android.view.SurfaceHolder;
 
 
 import lib.kalu.mediaplayer.config.start.StartBuilder;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
@@ -25,6 +26,10 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
     void createDecoder(Context context, boolean logger, int seekParameters);
 
     void startDecoder(Context context, String url, boolean prepareAsync);
+
+    void setKernelApi(VideoKernelApiEvent eventApi);
+
+    void setPlayerApi(VideoPlayerApi playerApi);
 
     default void initOptionsIjk() {
     }

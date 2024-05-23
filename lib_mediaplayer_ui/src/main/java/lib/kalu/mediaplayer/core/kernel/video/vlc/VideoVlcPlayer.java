@@ -30,11 +30,6 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     private lib.kalu.vlc.widget.VlcPlayer mVlcPlayer;
     private lib.kalu.vlc.widget.OnVlcInfoChangeListener mVlcPlayerListener;
 
-    public VideoVlcPlayer(VideoPlayerApi playerApi, VideoKernelApiEvent eventApi) {
-        super(playerApi, eventApi);
-    }
-
-
     @Override
     public VideoVlcPlayer getPlayer() {
         return this;
@@ -57,7 +52,8 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void createDecoder(Context context, boolean logger, int seekParameters) {
         try {
-            releaseDecoder(false);
+            if (null != mVlcPlayer)
+                throw new Exception("warning: null != mVlcPlayer");
             mVlcPlayer = new VlcPlayer(context);
             setLooping(false);
             setVolume(1F, 1F);
@@ -75,6 +71,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
+            mVlcPlayer.stop();
             mVlcPlayer.setDataSource(Uri.parse(url), mPlayWhenReady);
             mVlcPlayer.play();
         } catch (Exception e) {

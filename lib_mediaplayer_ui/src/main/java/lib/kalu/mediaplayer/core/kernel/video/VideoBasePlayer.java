@@ -9,8 +9,13 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     private VideoKernelApiEvent eventApi;
     private VideoPlayerApi playerApi;
 
-    public VideoBasePlayer( VideoPlayerApi playerApi,  VideoKernelApiEvent eventApi) {
+    @Override
+    public void setPlayerApi(VideoPlayerApi playerApi) {
         this.playerApi = playerApi;
+    }
+
+    @Override
+    public void setKernelApi(VideoKernelApiEvent eventApi) {
         this.eventApi = eventApi;
     }
 

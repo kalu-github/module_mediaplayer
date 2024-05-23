@@ -45,10 +45,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
 
-    public VideoAndroidPlayer(VideoPlayerApi playerApi, VideoKernelApiEvent eventApi) {
-        super(playerApi, eventApi);
-    }
-
     @Override
     public VideoAndroidPlayer getPlayer() {
         return this;
@@ -71,11 +67,10 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     @Override
     public void createDecoder(Context context, boolean logger, int seekParameters) {
-        MPLogUtil.log("VideoAndroidPlayer => createDecoder => mMediaPlayer = " + mMediaPlayer);
         try {
-            releaseDecoder(false);
+            if (null != mMediaPlayer)
+                throw new Exception("warning: null == mMediaPlayer");
             mMediaPlayer = new MediaPlayer();
-            mMediaPlayer.reset();
             mMediaPlayer.setLooping(false);
             setVolume(1F, 1F);
         } catch (Exception e) {
@@ -83,15 +78,14 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
     @Override
     public void startDecoder(Context context, String url, boolean prepareAsync) {
         MPLogUtil.log("VideoAndroidPlayer => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
-            if (null == mMediaPlayer)
-                throw new Exception("mMediaPlayer error: null");
             if (url == null || url.length() == 0)
                 throw new IllegalArgumentException("url error: " + url);
+            if (null == mMediaPlayer)
+                throw new Exception("mMediaPlayer error: null");
             // 监测拉流超时
             new Thread(new Runnable() {
                 @Override
@@ -125,6 +119,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             }).start();
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
             initListener();
+            mMediaPlayer.stop();
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);
             if (prepareAsync) {
                 mMediaPlayer.prepareAsync();

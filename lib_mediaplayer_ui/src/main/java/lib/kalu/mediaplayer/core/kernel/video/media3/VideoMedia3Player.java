@@ -84,11 +84,6 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     private ExoPlayer mExoPlayer;
     private AnalyticsListener mAnalyticsListener;
 
-    public VideoMedia3Player( VideoPlayerApi playerApi,  VideoKernelApiEvent eventApi) {
-        super(playerApi, eventApi);
-    }
-
-    
     @Override
     public ExoPlayer getPlayer() {
         return mExoPlayer;
@@ -182,8 +177,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     @Override
     public void createDecoder( Context context,  boolean logger,  int seekParameters) {
         try {
-            // 1
-            releaseDecoder(false);
+            if (null != mExoPlayer)
+                throw new Exception("warning: null != mExoPlayer");
             // 2
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
             builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
@@ -372,6 +367,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 //                    MediaLogUtil.log("onEXOLoadCompleted => ");
 //                }
 //            });
+
+            mExoPlayer.stop();
 
             MediaSource mediaSource = buildMediaSource(context, url, null, cacheType, cacheMax, cacheDir);
             mExoPlayer.setMediaSource(mediaSource);

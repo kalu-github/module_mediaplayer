@@ -11,5 +11,5 @@ import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
  */
 
 public interface VideoKernelFactory<T extends VideoKernelApi> {
-    T createKernel( VideoPlayerApi playerApi,  VideoKernelApiEvent event);
+    T createKernel();
 }

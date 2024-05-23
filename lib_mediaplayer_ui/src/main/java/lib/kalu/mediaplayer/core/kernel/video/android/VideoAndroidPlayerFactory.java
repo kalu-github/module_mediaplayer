@@ -22,7 +22,7 @@ public class VideoAndroidPlayerFactory implements VideoKernelFactory<VideoAndroi
     }
 
     @Override
-    public VideoAndroidPlayer createKernel( VideoPlayerApi playerApi,  VideoKernelApiEvent event) {
-        return new VideoAndroidPlayer(playerApi, event);
+    public VideoAndroidPlayer createKernel() {
+        return new VideoAndroidPlayer();
     }
 }

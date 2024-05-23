@@ -55,7 +55,7 @@ public final class VideoKernelFactoryManager {
         }
     }
 
-    public static VideoKernelApi getKernel( VideoPlayerApi playerApi, @PlayerType.KernelType.Value int kernelType,  VideoKernelApiEvent event) {
-        return getFactory(kernelType).createKernel(playerApi, event);
+    public static VideoKernelApi getKernel(@PlayerType.KernelType.Value int kernelType) {
+        return getFactory(kernelType).createKernel();
     }
 }

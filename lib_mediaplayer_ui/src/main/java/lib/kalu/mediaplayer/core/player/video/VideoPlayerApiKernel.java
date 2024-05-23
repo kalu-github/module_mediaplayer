@@ -71,12 +71,24 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 1
             PlayerBuilder playerBuilder = PlayerManager.getInstance().getConfig();
             MPLogUtil.setLogger(playerBuilder);
+            // 2
+            setScreenKeep(true);
             // 3
-            checkVideoKernel();
+            pause(true);
+            // 4
+            int kernelType = playerBuilder.getKernel();
+            boolean log = playerBuilder.isLog();
+            int seekParameters = playerBuilder.getExoSeekParameters();
+            checkKernelNull(log, kernelType, seekParameters);
             // 5
-            initVideoKernel(startBuilder, playerBuilder);
+            int renderType = playerBuilder.getRender();
+            checkRenderNull(renderType);
             // 6
-            initVideoDecoder(startBuilder, playUrl);
+            attachRenderKernel();
+            // 7
+            setEvent(startBuilder);
+            // 4
+            startDecoder(startBuilder, playUrl);
             // 8
             updatePlayerData(startBuilder, playUrl);
         } catch (Exception e) {
@@ -477,17 +489,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /*********************/
 
-    default void checkVideoKernel() {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("check kernel is null");
-            release(false, false);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => checkVideoKernel => " + e.getMessage());
-        }
-    }
-
     default void resumeVideoKernel(boolean ignore) {
         setPlayWhenReady(true);
         try {
@@ -581,15 +582,14 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void initVideoDecoder(StartBuilder bundle, String playUrl) {
+    default void startDecoder(StartBuilder bundle, String playUrl) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
             kernel.initDecoder(getBaseContext(), playUrl, bundle);
-            setScreenKeep(true);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => initVideoDecoder => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiKernel => startDecoder => " + e.getMessage());
         }
     }
 
@@ -599,17 +599,32 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /***************************/
 
-    default void setVideoKernel(@PlayerType.KernelType.Value int v) {
+//    default void setVideoKernelType(@PlayerType.KernelType.Value int v) {
+//        try {
+//            PlayerManager.getInstance().setKernel(v);
+//        } catch (Exception e) {
+//        }
+//    }
+    default void checkKernelNull(boolean enableLogger, int kernelType, int seekParameters) {
         try {
-            PlayerManager.getInstance().setKernel(v);
+            VideoKernelApi videoKernel = getVideoKernel();
+            if (null != videoKernel)
+                throw new Exception("warning: null != videoKernel");
+            VideoKernelApi kernelApi = VideoKernelFactoryManager.getKernel(kernelType);
+            kernelApi.createDecoder(getBaseContext(), enableLogger, seekParameters);
+            setVideoKernel(kernelApi);
         } catch (Exception e) {
+            MPLogUtil.log("VideoPlayerApiKernel => checkKernelNull => " + e.getMessage());
         }
     }
 
-    default void initVideoKernel(StartBuilder builder, PlayerBuilder playerBuilder) {
+    default void setEvent(StartBuilder builder) {
         try {
-            int type = PlayerManager.getInstance().getConfig().getKernel();
-            VideoKernelApi kernel = VideoKernelFactoryManager.getKernel((VideoPlayerApi) this, type, new VideoKernelApiEvent() {
+            VideoKernelApi videoKernel = getVideoKernel();
+            if (null == videoKernel)
+                throw new Exception("");
+            videoKernel.setPlayerApi((VideoPlayerApi) this);
+            videoKernel.setKernelApi(new VideoKernelApiEvent() {
 
                 @Override
                 public void onUpdateTimeMillis(boolean isLooping, long max, long seek, long position, long duration) {
@@ -722,11 +737,11 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                            formatVideoRender();
 //                            // 4
 //                             initVideoRender();
-                            // 7
-                            attachVideoRender();
-                            // 8
-                            attachVideoRenderKernel();
-                            // step3
+//                            // 7
+//                            attachVideoRender();
+//                            // 8
+//                            attachVideoRenderKernel();
+//                            // step3
                             checkVideoView();
                             // step4
                             boolean playWhenReady2 = isPlayWhenReady();
@@ -789,25 +804,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     setVideoFormat(videoWidth, videoHeight, rotation);
                 }
             });
-            // 4
-            setVideoKernel(kernel);
-            // 5
-            createVideoDecoder(playerBuilder);
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiKernel => initVideoKernel => " + e.getMessage());
-        }
-    }
-
-    default void createVideoDecoder(PlayerBuilder config) {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
-            boolean log = config.isLog();
-            int seekParameters = config.getExoSeekParameters();
-            kernel.createDecoder(getBaseContext(), log, seekParameters);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => createVideoDecoder => " + e.getMessage());
         }
     }
 

@@ -18,7 +18,7 @@ public class VideoFFmpegPlayerFactory implements VideoKernelFactory<VideoFFmpegP
     }
 
     @Override
-    public VideoFFmpegPlayer createKernel( VideoPlayerApi playerApi,  VideoKernelApiEvent event) {
-        return new VideoFFmpegPlayer(playerApi, event);
+    public VideoFFmpegPlayer createKernel() {
+        return new VideoFFmpegPlayer();
     }
 }

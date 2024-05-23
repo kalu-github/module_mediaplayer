@@ -18,7 +18,7 @@ public final class VideoMedia3PlayerFactory implements VideoKernelFactory<VideoM
     }
 
     @Override
-    public VideoMedia3Player createKernel( VideoPlayerApi playerApi,  VideoKernelApiEvent event) {
-        return new VideoMedia3Player(playerApi, event);
+    public VideoMedia3Player createKernel() {
+        return new VideoMedia3Player();
     }
 }

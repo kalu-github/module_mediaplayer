@@ -85,27 +85,28 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
     }
 
     default boolean startFull(boolean rememberPlaying, boolean resetSurface) {
-        try {
-            boolean isPhoneWindow = isParentEqualsPhoneWindow();
-            if (isPhoneWindow)
-                throw new Exception("always full");
-            requestFocusFull();
-            boolean b = switchToDecorView(true);
-            if (b) {
-                if (resetSurface) {
-                    toogleVideoRender();
-                }
-                callPlayerEvent(PlayerType.StateType.STATE_FULL_START);
-                callPlayerWindow(PlayerType.WindowType.FULL);
-            }
-            if (rememberPlaying) {
-                checkPlaying();
-            }
-            return b;
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => startFull => " + e.getMessage());
-            return false;
-        }
+//        try {
+//            boolean isPhoneWindow = isParentEqualsPhoneWindow();
+//            if (isPhoneWindow)
+//                throw new Exception("always full");
+//            requestFocusFull();
+//            boolean b = switchToDecorView(true);
+//            if (b) {
+//                if (resetSurface) {
+//                    toogleVideoRender();
+//                }
+//                callPlayerEvent(PlayerType.StateType.STATE_FULL_START);
+//                callPlayerWindow(PlayerType.WindowType.FULL);
+//            }
+//            if (rememberPlaying) {
+//                checkPlaying();
+//            }
+//            return b;
+//        } catch (Exception e) {
+//            MPLogUtil.log("VideoPlayerApiRender => startFull => " + e.getMessage());
+//            return false;
+//        }
+        return false;
     }
 
     default boolean stopFull() {
@@ -113,65 +114,68 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
     }
 
     default boolean stopFull(boolean resetSurface) {
-        try {
-            boolean isFull = isFull();
-            if (!isFull)
-                throw new Exception("not full");
-            boolean b = switchToPlayerLayout();
-            switchPlaying();
-            if (b) {
-                if (resetSurface) {
-                    toogleVideoRender();
-                }
-                cleanFocusFull();
-                callPlayerEvent(PlayerType.StateType.STATE_FULL_STOP);
-                callPlayerWindow(PlayerType.WindowType.NORMAL);
-            }
-            return b;
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => stopFull => " + e.getMessage());
-            return false;
-        }
+//        try {
+//            boolean isFull = isFull();
+//            if (!isFull)
+//                throw new Exception("not full");
+//            boolean b = switchToPlayerLayout();
+//            switchPlaying();
+//            if (b) {
+//                if (resetSurface) {
+//                    toogleVideoRender();
+//                }
+//                cleanFocusFull();
+//                callPlayerEvent(PlayerType.StateType.STATE_FULL_STOP);
+//                callPlayerWindow(PlayerType.WindowType.NORMAL);
+//            }
+//            return b;
+//        } catch (Exception e) {
+//            MPLogUtil.log("VideoPlayerApiRender => stopFull => " + e.getMessage());
+//            return false;
+//        }
+        return false;
     }
 
     default boolean startFloat(boolean rememberPlaying) {
-        try {
-            boolean isPhoneWindow = isParentEqualsPhoneWindow();
-            if (isPhoneWindow)
-                throw new Exception("always Float");
-            boolean switchToDecorView = switchToDecorView(false);
-            if (switchToDecorView) {
-                toogleVideoRender();
-                callPlayerEvent(PlayerType.StateType.STATE_FLOAT_START);
-                callPlayerWindow(PlayerType.WindowType.FLOAT);
-            }
-            if (rememberPlaying) {
-                checkPlaying();
-            }
-            return switchToDecorView;
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => startFloat => " + e.getMessage());
-            return false;
-        }
+//        try {
+//            boolean isPhoneWindow = isParentEqualsPhoneWindow();
+//            if (isPhoneWindow)
+//                throw new Exception("always Float");
+//            boolean switchToDecorView = switchToDecorView(false);
+//            if (switchToDecorView) {
+//                toogleVideoRender();
+//                callPlayerEvent(PlayerType.StateType.STATE_FLOAT_START);
+//                callPlayerWindow(PlayerType.WindowType.FLOAT);
+//            }
+//            if (rememberPlaying) {
+//                checkPlaying();
+//            }
+//            return switchToDecorView;
+//        } catch (Exception e) {
+//            MPLogUtil.log("VideoPlayerApiRender => startFloat => " + e.getMessage());
+//            return false;
+//        }
+        return false;
     }
 
     default boolean stopFloat() {
-        try {
-            boolean isFloat = isFloat();
-            if (!isFloat)
-                throw new Exception("not Float");
-            boolean switchToPlayerLayout = switchToPlayerLayout();
-            switchPlaying();
-            if (switchToPlayerLayout) {
-                toogleVideoRender();
-                callPlayerEvent(PlayerType.StateType.STATE_FLOAT_STOP);
-                callPlayerWindow(PlayerType.WindowType.NORMAL);
-            }
-            return switchToPlayerLayout;
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => stopFloat => " + e.getMessage());
-            return false;
-        }
+//        try {
+//            boolean isFloat = isFloat();
+//            if (!isFloat)
+//                throw new Exception("not Float");
+//            boolean switchToPlayerLayout = switchToPlayerLayout();
+//            switchPlaying();
+//            if (switchToPlayerLayout) {
+//                toogleVideoRender();
+//                callPlayerEvent(PlayerType.StateType.STATE_FLOAT_STOP);
+//                callPlayerWindow(PlayerType.WindowType.NORMAL);
+//            }
+//            return switchToPlayerLayout;
+//        } catch (Exception e) {
+//            MPLogUtil.log("VideoPlayerApiRender => stopFloat => " + e.getMessage());
+//            return false;
+//        }
+        return false;
     }
 
     default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
@@ -325,40 +329,40 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
 //        }
 //    }
 
-    default void attachVideoRender() {
+    default void checkRenderNull(int renderType) {
         try {
             ViewGroup renderGroup = getBaseVideoViewGroup();
             if (null == renderGroup)
                 throw new Exception("renderGroup error: null");
-            // 1
-            while (true) {
-                int childCount = renderGroup.getChildCount();
-                if (childCount == 0)
-                    break;
-                int index = childCount - 1;
-                View childAt = renderGroup.getChildAt(index);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof VideoRenderApi))
-                    continue;
-                ((VideoRenderApi) childAt).release();
-                renderGroup.removeView(childAt);
-            }
-            // 2
-            int render = PlayerManager.getInstance().getConfig().getRender();
-            VideoRenderApi videoRender = VideoRenderFactoryManager.createRender(getBaseContext(), render);
+            int childCount = renderGroup.getChildCount();
+            if (childCount > 0)
+                throw new Exception("error: renderGroup childCount > 0");
+            VideoRenderApi videoRender = VideoRenderFactoryManager.createRender(getBaseContext(), renderType);
             setVideoRender(videoRender);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             videoRender.setLayoutParams(layoutParams);
-            ViewGroup viewGroup = getBaseVideoViewGroup();
-            viewGroup.addView((View) videoRender, 0);
-            MPLogUtil.log("VideoPlayerApiRender => attachVideoRender => succ");
+            renderGroup.addView((View) videoRender, 0);
+            MPLogUtil.log("VideoPlayerApiRender => checkRenderNull => succ");
+//            // 1
+//            while (true) {
+//                int childCount = renderGroup.getChildCount();
+//                if (childCount == 0)
+//                    break;
+//                int index = childCount - 1;
+//                View childAt = renderGroup.getChildAt(index);
+//                if (null == childAt)
+//                    continue;
+//                if (!(childAt instanceof VideoRenderApi))
+//                    continue;
+//                ((VideoRenderApi) childAt).release();
+//                renderGroup.removeView(childAt);
+//            }
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiRender => attachVideoRender => " + e.getMessage());
         }
     }
 
-    default void attachVideoRenderKernel() {
+    default void attachRenderKernel() {
         try {
             VideoRenderApi videoRender = getVideoRender();
             if (null == videoRender)
@@ -368,35 +372,35 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
                 throw new Exception("error: null == videoKernel");
             videoRender.setKernel(videoKernel);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => attachVideoRenderKernel => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiRender => attachRenderKernel => " + e.getMessage());
         }
     }
 
-    default boolean toogleVideoRender() {
-        try {
-            PlayerBuilder config = PlayerManager.getInstance().getConfig();
-            if (null == config)
-                throw new Exception("config warning: null");
-            int videoRender = config.getRender();
-            if (videoRender != PlayerType.RenderType.SURFACE_VIEW)
-                throw new Exception("videoRender warning: not SURFACE_VIEW");
-            int videoKernel = config.getKernel();
-            if (videoKernel != PlayerType.KernelType.IJK_MEDIACODEC && videoKernel != PlayerType.KernelType.EXO_V1 && videoKernel != PlayerType.KernelType.EXO_V2)
-                throw new Exception("videoKernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
-            if (!(this instanceof VideoPlayerApiKernel))
-                throw new Exception("videoRender warning: not instanceof PlayerApiKernel");
-            VideoRenderApi videoRenderApi = getVideoRender();
-            if (null == videoRenderApi)
-                throw new Exception("videoRenderApi error: null");
-            // TODO: 2024/5/15
-            attachVideoRenderKernel();
-            updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 400 : 400);
-            return true;
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => toogleVideoRender => " + e.getMessage());
-            return false;
-        }
-    }
+//    default boolean toogleVideoRender() {
+//        try {
+//            PlayerBuilder config = PlayerManager.getInstance().getConfig();
+//            if (null == config)
+//                throw new Exception("config warning: null");
+//            int videoRender = config.getRender();
+//            if (videoRender != PlayerType.RenderType.SURFACE_VIEW)
+//                throw new Exception("videoRender warning: not SURFACE_VIEW");
+//            int videoKernel = config.getKernel();
+//            if (videoKernel != PlayerType.KernelType.IJK_MEDIACODEC && videoKernel != PlayerType.KernelType.EXO_V1 && videoKernel != PlayerType.KernelType.EXO_V2)
+//                throw new Exception("videoKernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
+//            if (!(this instanceof VideoPlayerApiKernel))
+//                throw new Exception("videoRender warning: not instanceof PlayerApiKernel");
+//            VideoRenderApi videoRenderApi = getVideoRender();
+//            if (null == videoRenderApi)
+//                throw new Exception("videoRenderApi error: null");
+//            // TODO: 2024/5/15
+//            attachVideoRenderKernel();
+//            updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 400 : 400);
+//            return true;
+//        } catch (Exception e) {
+//            MPLogUtil.log("VideoPlayerApiRender => toogleVideoRender => " + e.getMessage());
+//            return false;
+//        }
+//    }
 
     void checkVideoView();
 }

@@ -38,11 +38,6 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     private boolean mPlayWhenReady = true;
     private boolean mPrepared = false;
 
-    public VideoFFmpegPlayer(VideoPlayerApi playerApi, VideoKernelApiEvent eventApi) {
-        super(playerApi, eventApi);
-    }
-
-
     @Override
     public VideoFFmpegPlayer getPlayer() {
         return this;
@@ -65,7 +60,8 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void createDecoder(Context context, boolean logger, int seekParameters) {
         try {
-            releaseDecoder(false);
+            if (null != mFFmpegPlayer)
+                throw new Exception("warning: null != mFFmpegPlayer");
             mFFmpegPlayer = new FFmpegPlayer();
             mFFmpegPlayer.setLooping(false);
             setVolume(1F, 1F);
@@ -84,7 +80,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             if (url == null || url.length() == 0)
                 throw new IllegalArgumentException("url error: " + url);
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_START);
-            mFFmpegPlayer.reset();
+            mFFmpegPlayer.stop();
             mFFmpegPlayer.setDataSource(context, Uri.parse(url), null);
             mFFmpegPlayer.prepare();
         } catch (IllegalArgumentException e) {

@@ -22,7 +22,7 @@ public class VideoIjkPlayerFactory implements VideoKernelFactory<VideoIjkPlayer>
     }
 
     @Override
-    public VideoIjkPlayer createKernel( VideoPlayerApi playerApi,  VideoKernelApiEvent event) {
-        return new VideoIjkPlayer(mUseMediaCodec, playerApi, event);
+    public VideoIjkPlayer createKernel() {
+        return new VideoIjkPlayer(mUseMediaCodec);
     }
 }

@@ -18,7 +18,7 @@ public class VideoVlcPlayerFactory implements VideoKernelFactory<VideoVlcPlayer>
     }
 
     @Override
-    public VideoVlcPlayer createKernel( VideoPlayerApi playerApi,  VideoKernelApiEvent event) {
-        return new VideoVlcPlayer(playerApi, event);
+    public VideoVlcPlayer createKernel() {
+        return new VideoVlcPlayer();
     }
 }

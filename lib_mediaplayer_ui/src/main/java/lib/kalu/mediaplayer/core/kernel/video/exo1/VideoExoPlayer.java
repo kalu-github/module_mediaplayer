@@ -27,11 +27,6 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     private boolean mPrepared = false;
     private DemoPlayer mExoPlayer;
 
-    public VideoExoPlayer(VideoPlayerApi playerApi, VideoKernelApiEvent eventApi) {
-        super(playerApi, eventApi);
-    }
-
-
     @Override
     public DemoPlayer getPlayer() {
         return mExoPlayer;
@@ -139,6 +134,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
         MPLogUtil.log("VideoExoPlayer => startDecoder => mExoPlayer = " + mExoPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_START);
+            mExoPlayer.setPlayWhenReady(false);
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
             mExoPlayer.prepare();
         } catch (IllegalArgumentException e) {

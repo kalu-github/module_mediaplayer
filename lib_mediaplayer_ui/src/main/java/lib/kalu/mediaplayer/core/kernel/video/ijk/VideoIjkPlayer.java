@@ -46,11 +46,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     private boolean mUseMediaCodec;
     private IjkMediaPlayer mIjkPlayer = null;
 
-    public VideoIjkPlayer(boolean useMediaCodec, VideoPlayerApi musicApi, VideoKernelApiEvent eventApi) {
-        super(musicApi, eventApi);
+    public VideoIjkPlayer(boolean useMediaCodec) {
         mUseMediaCodec = useMediaCodec;
     }
-
 
     @Override
     public VideoIjkPlayer getPlayer() {
@@ -74,7 +72,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void createDecoder(Context context, boolean logger, int seekParameters) {
         try {
-            releaseDecoder(false);
+            if (null != mIjkPlayer)
+                throw new Exception("warning: null != mIjkPlayer");
             mIjkPlayer = new IjkMediaPlayer();
             mIjkPlayer.reset();
             mIjkPlayer.setLooping(false);
@@ -98,6 +97,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("url error: " + url);
             initListener();
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
+            mIjkPlayer.stop();
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
             if (prepareAsync) {
                 mIjkPlayer.prepareAsync();
