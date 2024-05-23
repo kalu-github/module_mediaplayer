@@ -1,8 +1,11 @@
 package lib.kalu.mediaplayer.core.player.video;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemClock;
 import android.view.View;
 
 import androidx.annotation.FloatRange;
@@ -644,6 +647,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     }
                 }
 
+                @SuppressLint("StaticFieldLeak")
                 @Override
                 public void onEvent(int kernel, int event) {
                     MPLogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
@@ -729,25 +733,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 }
                             }
                             callPlayerEvent(PlayerType.StateType.STATE_START);
-
-                            if (kernelType == PlayerType.KernelType.IJK) {
-                                releaseRender();
-                                checkRenderNull(renderType);
-                                attachRenderKernel();
-                            } else if (kernelType == PlayerType.KernelType.IJK_MEDIACODEC) {
-                                releaseRender();
-                                checkRenderNull(renderType);
-                                attachRenderKernel();
-                            }
-
-//                            // step1
-//                            formatVideoRender();
-//                            // 4
-//                             initVideoRender();
-//                            // 7
-//                            attachVideoRender();
-//                            // 8
-//                            attachVideoRenderKernel();
+                            // ijk需要刷新RenderView
+                            updateRenderView(renderType, kernelType, 100);
 //                            // step3
                             checkVideoView();
                             // step4

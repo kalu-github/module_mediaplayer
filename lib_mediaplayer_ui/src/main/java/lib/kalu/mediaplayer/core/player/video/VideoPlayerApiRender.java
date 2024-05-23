@@ -1,5 +1,10 @@
 package lib.kalu.mediaplayer.core.player.video;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -364,9 +369,8 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             videoRender.setLayoutParams(layoutParams);
             renderGroup.addView((View) videoRender, 0);
             setVideoRender(videoRender);
-            MPLogUtil.log("VideoPlayerApiRender => checkRenderNull => succ");
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => attachVideoRender => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiRender => checkRenderNull => " + e.getMessage());
         }
     }
 
@@ -381,6 +385,57 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             videoRender.setKernel(videoKernel);
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiRender => attachRenderKernel => " + e.getMessage());
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    default void updateRenderView(int renderType, int kernelType, long dealyTime) {
+        try {
+            if (kernelType != PlayerType.KernelType.IJK && kernelType != PlayerType.KernelType.IJK_MEDIACODEC)
+                throw new Exception("warning: not need updateRenderView");
+            // 1
+            try {
+                ViewGroup renderGroup = getBaseVideoViewGroup();
+                if (null == renderGroup)
+                    throw new Exception("renderGroup error: null");
+                int childCount = renderGroup.getChildCount();
+                if (childCount <= 0)
+                    throw new Exception("error: renderGroup childCount <= 0");
+                VideoRenderApi videoRender = VideoRenderFactoryManager.createRender(getBaseContext(), renderType);
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                videoRender.setLayoutParams(layoutParams);
+                renderGroup.addView((View) videoRender, childCount);
+                setVideoRender(videoRender);
+            } catch (Exception e) {
+            }
+            // 2
+            attachRenderKernel();
+            // 3
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        ViewGroup renderGroup = getBaseVideoViewGroup();
+                        if (null == renderGroup)
+                            throw new Exception("warning: null renderGroup");
+                        int childCount = renderGroup.getChildCount();
+                        if (childCount == 0)
+                            throw new Exception("warning: childCount == 0");
+                        while (renderGroup.getChildCount() > 1) {
+                            View childAt = renderGroup.getChildAt(0);
+                            if (null == childAt)
+                                continue;
+                            if (!(childAt instanceof VideoRenderApi))
+                                continue;
+                            ((VideoRenderApi) childAt).release();
+                            renderGroup.removeView(childAt);
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            }, dealyTime);
+        } catch (Exception e) {
+            MPLogUtil.log("VideoPlayerApiRender => updateRenderView => " + e.getMessage());
         }
     }
 
