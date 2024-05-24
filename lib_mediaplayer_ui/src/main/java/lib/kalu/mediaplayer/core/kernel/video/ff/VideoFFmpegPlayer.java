@@ -2,14 +2,11 @@ package lib.kalu.mediaplayer.core.kernel.video.ff;
 
 import android.content.Context;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
-
 
 import lib.kalu.ffplayer.FFmpegPlayer;
 import lib.kalu.ffplayer.inter.OnBufferingUpdateListener;
@@ -20,9 +17,7 @@ import lib.kalu.ffplayer.inter.OnPreparedListener;
 import lib.kalu.ffplayer.inter.OnSeekCompleteListener;
 import lib.kalu.ffplayer.inter.OnVideoSizeChangedListener;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
@@ -72,7 +67,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context,  boolean reset, String url, boolean prepareAsync) {
+    public void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");

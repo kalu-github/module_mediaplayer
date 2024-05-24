@@ -7,11 +7,8 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
 
-
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import lib.kalu.vlc.widget.OnVlcInfoChangeListener;
 import lib.kalu.vlc.widget.VlcPlayer;
@@ -63,7 +60,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context,  boolean reset, String url, boolean prepareAsync) {
+    public void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync) {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");

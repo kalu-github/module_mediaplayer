@@ -1,15 +1,12 @@
 package lib.kalu.mediaplayer.core.kernel.video.exo2;
 
 import android.content.Context;
-import android.media.browse.MediaBrowser;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
-
-
 import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.C;
@@ -19,7 +16,6 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.MediaMetadata;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -27,16 +23,13 @@ import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.Tracks;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
-import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.LoadEventInfo;
 import com.google.android.exoplayer2.source.MediaLoadData;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
@@ -53,7 +46,6 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Clock;
-import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.video.VideoSize;
 import com.google.common.collect.ImmutableList;
 
@@ -65,21 +57,14 @@ import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.SocketAddress;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
@@ -340,7 +325,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context,  boolean reset, String url, boolean prepareAsync) {
+    public void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -365,7 +350,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //                    MediaLogUtil.log("onEXOLoadCompleted => ");
 //                }
 //            });
-            mExoPlayer.setMediaSource(buildMediaSource(context, url, null, cacheType, cacheMax, cacheDir));
+            mExoPlayer.setMediaSource(buildMediaSource(context, connectTimeout, url, null, cacheType, cacheMax, cacheDir));
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
             if (prepareAsync) {
                 mExoPlayer.prepare();
@@ -734,6 +719,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     /************************/
 
     public MediaSource buildMediaSource(Context context,
+                                        int timeout,
                                         String mediaUrl,
                                         @Nullable String subtitleUrl,
                                         @PlayerType.CacheType int cacheType,
@@ -829,10 +815,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 Class<?> clazz = Class.forName("okhttp3.OkHttpClient");
                 if (null == clazz)
                     throw new Exception();
-                int connectTimeoutSeconds = PlayerManager.getInstance().getConfig().getConnectTimeoutSeconds();
-                MPLogUtil.log("VideoExo2Player => createMediaSource => connectTimeoutSeconds = " + connectTimeoutSeconds);
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                        .connectTimeout(connectTimeoutSeconds, TimeUnit.SECONDS)
+                        .connectTimeout(timeout, TimeUnit.MILLISECONDS)
                         .connectionPool(new ConnectionPool(10, 60, TimeUnit.MINUTES))
                         .retryOnConnectionFailure(true)
                         .proxySelector(new ProxySelector() { // 禁止抓包

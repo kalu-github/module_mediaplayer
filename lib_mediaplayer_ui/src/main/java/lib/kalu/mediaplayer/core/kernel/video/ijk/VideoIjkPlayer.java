@@ -8,10 +8,12 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
 
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import lib.kalu.ijkplayer.IMediaPlayer;
+import lib.kalu.ijkplayer.IjkMediaPlayer;
+import lib.kalu.ijkplayer.IjkTimedText;
 import lib.kalu.ijkplayer.inter.OnBufferingUpdateListener;
 import lib.kalu.ijkplayer.inter.OnCompletionListener;
 import lib.kalu.ijkplayer.inter.OnErrorListener;
@@ -21,16 +23,11 @@ import lib.kalu.ijkplayer.inter.OnPreparedListener;
 import lib.kalu.ijkplayer.inter.OnSeekCompleteListener;
 import lib.kalu.ijkplayer.inter.OnTimedTextListener;
 import lib.kalu.ijkplayer.inter.OnVideoSizeChangedListener;
-import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
-import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
-import lib.kalu.mediaplayer.util.MPLogUtil;
-import lib.kalu.ijkplayer.IMediaPlayer;
-import lib.kalu.ijkplayer.IjkMediaPlayer;
-import lib.kalu.ijkplayer.IjkTimedText;
 import lib.kalu.ijkplayer.misc.IMediaFormat;
 import lib.kalu.ijkplayer.misc.IjkTrackInfo;
+import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
 public final class VideoIjkPlayer extends VideoBasePlayer {
@@ -87,7 +84,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context,  boolean reset, String url, boolean prepareAsync) {
+    public void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");

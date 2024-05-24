@@ -6,13 +6,10 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
 
-
 import com.google.android.exoplayer.ExoPlayer;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import tv.kalu.android.exoplayer.player.DemoPlayer;
 
@@ -130,7 +127,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, boolean reset, String url, boolean prepareAsync) {
+    public void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync) {
         try {
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_START);
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);

@@ -7,8 +7,6 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
-
-
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
 import androidx.media3.common.Format;
@@ -60,10 +58,7 @@ import java.util.concurrent.TimeUnit;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.core.kernel.video.exo2.VideoExo2PlayerSimpleCache;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
@@ -341,7 +336,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, boolean reset, String url, boolean prepareAsync) {
+    public void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -367,7 +362,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 //                }
 //            });
 
-            MediaSource mediaSource = buildMediaSource(context, url, null, cacheType, cacheMax, cacheDir);
+            MediaSource mediaSource = buildMediaSource(context, connectTimeout, url, null, cacheType, cacheMax, cacheDir);
             mExoPlayer.setMediaSource(mediaSource);
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
             if (prepareAsync) {
@@ -690,6 +685,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     /************************/
 
     public MediaSource buildMediaSource(Context context,
+                                        int timeout,
                                         String mediaUrl,
                                         @Nullable String subtitleUrl,
                                         @PlayerType.CacheType int cacheType,
@@ -779,11 +775,14 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             boolean useOkhttp = PlayerManager.getInstance().getConfig().isExoUseOkhttp();
             MPLogUtil.log("VideoMedia3Player => createMediaSource => useOkhttp = " + useOkhttp);
             DataSource.Factory dataSourceFactory;
-            if (useOkhttp) {
-                int connectTimeoutSeconds = PlayerManager.getInstance().getConfig().getConnectTimeoutSeconds();
-                MPLogUtil.log("VideoMedia3Player => createMediaSource => connectTimeoutSeconds = " + connectTimeoutSeconds);
+            try {
+                if (!useOkhttp)
+                    throw new Exception();
+                Class<?> clazz = Class.forName("okhttp3.OkHttpClient");
+                if (null == clazz)
+                    throw new Exception();
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                        .connectTimeout(connectTimeoutSeconds, TimeUnit.SECONDS)
+                        .connectTimeout(timeout, TimeUnit.MILLISECONDS)
                         .connectionPool(new ConnectionPool(10, 60, TimeUnit.MINUTES))
                         .retryOnConnectionFailure(true)
                         .proxySelector(new ProxySelector() { // 禁止抓包
@@ -800,7 +799,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 OkHttpDataSource.Factory okHttpFactory = new OkHttpDataSource.Factory(okHttpClient);
                 okHttpFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
                 dataSourceFactory = okHttpFactory;
-            } else {
+            } catch (Exception e) {
                 DefaultHttpDataSource.Factory httpFactory = new DefaultHttpDataSource.Factory();
                 httpFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
                 httpFactory.setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS);

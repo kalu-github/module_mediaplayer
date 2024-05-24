@@ -33,8 +33,8 @@ public final class PlayerManager {
         return this;
     }
 
-    public PlayerManager setConnectTimeoutSeconds( int v) {
-        this.mPlayerBuilder.setConnectTimeoutSeconds(v);
+    public PlayerManager setConnectTimeout( int v) {
+        this.mPlayerBuilder.setConnectTimeout(v);
         return this;
     }
 

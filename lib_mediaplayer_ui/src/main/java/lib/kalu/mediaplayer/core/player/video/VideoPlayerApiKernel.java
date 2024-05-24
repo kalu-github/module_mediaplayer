@@ -1,15 +1,12 @@
 package lib.kalu.mediaplayer.core.player.video;
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.SystemClock;
 import android.view.View;
 
 import androidx.annotation.FloatRange;
-
 
 import org.json.JSONArray;
 
@@ -21,7 +18,6 @@ import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
-import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 interface VideoPlayerApiKernel extends VideoPlayerApiListener,
@@ -92,9 +88,11 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 6
             attachRenderKernel();
             // 7
-            setKernelEvent(startBuilder, kernelType, renderType, reset);
+            int connectTimeout = playerBuilder.getConnectTimeout();
+            boolean retry = playerBuilder.getBufferingTimeoutRetry();
+            setKernelEvent(startBuilder, kernelType, renderType, reset, retry, connectTimeout);
             // 4
-            startDecoder(startBuilder, playUrl, reset);
+            startDecoder(startBuilder, playUrl, reset, connectTimeout);
             // 8
             updatePlayerData(startBuilder, playUrl);
         } catch (Exception e) {
@@ -567,12 +565,12 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void startDecoder(StartBuilder bundle, String playUrl, boolean reset) {
+    default void startDecoder(StartBuilder bundle, String playUrl, boolean reset, int connectTimeout) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            kernel.initDecoder(getBaseContext(), reset, playUrl, bundle);
+            kernel.initDecoder(getBaseContext(), reset, connectTimeout, playUrl, bundle);
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiKernel => startDecoder => " + e.getMessage());
         }
@@ -613,7 +611,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void setKernelEvent(StartBuilder builder, int kernelType, int renderType, boolean reset) {
+    default void setKernelEvent(StartBuilder builder, int kernelType, int renderType, boolean reset, boolean retry, int connectTimeout) {
 
         try {
             VideoKernelApi videoKernel = getVideoKernel();
@@ -664,12 +662,12 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         // 缓冲开始
                         case PlayerType.EventType.EVENT_BUFFERING_START:
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
-                            startCheckBuffering();
+                            getVideoKernel().startCheckLoadBufferingTimeout(reset, retry, connectTimeout);
                             break;
                         // 缓冲结束
                         case PlayerType.EventType.EVENT_BUFFERING_STOP:
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
-                            stopCheckBuffering();
+                            getVideoKernel().stopCheckLoadBufferingTimeout();
                             break;
 //                        // 播放开始
 //                        case PlayerType.EventType.EVENT_VIDEO_START_903:
@@ -857,68 +855,4 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //            return null;
 //        }
 //    }
-
-    /*******************/
-
-
-    Handler[] mHandlerBuffering = new Handler[1];
-
-    default void startCheckBuffering() {
-        try {
-            stopCheckBuffering();
-            boolean bufferingTimeoutRetry = PlayerManager.getInstance().getConfig().getBufferingTimeoutRetry();
-            if (!bufferingTimeoutRetry)
-                throw new Exception("bufferingTimeoutRetry warning: false");
-            int connectTimeoutSeconds = PlayerManager.getInstance().getConfig().getConnectTimeoutSeconds();
-            mHandlerBuffering[0] = new Handler(Looper.getMainLooper()) {
-                @Override
-                public void handleMessage(Message msg) {
-                    super.handleMessage(msg);
-                    if (msg.what == 7677) {
-                        if (bufferingTimeoutRetry) {
-                            long seek;
-                            try {
-                                if (isLive()) {   // 直播
-                                    seek = 0;
-                                } else {  // 点播
-                                    seek = getPosition();
-                                }
-                            } catch (Exception e) {
-                                seek = 0;
-                                MPLogUtil.log("VideoPlayerApiKernel => startCheckBuffering => handleMessage => " + e.getMessage());
-                            }
-                            if (seek < 0) {
-                                seek = 0;
-                            }
-                            MPLogUtil.log("VideoPlayerApiKernel => startCheckBuffering => handleMessage => what = " + msg.what + ", seek = " + seek);
-
-                            release(false, false, false);
-                            restart(seek, true);
-                            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
-                        } else {
-                            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
-                            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_TIMEOUT);
-                            release(false, false, false);
-                        }
-                    }
-                }
-            };
-            mHandlerBuffering[0].sendEmptyMessageDelayed(7677, connectTimeoutSeconds * 1000);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => startCheckBuffering => " + e.getMessage());
-        }
-    }
-
-    default void stopCheckBuffering() {
-        try {
-            if (null == mHandlerBuffering[0])
-                throw new Exception("mHandler warning: null");
-            mHandlerBuffering[0].removeMessages(7677);
-            mHandlerBuffering[0].removeCallbacksAndMessages(null);
-            mHandlerBuffering[0] = null;
-            MPLogUtil.log("VideoPlayerApiKernel => stopCheckBuffering => succ");
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => stopCheckBuffering => " + e.getMessage());
-        }
-    }
 }

@@ -2,34 +2,20 @@ package lib.kalu.mediaplayer.core.kernel.video.android;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.media.AsyncPlayer;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.os.SystemClock;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
-import androidx.annotation.IntRange;
-import androidx.annotation.NonNull;
 
-
-import com.google.android.exoplayer2.PlaybackParameters;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
 
@@ -79,45 +65,17 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, boolean reset, String url, boolean prepareAsync) {
+    public void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync) {
         MPLogUtil.log("VideoAndroidPlayer => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (url == null || url.length() == 0)
                 throw new IllegalArgumentException("url error: " + url);
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
-            // 监测拉流超时
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    int timeoutSeconds = PlayerManager.getInstance().getConfig().getConnectTimeoutSeconds();
-                    long maxTime = timeoutSeconds * 1000;
-                    long startTime = System.currentTimeMillis();
-                    while (true) {
-                        MPLogUtil.log("VideoAndroidPlayer => startDecoder => mPrepared = " + mPrepared + ", mMediaPlayer = " + mMediaPlayer);
-                        if (null == mMediaPlayer || mPrepared)
-                            break;
-                        long currtTime = System.currentTimeMillis();
-                        long castTime = currtTime - startTime;
-                        MPLogUtil.log("VideoAndroidPlayer => startDecoder => currtTime = " + currtTime + ", startTime = " + startTime + ", castTime = " + castTime + ", maxTime = " + maxTime);
-                        if (castTime > maxTime) {
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-                                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_NET);
-                                    stop();
-                                    if (reset) {
-                                        release();
-                                    }
-                                }
-                            });
-                            break;
-                        }
-                        SystemClock.sleep(100);
-                    }
-                }
-            }).start();
+            // 监测超时
+            long startTime = System.currentTimeMillis();
+            startCheckOpenUrlTimeout(reset, startTime, connectTimeout);
+            // 拉流
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
             initListener();
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);

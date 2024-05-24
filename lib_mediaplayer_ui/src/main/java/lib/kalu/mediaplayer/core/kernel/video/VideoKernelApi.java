@@ -1,10 +1,16 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.config.player.PlayerManager;
+import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.MPLogUtil;
@@ -19,17 +25,21 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 
     void onUpdateTimeMillis();
 
+//    boolean isPrepared();
+
     <T extends Object> T getPlayer();
 
     void releaseDecoder(boolean isFromUser);
 
     void createDecoder(Context context, boolean logger, int seekParameters);
 
-    void startDecoder(Context context, boolean reset, String url, boolean prepareAsync);
-
     void setKernelApi(VideoKernelApiEvent eventApi);
 
+    VideoKernelApiEvent getKernelApi();
+
     void setPlayerApi(VideoPlayerApi playerApi);
+
+    VideoPlayerApi getPlayerApi();
 
     default void initOptionsIjk() {
     }
@@ -40,7 +50,15 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
     default void initOptionsMediax(Context context, androidx.media3.exoplayer.ExoPlayer.Builder exoBuilder) {
     }
 
-    default void initDecoder(Context context, boolean reset, String playUrl, StartBuilder bundle) {
+    void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync);
+
+    default void update(long seek, long max, boolean loop) {
+        setSeek(seek);
+        setMax(max);
+        setLooping(loop);
+    }
+
+    default void initDecoder(Context context, boolean reset, int connectTimeout, String playUrl, StartBuilder bundle) {
 
         long seek = bundle.getSeek();
         setSeek(seek);
@@ -56,7 +74,7 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
         setPlayWhenReady(playWhenReady);
         boolean prepareAsync = bundle.isPrepareAsync();
         MPLogUtil.log("VideoKernelApi => initDecoder => prepareAsync = " + prepareAsync + ", playWhenReady = " + playWhenReady + ", live = " + live + ", loop = " + loop + ", mute = " + mute + ", max = " + max + ", seek = " + seek + ", playUrl = " + playUrl);
-        startDecoder(context, reset, playUrl, prepareAsync);
+        startDecoder(context, reset, connectTimeout, playUrl, prepareAsync);
 
 //        String musicUrl = bundle.getExternalMusicUrl();
 //        MPLogUtil.log("VideoKernelApi => update => musicUrl = " + musicUrl);
@@ -69,13 +87,113 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 //        setisExternalMusicPlayWhenReady(musicPlayWhenReady);
     }
 
-    default void update(long seek, long max, boolean loop) {
-        setSeek(seek);
-        setMax(max);
-        setLooping(loop);
-    }
-
     void setDisplay(SurfaceHolder surfaceHolder);
 
     void setSurface(Surface surface, int w, int h);
+
+    /***********/
+
+    android.os.Handler[] mHandlerOpenUrl = new android.os.Handler[1];
+
+    default void loppingOpenUrlTimeout(boolean reset, long start, long timeout) {
+        try {
+            boolean prepared = isPrepared();
+            if (prepared)
+                throw new Exception("warning: prepared true");
+            long current = System.currentTimeMillis();
+            long cast = current - start;
+            if (cast >= timeout)
+                throw new Exception("warning: cast >= timeout");
+            mHandlerOpenUrl[0].sendEmptyMessageDelayed(1234, 1000);
+        } catch (Exception e) {
+            mHandlerOpenUrl[0].removeCallbacksAndMessages(null);
+            mHandlerOpenUrl[0] = null;
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_NET);
+            getPlayerApi().stop(false);
+            if (reset) {
+                getPlayerApi().release();
+            }
+        }
+    }
+
+    default void startCheckOpenUrlTimeout(boolean reset, long start, long timeout) {
+        if (null != mHandlerOpenUrl[0]) {
+            mHandlerOpenUrl[0].removeCallbacksAndMessages(null);
+            mHandlerOpenUrl[0] = null;
+        }
+        mHandlerOpenUrl[0] = new android.os.Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                if (msg.what == 1234) {
+                    loppingOpenUrlTimeout(reset, start, timeout);
+                }
+            }
+        };
+    }
+
+    /***********/
+
+    android.os.Handler[] mHandlerLoadBuffering = new android.os.Handler[1];
+
+    default void loppingLoadBufferingTimeout(boolean reset, boolean retry, long timeout) {
+        try {
+            if (!retry)
+                throw new Exception("warning: retry false");
+            long seek;
+            try {
+                if (isLive()) {   // 直播
+                    seek = 0;
+                } else {  // 点播
+                    seek = getPosition();
+                }
+            } catch (Exception e) {
+                seek = 0;
+            }
+            if (seek < 0) {
+                seek = 0;
+            }
+
+            getPlayerApi().stop(false);
+            if (reset) {
+                getPlayerApi().release();
+            }
+
+            getPlayerApi().restart(seek, true);
+            getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
+            mHandlerLoadBuffering[0].sendEmptyMessageDelayed(4321, timeout);
+        } catch (Exception e) {
+            mHandlerLoadBuffering[0].removeCallbacksAndMessages(null);
+            mHandlerLoadBuffering[0] = null;
+//            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
+//            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_TIMEOUT);
+            getPlayerApi().stop(false);
+            if (reset) {
+                getPlayerApi().release();
+            }
+        }
+    }
+
+    default void startCheckLoadBufferingTimeout(boolean reset, boolean retry, long timeout) {
+        if (null != mHandlerLoadBuffering[0]) {
+            mHandlerLoadBuffering[0].removeCallbacksAndMessages(null);
+            mHandlerLoadBuffering[0] = null;
+        }
+        mHandlerLoadBuffering[0] = new android.os.Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                if (msg.what == 4321) {
+                    loppingLoadBufferingTimeout(reset, retry, timeout);
+                }
+            }
+        };
+    }
+    default void stopCheckLoadBufferingTimeout() {
+        if (null != mHandlerLoadBuffering[0]) {
+            mHandlerLoadBuffering[0].removeCallbacksAndMessages(null);
+            mHandlerLoadBuffering[0] = null;
+        }
+    }
+
+    /***********/
 }

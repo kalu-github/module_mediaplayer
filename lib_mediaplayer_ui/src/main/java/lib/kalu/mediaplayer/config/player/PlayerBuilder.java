@@ -13,7 +13,7 @@ public final class PlayerBuilder {
 
     private boolean log;// 日志log
     private boolean reset;
-    private int connectTimeoutSeconds;
+    private int connectTimeout;
     private boolean bufferingTimeoutRetry;
     @PlayerType.KernelType.Value
     private int externalAudioKernel; // 音频播放器内核
@@ -43,8 +43,8 @@ public final class PlayerBuilder {
         return exoUseOkhttp;
     }
 
-    public int getConnectTimeoutSeconds() {
-        return connectTimeoutSeconds;
+    public int getConnectTimeout() {
+        return connectTimeout;
     }
 
     public boolean getBufferingTimeoutRetry() {
@@ -74,6 +74,7 @@ public final class PlayerBuilder {
     public boolean isLog() {
         return log;
     }
+
     public boolean isReset() {
         return reset;
     }
@@ -120,7 +121,7 @@ public final class PlayerBuilder {
     private PlayerBuilder(Builder builder) {
         log = builder.log;
         reset = builder.reset;
-        connectTimeoutSeconds = builder.connectTimeoutSeconds;
+        connectTimeout = builder.connectTimeout;
         bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         externalAudioKernel = builder.externalAudioKernel;
         kernel = builder.kernel;
@@ -143,7 +144,7 @@ public final class PlayerBuilder {
         Builder builder = new Builder();
         builder.setLog(this.log);
         builder.setReset(this.reset);
-        builder.setConnectTimeoutSeconds(this.connectTimeoutSeconds);
+        builder.setConnectTimeout(this.connectTimeout);
         builder.setBufferingTimeoutRetry(this.bufferingTimeoutRetry);
         builder.setExternalAudioKernel(this.externalAudioKernel);
         builder.setKernel(this.kernel);
@@ -168,7 +169,7 @@ public final class PlayerBuilder {
 
         private boolean log = false;// 日志log
         private boolean reset = false;
-        private int connectTimeoutSeconds = 10;  // 连接超时
+        private int connectTimeout = 10 * 1000;  // 连接超时
         private boolean bufferingTimeoutRetry = false; // 缓冲失败重试
         @PlayerType.KernelType.Value
         private int externalAudioKernel = PlayerType.KernelType.ANDROID; // 音频播放器内核
@@ -199,8 +200,8 @@ public final class PlayerBuilder {
         private boolean exoUseOkhttp = true;
 
 
-        public Builder setConnectTimeoutSeconds(int v) {
-            connectTimeoutSeconds = v;
+        public Builder setConnectTimeout(int v) {
+            connectTimeout = v;
             return this;
         }
 
@@ -243,6 +244,7 @@ public final class PlayerBuilder {
             log = v;
             return this;
         }
+
         public Builder setReset(boolean v) {
             reset = v;
             return this;
