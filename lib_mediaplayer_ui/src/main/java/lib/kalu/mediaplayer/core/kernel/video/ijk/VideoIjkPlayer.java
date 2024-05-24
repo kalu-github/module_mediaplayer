@@ -242,6 +242,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             mIjkPlayer.setOption(format, "http-detect-range-support", 1);
             // 清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频), 有时会造成因为DNS的问题而报10000问题的
             mIjkPlayer.setOption(format, "dns_cache_clear", 1);
+            mIjkPlayer.setOption(format, "dns_cache_timeout", -1);
             // user_agent
             mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", "ijkplayer");
         } catch (Exception e) {
