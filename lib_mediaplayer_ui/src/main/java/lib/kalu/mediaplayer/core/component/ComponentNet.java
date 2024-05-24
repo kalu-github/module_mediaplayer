@@ -51,11 +51,6 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
                 MPLogUtil.log("ComponentNet => onPlayStateChanged => playState = " + playState);
                 show();
                 break;
-//            case PlayerType.StateType.STATE_INIT:
-//            case PlayerType.StateType.STATE_LOADING_STOP:
-//            case PlayerType.StateType.STATE_BUFFERING_STOP:
-//            case PlayerType.StateType.STATE_FAST_FORWARD_START:
-//            case PlayerType.StateType.STATE_FAST_REWIND_START:
             case PlayerType.StateType.STATE_INIT_RETEY_BUFFERING:
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_BUFFERING_STOP:
