@@ -12,6 +12,7 @@ import lib.kalu.mediaplayer.keycode.KeycodeApi;
 public final class PlayerBuilder {
 
     private boolean log;// 日志log
+    private boolean reset;
     private int connectTimeoutSeconds;
     private boolean bufferingTimeoutRetry;
     @PlayerType.KernelType.Value
@@ -73,6 +74,9 @@ public final class PlayerBuilder {
     public boolean isLog() {
         return log;
     }
+    public boolean isReset() {
+        return reset;
+    }
 
     public int getExtrAudioKernel() {
         return externalAudioKernel;
@@ -115,6 +119,7 @@ public final class PlayerBuilder {
 
     private PlayerBuilder(Builder builder) {
         log = builder.log;
+        reset = builder.reset;
         connectTimeoutSeconds = builder.connectTimeoutSeconds;
         bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         externalAudioKernel = builder.externalAudioKernel;
@@ -126,7 +131,6 @@ public final class PlayerBuilder {
         checkOrientation = builder.checkOrientation;
         buriedEvent = builder.buriedEvent;
         keycodeApi = builder.keycodeApi;
-
         exoSeekParameters = builder.exoSeekParameters;
         exoFFmpeg = builder.exoFFmpeg;
         exoUseOkhttp = builder.exoUseOkhttp;
@@ -138,6 +142,7 @@ public final class PlayerBuilder {
     public Builder newBuilder() {
         Builder builder = new Builder();
         builder.setLog(this.log);
+        builder.setReset(this.reset);
         builder.setConnectTimeoutSeconds(this.connectTimeoutSeconds);
         builder.setBufferingTimeoutRetry(this.bufferingTimeoutRetry);
         builder.setExternalAudioKernel(this.externalAudioKernel);
@@ -162,6 +167,7 @@ public final class PlayerBuilder {
     public final static class Builder {
 
         private boolean log = false;// 日志log
+        private boolean reset = false;
         private int connectTimeoutSeconds = 10;  // 连接超时
         private boolean bufferingTimeoutRetry = false; // 缓冲失败重试
         @PlayerType.KernelType.Value
@@ -235,6 +241,10 @@ public final class PlayerBuilder {
 
         public Builder setLog(boolean v) {
             log = v;
+            return this;
+        }
+        public Builder setReset(boolean v) {
+            reset = v;
             return this;
         }
 

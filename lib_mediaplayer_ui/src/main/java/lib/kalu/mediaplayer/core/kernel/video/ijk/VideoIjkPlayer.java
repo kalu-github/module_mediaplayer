@@ -87,8 +87,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, String url, boolean prepareAsync) {
-        MPLogUtil.log("VideoIjkPlayer => startDecoder => mIjkPlayer = " + mIjkPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
+    public void startDecoder(Context context,  boolean reset, String url, boolean prepareAsync) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -441,8 +440,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("currentPosition warning: " + currentPosition);
             return currentPosition;
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => getPosition => " + e.getMessage());
-            return -1L;
+//            MPLogUtil.log("VideoIjkPlayer => getPosition => " + e.getMessage());
+            return 0L;
         }
     }
 
@@ -458,8 +457,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("duration warning: " + duration);
             return duration;
         } catch (Exception e) {
-            MPLogUtil.log("VideoIjkPlayer => getDuration => " + e.getMessage());
-            return -1L;
+//            MPLogUtil.log("VideoIjkPlayer => getDuration => " + e.getMessage());
+            return 0L;
         }
     }
 

@@ -79,7 +79,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, String url, boolean prepareAsync) {
+    public void startDecoder(Context context, boolean reset, String url, boolean prepareAsync) {
         MPLogUtil.log("VideoAndroidPlayer => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (url == null || url.length() == 0)
@@ -106,9 +106,10 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                                 public void run() {
                                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
                                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_NET);
-                                    pause();
                                     stop();
-                                    release();
+                                    if (reset) {
+                                        release();
+                                    }
                                 }
                             });
                             break;
@@ -310,8 +311,8 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 throw new Exception("currentPosition warning: " + currentPosition);
             return currentPosition;
         } catch (Exception e) {
-            MPLogUtil.log("VideoAndroidPlayer => getPosition => " + e.getMessage());
-            return -1L;
+//            MPLogUtil.log("VideoAndroidPlayer => getPosition => " + e.getMessage());
+            return 0L;
         }
     }
 
@@ -330,8 +331,8 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 throw new Exception("duration warning: " + duration);
             return duration;
         } catch (Exception e) {
-            MPLogUtil.log("VideoAndroidPlayer => getDuration => " + e.getMessage());
-            return 0;
+//            MPLogUtil.log("VideoAndroidPlayer => getDuration => " + e.getMessage());
+            return 0L;
         }
     }
 

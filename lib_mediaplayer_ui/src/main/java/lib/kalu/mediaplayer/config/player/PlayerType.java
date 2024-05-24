@@ -87,7 +87,6 @@ public @interface PlayerType {
         int STATE_END = 3_015; // 播放完成
         int STATE_TRY_COMPLETE = 3_016; // 试看完成
         int STATE_PAUSE = 3_017; // 暂停播放
-        int STATE_PAUSE_IGNORE = 3_018; // 暂停播放
         int STATE_RESUME = 3_019; // 恢复播放
         int STATE_RESUME_IGNORE = 3_020; // 恢复播放
         int STATE_RESTAER = 3_021; // 重播一次
@@ -138,7 +137,6 @@ public @interface PlayerType {
                 STATE_START_SEEK,
                 STATE_START_PLAY_WHEN_READY_PAUSE,
                 STATE_PAUSE,
-                STATE_PAUSE_IGNORE,
                 STATE_RESUME,
                 STATE_RESUME_IGNORE,
                 STATE_RESTAER,

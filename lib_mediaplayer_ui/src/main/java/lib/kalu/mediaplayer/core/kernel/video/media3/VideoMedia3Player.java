@@ -104,7 +104,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void initOptionsMediax( Context context,  androidx.media3.exoplayer.ExoPlayer.Builder exoBuilder) {
+    public void initOptionsMediax(Context context, androidx.media3.exoplayer.ExoPlayer.Builder exoBuilder) {
         try {
             if (null == exoBuilder)
                 throw new Exception("exoBuilder error: null");
@@ -175,7 +175,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder( Context context,  boolean logger,  int seekParameters) {
+    public void createDecoder(Context context, boolean logger, int seekParameters) {
         try {
             if (null != mExoPlayer)
                 throw new Exception("warning: null != mExoPlayer");
@@ -341,8 +341,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder( Context context,  String url,  boolean prepareAsync) {
-        MPLogUtil.log("VideoMedia3Player => startDecoder => mExoPlayer = " + mExoPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
+    public void startDecoder(Context context, boolean reset, String url, boolean prepareAsync) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -388,7 +387,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void setSurface( Surface surface, int w, int h) {
+    public void setSurface(Surface surface, int w, int h) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -430,7 +429,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void seekTo( long seek) {
+    public void seekTo(long seek) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -465,8 +464,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 throw new Exception("currentPosition warning: " + currentPosition);
             return currentPosition;
         } catch (Exception e) {
-            MPLogUtil.log("VideoMedia3Player => getPosition => " + e.getMessage());
-            return -1L;
+//            MPLogUtil.log("VideoMedia3Player => getPosition => " + e.getMessage());
+            return 0L;
         }
     }
 
@@ -485,8 +484,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 throw new Exception("duration warning: " + duration);
             return duration;
         } catch (Exception e) {
-            MPLogUtil.log("VideoMedia3Player => getDuration => " + e.getMessage());
-            return -1L;
+//            MPLogUtil.log("VideoMedia3Player => getDuration => " + e.getMessage());
+            return 0L;
         }
     }
 
@@ -603,7 +602,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void setLive( boolean live) {
+    public void setLive(boolean live) {
         this.mLive = live;
     }
 
@@ -690,12 +689,12 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
     /************************/
 
-    public MediaSource buildMediaSource( Context context,
-                                         String mediaUrl,
+    public MediaSource buildMediaSource(Context context,
+                                        String mediaUrl,
                                         @Nullable String subtitleUrl,
                                         @PlayerType.CacheType int cacheType,
-                                         int cacheMax,
-                                         String cacheDir) {
+                                        int cacheMax,
+                                        String cacheDir) {
 
         MPLogUtil.log("VideoMedia3Player => createMediaSource => mediaUrl = " + mediaUrl);
         MPLogUtil.log("VideoMedia3Player => createMediaSource => subtitleUrl = " + subtitleUrl);

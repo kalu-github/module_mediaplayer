@@ -356,8 +356,11 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    default void checkRenderNull(int renderType) {
+    default void checkRenderNull(boolean reset, int renderType) {
         try {
+            if (reset) {
+                releaseRender();
+            }
             ViewGroup renderGroup = getBaseVideoViewGroup();
             if (null == renderGroup)
                 throw new Exception("renderGroup error: null");
@@ -389,8 +392,10 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
     }
 
     @SuppressLint("StaticFieldLeak")
-    default void updateRenderView(int renderType, int kernelType, long dealyTime) {
+    default void updateRenderView(boolean reset, int renderType, int kernelType, long dealyTime) {
         try {
+            if (!reset)
+                throw new Exception("warning: reset false");
             if (kernelType != PlayerType.KernelType.IJK && kernelType != PlayerType.KernelType.IJK_MEDIACODEC)
                 throw new Exception("warning: not need updateRenderView");
             // 1

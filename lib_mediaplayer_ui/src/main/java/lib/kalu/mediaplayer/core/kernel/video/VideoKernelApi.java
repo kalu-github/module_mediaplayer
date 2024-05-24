@@ -25,7 +25,7 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 
     void createDecoder(Context context, boolean logger, int seekParameters);
 
-    void startDecoder(Context context, String url, boolean prepareAsync);
+    void startDecoder(Context context, boolean reset, String url, boolean prepareAsync);
 
     void setKernelApi(VideoKernelApiEvent eventApi);
 
@@ -40,7 +40,7 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
     default void initOptionsMediax(Context context, androidx.media3.exoplayer.ExoPlayer.Builder exoBuilder) {
     }
 
-    default void initDecoder(Context context, String playUrl, StartBuilder bundle) {
+    default void initDecoder(Context context, boolean reset, String playUrl, StartBuilder bundle) {
 
         long seek = bundle.getSeek();
         setSeek(seek);
@@ -56,7 +56,7 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
         setPlayWhenReady(playWhenReady);
         boolean prepareAsync = bundle.isPrepareAsync();
         MPLogUtil.log("VideoKernelApi => initDecoder => prepareAsync = " + prepareAsync + ", playWhenReady = " + playWhenReady + ", live = " + live + ", loop = " + loop + ", mute = " + mute + ", max = " + max + ", seek = " + seek + ", playUrl = " + playUrl);
-        startDecoder(context, playUrl, prepareAsync);
+        startDecoder(context, reset, playUrl, prepareAsync);
 
 //        String musicUrl = bundle.getExternalMusicUrl();
 //        MPLogUtil.log("VideoKernelApi => update => musicUrl = " + musicUrl);

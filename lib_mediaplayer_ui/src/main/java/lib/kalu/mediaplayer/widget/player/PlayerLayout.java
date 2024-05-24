@@ -491,12 +491,12 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void pauseKernel(boolean ignore) {
+    public final void pauseKernel(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.pauseVideoKernel(ignore);
+            playerView.pauseKernel(callEvent);
         } catch (Exception e) {
             MPLogUtil.log("PlayerLayout => pauseKernel => " + e.getMessage());
         }

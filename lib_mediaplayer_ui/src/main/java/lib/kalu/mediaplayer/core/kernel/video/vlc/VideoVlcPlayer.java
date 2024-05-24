@@ -63,8 +63,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, String url, boolean prepareAsync) {
-        MPLogUtil.log("VideoVlcPlayer => startDecoder => mVlcPlayer = " + mVlcPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
+    public void startDecoder(Context context,  boolean reset, String url, boolean prepareAsync) {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -237,8 +236,8 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
                 throw new Exception("position warning: " + position);
             return position;
         } catch (Exception e) {
-            MPLogUtil.log("VideoVlcPlayer => getPosition => " + e.getMessage());
-            return -1L;
+//            MPLogUtil.log("VideoVlcPlayer => getPosition => " + e.getMessage());
+            return 0L;
         }
     }
 
@@ -257,8 +256,8 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
                 throw new Exception("duration warning: " + duration);
             return duration;
         } catch (Exception e) {
-            MPLogUtil.log("VideoVlcPlayer => getDuration => " + e.getMessage());
-            return -1L;
+//            MPLogUtil.log("VideoVlcPlayer => getDuration => " + e.getMessage());
+            return 0L;
         }
     }
 

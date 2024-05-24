@@ -72,6 +72,10 @@ public final class PlayerManager {
         mPlayerBuilder.setLog(v);
         return this;
     }
+    public PlayerManager setReset(boolean v) {
+        mPlayerBuilder.setReset(v);
+        return this;
+    }
 
     public PlayerManager setExternalAudioKernel(@PlayerType.KernelType.Value int v) {
         mPlayerBuilder.setExternalAudioKernel(v);

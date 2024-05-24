@@ -72,7 +72,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, String url, boolean prepareAsync) {
+    public void startDecoder(Context context,  boolean reset, String url, boolean prepareAsync) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -247,8 +247,8 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("currentPosition warning: " + currentPosition);
             return currentPosition;
         } catch (Exception e) {
-            MPLogUtil.log("VideoFFmpegPlayer => getPosition => " + e.getMessage());
-            return -1L;
+//            MPLogUtil.log("VideoFFmpegPlayer => getPosition => " + e.getMessage());
+            return 0L;
         }
     }
 
@@ -267,8 +267,8 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("duration warning: " + duration);
             return duration;
         } catch (Exception e) {
-            MPLogUtil.log("VideoFFmpegPlayer => getDuration => " + e.getMessage());
-            return -1L;
+//            MPLogUtil.log("VideoFFmpegPlayer => getDuration => " + e.getMessage());
+            return 0L;
         }
     }
 

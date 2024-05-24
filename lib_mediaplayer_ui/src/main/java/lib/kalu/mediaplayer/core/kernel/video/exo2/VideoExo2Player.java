@@ -340,7 +340,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, String url, boolean prepareAsync) {
+    public void startDecoder(Context context,  boolean reset, String url, boolean prepareAsync) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -451,8 +451,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 throw new Exception("currentPosition warning: " + currentPosition);
             return currentPosition;
         } catch (Exception e) {
-            MPLogUtil.log("VideoExo2Player => getPosition => " + e.getMessage());
-            return -1L;
+//            MPLogUtil.log("VideoExo2Player => getPosition => " + e.getMessage());
+            return 0L;
         }
     }
 
@@ -471,8 +471,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 throw new Exception("duration warning: " + duration);
             return duration;
         } catch (Exception e) {
-            MPLogUtil.log("VideoExo2Player => getDuration => " + e.getMessage());
-            return -1L;
+//            MPLogUtil.log("VideoExo2Player => getDuration => " + e.getMessage());
+            return 0L;
         }
     }
 

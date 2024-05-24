@@ -81,7 +81,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
                 throw new Exception("progressListener error: null");
             progressListener.onProgress(position, duration);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiListener => callPlayerProgress => " + e.getMessage());
+//            MPLogUtil.log("VideoPlayerApiListener => callPlayerProgress => " + e.getMessage());
         }
     }
 
