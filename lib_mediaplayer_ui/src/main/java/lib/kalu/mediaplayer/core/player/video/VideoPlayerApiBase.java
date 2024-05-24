@@ -222,7 +222,7 @@ interface VideoPlayerApiBase {
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).onUpdateSeekProgress(true, position, duration, max);
+                ((ComponentApi) childAt).onUpdateProgress(-1, position, duration, max);
             }
         } catch (Exception e) {
             MPLogUtil.log("VideoPlayerApiBase => callUpdateSeekProgress => " + e.getMessage());

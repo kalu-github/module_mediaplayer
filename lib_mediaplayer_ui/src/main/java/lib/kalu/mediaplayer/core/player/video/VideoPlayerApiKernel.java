@@ -622,7 +622,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                 @Override
                 public void onUpdateProgress(boolean isLooping, long max, long seek, long position, long duration) {
-                    callUpdateProgressComponent(seek, position, duration, max);
+//                    MPLogUtil.log("VideoPlayerApiKernel => onUpdateProgress => isLooping = " + isLooping + ", max = " + max + ", seek = " + seek + ", position = " + position + ", duration = " + duration);
+
+                    callUpdateProgressComponent(max, seek, position, duration);
                     callUpdateProgressPlayer(position, duration);
                     try {
                         if (max <= 0 || position <= max)

@@ -7,11 +7,9 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.MPLogUtil;
-import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 
 public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
@@ -38,7 +36,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_ERROR_IGNORE:
             case PlayerType.StateType.STATE_END:
-                onUpdateTimeMillis(0, 0, 0, 0);
+                onUpdateProgress(0, 0, 0, 0);
                 break;
         }
     }
@@ -80,77 +78,78 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public void onUpdateTimeMillis(long seek, long position, long duration, long max) {
+    public void onUpdateProgress(long max, long seek, long position, long duration) {
+        MPLogUtil.log("ComponentSeek => onUpdateProgress => max = " + max + ", seek = " + seek + ", position = " + position + ", duration = " + duration);
+
+        // 进度条
         try {
             SeekBar seekBar = findSeekBar();
             if (null == seekBar)
-                throw new Exception("seekbar error: null");
-            Object tag = getTag(R.id.module_mediaplayer_component_seek_sb);
-            if (null != tag && ((boolean) tag))
-                throw new Exception("seekbar warning: user current action down");
-            onUpdateSeekProgress(true, position, duration, max);
-        } catch (Exception e) {
-//            MPLogUtil.log("ComponentSeek => onUpdateTimeMillis => " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void onUpdateSeekProgress(boolean updateTime, long position, long duration, long max) {
-
-        try {
-            SeekBar seekBar = findSeekBar();
-            if (null == seekBar)
-                throw new Exception("seekBar error: null");
+                throw new Exception("warning: null == seekBar");
+            int visibility = seekBar.getVisibility();
+            if (visibility != View.VISIBLE)
+                throw new Exception("warning: seekBar visibility != View.VISIBLE");
             seekBar.setProgress((int) position);
             seekBar.setSecondaryProgress((int) position);
             seekBar.setMax((int) (max > 0 ? max : duration));
         } catch (Exception e) {
-            MPLogUtil.log("ComponentSeek => onUpdateSeekProgress => " + e.getMessage());
         }
 
+        // 进度时间
         try {
-            if (!updateTime)
-                throw new Exception();
-            long c = position / 1000;
-            long c1 = c / 60;
-            long c2 = c % 60;
-            StringBuilder builderPosition = new StringBuilder();
-            if (c1 < 10) {
-                builderPosition.append("0");
-            }
-            builderPosition.append(c1);
-            builderPosition.append(":");
-            if (c2 < 10) {
-                builderPosition.append("0");
-            }
-            builderPosition.append(c2);
-            String strPosition = builderPosition.toString();
+            TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
+            if (null == viewMax)
+                throw new Exception("warning: null == viewMax");
+            int visibility = viewMax.getVisibility();
+            if (visibility != View.VISIBLE)
+                throw new Exception("warning: viewMax visibility != View.VISIBLE");
 
             // ms => s
-            StringBuilder builderDuration = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
             long d = (max > 0 ? max : duration) / 1000;
             long d1 = d / 60;
             long d2 = d % 60;
             if (d1 < 10) {
-                builderDuration.append("0");
+                builder.append("0");
             }
-            builderDuration.append(d1);
-            builderDuration.append(":");
+            builder.append(d1);
+            builder.append(":");
             if (d2 < 10) {
-                builderDuration.append("0");
+                builder.append("0");
             }
-            builderDuration.append(d2);
-            String strDuration = builderDuration.toString();
+            builder.append(d2);
 
-            TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
-            viewMax.setText(strDuration);
-            TextView viewPosition = findViewById(R.id.module_mediaplayer_component_seek_position);
-            viewPosition.setText(strPosition);
+            String s = builder.toString();
+            viewMax.setText(s);
         } catch (Exception e) {
-            TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
-            viewMax.setText("00:00");
+        }
+
+        // 总时间
+        try {
             TextView viewPosition = findViewById(R.id.module_mediaplayer_component_seek_position);
-            viewPosition.setText("00:00");
+            if (null == viewPosition)
+                throw new Exception("warning: null == viewPosition");
+            int visibility = viewPosition.getVisibility();
+            if (visibility != View.VISIBLE)
+                throw new Exception("warning: viewPosition visibility != View.VISIBLE");
+
+            // ms => s
+            long c = position / 1000;
+            long c1 = c / 60;
+            long c2 = c % 60;
+            StringBuilder builder = new StringBuilder();
+            if (c1 < 10) {
+                builder.append("0");
+            }
+            builder.append(c1);
+            builder.append(":");
+            if (c2 < 10) {
+                builder.append("0");
+            }
+            builder.append(c2);
+            String s = builder.toString();
+            viewPosition.setText(s);
+        } catch (Exception e) {
         }
     }
 

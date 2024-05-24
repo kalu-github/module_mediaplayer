@@ -63,25 +63,18 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void onUpdateTimeMillis( long seek,  long position,  long duration,  long max) {
-        onUpdateSeekProgress(true, position, duration, max);
-    }
-
-    @Override
-    public void onUpdateSeekProgress( boolean updateTime,  long position,  long duration,  long max) {
+    public void onUpdateProgress(long max, long seek, long position, long duration) {
         try {
             if (position < 0 || duration < 0)
                 throw new Exception();
-            SeekBar seek = findViewById(R.id.module_mediaplayer_component_pause_sb);
-            seek.setProgress((int) position);
-            seek.setSecondaryProgress((int) position);
-            seek.setMax((int) (max > 0 ? max : duration));
+            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_pause_sb);
+            seekBar.setProgress((int) position);
+            seekBar.setSecondaryProgress((int) position);
+            seekBar.setMax((int) (max > 0 ? max : duration));
         } catch (Exception e) {
         }
 
         try {
-            if (!updateTime)
-                throw new Exception();
             if (position < 0 || duration < 0)
                 throw new Exception();
             // ms => s

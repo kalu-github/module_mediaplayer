@@ -170,14 +170,14 @@ public final class TestActivity extends Activity {
             @Override
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                playerLayout.showComponent(ComponentNet.class);
+                playerLayout.showComponent(ComponentSeek.class);
             }
         });
         findViewById(R.id.module_mediaplayer_test_button5).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                playerLayout.hideComponent(ComponentNet.class);
+                playerLayout.hideComponent(ComponentSeek.class);
             }
         });
     }

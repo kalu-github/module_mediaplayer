@@ -283,11 +283,11 @@ public interface VideoRenderApi {
                 public void handleMessage(Message msg) {
                     if (msg.what == 2345) {
                         kernelApi.onUpdateProgress();
-                        mHandler[0].sendEmptyMessageDelayed(1111, 1000);
+                        mHandler[0].sendEmptyMessageDelayed(2345, 1000);
                     }
                 }
             };
-            mHandler[0].sendEmptyMessageDelayed(1111, 1000);
+            mHandler[0].sendEmptyMessageDelayed(2345, 1000);
         } catch (Exception e) {
             MPLogUtil.log("VideoRenderApi => startUpdateProgress => " + e.getMessage());
         }
