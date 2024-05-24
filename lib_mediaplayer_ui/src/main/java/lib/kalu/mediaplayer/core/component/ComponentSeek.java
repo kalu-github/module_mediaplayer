@@ -79,7 +79,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
     @Override
     public void onUpdateProgress(long max, long seek, long position, long duration) {
-        MPLogUtil.log("ComponentSeek => onUpdateProgress => max = " + max + ", seek = " + seek + ", position = " + position + ", duration = " + duration);
+//        MPLogUtil.log("ComponentSeek => onUpdateProgress => max = " + max + ", seek = " + seek + ", position = " + position + ", duration = " + duration);
 
         // 进度条
         try {
