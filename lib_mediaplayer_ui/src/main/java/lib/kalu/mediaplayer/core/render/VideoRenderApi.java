@@ -11,6 +11,9 @@ import android.opengl.EGLContext;
 import android.opengl.EGLDisplay;
 import android.opengl.EGLSurface;
 import android.opengl.GLES20;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
@@ -32,6 +35,10 @@ public interface VideoRenderApi {
 
     void addListener();
 
+    void setSurface(boolean release);
+
+    void reset();
+
     void release();
 
     void setLayoutParams(ViewGroup.LayoutParams params);
@@ -45,20 +52,14 @@ public interface VideoRenderApi {
      */
     void setKernel(VideoKernelApi player);
 
+    VideoKernelApi getKernel();
+
     /**
      * 截图
      *
      * @return
      */
     String screenshot(String url, long position);
-
-    /**
-     *
-     */
-    void updateBuffer(int delayMillis);
-
-    /******************/
-
 
     void setVideoFormat(int videoWidth, int videoHeight, @PlayerType.RotationType.Value int videoRotation);
 
@@ -264,6 +265,42 @@ public interface VideoRenderApi {
             EGL14.eglTerminate(display);
         } catch (Exception e) {
             MPLogUtil.log("VideoRenderApi => clearSurfaceGLES => " + e.getMessage());
+        }
+    }
+
+    /*************/
+
+    android.os.Handler[] mHandler = new android.os.Handler[1];
+
+    default void startUpdateProgress() {
+        try {
+            VideoKernelApi kernelApi = getKernel();
+            if (null == kernelApi)
+                throw new Exception("warning: null == kernelApi");
+            stopUpdateProgress();
+            mHandler[0] = new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    if (msg.what == 2345) {
+                        kernelApi.onUpdateTimeMillis();
+                        mHandler[0].sendEmptyMessageDelayed(1111, 1000);
+                    }
+                }
+            };
+            mHandler[0].sendEmptyMessageDelayed(1111, 1000);
+        } catch (Exception e) {
+            MPLogUtil.log("VideoRenderApi => startUpdateProgress => " + e.getMessage());
+        }
+    }
+
+    default void stopUpdateProgress() {
+        try {
+            if (null == mHandler[0])
+                throw new Exception("warning: null == mHandler[0]");
+            mHandler[0].removeMessages(2345);
+            mHandler[0] = null;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoRenderApi => stopUpdateProgress => " + e.getMessage());
         }
     }
 }

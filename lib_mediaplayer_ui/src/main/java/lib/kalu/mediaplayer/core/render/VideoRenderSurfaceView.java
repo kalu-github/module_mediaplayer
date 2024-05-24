@@ -85,9 +85,8 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
                     MPLogUtil.log("VideoRenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
-                    updateSurface(false);
-                    addHandler();
-                    sendMessage(1000);
+                    setSurface(false);
+                    startUpdateProgress();
                 }
 
                 /**
@@ -109,8 +108,8 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
                     MPLogUtil.log("VideoRenderSurfaceView => addListener => surfaceDestroyed => " + this);
-                    clearMessage();
-                    updateSurface(true);
+                    setSurface(true);
+                    stopUpdateProgress();
                 }
             };
             getHolder().addCallback(mSurfaceHolderCallback);
@@ -120,8 +119,28 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
     }
 
     @Override
-    public void release() {
+    public void setSurface(boolean release) {
+        try {
+            if (null == mKernel)
+                throw new Exception("mKernel warning: null");
+            if (release) {
+                mKernel.setDisplay(null);
+                mKernel.setSurface(null, 0, 0);
+            } else {
+                mKernel.setSurface(getHolder().getSurface(), 0, 0);
+            }
+        } catch (Exception e) {
+            MPLogUtil.log("VideoRenderSurfaceView => setSurface => " + e.getMessage());
+        }
+    }
 
+    @Override
+    public void reset() {
+        setSurface(false);
+    }
+
+    @Override
+    public void release() {
         // step1
         try {
             SurfaceHolder surfaceHolder = getHolder();
@@ -169,6 +188,11 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
         this.mKernel = kernel;
     }
 
+    @Override
+    public VideoKernelApi getKernel() {
+        return this.mKernel;
+    }
+
 
     @Override
     public String screenshot(String url, long position) {
@@ -198,23 +222,6 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 //        Context context = getContext();
 //        Bitmap bitmap = getDrawingCache();
 //        return saveBitmap(context, bitmap);
-    }
-
-    @Override
-    public void updateBuffer(int delayMillis) {
-        try {
-            if (null == mHandler) {
-                addHandler();
-            }
-            mHandler.removeMessages(9888);
-            mHandler.removeMessages(9877);
-            Message message = new Message();
-            message.what = 9888;
-            message.arg1 = delayMillis;
-            mHandler.sendMessage(message);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => updateBuffer => " + e.getMessage());
-        }
     }
 
     @Override
@@ -378,76 +385,6 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 //            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
         } catch (Exception e) {
             MPLogUtil.log("VideoRenderSurfaceView => onMeasure => " + e.getMessage());
-        }
-    }
-
-    /*****/
-
-    private void updateSurface(boolean clean) {
-        try {
-            if (null == mKernel)
-                throw new Exception("mKernel warning: null");
-            if (clean) {
-                mKernel.setDisplay(null);
-                mKernel.setSurface(null, 0, 0);
-            } else {
-                mKernel.setSurface(getHolder().getSurface(), 0, 0);
-            }
-        } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => updateSurface => " + e.getMessage());
-        }
-    }
-
-    private void sendMessage(long delayMillis) {
-        try {
-            if (null == mHandler)
-                throw new Exception("mHandler warning: null");
-            mHandler.removeMessages(9899);
-            mHandler.sendEmptyMessageDelayed(9899, delayMillis);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => sendMessage => " + e.getMessage());
-        }
-    }
-
-    private void clearMessage() {
-        try {
-            if (null == mHandler)
-                throw new Exception("mHandler warning: null");
-            mHandler.removeMessages(9899);
-            mHandler.removeMessages(9888);
-            mHandler.removeMessages(9877);
-            mHandler.removeCallbacksAndMessages(null);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => clearMessage => " + e.getMessage());
-        }
-    }
-
-    private void addHandler() {
-        try {
-            if (null != mHandler)
-                throw new Exception("mHandler warning: " + mHandler);
-            mHandler = new Handler(Looper.getMainLooper()) {
-                @Override
-                public void handleMessage(Message msg) {
-                    if (msg.what == 9899) {
-                        if (null != mKernel) {
-                            mKernel.onUpdateTimeMillis();
-                            mHandler.sendEmptyMessageDelayed(9899, 100);
-                        }
-                    } else if (msg.what == 9888) {
-                        if (null != mKernel) {
-                            mKernel.onUpdateBuffer(PlayerType.StateType.STATE_BUFFERING_START);
-                            mHandler.sendEmptyMessageDelayed(9877, msg.arg1);
-                        }
-                    } else if (msg.what == 9877) {
-                        if (null != mKernel) {
-                            mKernel.onUpdateBuffer(PlayerType.StateType.STATE_BUFFERING_STOP);
-                        }
-                    }
-                }
-            };
-        } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => addHandler => " + e.getMessage());
         }
     }
 }

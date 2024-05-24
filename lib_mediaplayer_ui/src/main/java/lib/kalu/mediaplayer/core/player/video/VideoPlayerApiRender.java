@@ -90,28 +90,29 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
     }
 
     default boolean startFull(boolean rememberPlaying, boolean resetSurface) {
-//        try {
-//            boolean isPhoneWindow = isParentEqualsPhoneWindow();
-//            if (isPhoneWindow)
-//                throw new Exception("always full");
-//            requestFocusFull();
-//            boolean b = switchToDecorView(true);
-//            if (b) {
-//                if (resetSurface) {
-//                    toogleVideoRender();
-//                }
-//                callPlayerEvent(PlayerType.StateType.STATE_FULL_START);
-//                callPlayerWindow(PlayerType.WindowType.FULL);
-//            }
-//            if (rememberPlaying) {
-//                checkPlaying();
-//            }
-//            return b;
-//        } catch (Exception e) {
-//            MPLogUtil.log("VideoPlayerApiRender => startFull => " + e.getMessage());
-//            return false;
-//        }
-        return false;
+        try {
+            boolean isPhoneWindow = isParentEqualsPhoneWindow();
+            if (isPhoneWindow)
+                throw new Exception("always full");
+            requestFocusFull();
+            boolean b = switchToDecorView(true);
+            if (b) {
+                if (resetSurface) {
+                    PlayerBuilder config = PlayerManager.getInstance().getConfig();
+                    int videoKernel = config.getKernel();
+                    resetRenderView(videoKernel);
+                }
+                callPlayerEvent(PlayerType.StateType.STATE_FULL_START);
+                callPlayerWindow(PlayerType.WindowType.FULL);
+            }
+            if (rememberPlaying) {
+                checkPlaying();
+            }
+            return b;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoPlayerApiRender => startFull => " + e.getMessage());
+            return false;
+        }
     }
 
     default boolean stopFull() {
@@ -119,68 +120,71 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
     }
 
     default boolean stopFull(boolean resetSurface) {
-//        try {
-//            boolean isFull = isFull();
-//            if (!isFull)
-//                throw new Exception("not full");
-//            boolean b = switchToPlayerLayout();
-//            switchPlaying();
-//            if (b) {
-//                if (resetSurface) {
-//                    toogleVideoRender();
-//                }
-//                cleanFocusFull();
-//                callPlayerEvent(PlayerType.StateType.STATE_FULL_STOP);
-//                callPlayerWindow(PlayerType.WindowType.NORMAL);
-//            }
-//            return b;
-//        } catch (Exception e) {
-//            MPLogUtil.log("VideoPlayerApiRender => stopFull => " + e.getMessage());
-//            return false;
-//        }
-        return false;
+        try {
+            boolean isFull = isFull();
+            if (!isFull)
+                throw new Exception("not full");
+            boolean b = switchToPlayerLayout();
+            switchPlaying();
+            if (b) {
+                if (resetSurface) {
+                    PlayerBuilder config = PlayerManager.getInstance().getConfig();
+                    int videoKernel = config.getKernel();
+                    resetRenderView(videoKernel);
+                }
+                cleanFocusFull();
+                callPlayerEvent(PlayerType.StateType.STATE_FULL_STOP);
+                callPlayerWindow(PlayerType.WindowType.NORMAL);
+            }
+            return b;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoPlayerApiRender => stopFull => " + e.getMessage());
+            return false;
+        }
     }
 
     default boolean startFloat(boolean rememberPlaying) {
-//        try {
-//            boolean isPhoneWindow = isParentEqualsPhoneWindow();
-//            if (isPhoneWindow)
-//                throw new Exception("always Float");
-//            boolean switchToDecorView = switchToDecorView(false);
-//            if (switchToDecorView) {
-//                toogleVideoRender();
-//                callPlayerEvent(PlayerType.StateType.STATE_FLOAT_START);
-//                callPlayerWindow(PlayerType.WindowType.FLOAT);
-//            }
-//            if (rememberPlaying) {
-//                checkPlaying();
-//            }
-//            return switchToDecorView;
-//        } catch (Exception e) {
-//            MPLogUtil.log("VideoPlayerApiRender => startFloat => " + e.getMessage());
-//            return false;
-//        }
-        return false;
+        try {
+            boolean isPhoneWindow = isParentEqualsPhoneWindow();
+            if (isPhoneWindow)
+                throw new Exception("always Float");
+            boolean switchToDecorView = switchToDecorView(false);
+            if (switchToDecorView) {
+                PlayerBuilder config = PlayerManager.getInstance().getConfig();
+                int videoKernel = config.getKernel();
+                resetRenderView(videoKernel);
+                callPlayerEvent(PlayerType.StateType.STATE_FLOAT_START);
+                callPlayerWindow(PlayerType.WindowType.FLOAT);
+            }
+            if (rememberPlaying) {
+                checkPlaying();
+            }
+            return switchToDecorView;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoPlayerApiRender => startFloat => " + e.getMessage());
+            return false;
+        }
     }
 
     default boolean stopFloat() {
-//        try {
-//            boolean isFloat = isFloat();
-//            if (!isFloat)
-//                throw new Exception("not Float");
-//            boolean switchToPlayerLayout = switchToPlayerLayout();
-//            switchPlaying();
-//            if (switchToPlayerLayout) {
-//                toogleVideoRender();
-//                callPlayerEvent(PlayerType.StateType.STATE_FLOAT_STOP);
-//                callPlayerWindow(PlayerType.WindowType.NORMAL);
-//            }
-//            return switchToPlayerLayout;
-//        } catch (Exception e) {
-//            MPLogUtil.log("VideoPlayerApiRender => stopFloat => " + e.getMessage());
-//            return false;
-//        }
-        return false;
+        try {
+            boolean isFloat = isFloat();
+            if (!isFloat)
+                throw new Exception("not Float");
+            boolean switchToPlayerLayout = switchToPlayerLayout();
+            switchPlaying();
+            if (switchToPlayerLayout) {
+                PlayerBuilder config = PlayerManager.getInstance().getConfig();
+                int videoKernel = config.getKernel();
+                resetRenderView(videoKernel);
+                callPlayerEvent(PlayerType.StateType.STATE_FLOAT_STOP);
+                callPlayerWindow(PlayerType.WindowType.NORMAL);
+            }
+            return switchToPlayerLayout;
+        } catch (Exception e) {
+            MPLogUtil.log("VideoPlayerApiRender => stopFloat => " + e.getMessage());
+            return false;
+        }
     }
 
     default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
@@ -292,17 +296,6 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    default void updateVideoRenderBuffer(int delayMillis) {
-        try {
-            VideoRenderApi render = searchVideoRender();
-            if (null == render)
-                throw new Exception("render warning: null");
-            render.updateBuffer(delayMillis);
-        } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => updateVideoRenderBuffer => " + e.getMessage());
-        }
-    }
-
     default void addVideoRenderListener() {
         try {
             VideoRenderApi render = searchVideoRender();
@@ -392,83 +385,16 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
     }
 
     @SuppressLint("StaticFieldLeak")
-    default void updateRenderView(boolean reset, int renderType, int kernelType, long dealyTime) {
+    default void resetRenderView(int kernelType) {
         try {
-            if (!reset)
-                throw new Exception("warning: reset false");
             if (kernelType != PlayerType.KernelType.IJK && kernelType != PlayerType.KernelType.IJK_MEDIACODEC)
                 throw new Exception("warning: not need updateRenderView");
-            // 1
-            try {
-                ViewGroup renderGroup = getBaseVideoViewGroup();
-                if (null == renderGroup)
-                    throw new Exception("renderGroup error: null");
-                int childCount = renderGroup.getChildCount();
-                if (childCount <= 0)
-                    throw new Exception("error: renderGroup childCount <= 0");
-                VideoRenderApi videoRender = VideoRenderFactoryManager.createRender(getBaseContext(), renderType);
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                videoRender.setLayoutParams(layoutParams);
-                renderGroup.addView((View) videoRender, childCount);
-                setVideoRender(videoRender);
-            } catch (Exception e) {
-            }
-            // 2
-            attachRenderKernel();
-            // 3
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        ViewGroup renderGroup = getBaseVideoViewGroup();
-                        if (null == renderGroup)
-                            throw new Exception("warning: null renderGroup");
-                        int childCount = renderGroup.getChildCount();
-                        if (childCount == 0)
-                            throw new Exception("warning: childCount == 0");
-                        while (renderGroup.getChildCount() > 1) {
-                            View childAt = renderGroup.getChildAt(0);
-                            if (null == childAt)
-                                continue;
-                            if (!(childAt instanceof VideoRenderApi))
-                                continue;
-                            ((VideoRenderApi) childAt).release();
-                            renderGroup.removeView(childAt);
-                        }
-                    } catch (Exception e) {
-                    }
-                }
-            }, dealyTime);
+            VideoRenderApi videoRender = getVideoRender();
+            videoRender.reset();
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiRender => updateRenderView => " + e.getMessage());
+            MPLogUtil.log("VideoPlayerApiRender => resetRenderView => " + e.getMessage());
         }
     }
-
-//    default boolean toogleVideoRender() {
-//        try {
-//            PlayerBuilder config = PlayerManager.getInstance().getConfig();
-//            if (null == config)
-//                throw new Exception("config warning: null");
-//            int videoRender = config.getRender();
-//            if (videoRender != PlayerType.RenderType.SURFACE_VIEW)
-//                throw new Exception("videoRender warning: not SURFACE_VIEW");
-//            int videoKernel = config.getKernel();
-//            if (videoKernel != PlayerType.KernelType.IJK_MEDIACODEC && videoKernel != PlayerType.KernelType.EXO_V1 && videoKernel != PlayerType.KernelType.EXO_V2)
-//                throw new Exception("videoKernel waring: not ijk_mediacodec or exo_v1 or exo_v2");
-//            if (!(this instanceof VideoPlayerApiKernel))
-//                throw new Exception("videoRender warning: not instanceof PlayerApiKernel");
-//            VideoRenderApi videoRenderApi = getVideoRender();
-//            if (null == videoRenderApi)
-//                throw new Exception("videoRenderApi error: null");
-//            // TODO: 2024/5/15
-//            attachVideoRenderKernel();
-//            updateVideoRenderBuffer(videoKernel == PlayerType.KernelType.IJK_MEDIACODEC ? 400 : 400);
-//            return true;
-//        } catch (Exception e) {
-//            MPLogUtil.log("VideoPlayerApiRender => toogleVideoRender => " + e.getMessage());
-//            return false;
-//        }
-//    }
 
     void checkVideoView();
 }

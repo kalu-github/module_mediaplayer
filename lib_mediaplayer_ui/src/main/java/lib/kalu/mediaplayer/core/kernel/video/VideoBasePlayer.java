@@ -35,20 +35,6 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     }
 
     @Override
-    public void onUpdateBuffer(@PlayerType.StateType int status) {
-        try {
-            if (null == playerApi)
-                throw new Exception("playerApi error: null");
-            boolean playing = isPlaying();
-            if (!playing)
-                throw new Exception("playing error: false");
-            playerApi.callPlayerEvent(status);
-        } catch (Exception e) {
-            MPLogUtil.log("BasePlayer => onUpdateBuffer => " + e.getMessage());
-        }
-    }
-
-    @Override
     public void onUpdateTimeMillis() {
         try {
             if (null == eventApi)

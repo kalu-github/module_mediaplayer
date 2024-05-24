@@ -135,6 +135,27 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
         setSurfaceTextureListener(mSurfaceTextureListener);
     }
 
+    @Override
+    public void setSurface(boolean release) {
+        if (release) {
+            if (mSurface != null) {
+                mSurface.release();
+                mSurface = null;
+            }
+            mSurface = new Surface(mSurfaceTexture);
+        }
+        if (mKernel != null) {
+            int w = getWidth();
+            int h = getHeight();
+            mKernel.setSurface(mSurface, w, h);
+        }
+    }
+
+    @Override
+    public void reset() {
+        setSurface(false);
+    }
+
     /**
      * 释放资源
      */
@@ -145,6 +166,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
         }
         if (mSurface != null) {
             mSurface.release();
+            mSurface = null;
         }
         if (null != mSurfaceTextureListener) {
             mSurfaceTextureListener = null;
@@ -154,6 +176,11 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
     @Override
     public void setKernel(VideoKernelApi player) {
         this.mKernel = player;
+    }
+
+    @Override
+    public VideoKernelApi getKernel() {
+        return this.mKernel;
     }
 
     @Override
@@ -167,11 +194,6 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
 //        Context context = getContext();
 //        Bitmap bitmap = getDrawingCache();
         return saveBitmap(context, bitmap);
-    }
-
-    @Override
-    public void updateBuffer(int delayMillis) {
-
     }
 
     @Override
@@ -293,7 +315,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
                 throw new Exception("measureSpec error: " + measureSpec);
             int width = measureSpec[0];
             int height = measureSpec[1];
-            MPLogUtil.log("VideoRenderTextureView => onMeasure => width = " + width+", height = "+height);
+            MPLogUtil.log("VideoRenderTextureView => onMeasure => width = " + width + ", height = " + height);
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             int specH = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             super.onMeasure(specW, specH);

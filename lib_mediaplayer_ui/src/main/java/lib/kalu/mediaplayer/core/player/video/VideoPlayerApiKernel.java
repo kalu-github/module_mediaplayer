@@ -729,7 +729,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             }
                             callPlayerEvent(PlayerType.StateType.STATE_START);
                             // ijk需要刷新RenderView
-                            updateRenderView(reset, renderType, kernelType, 100);
+                            resetRenderView(kernelType);
 //                            // step3
                             checkVideoView();
                             // step4

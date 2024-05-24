@@ -8,9 +8,6 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 
 public interface VideoKernelApiEvent {
 
-    default void onUpdateBuffer(@PlayerType.StateType int status) {
-    }
-
     default void onUpdateTimeMillis( boolean isLooping,  long max,  long seek,  long position,  long duration) {
     }
 
