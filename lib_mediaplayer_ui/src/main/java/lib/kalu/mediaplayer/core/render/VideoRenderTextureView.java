@@ -97,6 +97,17 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
                         mKernel.setSurface(mSurface, w, h);
                     }
                 }
+                startUpdateProgress();
+            }
+
+            /**
+             * SurfaceTexture即将被销毁
+             * @param surface                   surface
+             */
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                stopUpdateProgress();
+                return false;
             }
 
             /**
@@ -110,26 +121,17 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
             }
 
             /**
-             * SurfaceTexture即将被销毁
-             * @param surface                   surface
-             */
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                return false;
-            }
-
-            /**
              * SurfaceTexture通过updateImage更新
              * @param surface                   surface
              */
             @Override
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-                try {
-                    if (null == mKernel) throw new Exception("mKernel error: null");
-                    mKernel.onUpdateTimeMillis();
-                } catch (Exception e) {
-                    MPLogUtil.log("VideoRenderTextureView => onSurfaceTextureUpdated => " + e.getMessage());
-                }
+//                try {
+//                    if (null == mKernel) throw new Exception("mKernel error: null");
+//                    mKernel.onUpdateTimeMillis();
+//                } catch (Exception e) {
+//                    MPLogUtil.log("VideoRenderTextureView => onSurfaceTextureUpdated => " + e.getMessage());
+//                }
             }
         };
         setSurfaceTextureListener(mSurfaceTextureListener);

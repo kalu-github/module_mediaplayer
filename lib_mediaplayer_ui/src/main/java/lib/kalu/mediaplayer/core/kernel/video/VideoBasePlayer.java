@@ -35,7 +35,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     }
 
     @Override
-    public void onUpdateTimeMillis() {
+    public void onUpdateProgress() {
         try {
             if (null == eventApi)
                 throw new Exception("eventApi warning: null");
@@ -51,9 +51,8 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
             long seek = getSeek();
             long max = getMax();
             boolean looping = isLooping();
-            eventApi.onUpdateTimeMillis(looping, max, seek, position, duration);
+            eventApi.onUpdateProgress(looping, max, seek, position, duration);
         } catch (Exception e) {
-//            MPLogUtil.log("VideoBasePlayer => onUpdateTimeMillis => " + e.getMessage());
         }
     }
 

@@ -282,7 +282,7 @@ public interface VideoRenderApi {
                 @Override
                 public void handleMessage(Message msg) {
                     if (msg.what == 2345) {
-                        kernelApi.onUpdateTimeMillis();
+                        kernelApi.onUpdateProgress();
                         mHandler[0].sendEmptyMessageDelayed(1111, 1000);
                     }
                 }

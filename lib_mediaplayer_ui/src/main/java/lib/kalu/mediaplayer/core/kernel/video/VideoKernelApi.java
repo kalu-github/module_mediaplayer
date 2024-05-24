@@ -23,9 +23,7 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 
 public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent {
 
-    void onUpdateTimeMillis();
-
-//    boolean isPrepared();
+    void onUpdateProgress();
 
     <T extends Object> T getPlayer();
 

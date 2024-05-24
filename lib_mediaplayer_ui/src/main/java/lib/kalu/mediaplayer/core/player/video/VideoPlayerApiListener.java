@@ -74,7 +74,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
         }
     }
 
-    default void callPlayerProgress(long position, long duration) {
+    default void callUpdateProgressPlayer(long position, long duration) {
         try {
             OnPlayerProgressListener progressListener = getOnPlayerProgressListener();
             if (null == progressListener)

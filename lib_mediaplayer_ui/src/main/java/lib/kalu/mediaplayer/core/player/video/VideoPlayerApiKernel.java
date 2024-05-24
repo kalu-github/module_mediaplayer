@@ -621,7 +621,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             videoKernel.setKernelApi(new VideoKernelApiEvent() {
 
                 @Override
-                public void onUpdateTimeMillis(boolean isLooping, long max, long seek, long position, long duration) {
+                public void onUpdateProgress(boolean isLooping, long max, long seek, long position, long duration) {
+                    callUpdateProgressComponent(seek, position, duration, max);
+                    callUpdateProgressPlayer(position, duration);
                     try {
                         if (max <= 0 || position <= max)
                             throw new Exception("time warning: max = " + max + ", position = " + position + ", seek = " + seek + ", duration = " + duration + ", isLooping = " + isLooping);
@@ -637,8 +639,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         }
                     } catch (Exception e) {
 //                        MPLogUtil.log("VideoPlayerApiKernel => onUpdateTimeMillis => " + e.getMessage());
-                        callUpdateTimeMillis(seek, position, duration, max);
-                        callPlayerProgress(position, duration);
                     }
                 }
 

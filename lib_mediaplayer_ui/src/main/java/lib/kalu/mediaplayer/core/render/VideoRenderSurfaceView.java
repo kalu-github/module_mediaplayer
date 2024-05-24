@@ -36,8 +36,6 @@ import lib.kalu.mediaplayer.util.MPLogUtil;
 public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Nullable
-    private Handler mHandler = null;
-    @Nullable
     private VideoKernelApi mKernel;
     @Nullable
     private SurfaceHolder.Callback mSurfaceHolderCallback;
@@ -168,18 +166,6 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
             MPLogUtil.log("VideoRenderSurfaceView => release => removeCallback => succ");
         } catch (Exception e) {
             MPLogUtil.log("VideoRenderSurfaceView => release => removeCallback => " + e.getMessage());
-        }
-
-        // step3
-        try {
-            if (null == mHandler)
-                throw new Exception("mHandler error: null");
-            mHandler.removeMessages(9899);
-            mHandler.removeCallbacksAndMessages(null);
-            mHandler = null;
-            MPLogUtil.log("VideoRenderSurfaceView => release => Handler => succ");
-        } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => release => Handler => " + e.getMessage());
         }
     }
 
