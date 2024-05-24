@@ -98,13 +98,15 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
     default void loppingOpenUrlTimeout(boolean reset, long start, long timeout) {
         try {
             boolean prepared = isPrepared();
-            if (prepared)
-                throw new Exception("warning: prepared true");
-            long current = System.currentTimeMillis();
-            long cast = current - start;
-            if (cast >= timeout)
-                throw new Exception("warning: cast >= timeout");
-            mHandlerOpenUrl[0].sendEmptyMessageDelayed(1234, 1000);
+            if (prepared) {
+                stopCheckOpenUrlTimeout();
+            } else {
+                long current = System.currentTimeMillis();
+                long cast = current - start;
+                if (cast >= timeout)
+                    throw new Exception("warning: cast >= timeout");
+                mHandlerOpenUrl[0].sendEmptyMessageDelayed(1234, 1000);
+            }
         } catch (Exception e) {
             mHandlerOpenUrl[0].removeCallbacksAndMessages(null);
             mHandlerOpenUrl[0] = null;
@@ -118,10 +120,7 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
     }
 
     default void startCheckOpenUrlTimeout(boolean reset, long start, long timeout) {
-        if (null != mHandlerOpenUrl[0]) {
-            mHandlerOpenUrl[0].removeCallbacksAndMessages(null);
-            mHandlerOpenUrl[0] = null;
-        }
+        stopCheckOpenUrlTimeout();
         mHandlerOpenUrl[0] = new android.os.Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
@@ -130,6 +129,14 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
                 }
             }
         };
+        mHandlerOpenUrl[0].sendEmptyMessageDelayed(1234, 1000);
+    }
+
+    default void stopCheckOpenUrlTimeout() {
+        if (null != mHandlerOpenUrl[0]) {
+            mHandlerOpenUrl[0].removeCallbacksAndMessages(null);
+            mHandlerOpenUrl[0] = null;
+        }
     }
 
     /***********/
@@ -175,10 +182,7 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
     }
 
     default void startCheckLoadBufferingTimeout(boolean reset, boolean retry, long timeout) {
-        if (null != mHandlerLoadBuffering[0]) {
-            mHandlerLoadBuffering[0].removeCallbacksAndMessages(null);
-            mHandlerLoadBuffering[0] = null;
-        }
+        stopCheckLoadBufferingTimeout();
         mHandlerLoadBuffering[0] = new android.os.Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
@@ -187,7 +191,9 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
                 }
             }
         };
+        mHandlerLoadBuffering[0].sendEmptyMessageDelayed(4321, timeout);
     }
+
     default void stopCheckLoadBufferingTimeout() {
         if (null != mHandlerLoadBuffering[0]) {
             mHandlerLoadBuffering[0].removeCallbacksAndMessages(null);
