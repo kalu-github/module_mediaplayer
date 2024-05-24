@@ -29,7 +29,6 @@ import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.MPLogUtil;
 
-
 public final class VideoIjkPlayer extends VideoBasePlayer {
 
     private long mSeek = 0L; // 快进
