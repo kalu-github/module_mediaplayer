@@ -44,6 +44,10 @@
     public <fields>;
     public <methods>;
 }
+-keep class lib.kalu.mediaplayer.config.start.StartBuilder$Builder {
+    public <fields>;
+    public <methods>;
+}
 
 # component
 -keep class lib.kalu.mediaplayer.core.component.ComponentApi {
