@@ -42,10 +42,9 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
             long duration = getDuration();
             if (duration < 0)
                 duration = 0;
-            long seek = getSeek();
             long max = getMax();
             boolean looping = isLooping();
-            eventApi.onUpdateProgress(looping, max, seek, position, duration);
+            eventApi.onUpdateProgress(looping, max, position, duration);
         } catch (Exception e) {
         }
     }

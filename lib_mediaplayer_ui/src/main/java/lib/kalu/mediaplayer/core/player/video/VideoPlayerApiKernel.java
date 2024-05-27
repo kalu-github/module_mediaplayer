@@ -616,14 +616,13 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             videoKernel.setKernelApi(new VideoKernelApiEvent() {
 
                 @Override
-                public void onUpdateProgress(boolean isLooping, long max, long seek, long position, long duration) {
-//                    MPLogUtil.log("VideoPlayerApiKernel => onUpdateProgress => isLooping = " + isLooping + ", max = " + max + ", seek = " + seek + ", position = " + position + ", duration = " + duration);
+                public void onUpdateProgress(boolean isLooping, long max, long position, long duration) {
 
-                    callUpdateProgressComponent(max, seek, position, duration);
+                    callUpdateProgressComponent(max, position, duration);
                     callUpdateProgressPlayer(position, duration);
                     try {
                         if (max <= 0 || position <= max)
-                            throw new Exception("time warning: max = " + max + ", position = " + position + ", seek = " + seek + ", duration = " + duration + ", isLooping = " + isLooping);
+                            throw new Exception("time warning: max = " + max + ", position = " + position +", duration = " + duration + ", isLooping = " + isLooping);
                         callPlayerEvent(PlayerType.StateType.STATE_TRY_COMPLETE);
                         // 试看1
                         if (isLooping) {

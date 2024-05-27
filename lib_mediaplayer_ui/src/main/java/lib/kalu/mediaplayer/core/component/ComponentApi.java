@@ -202,7 +202,7 @@ public interface ComponentApi {
 
     /******************/
 
-    default void onUpdateProgress(long max, long seek, long position, long duration) {
+    default void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
     }
 
     default boolean dispatchKeyEventComponent(KeyEvent event) {

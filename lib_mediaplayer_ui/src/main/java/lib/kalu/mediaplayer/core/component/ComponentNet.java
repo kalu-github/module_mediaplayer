@@ -20,7 +20,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void onUpdateProgress(long max, long seek, long position, long duration) {
+    public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
         try {
             if(!showSpeed)
                 throw new Exception();

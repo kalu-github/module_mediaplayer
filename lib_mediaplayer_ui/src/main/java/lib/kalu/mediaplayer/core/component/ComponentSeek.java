@@ -25,17 +25,19 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             case PlayerType.StateType.STATE_FAST_FORWARD_START:
             case PlayerType.StateType.STATE_FAST_REWIND_START:
                 LogUtil.log("ComponentSeek => callPlayerEvent => show => playState = " + playState);
+                setUserTouch(true);
                 show();
                 break;
             case PlayerType.StateType.STATE_FAST_FORWARD_STOP:
             case PlayerType.StateType.STATE_FAST_REWIND_STOP:
                 LogUtil.log("ComponentSeek => callPlayerEvent => gone => playState = " + playState);
+                setUserTouch(false);
                 hide();
                 break;
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_END:
-                onUpdateProgress(0, 0, 0, 0);
+                onUpdateProgress(false, 0, 0, 0);
                 break;
         }
     }
@@ -77,17 +79,23 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public void onUpdateProgress(long max, long seek, long position, long duration) {
-//        MPLogUtil.log("ComponentSeek => onUpdateProgress => max = " + max + ", seek = " + seek + ", position = " + position + ", duration = " + duration);
+    public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
+        LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", max = " + max + ", position = " + position + ", duration = " + duration);
 
         // 进度条
         try {
             SeekBar seekBar = findSeekBar();
             if (null == seekBar)
                 throw new Exception("warning: null == seekBar");
-            int visibility = seekBar.getVisibility();
-            if (visibility != View.VISIBLE)
-                throw new Exception("warning: seekBar visibility != View.VISIBLE");
+            Object tag = seekBar.getTag();
+            if (null != tag && !isFromUser)
+                throw new Exception("warning: user touch");
+            if (null == tag && !isFromUser) {
+                int visibility = seekBar.getVisibility();
+                if (visibility != View.VISIBLE) {
+                    throw new Exception("warning: visibility != View.VISIBLE");
+                }
+            }
             seekBar.setProgress((int) position);
             seekBar.setSecondaryProgress((int) position);
             seekBar.setMax((int) (max > 0 ? max : duration));
@@ -99,10 +107,15 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
             if (null == viewMax)
                 throw new Exception("warning: null == viewMax");
-            int visibility = viewMax.getVisibility();
-            if (visibility != View.VISIBLE)
-                throw new Exception("warning: viewMax visibility != View.VISIBLE");
-
+            Object tag = viewMax.getTag();
+            if (null != tag && !isFromUser)
+                throw new Exception("warning: user touch");
+            if (null == tag && !isFromUser) {
+                int visibility = viewMax.getVisibility();
+                if (visibility != View.VISIBLE) {
+                    throw new Exception("warning: visibility != View.VISIBLE");
+                }
+            }
             // ms => s
             StringBuilder builder = new StringBuilder();
             long d = (max > 0 ? max : duration) / 1000;
@@ -128,9 +141,15 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             TextView viewPosition = findViewById(R.id.module_mediaplayer_component_seek_position);
             if (null == viewPosition)
                 throw new Exception("warning: null == viewPosition");
-            int visibility = viewPosition.getVisibility();
-            if (visibility != View.VISIBLE)
-                throw new Exception("warning: viewPosition visibility != View.VISIBLE");
+            Object tag = viewPosition.getTag();
+            if (null != tag && !isFromUser)
+                throw new Exception("warning: user touch");
+            if (null == tag && !isFromUser) {
+                int visibility = viewPosition.getVisibility();
+                if (visibility != View.VISIBLE) {
+                    throw new Exception("warning: visibility != View.VISIBLE");
+                }
+            }
 
             // ms => s
             long c = position / 1000;
@@ -149,6 +168,34 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             String s = builder.toString();
             viewPosition.setText(s);
         } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void setUserTouch(boolean status) {
+        try {
+            SeekBar seekBar = findSeekBar();
+            if (null == seekBar)
+                throw new Exception("seekBar error: null");
+            seekBar.setTag(status ? true : null);
+        } catch (Exception e) {
+            LogUtil.log("ComponentSeek => setUserTouch => " + e.getMessage());
+        }
+        try {
+            TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
+            if (null == viewMax)
+                throw new Exception("warning: null == viewMax");
+            viewMax.setTag(status ? true : null);
+        } catch (Exception e) {
+            LogUtil.log("ComponentSeek => setUserTouch => " + e.getMessage());
+        }
+        try {
+            TextView viewPosition = findViewById(R.id.module_mediaplayer_component_seek_position);
+            if (null == viewPosition)
+                throw new Exception("warning: null == viewPosition");
+            viewPosition.setTag(status ? true : null);
+        } catch (Exception e) {
+            LogUtil.log("ComponentSeek => setUserTouch => " + e.getMessage());
         }
     }
 

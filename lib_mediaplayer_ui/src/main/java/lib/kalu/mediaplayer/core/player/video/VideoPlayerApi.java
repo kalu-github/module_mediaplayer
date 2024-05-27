@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.SeekBar;
 
 
-
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
@@ -13,7 +12,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerApiBase, VideoPlayerApiKernel, VideoPlayerApiDevice, VideoPlayerApiComponent, VideoPlayerApiCache, VideoPlayerApiRender {
 
-    default boolean dispatchKeyEventPlayer( KeyEvent event) {
+    default boolean dispatchKeyEventPlayer(KeyEvent event) {
         boolean isFloat = isFloat();
         boolean isFull = isFull();
         dispatchKeyEventComponents(event);
@@ -53,96 +52,28 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
             toggle();
             return true;
         }
-        // action_down => keycode_dpad_right => seek_forward => start1
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT && event.getRepeatCount() == 0) {
-            try {
-                if (!isPrepared())
-                    throw new Exception("isPrepared error: false");
-                if (isLive())
-                    throw new Exception("living error: true");
-                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
-            } catch (Exception e) {
-                LogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekForward => start1 => " + e.getMessage());
-            }
-            return true;
-        }
-        // action_down => keycode_dpad_right => seek_forward => start2
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT && event.getRepeatCount() >= 1) {
-            try {
-                if (!isPrepared())
-                    throw new Exception("isPrepared error: false");
-                if (isLive())
-                    throw new Exception("living error: true");
-                seekForward(KeyEvent.ACTION_DOWN);
-            } catch (Exception e) {
-                LogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekForward => start2 => " + e.getMessage());
-            }
+        // seekForward => start
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            int repeatCount = event.getRepeatCount();
+            seekForward(KeyEvent.ACTION_DOWN, repeatCount);
             return true;
         }
         // seekForward => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            try {
-                if (!isPrepared())
-                    throw new Exception("isPrepared error: false");
-                if (isLive())
-                    throw new Exception("living error: true");
-                boolean checkSeekBar = checkSeekBar();
-                if (!checkSeekBar)
-                    throw new Exception("checkSeekBar error: false");
-                seekForward(KeyEvent.ACTION_UP);
-                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
-                if (isPlaying())
-                    throw new Exception("playing waining: true");
-                resume();
-            } catch (Exception e) {
-                LogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekForward => stop => " + e.getMessage());
-            }
+            int repeatCount = event.getRepeatCount();
+            seekForward(KeyEvent.ACTION_UP, repeatCount);
             return true;
         }
-        // seekRewind => start1
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT && event.getRepeatCount() == 0) {
-            try {
-                if (!isPrepared())
-                    throw new Exception("isPrepared error: false");
-                if (isLive())
-                    throw new Exception("living error: true");
-                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
-            } catch (Exception e) {
-                LogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekRewind => start1 => " + e.getMessage());
-            }
-            return true;
-        }
-        // seekRewind => start2
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT && event.getRepeatCount() >= 1) {
-            try {
-                if (!isPrepared())
-                    throw new Exception("isPrepared error: false");
-                if (isLive())
-                    throw new Exception("living error: true");
-                seekRewind(KeyEvent.ACTION_DOWN);
-            } catch (Exception e) {
-                LogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekRewind => start2 => " + e.getMessage());
-            }
+        // seekRewind => start
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            int repeatCount = event.getRepeatCount();
+            seekRewind(KeyEvent.ACTION_DOWN, repeatCount);
             return true;
         }
         // seekRewind => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            try {
-                if (!isPrepared())
-                    throw new Exception("isPrepared error: false");
-                if (isLive())
-                    throw new Exception("living error: true");
-                boolean checkSeekBar = checkSeekBar();
-                if (!checkSeekBar)
-                    throw new Exception("checkSeekBar error: false");
-                seekRewind(KeyEvent.ACTION_UP);
-                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
-                if (isPlaying())
-                    throw new Exception("playing waining: true");
-                resume();
-            } catch (Exception e) {
-                LogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekRewind => stop => " + e.getMessage());
-            }
+            int repeatCount = event.getRepeatCount();
+            seekRewind(KeyEvent.ACTION_UP, repeatCount);
             return true;
         }
         // android
@@ -181,7 +112,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
         }
     }
 
-    default void checkOnDetachedFromWindow( boolean releaseTag) {
+    default void checkOnDetachedFromWindow(boolean releaseTag) {
         try {
             String url = getUrl();
             if (null == url || url.length() <= 0)
@@ -222,104 +153,135 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
 
     /**
      * 快进
-     *
-     * @param action
      */
-    default void seekForward(int action) {
+    default void seekForward(int action, int repeatCount) {
         try {
+            boolean live = isLive();
+            if (live)
+                throw new Exception("warning: live true");
+            boolean prepared = isPrepared();
+            if (!prepared)
+                throw new Exception("warning: prepared false");
             SeekBar seekBar = findSeekBar();
             if (null == seekBar)
                 throw new Exception("seekbar error: null");
-            boolean checkSeekBar = checkSeekBar();
-            if (!checkSeekBar)
-                throw new Exception("checkSeekBar error: false");
-            int duration = seekBar.getMax();
-            int progress = seekBar.getProgress();
-            if (duration <= 0)
-                throw new Exception("duration error: " + duration);
-            // action_down
-            if (action == KeyEvent.ACTION_DOWN) {
+            if (action == KeyEvent.ACTION_DOWN && repeatCount == 1) {
+                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
+            } else if (action == KeyEvent.ACTION_DOWN && repeatCount > 1) {
+                boolean seekBarShowing = isSeekBarShowing();
+                if (!seekBarShowing)
+                    throw new Exception("warning: seekBarShowing false");
+                int duration = seekBar.getMax();
+                int progress = seekBar.getProgress();
+                if (duration <= 0)
+                    throw new Exception("duration error: " + duration);
                 if (progress >= duration)
                     throw new Exception("error: not progress>=max");
-                int nextPosition = progress + Math.abs(duration) / 200;
-                if (nextPosition > duration) {
-                    nextPosition = duration;
+                int range = (progress / 100);
+                if (range < 1000) {
+                    range = 1000;
+                }
+                progress += range;
+                if (progress > duration) {
+                    progress = duration;
                 }
                 long max = getMax();
-                callUpdateSeekProgress(nextPosition, duration, max);
-            }
-            // action_up
-            else if (action == KeyEvent.ACTION_UP) {
+                callUpdateProgress(max, progress, duration);
+            } else if (action == KeyEvent.ACTION_DOWN) {
+                throw new Exception("warning: repeatCount <1");
+            } else if (action == KeyEvent.ACTION_UP) {
+                boolean seekBarShowing = isSeekBarShowing();
+                if (!seekBarShowing)
+                    throw new Exception("warning: seekBarShowing false");
+                int duration = seekBar.getMax();
+                int progress = seekBar.getProgress();
+                if (duration <= 0)
+                    throw new Exception("duration error: " + duration);
                 if (progress >= duration) {
                     progress = duration;
                 }
                 seekTo(progress);
-            }
-            // error
-            else {
+                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
+                boolean playing = isPlaying();
+                if (!playing) {
+                    resume();
+                }
+            } else {
                 throw new Exception("error: not find");
             }
-
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApi => seekForward => " + e.getMessage());
         }
     }
 
-
     /**
      * 快退
-     *
-     * @param action
      */
-    default void seekRewind(int action) {
+    default void seekRewind(int action, int repeatCount) {
         try {
+            boolean live = isLive();
+            if (live)
+                throw new Exception("warning: live true");
+            boolean prepared = isPrepared();
+            if (!prepared)
+                throw new Exception("warning: prepared false");
             SeekBar seekBar = findSeekBar();
             if (null == seekBar)
                 throw new Exception("seekbar error: null");
-            boolean checkSeekBar = checkSeekBar();
-            if (!checkSeekBar)
-                throw new Exception("checkSeekBar error: false");
-            int duration = seekBar.getMax();
-            int progress = seekBar.getProgress();
-            if (duration <= 0)
-                throw new Exception("error: max <= 0 || progress <= 0");
-            // action_down
-            if (action == KeyEvent.ACTION_DOWN) {
+            if (action == KeyEvent.ACTION_DOWN && repeatCount == 1) {
+                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
+            } else if (action == KeyEvent.ACTION_DOWN && repeatCount > 1) {
+                int duration = seekBar.getMax();
+                int progress = seekBar.getProgress();
+                if (duration <= 0)
+                    throw new Exception("error: max <= 0 || progress <= 0");
                 if (progress <= 0)
                     throw new Exception("progress warning: " + progress);
-                int nextPosition = progress - Math.abs(duration) / 200;
-                if (nextPosition < 0) {
-                    nextPosition = 0;
+                int range = (progress / 100);
+                if (range < 1000) {
+                    range = 1000;
+                }
+                progress -= range;
+                if (progress < 0) {
+                    progress = 0;
                 }
                 long max = getMax();
-                callUpdateSeekProgress(nextPosition, duration, max);
-            }
-            // action_up
-            else if (action == KeyEvent.ACTION_UP) {
+                callUpdateProgress(max, progress, duration);
+            } else if (action == KeyEvent.ACTION_DOWN) {
+                throw new Exception("warning: repeatCount <1");
+            } else if (action == KeyEvent.ACTION_UP) {
+                boolean seekBarShowing = isSeekBarShowing();
+                if (!seekBarShowing)
+                    throw new Exception("warning: seekBarShowing false");
+                int progress = seekBar.getProgress();
                 if (progress < 0) {
                     progress = 0;
                 }
                 seekTo(progress);
-            }
-            // error
-            else {
+                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
+                boolean playing = isPlaying();
+                if (!playing) {
+                    resume();
+                }
+            } else {
                 throw new Exception("error: not find");
             }
-
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApi => seekForward => " + e.getMessage());
+            LogUtil.log("VideoPlayerApi => seekRewind => " + e.getMessage());
         }
     }
 
-    default boolean checkSeekBar() {
+    default boolean isSeekBarShowing() {
         try {
             ComponentApiSeek seekComponent = findSeekComponent();
             if (null == seekComponent)
                 throw new Exception("seekComponent error: null");
-            LogUtil.log("VideoPlayerApi => checkSeekBar => seekComponent = " + seekComponent);
-            return seekComponent.isComponentShowing();
+            boolean componentShowing = seekComponent.isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            return true;
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApi => checkSeekBar => " + e.getMessage());
+            LogUtil.log("VideoPlayerApi => isSeekBarShowing => " + e.getMessage());
             return false;
         }
     }
@@ -328,10 +290,10 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
         try {
             ComponentApiSeek seekComponent = findSeekComponent();
             if (null == seekComponent)
-                throw new Exception("seekComponent error: null");
+                throw new Exception("warning: seekComponent null");
             SeekBar seekBar = seekComponent.findSeekBar();
             if (null == seekBar)
-                throw new Exception("seekbar error: null");
+                throw new Exception("error: seekBar null");
             return seekBar;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApi => findSeekBar => " + e.getMessage());

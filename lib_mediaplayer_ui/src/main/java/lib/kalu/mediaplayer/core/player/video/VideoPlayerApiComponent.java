@@ -148,7 +148,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
         }
     }
 
-    default void callUpdateProgressComponent(long max, long seek, long position, long duration) {
+    default void callUpdateProgressComponent(long max, long position, long duration) {
         try {
             ViewGroup viewGroup = getBaseControlViewGroup();
             int childCount = viewGroup.getChildCount();
@@ -160,7 +160,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).onUpdateProgress(max, seek, position, duration);
+                ((ComponentApi) childAt).onUpdateProgress(false, max, position, duration);
             }
         } catch (Exception e) {
 //            MPLogUtil.log("VideoPlayerApiComponent => callUpdateProgressComponent => " + e.getMessage());
