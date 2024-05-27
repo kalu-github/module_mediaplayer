@@ -240,6 +240,31 @@ public final class TestActivity extends Activity {
         });
         playerLayout.setOnPlayerEventListener(new OnPlayerEventListener() {
             @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onRestart() {
+
+            }
+
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onPause() {
+
+            }
+
+            @Override
+            public void onResume() {
+
+            }
+
+            @Override
             public void onEvent(int state) {
                 LogUtil.log("onPlayStateChanged => state = " + state);
 

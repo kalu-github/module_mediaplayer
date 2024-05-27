@@ -51,6 +51,35 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
             if (null == eventListener)
                 throw new Exception("eventListener error: null");
             eventListener.onEvent(state);
+            switch (state) {
+                case PlayerType.StateType.STATE_RESTAER:
+                    eventListener.onRestart();
+                    break;
+                case PlayerType.StateType.STATE_START:
+                    eventListener.onStart();
+                    break;
+                case PlayerType.StateType.STATE_END:
+                    eventListener.onComplete();
+                    break;
+                case PlayerType.StateType.STATE_PAUSE:
+                    eventListener.onPause();
+                    break;
+                case PlayerType.StateType.STATE_RESUME:
+                    eventListener.onResume();
+                    break;
+                case PlayerType.StateType.STATE_BUFFERING_START:
+                    eventListener.onBufferingStart();
+                    break;
+                case PlayerType.StateType.STATE_BUFFERING_STOP:
+                    eventListener.onBufferingStop();
+                    break;
+                case PlayerType.StateType.STATE_LOADING_START:
+                    eventListener.onLoadingStart();
+                    break;
+                case PlayerType.StateType.STATE_LOADING_STOP:
+                    eventListener.onLoadingStop();
+                    break;
+            }
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiBase => callPlayerEvent => " + e.getMessage());
         }
