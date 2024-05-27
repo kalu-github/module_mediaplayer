@@ -7,6 +7,7 @@ import android.widget.SeekBar;
 
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
 import lib.kalu.mediaplayer.util.LogUtil;
 

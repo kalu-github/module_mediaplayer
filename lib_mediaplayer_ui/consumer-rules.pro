@@ -46,7 +46,57 @@
 }
 
 # component
--keep class lib.kalu.mediaplayer.core.component.** {
+-keep class lib.kalu.mediaplayer.core.component.ComponentApi {
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentApiSeek {
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentComplete {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentError {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentGesture {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentInit {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentLoading {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentNet {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentPause {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentSeek {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentSubtitle {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentSurfaceCover {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentTitle {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentTry {
     public <fields>;
     public <methods>;
 }

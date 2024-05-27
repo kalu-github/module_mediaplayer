@@ -109,7 +109,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
         }
     }
 
-    default <T extends ComponentApiSeek> T findSeekComponent() {
+    default <T extends ComponentApi> T findSeekComponent() {
         try {
             ViewGroup viewGroup = getBaseControlViewGroup();
             int childCount = viewGroup.getChildCount();
