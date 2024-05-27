@@ -1,13 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
-import android.os.Looper;
-import android.os.Message;
-
-import androidx.annotation.NonNull;
-
-import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public abstract class VideoBasePlayer implements VideoKernelApi {
 
@@ -63,7 +57,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
                 throw new Exception("eventApi error: null");
             eventApi.onEvent(kernel, event);
         } catch (Exception e) {
-            MPLogUtil.log("VideoBasePlayer => onEvent => " + e.getMessage());
+            LogUtil.log("VideoBasePlayer => onEvent => " + e.getMessage());
         }
     }
 
@@ -74,7 +68,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
                 throw new Exception("eventApi error: null");
             eventApi.onUpdateSizeChanged(kernel, videoWidth, videoHeight, rotation);
         } catch (Exception e) {
-            MPLogUtil.log("VideoBasePlayer => onUpdateSizeChanged => " + e.getMessage());
+            LogUtil.log("VideoBasePlayer => onUpdateSizeChanged => " + e.getMessage());
         }
     }
 

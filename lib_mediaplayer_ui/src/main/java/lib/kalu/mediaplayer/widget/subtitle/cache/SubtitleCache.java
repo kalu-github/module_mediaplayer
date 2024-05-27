@@ -34,7 +34,7 @@ import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.List;
 
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;
 
 /**
@@ -71,7 +71,7 @@ public class SubtitleCache {
             md.update(str.getBytes());
             return new BigInteger(1, md.digest()).toString(16);
         } catch (Exception e) {
-            MPLogUtil.log("SubtitleCache => getMD5 => " + e.getMessage());
+            LogUtil.log("SubtitleCache => getMD5 => " + e.getMessage());
             return null;
         }
     }

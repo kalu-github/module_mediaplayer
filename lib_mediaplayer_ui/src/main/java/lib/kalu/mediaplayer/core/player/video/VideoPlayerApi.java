@@ -8,7 +8,7 @@ import android.widget.SeekBar;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerApiBase, VideoPlayerApiKernel, VideoPlayerApiDevice, VideoPlayerApiComponent, VideoPlayerApiCache, VideoPlayerApiRender {
 
@@ -61,7 +61,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
                     throw new Exception("living error: true");
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
             } catch (Exception e) {
-                MPLogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekForward => start1 => " + e.getMessage());
+                LogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekForward => start1 => " + e.getMessage());
             }
             return true;
         }
@@ -74,7 +74,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
                     throw new Exception("living error: true");
                 seekForward(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
-                MPLogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekForward => start2 => " + e.getMessage());
+                LogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekForward => start2 => " + e.getMessage());
             }
             return true;
         }
@@ -94,7 +94,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
                     throw new Exception("playing waining: true");
                 resume();
             } catch (Exception e) {
-                MPLogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekForward => stop => " + e.getMessage());
+                LogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekForward => stop => " + e.getMessage());
             }
             return true;
         }
@@ -107,7 +107,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
                     throw new Exception("living error: true");
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
             } catch (Exception e) {
-                MPLogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekRewind => start1 => " + e.getMessage());
+                LogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekRewind => start1 => " + e.getMessage());
             }
             return true;
         }
@@ -120,7 +120,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
                     throw new Exception("living error: true");
                 seekRewind(KeyEvent.ACTION_DOWN);
             } catch (Exception e) {
-                MPLogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekRewind => start2 => " + e.getMessage());
+                LogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekRewind => start2 => " + e.getMessage());
             }
             return true;
         }
@@ -140,7 +140,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
                     throw new Exception("playing waining: true");
                 resume();
             } catch (Exception e) {
-                MPLogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekRewind => stop => " + e.getMessage());
+                LogUtil.log("VideoPlayerApi => dispatchKeyEventComponent22 => seekRewind => stop => " + e.getMessage());
             }
             return true;
         }
@@ -176,7 +176,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
                 }
             }
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApi => checkOnWindowVisibilityChanged => " + e.getMessage());
+            LogUtil.log("VideoPlayerApi => checkOnWindowVisibilityChanged => " + e.getMessage());
         }
     }
 
@@ -187,7 +187,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
                 throw new Exception("url error: " + url);
             release(releaseTag, false);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApi => checkOnDetachedFromWindow => " + e.getMessage());
+            LogUtil.log("VideoPlayerApi => checkOnDetachedFromWindow => " + e.getMessage());
         }
     }
 
@@ -197,12 +197,12 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
             if (null == url || url.length() <= 0)
                 throw new Exception("url warning: " + url);
             boolean playing = isPlaying();
-            MPLogUtil.log("VideoPlayerApi => checkOnAttachedToWindow => url = " + url + ", playing = " + playing + ", this = " + this);
+            LogUtil.log("VideoPlayerApi => checkOnAttachedToWindow => url = " + url + ", playing = " + playing + ", this = " + this);
             if (playing)
                 throw new Exception("playing warning: true");
             restart();
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApi => checkOnAttachedToWindow => " + e.getMessage());
+            LogUtil.log("VideoPlayerApi => checkOnAttachedToWindow => " + e.getMessage());
         }
     }
 
@@ -215,7 +215,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
             long duration = getDuration();
             saveBundle(getBaseContext(), url, position, duration);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApi => onSaveBundle => " + e.getMessage());
+            LogUtil.log("VideoPlayerApi => onSaveBundle => " + e.getMessage());
         }
     }
 
@@ -260,7 +260,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
             }
 
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApi => seekForward => " + e.getMessage());
+            LogUtil.log("VideoPlayerApi => seekForward => " + e.getMessage());
         }
     }
 
@@ -306,7 +306,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
             }
 
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApi => seekForward => " + e.getMessage());
+            LogUtil.log("VideoPlayerApi => seekForward => " + e.getMessage());
         }
     }
 
@@ -315,10 +315,10 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
             ComponentApiSeek seekComponent = findSeekComponent();
             if (null == seekComponent)
                 throw new Exception("seekComponent error: null");
-            MPLogUtil.log("VideoPlayerApi => checkSeekBar => seekComponent = " + seekComponent);
+            LogUtil.log("VideoPlayerApi => checkSeekBar => seekComponent = " + seekComponent);
             return seekComponent.isComponentShowing();
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApi => checkSeekBar => " + e.getMessage());
+            LogUtil.log("VideoPlayerApi => checkSeekBar => " + e.getMessage());
             return false;
         }
     }
@@ -333,7 +333,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
                 throw new Exception("seekbar error: null");
             return seekBar;
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApi => findSeekBar => " + e.getMessage());
+            LogUtil.log("VideoPlayerApi => findSeekBar => " + e.getMessage());
             return null;
         }
     }

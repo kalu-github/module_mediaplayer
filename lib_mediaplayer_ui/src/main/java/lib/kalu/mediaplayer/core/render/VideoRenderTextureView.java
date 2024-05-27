@@ -29,7 +29,7 @@ import androidx.annotation.RequiresApi;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 
 /**
@@ -54,14 +54,14 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
 
     @Override
     protected void onDetachedFromWindow() {
-        MPLogUtil.log("VideoRenderTextureView => onDetachedFromWindow => " + this);
+        LogUtil.log("VideoRenderTextureView => onDetachedFromWindow => " + this);
         super.onDetachedFromWindow();
 //        release();
     }
 
     @Override
     protected void onAttachedToWindow() {
-        MPLogUtil.log("VideoRenderTextureView => onAttachedToWindow => " + this);
+        LogUtil.log("VideoRenderTextureView => onAttachedToWindow => " + this);
         super.onAttachedToWindow();
     }
 
@@ -85,7 +85,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-                MPLogUtil.log("VideoRenderTextureView => onSurfaceTextureAvailable => " + this);
+                LogUtil.log("VideoRenderTextureView => onSurfaceTextureAvailable => " + this);
                 if (mSurfaceTexture != null) {
                     setSurfaceTexture(mSurfaceTexture);
                 } else {
@@ -250,7 +250,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
 
     @Override
     public void setVideoFormat(int videoWidth, int videoHeight, int videoRotation) {
-        MPLogUtil.log("VideoRenderTextureView => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation);
+        LogUtil.log("VideoRenderTextureView => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation);
 
         boolean update = false;
         if (mVideoRotation != videoRotation) {
@@ -273,7 +273,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
 
     @Override
     public void setVideoSize(int videoWidth, int videoHeight) {
-        MPLogUtil.log("VideoRenderTextureView => setVideoSize => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
+        LogUtil.log("VideoRenderTextureView => setVideoSize => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
 
         boolean update = false;
         if (videoWidth != 0 && mVideoWidth != videoWidth) {
@@ -291,7 +291,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
 
     @Override
     public void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
-        MPLogUtil.log("VideoRenderTextureView => setVideoRotation => videoRotation = " + videoRotation);
+        LogUtil.log("VideoRenderTextureView => setVideoRotation => videoRotation = " + videoRotation);
         if (mVideoRotation != videoRotation) {
             this.mVideoRotation = videoRotation;
             requestLayout();
@@ -300,7 +300,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
 
     @Override
     public void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
-        MPLogUtil.log("VideoRenderTextureView => setVideoScaleType => scaleType = " + scaleType);
+        LogUtil.log("VideoRenderTextureView => setVideoScaleType => scaleType = " + scaleType);
         if (mVideoScaleType != scaleType) {
             this.mVideoScaleType = scaleType;
             requestLayout();
@@ -317,13 +317,13 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
                 throw new Exception("measureSpec error: " + measureSpec);
             int width = measureSpec[0];
             int height = measureSpec[1];
-            MPLogUtil.log("VideoRenderTextureView => onMeasure => width = " + width + ", height = " + height);
+            LogUtil.log("VideoRenderTextureView => onMeasure => width = " + width + ", height = " + height);
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             int specH = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             super.onMeasure(specW, specH);
 //            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderTextureView => onMeasure => " + e.getMessage());
+            LogUtil.log("VideoRenderTextureView => onMeasure => " + e.getMessage());
         }
     }
 }

@@ -7,7 +7,7 @@ import android.widget.RelativeLayout;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentSurfaceCover extends RelativeLayout implements ComponentApi {
 
@@ -20,14 +20,13 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
     public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_START:
-                MPLogUtil.log("ComponentSurfaceCover => callPlayerEvent => show => playState = " + playState);
+                LogUtil.log("ComponentSurfaceCover => callPlayerEvent => show => playState = " + playState);
                 hide();
                 break;
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_RELEASE:
             case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_ERROR_IGNORE:
-                MPLogUtil.log("ComponentSurfaceCover => callPlayerEvent => gone => playState = " + playState);
+                LogUtil.log("ComponentSurfaceCover => callPlayerEvent => gone => playState = " + playState);
                 show();
                 break;
         }
@@ -39,7 +38,7 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
             
             findViewById(R.id.module_mediaplayer_component_surface_cover_bg).setVisibility(View.VISIBLE);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentSurfaceCover => show => " + e.getMessage());
+            LogUtil.log("ComponentSurfaceCover => show => " + e.getMessage());
         }
     }
 
@@ -49,7 +48,7 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
             
             findViewById(R.id.module_mediaplayer_component_surface_cover_bg).setVisibility(View.GONE);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentSurfaceCover => hide => " + e.getMessage());
+            LogUtil.log("ComponentSurfaceCover => hide => " + e.getMessage());
         }
     }
 }

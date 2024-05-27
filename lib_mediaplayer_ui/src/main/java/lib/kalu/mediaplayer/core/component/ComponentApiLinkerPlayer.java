@@ -5,7 +5,7 @@ import android.view.ViewParent;
 
 
 
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 
@@ -25,7 +25,7 @@ public interface ComponentApiLinkerPlayer {
                 throw new Exception("parent error: not instanceof PlayerLayout");
             return (PlayerLayout) parent;
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApiLinkerPlayer => getPlayerLayout => " + e.getMessage());
+            LogUtil.log("ComponentApiLinkerPlayer => getPlayerLayout => " + e.getMessage());
             return null;
         }
     }
@@ -49,7 +49,7 @@ public interface ComponentApiLinkerPlayer {
                 new Exception("not find");
             return playerView;
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApiLinkerPlayer => getPlayerView => " + e.getMessage());
+            LogUtil.log("ComponentApiLinkerPlayer => getPlayerView => " + e.getMessage());
             return null;
         }
     }
@@ -61,7 +61,7 @@ public interface ComponentApiLinkerPlayer {
                 throw new Exception("playerView error: null");
             return playerView.isFull();
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApiLinkerPlayer => isFull => " + e.getMessage());
+            LogUtil.log("ComponentApiLinkerPlayer => isFull => " + e.getMessage());
             return false;
         }
     }
@@ -73,7 +73,7 @@ public interface ComponentApiLinkerPlayer {
                 throw new Exception("playerView error: null");
             return playerView.isPlaying();
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApiLinkerPlayer => isPlaying => " + e.getMessage());
+            LogUtil.log("ComponentApiLinkerPlayer => isPlaying => " + e.getMessage());
             return false;
         }
     }
@@ -85,7 +85,7 @@ public interface ComponentApiLinkerPlayer {
                 throw new Exception("playerView error: null");
             return playerView.getNetSpeed();
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApiLinkerPlayer => isFull => " + e.getMessage());
+            LogUtil.log("ComponentApiLinkerPlayer => isFull => " + e.getMessage());
             return "0kb/s";
         }
     }
@@ -97,7 +97,7 @@ public interface ComponentApiLinkerPlayer {
                 throw new Exception("playerView error: null");
             playerView.resume();
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApiLinkerPlayer => resume => " + e.getMessage());
+            LogUtil.log("ComponentApiLinkerPlayer => resume => " + e.getMessage());
         }
     }
 
@@ -108,7 +108,7 @@ public interface ComponentApiLinkerPlayer {
                 throw new Exception("playerView error: null");
             playerView.pause();
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApiLinkerPlayer => pause => " + e.getMessage());
+            LogUtil.log("ComponentApiLinkerPlayer => pause => " + e.getMessage());
         }
     }
 
@@ -122,7 +122,7 @@ public interface ComponentApiLinkerPlayer {
                 throw new Exception("url error: " + url);
             return url;
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApiLinkerPlayer => getUrl => " + e.getMessage());
+            LogUtil.log("ComponentApiLinkerPlayer => getUrl => " + e.getMessage());
             return null;
         }
     }
@@ -136,7 +136,7 @@ public interface ComponentApiLinkerPlayer {
                 throw new Exception("data error: " + data);
             return data;
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApiLinkerPlayer => getData => " + e.getMessage());
+            LogUtil.log("ComponentApiLinkerPlayer => getData => " + e.getMessage());
             return null;
         }
     }

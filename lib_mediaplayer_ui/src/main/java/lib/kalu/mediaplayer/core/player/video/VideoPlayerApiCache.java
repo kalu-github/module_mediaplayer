@@ -14,7 +14,7 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoPlayerApiCache {
 
@@ -117,7 +117,7 @@ interface VideoPlayerApiCache {
             String s = object.toString();
             setCache(context, "save_bundle", s);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBuriedEvent => saveBundle => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBuriedEvent => saveBundle => " + e.getMessage());
         }
     }
 }

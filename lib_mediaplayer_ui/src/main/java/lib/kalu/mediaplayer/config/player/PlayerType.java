@@ -88,7 +88,6 @@ public @interface PlayerType {
         int STATE_TRY_COMPLETE = 3_016; // 试看完成
         int STATE_PAUSE = 3_017; // 暂停播放
         int STATE_RESUME = 3_019; // 恢复播放
-        int STATE_RESUME_IGNORE = 3_020; // 恢复播放
         int STATE_RESTAER = 3_021; // 重播一次
         int STATE_CLOSE = 3_022; // 暂停播放
         int STATE_BUFFERING_TIMEOUT = 3_023; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
@@ -102,7 +101,6 @@ public @interface PlayerType {
         int STATE_FAST_REWIND_STOP = 3_031; // 快进
 
         int STATE_ERROR = 3_032; // 错误
-        int STATE_ERROR_IGNORE = 3_033; // 错误
         int STATE_COMPONENT_SEEK_SHOW = 3_034; // 显示进度条
         int STATE_RELEASE = 3_035;
         int STATE_RELEASE_EXCEPTION = 3_036;
@@ -138,7 +136,6 @@ public @interface PlayerType {
                 STATE_START_PLAY_WHEN_READY_PAUSE,
                 STATE_PAUSE,
                 STATE_RESUME,
-                STATE_RESUME_IGNORE,
                 STATE_RESTAER,
                 STATE_CLOSE,
                 STATE_BUFFERING_TIMEOUT,
@@ -151,7 +148,6 @@ public @interface PlayerType {
                 STATE_LOADING_START,
                 STATE_ONCE_LIVE,
                 STATE_ERROR,
-                STATE_ERROR_IGNORE,
                 STATE_RELEASE,
                 STATE_RELEASE_EXCEPTION,
                 STATE_COMPONENT_SEEK_SHOW})
@@ -245,7 +241,6 @@ public @interface PlayerType {
         int EVENT_ERROR_SOURCE = 7_003;
         int EVENT_ERROR_PARSE = 7_004;
         int EVENT_ERROR_NET = 7_005;
-        int EVENT_ERROR_IGNORE = 7_006;
         int EVENT_LOADING_START = 7_007; // 开始转圈
         int EVENT_LOADING_START_IGNORE = 7_008; // 开始转圈
         int EVENT_LOADING_STOP = 7_009; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放
@@ -288,7 +283,6 @@ public @interface PlayerType {
                 EVENT_ERROR_SOURCE,
                 EVENT_ERROR_PARSE,
                 EVENT_ERROR_NET,
-                EVENT_ERROR_IGNORE,
 //                EVENT_OPEN_INPUT,
                 EVENT_LOADING_START,
                 EVENT_LOADING_START_IGNORE,

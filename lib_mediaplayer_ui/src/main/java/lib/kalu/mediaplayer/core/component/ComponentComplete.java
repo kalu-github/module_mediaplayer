@@ -9,7 +9,7 @@ import android.widget.RelativeLayout;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentComplete extends RelativeLayout implements ComponentApi {
 
@@ -22,11 +22,11 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_END:
-                MPLogUtil.log("ComponentComplete[show] => playState = " + playState);
+                LogUtil.log("ComponentComplete[show] => playState = " + playState);
                 show();
                 break;
             case PlayerType.StateType.STATE_INIT:
-                MPLogUtil.log("ComponentComplete[gone] => playState = " + playState);
+                LogUtil.log("ComponentComplete[gone] => playState = " + playState);
                 hide();
                 break;
         }

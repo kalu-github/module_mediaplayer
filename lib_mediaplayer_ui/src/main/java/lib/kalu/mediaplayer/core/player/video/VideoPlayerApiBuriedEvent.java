@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.core.player.video;
 
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoPlayerApiBuriedEvent {
 
@@ -18,7 +18,7 @@ interface VideoPlayerApiBuriedEvent {
             long duration = ((VideoPlayerApi) this).getDuration();
             buriedEvent.onPlaying(url, position, duration);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBuriedEvent => onBuriedEventPlaying => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedEventPlaying => " + e.getMessage());
         }
     }
 
@@ -34,7 +34,7 @@ interface VideoPlayerApiBuriedEvent {
             long duration = ((VideoPlayerApi) this).getDuration();
             buriedEvent.onPause(url, position, duration);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBuriedEvent => onBuriedEventPause => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedEventPause => " + e.getMessage());
         }
     }
 
@@ -50,7 +50,7 @@ interface VideoPlayerApiBuriedEvent {
             long duration = ((VideoPlayerApi) this).getDuration();
             buriedEvent.onResume(url, position, duration);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBuriedEvent => onBuriedEventResume => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedEventResume => " + e.getMessage());
         }
     }
 
@@ -66,7 +66,7 @@ interface VideoPlayerApiBuriedEvent {
             long duration = ((VideoPlayerApi) this).getDuration();
             buriedEvent.onError(url, position, duration);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBuriedEvent => onBuriedEventError => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedEventError => " + e.getMessage());
         }
     }
 
@@ -82,7 +82,7 @@ interface VideoPlayerApiBuriedEvent {
             long duration = ((VideoPlayerApi) this).getDuration();
             buriedEvent.onCompletion(url, position, duration);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBuriedEvent => onBuriedEventCompletion => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedEventCompletion => " + e.getMessage());
         }
     }
 }

@@ -9,7 +9,7 @@ import lib.kalu.mediaplayer.config.player.PlayerBuilder;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.vlc.util.VlcLogUtil;
 
-public final class MPLogUtil {
+public final class LogUtil {
 
     private static String mTag = "MP_COMMON";
     private static boolean mLog = true;
@@ -68,7 +68,7 @@ public final class MPLogUtil {
             }
         }
 
-        MPLogUtil.mLog = log;
+        LogUtil.mLog = log;
     }
 
     public static boolean isLog() {

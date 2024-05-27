@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentTry extends RelativeLayout implements ComponentApi {
 
@@ -23,16 +23,16 @@ public class ComponentTry extends RelativeLayout implements ComponentApi {
     public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_TRY_BEGIN:
-                MPLogUtil.log("ComponentTry[show] => playState = " + playState);
+                LogUtil.log("ComponentTry[show] => playState = " + playState);
                 show();
                 break;
             case PlayerType.StateType.STATE_TRY_COMPLETE:
                 Toast.makeText(getContext(), "试看结束", Toast.LENGTH_SHORT).show();
-                MPLogUtil.log("ComponentTry[gone] => playState = " + playState);
+                LogUtil.log("ComponentTry[gone] => playState = " + playState);
                 hide();
                 break;
             case PlayerType.StateType.STATE_INIT:
-                MPLogUtil.log("ComponentTry[gone] => playState = " + playState);
+                LogUtil.log("ComponentTry[gone] => playState = " + playState);
                 hide();
                 break;
         }

@@ -9,7 +9,7 @@ import androidx.annotation.FloatRange;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.vlc.widget.OnVlcInfoChangeListener;
 import lib.kalu.vlc.widget.VlcPlayer;
 
@@ -47,7 +47,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context, boolean logger, int seekParameters) {
+    public void createDecoder(Context context, boolean logger, int seekParameters, int connectTimeout) {
         try {
             if (null != mVlcPlayer)
                 throw new Exception("warning: null != mVlcPlayer");
@@ -84,7 +84,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
      * MediaPlayer视频播放器监听listener
      */
     private void initListener() {
-        MPLogUtil.log("VideoVlcPlayer => initListener =>");
+        LogUtil.log("VideoVlcPlayer => initListener =>");
         mVlcPlayerListener = new OnVlcInfoChangeListener() {
             @Override
             public void onStart() {
@@ -140,7 +140,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             mVlcPlayer = null;
             mPrepared = false;
         } catch (Exception e) {
-            MPLogUtil.log("VideoVlcPlayer => release => " + e.getMessage());
+            LogUtil.log("VideoVlcPlayer => release => " + e.getMessage());
         }
     }
 
@@ -154,7 +154,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
                 throw new Exception("mVlcPlayer error: null");
             mVlcPlayer.play();
         } catch (Exception e) {
-            MPLogUtil.log("VideoVlcPlayer => start => " + e.getMessage());
+            LogUtil.log("VideoVlcPlayer => start => " + e.getMessage());
         }
     }
 
@@ -170,7 +170,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
                 throw new Exception("mVlcPlayer error: null");
             mVlcPlayer.pause();
         } catch (Exception e) {
-            MPLogUtil.log("VideoVlcPlayer => pause => " + e.getMessage());
+            LogUtil.log("VideoVlcPlayer => pause => " + e.getMessage());
         }
     }
 
@@ -186,7 +186,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
 //            mVlcPlayer.reset();
             mPrepared = false;
         } catch (Exception e) {
-            MPLogUtil.log("VideoVlcPlayer => stop => " + e.getMessage());
+            LogUtil.log("VideoVlcPlayer => stop => " + e.getMessage());
         }
     }
 
@@ -202,7 +202,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
                 throw new Exception("mVlcPlayer error: null");
             return mVlcPlayer.isPlaying();
         } catch (Exception e) {
-            MPLogUtil.log("VideoVlcPlayer => isPlaying => " + e.getMessage());
+            LogUtil.log("VideoVlcPlayer => isPlaying => " + e.getMessage());
             return false;
         }
     }
@@ -260,7 +260,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
 
     @Override
     public void setSurface(Surface sf, int w, int h) {
-        MPLogUtil.log("VideoVlcPlayer => setSurface => sf = " + sf + ", mVlcPlayer = " + mVlcPlayer + ", w = " + w + ", h = " + h);
+        LogUtil.log("VideoVlcPlayer => setSurface => sf = " + sf + ", mVlcPlayer = " + mVlcPlayer + ", w = " + w + ", h = " + h);
         if (null != sf && null != mVlcPlayer) {
             mVlcPlayer.setSurface(sf, w, h);
         }
@@ -287,7 +287,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
                 throw new Exception("speed error: " + speed);
             return speed;
         } catch (Exception e) {
-            MPLogUtil.log("VideoVlcPlayer => getSpeed => " + e.getMessage());
+            LogUtil.log("VideoVlcPlayer => getSpeed => " + e.getMessage());
             return 1F;
         }
     }
@@ -300,7 +300,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             mVlcPlayer.setSpeed(speed);
             return true;
         } catch (Exception e) {
-            MPLogUtil.log("VideoVlcPlayer => setSpeed => " + e.getMessage());
+            LogUtil.log("VideoVlcPlayer => setSpeed => " + e.getMessage());
             return false;
         }
     }

@@ -1,7 +1,6 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
 import android.content.Context;
-import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.Surface;
@@ -9,11 +8,10 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 
 /**
@@ -29,7 +27,7 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 
     void releaseDecoder(boolean isFromUser);
 
-    void createDecoder(Context context, boolean logger, int seekParameters);
+    void createDecoder(Context context, boolean logger, int seekParameters, int connectTimeout);
 
     void setKernelApi(VideoKernelApiEvent eventApi);
 
@@ -39,14 +37,14 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 
     VideoPlayerApi getPlayerApi();
 
-    default void initOptionsIjk() {
+    default void initOptions(Context context, Object o) {
     }
 
-    default void initOptionsExo(Context context, com.google.android.exoplayer2.ExoPlayer.Builder exoBuilder) {
-    }
-
-    default void initOptionsMediax(Context context, androidx.media3.exoplayer.ExoPlayer.Builder exoBuilder) {
-    }
+//    default void initOptionsExo(Context context, com.google.android.exoplayer2.ExoPlayer.Builder exoBuilder) {
+//    }
+//
+//    default void initOptionsMediax(Context context, androidx.media3.exoplayer.ExoPlayer.Builder exoBuilder) {
+//    }
 
     void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync);
 
@@ -71,7 +69,7 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
         boolean playWhenReady = bundle.isPlayWhenReady();
         setPlayWhenReady(playWhenReady);
         boolean prepareAsync = bundle.isPrepareAsync();
-        MPLogUtil.log("VideoKernelApi => initDecoder => prepareAsync = " + prepareAsync + ", playWhenReady = " + playWhenReady + ", live = " + live + ", loop = " + loop + ", mute = " + mute + ", max = " + max + ", seek = " + seek + ", playUrl = " + playUrl);
+        LogUtil.log("VideoKernelApi => initDecoder => prepareAsync = " + prepareAsync + ", playWhenReady = " + playWhenReady + ", live = " + live + ", loop = " + loop + ", mute = " + mute + ", max = " + max + ", seek = " + seek + ", playUrl = " + playUrl);
         startDecoder(context, reset, connectTimeout, playUrl, prepareAsync);
 
 //        String musicUrl = bundle.getExternalMusicUrl();

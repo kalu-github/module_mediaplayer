@@ -1,22 +1,13 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.RelativeLayout;
-
-import androidx.annotation.ColorInt;
-import androidx.annotation.DimenRes;
-import androidx.annotation.DrawableRes;
-
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentError extends RelativeLayout implements ComponentApi {
 
@@ -29,17 +20,13 @@ public class ComponentError extends RelativeLayout implements ComponentApi {
     public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_ERROR_IGNORE:
-                MPLogUtil.log("ComponentError[show] => playState = " + playState);
+                LogUtil.log("ComponentError[show] => playState = " + playState);
                 show();
                 break;
             case PlayerType.StateType.STATE_INIT:
-            case PlayerType.StateType.STATE_START:
-            case PlayerType.StateType.STATE_START_SEEK:
             case PlayerType.StateType.STATE_RESUME:
-            case PlayerType.StateType.STATE_RESUME_IGNORE:
             case PlayerType.StateType.STATE_RESTAER:
-                MPLogUtil.log("ComponentError[gone] => playState = " + playState);
+                LogUtil.log("ComponentError[gone] => playState = " + playState);
                 hide();
                 break;
         }

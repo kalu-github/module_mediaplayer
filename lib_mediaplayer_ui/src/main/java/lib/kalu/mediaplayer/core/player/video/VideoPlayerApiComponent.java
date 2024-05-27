@@ -13,7 +13,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoPlayerApiComponent extends VideoPlayerApiBase {
 
@@ -25,7 +25,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
                 throw new Exception("not find component");
             viewGroup.removeAllViews();
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiComponent => clearAllComponent => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiComponent => clearAllComponent => " + e.getMessage());
         }
     }
 
@@ -50,7 +50,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
                 viewGroup.removeView(v);
             }
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiComponent => clearComponent => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiComponent => clearComponent => " + e.getMessage());
         }
     }
 
@@ -64,7 +64,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
                 throw new Exception("viewGroup error: null");
             viewGroup.addView((View) componentApi, 0, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiComponent => addComponent => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiComponent => addComponent => " + e.getMessage());
         }
     }
 
@@ -82,7 +82,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
                 addComponent(componentApi);
             }
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiComponent => addAllComponent => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiComponent => addAllComponent => " + e.getMessage());
         }
     }
 
@@ -104,7 +104,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
             }
             throw new Exception("not find");
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiComponent => callWindowEvent => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiComponent => callWindowEvent => " + e.getMessage());
             return null;
         }
     }
@@ -124,7 +124,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
             }
             throw new Exception("not find");
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiComponent => callWindowEvent => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiComponent => callWindowEvent => " + e.getMessage());
             return null;
         }
     }
@@ -144,7 +144,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
                 ((ComponentApi) childAt).dispatchKeyEventComponent(event);
             }
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiComponent => dispatchKeyEventComponents => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiComponent => dispatchKeyEventComponents => " + e.getMessage());
         }
     }
 

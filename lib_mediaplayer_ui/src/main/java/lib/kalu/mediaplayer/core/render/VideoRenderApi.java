@@ -14,9 +14,7 @@ import android.opengl.GLES20;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.Surface;
-import android.view.View;
 import android.view.ViewGroup;
 
 
@@ -26,7 +24,7 @@ import java.io.FileOutputStream;
 import lib.kalu.mediaplayer.config.player.PlayerManager;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 
 public interface VideoRenderApi {
@@ -77,7 +75,7 @@ public interface VideoRenderApi {
                                 int videoWidth, int videoHeight,
                                 @PlayerType.ScaleType.Value int videoScaleType,
                                 @PlayerType.RotationType.Value int videoRotation) {
-        MPLogUtil.log("VideoRenderApi => doMeasureSpec => screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
+        LogUtil.log("VideoRenderApi => doMeasureSpec => screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
 
         if (videoScaleType == 0) {
             videoScaleType = PlayerManager.getInstance().getConfig().getScaleType();
@@ -200,7 +198,7 @@ public interface VideoRenderApi {
             // 5
             return screenshotFile.getAbsolutePath();
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderApi => saveBitmap => " + e.getMessage());
+            LogUtil.log("VideoRenderApi => saveBitmap => " + e.getMessage());
             return null;
         }
     }
@@ -218,7 +216,7 @@ public interface VideoRenderApi {
             canvas.drawRect(0, 0, 0 + canvas.getWidth(), 0 + canvas.getHeight(), paint);
             surface.unlockCanvasAndPost(canvas);
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderApi => clearSurface => " + e.getMessage());
+            LogUtil.log("VideoRenderApi => clearSurface => " + e.getMessage());
         }
     }
 
@@ -264,7 +262,7 @@ public interface VideoRenderApi {
             EGL14.eglDestroyContext(display, context);
             EGL14.eglTerminate(display);
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderApi => clearSurfaceGLES => " + e.getMessage());
+            LogUtil.log("VideoRenderApi => clearSurfaceGLES => " + e.getMessage());
         }
     }
 
@@ -289,7 +287,7 @@ public interface VideoRenderApi {
             };
             mHandler[0].sendEmptyMessageDelayed(2345, 1000);
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderApi => startUpdateProgress => " + e.getMessage());
+            LogUtil.log("VideoRenderApi => startUpdateProgress => " + e.getMessage());
         }
     }
 
@@ -300,7 +298,7 @@ public interface VideoRenderApi {
             mHandler[0].removeMessages(2345);
             mHandler[0] = null;
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderApi => stopUpdateProgress => " + e.getMessage());
+            LogUtil.log("VideoRenderApi => stopUpdateProgress => " + e.getMessage());
         }
     }
 }

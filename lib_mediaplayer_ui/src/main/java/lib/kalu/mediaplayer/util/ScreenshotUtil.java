@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable;
 import java.io.File;
 import java.io.FileOutputStream;
 
-public final class BitmapUtil {
+public final class ScreenshotUtil {
 
     public static String saveDrawable( Context context,  Drawable drawable) {
         try {
@@ -18,7 +18,7 @@ public final class BitmapUtil {
             Bitmap bitmap = bitmapDrawable.getBitmap();
             return saveBitmap(context, bitmap);
         } catch (Exception e) {
-            MPLogUtil.log("BitmapUtil => saveDrawable => " + e.getMessage());
+            LogUtil.log("BitmapUtil => saveDrawable => " + e.getMessage());
             return null;
         }
     }
@@ -48,7 +48,7 @@ public final class BitmapUtil {
             String path = file.getAbsolutePath();
             return path;
         } catch (Exception e) {
-            MPLogUtil.log("BitmapUtil => saveBitmap => " + e.getMessage());
+            LogUtil.log("BitmapUtil => saveBitmap => " + e.getMessage());
             return null;
         }
     }
@@ -78,7 +78,7 @@ public final class BitmapUtil {
             String path = file.getAbsolutePath();
             return path;
         } catch (Exception e) {
-            MPLogUtil.log("BitmapUtil => saveBitmap => " + e.getMessage());
+            LogUtil.log("BitmapUtil => saveBitmap => " + e.getMessage());
             return null;
         }
     }

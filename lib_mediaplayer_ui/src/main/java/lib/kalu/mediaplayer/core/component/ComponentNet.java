@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentNet extends RelativeLayout implements ComponentApi {
 
@@ -48,17 +48,16 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_BUFFERING_START:
-                MPLogUtil.log("ComponentNet => onPlayStateChanged => playState = " + playState);
+                LogUtil.log("ComponentNet => onPlayStateChanged => playState = " + playState);
                 show();
                 break;
             case PlayerType.StateType.STATE_INIT_RETEY_BUFFERING:
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_BUFFERING_STOP:
             case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_ERROR_IGNORE:
             case PlayerType.StateType.STATE_RELEASE:
             case PlayerType.StateType.STATE_RELEASE_EXCEPTION:
-                MPLogUtil.log("ComponentNet => onPlayStateChanged => playState = " + playState);
+                LogUtil.log("ComponentNet => onPlayStateChanged => playState = " + playState);
                 hide();
                 break;
         }

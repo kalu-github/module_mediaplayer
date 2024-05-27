@@ -21,7 +21,7 @@ import androidx.annotation.StringRes;
 
 import java.io.File;
 
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 
 public interface ComponentApi extends ComponentApiLinkerPlayer {
@@ -39,7 +39,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
             ImageView imageView = layout.findViewById(id);
             imageView.setImageResource(value);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setImageResource => " + e.getMessage());
+            LogUtil.log("ComponentApi => setImageResource => " + e.getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
             ImageView imageView = layout.findViewById(id);
             imageView.setImageURI(Uri.parse(url));
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setImageUrl => " + e.getMessage());
+            LogUtil.log("ComponentApi => setImageUrl => " + e.getMessage());
         }
     }
 
@@ -61,7 +61,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
             ImageView imageView = layout.findViewById(id);
             imageView.setImageBitmap(bitmap);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setImageFile => " + e.getMessage());
+            LogUtil.log("ComponentApi => setImageFile => " + e.getMessage());
         }
     }
 
@@ -70,7 +70,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
             TextView view = layout.findViewById(id);
             view.setTextColor(value);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setTextColor => " + e.getMessage());
+            LogUtil.log("ComponentApi => setTextColor => " + e.getMessage());
         }
     }
 
@@ -80,7 +80,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
             int offset = layout.getResources().getDimensionPixelOffset(value);
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setTextSize => " + e.getMessage());
+            LogUtil.log("ComponentApi => setTextSize => " + e.getMessage());
         }
     }
 
@@ -89,7 +89,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
             TextView view = layout.findViewById(id);
             view.setText(value);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setText => " + e.getMessage());
+            LogUtil.log("ComponentApi => setText => " + e.getMessage());
         }
     }
 
@@ -98,7 +98,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
             TextView view = layout.findViewById(id);
             view.setText(value);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setText => " + e.getMessage());
+            LogUtil.log("ComponentApi => setText => " + e.getMessage());
         }
     }
 
@@ -107,7 +107,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
             TextView view = layout.findViewById(id);
             view.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setCompoundDrawablesWithIntrinsicBounds => " + e.getMessage());
+            LogUtil.log("ComponentApi => setCompoundDrawablesWithIntrinsicBounds => " + e.getMessage());
         }
     }
 
@@ -120,7 +120,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
             layoutParams.height = offset;
             view.setLayoutParams(layoutParams);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setDimens => " + e.getMessage());
+            LogUtil.log("ComponentApi => setDimens => " + e.getMessage());
         }
     }
 
@@ -129,7 +129,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
             View view = layout.findViewById(id);
             view.setBackgroundColor(value);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setBackgroundColorInt => " + e.getMessage());
+            LogUtil.log("ComponentApi => setBackgroundColorInt => " + e.getMessage());
         }
     }
 
@@ -139,7 +139,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
             int color = view.getResources().getColor(resId);
             view.setBackgroundColor(color);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setBackgroundColorRes => " + e.getMessage());
+            LogUtil.log("ComponentApi => setBackgroundColorRes => " + e.getMessage());
         }
     }
 
@@ -148,7 +148,7 @@ public interface ComponentApi extends ComponentApiLinkerPlayer {
             View view = layout.findViewById(id);
             view.setBackgroundResource(resId);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentApi => setBackgroundDrawableRes => " + e.getMessage());
+            LogUtil.log("ComponentApi => setBackgroundDrawableRes => " + e.getMessage());
         }
     }
 

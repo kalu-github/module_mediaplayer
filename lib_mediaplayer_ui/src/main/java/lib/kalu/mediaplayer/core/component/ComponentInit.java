@@ -2,19 +2,13 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
-
-import androidx.annotation.Nullable;
-
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentInit extends RelativeLayout implements ComponentApi {
 
@@ -27,11 +21,11 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
     public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_INIT:
-                MPLogUtil.log("ComponentInit[show] => playState = " + playState);
+                LogUtil.log("ComponentInit[show] => playState = " + playState);
                 show();
                 break;
             default:
-                MPLogUtil.log("ComponentInit[gone] => playState = " + playState);
+                LogUtil.log("ComponentInit[gone] => playState = " + playState);
                 hide();
                 break;
         }

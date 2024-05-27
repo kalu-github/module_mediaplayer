@@ -9,7 +9,7 @@ import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoPlayerApiListener extends VideoPlayerApiBase {
 
@@ -22,7 +22,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
                 throw new Exception("windowListener error: null");
             windowListener.onWindow(state);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBase => callPlayerWindow => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBase => callPlayerWindow => " + e.getMessage());
         }
 
         // component
@@ -40,7 +40,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
                 ((ComponentApi) childAt).callWindowEvent(state);
             }
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBase => callPlayerWindow => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBase => callPlayerWindow => " + e.getMessage());
         }
     }
 
@@ -52,7 +52,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
                 throw new Exception("eventListener error: null");
             eventListener.onEvent(state);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBase => callPlayerEvent => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBase => callPlayerEvent => " + e.getMessage());
         }
 
         // component
@@ -70,7 +70,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
                 ((ComponentApi) childAt).callPlayerEvent(state);
             }
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiBase => callPlayerEvent => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBase => callPlayerEvent => " + e.getMessage());
         }
     }
 

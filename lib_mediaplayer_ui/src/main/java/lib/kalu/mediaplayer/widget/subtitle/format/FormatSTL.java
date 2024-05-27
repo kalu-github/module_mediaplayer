@@ -33,7 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.subtitle.exception.FatalParsingException;
 import lib.kalu.mediaplayer.widget.subtitle.model.Style;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;
@@ -190,7 +190,7 @@ public class FormatSTL implements TimedTextFileFormat {
 
         } catch (Exception e) {
             //format error
-            MPLogUtil.log("FormatSTL => parseFile => "+e.getMessage());
+            LogUtil.log("FormatSTL => parseFile => "+e.getMessage());
             throw new FatalParsingException("Format error in the file, migth be due to corrupt data.\n" + e.getMessage());
         }
 

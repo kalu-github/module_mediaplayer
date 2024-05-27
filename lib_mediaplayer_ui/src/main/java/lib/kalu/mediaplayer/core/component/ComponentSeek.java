@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 
 public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
@@ -24,17 +24,16 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
         switch (playState) {
             case PlayerType.StateType.STATE_FAST_FORWARD_START:
             case PlayerType.StateType.STATE_FAST_REWIND_START:
-                MPLogUtil.log("ComponentSeek => callPlayerEvent => show => playState = " + playState);
+                LogUtil.log("ComponentSeek => callPlayerEvent => show => playState = " + playState);
                 show();
                 break;
             case PlayerType.StateType.STATE_FAST_FORWARD_STOP:
             case PlayerType.StateType.STATE_FAST_REWIND_STOP:
-                MPLogUtil.log("ComponentSeek => callPlayerEvent => gone => playState = " + playState);
+                LogUtil.log("ComponentSeek => callPlayerEvent => gone => playState = " + playState);
                 hide();
                 break;
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_ERROR_IGNORE:
             case PlayerType.StateType.STATE_END:
                 onUpdateProgress(0, 0, 0, 0);
                 break;
@@ -56,7 +55,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_seek_ui).setVisibility(View.VISIBLE);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentSeek => show => " + e.getMessage());
+            LogUtil.log("ComponentSeek => show => " + e.getMessage());
         }
         try {
             setTag(R.id.module_mediaplayer_component_seek_sb, true);
@@ -161,7 +160,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 throw new Exception("seekBar error: null");
             return seekBar;
         } catch (Exception e) {
-            MPLogUtil.log("ComponentSeek => findSeekBar => " + e.getMessage());
+            LogUtil.log("ComponentSeek => findSeekBar => " + e.getMessage());
             return null;
         }
     }
@@ -173,7 +172,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             int visibility2 = findViewById(R.id.module_mediaplayer_component_seek_ui).getVisibility();
             return visibility1 == View.VISIBLE && visibility2 == View.VISIBLE;
         } catch (Exception e) {
-            MPLogUtil.log("ComponentSeek => isComponentShowing => " + e.getMessage());
+            LogUtil.log("ComponentSeek => isComponentShowing => " + e.getMessage());
             return false;
         }
     }

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentPause extends RelativeLayout implements ComponentApi {
 
@@ -24,17 +24,14 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_PAUSE:
-                MPLogUtil.log("ComponentPause[show] => playState = " + playState);
+                LogUtil.log("ComponentPause[show] => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.STATE_LOADING_START:
-            case PlayerType.StateType.STATE_START:
+            case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_RESUME:
-            case PlayerType.StateType.STATE_RESUME_IGNORE:
-            case PlayerType.StateType.STATE_RESTAER:
             case PlayerType.StateType.STATE_FAST_FORWARD_START:
             case PlayerType.StateType.STATE_FAST_REWIND_START:
-                MPLogUtil.log("ComponentPause[gone] => playState = " + playState);
+                LogUtil.log("ComponentPause[gone] => playState = " + playState);
                 hide();
                 break;
         }

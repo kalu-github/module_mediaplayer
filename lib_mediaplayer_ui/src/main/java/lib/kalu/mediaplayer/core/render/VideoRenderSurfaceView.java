@@ -1,15 +1,6 @@
 package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.media.MediaMetadataRetriever;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -19,7 +10,7 @@ import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
  * 优点：可以在一个独立的线程中进行绘制，不会影响主线程；使用双缓冲机制，播放视频时画面更流畅
@@ -49,13 +40,13 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 //        release();
-        MPLogUtil.log("VideoRenderSurfaceView => onDetachedFromWindow => " + this);
+        LogUtil.log("VideoRenderSurfaceView => onDetachedFromWindow => " + this);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        MPLogUtil.log("VideoRenderSurfaceView => onAttachedToWindow => " + this);
+        LogUtil.log("VideoRenderSurfaceView => onAttachedToWindow => " + this);
     }
 
     @Override
@@ -82,7 +73,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
                  */
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
-                    MPLogUtil.log("VideoRenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
+                    LogUtil.log("VideoRenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
                     setSurface(false);
                     startUpdateProgress();
                 }
@@ -96,7 +87,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
                  */
                 @Override
                 public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                    MPLogUtil.log("VideoRenderSurfaceView => addListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
+                    LogUtil.log("VideoRenderSurfaceView => addListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
                 }
 
                 /**
@@ -105,14 +96,14 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
                  */
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
-                    MPLogUtil.log("VideoRenderSurfaceView => addListener => surfaceDestroyed => " + this);
+                    LogUtil.log("VideoRenderSurfaceView => addListener => surfaceDestroyed => " + this);
                     setSurface(true);
                     stopUpdateProgress();
                 }
             };
             getHolder().addCallback(mSurfaceHolderCallback);
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => addListener => " + e.getMessage());
+            LogUtil.log("VideoRenderSurfaceView => addListener => " + e.getMessage());
         }
     }
 
@@ -128,7 +119,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
                 mKernel.setSurface(getHolder().getSurface(), 0, 0);
             }
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => setSurface => " + e.getMessage());
+            LogUtil.log("VideoRenderSurfaceView => setSurface => " + e.getMessage());
         }
     }
 
@@ -149,9 +140,9 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
                 throw new Exception("surface error: null");
 //            clearSurface(surface);
             surface.release();
-            MPLogUtil.log("VideoRenderSurfaceView => release => removeSurface => succ");
+            LogUtil.log("VideoRenderSurfaceView => release => removeSurface => succ");
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => release => removeSurface => " + e.getMessage());
+            LogUtil.log("VideoRenderSurfaceView => release => removeSurface => " + e.getMessage());
         }
 
         // step2
@@ -163,9 +154,9 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
                 throw new Exception("surfaceHolder error: null");
             surfaceHolder.removeCallback(mSurfaceHolderCallback);
             mSurfaceHolderCallback = null;
-            MPLogUtil.log("VideoRenderSurfaceView => release => removeCallback => succ");
+            LogUtil.log("VideoRenderSurfaceView => release => removeCallback => succ");
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => release => removeCallback => " + e.getMessage());
+            LogUtil.log("VideoRenderSurfaceView => release => removeCallback => " + e.getMessage());
         }
     }
 
@@ -252,7 +243,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
             super.setRotation(rotation);
             requestLayout();
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => setRotation => " + e.getMessage());
+            LogUtil.log("VideoRenderSurfaceView => setRotation => " + e.getMessage());
         }
     }
 
@@ -298,7 +289,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 
     @Override
     public void setVideoFormat(int videoWidth, int videoHeight, int videoRotation) {
-        MPLogUtil.log("VideoRenderSurfaceView => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation);
+        LogUtil.log("VideoRenderSurfaceView => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation);
 
         boolean update = false;
         if (mVideoRotation != videoRotation) {
@@ -321,7 +312,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 
     @Override
     public void setVideoSize(int videoWidth, int videoHeight) {
-        MPLogUtil.log("VideoRenderSurfaceView => setVideoSize => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
+        LogUtil.log("VideoRenderSurfaceView => setVideoSize => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
 
         boolean update = false;
         if (videoWidth != 0 && mVideoWidth != videoWidth) {
@@ -339,7 +330,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 
     @Override
     public void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
-        MPLogUtil.log("VideoRenderSurfaceView => setVideoRotation => videoRotation = " + videoRotation);
+        LogUtil.log("VideoRenderSurfaceView => setVideoRotation => videoRotation = " + videoRotation);
         if (mVideoRotation != videoRotation) {
             this.mVideoRotation = videoRotation;
             requestLayout();
@@ -348,7 +339,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 
     @Override
     public void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
-        MPLogUtil.log("VideoRenderSurfaceView => setVideoScaleType => scaleType = " + scaleType);
+        LogUtil.log("VideoRenderSurfaceView => setVideoScaleType => scaleType = " + scaleType);
         if (mVideoScaleType != scaleType) {
             this.mVideoScaleType = scaleType;
             requestLayout();
@@ -370,7 +361,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
             super.onMeasure(specW, specH);
 //            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
         } catch (Exception e) {
-            MPLogUtil.log("VideoRenderSurfaceView => onMeasure => " + e.getMessage());
+            LogUtil.log("VideoRenderSurfaceView => onMeasure => " + e.getMessage());
         }
     }
 }

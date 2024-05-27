@@ -27,7 +27,7 @@ import lib.kalu.mediaplayer.core.component.ComponentTry;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
 /**
@@ -92,7 +92,7 @@ public final class TestActivity extends Activity {
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
                 JSONArray trackInfo = playerLayout.getTrackInfo();
-                MPLogUtil.log("trackInfo = " + trackInfo);
+                LogUtil.log("trackInfo = " + trackInfo);
             }
         });
         // 音轨信息2
@@ -241,7 +241,7 @@ public final class TestActivity extends Activity {
         playerLayout.setOnPlayerEventListener(new OnPlayerEventListener() {
             @Override
             public void onEvent(int state) {
-                MPLogUtil.log("onPlayStateChanged => state = " + state);
+                LogUtil.log("onPlayStateChanged => state = " + state);
 
                 switch (state) {
                     case PlayerType.StateType.STATE_INIT:
@@ -300,7 +300,7 @@ public final class TestActivity extends Activity {
             max = getIntent().getIntExtra(INTENT_MAX, 0);
         }
         boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
-        MPLogUtil.log("TestActivity => onCreate => seek = " + seek + ", max = " + max + ", live = " + live + ", url = " + url);
+        LogUtil.log("TestActivity => onCreate => seek = " + seek + ", max = " + max + ", live = " + live + ", url = " + url);
 
         StartBuilder.Builder builder = new StartBuilder.Builder();
         builder.setSeek(seek);
@@ -362,7 +362,7 @@ public final class TestActivity extends Activity {
     protected void onPause() {
         super.onPause();
         PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-        videoLayout.pause(true);
+        videoLayout.pause();
     }
 
     @Override

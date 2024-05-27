@@ -1,9 +1,6 @@
 package lib.kalu.mediaplayer.core.player.video;
 
 import android.annotation.SuppressLint;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.view.View;
 
 import androidx.annotation.FloatRange;
@@ -18,7 +15,7 @@ import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         VideoPlayerApiBuriedEvent,
@@ -30,7 +27,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         try {
             ((View) this).setTag(R.id.module_mediaplayer_id_player_data, data);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => setData => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => setData => " + e.getMessage());
         }
     }
 
@@ -41,7 +38,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("tag error: null");
             return (String) tag;
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => getData => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => getData => " + e.getMessage());
             return null;
         }
     }
@@ -69,34 +66,34 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             }
             // 1
             PlayerBuilder playerBuilder = PlayerManager.getInstance().getConfig();
-            MPLogUtil.setLogger(playerBuilder);
+            LogUtil.setLogger(playerBuilder);
             // 2
             setScreenKeep(true);
             // 3
-            boolean reset = playerBuilder.isReset();
-            if (!reset) {
+            boolean kernelReset = playerBuilder.isReset();
+            if (!kernelReset) {
                 stop(false);
             }
             // 4
             int kernelType = playerBuilder.getKernel();
             boolean log = playerBuilder.isLog();
             int seekParameters = playerBuilder.getExoSeekParameters();
-            checkKernelNull(reset, log, kernelType, seekParameters);
+            int connectTimeout = playerBuilder.getConnectTimeout();
+            checkKernelNull(kernelReset, log, kernelType, seekParameters, connectTimeout);
             // 5
             int renderType = playerBuilder.getRender();
-            checkRenderNull(reset, renderType);
+            checkRenderNull(kernelReset, renderType);
             // 6
             attachRenderKernel();
             // 7
-            int connectTimeout = playerBuilder.getConnectTimeout();
-            boolean retry = playerBuilder.getBufferingTimeoutRetry();
-            setKernelEvent(startBuilder, kernelType, renderType, reset, retry, connectTimeout);
+            boolean retryTimeout = playerBuilder.getBufferingTimeoutRetry();
+            setKernelEvent(startBuilder, kernelType, kernelReset, retryTimeout, connectTimeout);
             // 4
-            startDecoder(startBuilder, playUrl, reset, connectTimeout);
+            startDecoder(startBuilder, playUrl, kernelReset, connectTimeout);
             // 8
             updatePlayerData(startBuilder, playUrl);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());
         }
     }
 
@@ -109,7 +106,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             ((View) this).setTag(R.id.module_mediaplayer_id_player_looping_release, data.isLoopingRelease());
             ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release, data.isWindowVisibilityChangedRelease());
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => updatePlayerData => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => updatePlayerData => " + e.getMessage());
         }
     }
 
@@ -140,7 +137,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             }
             return duration;
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => getDuration => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => getDuration => " + e.getMessage());
             return 0L;
         }
     }
@@ -160,7 +157,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void setVolume(@FloatRange(from = 0f, to = 1f) float left, @FloatRange(from = 0f, to = 1f) float right) {
         try {
-            MPLogUtil.log("VideoPlayerApiKernel => setVolume => left = " + left + ", right = " + right);
+            LogUtil.log("VideoPlayerApiKernel => setVolume => left = " + left + ", right = " + right);
             VideoKernelApi kernel = getVideoKernel();
             kernel.setVolume(left, right);
         } catch (Exception e) {
@@ -169,7 +166,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void setMute(boolean enable) {
         try {
-            MPLogUtil.log("VideoPlayerApiKernel => setMute => enable = " + enable);
+            LogUtil.log("VideoPlayerApiKernel => setMute => enable = " + enable);
             VideoKernelApi kernel = getVideoKernel();
             kernel.setMute(enable);
         } catch (Exception e) {
@@ -178,7 +175,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void setLooping(boolean looping) {
         try {
-            MPLogUtil.log("VideoPlayerApiKernel => setLooping => looping = " + looping);
+            LogUtil.log("VideoPlayerApiKernel => setLooping => looping = " + looping);
             VideoKernelApi kernel = getVideoKernel();
             kernel.setLooping(looping);
         } catch (Exception e) {
@@ -210,7 +207,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE);
         } catch (Exception e) {
             callPlayerEvent(PlayerType.StateType.STATE_RELEASE_EXCEPTION);
-            MPLogUtil.log("VideoPlayerApiKernel => release => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => release => " + e.getMessage());
         }
     }
 
@@ -220,7 +217,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void toggle(boolean ignore) {
         try {
-            MPLogUtil.log("VideoPlayerApiKernel => toggle => ignore = " + ignore);
+            LogUtil.log("VideoPlayerApiKernel => toggle => ignore = " + ignore);
             boolean playing = isPlaying();
             if (playing) {
                 // 埋点
@@ -268,7 +265,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             callPlayerEvent(PlayerType.StateType.STATE_RESTAER);
             start(builder, url, retryBuffering);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => restart => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => restart => " + e.getMessage());
         }
     }
 
@@ -276,15 +273,15 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         resume(false);
     }
 
-    default void resume(boolean ignore) {
+    default void resume(boolean callEvent) {
         setPlayWhenReady(true);
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            resumeVideoKernel(ignore);
+            resumeVideoKernel(callEvent);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => resume => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => resume => " + e.getMessage());
         }
     }
 
@@ -332,7 +329,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("position error: " + position);
             ((View) this).setTag(R.id.module_mediaplayer_id_player_position, position);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => setSeek => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => setSeek => " + e.getMessage());
         }
     }
 
@@ -346,7 +343,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("position error: " + position);
             setSeek(position);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => releaseSeek => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => releaseSeek => " + e.getMessage());
         }
     }
 
@@ -488,7 +485,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /*********************/
 
-    default void resumeVideoKernel(boolean ignore) {
+    default void resumeVideoKernel(boolean callEvent) {
         setPlayWhenReady(true);
         try {
             VideoKernelApi kernel = getVideoKernel();
@@ -496,14 +493,12 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: kernel null");
             kernel.start();
             setScreenKeep(true);
-            if (ignore) {
-                callPlayerEvent(PlayerType.StateType.STATE_RESUME_IGNORE);
-            } else {
+            if (callEvent) {
                 callPlayerEvent(PlayerType.StateType.STATE_RESUME);
                 callPlayerEvent(PlayerType.StateType.STATE_KERNEL_RESUME);
             }
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => resumeVideoKernel => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => resumeVideoKernel => " + e.getMessage());
         }
     }
 
@@ -518,7 +513,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             callPlayerEvent(PlayerType.StateType.STATE_KERNEL_STOP);
             callPlayerEvent(PlayerType.StateType.STATE_CLOSE);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => stopKernel => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => stopKernel => " + e.getMessage());
         }
     }
 
@@ -532,7 +527,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: callEvent false");
             callPlayerEvent(PlayerType.StateType.STATE_PAUSE);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => pauseKernel => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => pauseKernel => " + e.getMessage());
         }
     }
 
@@ -547,7 +542,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 return;
             callPlayerEvent(PlayerType.StateType.STATE_INIT_SEEK);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => seekToVideoKernel => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => seekToVideoKernel => " + e.getMessage());
         }
     }
 
@@ -561,7 +556,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             boolean loop = builder.isLooping();
             kernel.update(seek, max, loop);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => updateVideoKernel => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => updateVideoKernel => " + e.getMessage());
         }
     }
 
@@ -572,7 +567,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: kernel null");
             kernel.initDecoder(getBaseContext(), reset, connectTimeout, playUrl, bundle);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => startDecoder => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => startDecoder => " + e.getMessage());
         }
     }
 
@@ -591,11 +586,11 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             setVideoKernel(null);
             setScreenKeep(false);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => releaseKernel => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => releaseKernel => " + e.getMessage());
         }
     }
 
-    default void checkKernelNull(boolean reset, boolean enableLogger, int kernelType, int seekParameters) {
+    default void checkKernelNull(boolean reset, boolean enableLogger, int kernelType, int seekParameters, int connectTimeout) {
         try {
             if (reset) {
                 releaseKernel(false);
@@ -604,14 +599,14 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (null != videoKernel)
                 throw new Exception("warning: null != videoKernel");
             VideoKernelApi kernelApi = VideoKernelFactoryManager.getKernel(kernelType);
-            kernelApi.createDecoder(getBaseContext(), enableLogger, seekParameters);
+            kernelApi.createDecoder(getBaseContext(), enableLogger, seekParameters, connectTimeout);
             setVideoKernel(kernelApi);
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => checkKernelNull => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => checkKernelNull => " + e.getMessage());
         }
     }
 
-    default void setKernelEvent(StartBuilder builder, int kernelType, int renderType, boolean reset, boolean retry, int connectTimeout) {
+    default void setKernelEvent(StartBuilder builder, int kernelType, boolean kernelReset, boolean retryTimeout, int connectTimeout) {
 
         try {
             VideoKernelApi videoKernel = getVideoKernel();
@@ -647,7 +642,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 @SuppressLint("StaticFieldLeak")
                 @Override
                 public void onEvent(int kernel, int event) {
-                    MPLogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
+                    LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
                     switch (event) {
                         // 网络拉流开始
 //                        case PlayerType.EventType.EVENT_OPEN_INPUT:
@@ -664,7 +659,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         // 缓冲开始
                         case PlayerType.EventType.EVENT_BUFFERING_START:
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
-                            getVideoKernel().startCheckLoadBufferingTimeout(reset, retry, connectTimeout);
+                            getVideoKernel().startCheckLoadBufferingTimeout(kernelReset, retryTimeout, connectTimeout);
                             break;
                         // 缓冲结束
                         case PlayerType.EventType.EVENT_BUFFERING_STOP:
@@ -743,13 +738,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             }
                             break;
                         // 播放错误
-                        case PlayerType.EventType.EVENT_ERROR_IGNORE:
-                            // 埋点
-                            onBuriedEventError();
-                            setScreenKeep(false);
-                            callPlayerEvent(PlayerType.StateType.STATE_ERROR_IGNORE);
-                            break;
-                        // 播放错误
                         case PlayerType.EventType.EVENT_ERROR_SEEK_TIME:
                         case PlayerType.EventType.EVENT_ERROR_URL:
                         case PlayerType.EventType.EVENT_ERROR_RETRY:
@@ -789,12 +777,12 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                 @Override
                 public void onUpdateSizeChanged(int kernel, int videoWidth, int videoHeight, @PlayerType.RotationType.Value int rotation) {
-                    MPLogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateSizeChanged = kernel = " + kernel + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", rotation = " + rotation);
+                    LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateSizeChanged = kernel = " + kernel + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", rotation = " + rotation);
                     setVideoFormat(videoWidth, videoHeight, rotation);
                 }
             });
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => setKernelEvent => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => setKernelEvent => " + e.getMessage());
         }
     }
 
@@ -808,7 +796,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("trackInfo error: null");
             return trackInfo;
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => getTrackInfo => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => getTrackInfo => " + e.getMessage());
             return null;
         }
     }
@@ -821,7 +809,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernel.switchTrack(trackId);
             return true;
         } catch (Exception e) {
-            MPLogUtil.log("VideoPlayerApiKernel => switchTrack => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => switchTrack => " + e.getMessage());
             return false;
         }
     }

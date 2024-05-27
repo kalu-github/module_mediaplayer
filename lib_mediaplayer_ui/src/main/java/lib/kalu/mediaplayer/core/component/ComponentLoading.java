@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentLoading extends RelativeLayout implements ComponentApi {
 
@@ -21,16 +21,15 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     public void callPlayerEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_START:
-                MPLogUtil.log("ComponentLoading => callPlayerEvent => show => playState = " + playState);
+                LogUtil.log("ComponentLoading => callPlayerEvent => show => playState = " + playState);
                 show();
                 break;
             case PlayerType.StateType.STATE_LOADING_STOP:
             case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_ERROR_IGNORE:
             case PlayerType.StateType.STATE_RELEASE:
             case PlayerType.StateType.STATE_RELEASE_EXCEPTION:
 //            default:
-                MPLogUtil.log("ComponentLoading => callPlayerEvent => gone => playState = " + playState);
+                LogUtil.log("ComponentLoading => callPlayerEvent => gone => playState = " + playState);
                 hide();
                 break;
         }
@@ -75,7 +74,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
             boolean full = isFull();
             findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(full ? View.VISIBLE : View.INVISIBLE);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentLoading => show => " + e.getMessage());
+            LogUtil.log("ComponentLoading => show => " + e.getMessage());
         }
     }
 
@@ -87,7 +86,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
             findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
         } catch (Exception e) {
-            MPLogUtil.log("ComponentLoading => gone => " + e.getMessage());
+            LogUtil.log("ComponentLoading => gone => " + e.getMessage());
         }
     }
 

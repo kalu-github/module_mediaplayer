@@ -10,7 +10,7 @@ import com.google.android.exoplayer.ExoPlayer;
 
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.util.MPLogUtil;
+import lib.kalu.mediaplayer.util.LogUtil;
 import tv.kalu.android.exoplayer.player.DemoPlayer;
 
 public final class VideoExoPlayer extends VideoBasePlayer {
@@ -39,12 +39,12 @@ public final class VideoExoPlayer extends VideoBasePlayer {
             }
             release();
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => releaseDecoder => " + e.getMessage());
+            LogUtil.log("VideoExoPlayer => releaseDecoder => " + e.getMessage());
         }
     }
 
     @Override
-    public void createDecoder(Context context, boolean logger, int seekParameters) {
+    public void createDecoder(Context context, boolean logger, int seekParameters, int connectTimeout) {
 //        try {
 //            Uri contentUri = Uri.parse(url);
 //            String lastPathSegment = contentUri.getLastPathSegment();
@@ -133,11 +133,11 @@ public final class VideoExoPlayer extends VideoBasePlayer {
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
             mExoPlayer.prepare();
         } catch (IllegalArgumentException e) {
-            MPLogUtil.log("VideoExoPlayer => startDecoder => " + e.getMessage());
+            LogUtil.log("VideoExoPlayer => startDecoder => " + e.getMessage());
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_ERROR_URL);
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => startDecoder => " + e.getMessage());
+            LogUtil.log("VideoExoPlayer => startDecoder => " + e.getMessage());
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
@@ -160,7 +160,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
                 throw new Exception("mExoPlayer warning: null");
             return mExoPlayer.getPlaybackState() == ExoPlayer.STATE_READY && mExoPlayer.getPlayWhenReady();
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => isPlaying => " + e.getMessage());
+            LogUtil.log("VideoExoPlayer => isPlaying => " + e.getMessage());
             return false;
         }
     }
@@ -172,7 +172,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
                 throw new Exception("mExoPlayer warning: null");
             mExoPlayer.seekTo(position);
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => seekTo => " + e.getMessage());
+            LogUtil.log("VideoExoPlayer => seekTo => " + e.getMessage());
         }
     }
 
@@ -223,7 +223,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
                 throw new Exception("mExoPlayer error: null");
             mExoPlayer.setSurface(surface);
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => setSurface => " + e.getMessage());
+            LogUtil.log("VideoExoPlayer => setSurface => " + e.getMessage());
         }
     }
 
@@ -250,7 +250,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
 //            return speed;
             return false;
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => setSpeed => " + e.getMessage());
+            LogUtil.log("VideoExoPlayer => setSpeed => " + e.getMessage());
             return false;
         }
     }
@@ -269,7 +269,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
 //            return speed;
             return 1F;
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => getSpeed => " + e.getMessage());
+            LogUtil.log("VideoExoPlayer => getSpeed => " + e.getMessage());
             return 1F;
         }
     }
@@ -349,7 +349,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
             mExoPlayer = null;
             mPrepared = false;
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => release => " + e.getMessage());
+            LogUtil.log("VideoExoPlayer => release => " + e.getMessage());
         }
     }
 
@@ -363,7 +363,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
                 throw new Exception("mExoPlayer error: null");
             mExoPlayer.setPlayWhenReady(true);
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => start => " + e.getMessage());
+            LogUtil.log("VideoExoPlayer => start => " + e.getMessage());
         }
     }
 
@@ -379,7 +379,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
                 throw new Exception("mExoPlayer error: null");
             mExoPlayer.setPlayWhenReady(false);
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => pause => " + e.getMessage());
+            LogUtil.log("VideoExoPlayer => pause => " + e.getMessage());
         }
     }
 
@@ -394,7 +394,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
             mExoPlayer.setPlayWhenReady(false);
             mPrepared = false;
         } catch (Exception e) {
-            MPLogUtil.log("VideoExoPlayer => stop => " + e.getMessage());
+            LogUtil.log("VideoExoPlayer => stop => " + e.getMessage());
         }
     }
 }
