@@ -263,7 +263,7 @@ public class MainActivity extends Activity {
         }
 
         Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", exoFFmpeg = " + exoFFmpeg + ", scaleType = " + scaleType + ", exoUseOkhttp = " + exoUseOkhttp);
-        PlayerSDK.getInstance()
+        PlayerSDK.init()
                 .setLog(true)
                 .setKernel(kernelType)
                 .setRender(renderType)
