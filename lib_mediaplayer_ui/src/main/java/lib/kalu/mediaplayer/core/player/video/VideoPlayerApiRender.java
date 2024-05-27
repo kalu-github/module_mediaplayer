@@ -388,7 +388,6 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             } else if (kernel == PlayerType.KernelType.IJK_MEDIACODEC) {
                 VideoRenderApi videoRender = getVideoRender();
                 videoRender.reset();
-                LogUtil.log("VideoPlayerApiRender => resetRenderView => change");
             } else if (kernel == PlayerType.KernelType.IJK) {
                 VideoRenderApi videoRender = getVideoRender();
                 videoRender.reset();
