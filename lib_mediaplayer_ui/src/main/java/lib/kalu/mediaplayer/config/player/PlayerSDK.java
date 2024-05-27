@@ -5,7 +5,7 @@ import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
 
 
-public final class PlayerManager {
+public final class PlayerSDK {
 
     private PlayerBuilder mConfig = null;
     private PlayerBuilder.Builder mPlayerBuilder;
@@ -13,111 +13,111 @@ public final class PlayerManager {
     /***************/
 
     private static final class Holder {
-        private static final PlayerManager mInstance = new PlayerManager();
+        private static final PlayerSDK mInstance = new PlayerSDK();
     }
 
-    public static PlayerManager init() {
+    public static PlayerSDK init() {
         return Holder.mInstance;
     }
 
     /***************/
 
-    private PlayerManager() {
+    private PlayerSDK() {
         mPlayerBuilder = new PlayerBuilder.Builder();
     }
 
-    public PlayerManager setExoUseOkhttp(boolean v) {
+    public PlayerSDK setExoUseOkhttp(boolean v) {
         mPlayerBuilder.setExoUseOkhttp(v);
         return this;
     }
 
-    public PlayerManager setConnectTimeout(int v) {
+    public PlayerSDK setConnectTimeout(int v) {
         this.mPlayerBuilder.setConnectTimeout(v);
         return this;
     }
 
-    public PlayerManager setBufferingTimeoutRetry(boolean v) {
+    public PlayerSDK setBufferingTimeoutRetry(boolean v) {
         this.mPlayerBuilder.setBufferingTimeoutRetry(v);
         return this;
     }
 
-    public PlayerManager setExoFFmpeg(@PlayerType.FFmpegType int v) {
+    public PlayerSDK setExoFFmpeg(@PlayerType.FFmpegType int v) {
         mPlayerBuilder.setExoFFmpeg(v);
         return this;
     }
 
-    public PlayerManager setExoSeekParameters(@PlayerType.SeekType int v) {
+    public PlayerSDK setExoSeekParameters(@PlayerType.SeekType int v) {
         mPlayerBuilder.setExoSeekParameters(v);
         return this;
     }
 
-    public PlayerManager setExoCacheType(@PlayerType.CacheType int v) {
+    public PlayerSDK setExoCacheType(@PlayerType.CacheType int v) {
         mPlayerBuilder.setExoCacheType(v);
         return this;
     }
 
-    public PlayerManager setExoCacheMax(int v) {
+    public PlayerSDK setExoCacheMax(int v) {
         mPlayerBuilder.setExoCacheMax(v);
         return this;
     }
 
-    public PlayerManager setExoCacheDir(String v) {
+    public PlayerSDK setExoCacheDir(String v) {
         mPlayerBuilder.setExoCacheDir(v);
         return this;
     }
 
-    public PlayerManager setLog(boolean v) {
+    public PlayerSDK setLog(boolean v) {
         mPlayerBuilder.setLog(v);
         return this;
     }
 
-    public PlayerManager setReset(boolean v) {
+    public PlayerSDK setReset(boolean v) {
         mPlayerBuilder.setReset(v);
         return this;
     }
 
-    public PlayerManager setExternalAudioKernel(@PlayerType.KernelType.Value int v) {
+    public PlayerSDK setExternalAudioKernel(@PlayerType.KernelType.Value int v) {
         mPlayerBuilder.setExternalAudioKernel(v);
         return this;
     }
 
-    public PlayerManager setKernel(@PlayerType.KernelType.Value int v) {
+    public PlayerSDK setKernel(@PlayerType.KernelType.Value int v) {
         mPlayerBuilder.setKernel(v);
         return this;
     }
 
-    public PlayerManager setRender(@PlayerType.RenderType.Value int v) {
+    public PlayerSDK setRender(@PlayerType.RenderType.Value int v) {
         mPlayerBuilder.setRender(v);
         return this;
     }
 
-    public PlayerManager setScaleType(@PlayerType.ScaleType.Value int v) {
+    public PlayerSDK setScaleType(@PlayerType.ScaleType.Value int v) {
         mPlayerBuilder.setScaleType(v);
         updatePlayerBuilder(false);
         return this;
     }
 
-    public PlayerManager setCheckMobileNetwork(boolean v) {
+    public PlayerSDK setCheckMobileNetwork(boolean v) {
         mPlayerBuilder.setCheckMobileNetwork(v);
         return this;
     }
 
-    public PlayerManager setFitMobileCutout(boolean v) {
+    public PlayerSDK setFitMobileCutout(boolean v) {
         mPlayerBuilder.setFitMobileCutout(v);
         return this;
     }
 
-    public PlayerManager setCheckOrientation(boolean v) {
+    public PlayerSDK setCheckOrientation(boolean v) {
         mPlayerBuilder.setCheckOrientation(v);
         return this;
     }
 
-    public PlayerManager setBuriedEvent(BuriedEvent buriedEvent) {
+    public PlayerSDK setBuriedEvent(BuriedEvent buriedEvent) {
         mPlayerBuilder.setBuriedEvent(buriedEvent);
         return this;
     }
 
-    public PlayerManager setKeycodeApi(KeycodeApi keycodeApi) {
+    public PlayerSDK setKeycodeApi(KeycodeApi keycodeApi) {
         mPlayerBuilder.setKeycodeApi(keycodeApi);
         return this;
     }

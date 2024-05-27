@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import lib.kalu.mediaplayer.config.player.PlayerManager;
+import lib.kalu.mediaplayer.config.player.PlayerSDK;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -78,7 +78,7 @@ public interface VideoRenderApi {
         LogUtil.log("VideoRenderApi => doMeasureSpec => screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
 
         if (videoScaleType == 0) {
-            videoScaleType = PlayerManager.init().getPlayerBuilder().getScaleType();
+            videoScaleType = PlayerSDK.init().getPlayerBuilder().getScaleType();
         }
 
         // 软解码时处理旋转信息，交换宽高

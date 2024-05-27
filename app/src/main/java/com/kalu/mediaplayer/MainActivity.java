@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import lib.kalu.mediaplayer.TestActivity;
-import lib.kalu.mediaplayer.config.player.PlayerManager;
+import lib.kalu.mediaplayer.config.player.PlayerSDK;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.util.UdpMulticastUtil;
 
@@ -263,7 +263,7 @@ public class MainActivity extends Activity {
         }
 
         Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", exoFFmpeg = " + exoFFmpeg + ", scaleType = " + scaleType + ", exoUseOkhttp = " + exoUseOkhttp);
-        PlayerManager.getInstance()
+        PlayerSDK.getInstance()
                 .setLog(true)
                 .setKernel(kernelType)
                 .setRender(renderType)

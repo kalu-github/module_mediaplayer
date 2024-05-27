@@ -1,13 +1,12 @@
 package lib.kalu.mediaplayer.core.player.video;
 
-import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
-import lib.kalu.mediaplayer.config.player.PlayerManager;
+import lib.kalu.mediaplayer.config.player.PlayerSDK;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
@@ -181,7 +180,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             if (null == render)
                 throw new Exception("render error: null");
             render.setVideoScaleType(scaleType);
-            PlayerManager.init().setScaleType(scaleType);
+            PlayerSDK.init().setScaleType(scaleType);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => setVideoScaleType => " + e.getMessage());
         }
@@ -279,7 +278,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
 
     default void setVideoRender(@PlayerType.RenderType int v) {
         try {
-            PlayerManager.init().setRender(v);
+            PlayerSDK.init().setRender(v);
         } catch (Exception e) {
         }
     }
@@ -374,7 +373,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
 
     default void resetRenderView(boolean isWindow) {
         try {
-            PlayerBuilder playerBuilder = PlayerManager.init().getPlayerBuilder();
+            PlayerBuilder playerBuilder = PlayerSDK.init().getPlayerBuilder();
             if (null == playerBuilder)
                 throw new Exception("error: null playerBuilder");
             int kernel = playerBuilder.getKernel();

@@ -36,7 +36,7 @@
 -keep class lib.kalu.mediaplayer.config.player.PlayerType$** {
     public <fields>;
 }
--keep class lib.kalu.mediaplayer.config.player.PlayerManager {
+-keep class lib.kalu.mediaplayer.config.player.PlayerSDK {
     public <fields>;
     public <methods>;
 }

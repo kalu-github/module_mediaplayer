@@ -9,7 +9,7 @@ import org.json.JSONArray;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
-import lib.kalu.mediaplayer.config.player.PlayerManager;
+import lib.kalu.mediaplayer.config.player.PlayerSDK;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.config.start.StartBuilder;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
@@ -65,7 +65,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 callPlayerEvent(PlayerType.StateType.STATE_INIT);
             }
             // 1
-            PlayerBuilder playerBuilder = PlayerManager.init().getPlayerBuilder();
+            PlayerBuilder playerBuilder = PlayerSDK.init().getPlayerBuilder();
             LogUtil.setLogger(playerBuilder);
             // 2
             setScreenKeep(true);

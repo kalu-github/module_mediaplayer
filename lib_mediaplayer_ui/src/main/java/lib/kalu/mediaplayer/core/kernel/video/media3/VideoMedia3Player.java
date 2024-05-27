@@ -56,7 +56,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import lib.kalu.mediaplayer.config.player.PlayerBuilder;
-import lib.kalu.mediaplayer.config.player.PlayerManager;
+import lib.kalu.mediaplayer.config.player.PlayerSDK;
 import lib.kalu.mediaplayer.config.player.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -103,7 +103,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
         try {
             if (null == o)
                 throw new Exception("error: null obj");
-            PlayerBuilder playerBuilder = PlayerManager.init().getPlayerBuilder();
+            PlayerBuilder playerBuilder = PlayerSDK.init().getPlayerBuilder();
             if (null == playerBuilder)
                 throw new Exception("playerBuilder error: null");
             int exoFFmpeg = playerBuilder.getExoFFmpeg();
@@ -343,7 +343,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_START);
-            PlayerBuilder config = PlayerManager.init().getPlayerBuilder();
+            PlayerBuilder config = PlayerSDK.init().getPlayerBuilder();
             int cacheType = config.getExoCacheType();
             int cacheMax = config.getExoCacheMax();
             String cacheDir = config.getExoCacheDir();
@@ -772,7 +772,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             // head
 //            refreshHeaders(httpFactory, headers);
 
-            boolean useOkhttp = PlayerManager.init().getPlayerBuilder().isExoUseOkhttp();
+            boolean useOkhttp = PlayerSDK.init().getPlayerBuilder().isExoUseOkhttp();
             LogUtil.log("VideoMedia3Player => createMediaSource => useOkhttp = " + useOkhttp);
             DataSource.Factory dataSourceFactory;
             try {

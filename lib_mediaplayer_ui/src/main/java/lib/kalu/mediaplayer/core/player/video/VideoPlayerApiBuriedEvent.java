@@ -1,7 +1,7 @@
 package lib.kalu.mediaplayer.core.player.video;
 
 import lib.kalu.mediaplayer.buried.BuriedEvent;
-import lib.kalu.mediaplayer.config.player.PlayerManager;
+import lib.kalu.mediaplayer.config.player.PlayerSDK;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoPlayerApiBuriedEvent {
@@ -10,7 +10,7 @@ interface VideoPlayerApiBuriedEvent {
         try {
             if (!(this instanceof VideoPlayerApi))
                 throw new Exception("this not this instanceof PlayerApi");
-            BuriedEvent buriedEvent = PlayerManager.init().getPlayerBuilder().getBuriedEvent();
+            BuriedEvent buriedEvent = PlayerSDK.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
             String url = ((VideoPlayerApi) this).getUrl();
@@ -26,7 +26,7 @@ interface VideoPlayerApiBuriedEvent {
         try {
             if (!(this instanceof VideoPlayerApi))
                 throw new Exception("this not this instanceof PlayerApi");
-            BuriedEvent buriedEvent = PlayerManager.init().getPlayerBuilder().getBuriedEvent();
+            BuriedEvent buriedEvent = PlayerSDK.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
             String url = ((VideoPlayerApi) this).getUrl();
@@ -42,7 +42,7 @@ interface VideoPlayerApiBuriedEvent {
         try {
             if (!(this instanceof VideoPlayerApi))
                 throw new Exception("this not this instanceof PlayerApi");
-            BuriedEvent buriedEvent = PlayerManager.init().getPlayerBuilder().getBuriedEvent();
+            BuriedEvent buriedEvent = PlayerSDK.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
             String url = ((VideoPlayerApi) this).getUrl();
@@ -58,7 +58,7 @@ interface VideoPlayerApiBuriedEvent {
         try {
             if (!(this instanceof VideoPlayerApi))
                 throw new Exception("this not this instanceof PlayerApi");
-            BuriedEvent buriedEvent = PlayerManager.init().getPlayerBuilder().getBuriedEvent();
+            BuriedEvent buriedEvent = PlayerSDK.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
             String url = ((VideoPlayerApi) this).getUrl();
@@ -74,7 +74,7 @@ interface VideoPlayerApiBuriedEvent {
         try {
             if (!(this instanceof VideoPlayerApi))
                 throw new Exception("this not this instanceof PlayerApi");
-            BuriedEvent buriedEvent = PlayerManager.init().getPlayerBuilder().getBuriedEvent();
+            BuriedEvent buriedEvent = PlayerSDK.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
             String url = ((VideoPlayerApi) this).getUrl();
