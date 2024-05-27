@@ -1,11 +1,9 @@
 -dontwarn lib.kalu.mediaplayer.**
--dontwarn com.google.**
--dontwarn org.apache.commons.io.**
 
-
-#-keepattributes *Annotation*
-#-keepattributes InnerClasses,EnclosingMethod
--keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
+# @interface
+-keepattributes *Annotation*
+-keepattributes InnerClasses,EnclosingMethod
+#-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
 
 # buried
 -keep class lib.kalu.mediaplayer.buried.BuriedEvent {
@@ -32,7 +30,17 @@
 }
 
 # config
--keep class lib.kalu.mediaplayer.config.** {
+-keep class lib.kalu.mediaplayer.config.player.PlayerType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.config.player.PlayerType$** {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.config.player.PlayerManager {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.config.start.StartBuilder {
     public <fields>;
     public <methods>;
 }

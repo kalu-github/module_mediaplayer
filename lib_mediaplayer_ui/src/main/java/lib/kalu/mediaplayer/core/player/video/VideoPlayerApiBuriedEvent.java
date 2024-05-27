@@ -10,7 +10,7 @@ interface VideoPlayerApiBuriedEvent {
         try {
             if (!(this instanceof VideoPlayerApi))
                 throw new Exception("this not this instanceof PlayerApi");
-            BuriedEvent buriedEvent = PlayerManager.getInstance().getPlayerBuilder().getBuriedEvent();
+            BuriedEvent buriedEvent = PlayerManager.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
             String url = ((VideoPlayerApi) this).getUrl();
@@ -26,7 +26,7 @@ interface VideoPlayerApiBuriedEvent {
         try {
             if (!(this instanceof VideoPlayerApi))
                 throw new Exception("this not this instanceof PlayerApi");
-            BuriedEvent buriedEvent = PlayerManager.getInstance().getPlayerBuilder().getBuriedEvent();
+            BuriedEvent buriedEvent = PlayerManager.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
             String url = ((VideoPlayerApi) this).getUrl();
@@ -42,7 +42,7 @@ interface VideoPlayerApiBuriedEvent {
         try {
             if (!(this instanceof VideoPlayerApi))
                 throw new Exception("this not this instanceof PlayerApi");
-            BuriedEvent buriedEvent = PlayerManager.getInstance().getPlayerBuilder().getBuriedEvent();
+            BuriedEvent buriedEvent = PlayerManager.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
             String url = ((VideoPlayerApi) this).getUrl();
@@ -58,7 +58,7 @@ interface VideoPlayerApiBuriedEvent {
         try {
             if (!(this instanceof VideoPlayerApi))
                 throw new Exception("this not this instanceof PlayerApi");
-            BuriedEvent buriedEvent = PlayerManager.getInstance().getPlayerBuilder().getBuriedEvent();
+            BuriedEvent buriedEvent = PlayerManager.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
             String url = ((VideoPlayerApi) this).getUrl();
@@ -74,7 +74,7 @@ interface VideoPlayerApiBuriedEvent {
         try {
             if (!(this instanceof VideoPlayerApi))
                 throw new Exception("this not this instanceof PlayerApi");
-            BuriedEvent buriedEvent = PlayerManager.getInstance().getPlayerBuilder().getBuriedEvent();
+            BuriedEvent buriedEvent = PlayerManager.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
             String url = ((VideoPlayerApi) this).getUrl();

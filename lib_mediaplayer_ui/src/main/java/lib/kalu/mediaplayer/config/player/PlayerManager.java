@@ -16,7 +16,7 @@ public final class PlayerManager {
         private static final PlayerManager mInstance = new PlayerManager();
     }
 
-    public static PlayerManager getInstance() {
+    public static PlayerManager init() {
         return Holder.mInstance;
     }
 

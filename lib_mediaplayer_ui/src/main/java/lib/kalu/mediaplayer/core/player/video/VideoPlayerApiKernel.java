@@ -65,7 +65,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 callPlayerEvent(PlayerType.StateType.STATE_INIT);
             }
             // 1
-            PlayerBuilder playerBuilder = PlayerManager.getInstance().getPlayerBuilder();
+            PlayerBuilder playerBuilder = PlayerManager.init().getPlayerBuilder();
             LogUtil.setLogger(playerBuilder);
             // 2
             setScreenKeep(true);

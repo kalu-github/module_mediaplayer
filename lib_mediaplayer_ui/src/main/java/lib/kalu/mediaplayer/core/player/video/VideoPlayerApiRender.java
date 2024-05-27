@@ -181,7 +181,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             if (null == render)
                 throw new Exception("render error: null");
             render.setVideoScaleType(scaleType);
-            PlayerManager.getInstance().setScaleType(scaleType);
+            PlayerManager.init().setScaleType(scaleType);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => setVideoScaleType => " + e.getMessage());
         }
@@ -279,7 +279,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
 
     default void setVideoRender(@PlayerType.RenderType int v) {
         try {
-            PlayerManager.getInstance().setRender(v);
+            PlayerManager.init().setRender(v);
         } catch (Exception e) {
         }
     }
@@ -302,7 +302,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
 //    default void releaseVideoRender() {
 //        try {
 //            // 1
-//            int videoRender = PlayerManager.getInstance().getConfig().getRender();
+//            int videoRender = PlayerManager.init().getConfig().getRender();
 //            setVideoRender(VideoRenderFactoryManager.createRender(getBaseContext(), videoRender));
 //            // 2
 //            VideoRenderApi render = getVideoRender();
@@ -374,7 +374,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
 
     default void resetRenderView(boolean isWindow) {
         try {
-            PlayerBuilder playerBuilder = PlayerManager.getInstance().getPlayerBuilder();
+            PlayerBuilder playerBuilder = PlayerManager.init().getPlayerBuilder();
             if (null == playerBuilder)
                 throw new Exception("error: null playerBuilder");
             int kernel = playerBuilder.getKernel();
