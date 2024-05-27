@@ -108,7 +108,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
         try {
             if (null == o)
                 throw new Exception("exoBuilder error: null");
-            PlayerBuilder playerBuilder = PlayerManager.getInstance().getConfig();
+            PlayerBuilder playerBuilder = PlayerManager.getInstance().getPlayerBuilder();
             if (null == playerBuilder)
                 throw new Exception("playerBuilder error: null");
             int exoFFmpeg = playerBuilder.getExoFFmpeg();
@@ -332,7 +332,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_START);
-            PlayerBuilder config = PlayerManager.getInstance().getConfig();
+            PlayerBuilder config = PlayerManager.getInstance().getPlayerBuilder();
             int cacheType = config.getExoCacheType();
             int cacheMax = config.getExoCacheMax();
             String cacheDir = config.getExoCacheDir();
@@ -806,7 +806,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             // head
 //            refreshHeaders(httpFactory, headers);
 
-            boolean useOkhttp = PlayerManager.getInstance().getConfig().isExoUseOkhttp();
+            boolean useOkhttp = PlayerManager.getInstance().getPlayerBuilder().isExoUseOkhttp();
             LogUtil.log("VideoExo2Player => createMediaSource => useOkhttp = " + useOkhttp);
             DataSource.Factory dataSourceFactory;
             try {

@@ -78,7 +78,7 @@ public interface VideoRenderApi {
         LogUtil.log("VideoRenderApi => doMeasureSpec => screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
 
         if (videoScaleType == 0) {
-            videoScaleType = PlayerManager.getInstance().getConfig().getScaleType();
+            videoScaleType = PlayerManager.getInstance().getPlayerBuilder().getScaleType();
         }
 
         // 软解码时处理旋转信息，交换宽高

@@ -65,7 +65,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 callPlayerEvent(PlayerType.StateType.STATE_INIT);
             }
             // 1
-            PlayerBuilder playerBuilder = PlayerManager.getInstance().getConfig();
+            PlayerBuilder playerBuilder = PlayerManager.getInstance().getPlayerBuilder();
             LogUtil.setLogger(playerBuilder);
             // 2
             setScreenKeep(true);
@@ -87,7 +87,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             attachRenderKernel();
             // 7
             boolean retryTimeout = playerBuilder.getBufferingTimeoutRetry();
-            setKernelEvent(startBuilder, kernelType, kernelReset, retryTimeout, connectTimeout);
+            setKernelEvent(startBuilder, kernelReset, retryTimeout, connectTimeout);
             // 4
             startDecoder(startBuilder, playUrl, kernelReset, connectTimeout);
             // 8
@@ -606,7 +606,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void setKernelEvent(StartBuilder builder, int kernelType, boolean kernelReset, boolean retryTimeout, int connectTimeout) {
+    default void setKernelEvent(StartBuilder builder, boolean kernelReset, boolean retryTimeout, int connectTimeout) {
 
         try {
             VideoKernelApi videoKernel = getVideoKernel();
@@ -726,7 +726,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             }
                             callPlayerEvent(PlayerType.StateType.STATE_START);
                             // ijk需要刷新RenderView
-                            resetRenderView(kernelType);
+                            resetRenderView(false);
 //                            // step3
                             checkVideoView();
                             // step4

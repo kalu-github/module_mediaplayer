@@ -1,8 +1,6 @@
 package lib.kalu.mediaplayer.config.player;
 
 
-
-
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
 
@@ -28,17 +26,17 @@ public final class PlayerManager {
         mPlayerBuilder = new PlayerBuilder.Builder();
     }
 
-    public PlayerManager setExoUseOkhttp( boolean v) {
+    public PlayerManager setExoUseOkhttp(boolean v) {
         mPlayerBuilder.setExoUseOkhttp(v);
         return this;
     }
 
-    public PlayerManager setConnectTimeout( int v) {
+    public PlayerManager setConnectTimeout(int v) {
         this.mPlayerBuilder.setConnectTimeout(v);
         return this;
     }
 
-    public PlayerManager setBufferingTimeoutRetry( boolean v) {
+    public PlayerManager setBufferingTimeoutRetry(boolean v) {
         this.mPlayerBuilder.setBufferingTimeoutRetry(v);
         return this;
     }
@@ -72,6 +70,7 @@ public final class PlayerManager {
         mPlayerBuilder.setLog(v);
         return this;
     }
+
     public PlayerManager setReset(boolean v) {
         mPlayerBuilder.setReset(v);
         return this;
@@ -94,7 +93,7 @@ public final class PlayerManager {
 
     public PlayerManager setScaleType(@PlayerType.ScaleType.Value int v) {
         mPlayerBuilder.setScaleType(v);
-        updateConfig(false);
+        updatePlayerBuilder(false);
         return this;
     }
 
@@ -127,12 +126,12 @@ public final class PlayerManager {
         mConfig = mPlayerBuilder.build();
     }
 
-    public PlayerBuilder getConfig() {
-        updateConfig(true);
+    public PlayerBuilder getPlayerBuilder() {
+        updatePlayerBuilder(true);
         return mConfig;
     }
 
-    private void updateConfig(boolean check) {
+    private void updatePlayerBuilder(boolean check) {
         if (check) {
             if (null == mConfig) {
                 mConfig = mPlayerBuilder.build();

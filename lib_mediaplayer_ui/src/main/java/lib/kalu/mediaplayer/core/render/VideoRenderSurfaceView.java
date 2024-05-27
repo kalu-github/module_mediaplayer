@@ -125,6 +125,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 
     @Override
     public void reset() {
+        LogUtil.log("VideoRenderSurfaceView => reset =>");
         setSurface(false);
     }
 

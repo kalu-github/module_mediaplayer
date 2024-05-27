@@ -94,9 +94,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             boolean b = switchToDecorView(true);
             if (b) {
                 if (resetSurface) {
-                    PlayerBuilder config = PlayerManager.getInstance().getConfig();
-                    int videoKernel = config.getKernel();
-                    resetRenderView(videoKernel);
+                    resetRenderView(true);
                 }
                 callPlayerEvent(PlayerType.StateType.STATE_FULL_START);
                 callPlayerWindow(PlayerType.WindowType.FULL);
@@ -124,9 +122,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             switchPlaying();
             if (b) {
                 if (resetSurface) {
-                    PlayerBuilder config = PlayerManager.getInstance().getConfig();
-                    int videoKernel = config.getKernel();
-                    resetRenderView(videoKernel);
+                    resetRenderView(true);
                 }
                 cleanFocusFull();
                 callPlayerEvent(PlayerType.StateType.STATE_FULL_STOP);
@@ -146,9 +142,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
                 throw new Exception("always Float");
             boolean switchToDecorView = switchToDecorView(false);
             if (switchToDecorView) {
-                PlayerBuilder config = PlayerManager.getInstance().getConfig();
-                int videoKernel = config.getKernel();
-                resetRenderView(videoKernel);
+                resetRenderView(true);
                 callPlayerEvent(PlayerType.StateType.STATE_FLOAT_START);
                 callPlayerWindow(PlayerType.WindowType.FLOAT);
             }
@@ -170,9 +164,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             boolean switchToPlayerLayout = switchToPlayerLayout();
             switchPlaying();
             if (switchToPlayerLayout) {
-                PlayerBuilder config = PlayerManager.getInstance().getConfig();
-                int videoKernel = config.getKernel();
-                resetRenderView(videoKernel);
+                resetRenderView(true);
                 callPlayerEvent(PlayerType.StateType.STATE_FLOAT_STOP);
                 callPlayerWindow(PlayerType.WindowType.NORMAL);
             }
@@ -380,13 +372,29 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
-    default void resetRenderView(int kernelType) {
+    default void resetRenderView(boolean isWindow) {
         try {
-            if (kernelType != PlayerType.KernelType.IJK && kernelType != PlayerType.KernelType.IJK_MEDIACODEC)
-                throw new Exception("warning: not need updateRenderView");
-            VideoRenderApi videoRender = getVideoRender();
-            videoRender.reset();
+            PlayerBuilder playerBuilder = PlayerManager.getInstance().getPlayerBuilder();
+            if (null == playerBuilder)
+                throw new Exception("error: null playerBuilder");
+            int kernel = playerBuilder.getKernel();
+            if (kernel == PlayerType.KernelType.IJK_MEDIACODEC && isWindow) {
+                int render = playerBuilder.getRender();
+                if (render == PlayerType.RenderType.SURFACE_VIEW) {
+                    releaseRender();
+                    checkRenderNull(true, PlayerType.RenderType.SURFACE_VIEW);
+                    attachRenderKernel();
+                }
+            } else if (kernel == PlayerType.KernelType.IJK_MEDIACODEC) {
+                VideoRenderApi videoRender = getVideoRender();
+                videoRender.reset();
+                LogUtil.log("VideoPlayerApiRender => resetRenderView => change");
+            } else if (kernel == PlayerType.KernelType.IJK) {
+                VideoRenderApi videoRender = getVideoRender();
+                videoRender.reset();
+            } else {
+                throw new Exception("warning: kernel not ijk");
+            }
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => resetRenderView => " + e.getMessage());
         }
