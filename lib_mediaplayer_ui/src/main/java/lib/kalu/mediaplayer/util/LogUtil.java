@@ -5,8 +5,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.config.player.PlayerBuilder;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.args.PlayerArgs;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.vlc.util.VlcLogUtil;
 
 public final class LogUtil {
@@ -14,7 +14,7 @@ public final class LogUtil {
     private static String mTag = "MP_COMMON";
     private static boolean mLog = true;
 
-    public static void setLogger( PlayerBuilder config) {
+    public static void setLogger( PlayerArgs config) {
 
         int videoKernel = config.getKernel();
         boolean log = config.isLog();

@@ -5,6 +5,54 @@
 -keepattributes InnerClasses,EnclosingMethod
 #-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
 
+# sdk
+-keep class lib.kalu.mediaplayer.PlayerSDK {
+    public <fields>;
+    public <methods>;
+}
+
+# args
+-keep class lib.kalu.mediaplayer.args.StartArgs {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.args.StartArgs$Builder {
+    public <fields>;
+    public <methods>;
+}
+
+# type
+-keep class lib.kalu.mediaplayer.type.PlayerType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.type.PlayerType$KernelType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.type.PlayerType$RenderType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.type.PlayerType$WindowType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.type.PlayerType$ScaleType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.type.PlayerType$CacheType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.type.PlayerType$SeekType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.type.PlayerType$FFmpegType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.type.PlayerType$StateType {
+    public <fields>;
+}
+#-keep class lib.kalu.mediaplayer.config.player.PlayerType$* {
+#    public <fields>;
+#}
+
 # buried
 -keep class lib.kalu.mediaplayer.buried.BuriedEvent {
     public <fields>;
@@ -24,51 +72,7 @@
 }
 
 # test
--keep class lib.kalu.mediaplayer.TestActivity {
-    public <fields>;
-    public <methods>;
-}
-
-# config
--keep class lib.kalu.mediaplayer.config.player.PlayerType {
-    public <fields>;
-}
--keep class lib.kalu.mediaplayer.config.player.PlayerType$KernelType {
-    public <fields>;
-}
--keep class lib.kalu.mediaplayer.config.player.PlayerType$RenderType {
-    public <fields>;
-}
--keep class lib.kalu.mediaplayer.config.player.PlayerType$WindowType {
-    public <fields>;
-}
--keep class lib.kalu.mediaplayer.config.player.PlayerType$ScaleType {
-    public <fields>;
-}
--keep class lib.kalu.mediaplayer.config.player.PlayerType$CacheType {
-    public <fields>;
-}
--keep class lib.kalu.mediaplayer.config.player.PlayerType$SeekType {
-    public <fields>;
-}
--keep class lib.kalu.mediaplayer.config.player.PlayerType$FFmpegType {
-    public <fields>;
-}
--keep class lib.kalu.mediaplayer.config.player.PlayerType$StateType {
-    public <fields>;
-}
-#-keep class lib.kalu.mediaplayer.config.player.PlayerType$* {
-#    public <fields>;
-#}
--keep class lib.kalu.mediaplayer.config.player.PlayerSDK {
-    public <fields>;
-    public <methods>;
-}
--keep class lib.kalu.mediaplayer.config.start.StartBuilder {
-    public <fields>;
-    public <methods>;
-}
--keep class lib.kalu.mediaplayer.config.start.StartBuilder$Builder {
+-keep class lib.kalu.mediaplayer.test.TestActivity {
     public <fields>;
     public <methods>;
 }

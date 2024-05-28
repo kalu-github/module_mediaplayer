@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
 
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentComplete extends RelativeLayout implements ComponentApi {

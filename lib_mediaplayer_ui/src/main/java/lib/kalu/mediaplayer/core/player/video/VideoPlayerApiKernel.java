@@ -8,10 +8,10 @@ import androidx.annotation.FloatRange;
 import org.json.JSONArray;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.player.PlayerBuilder;
-import lib.kalu.mediaplayer.config.player.PlayerSDK;
-import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.config.start.StartBuilder;
+import lib.kalu.mediaplayer.args.PlayerArgs;
+import lib.kalu.mediaplayer.PlayerSDK;
+import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
@@ -44,18 +44,18 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void start(String url) {
-        StartBuilder.Builder builder = new StartBuilder.Builder();
-        StartBuilder build = builder.build();
+        StartArgs.Builder builder = new StartArgs.Builder();
+        StartArgs build = builder.build();
         start(build, url, false);
     }
 
 
-    default void start(StartBuilder builder, String playUrl) {
+    default void start(StartArgs builder, String playUrl) {
         start(builder, playUrl, false);
     }
 
     @Override
-    default void start(StartBuilder args, String playUrl, boolean retryBuffering) {
+    default void start(StartArgs args, String playUrl, boolean retryBuffering) {
         try {
             if (null == playUrl || playUrl.length() == 0)
                 throw new Exception("playUrl error: " + playUrl);
@@ -65,7 +65,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 callPlayerEvent(PlayerType.StateType.STATE_INIT);
             }
             // 1
-            PlayerBuilder playerBuilder = PlayerSDK.init().getPlayerBuilder();
+            PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
             LogUtil.setLogger(playerBuilder);
             // 2
             setScreenKeep(true);
@@ -76,7 +76,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             }
             // 4
             int kernelType = playerBuilder.getKernel();
-            int connectTimeout = playerBuilder.getConnectTimeout();
             checkKernelNull(kernelAlwaysRelease, kernelType);
             // 5
             int renderType = playerBuilder.getRender();
@@ -87,21 +86,17 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             boolean bufferingTimeoutRetry = playerBuilder.getBufferingTimeoutRetry();
             boolean log = playerBuilder.isLog();
             int seekParameters = playerBuilder.getExoSeekParameters();
+            int connectTimeout = playerBuilder.getConnectTimeout();
             // 0: url
             // 1: connentTimeout
             // 2: log
             // 3: seekParams
             // 4: bufferingTimeoutRetry
             // 5: kernelAlwaysRelease
-            setKernelEvent(args, playUrl, connectTimeout, log, seekParameters, bufferingTimeoutRetry);
+            Object[] objects = new Object[]{playUrl, connectTimeout, log, seekParameters, bufferingTimeoutRetry, kernelAlwaysRelease};
+            setKernelEvent(args, objects);
             // 4
-            // 0: url
-            // 1: connentTimeout
-            // 2: log
-            // 3: seekParams
-            // 4: bufferingTimeoutRetry
-            // 5: kernelAlwaysRelease
-            startDecoder(playUrl, args, playUrl, connectTimeout, log, seekParameters);
+            startDecoder(playUrl, args, objects);
             // 8
             updatePlayerData(args, playUrl);
         } catch (Exception e) {
@@ -109,7 +104,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void updatePlayerData(StartBuilder data, String playUrl) {
+    default void updatePlayerData(StartArgs data, String playUrl) {
         try {
             if (null == data)
                 throw new Exception("data error: null");
@@ -122,11 +117,11 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default StartBuilder getStartBuilder() {
+    default StartArgs getStartBuilder() {
         try {
             String url = getUrl();
             if (null == url || url.length() <= 0) throw new Exception();
-            StartBuilder.Builder builder = new StartBuilder.Builder();
+            StartArgs.Builder builder = new StartArgs.Builder();
             builder.setMax(getMax());
             builder.setSeek(getSeek());
             builder.setLooping(isLooping());
@@ -271,7 +266,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (null == url || url.length() == 0)
                 throw new Exception("url error: " + url);
             setSeek(seek);
-            StartBuilder builder = getStartBuilder();
+            StartArgs builder = getStartBuilder();
             if (null == builder)
                 throw new Exception("builder error: null");
             callPlayerEvent(PlayerType.StateType.STATE_RESTAER);
@@ -392,7 +387,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void seekTo(boolean force) {
-        StartBuilder.Builder builder = new StartBuilder.Builder();
+        StartArgs.Builder builder = new StartArgs.Builder();
         builder.setMax(getMax());
         builder.setSeek(getSeek());
         builder.setLooping(isLooping());
@@ -400,7 +395,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         builder.setLive(isLive());
         builder.setMute(isMute());
         builder.setWindowVisibilityChangedRelease(isWindowVisibilityChangedRelease());
-        StartBuilder build = builder.build();
+        StartArgs build = builder.build();
         seekTo(force, build);
     }
 
@@ -417,18 +412,18 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void seekTo(boolean force, long seek, long max, boolean looping) {
-        StartBuilder.Builder builder = new StartBuilder.Builder();
+        StartArgs.Builder builder = new StartArgs.Builder();
         builder.setMax(max);
         builder.setSeek(seek);
         builder.setLooping(looping);
         builder.setLoopingRelease(isLoopingRelease());
         builder.setLive(isLive());
         builder.setWindowVisibilityChangedRelease(isWindowVisibilityChangedRelease());
-        StartBuilder build = builder.build();
+        StartArgs build = builder.build();
         seekTo(force, build);
     }
 
-    default void seekTo(boolean force, StartBuilder builder) {
+    default void seekTo(boolean force, StartArgs builder) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -558,7 +553,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void updateVideoKernel(StartBuilder builder) {
+    default void updateVideoKernel(StartArgs builder) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -572,7 +567,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void startDecoder(String playUrl, StartBuilder args, Object... o) {
+    default void startDecoder(String playUrl, StartArgs args, Object... o) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -618,7 +613,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void setKernelEvent(StartBuilder args, Object... o) {
+    default void setKernelEvent(StartArgs args, Object... o) {
 
         try {
             VideoKernelApi videoKernel = getVideoKernel();

@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.config.player;
+package lib.kalu.mediaplayer.type;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;

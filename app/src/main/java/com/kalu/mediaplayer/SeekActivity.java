@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
-import lib.kalu.mediaplayer.config.start.StartBuilder;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
@@ -30,6 +30,6 @@ public class SeekActivity extends Activity {
         playerViewGroup.addComponent(new ComponentSeek(this));
         playerViewGroup.addComponent(new ComponentLoading(this));
         String url = getIntent().getStringExtra(INTENT_URL);
-        playerViewGroup.start(new StartBuilder.Builder().build(), url);
+        playerViewGroup.start(new StartArgs.Builder().build(), url);
     }
 }

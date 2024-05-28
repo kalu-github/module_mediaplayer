@@ -1,6 +1,6 @@
 package lib.kalu.mediaplayer.listener;
 
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.type.PlayerType;
 
 
 public interface OnPlayerWindowListener {

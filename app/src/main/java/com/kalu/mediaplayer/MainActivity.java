@@ -16,9 +16,9 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
-import lib.kalu.mediaplayer.TestActivity;
-import lib.kalu.mediaplayer.config.player.PlayerSDK;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.PlayerSDK;
+import lib.kalu.mediaplayer.test.TestActivity;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.UdpMulticastUtil;
 
 /**

@@ -7,7 +7,7 @@ import android.widget.RelativeLayout;
 
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.start.StartBuilder;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -255,7 +255,7 @@ interface VideoPlayerApiBase {
 
     void start(String url);
 
-    void start(StartBuilder builder, String playUrl);
+    void start(StartArgs builder, String playUrl);
 
-    void start(StartBuilder builder, String playUrl, boolean retryBuffering);
+    void start(StartArgs builder, String playUrl, boolean retryBuffering);
 }

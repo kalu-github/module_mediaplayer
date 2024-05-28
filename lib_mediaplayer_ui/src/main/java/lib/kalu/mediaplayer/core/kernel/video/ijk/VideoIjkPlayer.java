@@ -25,7 +25,7 @@ import lib.kalu.ijkplayer.inter.OnTimedTextListener;
 import lib.kalu.ijkplayer.inter.OnVideoSizeChangedListener;
 import lib.kalu.ijkplayer.misc.IMediaFormat;
 import lib.kalu.ijkplayer.misc.IjkTrackInfo;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
 

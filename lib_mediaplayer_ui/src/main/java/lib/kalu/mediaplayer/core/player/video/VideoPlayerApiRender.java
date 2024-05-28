@@ -5,9 +5,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.player.PlayerBuilder;
-import lib.kalu.mediaplayer.config.player.PlayerSDK;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.args.PlayerArgs;
+import lib.kalu.mediaplayer.PlayerSDK;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderFactoryManager;
@@ -373,7 +373,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
 
     default void resetRenderView(boolean isWindow) {
         try {
-            PlayerBuilder playerBuilder = PlayerSDK.init().getPlayerBuilder();
+            PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
             if (null == playerBuilder)
                 throw new Exception("error: null playerBuilder");
             int kernel = playerBuilder.getKernel();

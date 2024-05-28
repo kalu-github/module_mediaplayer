@@ -20,8 +20,8 @@ import org.json.JSONArray;
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.config.start.StartBuilder;
+import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
@@ -185,7 +185,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    private StartBuilder getStartBuilder() {
+    private StartArgs getStartBuilder() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -601,7 +601,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public void start(StartBuilder data, String playerUrl) {
+    public void start(StartArgs data, String playerUrl) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -636,7 +636,7 @@ public class PlayerLayout extends RelativeLayout {
 
     public final long getSeek() {
         try {
-            StartBuilder startBuilder = getStartBuilder();
+            StartArgs startBuilder = getStartBuilder();
             if (null == startBuilder)
                 throw new Exception("startBuilder error: null");
             return startBuilder.getSeek();
@@ -648,7 +648,7 @@ public class PlayerLayout extends RelativeLayout {
 
     public final long getMax() {
         try {
-            StartBuilder startBuilder = getStartBuilder();
+            StartArgs startBuilder = getStartBuilder();
             if (null == startBuilder)
                 throw new Exception("startBuilder error: null");
             return startBuilder.getMax();

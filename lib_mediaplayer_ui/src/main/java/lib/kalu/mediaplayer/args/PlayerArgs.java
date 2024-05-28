@@ -1,15 +1,16 @@
-package lib.kalu.mediaplayer.config.player;
+package lib.kalu.mediaplayer.args;
 
 
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
+import lib.kalu.mediaplayer.type.PlayerType;
 
 /**
  * @description: 播放器全局配置
  * @date: 2021-05-12 14:43
  */
 
-public final class PlayerBuilder {
+public final class PlayerArgs {
 
     private boolean log;// 日志log
     private boolean kernelAlwaysRelease;
@@ -118,7 +119,7 @@ public final class PlayerBuilder {
 
     /****************/
 
-    private PlayerBuilder(Builder builder) {
+    private PlayerArgs(Builder builder) {
         log = builder.log;
         kernelAlwaysRelease = builder.kernelAlwaysRelease;
         connectTimeout = builder.connectTimeout;
@@ -295,8 +296,8 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public PlayerBuilder build() {
-            return new PlayerBuilder(this);
+        public PlayerArgs build() {
+            return new PlayerArgs(this);
         }
     }
 }

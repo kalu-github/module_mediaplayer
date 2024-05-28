@@ -8,8 +8,8 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.config.start.StartBuilder;
+import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -48,7 +48,7 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
         setLooping(loop);
     }
 
-    default void initDecoder(Context context, String playUrl, StartBuilder args, Object... o) {
+    default void initDecoder(Context context, String playUrl, StartArgs args, Object... o) {
 
         long seek = args.getSeek();
         setSeek(seek);

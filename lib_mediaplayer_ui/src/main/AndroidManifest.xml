@@ -10,7 +10,7 @@
         android:supportsRtl="true">
 
         <activity
-            android:name="lib.kalu.mediaplayer.TestActivity"
+            android:name="lib.kalu.mediaplayer.test.TestActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard|uiMode"
             android:exported="false"
             android:screenOrientation="landscape"

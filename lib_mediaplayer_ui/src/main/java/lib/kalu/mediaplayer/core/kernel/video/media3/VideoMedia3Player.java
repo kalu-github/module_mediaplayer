@@ -25,7 +25,6 @@ import androidx.media3.datasource.cache.CacheDataSource;
 import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.datasource.okhttp.OkHttpDataSource;
 import androidx.media3.datasource.rtmp.RtmpDataSource;
-import androidx.media3.decoder.ffmpeg.FfmpegLibrary;
 import androidx.media3.exoplayer.DecoderReuseEvaluation;
 import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.ExoPlaybackException;
@@ -44,7 +43,6 @@ import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 import androidx.media3.extractor.DefaultExtractorsFactory;
 
 import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
-import com.google.android.exoplayer2.SeekParameters;
 
 import java.io.IOException;
 import java.net.Proxy;
@@ -56,9 +54,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import lib.kalu.mediaplayer.config.player.PlayerBuilder;
-import lib.kalu.mediaplayer.config.player.PlayerSDK;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.args.PlayerArgs;
+import lib.kalu.mediaplayer.PlayerSDK;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
 import okhttp3.ConnectionPool;
@@ -244,7 +242,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 throw new Exception("url error: " + url);
             initOptions(context, o);
             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_START);
-            PlayerBuilder config = PlayerSDK.init().getPlayerBuilder();
+            PlayerArgs config = PlayerSDK.init().getPlayerBuilder();
             int cacheType = config.getExoCacheType();
             int cacheMax = config.getExoCacheMax();
             String cacheDir = config.getExoCacheDir();
@@ -299,7 +297,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setMediaSourceFactory(new DefaultMediaSourceFactory(context));
                 ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setTrackSelector(new DefaultTrackSelector(context));
 
-                PlayerBuilder playerBuilder = PlayerSDK.init().getPlayerBuilder();
+                PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
                 if (null == playerBuilder)
                     throw new Exception("playerBuilder error: null");
                 int exoFFmpeg = playerBuilder.getExoFFmpeg();

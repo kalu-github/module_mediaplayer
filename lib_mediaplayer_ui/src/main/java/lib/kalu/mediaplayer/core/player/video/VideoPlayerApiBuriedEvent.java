@@ -1,7 +1,7 @@
 package lib.kalu.mediaplayer.core.player.video;
 
 import lib.kalu.mediaplayer.buried.BuriedEvent;
-import lib.kalu.mediaplayer.config.player.PlayerSDK;
+import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoPlayerApiBuriedEvent {

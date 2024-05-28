@@ -1,14 +1,16 @@
-package lib.kalu.mediaplayer.config.player;
+package lib.kalu.mediaplayer;
 
 
+import lib.kalu.mediaplayer.args.PlayerArgs;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.keycode.KeycodeApi;
 
 
 public final class PlayerSDK {
 
-    private PlayerBuilder mConfig = null;
-    private PlayerBuilder.Builder mPlayerBuilder;
+    private PlayerArgs mConfig = null;
+    private PlayerArgs.Builder mPlayerBuilder;
 
     /***************/
 
@@ -23,7 +25,7 @@ public final class PlayerSDK {
     /***************/
 
     private PlayerSDK() {
-        mPlayerBuilder = new PlayerBuilder.Builder();
+        mPlayerBuilder = new PlayerArgs.Builder();
     }
 
     public PlayerSDK setExoUseOkhttp(boolean v) {
@@ -126,7 +128,7 @@ public final class PlayerSDK {
         mConfig = mPlayerBuilder.build();
     }
 
-    public PlayerBuilder getPlayerBuilder() {
+    public PlayerArgs getPlayerBuilder() {
         updatePlayerBuilder(true);
         return mConfig;
     }

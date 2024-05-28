@@ -16,7 +16,7 @@ import lib.kalu.ffplayer.inter.OnInfoListener;
 import lib.kalu.ffplayer.inter.OnPreparedListener;
 import lib.kalu.ffplayer.inter.OnSeekCompleteListener;
 import lib.kalu.ffplayer.inter.OnVideoSizeChangedListener;
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
 

@@ -1,8 +1,7 @@
-package lib.kalu.mediaplayer.config.start;
+package lib.kalu.mediaplayer.args;
 
 
-public class StartBuilder {
-
+public class StartArgs {
     private long max;
     private long seek;
     private boolean live;
@@ -49,7 +48,7 @@ public class StartBuilder {
         return windowVisibilityChangedRelease;
     }
 
-    public StartBuilder(Builder builder) {
+    public StartArgs(Builder builder) {
         this.max = builder.max;
         this.seek = builder.seek;
         this.mute = builder.mute;
@@ -137,8 +136,8 @@ public class StartBuilder {
             return this;
         }
 
-        public StartBuilder build() {
-            return new StartBuilder(this);
+        public StartArgs build() {
+            return new StartArgs(this);
         }
     }
 }

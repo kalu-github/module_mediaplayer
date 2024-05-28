@@ -5,7 +5,7 @@ import android.content.Context;
 
 
 
-import lib.kalu.mediaplayer.config.player.PlayerType;
+import lib.kalu.mediaplayer.type.PlayerType;
 
 
 public final class VideoRenderFactoryManager {

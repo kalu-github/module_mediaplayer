@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer;
+package lib.kalu.mediaplayer.test;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,8 +13,9 @@ import org.json.JSONArray;
 
 import java.util.LinkedList;
 
-import lib.kalu.mediaplayer.config.player.PlayerType;
-import lib.kalu.mediaplayer.config.start.StartBuilder;
+import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.component.ComponentError;
@@ -327,7 +328,7 @@ public final class TestActivity extends Activity {
         boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
         LogUtil.log("TestActivity => onCreate => seek = " + seek + ", max = " + max + ", live = " + live + ", url = " + url);
 
-        StartBuilder.Builder builder = new StartBuilder.Builder();
+        StartArgs.Builder builder = new StartArgs.Builder();
         builder.setSeek(seek);
         builder.setMax(max);
         builder.setLive(live);
