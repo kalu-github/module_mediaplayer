@@ -12,11 +12,11 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-public class ComponentNet extends RelativeLayout implements ComponentApi {
+public class ComponentBuffering extends RelativeLayout implements ComponentApi {
 
-    public ComponentNet(Context context) {
+    public ComponentBuffering(Context context) {
         super(context);
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_net, this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_buffering, this, true);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
         try {
             if(!showSpeed)
                 throw new Exception();
-            TextView textView = findViewById(R.id.module_mediaplayer_component_net_message);
+            TextView textView = findViewById(R.id.module_mediaplayer_component_buffering_message);
             if (null == textView)
                 throw new Exception("textView error: null");
             int viewVisibility = textView.getVisibility();
@@ -37,7 +37,7 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
 //            String unit = speed.substring(start, length);
 //            String num = speed.substring(0, start);
 //            v1.setText(num);
-//            TextView v2 = findViewById(R.id.module_mediaplayer_component_net_unit);
+//            TextView v2 = findViewById(R.id.module_mediaplayer_component_buffering_unit);
 //            v2.setText(unit);
         } catch (Exception e) {
 //            MPLogUtil.log("ComponentNet => onUpdateTimeMillis => " + e.getMessage());
@@ -67,9 +67,9 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     public final void hide() {
         try {
             
-            findViewById(R.id.module_mediaplayer_component_net_bg).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_net_pb).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_net_message).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_buffering_bg).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_buffering_pb).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_buffering_message).setVisibility(View.GONE);
         } catch (Exception e) {
         }
     }
@@ -78,9 +78,9 @@ public class ComponentNet extends RelativeLayout implements ComponentApi {
     public final void show() {
         try {
             
-            findViewById(R.id.module_mediaplayer_component_net_bg).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_net_pb).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_net_message).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_buffering_bg).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_buffering_pb).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_buffering_message).setVisibility(View.VISIBLE);
         } catch (Exception e) {
         }
     }

@@ -108,7 +108,7 @@
     public <fields>;
     public <methods>;
 }
--keep class lib.kalu.mediaplayer.core.component.ComponentNet {
+-keep class lib.kalu.mediaplayer.core.component.ComponentBuffering {
     public <fields>;
     public <methods>;
 }

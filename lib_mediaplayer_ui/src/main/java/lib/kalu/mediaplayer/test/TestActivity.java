@@ -21,7 +21,7 @@ import lib.kalu.mediaplayer.core.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.component.ComponentError;
 import lib.kalu.mediaplayer.core.component.ComponentInit;
 import lib.kalu.mediaplayer.core.component.ComponentLoading;
-import lib.kalu.mediaplayer.core.component.ComponentNet;
+import lib.kalu.mediaplayer.core.component.ComponentBuffering;
 import lib.kalu.mediaplayer.core.component.ComponentPause;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.component.ComponentTry;
@@ -199,7 +199,7 @@ public final class TestActivity extends Activity {
         ComponentError error = new ComponentError(getApplicationContext());
         componentApis.add(error);
         // net
-        ComponentNet speed = new ComponentNet(getApplicationContext());
+        ComponentBuffering speed = new ComponentBuffering(getApplicationContext());
         componentApis.add(speed);
         // init
         ComponentInit init = new ComponentInit(getApplicationContext());
