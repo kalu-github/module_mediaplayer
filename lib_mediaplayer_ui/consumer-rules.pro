@@ -3,6 +3,10 @@
 # @interface
 -keepattributes *Annotation*
 -keepattributes InnerClasses,EnclosingMethod
+
+# 泛型方法 返回值
+-keepattributes Signature
+
 #-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
 
 # sdk
