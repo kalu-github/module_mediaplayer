@@ -2,26 +2,43 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="false"
     android:background="#00000000">
 
+    <!-- 背景 -->
     <ImageView
         android:id="@+id/module_mediaplayer_component_complete_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000"
         android:focusable="false"
         android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/module_mediaplayer_component_complete_message"
+    <!-- 提示 -->
+    <LinearLayout
+        android:id="@+id/module_mediaplayer_component_complete_ui"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:focusable="false"
-        android:padding="20dp"
-        android:text="@string/module_mediaplayer_string_end"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        android:visibility="gone" />
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/module_mediaplayer_component_complete_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="140dp"
+            android:focusable="false" />
+
+        <TextView
+            android:id="@+id/module_mediaplayer_component_complete_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:text="@string/module_mediaplayer_string_complete"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+    </LinearLayout>
 
 </RelativeLayout>

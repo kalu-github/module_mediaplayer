@@ -35,9 +35,8 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     @Override
     public final void show() {
         try {
-            
             findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_complete_message).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_complete_ui).setVisibility(View.VISIBLE);
         } catch (Exception e) {
         }
     }
@@ -45,9 +44,8 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     @Override
     public final void hide() {
         try {
-            
             findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_complete_message).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_complete_ui).setVisibility(View.GONE);
         } catch (Exception e) {
         }
     }
@@ -73,7 +71,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     @Override
     public final void setComponentImageResource(int resid) {
         try {
-            setImageResource(this, R.id.module_mediaplayer_component_complete_bg, resid);
+            setImageResource(this, R.id.module_mediaplayer_component_complete_icon, resid);
         } catch (Exception e) {
         }
     }
@@ -81,7 +79,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     @Override
     public final void setComponentImageUrl( String url) {
         try {
-            setImageUrl(this, R.id.module_mediaplayer_component_complete_bg, url);
+            setImageUrl(this, R.id.module_mediaplayer_component_complete_icon, url);
         } catch (Exception e) {
         }
     }

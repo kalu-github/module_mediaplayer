@@ -5,7 +5,7 @@
     <string name="module_mediaplayer_string_locked">已锁定</string>
     <string name="module_mediaplayer_string_continue_play">继续播放</string>
     <string name="module_mediaplayer_string_error_message">网络异常, 请稍后重试</string>
-    <string name="module_mediaplayer_string_end">播放结束</string>
+    <string name="module_mediaplayer_string_complete">播放结束</string>
     <string name="module_mediaplayer_string_init">初始化</string>
     <string name="module_mediaplayer_string_try">试看1分钟</string>
     <string name="module_mediaplayer_string_load">加载中...</string>
