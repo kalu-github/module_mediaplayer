@@ -397,10 +397,6 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void setDisplay(SurfaceHolder surfaceHolder) {
-    }
-
-    @Override
     public void setSurface(Surface surface, int w, int h) {
         try {
             if (null == mExoPlayer)

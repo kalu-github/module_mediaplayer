@@ -390,10 +390,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void setDisplay(SurfaceHolder surfaceHolder) {
-    }
-
-    @Override
     public void setSurface(Surface surface, int w, int h) {
         try {
             if (null == mExoPlayer)

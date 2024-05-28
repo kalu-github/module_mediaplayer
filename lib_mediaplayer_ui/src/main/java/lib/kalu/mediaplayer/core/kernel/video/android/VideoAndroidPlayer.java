@@ -96,19 +96,21 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     @Override
     public void initOptions(Context context, Object... o) {
-        // 0: url
-        // 1: connentTimeout
-        // 2: log
-        // 3: seekParams
-        // 4: bufferingTimeoutRetry
-        // 5: kernelAlwaysRelease
-        // 监测超时
-        long startTime = System.currentTimeMillis();
-        startCheckOpenUrlTimeout((boolean) o[5], startTime, (int) o[1]);
-    }
-
-    @Override
-    public void setDisplay(SurfaceHolder surfaceHolder) {
+        // 拉流超时
+        try {
+            // 0: url
+            // 1: connentTimeout
+            // 2: log
+            // 3: seekParams
+            // 4: bufferingTimeoutRetry
+            // 5: kernelAlwaysRelease
+            // 6: live
+            int connectTimeout = (int) o[1];
+            boolean releaseKernel = (boolean) o[5];
+            long startTime = System.currentTimeMillis();
+            startCheckOpenUrlTimeout(releaseKernel, startTime, connectTimeout);
+        } catch (Exception e) {
+        }
     }
 
     /**

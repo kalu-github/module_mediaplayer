@@ -43,6 +43,18 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
+    default void stopHanlder() {
+        try {
+            VideoKernelApi videoKernel = getVideoKernel();
+            if (null == videoKernel)
+                throw new Exception("error: null == videoKernel");
+            videoKernel.stopCheckOpenUrlTimeout();
+            videoKernel.stopCheckLoadBufferingTimeout();
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => stopHanlder => " + e.getMessage());
+        }
+    }
+
     default void start(String url) {
         StartArgs.Builder builder = new StartArgs.Builder();
         StartArgs build = builder.build();
@@ -57,6 +69,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     @Override
     default void start(StartArgs args, String playUrl, boolean retryBuffering) {
         try {
+            stopHanlder();
             if (null == playUrl || playUrl.length() == 0)
                 throw new Exception("playUrl error: " + playUrl);
             if (retryBuffering) {
@@ -87,13 +100,15 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             boolean log = playerBuilder.isLog();
             int seekParameters = playerBuilder.getExoSeekParameters();
             int connectTimeout = playerBuilder.getConnectTimeout();
+            boolean live = args.isLive();
             // 0: url
             // 1: connentTimeout
             // 2: log
             // 3: seekParams
             // 4: bufferingTimeoutRetry
             // 5: kernelAlwaysRelease
-            Object[] objects = new Object[]{playUrl, connectTimeout, log, seekParameters, bufferingTimeoutRetry, kernelAlwaysRelease};
+            // 6: live
+            Object[] objects = new Object[]{playUrl, connectTimeout, log, seekParameters, bufferingTimeoutRetry, kernelAlwaysRelease, live};
             setKernelEvent(args, objects);
             // 4
             startDecoder(playUrl, args, objects);

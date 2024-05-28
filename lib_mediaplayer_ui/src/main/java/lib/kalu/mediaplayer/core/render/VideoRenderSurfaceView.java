@@ -113,7 +113,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
             if (null == mKernel)
                 throw new Exception("mKernel warning: null");
             if (release) {
-                mKernel.setDisplay(null);
+//                mKernel.setDisplay(null);
                 mKernel.setSurface(null, 0, 0);
             } else {
                 mKernel.setSurface(getHolder().getSurface(), 0, 0);

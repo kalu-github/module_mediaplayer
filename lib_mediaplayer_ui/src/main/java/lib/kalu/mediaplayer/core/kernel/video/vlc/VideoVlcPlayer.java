@@ -75,11 +75,6 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
         }
     }
 
-    @Override
-    public void setDisplay(SurfaceHolder surfaceHolder) {
-
-    }
-
     /**
      * MediaPlayer视频播放器监听listener
      */

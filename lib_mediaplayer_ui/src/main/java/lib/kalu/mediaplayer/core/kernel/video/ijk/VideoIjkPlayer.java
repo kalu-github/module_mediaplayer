@@ -102,6 +102,24 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     // player => ff_ffplay_options.h
     @Override
     public void initOptions(Context context, Object... o) {
+
+        // 拉流超时
+        try {
+            // 0: url
+            // 1: connentTimeout
+            // 2: log
+            // 3: seekParams
+            // 4: bufferingTimeoutRetry
+            // 5: kernelAlwaysRelease
+            // 6: live
+            int connectTimeout = (int) o[1];
+            boolean releaseKernel = (boolean) o[5];
+            long startTime = System.currentTimeMillis();
+            startCheckOpenUrlTimeout(releaseKernel, startTime, connectTimeout);
+        } catch (Exception e) {
+        }
+
+        // ijk options
         try {
             int player = IjkMediaPlayer.OPT_CATEGORY_PLAYER;
             // 禁用音频
@@ -138,7 +156,15 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // 视频帧队列大小 => [3,16]
             mIjkPlayer.setOption(player, "video-pictq-size", 3);
             // 不限制输入缓冲区大小, 对实时流很有用
-            mIjkPlayer.setOption(player, "infbuf", 0);
+            // 0: url
+            // 1: connentTimeout
+            // 2: log
+            // 3: seekParams
+            // 4: bufferingTimeoutRetry
+            // 5: kernelAlwaysRelease
+            // 6: live
+            boolean isLive = (boolean) o[6];
+            mIjkPlayer.setOption(player, "infbuf", isLive ? 1 : 0);
             // 预读数据的缓冲区大小 => [0, 15 * 1024 * 1024]
             mIjkPlayer.setOption(player, "max-buffer-size", 400 * 1024); // 400KB
             // 停止预读的最小帧数, 即预读帧数大于等于该值时, 将停止预读 => [2,50000]
@@ -223,19 +249,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // 若是是rtsp协议，能够优先用tcp(默认是用udp)
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
             // 超时时间,timeout参数只对http设置有效,单位ms => 10s
-            // 0: url
-            // 1: connentTimeout
-            // 2: log
-            // 3: seekParams
-            // 4: bufferingTimeoutRetry
-            // 5: kernelAlwaysRelease
-            int timout = (int) o[1];
-            if (timout > 0) {
-                String url = (String) o[0];
-                if (!url.startsWith("https")) {
-                    mIjkPlayer.setOption(format, "timeout", timout); // 10s
-                }
-            }
+            // mIjkPlayer.setOption(format, "timeout", timout);
             // 重连次数
             mIjkPlayer.setOption(format, "reconnect", 0);
             // 设置seekTo能够快速seek到指定位置并播放, 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
@@ -274,16 +288,16 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         }
     }
 
-    @Override
-    public void setDisplay(SurfaceHolder surfaceHolder) {
-        try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
-            mIjkPlayer.setDisplay(surfaceHolder);
-        } catch (Exception e) {
-            LogUtil.log("VideoIjkPlayer => setDisplay => " + e.getMessage());
-        }
-    }
+//    @Override
+//    public void setDisplay(SurfaceHolder surfaceHolder) {
+//        try {
+//            if (null == mIjkPlayer)
+//                throw new Exception("mIjkPlayer error: null");
+//            mIjkPlayer.setDisplay(surfaceHolder);
+//        } catch (Exception e) {
+//            LogUtil.log("VideoIjkPlayer => setDisplay => " + e.getMessage());
+//        }
+//    }
 
     @Override
     public void setSurface(Surface surface, int w, int h) {

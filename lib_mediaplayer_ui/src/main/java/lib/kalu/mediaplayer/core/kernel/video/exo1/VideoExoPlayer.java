@@ -143,11 +143,6 @@ public final class VideoExoPlayer extends VideoBasePlayer {
         }
     }
 
-    @Override
-    public void setDisplay(SurfaceHolder surfaceHolder) {
-
-    }
-
     /**
      * 是否正在播放
      */

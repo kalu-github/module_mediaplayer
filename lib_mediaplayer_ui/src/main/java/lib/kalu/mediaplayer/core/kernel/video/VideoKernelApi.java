@@ -77,7 +77,10 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 //        setisExternalMusicPlayWhenReady(musicPlayWhenReady);
     }
 
-    void setDisplay(SurfaceHolder surfaceHolder);
+    /***********/
+
+//    default void setDisplay(SurfaceHolder surfaceHolder){
+//    }
 
     void setSurface(Surface surface, int w, int h);
 
