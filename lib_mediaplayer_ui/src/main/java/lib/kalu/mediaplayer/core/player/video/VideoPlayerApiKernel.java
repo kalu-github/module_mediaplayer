@@ -234,23 +234,23 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void toggle() {
-        toggle(false);
+        toggle(true);
     }
 
-    default void toggle(boolean ignore) {
+    default void toggle(boolean callEvent) {
         try {
-            LogUtil.log("VideoPlayerApiKernel => toggle => ignore = " + ignore);
             boolean playing = isPlaying();
             if (playing) {
                 // 埋点
                 onBuriedEventPause();
-                pause(ignore);
+                pause(callEvent);
             } else {
                 // 埋点
                 onBuriedEventResume();
                 resume();
             }
         } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => toggle => " + e.getMessage());
         }
     }
 
@@ -263,6 +263,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         pauseKernel(callEvent);
     }
 
+    default void stop() {
+        stop(true);
+    }
+
     default void stop(boolean callEvent) {
         releaseTag();
         releaseSeek();
@@ -272,10 +276,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void restart() {
-        restart(0, false);
+        restart(0, false, true);
     }
 
-    default void restart(long seek, boolean retryBuffering) {
+    default void restart(long seek, boolean retryBuffering, boolean callEvent) {
         try {
             String url = getUrl();
             if (null == url || url.length() == 0)
@@ -284,7 +288,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             StartArgs builder = getStartBuilder();
             if (null == builder)
                 throw new Exception("builder error: null");
-            callPlayerEvent(PlayerType.StateType.STATE_RESTAER);
+            if (callEvent) {
+                callPlayerEvent(PlayerType.StateType.STATE_RESTAER);
+            }
             start(builder, url, retryBuffering);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => restart => " + e.getMessage());
@@ -292,7 +298,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void resume() {
-        resume(false);
+        resume(true);
     }
 
     default void resume(boolean callEvent) {

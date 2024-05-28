@@ -159,7 +159,7 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
                 getPlayerApi().release();
             }
 
-            getPlayerApi().restart(seek, true);
+            getPlayerApi().restart(seek, true, true);
             getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
             mHandlerLoadBuffering[0].sendEmptyMessageDelayed(4321, timeout);
         } catch (Exception e) {
