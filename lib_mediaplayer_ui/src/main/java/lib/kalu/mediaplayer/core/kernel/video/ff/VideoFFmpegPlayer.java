@@ -53,7 +53,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context, boolean logger, int seekParameters, int connectTimeout) {
+    public void createDecoder(Context context) {
         try {
             if (null != mFFmpegPlayer)
                 throw new Exception("warning: null != mFFmpegPlayer");
@@ -67,7 +67,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync) {
+    public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");

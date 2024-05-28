@@ -55,7 +55,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     @Override
-    default void start(StartBuilder startBuilder, String playUrl, boolean retryBuffering) {
+    default void start(StartBuilder args, String playUrl, boolean retryBuffering) {
         try {
             if (null == playUrl || playUrl.length() == 0)
                 throw new Exception("playUrl error: " + playUrl);
@@ -70,28 +70,40 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 2
             setScreenKeep(true);
             // 3
-            boolean kernelReset = playerBuilder.isReset();
-            if (!kernelReset) {
+            boolean kernelAlwaysRelease = playerBuilder.isKernelAlwaysRelease();
+            if (!kernelAlwaysRelease) {
                 stop(false);
             }
             // 4
             int kernelType = playerBuilder.getKernel();
-            boolean log = playerBuilder.isLog();
-            int seekParameters = playerBuilder.getExoSeekParameters();
             int connectTimeout = playerBuilder.getConnectTimeout();
-            checkKernelNull(kernelReset, log, kernelType, seekParameters, connectTimeout);
+            checkKernelNull(kernelAlwaysRelease, kernelType);
             // 5
             int renderType = playerBuilder.getRender();
-            checkRenderNull(kernelReset, renderType);
+            checkRenderNull(kernelAlwaysRelease, renderType);
             // 6
             attachRenderKernel();
             // 7
-            boolean retryTimeout = playerBuilder.getBufferingTimeoutRetry();
-            setKernelEvent(startBuilder, kernelReset, retryTimeout, connectTimeout);
+            boolean bufferingTimeoutRetry = playerBuilder.getBufferingTimeoutRetry();
+            boolean log = playerBuilder.isLog();
+            int seekParameters = playerBuilder.getExoSeekParameters();
+            // 0: url
+            // 1: connentTimeout
+            // 2: log
+            // 3: seekParams
+            // 4: bufferingTimeoutRetry
+            // 5: kernelAlwaysRelease
+            setKernelEvent(args, playUrl, connectTimeout, log, seekParameters, bufferingTimeoutRetry);
             // 4
-            startDecoder(startBuilder, playUrl, kernelReset, connectTimeout);
+            // 0: url
+            // 1: connentTimeout
+            // 2: log
+            // 3: seekParams
+            // 4: bufferingTimeoutRetry
+            // 5: kernelAlwaysRelease
+            startDecoder(playUrl, args, playUrl, connectTimeout, log, seekParameters);
             // 8
-            updatePlayerData(startBuilder, playUrl);
+            updatePlayerData(args, playUrl);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());
         }
@@ -560,12 +572,12 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void startDecoder(StartBuilder bundle, String playUrl, boolean reset, int connectTimeout) {
+    default void startDecoder(String playUrl, StartBuilder args, Object... o) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            kernel.initDecoder(getBaseContext(), reset, connectTimeout, playUrl, bundle);
+            kernel.initDecoder(getBaseContext(), playUrl, args, o);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => startDecoder => " + e.getMessage());
         }
@@ -590,23 +602,23 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void checkKernelNull(boolean reset, boolean enableLogger, int kernelType, int seekParameters, int connectTimeout) {
+    default void checkKernelNull(boolean releaseKernel, int kernelType) {
         try {
-            if (reset) {
+            if (releaseKernel) {
                 releaseKernel(false);
             }
             VideoKernelApi videoKernel = getVideoKernel();
             if (null != videoKernel)
                 throw new Exception("warning: null != videoKernel");
             VideoKernelApi kernelApi = VideoKernelFactoryManager.getKernel(kernelType);
-            kernelApi.createDecoder(getBaseContext(), enableLogger, seekParameters, connectTimeout);
+            kernelApi.createDecoder(getBaseContext());
             setVideoKernel(kernelApi);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => checkKernelNull => " + e.getMessage());
         }
     }
 
-    default void setKernelEvent(StartBuilder builder, boolean kernelReset, boolean retryTimeout, int connectTimeout) {
+    default void setKernelEvent(StartBuilder args, Object... o) {
 
         try {
             VideoKernelApi videoKernel = getVideoKernel();
@@ -622,7 +634,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     callUpdateProgressPlayer(position, duration);
                     try {
                         if (max <= 0 || position <= max)
-                            throw new Exception("time warning: max = " + max + ", position = " + position +", duration = " + duration + ", isLooping = " + isLooping);
+                            throw new Exception("time warning: max = " + max + ", position = " + position + ", duration = " + duration + ", isLooping = " + isLooping);
                         callPlayerEvent(PlayerType.StateType.STATE_TRY_COMPLETE);
                         // 试看1
                         if (isLooping) {
@@ -658,7 +670,13 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         // 缓冲开始
                         case PlayerType.EventType.EVENT_BUFFERING_START:
                             callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
-                            getVideoKernel().startCheckLoadBufferingTimeout(kernelReset, retryTimeout, connectTimeout);
+                            // 0: url
+                            // 1: connentTimeout
+                            // 2: log
+                            // 3: seekParams
+                            // 4: bufferingTimeoutRetry
+                            // 5: kernelAlwaysRelease
+                            getVideoKernel().startCheckLoadBufferingTimeout((boolean) o[5], (boolean) o[4], (int) o[1]);
                             break;
                         // 缓冲结束
                         case PlayerType.EventType.EVENT_BUFFERING_STOP:
@@ -717,8 +735,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             // 埋点
                             onBuriedEventPlaying();
                             // 试看
-                            if (null != builder) {
-                                long max = builder.getMax();
+                            if (null != args) {
+                                long max = args.getMax();
                                 if (max > 0) {
                                     callPlayerEvent(PlayerType.StateType.STATE_TRY_BEGIN);
                                 }
@@ -764,7 +782,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             }
                             // loop2
                             else if (looping) {
-                                seekTo(true, builder);
+                                seekTo(true, args);
                             }
                             // sample
                             else {

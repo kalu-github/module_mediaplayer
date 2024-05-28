@@ -12,7 +12,7 @@ import lib.kalu.mediaplayer.keycode.KeycodeApi;
 public final class PlayerBuilder {
 
     private boolean log;// 日志log
-    private boolean reset;
+    private boolean kernelAlwaysRelease;
     private int connectTimeout;
     private boolean bufferingTimeoutRetry;
     @PlayerType.KernelType.Value
@@ -75,8 +75,8 @@ public final class PlayerBuilder {
         return log;
     }
 
-    public boolean isReset() {
-        return reset;
+    public boolean isKernelAlwaysRelease() {
+        return kernelAlwaysRelease;
     }
 
     public int getExtrAudioKernel() {
@@ -120,7 +120,7 @@ public final class PlayerBuilder {
 
     private PlayerBuilder(Builder builder) {
         log = builder.log;
-        reset = builder.reset;
+        kernelAlwaysRelease = builder.kernelAlwaysRelease;
         connectTimeout = builder.connectTimeout;
         bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         externalAudioKernel = builder.externalAudioKernel;
@@ -143,7 +143,7 @@ public final class PlayerBuilder {
     public Builder newBuilder() {
         Builder builder = new Builder();
         builder.setLog(this.log);
-        builder.setReset(this.reset);
+        builder.setKernelAlwaysRelease(this.kernelAlwaysRelease);
         builder.setConnectTimeout(this.connectTimeout);
         builder.setBufferingTimeoutRetry(this.bufferingTimeoutRetry);
         builder.setExternalAudioKernel(this.externalAudioKernel);
@@ -168,13 +168,13 @@ public final class PlayerBuilder {
     public final static class Builder {
 
         private boolean log = false;// 日志log
-        private boolean reset = false;
         private int connectTimeout = 10 * 1000;  // 连接超时
         private boolean bufferingTimeoutRetry = false; // 缓冲失败重试
         @PlayerType.KernelType.Value
         private int externalAudioKernel = PlayerType.KernelType.ANDROID; // 音频播放器内核
         @PlayerType.KernelType.Value
         private int kernel = PlayerType.KernelType.ANDROID; // 视频播放器内核
+        private boolean kernelAlwaysRelease = false;
         @PlayerType.RenderType.Value
         private int render = PlayerType.RenderType.SURFACE_VIEW; // 视频渲染类型
         @PlayerType.ScaleType
@@ -245,8 +245,8 @@ public final class PlayerBuilder {
             return this;
         }
 
-        public Builder setReset(boolean v) {
-            reset = v;
+        public Builder setKernelAlwaysRelease(boolean v) {
+            kernelAlwaysRelease = v;
             return this;
         }
 

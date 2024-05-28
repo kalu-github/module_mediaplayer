@@ -27,7 +27,12 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 
     void releaseDecoder(boolean isFromUser);
 
-    void createDecoder(Context context, boolean logger, int seekParameters, int connectTimeout);
+    void createDecoder(Context context);
+
+    void startDecoder(Context context, boolean prepareAsync, String url, Object... o);
+
+    default void initOptions(Context context, Object... o) {
+    }
 
     void setKernelApi(VideoKernelApiEvent eventApi);
 
@@ -37,40 +42,29 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
 
     VideoPlayerApi getPlayerApi();
 
-    default void initOptions(Context context, Object o) {
-    }
-
-//    default void initOptionsExo(Context context, com.google.android.exoplayer2.ExoPlayer.Builder exoBuilder) {
-//    }
-//
-//    default void initOptionsMediax(Context context, androidx.media3.exoplayer.ExoPlayer.Builder exoBuilder) {
-//    }
-
-    void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync);
-
     default void update(long seek, long max, boolean loop) {
         setSeek(seek);
         setMax(max);
         setLooping(loop);
     }
 
-    default void initDecoder(Context context, boolean reset, int connectTimeout, String playUrl, StartBuilder bundle) {
+    default void initDecoder(Context context, String playUrl, StartBuilder args, Object... o) {
 
-        long seek = bundle.getSeek();
+        long seek = args.getSeek();
         setSeek(seek);
-        long max = bundle.getMax();
+        long max = args.getMax();
         setMax(max);
-        boolean mute = bundle.isMute();
+        boolean mute = args.isMute();
         setMute(mute);
-        boolean loop = bundle.isLooping();
+        boolean loop = args.isLooping();
         setLooping(loop);
-        boolean live = bundle.isLive();
+        boolean live = args.isLive();
         setLive(live);
-        boolean playWhenReady = bundle.isPlayWhenReady();
+        boolean playWhenReady = args.isPlayWhenReady();
         setPlayWhenReady(playWhenReady);
-        boolean prepareAsync = bundle.isPrepareAsync();
+        boolean prepareAsync = args.isPrepareAsync();
         LogUtil.log("VideoKernelApi => initDecoder => prepareAsync = " + prepareAsync + ", playWhenReady = " + playWhenReady + ", live = " + live + ", loop = " + loop + ", mute = " + mute + ", max = " + max + ", seek = " + seek + ", playUrl = " + playUrl);
-        startDecoder(context, reset, connectTimeout, playUrl, prepareAsync);
+        startDecoder(context, prepareAsync, playUrl, o);
 
 //        String musicUrl = bundle.getExternalMusicUrl();
 //        MPLogUtil.log("VideoKernelApi => update => musicUrl = " + musicUrl);

@@ -44,7 +44,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context, boolean logger, int seekParameters, int connectTimeout) {
+    public void createDecoder(Context context) {
 //        try {
 //            Uri contentUri = Uri.parse(url);
 //            String lastPathSegment = contentUri.getLastPathSegment();
@@ -127,7 +127,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync) {
+    public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
         try {
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_START);
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);

@@ -33,9 +33,33 @@
 -keep class lib.kalu.mediaplayer.config.player.PlayerType {
     public <fields>;
 }
--keep class lib.kalu.mediaplayer.config.player.PlayerType$** {
+-keep class lib.kalu.mediaplayer.config.player.PlayerType$KernelType {
     public <fields>;
 }
+-keep class lib.kalu.mediaplayer.config.player.PlayerType$RenderType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.config.player.PlayerType$WindowType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.config.player.PlayerType$ScaleType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.config.player.PlayerType$CacheType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.config.player.PlayerType$SeekType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.config.player.PlayerType$FFmpegType {
+    public <fields>;
+}
+-keep class lib.kalu.mediaplayer.config.player.PlayerType$StateType {
+    public <fields>;
+}
+#-keep class lib.kalu.mediaplayer.config.player.PlayerType$* {
+#    public <fields>;
+#}
 -keep class lib.kalu.mediaplayer.config.player.PlayerSDK {
     public <fields>;
     public <methods>;

@@ -52,7 +52,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context, boolean logger, int seekParameters, int connectTimeout) {
+    public void createDecoder(Context context) {
         try {
             if (null != mMediaPlayer)
                 throw new Exception("warning: null == mMediaPlayer");
@@ -65,16 +65,14 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync) {
-        LogUtil.log("VideoAndroidPlayer => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
+    public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
+//        LogUtil.log("VideoAndroidPlayer => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
         try {
             if (url == null || url.length() == 0)
                 throw new IllegalArgumentException("url error: " + url);
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
-            // 监测超时
-            long startTime = System.currentTimeMillis();
-            startCheckOpenUrlTimeout(reset, startTime, connectTimeout);
+            initOptions(context, o);
             // 拉流
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
             initListener();
@@ -94,6 +92,19 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_PARSE);
         }
+    }
+
+    @Override
+    public void initOptions(Context context, Object... o) {
+        // 0: url
+        // 1: connentTimeout
+        // 2: log
+        // 3: seekParams
+        // 4: bufferingTimeoutRetry
+        // 5: kernelAlwaysRelease
+        // 监测超时
+        long startTime = System.currentTimeMillis();
+        startCheckOpenUrlTimeout((boolean) o[5], startTime, (int) o[1]);
     }
 
     @Override

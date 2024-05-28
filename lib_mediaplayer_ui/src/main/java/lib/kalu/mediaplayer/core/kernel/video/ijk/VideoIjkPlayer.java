@@ -66,29 +66,26 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context, boolean logger, int seekParameters, int connectTimeout) {
+    public void createDecoder(Context context) {
         try {
             if (null != mIjkPlayer)
                 throw new Exception("warning: null != mIjkPlayer");
             mIjkPlayer = new IjkMediaPlayer();
             mIjkPlayer.setLooping(false);
-            initOptions(context, connectTimeout);
             setVolume(1F, 1F);
-            lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(logger);
-            IjkMediaPlayer.native_setLogger(logger);
-            IjkMediaPlayer.native_setLogLevel(logger ? IjkMediaPlayer.IJK_LOG_INFO : IjkMediaPlayer.IJK_LOG_DEFAULT);
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => createDecoder => " + e.getMessage());
         }
     }
 
     @Override
-    public void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync) {
+    public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
+            initOptions(context, o);
             initListener();
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
@@ -102,9 +99,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         }
     }
 
+    // player => ff_ffplay_options.h
     @Override
-    public void initOptions(Context context, Object o) {
-        // player => ff_ffplay_options.h
+    public void initOptions(Context context, Object... o) {
         try {
             int player = IjkMediaPlayer.OPT_CATEGORY_PLAYER;
             // 禁用音频
@@ -226,11 +223,19 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // 若是是rtsp协议，能够优先用tcp(默认是用udp)
             mIjkPlayer.setOption(format, "rtsp_transport", "tcp");
             // 超时时间,timeout参数只对http设置有效,单位ms => 10s
-            int timout = (int) o;
-            if (timout < 10000) {
-                timout = 10000;
+            // 0: url
+            // 1: connentTimeout
+            // 2: log
+            // 3: seekParams
+            // 4: bufferingTimeoutRetry
+            // 5: kernelAlwaysRelease
+            int timout = (int) o[1];
+            if (timout > 0) {
+                String url = (String) o[0];
+                if (!url.startsWith("https")) {
+                    mIjkPlayer.setOption(format, "timeout", timout); // 10s
+                }
             }
-            mIjkPlayer.setOption(format, "timeout", timout); // 10s
             // 重连次数
             mIjkPlayer.setOption(format, "reconnect", 0);
             // 设置seekTo能够快速seek到指定位置并播放, 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟

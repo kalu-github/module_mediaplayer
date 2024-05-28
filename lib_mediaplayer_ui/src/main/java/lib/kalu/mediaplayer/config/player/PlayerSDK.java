@@ -71,8 +71,8 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setReset(boolean v) {
-        mPlayerBuilder.setReset(v);
+    public PlayerSDK setKernelAlwaysRelease(boolean v) {
+        mPlayerBuilder.setKernelAlwaysRelease(v);
         return this;
     }
 

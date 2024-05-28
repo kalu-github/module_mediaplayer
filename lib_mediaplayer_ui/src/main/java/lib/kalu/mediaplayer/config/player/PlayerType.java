@@ -231,82 +231,6 @@ public @interface PlayerType {
         }
     }
 
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface EventType {
-        int EVENT_ERROR_SEEK_TIME = 7_000;
-        int EVENT_ERROR_URL = 7_001;
-        int EVENT_ERROR_RETRY = 7_002;
-        int EVENT_ERROR_SOURCE = 7_003;
-        int EVENT_ERROR_PARSE = 7_004;
-        int EVENT_ERROR_NET = 7_005;
-        int EVENT_LOADING_START = 7_007; // 开始转圈
-        int EVENT_LOADING_START_IGNORE = 7_008; // 开始转圈
-        int EVENT_LOADING_STOP = 7_009; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放
-        // 播放结束
-        //        // 开始渲染视频画面
-//        int EVENT_VIDEO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
-//        // 开始渲染视频画面
-//        int EVENT_AUDIO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_SEEK_RENDERING_START;
-//        // 开始渲染视频画面
-//        int EVENT_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
-        // 首帧画面
-        int EVENT_VIDEO_RENDERING_START = 7010;
-        // 视频开播
-        int EVENT_VIDEO_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
-        int EVENT_VIDEO_END = 7_012;
-//        int EVENT_VIDEO_START_RETRY = 7_011;
-//        int EVENT_VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE;
-        //        int EVENT_VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
-        //        int EVENT_VIDEO_STOP = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
-//        int EVENT_VIDEO_END = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
-
-        // 缓冲开始
-//        int EVENT_OPEN_INPUT = IMediaPlayer.MEDIA_INFO_OPEN_INPUT;
-        // 缓冲开始
-        int EVENT_BUFFERING_START = IMediaPlayer.MEDIA_INFO_BUFFERING_START;
-        // 缓冲结束
-        int EVENT_BUFFERING_STOP = IMediaPlayer.MEDIA_INFO_BUFFERING_END;
-        // 视频旋转信息
-//        int EVENT_VIDEO_ROTATION_CHANGED = IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
-//        int EVENT_AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;
-//        int EVENT_VIDEO_DECODED_START = IMediaPlayer.MEDIA_INFO_VIDEO_DECODED_START;
-
-        @Documented
-        @Retention(CLASS)
-        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({
-                EVENT_ERROR_SEEK_TIME,
-                EVENT_ERROR_URL,
-                EVENT_ERROR_RETRY,
-                EVENT_ERROR_SOURCE,
-                EVENT_ERROR_PARSE,
-                EVENT_ERROR_NET,
-//                EVENT_OPEN_INPUT,
-                EVENT_LOADING_START,
-                EVENT_LOADING_START_IGNORE,
-                EVENT_LOADING_STOP,
-//                EVENT_VIDEO_SEEK_RENDERING_START,
-//                EVENT_AUDIO_SEEK_RENDERING_START,
-//                EVENT_AUDIO_RENDERING_START,
-                EVENT_VIDEO_RENDERING_START,
-                EVENT_VIDEO_START,
-//                EVENT_VIDEO_START_RETRY,
-//                EVENT_VIDEO_START_SEEK,
-                EVENT_VIDEO_END,
-//                EVENT_VIDEO_STOP,
-//                EVENT_VIDEO_END,
-                EVENT_BUFFERING_START,
-                EVENT_BUFFERING_STOP,
-//                EVENT_VIDEO_ROTATION_CHANGED,
-//                EVENT_AUDIO_DECODED_START,
-//                EVENT_VIDEO_DECODED_START
-        })
-        @interface Value {
-        }
-    }
-
     /**
      * 通过注解限定类型
      */
@@ -397,6 +321,82 @@ public @interface PlayerType {
                 SchemeType._M3U,
                 SchemeType._M3U8,
                 SchemeType._MATCHES})
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface EventType {
+        int EVENT_ERROR_SEEK_TIME = 7_000;
+        int EVENT_ERROR_URL = 7_001;
+        int EVENT_ERROR_RETRY = 7_002;
+        int EVENT_ERROR_SOURCE = 7_003;
+        int EVENT_ERROR_PARSE = 7_004;
+        int EVENT_ERROR_NET = 7_005;
+        int EVENT_LOADING_START = 7_007; // 开始转圈
+        int EVENT_LOADING_START_IGNORE = 7_008; // 开始转圈
+        int EVENT_LOADING_STOP = 7_009; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放
+        // 播放结束
+        //        // 开始渲染视频画面
+//        int EVENT_VIDEO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
+//        // 开始渲染视频画面
+//        int EVENT_AUDIO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_SEEK_RENDERING_START;
+//        // 开始渲染视频画面
+//        int EVENT_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
+        // 首帧画面
+        int EVENT_VIDEO_RENDERING_START = 7010;
+        // 视频开播
+        int EVENT_VIDEO_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
+        int EVENT_VIDEO_END = 7_012;
+//        int EVENT_VIDEO_START_RETRY = 7_011;
+//        int EVENT_VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE;
+        //        int EVENT_VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
+        //        int EVENT_VIDEO_STOP = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
+//        int EVENT_VIDEO_END = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
+
+        // 缓冲开始
+//        int EVENT_OPEN_INPUT = IMediaPlayer.MEDIA_INFO_OPEN_INPUT;
+        // 缓冲开始
+        int EVENT_BUFFERING_START = IMediaPlayer.MEDIA_INFO_BUFFERING_START;
+        // 缓冲结束
+        int EVENT_BUFFERING_STOP = IMediaPlayer.MEDIA_INFO_BUFFERING_END;
+        // 视频旋转信息
+//        int EVENT_VIDEO_ROTATION_CHANGED = IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
+//        int EVENT_AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;
+//        int EVENT_VIDEO_DECODED_START = IMediaPlayer.MEDIA_INFO_VIDEO_DECODED_START;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef({
+                EVENT_ERROR_SEEK_TIME,
+                EVENT_ERROR_URL,
+                EVENT_ERROR_RETRY,
+                EVENT_ERROR_SOURCE,
+                EVENT_ERROR_PARSE,
+                EVENT_ERROR_NET,
+//                EVENT_OPEN_INPUT,
+                EVENT_LOADING_START,
+                EVENT_LOADING_START_IGNORE,
+                EVENT_LOADING_STOP,
+//                EVENT_VIDEO_SEEK_RENDERING_START,
+//                EVENT_AUDIO_SEEK_RENDERING_START,
+//                EVENT_AUDIO_RENDERING_START,
+                EVENT_VIDEO_RENDERING_START,
+                EVENT_VIDEO_START,
+//                EVENT_VIDEO_START_RETRY,
+//                EVENT_VIDEO_START_SEEK,
+                EVENT_VIDEO_END,
+//                EVENT_VIDEO_STOP,
+//                EVENT_VIDEO_END,
+                EVENT_BUFFERING_START,
+                EVENT_BUFFERING_STOP,
+//                EVENT_VIDEO_ROTATION_CHANGED,
+//                EVENT_AUDIO_DECODED_START,
+//                EVENT_VIDEO_DECODED_START
+        })
         @interface Value {
         }
     }

@@ -104,114 +104,18 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void initOptions(Context context, Object o) {
-        try {
-            if (null == o)
-                throw new Exception("exoBuilder error: null");
-            PlayerBuilder playerBuilder = PlayerSDK.init().getPlayerBuilder();
-            if (null == playerBuilder)
-                throw new Exception("playerBuilder error: null");
-            int exoFFmpeg = playerBuilder.getExoFFmpeg();
-            // only_mediacodec
-            if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
-                if (null == clazz)
-                    throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
-                ((com.google.android.exoplayer2.ExoPlayer.Builder)o).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory(context));
-            }
-            // only_mediacodec_audio
-            else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_AUDIO) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory");
-                if (null == clazz)
-                    throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory");
-                ((com.google.android.exoplayer2.ExoPlayer.Builder)o).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory(context));
-            }
-            // only_mediacodec_video
-            else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_VIDEO) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory");
-                if (null == clazz)
-                    throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory");
-                ((com.google.android.exoplayer2.ExoPlayer.Builder)o).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory(context));
-            }
-            // only_ffmpeg
-            else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory");
-                if (null == clazz)
-                    throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory");
-                ((com.google.android.exoplayer2.ExoPlayer.Builder)o).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory(context));
-            }
-            // only_ffmpeg_audio
-            else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG_AUDIO) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory");
-                if (null == clazz)
-                    throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory");
-                ((com.google.android.exoplayer2.ExoPlayer.Builder)o).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory(context));
-            }
-            // only_ffmpeg_video
-            else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG_VIDEO) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory");
-                if (null == clazz)
-                    throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory");
-                ((com.google.android.exoplayer2.ExoPlayer.Builder)o).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory(context));
-            }
-            // video_mediacodec_audio_ffmpeg
-            else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory");
-                if (null == clazz)
-                    throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory");
-                ((com.google.android.exoplayer2.ExoPlayer.Builder)o).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory(context));
-            }
-            // video_ffmpeg_audio_mediacodec
-            else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory");
-                if (null == clazz)
-                    throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory");
-                ((com.google.android.exoplayer2.ExoPlayer.Builder)o).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory(context));
-            }
-            throw new Exception("not find: config");
-        } catch (Exception e) {
-            LogUtil.log("VideoExo2Player => initOptionsExo => " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void createDecoder(Context context, boolean logger, int seekParameters, int connectTimeout) {
+    public void createDecoder(Context context) {
         try {
             if (null != mExoPlayer)
                 throw new Exception("warning: null != mExoPlayer");
             // 2
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
-            builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
-            builder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
-            builder.setLoadControl(new DefaultLoadControl());
-            builder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));
-            builder.setTrackSelector(new DefaultTrackSelector(context));
-
             // 3
             initOptions(context, builder);
 
             mExoPlayer = builder.build();
             mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
             setVolume(1F, 1F);
-            // seek model
-            if (seekParameters == PlayerType.SeekType.EXO_SEEK_CLOSEST_SYNC) {
-                mExoPlayer.setSeekParameters(SeekParameters.CLOSEST_SYNC);
-            } else if (seekParameters == PlayerType.SeekType.EXO_SEEK_PREVIOUS_SYNC) {
-                mExoPlayer.setSeekParameters(SeekParameters.PREVIOUS_SYNC);
-            } else if (seekParameters == PlayerType.SeekType.EXO_SEEK_NEXT_SYNC) {
-                mExoPlayer.setSeekParameters(SeekParameters.NEXT_SYNC);
-            } else {
-                mExoPlayer.setSeekParameters(SeekParameters.DEFAULT);
-            }
-
-            // log
-            try {
-                Class<?> clazz = Class.forName("com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary");
-                if (null != clazz) {
-                    com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary.ffmpegLogger(logger);
-                }
-            } catch (Exception e) {
-            }
 
             if (null != mAnalyticsListener) {
                 mAnalyticsListener = null;
@@ -325,12 +229,13 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync) {
+    public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
+            initOptions(context, o);
             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_START);
             PlayerBuilder config = PlayerSDK.init().getPlayerBuilder();
             int cacheType = config.getExoCacheType();
@@ -350,7 +255,13 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //                    MediaLogUtil.log("onEXOLoadCompleted => ");
 //                }
 //            });
-            mExoPlayer.setMediaSource(buildMediaSource(context, connectTimeout, url, null, cacheType, cacheMax, cacheDir));
+            // 0: url
+            // 1: connentTimeout
+            // 2: log
+            // 3: seekParams
+            // 4: bufferingTimeoutRetry
+            // 5: kernelAlwaysRelease
+            mExoPlayer.setMediaSource(buildMediaSource(context, (int) o[1], url, null, cacheType, cacheMax, cacheDir));
             mExoPlayer.setPlayWhenReady(mPlayWhenReady);
             if (prepareAsync) {
                 mExoPlayer.prepare();
@@ -361,6 +272,120 @@ public final class VideoExo2Player extends VideoBasePlayer {
             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_URL);
             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
             LogUtil.log("VideoExo2Player => startDecoder => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void initOptions(Context context, Object... o) {
+        try {
+            if (null == o)
+                throw new Exception("exoBuilder error: null");
+
+            // 1
+            if(o.length == 1 && (o[0] instanceof com.google.android.exoplayer2.ExoPlayer.Builder)){
+
+                ((com.google.android.exoplayer2.ExoPlayer.Builder) o[0]).setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
+                ((com.google.android.exoplayer2.ExoPlayer.Builder) o[0]).setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
+                ((com.google.android.exoplayer2.ExoPlayer.Builder) o[0]).setLoadControl(new DefaultLoadControl());
+                ((com.google.android.exoplayer2.ExoPlayer.Builder) o[0]).setMediaSourceFactory(new DefaultMediaSourceFactory(context));
+                ((com.google.android.exoplayer2.ExoPlayer.Builder) o[0]).setTrackSelector(new DefaultTrackSelector(context));
+
+                PlayerBuilder playerBuilder = PlayerSDK.init().getPlayerBuilder();
+                if (null == playerBuilder)
+                    throw new Exception("playerBuilder error: null");
+                int exoFFmpeg = playerBuilder.getExoFFmpeg();
+                // only_mediacodec
+                if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC) {
+                    Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
+                    if (null == clazz)
+                        throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
+                    ((com.google.android.exoplayer2.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory(context));
+                }
+                // only_mediacodec_audio
+                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_AUDIO) {
+                    Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory");
+                    if (null == clazz)
+                        throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory");
+                    ((com.google.android.exoplayer2.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory(context));
+                }
+                // only_mediacodec_video
+                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_VIDEO) {
+                    Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory");
+                    if (null == clazz)
+                        throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory");
+                    ((com.google.android.exoplayer2.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory(context));
+                }
+                // only_ffmpeg
+                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG) {
+                    Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory");
+                    if (null == clazz)
+                        throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory");
+                    ((com.google.android.exoplayer2.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory(context));
+                }
+                // only_ffmpeg_audio
+                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG_AUDIO) {
+                    Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory");
+                    if (null == clazz)
+                        throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory");
+                    ((com.google.android.exoplayer2.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory(context));
+                }
+                // only_ffmpeg_video
+                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG_VIDEO) {
+                    Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory");
+                    if (null == clazz)
+                        throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory");
+                    ((com.google.android.exoplayer2.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory(context));
+                }
+                // video_mediacodec_audio_ffmpeg
+                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG) {
+                    Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory");
+                    if (null == clazz)
+                        throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory");
+                    ((com.google.android.exoplayer2.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory(context));
+                }
+                // video_ffmpeg_audio_mediacodec
+                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC) {
+                    Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory");
+                    if (null == clazz)
+                        throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory");
+                    ((com.google.android.exoplayer2.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory(context));
+                }
+            }
+            // 2
+            else{
+
+                // 0: url
+                // 1: connentTimeout
+                // 2: log
+                // 3: seekParams
+                // 4: bufferingTimeoutRetry
+                // 5: kernelAlwaysRelease
+
+                int seekParameters = (int) o[3];
+                // seek model
+                if (seekParameters == PlayerType.SeekType.EXO_SEEK_CLOSEST_SYNC) {
+                    mExoPlayer.setSeekParameters(SeekParameters.CLOSEST_SYNC);
+                } else if (seekParameters == PlayerType.SeekType.EXO_SEEK_PREVIOUS_SYNC) {
+                    mExoPlayer.setSeekParameters(SeekParameters.PREVIOUS_SYNC);
+                } else if (seekParameters == PlayerType.SeekType.EXO_SEEK_NEXT_SYNC) {
+                    mExoPlayer.setSeekParameters(SeekParameters.NEXT_SYNC);
+                } else {
+                    mExoPlayer.setSeekParameters(SeekParameters.DEFAULT);
+                }
+
+                boolean log = (boolean) o[2];
+                // log
+                try {
+                    Class<?> clazz = Class.forName("com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary");
+                    if (null != clazz) {
+                        com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
+                    }
+                } catch (Exception e) {
+                }
+
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoExo2Player => initOptionsExo => " + e.getMessage());
         }
     }
 
@@ -810,7 +835,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             LogUtil.log("VideoExo2Player => createMediaSource => useOkhttp = " + useOkhttp);
             DataSource.Factory dataSourceFactory;
             try {
-                if(!useOkhttp)
+                if (!useOkhttp)
                     throw new Exception();
                 Class<?> clazz = Class.forName("okhttp3.OkHttpClient");
                 if (null == clazz)

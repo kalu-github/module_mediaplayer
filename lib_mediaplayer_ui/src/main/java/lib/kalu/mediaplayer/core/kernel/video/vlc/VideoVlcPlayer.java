@@ -47,7 +47,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context, boolean logger, int seekParameters, int connectTimeout) {
+    public void createDecoder(Context context) {
         try {
             if (null != mVlcPlayer)
                 throw new Exception("warning: null != mVlcPlayer");
@@ -60,7 +60,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, boolean reset, int connectTimeout, String url, boolean prepareAsync) {
+    public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");

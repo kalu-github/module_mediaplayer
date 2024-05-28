@@ -336,9 +336,9 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    default void checkRenderNull(boolean reset, int renderType) {
+    default void checkRenderNull(boolean releaseKernel, int renderType) {
         try {
-            if (reset) {
+            if (releaseKernel) {
                 releaseRender();
             }
             ViewGroup renderGroup = getBaseVideoViewGroup();
