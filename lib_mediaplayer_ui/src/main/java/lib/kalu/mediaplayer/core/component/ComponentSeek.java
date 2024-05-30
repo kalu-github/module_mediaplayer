@@ -213,6 +213,50 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
+    public void initSeekBarChangeListener() {
+        try {
+            SeekBar seekBar = findSeekBar();
+            if (null == seekBar)
+                throw new Exception("warning: null == seekBar");
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    setUserTouch(true);
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    setUserTouch(false);
+                    seekToStopTrackingTouch();
+                }
+            });
+        } catch (Exception e) {
+            LogUtil.log("ComponentSeek => initSeekBarChangeListener => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void seekToStopTrackingTouch() {
+        try {
+            SeekBar seekBar = findSeekBar();
+            if (null == seekBar)
+                throw new Exception("warning: null == seekBar");
+            int duration = seekBar.getMax();
+            int progress = seekBar.getProgress();
+            if (progress > duration) {
+                progress = duration;
+            }
+            getPlayerView().seekTo(progress);
+        }catch (Exception e){
+            LogUtil.log("ComponentSeek => seekToStopTrackingTouch => " + e.getMessage());
+        }
+    }
+
+    @Override
     public boolean isComponentShowing() {
         try {
             int visibility1 = findViewById(R.id.module_mediaplayer_component_seek_bg).getVisibility();

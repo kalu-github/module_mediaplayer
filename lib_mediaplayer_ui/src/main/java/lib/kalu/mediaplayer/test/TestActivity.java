@@ -191,6 +191,7 @@ public final class TestActivity extends Activity {
         componentApis.add(loading);
         // seek
         ComponentSeek seek = new ComponentSeek(getApplicationContext());
+        seek.initSeekBarChangeListener();
         componentApis.add(seek);
         // complete
         ComponentComplete end = new ComponentComplete(getApplicationContext());
