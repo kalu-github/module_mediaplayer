@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00000000">
+    android:background="@color/module_mediaplayer_color_00000000"
+    android:focusable="false">
 
     <LinearLayout
         android:id="@+id/module_mediaplayer_controller_title"

@@ -38,6 +38,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
             findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_complete_ui).setVisibility(View.VISIBLE);
         } catch (Exception e) {
+            LogUtil.log("ComponentComplete => show => " + e.getMessage());
         }
     }
 
@@ -47,6 +48,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
             findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_complete_ui).setVisibility(View.GONE);
         } catch (Exception e) {
+            LogUtil.log("ComponentComplete => hide => " + e.getMessage());
         }
     }
 

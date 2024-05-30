@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="module_mediaplayer_color_00000000">#00000000</color>
+    <color name="module_mediaplayer_color_aa000000">#aa000000</color>
     <color name="module_mediaplayer_color_bc000000">#bc000000</color>
     <color name="module_mediaplayer_color_40000000">#40000000</color>
     <color name="module_mediaplayer_color_ffffff">#ffffff</color>
