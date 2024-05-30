@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.SeekBar;
 
 
+import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -165,6 +166,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
             if (null == seekBar)
                 throw new Exception("seekbar error: null");
             if (action == KeyEvent.ACTION_DOWN && repeatCount == 1) {
+                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_forward, 0);
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
             } else if (action == KeyEvent.ACTION_DOWN && repeatCount > 1) {
                 boolean seekBarShowing = isSeekBarShowing();
@@ -176,10 +178,9 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
                     throw new Exception("duration error: " + duration);
                 if (progress >= duration)
                     throw new Exception("error: not progress>=max");
-                int range = (progress / 100);
-                if (range < 1000) {
-                    range = 1000;
-                }
+                int tag = (int) ((View) this).getTag(R.id.module_mediaplayer_id_seek_range_forward);
+                int range = tag + (tag < 60000 ? 50 : 500);
+                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_forward, range);
                 progress += range;
                 if (progress > duration) {
                     progress = duration;
@@ -228,6 +229,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
             if (null == seekBar)
                 throw new Exception("seekbar error: null");
             if (action == KeyEvent.ACTION_DOWN && repeatCount == 1) {
+                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_rewind, 0);
                 callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
             } else if (action == KeyEvent.ACTION_DOWN && repeatCount > 1) {
                 int duration = seekBar.getMax();
@@ -236,10 +238,9 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
                     throw new Exception("error: max <= 0 || progress <= 0");
                 if (progress <= 0)
                     throw new Exception("progress warning: " + progress);
-                int range = (progress / 100);
-                if (range < 1000) {
-                    range = 1000;
-                }
+                int tag = (int) ((View) this).getTag(R.id.module_mediaplayer_id_seek_range_rewind);
+                int range = tag + (tag < 60000 ? 50 : 500);
+                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_rewind, range);
                 progress -= range;
                 if (progress < 0) {
                     progress = 0;

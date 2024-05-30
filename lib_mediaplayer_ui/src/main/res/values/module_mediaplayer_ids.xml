@@ -1,4 +1,8 @@
 <resources>
+
+    <item name="module_mediaplayer_id_seek_range_forward" type="id" />
+    <item name="module_mediaplayer_id_seek_range_rewind" type="id" />
+
     <!-- string -->
     <item name="module_mediaplayer_id_player_position" type="id" />
     <item name="module_mediaplayer_id_player_url" type="id" />

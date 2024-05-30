@@ -80,7 +80,7 @@ dependencies {
 
     // ui
 //    implementation project(path: ':lib_mediaplayer_ui')
-    api files('libs/lib_mediaplayer_ui_release_20240528.aar')
+    api files('libs/lib_mediaplayer_ui_release_20240530.aar')
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_full_release_20240509.aar')
     // exo1
