@@ -6,16 +6,17 @@ import android.widget.SeekBar;
 
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerApiBase, VideoPlayerApiKernel, VideoPlayerApiDevice, VideoPlayerApiComponent, VideoPlayerApiCache, VideoPlayerApiRender {
 
-    default boolean dispatchKeyEventPlayer(KeyEvent event) {
+    default boolean dispatchKeyEventApi(KeyEvent event) {
         boolean isFloat = isFloat();
         boolean isFull = isFull();
-        dispatchKeyEventComponents(event);
+//        dispatchKeyEventComponents(event);
         // action_down => keycode_back
         if (isFloat && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             stopFloat();
@@ -54,27 +55,47 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
         }
         // seekForward => start
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            int repeatCount = event.getRepeatCount();
-            seekForward(KeyEvent.ACTION_DOWN, repeatCount);
-            return true;
+            try {
+                ComponentApiSeek seekComponent = findSeekComponent();
+                if (null == seekComponent)
+                    throw new Exception();
+                return seekComponent.dispatchKeyEventComponent(event);
+            } catch (Exception e) {
+                return false;
+            }
         }
         // seekForward => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            int repeatCount = event.getRepeatCount();
-            seekForward(KeyEvent.ACTION_UP, repeatCount);
-            return true;
+            try {
+                ComponentApiSeek seekComponent = findSeekComponent();
+                if (null == seekComponent)
+                    throw new Exception();
+                return seekComponent.dispatchKeyEventComponent(event);
+            } catch (Exception e) {
+                return false;
+            }
         }
         // seekRewind => start
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            int repeatCount = event.getRepeatCount();
-            seekRewind(KeyEvent.ACTION_DOWN, repeatCount);
-            return true;
+            try {
+                ComponentApiSeek seekComponent = findSeekComponent();
+                if (null == seekComponent)
+                    throw new Exception();
+                return seekComponent.dispatchKeyEventComponent(event);
+            } catch (Exception e) {
+                return false;
+            }
         }
         // seekRewind => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            int repeatCount = event.getRepeatCount();
-            seekRewind(KeyEvent.ACTION_UP, repeatCount);
-            return true;
+            try {
+                ComponentApiSeek seekComponent = findSeekComponent();
+                if (null == seekComponent)
+                    throw new Exception();
+                return seekComponent.dispatchKeyEventComponent(event);
+            } catch (Exception e) {
+                return false;
+            }
         }
         // android
         else {
@@ -151,153 +172,153 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
         }
     }
 
-    /**
-     * 快进
-     */
-    default void seekForward(int action, int repeatCount) {
-        try {
-            boolean live = isLive();
-            if (live)
-                throw new Exception("warning: live true");
-            boolean prepared = isPrepared();
-            if (!prepared)
-                throw new Exception("warning: prepared false");
-            SeekBar seekBar = findSeekBar();
-            if (null == seekBar)
-                throw new Exception("seekbar error: null");
-            if (action == KeyEvent.ACTION_DOWN && repeatCount == 1) {
-                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_forward, 0);
-                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
-            } else if (action == KeyEvent.ACTION_DOWN && repeatCount > 1) {
-                boolean seekBarShowing = isSeekBarShowing();
-                if (!seekBarShowing)
-                    throw new Exception("warning: seekBarShowing false");
-                int duration = seekBar.getMax();
-                int progress = seekBar.getProgress();
-                if (duration <= 0)
-                    throw new Exception("duration error: " + duration);
-                if (progress >= duration)
-                    throw new Exception("error: not progress>=max");
-                int tag = (int) ((View) this).getTag(R.id.module_mediaplayer_id_seek_range_forward);
-                int range = tag + (tag < 60000 ? 50 : 500);
-                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_forward, range);
-                progress += range;
-                if (progress > duration) {
-                    progress = duration;
-                }
-                long max = getMax();
-                callUpdateProgress(max, progress, duration);
-            } else if (action == KeyEvent.ACTION_DOWN) {
-                throw new Exception("warning: repeatCount <1");
-            } else if (action == KeyEvent.ACTION_UP) {
-                boolean seekBarShowing = isSeekBarShowing();
-                if (!seekBarShowing)
-                    throw new Exception("warning: seekBarShowing false");
-                int duration = seekBar.getMax();
-                int progress = seekBar.getProgress();
-                if (duration <= 0)
-                    throw new Exception("duration error: " + duration);
-                if (progress >= duration) {
-                    progress = duration;
-                }
-                seekTo(progress);
-                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
-                boolean playing = isPlaying();
-                if (!playing) {
-                    resume();
-                }
-            } else {
-                throw new Exception("error: not find");
-            }
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApi => seekForward => " + e.getMessage());
-        }
-    }
-
-    /**
-     * 快退
-     */
-    default void seekRewind(int action, int repeatCount) {
-        try {
-            boolean live = isLive();
-            if (live)
-                throw new Exception("warning: live true");
-            boolean prepared = isPrepared();
-            if (!prepared)
-                throw new Exception("warning: prepared false");
-            SeekBar seekBar = findSeekBar();
-            if (null == seekBar)
-                throw new Exception("seekbar error: null");
-            if (action == KeyEvent.ACTION_DOWN && repeatCount == 1) {
-                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_rewind, 0);
-                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
-            } else if (action == KeyEvent.ACTION_DOWN && repeatCount > 1) {
-                int duration = seekBar.getMax();
-                int progress = seekBar.getProgress();
-                if (duration <= 0)
-                    throw new Exception("error: max <= 0 || progress <= 0");
-                if (progress <= 0)
-                    throw new Exception("progress warning: " + progress);
-                int tag = (int) ((View) this).getTag(R.id.module_mediaplayer_id_seek_range_rewind);
-                int range = tag + (tag < 60000 ? 50 : 500);
-                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_rewind, range);
-                progress -= range;
-                if (progress < 0) {
-                    progress = 0;
-                }
-                long max = getMax();
-                callUpdateProgress(max, progress, duration);
-            } else if (action == KeyEvent.ACTION_DOWN) {
-                throw new Exception("warning: repeatCount <1");
-            } else if (action == KeyEvent.ACTION_UP) {
-                boolean seekBarShowing = isSeekBarShowing();
-                if (!seekBarShowing)
-                    throw new Exception("warning: seekBarShowing false");
-                int progress = seekBar.getProgress();
-                if (progress < 0) {
-                    progress = 0;
-                }
-                seekTo(progress);
-                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
-                boolean playing = isPlaying();
-                if (!playing) {
-                    resume();
-                }
-            } else {
-                throw new Exception("error: not find");
-            }
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApi => seekRewind => " + e.getMessage());
-        }
-    }
-
-    default boolean isSeekBarShowing() {
-        try {
-            ComponentApiSeek seekComponent = findSeekComponent();
-            if (null == seekComponent)
-                throw new Exception("seekComponent error: null");
-            boolean componentShowing = seekComponent.isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
-            return true;
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApi => isSeekBarShowing => " + e.getMessage());
-            return false;
-        }
-    }
-
-    default SeekBar findSeekBar() {
-        try {
-            ComponentApiSeek seekComponent = findSeekComponent();
-            if (null == seekComponent)
-                throw new Exception("warning: seekComponent null");
-            SeekBar seekBar = seekComponent.findSeekBar();
-            if (null == seekBar)
-                throw new Exception("error: seekBar null");
-            return seekBar;
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApi => findSeekBar => " + e.getMessage());
-            return null;
-        }
-    }
+//    /**
+//     * 快进
+//     */
+//    default void seekForward(int action, int repeatCount) {
+//        try {
+//            boolean live = isLive();
+//            if (live)
+//                throw new Exception("warning: live true");
+//            boolean prepared = isPrepared();
+//            if (!prepared)
+//                throw new Exception("warning: prepared false");
+//            SeekBar seekBar = findSeekBar();
+//            if (null == seekBar)
+//                throw new Exception("seekbar error: null");
+//            if (action == KeyEvent.ACTION_DOWN && repeatCount == 1) {
+//                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_forward, 0);
+//                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
+//            } else if (action == KeyEvent.ACTION_DOWN && repeatCount > 1) {
+//                boolean seekBarShowing = isSeekBarShowing();
+//                if (!seekBarShowing)
+//                    throw new Exception("warning: seekBarShowing false");
+//                int duration = seekBar.getMax();
+//                int progress = seekBar.getProgress();
+//                if (duration <= 0)
+//                    throw new Exception("duration error: " + duration);
+//                if (progress >= duration)
+//                    throw new Exception("error: not progress>=max");
+//                int tag = (int) ((View) this).getTag(R.id.module_mediaplayer_id_seek_range_forward);
+//                int range = tag + (tag < 60000 ? 50 : 500);
+//                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_forward, range);
+//                progress += range;
+//                if (progress > duration) {
+//                    progress = duration;
+//                }
+//                long max = getMax();
+//                callUpdateProgress(max, progress, duration);
+//            } else if (action == KeyEvent.ACTION_DOWN) {
+//                throw new Exception("warning: repeatCount <1");
+//            } else if (action == KeyEvent.ACTION_UP) {
+//                boolean seekBarShowing = isSeekBarShowing();
+//                if (!seekBarShowing)
+//                    throw new Exception("warning: seekBarShowing false");
+//                int duration = seekBar.getMax();
+//                int progress = seekBar.getProgress();
+//                if (duration <= 0)
+//                    throw new Exception("duration error: " + duration);
+//                if (progress >= duration) {
+//                    progress = duration;
+//                }
+//                seekTo(progress);
+//                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
+//                boolean playing = isPlaying();
+//                if (!playing) {
+//                    resume();
+//                }
+//            } else {
+//                throw new Exception("error: not find");
+//            }
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApi => seekForward => " + e.getMessage());
+//        }
+//    }
+//
+//    /**
+//     * 快退
+//     */
+//    default void seekRewind(int action, int repeatCount) {
+//        try {
+//            boolean live = isLive();
+//            if (live)
+//                throw new Exception("warning: live true");
+//            boolean prepared = isPrepared();
+//            if (!prepared)
+//                throw new Exception("warning: prepared false");
+//            SeekBar seekBar = findSeekBar();
+//            if (null == seekBar)
+//                throw new Exception("seekbar error: null");
+//            if (action == KeyEvent.ACTION_DOWN && repeatCount == 1) {
+//                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_rewind, 0);
+//                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
+//            } else if (action == KeyEvent.ACTION_DOWN && repeatCount > 1) {
+//                int duration = seekBar.getMax();
+//                int progress = seekBar.getProgress();
+//                if (duration <= 0)
+//                    throw new Exception("error: max <= 0 || progress <= 0");
+//                if (progress <= 0)
+//                    throw new Exception("progress warning: " + progress);
+//                int tag = (int) ((View) this).getTag(R.id.module_mediaplayer_id_seek_range_rewind);
+//                int range = tag + (tag < 60000 ? 50 : 500);
+//                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_rewind, range);
+//                progress -= range;
+//                if (progress < 0) {
+//                    progress = 0;
+//                }
+//                long max = getMax();
+//                callUpdateProgress(max, progress, duration);
+//            } else if (action == KeyEvent.ACTION_DOWN) {
+//                throw new Exception("warning: repeatCount <1");
+//            } else if (action == KeyEvent.ACTION_UP) {
+//                boolean seekBarShowing = isSeekBarShowing();
+//                if (!seekBarShowing)
+//                    throw new Exception("warning: seekBarShowing false");
+//                int progress = seekBar.getProgress();
+//                if (progress < 0) {
+//                    progress = 0;
+//                }
+//                seekTo(progress);
+//                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
+//                boolean playing = isPlaying();
+//                if (!playing) {
+//                    resume();
+//                }
+//            } else {
+//                throw new Exception("error: not find");
+//            }
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApi => seekRewind => " + e.getMessage());
+//        }
+//    }
+//
+//    default boolean isSeekBarShowing() {
+//        try {
+//            ComponentApiSeek seekComponent = findSeekComponent();
+//            if (null == seekComponent)
+//                throw new Exception("seekComponent error: null");
+//            boolean componentShowing = seekComponent.isComponentShowing();
+//            if (!componentShowing)
+//                throw new Exception("warning: componentShowing false");
+//            return true;
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApi => isSeekBarShowing => " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    default SeekBar findSeekBar() {
+//        try {
+//            ComponentApiSeek seekComponent = findSeekComponent();
+//            if (null == seekComponent)
+//                throw new Exception("warning: seekComponent null");
+//            SeekBar seekBar = seekComponent.findSeekBar();
+//            if (null == seekBar)
+//                throw new Exception("error: seekBar null");
+//            return seekBar;
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApi => findSeekBar => " + e.getMessage());
+//            return null;
+//        }
+//    }
 }

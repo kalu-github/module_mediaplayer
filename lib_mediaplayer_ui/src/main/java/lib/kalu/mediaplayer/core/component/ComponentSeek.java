@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -17,6 +18,53 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     public ComponentSeek(Context context) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_seek, this, true);
+    }
+
+    @Override
+    public boolean dispatchKeyEventComponent(KeyEvent event) {
+        // seekForward => start
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            int repeatCount = event.getRepeatCount();
+            startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_RIGHT);
+            return true;
+        }
+        // seekForward => stop
+        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            startDelayedMsg(KeyEvent.KEYCODE_DPAD_RIGHT);
+            return true;
+        }
+        // seekRewind => start
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            int repeatCount = event.getRepeatCount();
+            startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_LEFT);
+            return true;
+        }
+        // seekRewind => stop
+        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            startDelayedMsg(KeyEvent.KEYCODE_DPAD_LEFT);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void rangeTo(int keyCode) {
+        try {
+            SeekBar seekBar = findSeekBar();
+            seekBar.setTag(keyCode == KeyEvent.KEYCODE_DPAD_LEFT ? R.id.module_mediaplayer_id_seek_range_rewind : R.id.module_mediaplayer_id_seek_range_forward, null);
+            int progress = seekBar.getProgress();
+
+            if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                getPlayerView().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
+                getPlayerView().seekTo(progress);
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+                getPlayerView().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
+                getPlayerView().seekTo(progress);
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentSeek => rangeTo => " + e.getMessage());
+        }
     }
 
     @Override
@@ -251,7 +299,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 progress = duration;
             }
             getPlayerView().seekTo(progress);
-        }catch (Exception e){
+        } catch (Exception e) {
             LogUtil.log("ComponentSeek => seekToStopTrackingTouch => " + e.getMessage());
         }
     }

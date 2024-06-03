@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -109,7 +108,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
         }
     }
 
-    default <T extends ComponentApi> T findSeekComponent() {
+    default <T extends ComponentApiSeek> T findSeekComponent() {
         try {
             ViewGroup viewGroup = getBaseControlViewGroup();
             int childCount = viewGroup.getChildCount();
@@ -129,24 +128,24 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
         }
     }
 
-    default void dispatchKeyEventComponents( KeyEvent event) {
-        try {
-            ViewGroup viewGroup = getBaseControlViewGroup();
-            int childCount = viewGroup.getChildCount();
-            if (childCount <= 0)
-                throw new Exception("not find component");
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).dispatchKeyEventComponent(event);
-            }
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiComponent => dispatchKeyEventComponents => " + e.getMessage());
-        }
-    }
+//    default void dispatchKeyEventComponents(KeyEvent event) {
+//        try {
+//            ViewGroup viewGroup = getBaseControlViewGroup();
+//            int childCount = viewGroup.getChildCount();
+//            if (childCount <= 0)
+//                throw new Exception("not find component");
+//            for (int i = 0; i < childCount; i++) {
+//                View childAt = viewGroup.getChildAt(i);
+//                if (null == childAt)
+//                    continue;
+//                if (!(childAt instanceof ComponentApi))
+//                    continue;
+//                ((ComponentApi) childAt).dispatchKeyEventComponent(event);
+//            }
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApiComponent => dispatchKeyEventComponents => " + e.getMessage());
+//        }
+//    }
 
     default void callUpdateProgressComponent(long max, long position, long duration) {
         try {

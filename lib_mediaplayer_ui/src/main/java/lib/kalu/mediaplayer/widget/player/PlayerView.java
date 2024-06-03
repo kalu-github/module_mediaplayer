@@ -59,7 +59,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        return dispatchKeyEventPlayer(event) || super.dispatchKeyEvent(event);
+        return dispatchKeyEventApi(event) || super.dispatchKeyEvent(event);
     }
 
     @Override
