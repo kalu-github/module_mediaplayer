@@ -22,7 +22,7 @@ public interface ComponentApiSeek extends ComponentApi {
 
     void seekToStopTrackingTouch();
 
-    void rangeTo(int keyCode);
+    void seekToPosition(int keyCode, int position);
 
     Handler[] mHandlerDelayedMsg = new Handler[1];
 
@@ -37,24 +37,24 @@ public interface ComponentApiSeek extends ComponentApi {
             SeekBar seekBar = findSeekBar();
             int duration = seekBar.getMax();
             if (repeatCount == 0) {
-                Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_range_forward);
+                Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                 if (null == tag) {
                     int progress = seekBar.getProgress();
-                    seekBar.setTag(R.id.module_mediaplayer_id_seek_range_forward, progress);
+                    seekBar.setTag(R.id.module_mediaplayer_id_seek_position, progress);
                     getPlayerView().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
                 } else {
-                    int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_range_forward);
+                    int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                     range += 1000;
-                    seekBar.setTag(R.id.module_mediaplayer_id_seek_range_forward, range);
+                    seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                     if (range >= duration) {
                         range = duration;
                     }
                     onUpdateProgress(true, max, range, duration);
                 }
             } else {
-                int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_range_forward);
+                int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                 range += 10000;
-                seekBar.setTag(R.id.module_mediaplayer_id_seek_range_forward, range);
+                seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                 onUpdateProgress(true, max, range, duration);
             }
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
@@ -62,24 +62,24 @@ public interface ComponentApiSeek extends ComponentApi {
             SeekBar seekBar = findSeekBar();
             int duration = seekBar.getMax();
             if (repeatCount == 0) {
-                Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_range_rewind);
+                Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                 if (null == tag) {
                     int progress = seekBar.getProgress();
-                    seekBar.setTag(R.id.module_mediaplayer_id_seek_range_rewind, progress);
+                    seekBar.setTag(R.id.module_mediaplayer_id_seek_position, progress);
                     getPlayerView().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
                 } else {
-                    int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_range_rewind);
+                    int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                     range -= 1000;
-                    seekBar.setTag(R.id.module_mediaplayer_id_seek_range_rewind, range);
+                    seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                     if (range <= 0) {
                         range = 0;
                     }
                     onUpdateProgress(true, max, range, duration);
                 }
             } else {
-                int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_range_rewind);
+                int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                 range -= 10000;
-                seekBar.setTag(R.id.module_mediaplayer_id_seek_range_rewind, range);
+                seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                 onUpdateProgress(true, max, range, duration);
             }
         }
@@ -90,7 +90,10 @@ public interface ComponentApiSeek extends ComponentApi {
             mHandlerDelayedMsg[0] = new Handler(Looper.getMainLooper()) {
                 @Override
                 public void handleMessage(@NonNull Message msg) {
-                    rangeTo(keyCode);
+                    SeekBar seekBar = findSeekBar();
+                    seekBar.setTag(R.id.module_mediaplayer_id_seek_position, null);
+                    int progress = seekBar.getProgress();
+                    seekToPosition(keyCode, progress);
                 }
             };
         }

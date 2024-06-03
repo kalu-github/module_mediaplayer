@@ -49,21 +49,17 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public void rangeTo(int keyCode) {
+    public void seekToPosition(int keyCode, int position) {
         try {
-            SeekBar seekBar = findSeekBar();
-            seekBar.setTag(keyCode == KeyEvent.KEYCODE_DPAD_LEFT ? R.id.module_mediaplayer_id_seek_range_rewind : R.id.module_mediaplayer_id_seek_range_forward, null);
-            int progress = seekBar.getProgress();
-
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 getPlayerView().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
-                getPlayerView().seekTo(progress);
+                getPlayerView().seekTo(position);
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 getPlayerView().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
-                getPlayerView().seekTo(progress);
+                getPlayerView().seekTo(position);
             }
         } catch (Exception e) {
-            LogUtil.log("ComponentSeek => rangeTo => " + e.getMessage());
+            LogUtil.log("ComponentSeek => seekToPosition => " + e.getMessage());
         }
     }
 
