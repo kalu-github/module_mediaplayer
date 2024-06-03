@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
@@ -72,10 +73,14 @@ public class PlayerLayout extends RelativeLayout {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         try {
-            return getPlayerView().dispatchKeyEvent(event) || super.dispatchKeyEvent(event);
+            return dispatchKeyEventApi(event) || super.dispatchKeyEvent(event);
         } catch (Exception e) {
             return super.dispatchKeyEvent(event);
         }
+    }
+
+    public boolean dispatchKeyEventApi(KeyEvent event) {
+        return getPlayerView().dispatchKeyEvent(event);
     }
 
     @Override
