@@ -17,8 +17,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import lib.kalu.ijkplayer.IMediaPlayer;
-
 @Documented
 @Retention(CLASS)
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
@@ -346,9 +344,9 @@ public @interface PlayerType {
 //        // 开始渲染视频画面
 //        int EVENT_AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
         // 首帧画面
-        int EVENT_VIDEO_RENDERING_START = 7010;
+        int EVENT_VIDEO_RENDERING_START = 7_010;
         // 视频开播
-        int EVENT_VIDEO_START = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
+        int EVENT_VIDEO_START = 7_011;
         int EVENT_VIDEO_END = 7_012;
 //        int EVENT_VIDEO_START_RETRY = 7_011;
 //        int EVENT_VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE;
@@ -359,9 +357,9 @@ public @interface PlayerType {
         // 缓冲开始
 //        int EVENT_OPEN_INPUT = IMediaPlayer.MEDIA_INFO_OPEN_INPUT;
         // 缓冲开始
-        int EVENT_BUFFERING_START = IMediaPlayer.MEDIA_INFO_BUFFERING_START;
+        int EVENT_BUFFERING_START = 7_013;
         // 缓冲结束
-        int EVENT_BUFFERING_STOP = IMediaPlayer.MEDIA_INFO_BUFFERING_END;
+        int EVENT_BUFFERING_STOP = 7_014;
         // 视频旋转信息
 //        int EVENT_VIDEO_ROTATION_CHANGED = IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
 //        int EVENT_AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;

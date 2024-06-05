@@ -399,7 +399,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             LogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", extra = " + extra);
             switch (what) {
                 // 缓冲开始
-                case PlayerType.EventType.EVENT_BUFFERING_START:
+                case MediaPlayer.MEDIA_INFO_BUFFERING_START:
                     if (mPrepared) {
                         onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
                     } else {
@@ -407,7 +407,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     }
                     break;
                 // 缓冲结束
-                case PlayerType.EventType.EVENT_BUFFERING_STOP:
+                case MediaPlayer.MEDIA_INFO_BUFFERING_END:
                     if (mPrepared) {
                         onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
                     } else {

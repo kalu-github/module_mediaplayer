@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.kernel.video.ff;
 
 import android.content.Context;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -321,7 +322,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         public boolean onInfo(FFmpegPlayer mp, int what, int extra) {
             LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what);
             // 缓冲开始
-            if (what == PlayerType.EventType.EVENT_BUFFERING_START) {
+            if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
                 if (mPrepared) {
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_BUFFERING_START);
                 } else {
@@ -329,7 +330,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 }
             }
             // 缓冲结束
-            else if (what == PlayerType.EventType.EVENT_BUFFERING_STOP) {
+            else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
                 if (mPrepared) {
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_BUFFERING_STOP);
                 } else {
@@ -337,7 +338,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 }
             }
             // 开始播放
-            else if (what == PlayerType.EventType.EVENT_VIDEO_START) {
+            else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                 try {
                     if (mPrepared)
                         throw new Exception("warning: mPrepared true");
