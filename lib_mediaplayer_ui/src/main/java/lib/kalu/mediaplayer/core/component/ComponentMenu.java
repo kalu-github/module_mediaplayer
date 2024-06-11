@@ -137,12 +137,10 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     private void initListener() {
-        LogUtil.log("ComponentMenu => initListener => ");
         try {
             findViewById(R.id.module_mediaplayer_component_menu_speed_0_5).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getContext(), "0.5", Toast.LENGTH_SHORT).show();
                     setSpeed(0.5F);
                 }
             });
