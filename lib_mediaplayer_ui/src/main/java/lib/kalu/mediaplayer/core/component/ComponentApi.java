@@ -33,6 +33,27 @@ public interface ComponentApi {
         return false;
     }
 
+    default boolean isComponentMenuShowing() {
+        try {
+            ViewGroup viewGroup = getPlayerView().getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (childAt instanceof ComponentApiMenu) {
+                    boolean componentShowing = ((ComponentApiMenu) childAt).isComponentShowing();
+                    if (componentShowing) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     /******************/
 
     default void callEventListener(int playState) {
@@ -225,7 +246,7 @@ public interface ComponentApi {
                 throw new Exception("parent error: not instanceof PlayerLayout");
             return (PlayerLayout) parent;
         } catch (Exception e) {
-            LogUtil.log("ComponentApiLinkerPlayer => getPlayerLayout => " + e.getMessage());
+            LogUtil.log("ComponentApi => getPlayerLayout => " + e.getMessage());
             return null;
         }
     }
@@ -249,7 +270,7 @@ public interface ComponentApi {
                 new Exception("not find");
             return playerView;
         } catch (Exception e) {
-            LogUtil.log("ComponentApiLinkerPlayer => getPlayerView => " + e.getMessage());
+            LogUtil.log("ComponentApi => getPlayerView => " + e.getMessage());
             return null;
         }
     }
@@ -261,7 +282,7 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             return playerView.isFull();
         } catch (Exception e) {
-            LogUtil.log("ComponentApiLinkerPlayer => isFull => " + e.getMessage());
+            LogUtil.log("ComponentApi => isFull => " + e.getMessage());
             return false;
         }
     }
@@ -273,7 +294,7 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             return playerView.isPlaying();
         } catch (Exception e) {
-            LogUtil.log("ComponentApiLinkerPlayer => isPlaying => " + e.getMessage());
+            LogUtil.log("ComponentApi => isPlaying => " + e.getMessage());
             return false;
         }
     }
@@ -285,7 +306,7 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             return playerView.getNetSpeed();
         } catch (Exception e) {
-            LogUtil.log("ComponentApiLinkerPlayer => isFull => " + e.getMessage());
+            LogUtil.log("ComponentApi => isFull => " + e.getMessage());
             return "0kb/s";
         }
     }
@@ -297,7 +318,7 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             playerView.resume();
         } catch (Exception e) {
-            LogUtil.log("ComponentApiLinkerPlayer => resume => " + e.getMessage());
+            LogUtil.log("ComponentApi => resume => " + e.getMessage());
         }
     }
 
@@ -308,9 +329,21 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             playerView.pause();
         } catch (Exception e) {
-            LogUtil.log("ComponentApiLinkerPlayer => pause => " + e.getMessage());
+            LogUtil.log("ComponentApi => pause => " + e.getMessage());
         }
     }
+
+    default void toggle() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.toggle();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => toggle => " + e.getMessage());
+        }
+    }
+
     default void setSpeed(float v) {
         try {
             PlayerView playerView = getPlayerView();
@@ -318,7 +351,7 @@ public interface ComponentApi {
                 throw new Exception("playerView error: null");
             playerView.setSpeed(v);
         } catch (Exception e) {
-            LogUtil.log("ComponentApiLinkerPlayer => setSpeed => " + e.getMessage());
+            LogUtil.log("ComponentApi => setSpeed => " + e.getMessage());
         }
     }
 
@@ -332,7 +365,7 @@ public interface ComponentApi {
                 throw new Exception("url error: " + url);
             return url;
         } catch (Exception e) {
-            LogUtil.log("ComponentApiLinkerPlayer => getUrl => " + e.getMessage());
+            LogUtil.log("ComponentApi => getUrl => " + e.getMessage());
             return null;
         }
     }
@@ -347,7 +380,7 @@ public interface ComponentApi {
                 throw new Exception("data error: " + data);
             return data;
         } catch (Exception e) {
-            LogUtil.log("ComponentApiLinkerPlayer => getData => " + e.getMessage());
+            LogUtil.log("ComponentApi => getData => " + e.getMessage());
             return null;
         }
     }

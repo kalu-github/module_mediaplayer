@@ -24,22 +24,21 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     public boolean dispatchKeyEvent(KeyEvent event) {
         // toggle
         if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-            try {
-                getPlayerView().toggle();
-            } catch (Exception e) {
+            boolean isShowing = isComponentMenuShowing();
+            if (!isShowing) {
+                toggle();
+                return true;
             }
-            return true;
         }
         // toggle
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
-            try {
-                getPlayerView().toggle();
-            } catch (Exception e) {
+            boolean isShowing = isComponentMenuShowing();
+            if (!isShowing) {
+                toggle();
+                return true;
             }
-            return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     @Override

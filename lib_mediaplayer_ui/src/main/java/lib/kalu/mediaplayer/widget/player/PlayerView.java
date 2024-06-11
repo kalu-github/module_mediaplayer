@@ -74,22 +74,23 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                     return true;
                 }
             }
+
             // dispatchKeyEvent
-            else {
-                ViewGroup viewGroup = getBaseComponentViewGroup();
-                int childCount = viewGroup.getChildCount();
-                for (int i = 0; i < childCount; i++) {
-                    View childAt = viewGroup.getChildAt(i);
-                    if (null == childAt)
-                        continue;
-                    if (!(childAt instanceof ComponentApi))
-                        continue;
-                    boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
-                    if (dispatchKeyEvent) {
-                        return true;
-                    }
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
+                if (dispatchKeyEvent) {
+                    return true;
                 }
             }
+
+            // error
             throw new Exception("warning: not todo");
         } catch (Exception e) {
             return false;

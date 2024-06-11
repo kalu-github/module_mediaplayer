@@ -24,8 +24,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     public boolean dispatchKeyEvent(KeyEvent event) {
         // seekForward => start
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            boolean pass = checkPass();
-            if (pass) {
+            boolean isShowing = isComponentMenuShowing();
+            if (!isShowing) {
                 int repeatCount = event.getRepeatCount();
                 startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_RIGHT);
                 return true;
@@ -33,16 +33,16 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
         }
         // seekForward => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            boolean pass = checkPass();
-            if (pass) {
+            boolean isShowing = isComponentMenuShowing();
+            if (!isShowing) {
                 startDelayedMsg(KeyEvent.KEYCODE_DPAD_RIGHT);
                 return true;
             }
         }
         // seekRewind => start
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            boolean pass = checkPass();
-            if (pass) {
+            boolean isShowing = isComponentMenuShowing();
+            if (!isShowing) {
                 int repeatCount = event.getRepeatCount();
                 startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_LEFT);
                 return true;
@@ -50,8 +50,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
         }
         // seekRewind => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            boolean pass = checkPass();
-            if (pass) {
+            boolean isShowing = isComponentMenuShowing();
+            if (!isShowing) {
                 startDelayedMsg(KeyEvent.KEYCODE_DPAD_LEFT);
                 return true;
             }

@@ -1,84 +1,316 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/module_mediaplayer_color_00000000"
-    android:focusable="false"
-    android:gravity="bottom"
-    android:orientation="vertical">
+    android:focusable="false">
 
     <LinearLayout
-        android:id="@+id/module_mediaplayer_component_menu_speed"
+        android:id="@+id/module_mediaplayer_component_menu_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/module_mediaplayer_shape_shandow_down_to_up"
         android:focusable="false"
-        android:visibility="gone"
-        android:background="@android:color/holo_red_dark"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:paddingBottom="20dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:focusable="false"
             android:gravity="center_vertical"
-            android:text="倍速" />
+            android:text="选集"
+            android:textColor="@color/module_mediaplayer_color_ffffff"
+            android:textSize="20sp" />
 
-        <RadioGroup
-            android:id="@+id/module_mediaplayer_component_menu_speed_group"
+        <LinearLayout
+            android:id="@+id/module_mediaplayer_component_menu_items_group"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:focusable="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-            <RadioButton
+            <TextView
+                android:id="@+id/module_mediaplayer_component_menu_items_no1"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/module_mediaplayer_selector_button"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="1"
+                android:textSize="20sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
+                android:id="@+id/module_mediaplayer_component_menu_items_no2"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/module_mediaplayer_selector_button"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="2"
+                android:textSize="20sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
+                android:id="@+id/module_mediaplayer_component_menu_items_no3"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/module_mediaplayer_selector_button"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="3"
+                android:textSize="20sp" />
+
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
+                android:id="@+id/module_mediaplayer_component_menu_items_no4"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/module_mediaplayer_selector_button"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="4"
+                android:textSize="20sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
+                android:id="@+id/module_mediaplayer_component_menu_items_no5"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/module_mediaplayer_selector_button"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="5"
+                android:textSize="20sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
+                android:id="@+id/module_mediaplayer_component_menu_items_no6"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/module_mediaplayer_selector_button"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="6"
+                android:textSize="20sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
+                android:id="@+id/module_mediaplayer_component_menu_items_no7"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/module_mediaplayer_selector_button"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="7"
+                android:textSize="20sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
+                android:id="@+id/module_mediaplayer_component_menu_items_no8"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/module_mediaplayer_selector_button"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="8"
+                android:textSize="20sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
+                android:id="@+id/module_mediaplayer_component_menu_items_no9"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/module_mediaplayer_selector_button"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="9"
+                android:textSize="20sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
+                android:id="@+id/module_mediaplayer_component_menu_items_no10"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/module_mediaplayer_selector_button"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="10"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:focusable="false"
+            android:gravity="center_vertical"
+            android:text="倍速"
+            android:textColor="@color/module_mediaplayer_color_ffffff"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:id="@+id/module_mediaplayer_component_menu_speeds_group"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:focusable="false"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
                 android:id="@+id/module_mediaplayer_component_menu_speed_0_5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/module_mediaplayer_selector_button"
                 android:focusable="true"
-                android:text="0.5" />
-            <RadioButton
+                android:gravity="center"
+                android:text="0.5"
+                android:textSize="20sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
                 android:id="@+id/module_mediaplayer_component_menu_speed_1_0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/module_mediaplayer_selector_button"
                 android:focusable="true"
-                android:text="1.0" />
+                android:gravity="center"
+                android:text="1.0"
+                android:textSize="20sp" />
 
-            <RadioButton
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
                 android:id="@+id/module_mediaplayer_component_menu_speed_1_5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/module_mediaplayer_selector_button"
                 android:focusable="true"
-                android:text="1.5" />
+                android:gravity="center"
+                android:text="1.5"
+                android:textSize="20sp" />
 
-            <RadioButton
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
                 android:id="@+id/module_mediaplayer_component_menu_speed_2_0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/module_mediaplayer_selector_button"
                 android:focusable="true"
-                android:text="2" />
+                android:gravity="center"
+                android:text="2"
+                android:textSize="20sp" />
 
-            <RadioButton
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
                 android:id="@+id/module_mediaplayer_component_menu_speed_2_5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/module_mediaplayer_selector_button"
                 android:focusable="true"
-                android:text="2.5" />
+                android:gravity="center"
+                android:text="2.5"
+                android:textSize="20sp" />
 
-            <RadioButton
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:focusable="false" />
+
+            <TextView
                 android:id="@+id/module_mediaplayer_component_menu_speed_3_0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/module_mediaplayer_selector_button"
                 android:focusable="true"
-                android:text="3" />
+                android:gravity="center"
+                android:text="3"
+                android:textSize="20sp" />
 
-        </RadioGroup>
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

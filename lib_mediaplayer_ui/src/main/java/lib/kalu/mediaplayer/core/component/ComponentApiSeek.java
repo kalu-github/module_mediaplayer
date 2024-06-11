@@ -26,24 +26,6 @@ public interface ComponentApiSeek extends ComponentApi {
 
     void seekToPosition(int keyCode, int position);
 
-
-    default boolean checkPass() {
-        try {
-            ViewGroup viewGroup = getPlayerView().getBaseComponentViewGroup();
-            int childCount = viewGroup.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (childAt instanceof ComponentApiMenu)
-                    return false;
-            }
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     Handler[] mHandlerDelayedMsg = new Handler[1];
 
     default void startInitMsg(int repeatCount, int keyCode) {
