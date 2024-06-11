@@ -14,9 +14,9 @@
         android:focusable="false"
         android:orientation="vertical"
         android:paddingLeft="40dp"
+        android:visibility="gone"
         android:paddingRight="40dp"
-        android:paddingBottom="20dp"
-        android:visibility="gone">
+        android:paddingBottom="20dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -211,105 +211,98 @@
             android:textColor="@color/module_mediaplayer_color_ffffff"
             android:textSize="20sp" />
 
-        <LinearLayout
+        <RadioGroup
             android:id="@+id/module_mediaplayer_component_menu_speeds_group"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:focusable="false"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:orientation="horizontal">
 
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_speed_0_5"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
+                android:checked="false"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="0.5"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_speed_1_0"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
+                android:checked="true"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="1.0"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_speed_1_5"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
+                android:checked="false"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="1.5"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_speed_2_0"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
+                android:checked="false"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="2"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_speed_2_5"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
+                android:checked="false"
                 android:focusable="true"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:gravity="center"
                 android:text="2.5"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_speed_3_0"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
+                android:checked="false"
                 android:focusable="true"
                 android:gravity="center"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:text="3"
                 android:textSize="20sp" />
 
-        </LinearLayout>
+        </RadioGroup>
 
     </LinearLayout>
 

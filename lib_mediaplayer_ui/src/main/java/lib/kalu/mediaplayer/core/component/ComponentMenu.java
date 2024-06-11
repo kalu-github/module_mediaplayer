@@ -83,6 +83,15 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 return true;
             }
         }
+        // center
+//        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+//            boolean componentShowing = isComponentShowing();
+//            if (componentShowing) {
+//                View focus = findFocus();
+//                int id = focus.getId();
+//                return true;
+//            }
+//        }
         return false;
     }
 
@@ -103,6 +112,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             findViewById(R.id.module_mediaplayer_component_menu_items_group).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.GONE);
         } catch (Exception e) {
+            LogUtil.log("ComponentMenu => hide => " + e.getMessage());
         }
     }
 
@@ -111,10 +121,10 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         try {
             findViewById(R.id.module_mediaplayer_component_menu_root).setVisibility(View.VISIBLE);
         } catch (Exception e) {
+            LogUtil.log("ComponentMenu => show => " + e.getMessage());
         }
 
         showItems();
-        initListener();
     }
 
 
@@ -124,6 +134,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             findViewById(R.id.module_mediaplayer_component_menu_items_group).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_menu_items_no1).requestFocus();
         } catch (Exception e) {
+            LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
         }
     }
 
@@ -131,71 +142,33 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         try {
             findViewById(R.id.module_mediaplayer_component_menu_items_group).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_menu_speed_1_0).requestFocus();
         } catch (Exception e) {
-        }
-    }
-
-    private void initListener() {
-        try {
-            findViewById(R.id.module_mediaplayer_component_menu_speed_0_5).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setSpeed(0.5F);
-                }
-            });
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => initListener => " + e.getMessage());
+            LogUtil.log("ComponentMenu => showSpeeds => " + e.getMessage());
         }
         try {
-            findViewById(R.id.module_mediaplayer_component_menu_speed_1_0).setOnClickListener(new OnClickListener() {
+            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_speeds_group);
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
-                public void onClick(View v) {
-                    setSpeed(1.0F);
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    if (checkedId == R.id.module_mediaplayer_component_menu_speed_0_5) {
+                        setSpeed(0.5F);
+                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_1_0) {
+                        setSpeed(1.0F);
+                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_1_5) {
+                        setSpeed(1.5F);
+                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_2_0) {
+                        setSpeed(2.0F);
+                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_2_5) {
+                        setSpeed(2.5F);
+                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_3_0) {
+                        setSpeed(3.0F);
+                    }
                 }
             });
+            int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+            findViewById(checkedRadioButtonId).requestFocus();
         } catch (Exception e) {
-            LogUtil.log("ComponentMenu => initListener => " + e.getMessage());
-        }
-        try {
-            findViewById(R.id.module_mediaplayer_component_menu_speed_1_5).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setSpeed(1.5F);
-                }
-            });
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => initListener => " + e.getMessage());
-        }
-        try {
-            findViewById(R.id.module_mediaplayer_component_menu_speed_2_0).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setSpeed(2.0F);
-                }
-            });
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => initListener => " + e.getMessage());
-        }
-        try {
-            findViewById(R.id.module_mediaplayer_component_menu_speed_2_5).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setSpeed(2.5F);
-                }
-            });
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => initListener => " + e.getMessage());
-        }
-        try {
-            findViewById(R.id.module_mediaplayer_component_menu_speed_3_0).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setSpeed(3.0F);
-                }
-            });
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => initListener => " + e.getMessage());
+            LogUtil.log("ComponentMenu => showSpeeds => " + e.getMessage());
         }
     }
 }
