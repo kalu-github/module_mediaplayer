@@ -516,7 +516,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
         @Override
         public void onBufferingUpdate(MediaPlayer mp, int percent) {
-            LogUtil.log("VideoAndroidPlayer => onBufferingUpdate => percent = " + percent);
+//            LogUtil.log("VideoAndroidPlayer => onBufferingUpdate => percent = " + percent);
         }
     };
 

@@ -45,13 +45,12 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void callPlayerEvent(int playState) {
+    public void callEventListener(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_BUFFERING_START:
                 LogUtil.log("ComponentNet => onPlayStateChanged => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.STATE_INIT_RETEY_BUFFERING:
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_BUFFERING_STOP:
             case PlayerType.StateType.STATE_ERROR:

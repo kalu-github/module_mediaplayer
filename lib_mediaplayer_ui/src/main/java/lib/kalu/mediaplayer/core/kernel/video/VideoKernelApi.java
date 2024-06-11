@@ -160,13 +160,13 @@ public interface VideoKernelApi extends VideoKernelApiBase, VideoKernelApiEvent 
             }
 
             getPlayerApi().restart(seek, true, true);
-            getPlayerApi().callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
+            getPlayerApi().callEventListener(PlayerType.StateType.STATE_BUFFERING_START);
             mHandlerLoadBuffering[0].sendEmptyMessageDelayed(4321, timeout);
         } catch (Exception e) {
             mHandlerLoadBuffering[0].removeCallbacksAndMessages(null);
             mHandlerLoadBuffering[0] = null;
-//            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
-//            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_TIMEOUT);
+//            callEventListener(PlayerType.StateType.STATE_BUFFERING_STOP);
+//            callEventListener(PlayerType.StateType.STATE_BUFFERING_TIMEOUT);
             getPlayerApi().stop(false);
             if (reset) {
                 getPlayerApi().release();

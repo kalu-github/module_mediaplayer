@@ -95,8 +95,8 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
                 if (resetSurface) {
                     resetRenderView(true);
                 }
-                callPlayerEvent(PlayerType.StateType.STATE_FULL_START);
-                callPlayerWindow(PlayerType.WindowType.FULL);
+                callEventListener(PlayerType.StateType.STATE_FULL_START);
+                callWindowListener(PlayerType.WindowType.FULL);
             }
             if (rememberPlaying) {
                 checkPlaying();
@@ -124,8 +124,8 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
                     resetRenderView(true);
                 }
                 cleanFocusFull();
-                callPlayerEvent(PlayerType.StateType.STATE_FULL_STOP);
-                callPlayerWindow(PlayerType.WindowType.NORMAL);
+                callEventListener(PlayerType.StateType.STATE_FULL_STOP);
+                callWindowListener(PlayerType.WindowType.NORMAL);
             }
             return b;
         } catch (Exception e) {
@@ -142,8 +142,8 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             boolean switchToDecorView = switchToDecorView(false);
             if (switchToDecorView) {
                 resetRenderView(true);
-                callPlayerEvent(PlayerType.StateType.STATE_FLOAT_START);
-                callPlayerWindow(PlayerType.WindowType.FLOAT);
+                callEventListener(PlayerType.StateType.STATE_FLOAT_START);
+                callWindowListener(PlayerType.WindowType.FLOAT);
             }
             if (rememberPlaying) {
                 checkPlaying();
@@ -164,8 +164,8 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             switchPlaying();
             if (switchToPlayerLayout) {
                 resetRenderView(true);
-                callPlayerEvent(PlayerType.StateType.STATE_FLOAT_STOP);
-                callPlayerWindow(PlayerType.WindowType.NORMAL);
+                callEventListener(PlayerType.StateType.STATE_FLOAT_STOP);
+                callWindowListener(PlayerType.WindowType.NORMAL);
             }
             return switchToPlayerLayout;
         } catch (Exception e) {

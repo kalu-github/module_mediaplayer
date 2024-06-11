@@ -4,30 +4,20 @@ package lib.kalu.mediaplayer.core.player.video;
 import android.view.View;
 import android.view.ViewGroup;
 
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoPlayerApiListener extends VideoPlayerApiBase {
 
-    default void callPlayerWindow(@PlayerType.WindowType.Value int state) {
-
-        // listener
-        try {
-            OnPlayerWindowListener windowListener = getOnPlayerWindowListener();
-            if (null == windowListener)
-                throw new Exception("windowListener error: null");
-            windowListener.onWindow(state);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => callPlayerWindow => " + e.getMessage());
-        }
+    default void callWindowListener(@PlayerType.WindowType.Value int state) {
 
         // component
         try {
-            ViewGroup viewGroup = getBaseControlViewGroup();
+            ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
             if (childCount <= 0)
                 throw new Exception("not find component");
@@ -40,53 +30,25 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
                 ((ComponentApi) childAt).callWindowEvent(state);
             }
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => callPlayerWindow => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBase => callWindowListener => " + e.getMessage());
+        }
+
+        // listener
+        try {
+            OnPlayerWindowListener windowListener = getOnPlayerWindowListener();
+            if (null != windowListener) {
+                windowListener.onWindow(state);
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiBase => callWindowListener => " + e.getMessage());
         }
     }
 
-    default void callPlayerEvent(@PlayerType.StateType.Value int state) {
-        // listener
-        try {
-            OnPlayerEventListener eventListener = getOnPlayerEventListener();
-            if (null == eventListener)
-                throw new Exception("eventListener error: null");
-            eventListener.onEvent(state);
-            switch (state) {
-                case PlayerType.StateType.STATE_RESTAER:
-                    eventListener.onRestart();
-                    break;
-                case PlayerType.StateType.STATE_START:
-                    eventListener.onStart();
-                    break;
-                case PlayerType.StateType.STATE_END:
-                    eventListener.onComplete();
-                    break;
-                case PlayerType.StateType.STATE_PAUSE:
-                    eventListener.onPause();
-                    break;
-                case PlayerType.StateType.STATE_RESUME:
-                    eventListener.onResume();
-                    break;
-                case PlayerType.StateType.STATE_BUFFERING_START:
-                    eventListener.onBufferingStart();
-                    break;
-                case PlayerType.StateType.STATE_BUFFERING_STOP:
-                    eventListener.onBufferingStop();
-                    break;
-                case PlayerType.StateType.STATE_LOADING_START:
-                    eventListener.onLoadingStart();
-                    break;
-                case PlayerType.StateType.STATE_LOADING_STOP:
-                    eventListener.onLoadingStop();
-                    break;
-            }
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => callPlayerEvent => " + e.getMessage());
-        }
+    default void callEventListener(@PlayerType.StateType.Value int state) {
 
         // component
         try {
-            ViewGroup viewGroup = getBaseControlViewGroup();
+            ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
             if (childCount <= 0)
                 throw new Exception("not find component");
@@ -96,21 +58,71 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).callPlayerEvent(state);
+                ((ComponentApi) childAt).callEventListener(state);
             }
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => callPlayerEvent => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBase => callEventListener => " + e.getMessage());
+        }
+
+        // listener
+        try {
+            OnPlayerEventListener eventListener = getOnPlayerEventListener();
+            if (null != eventListener) {
+                eventListener.onEvent(state);
+                if (state == PlayerType.StateType.STATE_RESTAER) {
+                    eventListener.onRestart();
+                } else if (state == PlayerType.StateType.STATE_START) {
+                    eventListener.onStart();
+                } else if (state == PlayerType.StateType.STATE_END) {
+                    eventListener.onComplete();
+                } else if (state == PlayerType.StateType.STATE_PAUSE) {
+                    eventListener.onPause();
+                } else if (state == PlayerType.StateType.STATE_RESUME) {
+                    eventListener.onResume();
+                } else if (state == PlayerType.StateType.STATE_BUFFERING_START) {
+                    eventListener.onBufferingStart();
+                } else if (state == PlayerType.StateType.STATE_BUFFERING_STOP) {
+                    eventListener.onBufferingStop();
+                } else if (state == PlayerType.StateType.STATE_LOADING_START) {
+                    eventListener.onLoadingStart();
+                } else if (state == PlayerType.StateType.STATE_LOADING_STOP) {
+                    eventListener.onLoadingStop();
+                }
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiBase => callEventListener => " + e.getMessage());
         }
     }
 
-    default void callUpdateProgressPlayer(long position, long duration) {
+    default void callProgressListener(long max, long position, long duration) {
+
+
+        // component
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).onUpdateProgress(false, max, position, duration);
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiComponent => callProgressListener => " + e.getMessage());
+        }
+
+        // listenr
         try {
             OnPlayerProgressListener progressListener = getOnPlayerProgressListener();
-            if (null == progressListener)
-                throw new Exception("progressListener error: null");
-            progressListener.onProgress(position, duration);
+            if (null != progressListener) {
+                progressListener.onProgress(position, duration);
+            }
         } catch (Exception e) {
-//            MPLogUtil.log("VideoPlayerApiListener => callPlayerProgress => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiListener => callProgressListener => " + e.getMessage());
         }
     }
 

@@ -72,11 +72,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             stopHanlder();
             if (null == playUrl || playUrl.length() == 0)
                 throw new Exception("playUrl error: " + playUrl);
-            if (retryBuffering) {
-                callPlayerEvent(PlayerType.StateType.STATE_INIT_RETEY_BUFFERING);
-            } else {
-                callPlayerEvent(PlayerType.StateType.STATE_INIT);
-            }
+            callEventListener(PlayerType.StateType.STATE_INIT);
             // 1
             PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
             LogUtil.setLogger(playerBuilder);
@@ -226,9 +222,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 removeOnPlayerProgressListener();
                 removeOnPlayerWindowListener();
             }
-            callPlayerEvent(PlayerType.StateType.STATE_RELEASE);
+            callEventListener(PlayerType.StateType.STATE_RELEASE);
         } catch (Exception e) {
-            callPlayerEvent(PlayerType.StateType.STATE_RELEASE_EXCEPTION);
+            callEventListener(PlayerType.StateType.STATE_RELEASE_EXCEPTION);
             LogUtil.log("VideoPlayerApiKernel => release => " + e.getMessage());
         }
     }
@@ -289,7 +285,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (null == builder)
                 throw new Exception("builder error: null");
             if (callEvent) {
-                callPlayerEvent(PlayerType.StateType.STATE_RESTAER);
+                callEventListener(PlayerType.StateType.STATE_RESTAER);
             }
             start(builder, url, retryBuffering);
         } catch (Exception e) {
@@ -522,8 +518,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernel.start();
             setScreenKeep(true);
             if (callEvent) {
-                callPlayerEvent(PlayerType.StateType.STATE_RESUME);
-                callPlayerEvent(PlayerType.StateType.STATE_KERNEL_RESUME);
+                callEventListener(PlayerType.StateType.STATE_RESUME);
+                callEventListener(PlayerType.StateType.STATE_KERNEL_RESUME);
             }
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => resumeVideoKernel => " + e.getMessage());
@@ -538,8 +534,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernel.stop();
             if (!callEvent)
                 throw new Exception("warning: callEvent false");
-            callPlayerEvent(PlayerType.StateType.STATE_KERNEL_STOP);
-            callPlayerEvent(PlayerType.StateType.STATE_CLOSE);
+            callEventListener(PlayerType.StateType.STATE_KERNEL_STOP);
+            callEventListener(PlayerType.StateType.STATE_CLOSE);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => stopKernel => " + e.getMessage());
         }
@@ -553,7 +549,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernel.pause();
             if (!callEvent)
                 throw new Exception("warning: callEvent false");
-            callPlayerEvent(PlayerType.StateType.STATE_PAUSE);
+            callEventListener(PlayerType.StateType.STATE_PAUSE);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => pauseKernel => " + e.getMessage());
         }
@@ -568,7 +564,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             setScreenKeep(true);
             if (milliSeconds <= 0)
                 return;
-            callPlayerEvent(PlayerType.StateType.STATE_INIT_SEEK);
+            callEventListener(PlayerType.StateType.STATE_INIT_SEEK);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => seekToVideoKernel => " + e.getMessage());
         }
@@ -646,12 +642,11 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 @Override
                 public void onUpdateProgress(boolean isLooping, long max, long position, long duration) {
 
-                    callUpdateProgressComponent(max, position, duration);
-                    callUpdateProgressPlayer(position, duration);
+                    callProgressListener(max, position, duration);
                     try {
                         if (max <= 0 || position <= max)
                             throw new Exception("time warning: max = " + max + ", position = " + position + ", duration = " + duration + ", isLooping = " + isLooping);
-                        callPlayerEvent(PlayerType.StateType.STATE_TRY_COMPLETE);
+                        callEventListener(PlayerType.StateType.STATE_TRY_COMPLETE);
                         // 试看1
                         if (isLooping) {
                             seekTo(true);
@@ -677,15 +672,15 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                            break;
                         // 初始化开始 => loading start
                         case PlayerType.EventType.EVENT_LOADING_START:
-                            callPlayerEvent(PlayerType.StateType.STATE_LOADING_START);
+                            callEventListener(PlayerType.StateType.STATE_LOADING_START);
                             break;
                         // 初始化完成 => loading stop
                         case PlayerType.EventType.EVENT_LOADING_STOP:
-                            callPlayerEvent(PlayerType.StateType.STATE_LOADING_STOP);
+                            callEventListener(PlayerType.StateType.STATE_LOADING_STOP);
                             break;
                         // 缓冲开始
                         case PlayerType.EventType.EVENT_BUFFERING_START:
-                            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_START);
+                            callEventListener(PlayerType.StateType.STATE_BUFFERING_START);
                             // 0: url
                             // 1: connentTimeout
                             // 2: log
@@ -696,7 +691,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             break;
                         // 缓冲结束
                         case PlayerType.EventType.EVENT_BUFFERING_STOP:
-                            callPlayerEvent(PlayerType.StateType.STATE_BUFFERING_STOP);
+                            callEventListener(PlayerType.StateType.STATE_BUFFERING_STOP);
                             getVideoKernel().stopCheckLoadBufferingTimeout();
                             break;
 //                        // 播放开始
@@ -708,7 +703,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                            break;
 //                        // 播放开始
 //                        case PlayerType.EventType.EVENT_VIDEO_START_RETRY:
-//                            callPlayerEvent(PlayerType.StateType.STATE_START_RETRY);
+//                            callEventListener(PlayerType.StateType.STATE_START_RETRY);
 //                            // step2
 //                            showVideoReal();
 //                            // step3
@@ -722,11 +717,11 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                            if (null != builder) {
 //                                long max = builder.getMax();
 //                                if (max > 0) {
-//                                    callPlayerEvent(PlayerType.StateType.STATE_TRY_BEGIN);
+//                                    callEventListener(PlayerType.StateType.STATE_TRY_BEGIN);
 //                                }
 //                            }
 //                            // step1
-//                            callPlayerEvent(PlayerType.StateType.STATE_START_SEEK);
+//                            callEventListener(PlayerType.StateType.STATE_START_SEEK);
 //                            // step2
 //                            showVideoReal();
 //                            // step4
@@ -737,12 +732,12 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                            if (!playWhenReady1) {
 //                                pause();
 //                                setPlayWhenReady(true);
-//                                callPlayerEvent(PlayerType.StateType.STATE_START_PLAY_WHEN_READY_PAUSE);
+//                                callEventListener(PlayerType.StateType.STATE_START_PLAY_WHEN_READY_PAUSE);
 //                            }
 //                            break;
                         // 视频首帧
                         case PlayerType.EventType.EVENT_VIDEO_RENDERING_START:
-                            callPlayerEvent(PlayerType.StateType.STATE_VIDEO_RENDERING_START);
+                            callEventListener(PlayerType.StateType.STATE_VIDEO_RENDERING_START);
                             break;
                         // 播放开始-默认
                         case PlayerType.EventType.EVENT_VIDEO_START:
@@ -754,10 +749,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             if (null != args) {
                                 long max = args.getMax();
                                 if (max > 0) {
-                                    callPlayerEvent(PlayerType.StateType.STATE_TRY_BEGIN);
+                                    callEventListener(PlayerType.StateType.STATE_TRY_BEGIN);
                                 }
                             }
-                            callPlayerEvent(PlayerType.StateType.STATE_START);
+                            callEventListener(PlayerType.StateType.STATE_START);
                             // ijk需要刷新RenderView
                             resetRenderView(false);
 //                            // step3
@@ -767,7 +762,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             if (!playWhenReady2) {
                                 pause();
                                 setPlayWhenReady(true);
-                                callPlayerEvent(PlayerType.StateType.STATE_START_PLAY_WHEN_READY_PAUSE);
+                                callEventListener(PlayerType.StateType.STATE_START_PLAY_WHEN_READY_PAUSE);
                             }
                             break;
                         // 播放错误
@@ -780,14 +775,13 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             // 埋点
                             onBuriedEventError();
                             setScreenKeep(false);
-                            callPlayerEvent(PlayerType.StateType.STATE_ERROR);
+                            callEventListener(PlayerType.StateType.STATE_ERROR);
                             break;
                         // 播放结束
                         case PlayerType.EventType.EVENT_VIDEO_END:
-
+                            callEventListener(PlayerType.StateType.STATE_END);
                             // 埋点
                             onBuriedEventCompletion();
-                            callPlayerEvent(PlayerType.StateType.STATE_END);
 
                             boolean looping = isLooping();
                             boolean loopingRelease = isLoopingRelease();

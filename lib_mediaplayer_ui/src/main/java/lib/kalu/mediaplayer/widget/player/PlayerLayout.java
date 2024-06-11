@@ -685,14 +685,14 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void callPlayerEvent(@PlayerType.StateType.Value int state) {
+    public final void callEventListener(@PlayerType.StateType.Value int state) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.callPlayerEvent(state);
+            playerView.callEventListener(state);
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => callPlayerEvent => " + e.getMessage());
+            LogUtil.log("PlayerLayout => callEventListener => " + e.getMessage());
         }
     }
 

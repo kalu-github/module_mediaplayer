@@ -188,7 +188,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
 //                throw new Exception("seekbar error: null");
 //            if (action == KeyEvent.ACTION_DOWN && repeatCount == 1) {
 //                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_forward, 0);
-//                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
+//                callEventListener(PlayerType.StateType.STATE_FAST_FORWARD_START);
 //            } else if (action == KeyEvent.ACTION_DOWN && repeatCount > 1) {
 //                boolean seekBarShowing = isSeekBarShowing();
 //                if (!seekBarShowing)
@@ -222,7 +222,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
 //                    progress = duration;
 //                }
 //                seekTo(progress);
-//                callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
+//                callEventListener(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
 //                boolean playing = isPlaying();
 //                if (!playing) {
 //                    resume();
@@ -251,7 +251,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
 //                throw new Exception("seekbar error: null");
 //            if (action == KeyEvent.ACTION_DOWN && repeatCount == 1) {
 //                ((View) this).setTag(R.id.module_mediaplayer_id_seek_range_rewind, 0);
-//                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
+//                callEventListener(PlayerType.StateType.STATE_FAST_REWIND_START);
 //            } else if (action == KeyEvent.ACTION_DOWN && repeatCount > 1) {
 //                int duration = seekBar.getMax();
 //                int progress = seekBar.getProgress();
@@ -279,7 +279,7 @@ public interface VideoPlayerApi extends VideoPlayerApiBuriedEvent, VideoPlayerAp
 //                    progress = 0;
 //                }
 //                seekTo(progress);
-//                callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
+//                callEventListener(PlayerType.StateType.STATE_FAST_REWIND_STOP);
 //                boolean playing = isPlaying();
 //                if (!playing) {
 //                    resume();

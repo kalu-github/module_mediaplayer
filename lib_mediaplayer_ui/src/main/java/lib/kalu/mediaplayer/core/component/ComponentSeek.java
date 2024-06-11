@@ -52,10 +52,10 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     public void seekToPosition(int keyCode, int position) {
         try {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                getPlayerView().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
+                getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 getPlayerView().seekTo(position);
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-                getPlayerView().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_STOP);
+                getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 getPlayerView().seekTo(position);
             }
         } catch (Exception e) {
@@ -64,17 +64,17 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public void callPlayerEvent(int playState) {
+    public void callEventListener(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_FAST_FORWARD_START:
             case PlayerType.StateType.STATE_FAST_REWIND_START:
-                LogUtil.log("ComponentSeek => callPlayerEvent => show => playState = " + playState);
+                LogUtil.log("ComponentSeek => callEventListener => show => playState = " + playState);
                 setUserTouch(true);
                 show();
                 break;
             case PlayerType.StateType.STATE_FAST_FORWARD_STOP:
             case PlayerType.StateType.STATE_FAST_REWIND_STOP:
-                LogUtil.log("ComponentSeek => callPlayerEvent => gone => playState = " + playState);
+                LogUtil.log("ComponentSeek => callEventListener => gone => playState = " + playState);
                 setUserTouch(false);
                 hide();
                 break;

@@ -196,20 +196,20 @@ interface VideoPlayerApiBase {
         }
     }
 
-    default ViewGroup getBaseControlViewGroup() {
+    default ViewGroup getBaseComponentViewGroup() {
 
         try {
             ViewGroup playerGroup = getBaseViewGroup();
-            return playerGroup.findViewById(R.id.module_mediaplayer_control);
+            return playerGroup.findViewById(R.id.module_mediaplayer_component);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => getBaseControlViewGroup => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBase => getBaseComponentViewGroup => " + e.getMessage());
             return null;
         }
     }
 
     default void callUpdateProgress(long max, long position, long duration) {
         try {
-            ViewGroup viewGroup = getBaseControlViewGroup();
+            ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
             if (childCount <= 0)
                 throw new Exception("not find component");

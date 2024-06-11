@@ -29,7 +29,7 @@ import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public interface ComponentApi {
 
-    default void callPlayerEvent(int playState) {
+    default void callEventListener(int playState) {
     }
 
     default void callWindowEvent(int state) {

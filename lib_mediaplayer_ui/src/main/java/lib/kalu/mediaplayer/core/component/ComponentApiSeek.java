@@ -41,7 +41,7 @@ public interface ComponentApiSeek extends ComponentApi {
                 if (null == tag) {
                     int progress = seekBar.getProgress();
                     seekBar.setTag(R.id.module_mediaplayer_id_seek_position, progress);
-                    getPlayerView().callPlayerEvent(PlayerType.StateType.STATE_FAST_FORWARD_START);
+                    getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_FORWARD_START);
                 } else {
                     int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                     range += 1000;
@@ -66,7 +66,7 @@ public interface ComponentApiSeek extends ComponentApi {
                 if (null == tag) {
                     int progress = seekBar.getProgress();
                     seekBar.setTag(R.id.module_mediaplayer_id_seek_position, progress);
-                    getPlayerView().callPlayerEvent(PlayerType.StateType.STATE_FAST_REWIND_START);
+                    getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_REWIND_START);
                 } else {
                     int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                     range -= 1000;

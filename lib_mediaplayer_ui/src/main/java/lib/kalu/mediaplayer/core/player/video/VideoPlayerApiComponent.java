@@ -18,7 +18,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
 
     default void clearAllComponent() {
         try {
-            ViewGroup viewGroup = getBaseControlViewGroup();
+            ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
             if (childCount <= 0)
                 throw new Exception("not find component");
@@ -31,7 +31,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
     default void clearComponent(java.lang.Class<?> cls) {
         try {
             LinkedList<View> views = new LinkedList<>();
-            ViewGroup viewGroup = getBaseControlViewGroup();
+            ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
             if (childCount <= 0)
                 throw new Exception("not find component");
@@ -58,7 +58,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
         try {
             if (null == componentApi)
                 throw new Exception("componentApi error: null");
-            ViewGroup viewGroup = getBaseControlViewGroup();
+            ViewGroup viewGroup = getBaseComponentViewGroup();
             if (null == viewGroup)
                 throw new Exception("viewGroup error: null");
             viewGroup.addView((View) componentApi, 0, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
@@ -71,7 +71,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
         try {
             if (null == componentApis || componentApis.size() <= 0)
                 throw new Exception("componentApi error: null");
-            ViewGroup viewGroup = getBaseControlViewGroup();
+            ViewGroup viewGroup = getBaseComponentViewGroup();
             if (null == viewGroup)
                 throw new Exception("viewGroup error: null");
             viewGroup.removeAllViews();
@@ -87,7 +87,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
 
     default <T extends ComponentApi> T findComponent(java.lang.Class<?> cls) {
         try {
-            ViewGroup viewGroup = getBaseControlViewGroup();
+            ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
             if (childCount <= 0)
                 throw new Exception("not find component");
@@ -110,7 +110,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
 
     default <T extends ComponentApiSeek> T findSeekComponent() {
         try {
-            ViewGroup viewGroup = getBaseControlViewGroup();
+            ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
             if (childCount <= 0)
                 throw new Exception("not find component");
@@ -130,7 +130,7 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
 
 //    default void dispatchKeyEventComponents(KeyEvent event) {
 //        try {
-//            ViewGroup viewGroup = getBaseControlViewGroup();
+//            ViewGroup viewGroup = getBaseComponentViewGroup();
 //            int childCount = viewGroup.getChildCount();
 //            if (childCount <= 0)
 //                throw new Exception("not find component");
@@ -146,23 +146,4 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
 //            LogUtil.log("VideoPlayerApiComponent => dispatchKeyEventComponents => " + e.getMessage());
 //        }
 //    }
-
-    default void callUpdateProgressComponent(long max, long position, long duration) {
-        try {
-            ViewGroup viewGroup = getBaseControlViewGroup();
-            int childCount = viewGroup.getChildCount();
-            if (childCount <= 0)
-                throw new Exception("not find component");
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (!(childAt instanceof ComponentApi))
-                    continue;
-                ((ComponentApi) childAt).onUpdateProgress(false, max, position, duration);
-            }
-        } catch (Exception e) {
-//            MPLogUtil.log("VideoPlayerApiComponent => callUpdateProgressComponent => " + e.getMessage());
-        }
-    }
 }

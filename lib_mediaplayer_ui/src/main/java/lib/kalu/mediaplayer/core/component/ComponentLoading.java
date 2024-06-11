@@ -18,10 +18,10 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void callPlayerEvent(int playState) {
+    public void callEventListener(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_START:
-                LogUtil.log("ComponentLoading => callPlayerEvent => show => playState = " + playState);
+                LogUtil.log("ComponentLoading => callEventListener => show => playState = " + playState);
                 show();
                 break;
             case PlayerType.StateType.STATE_LOADING_STOP:
@@ -29,7 +29,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
             case PlayerType.StateType.STATE_RELEASE:
             case PlayerType.StateType.STATE_RELEASE_EXCEPTION:
 //            default:
-                LogUtil.log("ComponentLoading => callPlayerEvent => gone => playState = " + playState);
+                LogUtil.log("ComponentLoading => callEventListener => gone => playState = " + playState);
                 hide();
                 break;
         }

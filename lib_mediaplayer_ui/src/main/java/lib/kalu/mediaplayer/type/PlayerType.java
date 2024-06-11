@@ -69,7 +69,6 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface StateType {
         int STATE_INIT = 3_001; // 播放未开始，即将进行
-        int STATE_INIT_RETEY_BUFFERING = 3_002; // 显示进度条
         int STATE_INIT_SEEK = 3_003; // 显示进度条
         int STATE_CLEAN = 3_004; //
         int STATE_LOADING_START = 3_005; // 开始转圈
@@ -113,7 +112,6 @@ public @interface PlayerType {
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
                 STATE_INIT,
-                STATE_INIT_RETEY_BUFFERING,
                 STATE_INIT_SEEK,
                 STATE_FULL_START,
                 STATE_FULL_STOP,

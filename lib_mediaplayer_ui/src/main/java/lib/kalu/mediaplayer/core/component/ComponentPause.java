@@ -21,7 +21,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void callPlayerEvent(int playState) {
+    public void callEventListener(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_PAUSE:
                 LogUtil.log("ComponentPause[show] => playState = " + playState);
