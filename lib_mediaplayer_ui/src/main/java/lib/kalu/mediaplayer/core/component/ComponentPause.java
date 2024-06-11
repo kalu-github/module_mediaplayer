@@ -1,12 +1,12 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 
 
 import lib.kalu.mediaplayer.R;
@@ -15,9 +15,31 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentPause extends RelativeLayout implements ComponentApi {
 
-    public ComponentPause( Context context) {
+    public ComponentPause(Context context) {
         super(context);
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_pause, this, true);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        // toggle
+        if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+            try {
+                getPlayerView().toggle();
+            } catch (Exception e) {
+            }
+            return true;
+        }
+        // toggle
+        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+            try {
+                getPlayerView().toggle();
+            } catch (Exception e) {
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -40,7 +62,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     @Override
     public final void hide() {
         try {
-            
+
             findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_pause_title).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_pause_seekbar).setVisibility(View.GONE);
@@ -51,7 +73,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     @Override
     public final void show() {
         try {
-            
+
             findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_pause_title).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_pause_seekbar).setVisibility(View.VISIBLE);
@@ -141,7 +163,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void setComponentImageUrl( String url) {
+    public final void setComponentImageUrl(String url) {
         try {
             setImageUrl(this, R.id.module_mediaplayer_component_pause_icon, url);
         } catch (Exception e) {
@@ -155,7 +177,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
         }
     }
 
-    public final void setComponentTitleText( String value) {
+    public final void setComponentTitleText(String value) {
         try {
             setText(this, R.id.module_mediaplayer_component_pause_title, value);
         } catch (Exception e) {

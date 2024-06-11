@@ -54,28 +54,28 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
     }
 
     @SuppressLint("StaticFieldLeak")
-    default void addComponent(ComponentApi componentApi) {
+    default void addComponent(ComponentApi component) {
         try {
-            if (null == componentApi)
+            if (null == component)
                 throw new Exception("componentApi error: null");
             ViewGroup viewGroup = getBaseComponentViewGroup();
             if (null == viewGroup)
                 throw new Exception("viewGroup error: null");
-            viewGroup.addView((View) componentApi, 0, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+            viewGroup.addView((View) component, 0, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiComponent => addComponent => " + e.getMessage());
         }
     }
 
-    default void addAllComponent(List<ComponentApi> componentApis) {
+    default void addAllComponent(List<ComponentApi> components) {
         try {
-            if (null == componentApis || componentApis.size() <= 0)
-                throw new Exception("componentApi error: null");
+            if (null == components || components.size() <= 0)
+                throw new Exception("components error: null");
             ViewGroup viewGroup = getBaseComponentViewGroup();
             if (null == viewGroup)
                 throw new Exception("viewGroup error: null");
             viewGroup.removeAllViews();
-            for (ComponentApi componentApi : componentApis) {
+            for (ComponentApi componentApi : components) {
                 if (null == componentApi)
                     continue;
                 addComponent(componentApi);
@@ -103,47 +103,8 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
             }
             throw new Exception("not find");
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiComponent => callWindowEvent => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiComponent => findComponent => " + e.getMessage());
             return null;
         }
     }
-
-    default <T extends ComponentApiSeek> T findSeekComponent() {
-        try {
-            ViewGroup viewGroup = getBaseComponentViewGroup();
-            int childCount = viewGroup.getChildCount();
-            if (childCount <= 0)
-                throw new Exception("not find component");
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (childAt instanceof ComponentApiSeek)
-                    return (T) childAt;
-            }
-            throw new Exception("not find");
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiComponent => callWindowEvent => " + e.getMessage());
-            return null;
-        }
-    }
-
-//    default void dispatchKeyEventComponents(KeyEvent event) {
-//        try {
-//            ViewGroup viewGroup = getBaseComponentViewGroup();
-//            int childCount = viewGroup.getChildCount();
-//            if (childCount <= 0)
-//                throw new Exception("not find component");
-//            for (int i = 0; i < childCount; i++) {
-//                View childAt = viewGroup.getChildAt(i);
-//                if (null == childAt)
-//                    continue;
-//                if (!(childAt instanceof ComponentApi))
-//                    continue;
-//                ((ComponentApi) childAt).dispatchKeyEventComponent(event);
-//            }
-//        } catch (Exception e) {
-//            LogUtil.log("VideoPlayerApiComponent => dispatchKeyEventComponents => " + e.getMessage());
-//        }
-//    }
 }

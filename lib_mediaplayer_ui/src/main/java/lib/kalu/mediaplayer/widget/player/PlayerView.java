@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.widget.player;
 import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 
@@ -59,7 +60,40 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        return dispatchKeyEventApi(event) || super.dispatchKeyEvent(event);
+        try {
+            // onBackPressed
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                // stopFull
+                if (isFull()) {
+                    stopFull();
+                    return true;
+                }
+                //  stopFloat();
+                else if (isFloat()) {
+                    stopFloat();
+                    return true;
+                }
+            }
+            // dispatchKeyEvent
+            else {
+                ViewGroup viewGroup = getBaseComponentViewGroup();
+                int childCount = viewGroup.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = viewGroup.getChildAt(i);
+                    if (null == childAt)
+                        continue;
+                    if (!(childAt instanceof ComponentApi))
+                        continue;
+                    boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
+                    if (dispatchKeyEvent) {
+                        return true;
+                    }
+                }
+            }
+            throw new Exception("warning: not todo");
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

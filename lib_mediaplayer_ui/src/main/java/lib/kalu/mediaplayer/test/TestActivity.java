@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import java.util.LinkedList;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.core.component.ComponentMenu;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
@@ -57,25 +58,8 @@ public final class TestActivity extends Activity {
     public static final String INTENT_TIME_LENGTH = "intent_time_length"; // 视频总时长
 
     @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        // back
-        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-            boolean full = playerLayout.isFull();
-            Log.e("TestActivity", "dispatchKeyEvent => isFull = " + full);
-            if (full) {
-                stopFull();
-                return true;
-            } else {
-                boolean floats = playerLayout.isFloat();
-                Log.e("TestActivity", "dispatchKeyEvent => isFloat = " + floats);
-                if (floats) {
-                    stopFloat();
-                    return true;
-                }
-            }
-        }
-        return super.dispatchKeyEvent(event);
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override
@@ -185,6 +169,9 @@ public final class TestActivity extends Activity {
 
     private void initComponent() {
         LinkedList<ComponentApi> componentApis = new LinkedList<>();
+        // menu
+        ComponentMenu menu = new ComponentMenu(getApplicationContext());
+        componentApis.add(menu);
         // loading
         ComponentLoading loading = new ComponentLoading(getApplicationContext());
         loading.setComponentText(R.string.module_mediaplayer_string_load);

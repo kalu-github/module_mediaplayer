@@ -29,6 +29,12 @@ import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public interface ComponentApi {
 
+    default boolean dispatchKeyEvent(KeyEvent event) {
+        return false;
+    }
+
+    /******************/
+
     default void callEventListener(int playState) {
     }
 
@@ -205,10 +211,6 @@ public interface ComponentApi {
     default void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
     }
 
-    default boolean dispatchKeyEventComponent(KeyEvent event) {
-        return false;
-    }
-
     /*******************/
 
     default PlayerLayout getPlayerLayout() {
@@ -307,6 +309,16 @@ public interface ComponentApi {
             playerView.pause();
         } catch (Exception e) {
             LogUtil.log("ComponentApiLinkerPlayer => pause => " + e.getMessage());
+        }
+    }
+    default void setSpeed(float v) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setSpeed(v);
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiLinkerPlayer => setSpeed => " + e.getMessage());
         }
     }
 

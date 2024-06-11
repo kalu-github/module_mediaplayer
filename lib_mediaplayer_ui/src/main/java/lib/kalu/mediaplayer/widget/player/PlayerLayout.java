@@ -73,14 +73,18 @@ public class PlayerLayout extends RelativeLayout {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         try {
-            return dispatchKeyEventApi(event) || super.dispatchKeyEvent(event);
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("warning: null == playerView");
+            boolean dispatchKeyEvent2 = playerView.dispatchKeyEvent(event);
+            if (!dispatchKeyEvent2)
+                throw new Exception("warning: dispatchKeyEvent2 false");
+            return true;
         } catch (Exception e) {
-            return super.dispatchKeyEvent(event);
+            LogUtil.log("PlayerLayout => dispatchKeyEvent => " + e.getMessage());
+//            return super.dispatchKeyEvent(event);
+            return false;
         }
-    }
-
-    public boolean dispatchKeyEventApi(KeyEvent event) {
-        return getPlayerView().dispatchKeyEvent(event);
     }
 
     @Override
@@ -157,7 +161,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    private final PlayerView getPlayerView() {
+    private PlayerView getPlayerView() {
         try {
             int childCount = getChildCount();
             LogUtil.log("PlayerLayout => getPlayerView => childCount = " + childCount + ", this = " + this);

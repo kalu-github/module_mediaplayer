@@ -88,6 +88,9 @@
 -keep class lib.kalu.mediaplayer.core.component.ComponentApiSeek {
     public <methods>;
 }
+-keep class lib.kalu.mediaplayer.core.component.ComponentApiMenu {
+    public <methods>;
+}
 -keep class lib.kalu.mediaplayer.core.component.ComponentComplete {
     public <fields>;
     public <methods>;
@@ -133,6 +136,10 @@
     public <methods>;
 }
 -keep class lib.kalu.mediaplayer.core.component.ComponentTry {
+    public <fields>;
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.core.component.ComponentMenu {
     public <fields>;
     public <methods>;
 }
