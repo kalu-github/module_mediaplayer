@@ -122,7 +122,9 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     if (null != text && text.length() > 0) {
                         hide();
                         stop();
-                        callItemsListener(Integer.parseInt(text.toString()));
+                        int num = Integer.parseInt(text.toString());
+                        int pos = --num;
+                        callItemsClickListener(pos);
                     }
                 }
                 return true;
@@ -142,16 +144,17 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             if (null == text || text.length() == 0)
                 throw new Exception("error: text null");
             int num = Integer.parseInt(String.valueOf(text));
-            if (num <= 0)
-                throw new Exception("error: num <= 0");
+            if (num <= 1)
+                throw new Exception("error: num <= 1");
             RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
             int childCount = radioGroup.getChildCount();
-            int start = --num;
+            int pos = --num;
+            int start = pos - 1;
             int length = start + childCount;
             for (int i = start; i < length; i++) {
                 int index = i - start;
                 RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
-                radioButton.setText(String.valueOf(i));
+                radioButton.setText(String.valueOf(i + 1));
                 radioButton.setChecked(i == start);
             }
         } catch (Exception e) {
@@ -178,13 +181,14 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             if (num >= count)
                 throw new Exception("error: num >= " + count);
             int childCount = radioGroup.getChildCount();
-            int length = ++num;
-            int start = length - childCount + 1;
-            for (int i = start; i <= length; i++) {
+            int pos = --num;
+            int length = (pos + 2);
+            int start = length - childCount;
+            for (int i = start; i < length; i++) {
                 int index = i - start;
                 RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
-                radioButton.setText(String.valueOf(i));
-                radioButton.setChecked(i == length);
+                radioButton.setText(String.valueOf(i + 1));
+                radioButton.setChecked(i + 1 == length);
             }
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => moveItemsRight => " + e.getMessage());
@@ -233,16 +237,16 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         int childCount = radioGroup.getChildCount();
 
         int num = pos / childCount;
-        int start = num * childCount + 1;
+        int start = num * childCount;
         int length = start + childCount;
         if (length > count) {
             start -= Math.abs(length - count);
             length = count;
         }
-        for (int i = start; i <= length; i++) {
+        for (int i = start; i < length; i++) {
             int index = i - start;
             RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
-            radioButton.setText(String.valueOf(i));
+            radioButton.setText(String.valueOf(i + 1));
             radioButton.setChecked(i == pos);
         }
     }

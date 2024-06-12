@@ -24,11 +24,11 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
                 LogUtil.log("ComponentLoading => callEventListener => show => playState = " + playState);
                 show();
                 break;
+            case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_LOADING_STOP:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_RELEASE:
             case PlayerType.StateType.STATE_RELEASE_EXCEPTION:
-//            default:
                 LogUtil.log("ComponentLoading => callEventListener => gone => playState = " + playState);
                 hide();
                 break;

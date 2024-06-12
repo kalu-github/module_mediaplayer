@@ -15,7 +15,7 @@ public interface ComponentApiMenu extends ComponentApi {
     default void setItemsData(int pos, int count) {
     }
 
-    default void callItemsListener(int pos) {
+    default void callItemsClickListener(int pos) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -25,7 +25,7 @@ public interface ComponentApiMenu extends ComponentApi {
                 throw new Exception("error: null == listener");
             listener.onItem(pos);
         } catch (Exception e) {
-            LogUtil.log("ComponentApiMenu => callItemsListener => " + e.getMessage());
+            LogUtil.log("ComponentApiMenu => callItemsClickListener => " + e.getMessage());
         }
     }
 

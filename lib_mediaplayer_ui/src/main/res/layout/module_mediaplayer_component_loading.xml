@@ -16,16 +16,31 @@
         android:visibility="gone" />
 
     <!-- 转圈 -->
-    <ProgressBar
+    <lib.kalu.mediaplayer.widget.progress.MPAnimatorProgressView
         android:id="@+id/module_mediaplayer_component_loading_pb"
-        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="14dp"
+        android:layout_height="4dp"
         android:layout_centerInParent="true"
-        android:layout_marginLeft="100dp"
-        android:layout_marginRight="100dp"
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="200dp"
         android:focusable="false"
-        android:indeterminate="true" />
+        app:ap_animator_time="800"
+        app:ap_line_space="20dp"
+        app:ap_line_width="4dp"
+        app:ap_progress="100"
+        app:ap_background_color="#00000000"
+        app:ap_line_color="#ffffff"
+        app:ap_progress_color="@android:color/holo_red_light" />
+    <!--    <ProgressBar-->
+    <!--        android:id="@+id/module_mediaplayer_component_loading_pb"-->
+    <!--        style="?android:attr/progressBarStyleHorizontal"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="14dp"-->
+    <!--        android:layout_centerInParent="true"-->
+    <!--        android:layout_marginLeft="100dp"-->
+    <!--        android:layout_marginRight="100dp"-->
+    <!--        android:focusable="false"-->
+    <!--        android:indeterminate="true" />-->
     <!--    <lib.kalu.mediaplayer.widget.loading.MPLoadingView-->
     <!--        android:id="@+id/module_mediaplayer_component_loading_pb"-->
     <!--        android:layout_width="80dp"-->
