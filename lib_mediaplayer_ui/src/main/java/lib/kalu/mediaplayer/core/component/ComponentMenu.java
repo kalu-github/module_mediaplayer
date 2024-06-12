@@ -84,29 +84,15 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             }
         }
         // center
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER || event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
             boolean componentShowing = isComponentShowing();
             if (componentShowing) {
                 View focus = findFocus();
-                int id = focus.getId();
-                if (id == R.id.module_mediaplayer_component_menu_speed_0_5) {
-                    checkedSpeed(R.id.module_mediaplayer_component_menu_speed_0_5);
-                    setSpeed(0.5F);
-                } else if (id == R.id.module_mediaplayer_component_menu_speed_1_0) {
-                    checkedSpeed(R.id.module_mediaplayer_component_menu_speed_1_0);
-                    setSpeed(1.0F);
-                } else if (id == R.id.module_mediaplayer_component_menu_speed_1_5) {
-                    checkedSpeed(R.id.module_mediaplayer_component_menu_speed_1_5);
-                    setSpeed(1.5F);
-                } else if (id == R.id.module_mediaplayer_component_menu_speed_2_0) {
-                    checkedSpeed(R.id.module_mediaplayer_component_menu_speed_2_0);
-                    setSpeed(2.0F);
-                } else if (id == R.id.module_mediaplayer_component_menu_speed_2_5) {
-                    checkedSpeed(R.id.module_mediaplayer_component_menu_speed_2_5);
-                    setSpeed(2.5F);
-                } else if (id == R.id.module_mediaplayer_component_menu_speed_3_0) {
-                    checkedSpeed(R.id.module_mediaplayer_component_menu_speed_3_0);
-                    setSpeed(3.0F);
+                int id = ((View) focus.getParent()).getId();
+                if (id == R.id.module_mediaplayer_component_menu_speeds_group) {
+                    ((RadioGroup) focus.getParent()).check(focus.getId());
+                } else if (id == R.id.module_mediaplayer_component_menu_items_group) {
+                    ((RadioGroup) focus.getParent()).check(focus.getId());
                 }
                 return true;
             }
@@ -151,27 +137,25 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         try {
             findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_menu_items_group).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_menu_items_no1).requestFocus();
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
         }
-    }
-
-    private void checkedSpeed(int id) {
         try {
-            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_speeds_group);
-            radioGroup.check(id);
-//            int childCount = radioGroup.getChildCount();
-//            for(int i=0;i<childCount;i++){
-//                View childAt = radioGroup.getChildAt(i);
-//                if(null == childAt)
-//                    continue;
-//                int id1 = childAt.getId();
-//                if()
-//            }
-//            radioGroup.check(R.id.module_mediaplayer_component_menu_speed_1_0);
+            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+            int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+            if (checkedRadioButtonId == -1) {
+                radioGroup.check(R.id.module_mediaplayer_component_menu_items_no1);
+                checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+            }
+            findViewById(checkedRadioButtonId).requestFocus();
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    Toast.makeText(getContext(), "切换选集", Toast.LENGTH_SHORT).show();
+                }
+            });
         } catch (Exception e) {
-            LogUtil.log("ComponentMenu => showSpeeds => " + e.getMessage());
+            LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
         }
     }
 
@@ -186,10 +170,28 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_speeds_group);
             int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
             if (checkedRadioButtonId == -1) {
-                checkedRadioButtonId = R.id.module_mediaplayer_component_menu_speed_1_0;
                 radioGroup.check(R.id.module_mediaplayer_component_menu_speed_1_0);
+                checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
             }
             findViewById(checkedRadioButtonId).requestFocus();
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    if (checkedId == R.id.module_mediaplayer_component_menu_speeds_group) {
+                        setSpeed(0.5F);
+                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_1_0) {
+                        setSpeed(1.0F);
+                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_1_5) {
+                        setSpeed(1.5F);
+                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_2_0) {
+                        setSpeed(2.0F);
+                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_2_5) {
+                        setSpeed(2.5F);
+                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_3_0) {
+                        setSpeed(3.0F);
+                    }
+                }
+            });
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => showSpeeds => " + e.getMessage());
         }

@@ -14,9 +14,9 @@
         android:focusable="false"
         android:orientation="vertical"
         android:paddingLeft="40dp"
-        android:visibility="gone"
         android:paddingRight="40dp"
-        android:paddingBottom="20dp">
+        android:paddingBottom="20dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
             android:textColor="@color/module_mediaplayer_color_ffffff"
             android:textSize="20sp" />
 
-        <LinearLayout
+        <RadioGroup
             android:id="@+id/module_mediaplayer_component_menu_items_group"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -35,172 +35,155 @@
             android:orientation="horizontal"
             android:visibility="gone">
 
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_items_no1"
-                android:layout_width="40dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="1"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_items_no2"
-                android:layout_width="40dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="2"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_items_no3"
-                android:layout_width="40dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="3"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_items_no4"
-                android:layout_width="40dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="4"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_items_no5"
-                android:layout_width="40dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="5"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_items_no6"
-                android:layout_width="40dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="6"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_items_no7"
-                android:layout_width="40dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="7"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_items_no8"
-                android:layout_width="40dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="8"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_items_no9"
-                android:layout_width="40dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="9"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:focusable="false" />
-
-            <TextView
+            <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_items_no10"
-                android:layout_width="40dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/module_mediaplayer_selector_button"
+                android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="10"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
-        </LinearLayout>
+        </RadioGroup>
 
         <TextView
             android:layout_width="wrap_content"
@@ -216,8 +199,8 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:focusable="false"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_speed_0_5"
@@ -239,10 +222,10 @@
                 android:layout_marginRight="20dp"
                 android:background="@drawable/module_mediaplayer_selector_button"
                 android:button="@color/module_mediaplayer_color_00000000"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="1.0"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -252,10 +235,10 @@
                 android:layout_marginRight="20dp"
                 android:background="@drawable/module_mediaplayer_selector_button"
                 android:button="@color/module_mediaplayer_color_00000000"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="1.5"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -265,10 +248,10 @@
                 android:layout_marginRight="20dp"
                 android:background="@drawable/module_mediaplayer_selector_button"
                 android:button="@color/module_mediaplayer_color_00000000"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="2"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -279,9 +262,9 @@
                 android:background="@drawable/module_mediaplayer_selector_button"
                 android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:gravity="center"
                 android:text="2.5"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -292,8 +275,8 @@
                 android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:text="3"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
         </RadioGroup>
