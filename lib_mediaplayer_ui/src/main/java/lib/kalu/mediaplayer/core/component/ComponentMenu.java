@@ -5,6 +5,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewParent;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -160,7 +161,9 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    callItemsListener(checkedId);
+                    RadioButton radioButton = findViewById(checkedId);
+                    CharSequence text = radioButton.getText();
+                    callItemsListener(Integer.parseInt(text.toString()));
                 }
             });
         } catch (Exception e) {
