@@ -98,9 +98,27 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 View focus = findFocus();
                 int id = ((View) focus.getParent()).getId();
                 if (id == R.id.module_mediaplayer_component_menu_speeds_group) {
-                    ((RadioGroup) focus.getParent()).check(focus.getId());
+                    int focusId = focus.getId();
+                    ((RadioGroup) focus.getParent()).check(focusId);
+                    if (focusId == R.id.module_mediaplayer_component_menu_speeds_group) {
+                        setSpeed(0.5F);
+                    } else if (focusId == R.id.module_mediaplayer_component_menu_speed_1_0) {
+                        setSpeed(1.0F);
+                    } else if (focusId == R.id.module_mediaplayer_component_menu_speed_1_5) {
+                        setSpeed(1.5F);
+                    } else if (focusId == R.id.module_mediaplayer_component_menu_speed_2_0) {
+                        setSpeed(2.0F);
+                    } else if (focusId == R.id.module_mediaplayer_component_menu_speed_2_5) {
+                        setSpeed(2.5F);
+                    } else if (focusId == R.id.module_mediaplayer_component_menu_speed_3_0) {
+                        setSpeed(3.0F);
+                    }
                 } else if (id == R.id.module_mediaplayer_component_menu_items_group) {
+                    hide();
+                    stop();
                     ((RadioGroup) focus.getParent()).check(focus.getId());
+                    CharSequence text = ((RadioButton) focus).getText();
+                    callItemsListener(Integer.parseInt(text.toString()));
                 }
                 return true;
             }
@@ -165,14 +183,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
             }
             findViewById(checkedRadioButtonId).requestFocus();
-            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    RadioButton radioButton = findViewById(checkedId);
-                    CharSequence text = radioButton.getText();
-                    callItemsListener(Integer.parseInt(text.toString()));
-                }
-            });
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
         }
@@ -193,24 +203,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
             }
             findViewById(checkedRadioButtonId).requestFocus();
-            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    if (checkedId == R.id.module_mediaplayer_component_menu_speeds_group) {
-                        setSpeed(0.5F);
-                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_1_0) {
-                        setSpeed(1.0F);
-                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_1_5) {
-                        setSpeed(1.5F);
-                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_2_0) {
-                        setSpeed(2.0F);
-                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_2_5) {
-                        setSpeed(2.5F);
-                    } else if (checkedId == R.id.module_mediaplayer_component_menu_speed_3_0) {
-                        setSpeed(3.0F);
-                    }
-                }
-            });
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => showSpeeds => " + e.getMessage());
         }

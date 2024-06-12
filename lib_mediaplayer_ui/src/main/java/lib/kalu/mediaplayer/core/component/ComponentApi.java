@@ -343,6 +343,16 @@ public interface ComponentApi {
             LogUtil.log("ComponentApi => toggle => " + e.getMessage());
         }
     }
+    default void stop() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.stop(true);
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => toggle => " + e.getMessage());
+        }
+    }
 
     default void setSpeed(float v) {
         try {

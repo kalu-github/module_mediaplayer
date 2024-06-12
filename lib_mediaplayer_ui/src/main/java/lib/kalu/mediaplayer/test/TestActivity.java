@@ -212,6 +212,7 @@ public final class TestActivity extends Activity {
             @Override
             public void onItem(int pos) {
                 Toast.makeText(getApplicationContext(), "切换选集 " + pos+" "+ Looper.myLooper().getThread().getName(), Toast.LENGTH_SHORT).show();
+                startPlayer();
             }
         });
         playerLayout.setOnPlayerWindowListener(new OnPlayerWindowListener() {
