@@ -12,6 +12,12 @@ import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public interface ComponentApiMenu extends ComponentApi {
 
+    default void setItemsCount(int num) {
+    }
+
+    default void setItemsDefaultPosition(int pos) {
+    }
+
     default void callItemsListener(int pos) {
         try {
             PlayerView playerView = getPlayerView();

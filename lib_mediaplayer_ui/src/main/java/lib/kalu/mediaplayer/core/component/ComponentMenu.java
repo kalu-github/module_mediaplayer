@@ -142,6 +142,13 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         startDelayedMsg();
     }
 
+    @Override
+    public void setItemsCount(int num) {
+    }
+
+    @Override
+    public void setItemsDefaultPosition(int pos) {
+    }
 
     private void showItems() {
         try {
