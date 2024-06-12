@@ -102,11 +102,11 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
                     return (T) childAt;
                 } else {
                     Class<?>[] interfaces = childAt.getClass().getInterfaces();
-                    if (null == interfaces)
-                        continue;
-                    for (Class<?> c : interfaces) {
-                        if (c == cls) {
-                            return (T) childAt;
+                    if (null != interfaces && interfaces.length > 0) {
+                        for (Class<?> c : interfaces) {
+                            if (c == cls) {
+                                return (T) childAt;
+                            }
                         }
                     }
                 }
