@@ -6,7 +6,25 @@ import android.os.Message;
 
 import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
+import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.widget.player.PlayerView;
+
 public interface ComponentApiMenu extends ComponentApi {
+
+    default void callItemsListener(int pos) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("error: null == playerView");
+            OnPlayerItemsLiatener listener = playerView.getOnPlayerItemsListener();
+            if (null == listener)
+                throw new Exception("error: null == listener");
+            listener.onItem(pos);
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => callItemsListener => " + e.getMessage());
+        }
+    }
 
     Handler[] mHandlerDelayedMsg = new Handler[]{null};
 

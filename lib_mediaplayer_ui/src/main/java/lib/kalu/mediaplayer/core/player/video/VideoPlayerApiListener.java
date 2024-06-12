@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
+import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
 import lib.kalu.mediaplayer.type.PlayerType;
@@ -154,5 +155,15 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
     }
 
     default void setOnPlayerWindowListener(OnPlayerWindowListener l) {
+    }
+
+    default OnPlayerItemsLiatener getOnPlayerItemsListener() {
+        return null;
+    }
+
+    default void removeOnPlayerItemsListener() {
+    }
+
+    default void setOnPlayerItemsListener(OnPlayerItemsLiatener l) {
     }
 }

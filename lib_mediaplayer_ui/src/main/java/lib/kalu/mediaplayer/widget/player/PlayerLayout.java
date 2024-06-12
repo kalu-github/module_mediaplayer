@@ -21,6 +21,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
+import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
@@ -967,6 +968,30 @@ public class PlayerLayout extends RelativeLayout {
             if (null == playerView)
                 throw new Exception("playerView error: null");
             playerView.setOnPlayerWindowListener(listener);
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => setOnPlayerWindowListener => " + e.getMessage());
+        }
+    }
+
+    public final void removeOnPlayerItemsListener() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.removeOnPlayerItemsListener();
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => removeOnPlayerItemsListener => " + e.getMessage());
+        }
+    }
+
+    public final void setOnPlayerItemsListener(OnPlayerItemsLiatener listener) {
+        try {
+            if (null == listener)
+                throw new Exception("listener error: null");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setOnPlayerItemsListener(listener);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => setOnPlayerWindowListener => " + e.getMessage());
         }

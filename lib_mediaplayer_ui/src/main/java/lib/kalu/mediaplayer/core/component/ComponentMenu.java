@@ -10,7 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     public ComponentMenu(Context context) {
@@ -158,7 +160,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    Toast.makeText(getContext(), "切换选集", Toast.LENGTH_SHORT).show();
+                    callItemsListener(checkedId);
                 }
             });
         } catch (Exception e) {

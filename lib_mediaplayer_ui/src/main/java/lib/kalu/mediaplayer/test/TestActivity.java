@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.test;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -15,6 +16,7 @@ import java.util.LinkedList;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
+import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
@@ -67,8 +69,8 @@ public final class TestActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.module_mediaplayer_test);
 
+        initListener();
         initComponent();
-        initPlayer();
         startPlayer();
 
         // 音轨信息
@@ -203,9 +205,15 @@ public final class TestActivity extends Activity {
         playerLayout.addAllComponent(componentApis);
     }
 
-    private void initPlayer() {
+    private void initListener() {
         // playerLayout
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        playerLayout.setOnPlayerItemsListener(new OnPlayerItemsLiatener() {
+            @Override
+            public void onItem(int pos) {
+                Toast.makeText(getApplicationContext(), "切换选集 " + pos+" "+ Looper.myLooper().getThread().getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
         playerLayout.setOnPlayerWindowListener(new OnPlayerWindowListener() {
             @Override
             public void onWindow(int state) {
