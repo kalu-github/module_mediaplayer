@@ -26,7 +26,7 @@ public interface ComponentApiSeek extends ComponentApi {
 
     void seekToPosition(int keyCode, int position);
 
-    Handler[] mHandlerDelayedMsg = new Handler[1];
+    Handler[] mHandlerDelayedMsg = new Handler[]{null};
 
     default void startInitMsg(int repeatCount, int keyCode) {
         if (null != mHandlerDelayedMsg[0]) {

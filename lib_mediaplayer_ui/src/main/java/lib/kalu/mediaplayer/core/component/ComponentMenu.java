@@ -25,6 +25,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
             boolean showing = isComponentShowing();
             if (showing) {
+                startDelayedMsg();
                 View focus = findFocus();
                 ViewParent parent = focus.getParent();
                 int id = ((View) parent).getId();
@@ -40,6 +41,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
             boolean showing = isComponentShowing();
             if (showing) {
+                startDelayedMsg();
                 View focus = findFocus();
                 ViewParent parent = focus.getParent();
                 int id = ((View) parent).getId();
@@ -53,6 +55,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             boolean showing = isComponentShowing();
             if (showing) {
+                startDelayedMsg();
                 View focus = findFocus();
                 int id = focus.getId();
                 if (id == R.id.module_mediaplayer_component_menu_speed_0_5) {
@@ -66,6 +69,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             boolean showing = isComponentShowing();
             if (showing) {
+                startDelayedMsg();
                 View focus = findFocus();
                 int id = focus.getId();
                 if (id == R.id.module_mediaplayer_component_menu_speed_3_0) {
@@ -87,6 +91,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         else if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER || event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
             boolean componentShowing = isComponentShowing();
             if (componentShowing) {
+                startDelayedMsg();
                 View focus = findFocus();
                 int id = ((View) focus.getParent()).getId();
                 if (id == R.id.module_mediaplayer_component_menu_speeds_group) {
@@ -119,6 +124,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => hide => " + e.getMessage());
         }
+        stopDelayedMsg();
     }
 
     @Override
@@ -130,6 +136,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
 
         showItems();
+        startDelayedMsg();
     }
 
 
