@@ -207,6 +207,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public final void hide() {
+        checkComponentPause2();
         try {
             findViewById(R.id.module_mediaplayer_component_menu_root).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_menu_items_group).setVisibility(View.GONE);
@@ -219,6 +220,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public final void show() {
+        checkComponentPause1();
         try {
             findViewById(R.id.module_mediaplayer_component_menu_root).setVisibility(View.VISIBLE);
         } catch (Exception e) {

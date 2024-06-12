@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import lib.kalu.mediaplayer.core.component.ComponentApi;
+import lib.kalu.mediaplayer.core.component.ComponentApiPause;
 import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -99,6 +100,15 @@ interface VideoPlayerApiComponent extends VideoPlayerApiBase {
                     continue;
                 if (childAt.getClass() == cls) {
                     return (T) childAt;
+                } else {
+                    Class<?>[] interfaces = childAt.getClass().getInterfaces();
+                    if (null == interfaces)
+                        continue;
+                    for (Class<?> c : interfaces) {
+                        if (c == cls) {
+                            return (T) childAt;
+                        }
+                    }
                 }
             }
             throw new Exception("not find");

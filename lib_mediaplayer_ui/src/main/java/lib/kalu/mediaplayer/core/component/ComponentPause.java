@@ -13,7 +13,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-public class ComponentPause extends RelativeLayout implements ComponentApi {
+public class ComponentPause extends RelativeLayout implements ComponentApiPause {
 
     public ComponentPause(Context context) {
         super(context);
@@ -56,6 +56,14 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 hide();
                 break;
         }
+    }
+
+    @Override
+    public boolean isComponentShowing() {
+        int visibility1 = findViewById(R.id.module_mediaplayer_component_pause_bg).getVisibility();
+        int visibility2 = findViewById(R.id.module_mediaplayer_component_pause_title).getVisibility();
+        int visibility3 = findViewById(R.id.module_mediaplayer_component_pause_seekbar).getVisibility();
+        return visibility1 == View.VISIBLE && visibility2 == View.VISIBLE && visibility3 == View.VISIBLE;
     }
 
     @Override
