@@ -11,34 +11,46 @@
         android:id="@+id/module_mediaplayer_component_loading_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/module_mediaplayer_color_aa000000"
         android:focusable="false"
         android:visibility="gone" />
 
     <!-- 转圈 -->
-    <lib.kalu.mediaplayer.widget.loading.MPLoadingView
+    <ProgressBar
         android:id="@+id/module_mediaplayer_component_loading_pb"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="14dp"
         android:layout_centerInParent="true"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
         android:focusable="false"
-        android:indeterminateDuration="2000"
-        android:longClickable="false"
-        android:visibility="gone"
-        app:lv_color_round="#ffffff"
-        app:lv_count="8"
-        app:lv_radius="10dp"
-        app:lv_rate="0.9" />
+        android:indeterminate="true" />
+    <!--    <lib.kalu.mediaplayer.widget.loading.MPLoadingView-->
+    <!--        android:id="@+id/module_mediaplayer_component_loading_pb"-->
+    <!--        android:layout_width="80dp"-->
+    <!--        android:layout_height="80dp"-->
+    <!--        android:layout_centerInParent="true"-->
+    <!--        android:focusable="false"-->
+    <!--        android:indeterminateDuration="2000"-->
+    <!--        android:longClickable="false"-->
+    <!--        android:visibility="gone"-->
+    <!--        app:lv_color_round="#ffffff"-->
+    <!--        app:lv_count="8"-->
+    <!--        app:lv_radius="10dp"-->
+    <!--        app:lv_rate="0.9" />-->
 
     <!-- 提示 -->
     <TextView
         android:id="@+id/module_mediaplayer_component_loading_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/module_mediaplayer_component_loading_pb"
+        android:layout_above="@id/module_mediaplayer_component_loading_pb"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
         android:focusable="false"
         android:textColor="@color/module_mediaplayer_color_ffffff"
-        android:textSize="22sp"
+        android:textSize="40sp"
         android:visibility="gone" />
 
 </RelativeLayout>

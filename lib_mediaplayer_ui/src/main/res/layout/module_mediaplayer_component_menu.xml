@@ -45,7 +45,6 @@
                 android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="1"
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
@@ -60,7 +59,6 @@
                 android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="2"
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
@@ -75,7 +73,6 @@
                 android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="3"
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
@@ -90,7 +87,6 @@
                 android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="4"
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
@@ -105,7 +101,6 @@
                 android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="5"
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
@@ -120,7 +115,6 @@
                 android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="6"
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
@@ -135,7 +129,6 @@
                 android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="7"
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
@@ -150,7 +143,6 @@
                 android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="8"
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
@@ -165,7 +157,6 @@
                 android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="9"
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 
@@ -179,7 +170,6 @@
                 android:button="@color/module_mediaplayer_color_00000000"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="10"
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor"
                 android:textSize="20sp" />
 

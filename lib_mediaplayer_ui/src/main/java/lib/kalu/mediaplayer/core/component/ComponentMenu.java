@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +65,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 if (id == R.id.module_mediaplayer_component_menu_speed_0_5) {
                     return true;
                 } else if (id == R.id.module_mediaplayer_component_menu_items_no1) {
+                    moveItemsLeft();
                     return true;
                 }
             }
@@ -78,6 +80,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 if (id == R.id.module_mediaplayer_component_menu_speed_3_0) {
                     return true;
                 } else if (id == R.id.module_mediaplayer_component_menu_items_no10) {
+                    moveItemsRight();
                     return true;
                 }
             }
@@ -114,16 +117,78 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         setSpeed(3.0F);
                     }
                 } else if (id == R.id.module_mediaplayer_component_menu_items_group) {
-                    hide();
-                    stop();
                     ((RadioGroup) focus.getParent()).check(focus.getId());
                     CharSequence text = ((RadioButton) focus).getText();
-                    callItemsListener(Integer.parseInt(text.toString()));
+                    if (null != text && text.length() > 0) {
+                        hide();
+                        stop();
+                        callItemsListener(Integer.parseInt(text.toString()));
+                    }
                 }
                 return true;
             }
         }
         return false;
+    }
+
+    private void moveItemsLeft() {
+        try {
+            View focus = findFocus();
+            if (null == focus)
+                throw new Exception("error: null == focus");
+            if (!(focus instanceof RadioButton))
+                throw new Exception("error: focus not RadioButton");
+            CharSequence text = ((RadioButton) focus).getText();
+            if (null == text || text.length() == 0)
+                throw new Exception("error: text null");
+            int num = Integer.parseInt(String.valueOf(text));
+            if (num <= 0)
+                throw new Exception("error: num <= 0");
+            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+            int childCount = radioGroup.getChildCount();
+            int start = --num;
+            int length = start + childCount;
+            for (int i = start; i < length; i++) {
+                int index = i - start;
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
+                radioButton.setText(String.valueOf(i));
+                radioButton.setChecked(i == start);
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => moveItemsLeft => " + e.getMessage());
+        }
+    }
+
+    private void moveItemsRight() {
+        try {
+            View focus = findFocus();
+            if (null == focus)
+                throw new Exception("error: null == focus");
+            if (!(focus instanceof RadioButton))
+                throw new Exception("error: focus not RadioButton");
+            CharSequence text = ((RadioButton) focus).getText();
+            if (null == text || text.length() == 0)
+                throw new Exception("error: text null");
+            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+            Object tag = radioGroup.getTag();
+            if (null == tag)
+                throw new Exception("error: null == tag");
+            int count = (int) tag;
+            int num = Integer.parseInt(String.valueOf(text));
+            if (num >= count)
+                throw new Exception("error: num >= " + count);
+            int childCount = radioGroup.getChildCount();
+            int length = ++num;
+            int start = length - childCount + 1;
+            for (int i = start; i <= length; i++) {
+                int index = i - start;
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
+                radioButton.setText(String.valueOf(i));
+                radioButton.setChecked(i == length);
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => moveItemsRight => " + e.getMessage());
+        }
     }
 
     @Override
@@ -161,11 +226,25 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public void setItemsCount(int num) {
-    }
+    public void setItemsData(int pos, int count) {
 
-    @Override
-    public void setItemsDefaultPosition(int pos) {
+        RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+        radioGroup.setTag(count);
+        int childCount = radioGroup.getChildCount();
+
+        int num = pos / childCount;
+        int start = num * childCount + 1;
+        int length = start + childCount;
+        if (length > count) {
+            start -= Math.abs(length - count);
+            length = count;
+        }
+        for (int i = start; i <= length; i++) {
+            int index = i - start;
+            RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
+            radioButton.setText(String.valueOf(i));
+            radioButton.setChecked(i == pos);
+        }
     }
 
     private void showItems() {

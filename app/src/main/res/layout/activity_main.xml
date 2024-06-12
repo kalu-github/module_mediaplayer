@@ -469,6 +469,7 @@
                         android:id="@+id/main_radio8"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:checked="true"
                         android:tag="@string/url_tencent"
                         android:text="test" />
 
@@ -496,7 +497,6 @@
                         android:id="@+id/main_radio12"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:checked="true"
                         android:tag="@string/url_sx1"
                         android:text="m3u8-sn1" />
 
@@ -504,7 +504,6 @@
                         android:id="@+id/main_radio13"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:checked="true"
                         android:tag="@string/url_sx2"
                         android:text="m3u8-sn2" />
 
@@ -512,7 +511,6 @@
                         android:id="@+id/main_radio14"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:checked="true"
                         android:tag="@string/url_sx3"
                         android:text="m3u8-sn3" />
 
@@ -520,7 +518,6 @@
                         android:id="@+id/main_radio15"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:checked="true"
                         android:tag="@string/url_track"
                         android:text="track" />
 

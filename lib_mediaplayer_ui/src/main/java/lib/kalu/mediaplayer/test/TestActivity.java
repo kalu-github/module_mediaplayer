@@ -173,10 +173,11 @@ public final class TestActivity extends Activity {
         LinkedList<ComponentApi> componentApis = new LinkedList<>();
         // menu
         ComponentMenu menu = new ComponentMenu(getApplicationContext());
+        menu.setItemsData(64, 66);
         componentApis.add(menu);
         // loading
         ComponentLoading loading = new ComponentLoading(getApplicationContext());
-        loading.setComponentText(R.string.module_mediaplayer_string_load);
+        loading.setComponentText("正在播放 第65集");
         componentApis.add(loading);
         // seek
         ComponentSeek seek = new ComponentSeek(getApplicationContext());
@@ -211,7 +212,8 @@ public final class TestActivity extends Activity {
         playerLayout.setOnPlayerItemsListener(new OnPlayerItemsLiatener() {
             @Override
             public void onItem(int pos) {
-                Toast.makeText(getApplicationContext(), "切换选集 " + pos+" "+ Looper.myLooper().getThread().getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "切换选集 " + pos + " " + Looper.myLooper().getThread().getName(), Toast.LENGTH_SHORT).show();
+                updateTitle(pos);
                 startPlayer();
             }
         });
@@ -300,6 +302,12 @@ public final class TestActivity extends Activity {
                 }
             }
         });
+    }
+
+    private void updateTitle(int pos) {
+        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+        ComponentLoading loading = videoLayout.findComponent(ComponentLoading.class);
+        loading.setComponentText("正在播放 第" + pos + "集");
     }
 
     private String getUrl() {
