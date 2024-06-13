@@ -36,130 +36,134 @@ public interface ComponentApiSeek extends ComponentApi {
         }
 
         if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            long max = getPlayerView().getMax();
             SeekBar seekBar = findSeekBar();
             int duration = seekBar.getMax();
-            if (repeatCount == 0) {
-                Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                if (null == tag) {
-                    int progress = seekBar.getProgress();
-                    seekBar.setTag(R.id.module_mediaplayer_id_seek_position, progress);
-                    getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_FORWARD_START);
+            if (duration > 0) {
+                long max = getPlayerView().getMax();
+                if (repeatCount == 0) {
+                    Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
+                    if (null == tag) {
+                        int progress = seekBar.getProgress();
+                        seekBar.setTag(R.id.module_mediaplayer_id_seek_position, progress);
+                        getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_FORWARD_START);
+                    } else {
+                        int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
+                        // >=2H 2 * 60 * 60 * 1000
+                        if (duration >= 7200000) {
+                            range += 8000;
+                        }
+                        // >=1H 60*60*1000
+                        else if (duration >= 3600000) {
+                            range += 4000;
+                        }
+                        // >=30MIN 30*60*1000
+                        else if (duration >= 1800000) {
+                            range += 1000;
+                        }
+                        // 10MIN 10*60*1000
+                        else if (duration >= 600000) {
+                            range += 400;
+                        }
+                        // 时间太短了
+                        else {
+                            range += 100;
+                        }
+                        seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
+                        if (range >= duration) {
+                            range = duration;
+                        }
+                        onUpdateProgress(true, max, range, duration);
+                    }
                 } else {
                     int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                     // >=2H 2 * 60 * 60 * 1000
                     if (duration >= 7200000) {
-                        range += 8000;
+                        range += 60000;
                     }
                     // >=1H 60*60*1000
                     else if (duration >= 3600000) {
-                        range += 4000;
+                        range += 30000;
                     }
                     // >=30MIN 30*60*1000
                     else if (duration >= 1800000) {
+                        range += 10000;
+                    }
+                    // 10MIN 10*60*1000
+                    else if (duration >= 600000) {
+                        range += 5000;
+                    }
+                    // 时间太短了
+                    else {
                         range += 1000;
                     }
-                    // 10MIN 10*60*1000
-                    else if (duration >= 600000) {
-                        range += 400;
-                    }
-                    // 时间太短了
-                    else {
-                        range += 100;
-                    }
                     seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
-                    if (range >= duration) {
-                        range = duration;
-                    }
                     onUpdateProgress(true, max, range, duration);
                 }
-            } else {
-                int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                // >=2H 2 * 60 * 60 * 1000
-                if (duration >= 7200000) {
-                    range += 60000;
-                }
-                // >=1H 60*60*1000
-                else if (duration >= 3600000) {
-                    range += 30000;
-                }
-                // >=30MIN 30*60*1000
-                else if (duration >= 1800000) {
-                    range += 10000;
-                }
-                // 10MIN 10*60*1000
-                else if (duration >= 600000) {
-                    range += 5000;
-                }
-                // 时间太短了
-                else {
-                    range += 1000;
-                }
-                seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
-                onUpdateProgress(true, max, range, duration);
             }
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-            long max = getPlayerView().getMax();
             SeekBar seekBar = findSeekBar();
             int duration = seekBar.getMax();
-            if (repeatCount == 0) {
-                Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                if (null == tag) {
-                    int progress = seekBar.getProgress();
-                    seekBar.setTag(R.id.module_mediaplayer_id_seek_position, progress);
-                    getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_REWIND_START);
+            if (duration > 0) {
+                long max = getPlayerView().getMax();
+                if (repeatCount == 0) {
+                    Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
+                    if (null == tag) {
+                        int progress = seekBar.getProgress();
+                        seekBar.setTag(R.id.module_mediaplayer_id_seek_position, progress);
+                        getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_REWIND_START);
+                    } else {
+                        int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
+                        // >=2H 2 * 60 * 60 * 1000
+                        if (duration >= 7200000) {
+                            range -= 8000;
+                        }
+                        // >=1H 60*60*1000
+                        else if (duration >= 3600000) {
+                            range -= 4000;
+                        }
+                        // >=30MIN 30*60*1000
+                        else if (duration >= 1800000) {
+                            range -= 1000;
+                        }
+                        // 10MIN 10*60*1000
+                        else if (duration >= 600000) {
+                            range -= 400;
+                        }
+                        // 时间太短了
+                        else {
+                            range -= 100;
+                        }
+                        seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
+                        if (range <= 0) {
+                            range = 0;
+                        }
+                        onUpdateProgress(true, max, range, duration);
+                    }
                 } else {
                     int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                     // >=2H 2 * 60 * 60 * 1000
                     if (duration >= 7200000) {
-                        range -= 8000;
+                        range -= 60000;
                     }
                     // >=1H 60*60*1000
                     else if (duration >= 3600000) {
-                        range -= 4000;
+                        range -= 30000;
                     }
                     // >=30MIN 30*60*1000
                     else if (duration >= 1800000) {
-                        range -= 1000;
+                        range -= 10000;
                     }
                     // 10MIN 10*60*1000
                     else if (duration >= 600000) {
-                        range -= 400;
+                        range -= 5000;
                     }
                     // 时间太短了
                     else {
-                        range -= 100;
+                        range -= 1000;
                     }
                     seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
-                    if (range <= 0) {
-                        range = 0;
-                    }
                     onUpdateProgress(true, max, range, duration);
                 }
-            } else {
-                int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                // >=2H 2 * 60 * 60 * 1000
-                if (duration >= 7200000) {
-                    range -= 60000;
-                }
-                // >=1H 60*60*1000
-                else if (duration >= 3600000) {
-                    range -= 30000;
-                }
-                // >=30MIN 30*60*1000
-                else if (duration >= 1800000) {
-                    range -= 10000;
-                }
-                // 10MIN 10*60*1000
-                else if (duration >= 600000) {
-                    range -= 5000;
-                }
-                // 时间太短了
-                else {
-                    range -= 1000;
-                }
-                seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
-                onUpdateProgress(true, max, range, duration);
             }
         }
     }
