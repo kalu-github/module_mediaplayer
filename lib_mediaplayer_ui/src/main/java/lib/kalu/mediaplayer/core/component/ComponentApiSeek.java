@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public interface ComponentApiSeek extends ComponentApi {
 
@@ -46,7 +47,26 @@ public interface ComponentApiSeek extends ComponentApi {
                     getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_FORWARD_START);
                 } else {
                     int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                    range += 1000;
+                    // >=2H 2 * 60 * 60 * 1000
+                    if (duration >= 7200000) {
+                        range += 8000;
+                    }
+                    // >=1H 60*60*1000
+                    else if (duration >= 3600000) {
+                        range += 4000;
+                    }
+                    // >=30MIN 30*60*1000
+                    else if (duration >= 1800000) {
+                        range += 1000;
+                    }
+                    // 10MIN 10*60*1000
+                    else if (duration >= 600000) {
+                        range += 400;
+                    }
+                    // 时间太短了
+                    else {
+                        range += 100;
+                    }
                     seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                     if (range >= duration) {
                         range = duration;
@@ -55,7 +75,26 @@ public interface ComponentApiSeek extends ComponentApi {
                 }
             } else {
                 int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                range += 10000;
+                // >=2H 2 * 60 * 60 * 1000
+                if (duration >= 7200000) {
+                    range += 60000;
+                }
+                // >=1H 60*60*1000
+                else if (duration >= 3600000) {
+                    range += 30000;
+                }
+                // >=30MIN 30*60*1000
+                else if (duration >= 1800000) {
+                    range += 10000;
+                }
+                // 10MIN 10*60*1000
+                else if (duration >= 600000) {
+                    range += 5000;
+                }
+                // 时间太短了
+                else {
+                    range += 1000;
+                }
                 seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                 onUpdateProgress(true, max, range, duration);
             }
@@ -71,7 +110,26 @@ public interface ComponentApiSeek extends ComponentApi {
                     getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_REWIND_START);
                 } else {
                     int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                    range -= 1000;
+                    // >=2H 2 * 60 * 60 * 1000
+                    if (duration >= 7200000) {
+                        range -= 8000;
+                    }
+                    // >=1H 60*60*1000
+                    else if (duration >= 3600000) {
+                        range -= 4000;
+                    }
+                    // >=30MIN 30*60*1000
+                    else if (duration >= 1800000) {
+                        range -= 1000;
+                    }
+                    // 10MIN 10*60*1000
+                    else if (duration >= 600000) {
+                        range -= 400;
+                    }
+                    // 时间太短了
+                    else {
+                        range -= 100;
+                    }
                     seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                     if (range <= 0) {
                         range = 0;
@@ -80,7 +138,26 @@ public interface ComponentApiSeek extends ComponentApi {
                 }
             } else {
                 int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                range -= 10000;
+                // >=2H 2 * 60 * 60 * 1000
+                if (duration >= 7200000) {
+                    range -= 60000;
+                }
+                // >=1H 60*60*1000
+                else if (duration >= 3600000) {
+                    range -= 30000;
+                }
+                // >=30MIN 30*60*1000
+                else if (duration >= 1800000) {
+                    range -= 10000;
+                }
+                // 10MIN 10*60*1000
+                else if (duration >= 600000) {
+                    range -= 5000;
+                }
+                // 时间太短了
+                else {
+                    range -= 1000;
+                }
                 seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                 onUpdateProgress(true, max, range, duration);
             }
