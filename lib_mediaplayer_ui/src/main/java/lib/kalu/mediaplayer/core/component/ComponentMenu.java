@@ -28,6 +28,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
 
             boolean showing = isComponentShowing();
+            LogUtil.log("ComponentMenu => dispatchKeyEvent => showing = " + showing);
             if (showing) {
                 startDelayedMsg();
                 View focus = findFocus();
@@ -65,7 +66,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 if (id == R.id.module_mediaplayer_component_menu_speed_0_5) {
                     return true;
                 } else if (id == R.id.module_mediaplayer_component_menu_items_no1) {
-                    moveItemsLeft();
+                    nextItemChecked(KeyEvent.KEYCODE_DPAD_LEFT);
                     return true;
                 }
             }
@@ -80,7 +81,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 if (id == R.id.module_mediaplayer_component_menu_speed_3_0) {
                     return true;
                 } else if (id == R.id.module_mediaplayer_component_menu_items_no10) {
-                    moveItemsRight();
+                    nextItemChecked(KeyEvent.KEYCODE_DPAD_RIGHT);
                     return true;
                 }
             }
@@ -133,65 +134,89 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         return false;
     }
 
-    private void moveItemsLeft() {
-        try {
-            View focus = findFocus();
-            if (null == focus)
-                throw new Exception("error: null == focus");
-            if (!(focus instanceof RadioButton))
-                throw new Exception("error: focus not RadioButton");
-            CharSequence text = ((RadioButton) focus).getText();
-            if (null == text || text.length() == 0)
-                throw new Exception("error: text null");
-            int num = Integer.parseInt(String.valueOf(text));
-            if (num <= 1)
-                throw new Exception("error: num <= 1");
-            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
-            int childCount = radioGroup.getChildCount();
-            int pos = --num;
-            int start = pos - 1;
-            int length = start + childCount;
-            for (int i = start; i < length; i++) {
-                int index = i - start;
-                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
-                radioButton.setText(String.valueOf(i + 1));
-                radioButton.setChecked(i == start);
+    @Override
+    public void nextItemChecked(int action) {
+        if (action == KeyEvent.KEYCODE_DPAD_LEFT) {
+            try {
+                View focus = findFocus();
+                if (null == focus)
+                    throw new Exception("error: null == focus");
+                if (!(focus instanceof RadioButton))
+                    throw new Exception("error: focus not RadioButton");
+                CharSequence text = ((RadioButton) focus).getText();
+                if (null == text || text.length() == 0)
+                    throw new Exception("error: text null");
+                int num = Integer.parseInt(String.valueOf(text));
+                if (num <= 1)
+                    throw new Exception("error: num <= 1");
+                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+                int childCount = radioGroup.getChildCount();
+                int pos = --num;
+                int start = pos - 1;
+                int length = start + childCount;
+                for (int i = start; i < length; i++) {
+                    int index = i - start;
+                    RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
+                    radioButton.setText(String.valueOf(i + 1));
+                    radioButton.setChecked(i == start);
+                }
+            } catch (Exception e) {
+                LogUtil.log("ComponentMenu => nextItemChecked => " + e.getMessage());
             }
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => moveItemsLeft => " + e.getMessage());
+        } else if (action == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            try {
+                View focus = findFocus();
+                if (null == focus)
+                    throw new Exception("error: null == focus");
+                if (!(focus instanceof RadioButton))
+                    throw new Exception("error: focus not RadioButton");
+                CharSequence text = ((RadioButton) focus).getText();
+                if (null == text || text.length() == 0)
+                    throw new Exception("error: text null");
+                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+                Object tag = radioGroup.getTag();
+                if (null == tag)
+                    throw new Exception("error: null == tag");
+                int count = (int) tag;
+                int num = Integer.parseInt(String.valueOf(text));
+                if (num >= count)
+                    throw new Exception("error: num >= " + count);
+                int childCount = radioGroup.getChildCount();
+                int pos = --num;
+                int length = (pos + 2);
+                int start = length - childCount;
+                for (int i = start; i < length; i++) {
+                    int index = i - start;
+                    RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
+                    radioButton.setText(String.valueOf(i + 1));
+                    radioButton.setChecked(i + 1 == length);
+                }
+            } catch (Exception e) {
+                LogUtil.log("ComponentMenu => nextItemChecked => " + e.getMessage());
+            }
         }
     }
 
-    private void moveItemsRight() {
+    @Override
+    public void setItemsChecked(int position) {
         try {
-            View focus = findFocus();
-            if (null == focus)
-                throw new Exception("error: null == focus");
-            if (!(focus instanceof RadioButton))
-                throw new Exception("error: focus not RadioButton");
-            CharSequence text = ((RadioButton) focus).getText();
-            if (null == text || text.length() == 0)
-                throw new Exception("error: text null");
             RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
-            Object tag = radioGroup.getTag();
-            if (null == tag)
-                throw new Exception("error: null == tag");
-            int count = (int) tag;
-            int num = Integer.parseInt(String.valueOf(text));
-            if (num >= count)
-                throw new Exception("error: num >= " + count);
             int childCount = radioGroup.getChildCount();
-            int pos = --num;
-            int length = (pos + 2);
-            int start = length - childCount;
-            for (int i = start; i < length; i++) {
-                int index = i - start;
+            RadioButton radioButton1 = (RadioButton) radioGroup.getChildAt(0);
+            RadioButton radioButton2 = (RadioButton) radioGroup.getChildAt(childCount - 1);
+            int start = Integer.parseInt(radioButton1.getText().toString()) - 1;
+            int end = Integer.parseInt(radioButton2.getText().toString()) - 1;
+            if (position < start) {
+                nextItemChecked(KeyEvent.KEYCODE_DPAD_LEFT);
+            } else if (position > end) {
+                nextItemChecked(KeyEvent.KEYCODE_DPAD_RIGHT);
+            } else {
+                int index = position % childCount;
                 RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
-                radioButton.setText(String.valueOf(i + 1));
-                radioButton.setChecked(i + 1 == length);
+                int id = radioButton.getId();
+                radioGroup.check(id);
             }
         } catch (Exception e) {
-            LogUtil.log("ComponentMenu => moveItemsRight => " + e.getMessage());
         }
     }
 
@@ -207,6 +232,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public final void hide() {
+        LogUtil.log("ComponentMenu => hide => ");
         checkComponentPause2();
         try {
             findViewById(R.id.module_mediaplayer_component_menu_root).setVisibility(View.GONE);
@@ -220,6 +246,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public final void show() {
+        LogUtil.log("ComponentMenu => show => ");
         checkComponentPause1();
         try {
             findViewById(R.id.module_mediaplayer_component_menu_root).setVisibility(View.VISIBLE);
@@ -238,22 +265,36 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         radioGroup.setTag(count);
         int childCount = radioGroup.getChildCount();
 
-        int num = pos / childCount;
-        int start = num * childCount;
-        int length = start + childCount;
-        if (length > count) {
-            start -= Math.abs(length - count);
-            length = count;
-        }
-        for (int i = start; i < length; i++) {
-            int index = i - start;
-            RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
-            radioButton.setText(String.valueOf(i + 1));
-            radioButton.setChecked(i == pos);
+
+        if (count >= childCount) {
+            int num = pos / childCount;
+            int start = num * childCount;
+            int length = start + childCount;
+            if (length > count) {
+                start -= Math.abs(length - count);
+                length = count;
+            }
+            for (int i = start; i < length; i++) {
+                int index = i - start;
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
+                radioButton.setEnabled(true);
+                radioButton.setVisibility(View.VISIBLE);
+                radioButton.setChecked(i == pos);
+                radioButton.setText(String.valueOf(i + 1));
+            }
+        } else {
+            for (int i = 0; i < childCount; i++) {
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+                radioButton.setEnabled(i < count);
+                radioButton.setVisibility(i < count ? View.VISIBLE : View.INVISIBLE);
+                radioButton.setChecked(i == pos);
+                radioButton.setText(String.valueOf(i + 1));
+            }
         }
     }
 
-    private void showItems() {
+    @Override
+    public void showItems() {
         try {
             findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_menu_items_group).setVisibility(View.VISIBLE);
@@ -273,7 +314,8 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    private void showSpeeds() {
+    @Override
+    public void showSpeeds() {
         try {
             findViewById(R.id.module_mediaplayer_component_menu_items_group).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.VISIBLE);

@@ -17,6 +17,11 @@ import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public interface ComponentApiSeek extends ComponentApi {
 
+    @Override
+    default boolean enableDispatchKeyEvent() {
+        return true;
+    }
+
     void setUserTouch(boolean status);
 
     SeekBar findSeekBar();
@@ -48,6 +53,8 @@ public interface ComponentApiSeek extends ComponentApi {
                         getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_FORWARD_START);
                     } else {
                         int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
+                        if (range >= duration)
+                            return;
                         // >=2H 2 * 60 * 60 * 1000
                         if (duration >= 7200000) {
                             range += 8000;
@@ -68,14 +75,17 @@ public interface ComponentApiSeek extends ComponentApi {
                         else {
                             range += 100;
                         }
-                        seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                         if (range >= duration) {
                             range = duration;
                         }
+                        seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                         onUpdateProgress(true, max, range, duration);
                     }
                 } else {
                     int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
+                    if (range >= duration) {
+                        return;
+                    }
                     // >=2H 2 * 60 * 60 * 1000
                     if (duration >= 7200000) {
                         range += 60000;
@@ -96,6 +106,9 @@ public interface ComponentApiSeek extends ComponentApi {
                     else {
                         range += 1000;
                     }
+                    if (range >= duration) {
+                        range = duration;
+                    }
                     seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                     onUpdateProgress(true, max, range, duration);
                 }
@@ -113,6 +126,8 @@ public interface ComponentApiSeek extends ComponentApi {
                         getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_REWIND_START);
                     } else {
                         int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
+                        if (range <= 0)
+                            return;
                         // >=2H 2 * 60 * 60 * 1000
                         if (duration >= 7200000) {
                             range -= 8000;
@@ -133,14 +148,16 @@ public interface ComponentApiSeek extends ComponentApi {
                         else {
                             range -= 100;
                         }
-                        seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                         if (range <= 0) {
                             range = 0;
                         }
+                        seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                         onUpdateProgress(true, max, range, duration);
                     }
                 } else {
                     int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
+                    if (range <= 0)
+                        return;
                     // >=2H 2 * 60 * 60 * 1000
                     if (duration >= 7200000) {
                         range -= 60000;
@@ -160,6 +177,9 @@ public interface ComponentApiSeek extends ComponentApi {
                     // 时间太短了
                     else {
                         range -= 1000;
+                    }
+                    if (range <= 0) {
+                        range = 0;
                     }
                     seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
                     onUpdateProgress(true, max, range, duration);

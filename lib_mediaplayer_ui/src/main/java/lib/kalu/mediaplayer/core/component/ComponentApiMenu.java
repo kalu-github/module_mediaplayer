@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.core.component;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.KeyEvent;
 
 import androidx.annotation.NonNull;
 
@@ -12,7 +13,25 @@ import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public interface ComponentApiMenu extends ComponentApi {
 
-    default void setItemsData(int pos, int count) {
+    @Override
+    default boolean enableDispatchKeyEvent() {
+        return true;
+    }
+
+    default void setItemsData(int checkedPos, int count) {
+    }
+
+    default void setItemsChecked(int checkedPos) {
+    }
+
+    default void nextItemChecked(int action) {
+    }
+
+    default void showItems(){
+    }
+
+    default void showSpeeds(){
+
     }
 
     boolean[] mComponentPauseShowing = new boolean[]{false};

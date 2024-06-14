@@ -29,7 +29,7 @@ import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public interface ComponentApi {
 
-    default boolean dispatchKeyEvent(KeyEvent event) {
+    default boolean enableDispatchKeyEvent() {
         return false;
     }
 
