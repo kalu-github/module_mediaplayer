@@ -15,7 +15,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoKernelApiBase {
 
-    default void releaseParams() {
+    default void resetParams() {
         mSeek[0] = 0L;
         mMax[0] = 0L;
         mLooping[0] = false;

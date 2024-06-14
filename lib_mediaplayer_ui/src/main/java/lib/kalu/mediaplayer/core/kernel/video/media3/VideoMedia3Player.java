@@ -554,7 +554,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
     @Override
     public void release() {
-        releaseParams();
+        resetParams();
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -607,7 +607,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
      */
     @Override
     public void stop() {
-        setPrepared(false);
+        resetParams();
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");

@@ -138,7 +138,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        releaseParams();
+        resetParams();
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -193,7 +193,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
      */
     @Override
     public void stop() {
-        setPrepared(false);
+        resetParams();
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");

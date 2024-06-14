@@ -346,7 +346,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        releaseParams();
+        resetParams();
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -391,7 +391,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
     @Override
     public void stop() {
-        setPrepared(false);
+        resetParams();
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");

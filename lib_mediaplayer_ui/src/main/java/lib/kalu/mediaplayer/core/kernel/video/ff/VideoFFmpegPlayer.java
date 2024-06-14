@@ -107,7 +107,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        releaseParams();
+        resetParams();
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -163,6 +163,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
      */
     @Override
     public void stop() {
+        resetParams();
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");

@@ -258,7 +258,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        releaseParams();
+        resetParams();
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -307,10 +307,10 @@ public final class VideoExoPlayer extends VideoBasePlayer {
      */
     @Override
     public void stop() {
+        resetParams();
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            setPrepared(false);
             mExoPlayer.setPlayWhenReady(false);
         } catch (Exception e) {
             LogUtil.log("VideoExoPlayer => stop => " + e.getMessage());
