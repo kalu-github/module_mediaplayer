@@ -395,8 +395,16 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             }
             if (playIndex == -1)
                 throw new Exception("error: playIndex == -1");
-            RadioButton radioButton = (RadioButton) radioGroup.getChildAt(playIndex);
-            radioButton.requestFocus();
+
+            int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+            CharSequence text = ((RadioButton) radioGroup.findViewById(checkedRadioButtonId)).getText();
+            int numPos = Integer.parseInt(String.valueOf(text));
+
+            if (Math.abs(numPos - playIndex) >= childCount) {
+                radioGroup.findViewById(checkedRadioButtonId).requestFocus();
+            } else {
+                radioGroup.getChildAt(playIndex % childCount).requestFocus();
+            }
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
         }
