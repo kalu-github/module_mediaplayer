@@ -556,7 +556,19 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
     @Override
     public long getSeek() {
-        return mSeek;
+        try {
+            if (mSeek <= 0)
+                throw new Exception("warning: mSeek <= 0");
+            long duration = getDuration();
+            if (duration <= 0)
+                throw new Exception("warning: duration <= 0");
+            if (mSeek >= duration)
+                throw new Exception("warning: mSeek >= duration");
+            return mSeek;
+        } catch (Exception e) {
+            mSeek = 0L;
+            return mSeek;
+        }
     }
 
     @Override
