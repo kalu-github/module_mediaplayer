@@ -31,19 +31,10 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class VideoIjkPlayer extends VideoBasePlayer {
 
-    private long mSeek = 0L; // 快进
-    private long mMax = 0L; // 试播时常
-    private boolean mLoop = false; // 循环播放
-    private boolean mLive = false;
-    private boolean mMute = false;
-    private boolean mPlayWhenReady = true;
-    private boolean mPrepared = false;
-
-    private boolean mUseMediaCodec;
     private IjkMediaPlayer mIjkPlayer = null;
 
     public VideoIjkPlayer(boolean useMediaCodec) {
-        mUseMediaCodec = useMediaCodec;
+        setIjkMediaCodec(useMediaCodec);
     }
 
     @Override
@@ -148,11 +139,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // SDL_FCC_RV16 ---- bpp=16, RGB565
             // SDL_FCC_RV24 ---- bpp=24, RGB888
             // SDL_FCC_RV32 ---- bpp=32, RGBX8888
-            mIjkPlayer.setOption(player, "overlay-format", mUseMediaCodec ? IjkMediaPlayer.SDL_FCC_RV32 : IjkMediaPlayer.SDL_FCC_RV16);
+            mIjkPlayer.setOption(player, "overlay-format", isIjkMediaCodec() ? IjkMediaPlayer.SDL_FCC_RV32 : IjkMediaPlayer.SDL_FCC_RV16);
             // 允许的最大播放帧率，当视频的实际帧率大于这个数值时，将丢弃部分视频帧 => [-1,121]
-            mIjkPlayer.setOption(player, "max-fps", mUseMediaCodec ? 60 : 30);
+            mIjkPlayer.setOption(player, "max-fps", isIjkMediaCodec() ? 60 : 30);
             // 是否播放准备工作完成后自动开始播放
-            mIjkPlayer.setOption(player, "start-on-prepared", (mPlayWhenReady ? 1 : 0));
+            mIjkPlayer.setOption(player, "start-on-prepared", (isPlayWhenReady() ? 1 : 0));
             // 视频帧队列大小 => [3,16]
             mIjkPlayer.setOption(player, "video-pictq-size", 3);
             // 不限制输入缓冲区大小, 对实时流很有用
@@ -202,27 +193,27 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // ??
             mIjkPlayer.setOption(player, "video-mime-type", null);
             // Android自动旋转角度
-            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", (mUseMediaCodec ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", (isIjkMediaCodec() ? 1 : 0));
             // Android硬解, 是否分辨率变化时解码
-            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", (mUseMediaCodec ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", (isIjkMediaCodec() ? 1 : 0));
             // Android硬解 ??
-            mIjkPlayer.setOption(player, "mediacodec-sync", (mUseMediaCodec ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-sync", (isIjkMediaCodec() ? 1 : 0));
             // Android硬解 ??
             mIjkPlayer.setOption(player, "mediacodec-default-name", null);
             // Android硬解
-            mIjkPlayer.setOption(player, "mediacodec-all-videos", (mUseMediaCodec ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-all-videos", (isIjkMediaCodec() ? 1 : 0));
             // Android硬解avc
-            mIjkPlayer.setOption(player, "mediacodec-avc", (mUseMediaCodec ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-avc", (isIjkMediaCodec() ? 1 : 0));
             // Android硬解hevc
-            mIjkPlayer.setOption(player, "mediacodec-hevc", (mUseMediaCodec ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-hevc", (isIjkMediaCodec() ? 1 : 0));
             // Android硬解mpeg2
-            mIjkPlayer.setOption(player, "mediacodec-mpeg2", (mUseMediaCodec ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-mpeg2", (isIjkMediaCodec() ? 1 : 0));
             // Android硬解mpeg4
-            mIjkPlayer.setOption(player, "mediacodec-mpeg4", (mUseMediaCodec ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-mpeg4", (isIjkMediaCodec() ? 1 : 0));
             // Android硬解vp8
-            mIjkPlayer.setOption(player, "mediacodec-vp8", (mUseMediaCodec ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-vp8", (isIjkMediaCodec() ? 1 : 0));
             // Android硬解vp9
-            mIjkPlayer.setOption(player, "mediacodec-vp9", (mUseMediaCodec ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-vp9", (isIjkMediaCodec() ? 1 : 0));
             // Android音频解码opensl
             mIjkPlayer.setOption(player, "opensles", 0);
             // Android音频倍速
@@ -281,7 +272,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // IJK_AVDISCARD_NONKEY  = 32, ///< 抛弃除关键帧以外的，比如B，P帧
             // IJK_AVDISCARD_ALL     = 48, ///< 抛弃所有的帧
             // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
-            mIjkPlayer.setOption(codec, "skip_loop_filter", (mUseMediaCodec ? 0 : 48));
+            mIjkPlayer.setOption(codec, "skip_loop_filter", (isIjkMediaCodec() ? 0 : 48));
 //            mIjkPlayer.setOption(codec, "skip_frame", 100); // // 跳过帧
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => initOptionsIjk => OPT_CATEGORY_CODEC => " + e.getMessage());
@@ -343,7 +334,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void pause() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -355,6 +346,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
+        releaseParams();
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -381,7 +373,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             mIjkPlayer.reset();
             mIjkPlayer.release();
             mIjkPlayer = null;
-            mPrepared = false;
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => release => " + e.getMessage());
         }
@@ -400,12 +391,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
     @Override
     public void stop() {
+        setPrepared(false);
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
             mIjkPlayer.stop();
             mIjkPlayer.reset();
-            mPrepared = false;
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => stop => " + e.getMessage());
         }
@@ -414,7 +405,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public boolean isPlaying() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -451,7 +442,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public long getPosition() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -468,7 +459,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public long getDuration() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -480,16 +471,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 //            MPLogUtil.log("VideoIjkPlayer => getDuration => " + e.getMessage());
             return 0L;
         }
-    }
-
-    @Override
-    public void setPlayWhenReady(boolean playWhenReady) {
-        this.mPlayWhenReady = playWhenReady;
-    }
-
-    @Override
-    public boolean isPlayWhenReady() {
-        return mPlayWhenReady;
     }
 
     @Override
@@ -541,79 +522,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => setVolume => " + e.getMessage());
         }
-    }
-
-    @Override
-    public boolean isMute() {
-        return mMute;
-    }
-
-    @Override
-    public void setMute(boolean v) {
-        mMute = v;
-        setVolume(v ? 0f : 1f, v ? 0f : 1f);
-    }
-
-    @Override
-    public long getSeek() {
-        try {
-            if (mSeek <= 0)
-                throw new Exception("warning: mSeek <= 0");
-            long duration = getDuration();
-            if (duration <= 0)
-                throw new Exception("warning: duration <= 0");
-            if (mSeek >= duration)
-                throw new Exception("warning: mSeek >= duration");
-            return mSeek;
-        } catch (Exception e) {
-            LogUtil.log("VideoIjkPlayer => getSeek => " + e.getMessage());
-            mSeek = 0L;
-            return mSeek;
-        }
-    }
-
-    @Override
-    public void setSeek(long seek) {
-        if (seek < 0)
-            return;
-        mSeek = seek;
-    }
-
-    @Override
-    public long getMax() {
-        return mMax;
-    }
-
-    @Override
-    public void setMax(long max) {
-        if (max < 0)
-            return;
-        mMax = max;
-    }
-
-    @Override
-    public boolean isLive() {
-        return mLive;
-    }
-
-    @Override
-    public void setLive(boolean live) {
-        this.mLive = live;
-    }
-
-    @Override
-    public void setLooping(boolean loop) {
-        this.mLoop = loop;
-    }
-
-    @Override
-    public boolean isLooping() {
-        return mLoop;
-    }
-
-    @Override
-    public boolean isPrepared() {
-        return mPrepared;
     }
 
     @Override
@@ -678,7 +586,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     break;
                 // 缓冲开始
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
-                    if (mPrepared) {
+                    if (isPrepared()) {
                         onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
                     } else {
                         LogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", mPrepared = false");
@@ -686,7 +594,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     break;
                 // 缓冲结束
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
-                    if (mPrepared) {
+                    if (isPrepared()) {
                         onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
                     } else {
                         LogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", mPrepared = false");
@@ -695,9 +603,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 // 出画面 => 起播
                 case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
                     try {
-                        if (mPrepared)
+                        if (isPrepared())
                             throw new Exception("warning: mPrepared true");
-                        mPrepared = true;
+                        setPrepared(true);
                         onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
                         long seek = getSeek();
                         if (seek <= 0) {

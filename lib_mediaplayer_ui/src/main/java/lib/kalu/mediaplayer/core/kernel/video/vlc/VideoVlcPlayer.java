@@ -16,14 +16,6 @@ import lib.kalu.vlc.widget.VlcPlayer;
 
 public final class VideoVlcPlayer extends VideoBasePlayer {
 
-    private long mSeek = 0L; // 快进
-    private long mMax = 0L; // 试播时常
-    private boolean mLoop = false; // 循环播放
-    private boolean mLive = false;
-    private boolean mMute = false;
-    private boolean mPlayWhenReady = true;
-    private boolean mPrepared = false;
-
     private lib.kalu.vlc.widget.VlcPlayer mVlcPlayer;
     private lib.kalu.vlc.widget.OnVlcInfoChangeListener mVlcPlayerListener;
 
@@ -67,7 +59,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
-            mVlcPlayer.setDataSource(Uri.parse(url), mPlayWhenReady);
+            mVlcPlayer.setDataSource(Uri.parse(url), isPlayWhenReady());
             mVlcPlayer.play();
         } catch (Exception e) {
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
@@ -123,6 +115,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
+        releaseParams();
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -133,7 +126,6 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             mVlcPlayer.setSurface(null, 0, 0);
             mVlcPlayer.release();
             mVlcPlayer = null;
-            mPrepared = false;
         } catch (Exception e) {
             LogUtil.log("VideoVlcPlayer => release => " + e.getMessage());
         }
@@ -159,7 +151,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void pause() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -174,12 +166,12 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
      */
     @Override
     public void stop() {
+        setPrepared(false);
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
             mVlcPlayer.stop();
 //            mVlcPlayer.reset();
-            mPrepared = false;
         } catch (Exception e) {
             LogUtil.log("VideoVlcPlayer => stop => " + e.getMessage());
         }
@@ -191,7 +183,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public boolean isPlaying() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -219,7 +211,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public long getPosition() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -239,7 +231,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public long getDuration() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -259,16 +251,6 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
         if (null != sf && null != mVlcPlayer) {
             mVlcPlayer.setSurface(sf, w, h);
         }
-    }
-
-    @Override
-    public void setPlayWhenReady(boolean playWhenReady) {
-        this.mPlayWhenReady = playWhenReady;
-    }
-
-    @Override
-    public boolean isPlayWhenReady() {
-        return mPlayWhenReady;
     }
 
     @Override
@@ -316,78 +298,5 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
                 mVlcPlayer.setVolume(value, value);
             }
         }
-    }
-
-    @Override
-    public boolean isMute() {
-        return mMute;
-    }
-
-    @Override
-    public void setMute(boolean v) {
-        mMute = v;
-        setVolume(v ? 0f : 1f, v ? 0f : 1f);
-    }
-
-    @Override
-    public long getSeek() {
-        try {
-            if (mSeek <= 0)
-                throw new Exception("warning: mSeek <= 0");
-            long duration = getDuration();
-            if (duration <= 0)
-                throw new Exception("warning: duration <= 0");
-            if (mSeek >= duration)
-                throw new Exception("warning: mSeek >= duration");
-            return mSeek;
-        } catch (Exception e) {
-            LogUtil.log("VideoVlcPlayer => getSeek => " + e.getMessage());
-            mSeek = 0L;
-            return mSeek;
-        }
-    }
-
-    @Override
-    public void setSeek(long seek) {
-        if (seek < 0)
-            return;
-        mSeek = seek;
-    }
-
-    @Override
-    public long getMax() {
-        return mMax;
-    }
-
-    @Override
-    public void setMax(long max) {
-        if (max < 0)
-            return;
-        mMax = max;
-    }
-
-    @Override
-    public boolean isLive() {
-        return mLive;
-    }
-
-    @Override
-    public void setLive(boolean live) {
-        this.mLive = live;
-    }
-
-    @Override
-    public void setLooping(boolean loop) {
-        this.mLoop = loop;
-    }
-
-    @Override
-    public boolean isLooping() {
-        return mLoop;
-    }
-
-    @Override
-    public boolean isPrepared() {
-        return mPrepared;
     }
 }

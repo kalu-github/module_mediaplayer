@@ -21,15 +21,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class VideoAndroidPlayer extends VideoBasePlayer {
 
-    private long mSeek = 0L; // 快进
-    private long mMax = 0L; // 试播时常
-    private boolean mLoop = false; // 循环播放
-    private boolean mLive = false;
-    private boolean mMute = false;
-
     private MediaPlayer mMediaPlayer = null;
-    private boolean mPlayWhenReady = true;
-    private boolean mPrepared = false;
 
     @Override
     public VideoAndroidPlayer getPlayer() {
@@ -146,6 +138,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
+        releaseParams();
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -160,7 +153,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
-            mPrepared = false;
         } catch (Exception e) {
             LogUtil.log("VideoAndroidPlayer => release => " + e.getMessage());
         }
@@ -186,7 +178,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     @Override
     public void pause() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -201,12 +193,12 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
      */
     @Override
     public void stop() {
+        setPrepared(false);
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
             mMediaPlayer.stop();
             mMediaPlayer.reset();
-            mPrepared = false;
         } catch (Exception e) {
             LogUtil.log("VideoAndroidPlayer => stop => " + e.getMessage());
         }
@@ -218,7 +210,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     @Override
     public boolean isPlaying() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -239,7 +231,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 throw new Exception("mMediaPlayer error: null");
             if (seek < 0)
                 throw new Exception("seek error: " + seek);
-            if (!mPrepared) {
+            if (!isPrepared()) {
                 long position = getPosition();
                 if (position > 0) {
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
@@ -273,7 +265,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     @Override
     public long getPosition() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -293,7 +285,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     @Override
     public long getDuration() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -318,16 +310,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         } catch (Exception e) {
             LogUtil.log("VideoAndroidPlayer => setSurface => " + e.getMessage());
         }
-    }
-
-    @Override
-    public void setPlayWhenReady(boolean playWhenReady) {
-        this.mPlayWhenReady = playWhenReady;
-    }
-
-    @Override
-    public boolean isPlayWhenReady() {
-        return mPlayWhenReady;
     }
 
     @Override
@@ -400,7 +382,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             switch (what) {
                 // 缓冲开始
                 case MediaPlayer.MEDIA_INFO_BUFFERING_START:
-                    if (mPrepared) {
+                    if (isPrepared()) {
                         onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_START);
                     } else {
                         LogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", mPrepared = false");
@@ -408,7 +390,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     break;
                 // 缓冲结束
                 case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-                    if (mPrepared) {
+                    if (isPrepared()) {
                         onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_BUFFERING_STOP);
                     } else {
                         LogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", mPrepared = false");
@@ -418,9 +400,9 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 case 903:
                 case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
                     try {
-                        if (mPrepared)
+                        if (isPrepared())
                             throw new Exception("warning: mPrepared true");
-                        mPrepared = true;
+                        setPrepared(true);
                         onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
                         long seek = getSeek();
                         if (seek <= 0) {
@@ -558,78 +540,5 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         } catch (Exception e) {
             LogUtil.log("VideoAndroidPlayer => setVolume => " + e.getMessage());
         }
-    }
-
-    @Override
-    public boolean isMute() {
-        return mMute;
-    }
-
-    @Override
-    public void setMute(boolean v) {
-        mMute = v;
-        setVolume(v ? 0f : 1f, v ? 0f : 1f);
-    }
-
-    @Override
-    public long getSeek() {
-        try {
-            if (mSeek <= 0)
-                throw new Exception("warning: mSeek <= 0");
-            long duration = getDuration();
-            if (duration <= 0)
-                throw new Exception("warning: duration <= 0");
-            if (mSeek >= duration)
-                throw new Exception("warning: mSeek >= duration");
-            return mSeek;
-        } catch (Exception e) {
-            LogUtil.log("VideoAndroidPlayer => getSeek => " + e.getMessage());
-            mSeek = 0L;
-            return mSeek;
-        }
-    }
-
-    @Override
-    public void setSeek(long seek) {
-        if (seek < 0)
-            return;
-        mSeek = seek;
-    }
-
-    @Override
-    public long getMax() {
-        return mMax;
-    }
-
-    @Override
-    public void setMax(long max) {
-        if (max < 0)
-            return;
-        mMax = max;
-    }
-
-    @Override
-    public boolean isLive() {
-        return mLive;
-    }
-
-    @Override
-    public void setLive(boolean live) {
-        this.mLive = live;
-    }
-
-    @Override
-    public void setLooping(boolean loop) {
-        this.mLoop = loop;
-    }
-
-    @Override
-    public boolean isLooping() {
-        return mLoop;
-    }
-
-    @Override
-    public boolean isPrepared() {
-        return mPrepared;
     }
 }

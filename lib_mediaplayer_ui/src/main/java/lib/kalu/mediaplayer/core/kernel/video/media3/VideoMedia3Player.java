@@ -66,15 +66,6 @@ import okhttp3.OkHttpClient;
 
 public final class VideoMedia3Player extends VideoBasePlayer {
 
-    private long mSeek = 0L; // 快进
-    private long mMax = 0L; // 试播时常
-    private boolean mLoop = false; // 循环播放
-    private boolean mLive = false;
-    private boolean mMute = false;
-    private boolean mPlayWhenReady = true;
-    private boolean mPrepared = false;
-//    private PlaybackParameters mSpeedPlaybackParameters;
-
     private ExoPlayer mExoPlayer;
     private AnalyticsListener mAnalyticsListener;
 
@@ -167,7 +158,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                     // 播放开始
                     else if (state == Player.STATE_READY) {
                         try {
-                            if (mPrepared)
+                            if (isPrepared())
                                 throw new Exception("mPrepared warning: true");
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_START);
@@ -183,13 +174,13 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                         } catch (Exception e) {
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
                         }
-                        mPrepared = true;
+                        setPrepared(true);
                     }
                     // 播放缓冲
                     else if (state == Player.STATE_BUFFERING) {
                         LogUtil.log("VideoMedia3Player => onPlaybackStateChanged[播放缓冲] =>");
                         try {
-                            if (!mPrepared)
+                            if (!isPrepared())
                                 throw new Exception("mPrepared warning: false");
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_START);
                         } catch (Exception e) {
@@ -269,7 +260,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             // 5: kernelAlwaysRelease
             MediaSource mediaSource = buildMediaSource(context, (int) o[1], url, null, cacheType, cacheMax, cacheDir);
             mExoPlayer.setMediaSource(mediaSource);
-            mExoPlayer.setPlayWhenReady(mPlayWhenReady);
+            mExoPlayer.setPlayWhenReady(isPlayWhenReady());
             if (prepareAsync) {
                 mExoPlayer.prepare();
             } else {
@@ -420,7 +411,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     @Override
     public boolean isPlaying() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -465,7 +456,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     @Override
     public long getPosition() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -485,7 +476,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     @Override
     public long getDuration() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -497,16 +488,6 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 //            MPLogUtil.log("VideoMedia3Player => getDuration => " + e.getMessage());
             return 0L;
         }
-    }
-
-    @Override
-    public void setPlayWhenReady(boolean playWhenReady) {
-        this.mPlayWhenReady = playWhenReady;
-    }
-
-    @Override
-    public boolean isPlayWhenReady() {
-        return mPlayWhenReady;
     }
 
     /**
@@ -572,80 +553,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public boolean isMute() {
-        return mMute;
-    }
-
-    @Override
-    public void setMute(boolean v) {
-        mMute = v;
-        setVolume(v ? 0f : 1f, v ? 0f : 1f);
-    }
-
-    @Override
-    public long getSeek() {
-        try {
-            if (mSeek <= 0)
-                throw new Exception("warning: mSeek <= 0");
-            long duration = getDuration();
-            if (duration <= 0)
-                throw new Exception("warning: duration <= 0");
-            if (mSeek >= duration)
-                throw new Exception("warning: mSeek >= duration");
-            return mSeek;
-        } catch (Exception e) {
-            LogUtil.log("VideoMedia3Player => getSeek => " + e.getMessage());
-            mSeek = 0L;
-            return mSeek;
-        }
-    }
-
-    @Override
-    public void setSeek(long seek) {
-        if (seek < 0)
-            return;
-        mSeek = seek;
-    }
-
-    @Override
-    public long getMax() {
-        return mMax;
-    }
-
-    @Override
-    public void setMax(long max) {
-        if (max < 0)
-            return;
-        mMax = max;
-    }
-
-    @Override
-    public boolean isLive() {
-        return mLive;
-    }
-
-    @Override
-    public void setLive(boolean live) {
-        this.mLive = live;
-    }
-
-    @Override
-    public void setLooping(boolean loop) {
-        this.mLoop = loop;
-    }
-
-    @Override
-    public boolean isLooping() {
-        return mLoop;
-    }
-
-    @Override
-    public boolean isPrepared() {
-        return mPrepared;
-    }
-
-    @Override
     public void release() {
+        releaseParams();
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -658,7 +567,6 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             mExoPlayer.setVideoSurface(null);
             mExoPlayer.release();
             mExoPlayer = null;
-            mPrepared = false;
         } catch (Exception e) {
             LogUtil.log("VideoMedia3Player => release => " + e.getMessage());
         }
@@ -684,7 +592,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     @Override
     public void pause() {
         try {
-            if (!mPrepared)
+            if (!isPrepared())
                 throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -699,12 +607,12 @@ public final class VideoMedia3Player extends VideoBasePlayer {
      */
     @Override
     public void stop() {
+        setPrepared(false);
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             mExoPlayer.stop();
 //            mExoPlayer.reset();
-            mPrepared = false;
         } catch (Exception e) {
             LogUtil.log("VideoMedia3Player => stop => " + e.getMessage());
         }
