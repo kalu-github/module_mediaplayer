@@ -162,12 +162,13 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                             radioButton.setHint(String.valueOf(newPos));
                             CharSequence tempText = radioButton.getText();
                             int tempPos = Integer.parseInt(tempText.toString());
-                            radioButton.setActivated(newPos + 1 == tempPos);
+                            radioButton.setSelected(newPos + 1 == tempPos);
                         }
 
                         // 2
                         hide();
                         stop();
+                        ((RadioGroup) focus.getParent()).check(focus.getId());
                         callItemsClickListener(newPos);
                     } catch (Exception e) {
                         LogUtil.log("ComponentMenu => dispatchKeyEvent => Exception " + e.getMessage());
@@ -204,6 +205,11 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
                     radioButton.setText(String.valueOf(i + 1));
                     radioButton.setChecked(i == start);
+                    CharSequence tempPlay = radioButton.getHint();
+                    int tempPlayPos = Integer.parseInt(tempPlay.toString());
+                    CharSequence tempText = radioButton.getText();
+                    int tempPos = Integer.parseInt(tempText.toString());
+                    radioButton.setSelected(tempPlayPos + 1 == tempPos);
                 }
             } catch (Exception e) {
                 LogUtil.log("ComponentMenu => scrollNextItem => " + e.getMessage());
@@ -235,6 +241,11 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
                     radioButton.setText(String.valueOf(i + 1));
                     radioButton.setChecked(i + 1 == length);
+                    CharSequence tempPlay = radioButton.getHint();
+                    int tempPlayPos = Integer.parseInt(tempPlay.toString());
+                    CharSequence tempText = radioButton.getText();
+                    int tempPos = Integer.parseInt(tempText.toString());
+                    radioButton.setSelected(tempPlayPos + 1 == tempPos);
                 }
             } catch (Exception e) {
                 LogUtil.log("ComponentMenu => scrollNextItem => " + e.getMessage());
@@ -248,13 +259,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         try {
             RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
             int childCount = radioGroup.getChildCount();
-            int index = position % childCount;
             for (int i = 0; i < childCount; i++) {
                 RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
                 radioButton.setHint(position);
                 CharSequence tempText = radioButton.getText();
                 int tempPos = Integer.parseInt(tempText.toString());
-                radioButton.setActivated(position + 1 == tempPos);
+                radioButton.setSelected(position + 1 == tempPos);
             }
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => setItemsChecked => Exception " + e.getMessage());
@@ -345,7 +355,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 radioButton.setText(String.valueOf(i + 1));
                 // 在播pos
                 radioButton.setHint(String.valueOf(pos));
-                radioButton.setActivated(i + 1 == pos);
+                radioButton.setSelected(i == pos);
             }
         } else {
             for (int i = 0; i < childCount; i++) {
@@ -356,7 +366,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 radioButton.setText(String.valueOf(i + 1));
                 // 在播pos
                 radioButton.setHint(String.valueOf(pos));
-                radioButton.setActivated(i + 1 == pos);
+                radioButton.setSelected(i == pos);
             }
         }
     }
@@ -369,17 +379,38 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
         }
+
         try {
+            int playIndex = -1;
             RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
-            int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-            if (checkedRadioButtonId == -1) {
-                radioGroup.check(R.id.module_mediaplayer_component_menu_items_no1);
-                checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+            int childCount = radioGroup.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+                CharSequence hint = radioButton.getHint();
+                int playPos = Integer.parseInt(String.valueOf(hint));
+                if (playPos >= 0) {
+                    playIndex = playPos;
+                    break;
+                }
             }
-            findViewById(checkedRadioButtonId).requestFocus();
+            if (playIndex == -1)
+                throw new Exception("error: playIndex == -1");
+            RadioButton radioButton = (RadioButton) radioGroup.getChildAt(playIndex);
+            radioButton.requestFocus();
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
         }
+//            try {
+//                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+//                int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+//                if (checkedRadioButtonId == -1) {
+//                    radioGroup.check(R.id.module_mediaplayer_component_menu_items_no1);
+//                    checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+//                }
+//                findViewById(checkedRadioButtonId).requestFocus();
+//            } catch (Exception e) {
+//                LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
+//            }
     }
 
     @Override
