@@ -566,6 +566,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("warning: mSeek >= duration");
             return mSeek;
         } catch (Exception e) {
+            LogUtil.log("VideoIjkPlayer => getSeek => " + e.getMessage());
             mSeek = 0L;
             return mSeek;
         }
