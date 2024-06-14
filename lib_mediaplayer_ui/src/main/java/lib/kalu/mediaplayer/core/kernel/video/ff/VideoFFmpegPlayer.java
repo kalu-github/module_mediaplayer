@@ -465,7 +465,20 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
     @Override
     public long getSeek() {
-        return mSeek;
+        try {
+            if (mSeek <= 0)
+                throw new Exception("warning: mSeek <= 0");
+            long duration = getDuration();
+            if (duration <= 0)
+                throw new Exception("warning: duration <= 0");
+            if (mSeek >= duration)
+                throw new Exception("warning: mSeek >= duration");
+            return mSeek;
+        } catch (Exception e) {
+            LogUtil.log("VideoFfmpegPlayer => getSeek => " + e.getMessage());
+            mSeek = 0L;
+            return mSeek;
+        }
     }
 
     @Override

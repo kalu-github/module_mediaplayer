@@ -584,7 +584,20 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
     @Override
     public long getSeek() {
-        return mSeek;
+        try {
+            if (mSeek <= 0)
+                throw new Exception("warning: mSeek <= 0");
+            long duration = getDuration();
+            if (duration <= 0)
+                throw new Exception("warning: duration <= 0");
+            if (mSeek >= duration)
+                throw new Exception("warning: mSeek >= duration");
+            return mSeek;
+        } catch (Exception e) {
+            LogUtil.log("VideoMedia3Player => getSeek => " + e.getMessage());
+            mSeek = 0L;
+            return mSeek;
+        }
     }
 
     @Override
