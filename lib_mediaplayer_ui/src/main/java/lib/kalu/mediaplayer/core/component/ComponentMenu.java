@@ -89,7 +89,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 if (id == R.id.module_mediaplayer_component_menu_speed_0_5) {
                     return true;
                 } else if (id == R.id.module_mediaplayer_component_menu_items_no1) {
-                    nextItemChecked(KeyEvent.KEYCODE_DPAD_LEFT);
+                    scrollNextItem(KeyEvent.KEYCODE_DPAD_LEFT);
                     return true;
                 }
             }
@@ -104,7 +104,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 if (id == R.id.module_mediaplayer_component_menu_speed_3_0) {
                     return true;
                 } else if (id == R.id.module_mediaplayer_component_menu_items_no10) {
-                    nextItemChecked(KeyEvent.KEYCODE_DPAD_RIGHT);
+                    scrollNextItem(KeyEvent.KEYCODE_DPAD_RIGHT);
                     return true;
                 }
             }
@@ -141,14 +141,36 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         setSpeed(3.0F);
                     }
                 } else if (id == R.id.module_mediaplayer_component_menu_items_group) {
-                    ((RadioGroup) focus.getParent()).check(focus.getId());
-                    CharSequence text = ((RadioButton) focus).getText();
-                    if (null != text && text.length() > 0) {
+
+                    try {
+                        CharSequence hint = ((RadioButton) focus).getHint();
+                        int playPos = Integer.parseInt(hint.toString());
+
+                        CharSequence text = ((RadioButton) focus).getText();
+                        int numPos = Integer.parseInt(text.toString());
+
+                        // 判断在播pos
+                        if (playPos + 1 == numPos)
+                            throw new Exception("warning: playPos+1== numPos");
+
+                        int newPos = numPos - 1;
+
+                        // 1
+                        int childCount = ((RadioGroup) focus.getParent()).getChildCount();
+                        for (int i = 0; i < childCount; i++) {
+                            RadioButton radioButton = (RadioButton) ((RadioGroup) focus.getParent()).getChildAt(i);
+                            radioButton.setHint(String.valueOf(newPos));
+                            CharSequence tempText = radioButton.getText();
+                            int tempPos = Integer.parseInt(tempText.toString());
+                            radioButton.setActivated(newPos + 1 == tempPos);
+                        }
+
+                        // 2
                         hide();
                         stop();
-                        int num = Integer.parseInt(text.toString());
-                        int pos = --num;
-                        callItemsClickListener(pos);
+                        callItemsClickListener(newPos);
+                    } catch (Exception e) {
+                        LogUtil.log("ComponentMenu => dispatchKeyEvent => Exception " + e.getMessage());
                     }
                 }
                 return true;
@@ -158,7 +180,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public void nextItemChecked(int action) {
+    public void scrollNextItem(int action) {
         if (action == KeyEvent.KEYCODE_DPAD_LEFT) {
             try {
                 View focus = findFocus();
@@ -184,7 +206,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     radioButton.setChecked(i == start);
                 }
             } catch (Exception e) {
-                LogUtil.log("ComponentMenu => nextItemChecked => " + e.getMessage());
+                LogUtil.log("ComponentMenu => scrollNextItem => " + e.getMessage());
             }
         } else if (action == KeyEvent.KEYCODE_DPAD_RIGHT) {
             try {
@@ -215,13 +237,29 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     radioButton.setChecked(i + 1 == length);
                 }
             } catch (Exception e) {
-                LogUtil.log("ComponentMenu => nextItemChecked => " + e.getMessage());
+                LogUtil.log("ComponentMenu => scrollNextItem => " + e.getMessage());
             }
         }
     }
 
     @Override
     public void setItemsChecked(int position) {
+
+        try {
+            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+            int childCount = radioGroup.getChildCount();
+            int index = position % childCount;
+            for (int i = 0; i < childCount; i++) {
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+                radioButton.setHint(position);
+                CharSequence tempText = radioButton.getText();
+                int tempPos = Integer.parseInt(tempText.toString());
+                radioButton.setActivated(position + 1 == tempPos);
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => setItemsChecked => Exception " + e.getMessage());
+        }
+
         try {
             RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
             int childCount = radioGroup.getChildCount();
@@ -230,9 +268,9 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             int start = Integer.parseInt(radioButton1.getText().toString()) - 1;
             int end = Integer.parseInt(radioButton2.getText().toString()) - 1;
             if (position < start) {
-                nextItemChecked(KeyEvent.KEYCODE_DPAD_LEFT);
+                scrollNextItem(KeyEvent.KEYCODE_DPAD_LEFT);
             } else if (position > end) {
-                nextItemChecked(KeyEvent.KEYCODE_DPAD_RIGHT);
+                scrollNextItem(KeyEvent.KEYCODE_DPAD_RIGHT);
             } else {
                 int index = position % childCount;
                 RadioButton radioButton = (RadioButton) radioGroup.getChildAt(index);
@@ -240,6 +278,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 radioGroup.check(id);
             }
         } catch (Exception e) {
+            LogUtil.log("ComponentMenu => setItemsChecked => Exception " + e.getMessage());
         }
     }
 
@@ -304,6 +343,9 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 radioButton.setVisibility(View.VISIBLE);
                 radioButton.setChecked(i == pos);
                 radioButton.setText(String.valueOf(i + 1));
+                // 在播pos
+                radioButton.setHint(String.valueOf(pos));
+                radioButton.setActivated(i + 1 == pos);
             }
         } else {
             for (int i = 0; i < childCount; i++) {
@@ -312,6 +354,9 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 radioButton.setVisibility(i < count ? View.VISIBLE : View.INVISIBLE);
                 radioButton.setChecked(i == pos);
                 radioButton.setText(String.valueOf(i + 1));
+                // 在播pos
+                radioButton.setHint(String.valueOf(pos));
+                radioButton.setActivated(i + 1 == pos);
             }
         }
     }

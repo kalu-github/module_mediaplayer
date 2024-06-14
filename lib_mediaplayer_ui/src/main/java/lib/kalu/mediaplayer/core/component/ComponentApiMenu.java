@@ -24,7 +24,7 @@ public interface ComponentApiMenu extends ComponentApi {
     default void setItemsChecked(int checkedPos) {
     }
 
-    default void nextItemChecked(int action) {
+    default void scrollNextItem(int action) {
     }
 
     default void showItems(){
