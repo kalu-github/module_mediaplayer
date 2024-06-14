@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 
@@ -23,12 +24,34 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
+    public void callEventListener(int playState) {
+        if (playState == PlayerType.StateType.STATE_END) {
+            try {
+                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+                Object tag = radioGroup.getTag();
+                if (null == tag)
+                    throw new Exception("error: null == tag");
+                int count = (int) tag;
+                if (count <= 1)
+                    throw new Exception("warning: count <= 1");
+                int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+                RadioButton radioButton = radioGroup.findViewById(checkedRadioButtonId);
+                int num = Integer.parseInt(radioButton.getText().toString());
+                if (num >= count)
+                    throw new Exception("warning: num >= count");
+                setItemsChecked(num);
+            } catch (Exception e) {
+                LogUtil.log("ComponentMenu => callEventListener => Exception " + e.getMessage());
+            }
+        }
+    }
+
+    @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         // down
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
 
             boolean showing = isComponentShowing();
-            LogUtil.log("ComponentMenu => dispatchKeyEvent => showing = " + showing);
             if (showing) {
                 startDelayedMsg();
                 View focus = findFocus();
