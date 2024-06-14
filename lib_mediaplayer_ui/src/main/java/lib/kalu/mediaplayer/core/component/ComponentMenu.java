@@ -380,45 +380,45 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
         }
 
+//        try {
+//            int playIndex = -1;
+//            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+//            int childCount = radioGroup.getChildCount();
+//            for (int i = 0; i < childCount; i++) {
+//                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+//                CharSequence hint = radioButton.getHint();
+//                int playPos = Integer.parseInt(String.valueOf(hint));
+//                if (playPos >= 0) {
+//                    playIndex = playPos;
+//                    break;
+//                }
+//            }
+//            if (playIndex == -1)
+//                throw new Exception("error: playIndex == -1");
+//
+//            int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+//            CharSequence text = ((RadioButton) radioGroup.findViewById(checkedRadioButtonId)).getText();
+//            int numPos = Integer.parseInt(String.valueOf(text));
+//
+//            if (Math.abs(numPos - playIndex) >= childCount) {
+//                radioGroup.findViewById(checkedRadioButtonId).requestFocus();
+//            } else {
+//                radioGroup.getChildAt(playIndex % childCount).requestFocus();
+//            }
+//        } catch (Exception e) {
+//            LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
+//        }
         try {
-            int playIndex = -1;
             RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
-            int childCount = radioGroup.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
-                CharSequence hint = radioButton.getHint();
-                int playPos = Integer.parseInt(String.valueOf(hint));
-                if (playPos >= 0) {
-                    playIndex = playPos;
-                    break;
-                }
-            }
-            if (playIndex == -1)
-                throw new Exception("error: playIndex == -1");
-
             int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-            CharSequence text = ((RadioButton) radioGroup.findViewById(checkedRadioButtonId)).getText();
-            int numPos = Integer.parseInt(String.valueOf(text));
-
-            if (Math.abs(numPos - playIndex) >= childCount) {
-                radioGroup.findViewById(checkedRadioButtonId).requestFocus();
-            } else {
-                radioGroup.getChildAt(playIndex % childCount).requestFocus();
+            if (checkedRadioButtonId == -1) {
+                radioGroup.check(R.id.module_mediaplayer_component_menu_items_no1);
+                checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
             }
+            findViewById(checkedRadioButtonId).requestFocus();
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
         }
-//            try {
-//                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
-//                int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-//                if (checkedRadioButtonId == -1) {
-//                    radioGroup.check(R.id.module_mediaplayer_component_menu_items_no1);
-//                    checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-//                }
-//                findViewById(checkedRadioButtonId).requestFocus();
-//            } catch (Exception e) {
-//                LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
-//            }
     }
 
     @Override
