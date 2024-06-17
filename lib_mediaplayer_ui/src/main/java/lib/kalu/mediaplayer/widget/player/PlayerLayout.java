@@ -595,7 +595,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final long getMax() {
+    public final long getMaxDuration() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -603,9 +603,9 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs tag = playerView.getTags();
             if (null == tag)
                 throw new Exception("error: tag null");
-            return tag.getMax();
+            return tag.getMaxDuration();
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getMax => " + e.getMessage());
+            LogUtil.log("PlayerLayout => getMaxDuration => " + e.getMessage());
             return 0;
         }
     }

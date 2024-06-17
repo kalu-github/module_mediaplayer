@@ -94,17 +94,17 @@ interface VideoKernelApiBase {
 
     /************/
 
-    long[] mMax = new long[]{0L}; // 试播时常
+    long[] mMaxDuration = new long[]{0L}; // 试播时常
 
-    default long getMax() {
-        return mMax[0];
+    default long getMaxDuration() {
+        return mMaxDuration[0];
     }
 
-    default void setMax(long max) {
-        if (max < 0) {
-            max = 0;
+    default void setMaxDuration(long v) {
+        if (v < 0) {
+            v = 0;
         }
-        mMax[0] = max;
+        mMaxDuration[0] = v;
     }
 
     /*****/

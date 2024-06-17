@@ -26,6 +26,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
     private FFmpegPlayer mFFmpegPlayer = null;
+
     @Override
     public VideoFFmpegPlayer getPlayer() {
         return this;
@@ -200,15 +201,11 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("seek error: " + seek);
             long duration = getDuration();
             if (seek > duration) {
-                LogUtil.log("VideoFFmpegPlayer => seekTo => seek = " + seek + ", duration = " + duration);
-                pause();
-                stop();
-                release();
-                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_ERROR_SEEK_TIME);
-            } else {
-                LogUtil.log("VideoFFmpegPlayer => seekTo => succ");
-                mFFmpegPlayer.seekTo((int) seek);
+                seek = duration;
             }
+            LogUtil.log("VideoFFmpegPlayer => seekTo => succ");
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_SEEK_START);
+            mFFmpegPlayer.seekTo((int) seek);
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => seekTo => " + e.getMessage());
         }
@@ -344,6 +341,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         @Override
         public void onSeekComplete(FFmpegPlayer mediaPlayer) {
             LogUtil.log("VideoFFmpegPlayer => onSeekComplete =>");
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_SEEK_FINISH);
             try {
                 long seek = getSeek();
                 if (seek <= 0)

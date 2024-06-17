@@ -9,6 +9,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -22,6 +23,16 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+
+        // 试看
+        try {
+            StartArgs tags = getPlayerView().getTags();
+            boolean trySee = tags.isTrySee();
+            if (trySee)
+                return false;
+        } catch (Exception e) {
+        }
+
         // seekForward => start
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             boolean isShowing = isComponentMenuShowing();

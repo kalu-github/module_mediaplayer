@@ -72,35 +72,37 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     @Override
     default void start(StartArgs args) {
         try {
+            if (null == args)
+                throw new Exception("error: args null");
             String url = args.getMediaUrl();
             if (null == url)
                 throw new Exception("error: url null");
-            callEventListener(PlayerType.StateType.STATE_INIT);
             // 1
             boolean log = args.isLog();
             LogUtil.setLogger(log);
             // 2
             boolean initRelease = args.isInitRelease();
             if (initRelease) {
-                release(true, true, false);
+                release(true, false, false);
             } else {
-                stop(true, true);
+                stop(true, false);
             }
             // 3
-            int kernelType = args.getKernelType();
-            checkKernelNull(kernelType, false);
-            // 4
-            int renderType = args.getRenderType();
-            checkRenderNull(renderType, false);
-            // 5
-            attachRenderKernel();
-            // 6
-            setKernelEvent(args);
-            // 7
-            startDecoder(args);
-            // 8
             setTags(args);
             setScreenKeep(true);
+            callEventListener(PlayerType.StateType.STATE_INIT);
+            // 4
+            int kernelType = args.getKernelType();
+            checkKernelNull(kernelType, false);
+            // 5
+            int renderType = args.getRenderType();
+            checkRenderNull(renderType, false);
+            // 6
+            attachRenderKernel();
+            // 7
+            setKernelEvent(args);
+            // 8
+            startDecoder(args);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());
         }
@@ -207,18 +209,15 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         release(true, true, true);
     }
 
-    default void release(boolean clearListener, boolean clearTag, boolean isFromUser) {
+    default void release(boolean clearTag, boolean callEvent, boolean isFromUser) {
         try {
             if (clearTag) {
                 setTags(null);
             }
             releaseRender();
             releaseKernel(isFromUser);
-            if (clearListener) {
-                removeOnPlayerEventListener();
-                removeOnPlayerProgressListener();
-                removeOnPlayerWindowListener();
-            }
+            if (!callEvent)
+                throw new Exception("warning: callEvent false");
             callEventListener(PlayerType.StateType.STATE_RELEASE);
         } catch (Exception e) {
             callEventListener(PlayerType.StateType.STATE_RELEASE_EXCEPTION);
@@ -263,10 +262,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default long getMax() {
+    default long getMaxDuration() {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            return kernel.getMax();
+            return kernel.getMaxDuration();
         } catch (Exception e) {
             return 0L;
         }
@@ -282,7 +281,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: kernel null");
             kernel.seekTo(position);
             setScreenKeep(true);
-            callEventListener(PlayerType.StateType.STATE_INIT_SEEK);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => seekToVideoKernel => " + e.getMessage());
         }
@@ -457,31 +455,35 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 public void onUpdateProgress(long position, long duration) {
 
                     try {
-                        long max = args.getMax();
-                        callProgressListener(max, position, duration);
+                        long maxDuration = args.getMaxDuration();
+                        callProgressListener(maxDuration, position, duration);
                     } catch (Exception e) {
                     }
 
-                    // 试看
                     try {
-                        long max = args.getMax();
-                        if (max <= 0)
-                            throw new Exception("warning: max <= 0");
-                        if (max <= position)
-                            throw new Exception("warning: max <= position");
-                        callEventListener(PlayerType.StateType.STATE_TRY_TO_SEE_FINISH);
-                        boolean looping = args.isLooping();
-                        if (looping) {
-                            seekTo(0);
-                        } else {
-                            pause(true);
-                            setScreenKeep(false);
+                        boolean trySee = args.isTrySee();
+                        LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateProgress => trySee = " + trySee + ", maxDuration = " + args.getMaxDuration() + ", position = " + position);
+                        // 试看
+                        if (trySee) {
+                            long maxDuration = args.getMaxDuration();
+                            if (maxDuration <= 0)
+                                throw new Exception("warning: maxDuration <= 0");
+                            if (position <= maxDuration)
+                                throw new Exception("warning: position <= maxDuration");
+                            pause(false);
+                            callEventListener(PlayerType.StateType.STATE_TRY_TO_SEE_FINISH);
+                        }
+                        // 默认播放结束
+                        else {
+                            boolean looping = args.isLooping();
+                            if (looping) {
+                                restart();
+                            }
                         }
                     } catch (Exception e) {
                     }
                 }
 
-                @SuppressLint("StaticFieldLeak")
                 @Override
                 public void onEvent(int kernel, int event) {
                     LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
@@ -568,13 +570,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
                             // 埋点
                             onBuriedEventPlaying();
-                            // 试看
-                            if (null != args) {
-                                long max = args.getMax();
-                                if (max > 0) {
-                                    callEventListener(PlayerType.StateType.STATE_TRY_BEGIN);
-                                }
-                            }
                             callEventListener(PlayerType.StateType.STATE_START);
                             // ijk需要刷新RenderView
                             int kernelType = args.getKernelType();
@@ -589,8 +584,16 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                                 callEventListener(PlayerType.StateType.STATE_START_PLAY_WHEN_READY_PAUSE);
                             }
                             break;
+                        // 快进
+                        case PlayerType.EventType.EVENT_SEEK_START:
+                            callEventListener(PlayerType.StateType.STATE_SEEK_START);
+                            break;
+                        // 快进
+                        case PlayerType.EventType.EVENT_SEEK_FINISH:
+                            callEventListener(PlayerType.StateType.STATE_SEEK_FINISH);
+                            break;
+
                         // 播放错误
-                        case PlayerType.EventType.EVENT_ERROR_SEEK_TIME:
                         case PlayerType.EventType.EVENT_ERROR_URL:
                         case PlayerType.EventType.EVENT_ERROR_RETRY:
                         case PlayerType.EventType.EVENT_ERROR_SOURCE:

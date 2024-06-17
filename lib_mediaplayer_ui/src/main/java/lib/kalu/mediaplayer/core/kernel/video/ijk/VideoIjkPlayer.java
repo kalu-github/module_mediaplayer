@@ -434,15 +434,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("seek error: " + seek);
             long duration = getDuration();
             if (seek > duration) {
-                LogUtil.log("VideoIjkPlayer => seekTo => seek = " + seek + ", duration = " + duration);
-                pause();
-                stop();
-                release();
-                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_SEEK_TIME);
-            } else {
-                LogUtil.log("VideoIjkPlayer => seekTo => succ");
-                mIjkPlayer.seekTo(seek);
+                seek = duration;
             }
+            LogUtil.log("VideoIjkPlayer => seekTo => succ");
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_SEEK_START);
+            mIjkPlayer.seekTo(seek);
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => seekTo => " + e.getMessage());
         }
@@ -651,6 +647,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public void onSeekComplete(IMediaPlayer iMediaPlayer) {
             LogUtil.log("VideoIjkPlayer => onSeekComplete =>");
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_SEEK_FINISH);
             try {
                 long seek = getSeek();
                 if (seek <= 0)

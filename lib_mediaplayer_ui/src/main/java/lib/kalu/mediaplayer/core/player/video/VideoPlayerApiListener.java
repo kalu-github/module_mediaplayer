@@ -95,7 +95,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
         }
     }
 
-    default void callProgressListener(long max, long position, long duration) {
+    default void callProgressListener(long maxDuration, long position, long duration) {
 
         // component
         try {
@@ -109,7 +109,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).onUpdateProgress(false, max, position, duration);
+                ((ComponentApi) childAt).onUpdateProgress(false, maxDuration, position, duration);
             }
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiComponent => callProgressListener => " + e.getMessage());

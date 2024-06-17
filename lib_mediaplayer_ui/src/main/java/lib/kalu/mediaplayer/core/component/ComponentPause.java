@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public class ComponentPause extends RelativeLayout implements ComponentApiPause {
 
@@ -69,22 +71,40 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     @Override
     public final void hide() {
         try {
-
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("error: playerView null");
+            StartArgs tags = playerView.getTags();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            boolean trySee = tags.isTrySee();
+            if (trySee)
+                throw new Exception("warning: trySee true");
             findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_pause_title).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_pause_seekbar).setVisibility(View.GONE);
         } catch (Exception e) {
+            LogUtil.log("ComponentPause => hide => Exception " + e.getMessage());
         }
     }
 
     @Override
     public final void show() {
         try {
-
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("error: playerView null");
+            StartArgs tags = playerView.getTags();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            boolean trySee = tags.isTrySee();
+            if (trySee)
+                throw new Exception("warning: trySee true");
             findViewById(R.id.module_mediaplayer_component_pause_bg).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_pause_title).setVisibility(View.VISIBLE);
             findViewById(R.id.module_mediaplayer_component_pause_seekbar).setVisibility(View.VISIBLE);
         } catch (Exception e) {
+            LogUtil.log("ComponentPause => show => Exception " + e.getMessage());
         }
     }
 

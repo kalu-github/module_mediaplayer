@@ -69,13 +69,13 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface StateType {
         int STATE_INIT = 3_001; // 播放未开始，即将进行
-        int STATE_INIT_SEEK = 3_003; // 显示进度条
-        int STATE_CLEAN = 3_004; //
-        int STATE_LOADING_START = 3_005; // 开始转圈
-        int STATE_LOADING_STOP = 3_006; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int STATE_KERNEL_STOP = 3_007;
-        int STATE_KERNEL_RESUME = 3_008; // 开始播放
-        int STATE_TRY_BEGIN = 3_009; // 试看
+        int STATE_SEEK_START = 3_003; // 开始快进
+        int STATE_SEEK_FINISH = 3_004; // 结束快进
+        int STATE_CLEAN = 3_005; //
+        int STATE_LOADING_START = 3_006; // 开始转圈
+        int STATE_LOADING_STOP = 3_007; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
+        int STATE_KERNEL_STOP = 3_008;
+        int STATE_KERNEL_RESUME = 3_009; // 开始播放
         int STATE_VIDEO_RENDERING_START = 3_010; // 开始播放
         int STATE_START = 3_011; // 开始播放
         int STATE_START_RETRY = 3_012; // 开始播放
@@ -114,7 +114,8 @@ public @interface PlayerType {
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
                 STATE_INIT,
-                STATE_INIT_SEEK,
+                STATE_SEEK_START,
+                STATE_SEEK_FINISH,
                 STATE_FULL_START,
                 STATE_FULL_SUCC,
                 STATE_FULL_FAIL,
@@ -128,7 +129,6 @@ public @interface PlayerType {
                 STATE_CLEAN,
                 STATE_KERNEL_STOP,
                 STATE_KERNEL_RESUME,
-                STATE_TRY_BEGIN,
                 STATE_VIDEO_RENDERING_START,
                 STATE_START,
                 STATE_START_RETRY,
@@ -329,7 +329,6 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface EventType {
-        int EVENT_ERROR_SEEK_TIME = 7_000;
         int EVENT_ERROR_URL = 7_001;
         int EVENT_ERROR_RETRY = 7_002;
         int EVENT_ERROR_SOURCE = 7_003;
@@ -363,6 +362,8 @@ public @interface PlayerType {
         int EVENT_BUFFERING_START = 7_013;
         // 缓冲结束
         int EVENT_BUFFERING_STOP = 7_014;
+        int EVENT_SEEK_START = 7_015;
+        int EVENT_SEEK_FINISH = 7_016;
         // 视频旋转信息
 //        int EVENT_VIDEO_ROTATION_CHANGED = IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
 //        int EVENT_AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;
@@ -372,7 +373,6 @@ public @interface PlayerType {
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
-                EVENT_ERROR_SEEK_TIME,
                 EVENT_ERROR_URL,
                 EVENT_ERROR_RETRY,
                 EVENT_ERROR_SOURCE,
@@ -395,6 +395,8 @@ public @interface PlayerType {
 //                EVENT_VIDEO_END,
                 EVENT_BUFFERING_START,
                 EVENT_BUFFERING_STOP,
+                EVENT_SEEK_START,
+                EVENT_SEEK_FINISH,
 //                EVENT_VIDEO_ROTATION_CHANGED,
 //                EVENT_AUDIO_DECODED_START,
 //                EVENT_VIDEO_DECODED_START

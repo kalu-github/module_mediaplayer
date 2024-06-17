@@ -328,15 +328,11 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 throw new Exception("mExoPlayer error: null");
             long duration = getDuration();
             if (seek > duration) {
-                LogUtil.log("VideoMedia3Player => seekTo => seek = " + seek + ", duration = " + duration);
-                pause();
-                stop();
-                release();
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_SEEK_TIME);
-            } else {
-                LogUtil.log("VideoMedia3Player => seekTo => succ");
-                mExoPlayer.seekTo(seek);
+                seek = duration;
             }
+            LogUtil.log("VideoMedia3Player => seekTo => succ");
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.EVENT_SEEK_START);
+            mExoPlayer.seekTo(seek);
         } catch (Exception e) {
             LogUtil.log("VideoMedia3Player => seekTo => " + e.getMessage());
         }

@@ -138,7 +138,7 @@
     public <fields>;
     public <methods>;
 }
--keep class lib.kalu.mediaplayer.core.component.ComponentTryToSee {
+-keep class lib.kalu.mediaplayer.core.component.ComponentTrySee {
     public <fields>;
     public <methods>;
 }

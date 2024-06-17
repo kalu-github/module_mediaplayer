@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
                 intent.putExtra(TestActivity.INTENT_URL, getUrl());
                 intent.putExtra(TestActivity.INTENT_LIVE, isLive());
                 intent.putExtra(TestActivity.INTENT_SEEK, getSeek());
-                intent.putExtra(TestActivity.INTENT_MAX, getMax());
+                intent.putExtra(TestActivity.INTENT_TRY_SEE, isTrySee());
                 startActivity(intent);
             }
         });
@@ -79,19 +79,9 @@ public class MainActivity extends Activity {
         return seek;
     }
 
-    private long getMax() {
-        long max;
+    private boolean isTrySee() {
         RadioGroup radioGroup = findViewById(R.id.main_trysee);
-        int id = radioGroup.getCheckedRadioButtonId();
-        switch (id) {
-            case R.id.main_trysee_yes:
-                max = 60 * 1000; // 60s
-                break;
-            default:
-                max = 0;
-                break;
-        }
-        return max;
+        return R.id.main_trysee_yes == radioGroup.getCheckedRadioButtonId();
     }
 
     private String getUrl() {
@@ -123,9 +113,9 @@ public class MainActivity extends Activity {
             Toast.makeText(getApplicationContext(), "checkUdpJoinGroup = " + checkUdpJoinGroup + ", udp = " + videoUrl, Toast.LENGTH_SHORT).show();
         }
 
-        if(!videoUrl.startsWith("http")){
+        if (!videoUrl.startsWith("http")) {
             File file = new File(videoUrl);
-            if(!file.exists()){
+            if (!file.exists()) {
                 Toast.makeText(getApplicationContext(), "文件不存在", Toast.LENGTH_SHORT).show();
             }
         }

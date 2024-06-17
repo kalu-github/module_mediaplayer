@@ -27,18 +27,12 @@ public interface VideoKernelApi extends VideoKernelApiCheck, VideoKernelApiBase,
     default void initOptions(Context context, StartArgs args) {
     }
 
-    default void update(long seek, long max, boolean loop) {
-        setSeek(seek);
-        setMax(max);
-        setLooping(loop);
-    }
-
     default void clear() {
         mDoWindowing[0] = false;
         mConnectTimeout[0] = 0L;
         mBufferingTimeoutRetry[0] = false;
         mSeek[0] = 0L;
-        mMax[0] = 0L;
+        mMaxDuration[0] = 0L;
         mLooping[0] = false;
         mLive[0] = false;
         mMute[0] = false;
@@ -65,8 +59,8 @@ public interface VideoKernelApi extends VideoKernelApiCheck, VideoKernelApiBase,
 
             long seek = args.getSeek();
             setSeek(seek);
-            long max = args.getMax();
-            setMax(max);
+            long maxDuration = args.getMaxDuration();
+            setMaxDuration(maxDuration);
             boolean mute = args.isMute();
             setMute(mute);
             boolean loop = args.isLooping();

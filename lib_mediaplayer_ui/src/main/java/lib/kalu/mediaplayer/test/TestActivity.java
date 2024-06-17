@@ -25,7 +25,7 @@ import lib.kalu.mediaplayer.core.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.component.ComponentBuffering;
 import lib.kalu.mediaplayer.core.component.ComponentPause;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
-import lib.kalu.mediaplayer.core.component.ComponentTryToSee;
+import lib.kalu.mediaplayer.core.component.ComponentTrySee;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
@@ -43,7 +43,7 @@ public final class TestActivity extends Activity {
 
     public static final String INTENT_LIVE = "intent_live"; // live
 
-    public static final String INTENT_MAX = "intent_max"; // max
+    public static final String INTENT_TRY_SEE = "intent_try_see"; // 试看
 
     public static final String INTENT_SEEK = "intent_seek"; // 快进
 
@@ -62,7 +62,7 @@ public final class TestActivity extends Activity {
 
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
         boolean dispatchKeyEvent = playerLayout.dispatchKeyEvent(event);
-        if(dispatchKeyEvent){
+        if (dispatchKeyEvent) {
             return true;
         }
 
@@ -204,7 +204,7 @@ public final class TestActivity extends Activity {
         ComponentPause pause = new ComponentPause(getApplicationContext());
         componentApis.add(pause);
         // try
-        ComponentTryToSee trys = new ComponentTryToSee(getApplicationContext());
+        ComponentTrySee trys = new ComponentTrySee(getApplicationContext());
         componentApis.add(trys);
         // insert-component
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
@@ -331,16 +331,21 @@ public final class TestActivity extends Activity {
         if (seek <= 0) {
             seek = getIntent().getIntExtra(INTENT_SEEK, 0);
         }
-        long max = getIntent().getLongExtra(INTENT_MAX, 0);
-        if (max <= 0) {
-            max = getIntent().getIntExtra(INTENT_MAX, 0);
-        }
         boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
-        LogUtil.log("TestActivity => onCreate => seek = " + seek + ", max = " + max + ", live = " + live + ", url = " + url);
 
         StartArgs.Builder builder = new StartArgs.Builder();
+
+        // 试看
+        boolean trySee = getIntent().getBooleanExtra(INTENT_TRY_SEE, false);
+        if (trySee) {
+            builder.setTrySee(true);
+            builder.setMaxDuration(60 * 1000);
+        } else {
+            builder.setTrySee(false);
+        }
+
         builder.setSeek(seek);
-        builder.setMax(max);
+        builder.setTrySee(true);
         builder.setLive(live);
         builder.setMediaUrl(url);
         StartArgs build = builder.build();

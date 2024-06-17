@@ -230,19 +230,15 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
             long duration = getDuration();
             if (seek > duration) {
-                LogUtil.log("VideoAndroidPlayer => seekTo => seek = " + seek + ", duration = " + duration);
-                pause();
-                stop();
-                release();
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_SEEK_TIME);
+                seek = duration;
+            }
+            LogUtil.log("VideoAndroidPlayer => seekTo => succ");
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_SEEK_START);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_CLOSEST);
+//                    mMediaPlayer.seekTo((int) seek);
             } else {
-                LogUtil.log("VideoAndroidPlayer => seekTo => succ");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_CLOSEST);
-                    mMediaPlayer.seekTo((int) seek);
-                } else {
-                    mMediaPlayer.seekTo((int) seek);
-                }
+                mMediaPlayer.seekTo((int) seek);
             }
         } catch (Exception e) {
             LogUtil.log("VideoAndroidPlayer => seekTo => " + e.getMessage());
@@ -415,6 +411,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public void onSeekComplete(MediaPlayer mediaPlayer) {
             LogUtil.log("VideoAndroidPlayer => onSeekComplete =>");
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_SEEK_FINISH);
             try {
                 long seek = getSeek();
                 if (seek <= 0)

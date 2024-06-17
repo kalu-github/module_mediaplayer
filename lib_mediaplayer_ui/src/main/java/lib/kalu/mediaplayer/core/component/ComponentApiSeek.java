@@ -44,7 +44,7 @@ public interface ComponentApiSeek extends ComponentApi {
             SeekBar seekBar = findSeekBar();
             int duration = seekBar.getMax();
             if (duration > 0) {
-                long max = getPlayerView().getMax();
+                long maxDuration = getPlayerView().getMaxDuration();
                 if (repeatCount == 0) {
                     Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                     if (null == tag) {
@@ -79,7 +79,7 @@ public interface ComponentApiSeek extends ComponentApi {
                             range = duration;
                         }
                         seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
-                        onUpdateProgress(true, max, range, duration);
+                        onUpdateProgress(true, maxDuration, range, duration);
                     }
                 } else {
                     int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
@@ -110,14 +110,14 @@ public interface ComponentApiSeek extends ComponentApi {
                         range = duration;
                     }
                     seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
-                    onUpdateProgress(true, max, range, duration);
+                    onUpdateProgress(true, maxDuration, range, duration);
                 }
             }
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
             SeekBar seekBar = findSeekBar();
             int duration = seekBar.getMax();
             if (duration > 0) {
-                long max = getPlayerView().getMax();
+                long maxDuration = getPlayerView().getMaxDuration();
                 if (repeatCount == 0) {
                     Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                     if (null == tag) {
@@ -152,7 +152,7 @@ public interface ComponentApiSeek extends ComponentApi {
                             range = 0;
                         }
                         seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
-                        onUpdateProgress(true, max, range, duration);
+                        onUpdateProgress(true, maxDuration, range, duration);
                     }
                 } else {
                     int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
@@ -182,7 +182,7 @@ public interface ComponentApiSeek extends ComponentApi {
                         range = 0;
                     }
                     seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
-                    onUpdateProgress(true, max, range, duration);
+                    onUpdateProgress(true, maxDuration, range, duration);
                 }
             }
         }

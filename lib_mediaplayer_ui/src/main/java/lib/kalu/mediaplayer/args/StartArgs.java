@@ -102,13 +102,19 @@ public class StartArgs {
         return subtitleUrl;
     }
 
-    // 试看时长
-    private long max;
+    // 限制最大时长
+    private long maxDuration;
 
-    public long getMax() {
-        return max;
+    public long getMaxDuration() {
+        return maxDuration;
     }
 
+    // 试看开关
+    private boolean trySee;
+
+    public boolean isTrySee() {
+        return trySee;
+    }
     // 起播快进指定位置
     private long seek;
 
@@ -168,7 +174,8 @@ public class StartArgs {
                 ", supportViewLifecycle=" + supportViewLifecycle +
                 ", mediaUrl='" + mediaUrl + '\'' +
                 ", subtitleUrl='" + subtitleUrl + '\'' +
-                ", max=" + max +
+                ", maxDuration=" + maxDuration +
+                ", trySee=" + trySee +
                 ", seek=" + seek +
                 ", live=" + live +
                 ", looping=" + looping +
@@ -193,7 +200,8 @@ public class StartArgs {
         this.supportViewLifecycle = builder.supportViewLifecycle;
         this.mediaUrl = builder.mediaUrl;
         this.subtitleUrl = builder.subtitleUrl;
-        this.max = builder.max;
+        this.maxDuration = builder.maxDuration;
+        this.trySee = builder.trySee;
         this.seek = builder.seek;
         this.live = builder.live;
         this.looping = builder.looping;
@@ -218,7 +226,8 @@ public class StartArgs {
         builder.supportViewLifecycle = supportViewLifecycle;
         builder.mediaUrl = mediaUrl;
         builder.subtitleUrl = subtitleUrl;
-        builder.max = max;
+        builder.maxDuration = maxDuration;
+        builder.trySee = trySee;
         builder.seek = seek;
         builder.live = live;
         builder.looping = looping;
@@ -270,11 +279,19 @@ public class StartArgs {
             return this;
         }
 
-        // 试看时长
-        private long max = 0;
+        // 显示最大时长
+        private long maxDuration = 0;
 
-        public Builder setMax(long max) {
-            this.max = max;
+        public Builder setMaxDuration(long max) {
+            this.maxDuration = max;
+            return this;
+        }
+
+        // 试看开关
+        private boolean trySee;
+
+        public Builder setTrySee(boolean v) {
+            this.trySee = v;
             return this;
         }
 
