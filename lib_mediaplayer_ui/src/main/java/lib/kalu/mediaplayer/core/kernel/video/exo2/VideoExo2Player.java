@@ -221,6 +221,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
     @Override
     public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
+        clear();
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -537,7 +538,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
     @Override
     public void release() {
-        resetParams();
+        clear();
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -590,7 +591,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
      */
     @Override
     public void stop() {
-        resetParams();
+        clear();
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");

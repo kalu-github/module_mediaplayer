@@ -71,6 +71,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
     @Override
     public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
+        clear();
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -346,7 +347,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        resetParams();
+        clear();
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -391,7 +392,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
     @Override
     public void stop() {
-        resetParams();
+        clear();
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -658,6 +659,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         public void onPrepared(IMediaPlayer iMediaPlayer) {
             LogUtil.log("VideoIjkPlayer => onPrepared =>");
             start();
+            startCheckPreparedPlaying(PlayerType.KernelType.IJK);
         }
     };
 

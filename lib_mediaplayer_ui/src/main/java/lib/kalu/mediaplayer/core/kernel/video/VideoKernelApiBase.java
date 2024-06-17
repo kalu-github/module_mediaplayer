@@ -5,6 +5,7 @@ import androidx.annotation.FloatRange;
 
 import org.json.JSONArray;
 
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
@@ -14,19 +15,6 @@ import lib.kalu.mediaplayer.util.LogUtil;
  */
 
 interface VideoKernelApiBase {
-
-    default void resetParams() {
-        mSeek[0] = 0L;
-        mMax[0] = 0L;
-        mLooping[0] = false;
-        mLive[0] = false;
-        mMute[0] = false;
-        mPlayWhenReady[0] = true;
-        mPrepared[0] = false;
-        mIjkMediaCodec[0] = true;
-    }
-
-    /*****/
 
     boolean[] mIjkMediaCodec = new boolean[]{true};
 
@@ -138,6 +126,16 @@ interface VideoKernelApiBase {
     default void setPrepared(boolean v) {
         mPrepared[0] = v;
     }
+
+    /*****/
+
+    void setKernelApi(VideoKernelApiEvent eventApi);
+
+    VideoKernelApiEvent getKernelApi();
+
+    void setPlayerApi(VideoPlayerApi playerApi);
+
+    VideoPlayerApi getPlayerApi();
 
     /*****/
 

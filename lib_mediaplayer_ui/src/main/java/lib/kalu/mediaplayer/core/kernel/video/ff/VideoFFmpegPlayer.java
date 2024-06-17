@@ -60,6 +60,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
     @Override
     public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
+        clear();
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -107,7 +108,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        resetParams();
+        clear();
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -163,7 +164,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
      */
     @Override
     public void stop() {
-        resetParams();
+        clear();
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -362,6 +363,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         public void onPrepared(FFmpegPlayer mp) {
             LogUtil.log("VideoFFmpegPlayer => onPrepared =>");
             start();
+            startCheckPreparedPlaying(PlayerType.KernelType.FFPLAYER);
         }
     };
 

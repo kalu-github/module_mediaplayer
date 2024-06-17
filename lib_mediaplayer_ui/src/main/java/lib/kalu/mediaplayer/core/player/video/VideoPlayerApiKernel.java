@@ -43,18 +43,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void stopHanlder() {
-        try {
-            VideoKernelApi videoKernel = getVideoKernel();
-            if (null == videoKernel)
-                throw new Exception("error: null == videoKernel");
-            videoKernel.stopCheckOpenUrlTimeout();
-            videoKernel.stopCheckLoadBufferingTimeout();
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => stopHanlder => " + e.getMessage());
-        }
-    }
-
     default void start(String url) {
         StartArgs.Builder builder = new StartArgs.Builder();
         StartArgs build = builder.build();
@@ -69,7 +57,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     @Override
     default void start(StartArgs args, String playUrl, boolean retryBuffering) {
         try {
-            stopHanlder();
             if (null == playUrl || playUrl.length() == 0)
                 throw new Exception("playUrl error: " + playUrl);
             callEventListener(PlayerType.StateType.STATE_INIT);

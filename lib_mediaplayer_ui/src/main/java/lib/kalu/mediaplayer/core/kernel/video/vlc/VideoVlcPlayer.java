@@ -53,6 +53,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
 
     @Override
     public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
+        clear();
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -115,7 +116,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        resetParams();
+        clear();
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -166,7 +167,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
      */
     @Override
     public void stop() {
-        resetParams();
+        clear();
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");

@@ -59,6 +59,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     @Override
     public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
 //        LogUtil.log("VideoAndroidPlayer => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
+        clear();
         try {
             if (url == null || url.length() == 0)
                 throw new IllegalArgumentException("url error: " + url);
@@ -138,7 +139,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        resetParams();
+        clear();
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -193,7 +194,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
      */
     @Override
     public void stop() {
-        resetParams();
+        clear();
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -441,47 +442,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         public void onPrepared(MediaPlayer mp) {
             LogUtil.log("VideoAndroidPlayer => onPrepared =>");
             start();
-//            mPrepared = true;
-//            start();
-//            try {
-//
-//                long seek = getSeek();
-//                // 起播快进
-//                if (seek > 0) {
-//                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
-//                    setSeek(0);
-//                    seekTo(seek);
-//                }
-//
-//                // 监听播放状态
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        long position = getPosition();
-//                        long olds = Math.max(position, seek);
-//                        while (true) {
-//                            if (null == mMediaPlayer || !mPrepared)
-//                                break;
-//                            long news = getPosition();
-//                            LogUtil.log("VideoAndroidPlayer => onPrepared => olds = " + olds + ", news = " + news);
-//                            if (news > olds) {
-//                                new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-//                                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
-//                                    }
-//                                });
-//                                break;
-//                            }
-//                            SystemClock.sleep(100);
-//                        }
-//                    }
-//                }).start();
-//
-//            } catch (Exception e) {
-//                LogUtil.log("VideoAndroidPlayer => onPrepared => " + e.getMessage());
-//            }
+            startCheckPreparedPlaying(PlayerType.KernelType.ANDROID);
         }
     };
 
