@@ -335,11 +335,11 @@ public final class TestActivity extends Activity {
 
         StartArgs.Builder builder = new StartArgs.Builder();
 
-        // 试看
+        // 试看 45s
         boolean trySee = getIntent().getBooleanExtra(INTENT_TRY_SEE, false);
         if (trySee) {
             builder.setTrySee(true);
-            builder.setMaxDuration(60 * 1000);
+            builder.setMaxDuration(45 * 1000);
         } else {
             builder.setTrySee(false);
         }
