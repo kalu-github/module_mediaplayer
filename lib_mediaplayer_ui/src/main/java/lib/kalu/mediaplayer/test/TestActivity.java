@@ -345,7 +345,6 @@ public final class TestActivity extends Activity {
         }
 
         builder.setSeek(seek);
-        builder.setTrySee(true);
         builder.setLive(live);
         builder.setMediaUrl(url);
         StartArgs build = builder.build();
