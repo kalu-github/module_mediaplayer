@@ -69,6 +69,7 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface StateType {
         int STATE_INIT = 3_001; // 播放未开始，即将进行
+        int STATE_SEEK_PLAY_RECORD = 3_002; // 续播
         int STATE_SEEK_START = 3_003; // 开始快进
         int STATE_SEEK_FINISH = 3_004; // 结束快进
         int STATE_CLEAN = 3_005; //
@@ -114,6 +115,7 @@ public @interface PlayerType {
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
                 STATE_INIT,
+                STATE_SEEK_PLAY_RECORD,
                 STATE_SEEK_START,
                 STATE_SEEK_FINISH,
                 STATE_FULL_START,
@@ -364,6 +366,7 @@ public @interface PlayerType {
         int EVENT_BUFFERING_STOP = 7_014;
         int EVENT_SEEK_START = 7_015;
         int EVENT_SEEK_FINISH = 7_016;
+        int EVENT_SEEK_PLAY_RECORD = 7_017;
         // 视频旋转信息
 //        int EVENT_VIDEO_ROTATION_CHANGED = IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
 //        int EVENT_AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;
@@ -397,6 +400,7 @@ public @interface PlayerType {
                 EVENT_BUFFERING_STOP,
                 EVENT_SEEK_START,
                 EVENT_SEEK_FINISH,
+                EVENT_SEEK_PLAY_RECORD,
 //                EVENT_VIDEO_ROTATION_CHANGED,
 //                EVENT_AUDIO_DECODED_START,
 //                EVENT_VIDEO_DECODED_START

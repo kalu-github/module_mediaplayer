@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(getApplicationContext(), TestActivity.class);
                 intent.putExtra(TestActivity.INTENT_URL, getUrl());
                 intent.putExtra(TestActivity.INTENT_LIVE, isLive());
-                intent.putExtra(TestActivity.INTENT_SEEK, getSeek());
+                intent.putExtra(TestActivity.INTENT_SEEK, isSeek());
                 intent.putExtra(TestActivity.INTENT_TRY_SEE, isTrySee());
                 startActivity(intent);
             }
@@ -64,19 +64,9 @@ public class MainActivity extends Activity {
         return "http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com".equals(url);
     }
 
-    private long getSeek() {
-        long seek;
+    private boolean isSeek() {
         RadioGroup radioGroup = findViewById(R.id.main_seek);
-        int id = radioGroup.getCheckedRadioButtonId();
-        switch (id) {
-            case R.id.main_seek_yes:
-                seek = 10 * 1000; // 10s
-                break;
-            default:
-                seek = 0;
-                break;
-        }
-        return seek;
+        return R.id.main_seek_yes == radioGroup.getCheckedRadioButtonId();
     }
 
     private boolean isTrySee() {

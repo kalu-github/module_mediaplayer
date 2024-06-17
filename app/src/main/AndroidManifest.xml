@@ -20,12 +20,6 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
         <activity
-            android:name="com.kalu.mediaplayer.SeekActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppFull" />
-        <activity
             android:name="com.kalu.mediaplayer.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"

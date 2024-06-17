@@ -14,6 +14,7 @@ import java.util.LinkedList;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
+import lib.kalu.mediaplayer.core.component.ComponentPlayRecord;
 import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
@@ -206,6 +207,9 @@ public final class TestActivity extends Activity {
         // try
         ComponentTrySee trys = new ComponentTrySee(getApplicationContext());
         componentApis.add(trys);
+        // 续播
+        ComponentPlayRecord playRecord = new ComponentPlayRecord(getApplicationContext());
+        componentApis.add(playRecord);
         // insert-component
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
         playerLayout.addAllComponent(componentApis);
@@ -327,10 +331,6 @@ public final class TestActivity extends Activity {
             return;
         }
 
-        long seek = getIntent().getLongExtra(INTENT_SEEK, 0);
-        if (seek <= 0) {
-            seek = getIntent().getIntExtra(INTENT_SEEK, 0);
-        }
         boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
 
         StartArgs.Builder builder = new StartArgs.Builder();
@@ -344,7 +344,14 @@ public final class TestActivity extends Activity {
             builder.setTrySee(false);
         }
 
-        builder.setSeek(seek);
+        // 续播 10s
+        boolean isSeek = getIntent().getBooleanExtra(INTENT_SEEK, false);
+        if (isSeek) {
+            builder.setSeek(10000L);
+        } else {
+            builder.setSeek(0L);
+        }
+
         builder.setLive(live);
         builder.setMediaUrl(url);
         StartArgs build = builder.build();
