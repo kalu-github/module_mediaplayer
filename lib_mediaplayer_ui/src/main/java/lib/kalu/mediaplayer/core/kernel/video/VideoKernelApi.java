@@ -1,16 +1,9 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
 import android.content.Context;
-import android.os.Looper;
-import android.os.Message;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 
-import androidx.annotation.NonNull;
-
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
@@ -19,7 +12,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
  * @date: 2021-05-12 09:40
  */
 
-public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBase, VideoKernelApiEvent {
+public interface VideoKernelApi extends VideoKernelApiCheck, VideoKernelApiBase, VideoKernelApiEvent {
 
     void onUpdateProgress();
 
@@ -29,9 +22,9 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
 
     void createDecoder(Context context);
 
-    void startDecoder(Context context, boolean prepareAsync, String url, Object... o);
+    void startDecoder(Context context, StartArgs args);
 
-    default void initOptions(Context context, Object... o) {
+    default void initOptions(Context context, StartArgs args) {
     }
 
     default void update(long seek, long max, boolean loop) {
@@ -40,33 +33,55 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
         setLooping(loop);
     }
 
-    default void initDecoder(Context context, String playUrl, StartArgs args, Object... o) {
+    default void clear() {
+        mConnectTimeout[0] = 0L;
+        mBufferingTimeoutRetry[0] = false;
+        mSeek[0] = 0L;
+        mMax[0] = 0L;
+        mLooping[0] = false;
+        mLive[0] = false;
+        mMute[0] = false;
+        mPrepareAsync[0] = true;
+        mPlayWhenReady[0] = true;
+        mPrepared[0] = false;
+        mIjkMediaCodec[0] = true;
+        stopCheckPreparedPlaying();
+        stopCheckConnectTimeout();
+        stopCheckBufferingTimeout();
+    }
 
-        long seek = args.getSeek();
-        setSeek(seek);
-        long max = args.getMax();
-        setMax(max);
-        boolean mute = args.isMute();
-        setMute(mute);
-        boolean loop = args.isLooping();
-        setLooping(loop);
-        boolean live = args.isLive();
-        setLive(live);
-        boolean playWhenReady = args.isPlayWhenReady();
-        setPlayWhenReady(playWhenReady);
-        boolean prepareAsync = args.isPrepareAsync();
-        LogUtil.log("VideoKernelApi => initDecoder => prepareAsync = " + prepareAsync + ", playWhenReady = " + playWhenReady + ", live = " + live + ", loop = " + loop + ", mute = " + mute + ", max = " + max + ", seek = " + seek + ", playUrl = " + playUrl);
-        startDecoder(context, prepareAsync, playUrl, o);
+    default void initDecoder(Context context, StartArgs args) {
 
-//        String musicUrl = bundle.getExternalMusicUrl();
-//        MPLogUtil.log("VideoKernelApi => update => musicUrl = " + musicUrl);
-//        setExternalMusicPath(musicUrl);
-//        boolean musicLoop = bundle.isExternalMusicLoop();
-//        MPLogUtil.log("VideoKernelApi => update => musicLoop = " + musicLoop);
-//        setExternalMusicLooping(musicLoop);
-//        boolean musicPlayWhenReady = bundle.isExternalMusicPlayWhenReady();
-//        MPLogUtil.log("VideoKernelApi => update => musicPlayWhenReady = " + musicPlayWhenReady);
-//        setisExternalMusicPlayWhenReady(musicPlayWhenReady);
+        clear();
+        LogUtil.log("VideoKernelApi => initDecoder => " + args.toString());
+
+        try {
+
+            long connectTimout = args.getConnectTimout();
+            setConnectTimeout(connectTimout);
+            boolean bufferingTimeoutRetry = args.isBufferingTimeoutRetry();
+            setBufferingTimeoutRetry(bufferingTimeoutRetry);
+
+            long seek = args.getSeek();
+            setSeek(seek);
+            long max = args.getMax();
+            setMax(max);
+            boolean mute = args.isMute();
+            setMute(mute);
+            boolean loop = args.isLooping();
+            setLooping(loop);
+            boolean live = args.isLive();
+            setLive(live);
+            boolean playWhenReady = args.isPlayWhenReady();
+            setPlayWhenReady(playWhenReady);
+            boolean prepareAsync = args.isPrepareAsync();
+            setPrepareAsync(prepareAsync);
+        } catch (Exception e) {
+        }
+
+
+        initOptions(context, args);
+        startDecoder(context, args);
     }
 
     /***********/

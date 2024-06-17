@@ -196,16 +196,16 @@ public class MainActivity extends Activity {
         int exoFFmpegId = ((RadioGroup) findViewById(R.id.main_exo_ffmpeg)).getCheckedRadioButtonId();
         switch (exoFFmpegId) {
             case R.id.main_exo_vff_amc:
-                exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC;
+                exoFFmpeg = PlayerType.ExoFFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC;
                 break;
             case R.id.main_exo_vmc_aff:
-                exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG;
+                exoFFmpeg = PlayerType.ExoFFmpegType.EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG;
                 break;
             case R.id.main_exo_vff_aff:
-                exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG;
+                exoFFmpeg = PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_FFMPEG;
                 break;
             default:
-                exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
+                exoFFmpeg = PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
                 break;
         }
 

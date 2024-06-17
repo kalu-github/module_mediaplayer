@@ -16,6 +16,32 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoKernelApiBase {
 
+    /*****/
+
+    long[] mConnectTimeout = new long[]{0L};
+
+    default void setConnectTimeout(long v) {
+        mConnectTimeout[0] = v;
+    }
+
+    default long getConnectTimeout() {
+        return mConnectTimeout[0];
+    }
+
+    /*****/
+
+    boolean[] mBufferingTimeoutRetry = new boolean[]{false};
+
+    default void setBufferingTimeoutRetry(boolean v) {
+        mBufferingTimeoutRetry[0] = v;
+    }
+
+    default boolean isBufferingTimeoutRetry() {
+        return mBufferingTimeoutRetry[0];
+    }
+
+    /*****/
+
     boolean[] mIjkMediaCodec = new boolean[]{true};
 
     default void setIjkMediaCodec(boolean v) {
@@ -102,6 +128,18 @@ interface VideoKernelApiBase {
     default void setMute(boolean v) {
         mMute[0] = v;
         setVolume(v ? 0f : 1f, v ? 0f : 1f);
+    }
+
+    /*****/
+
+    boolean[] mPrepareAsync = new boolean[]{true};
+
+    default void setPrepareAsync(boolean v) {
+        mPrepareAsync[0] = v;
+    }
+
+    default boolean isPrepareAsync() {
+        return mPrepareAsync[0];
     }
 
     /*****/

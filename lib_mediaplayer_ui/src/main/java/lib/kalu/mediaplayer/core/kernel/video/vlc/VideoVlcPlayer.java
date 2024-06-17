@@ -7,9 +7,11 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
 
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.vlc.util.VlcLogUtil;
 import lib.kalu.vlc.widget.OnVlcInfoChangeListener;
 import lib.kalu.vlc.widget.VlcPlayer;
 
@@ -52,12 +54,12 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
-        clear();
+    public void startDecoder(Context context, StartArgs args) {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
-            if (url == null || url.length() == 0)
+            String url = args.getMediaUrl();
+            if (url == null)
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);
             mVlcPlayer.setDataSource(Uri.parse(url), isPlayWhenReady());
@@ -65,6 +67,20 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
         } catch (Exception e) {
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_STOP);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_ERROR_URL);
+        }
+    }
+
+    @Override
+    public void initOptions(Context context, StartArgs args) {
+        try {
+            if (null == mVlcPlayer)
+                throw new Exception("mVlcPlayer error: null");
+            Class<?> clazz = Class.forName("lib.kalu.vlc.util.VlcLogUtil");
+            if (null == clazz)
+                throw new Exception("warning: lib.kalu.vlc.util.VlcLogUtil not find");
+            boolean log = args.isLog();
+            VlcLogUtil.setLogger(log);
+        } catch (Exception e) {
         }
     }
 

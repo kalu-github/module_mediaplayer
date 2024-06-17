@@ -104,20 +104,4 @@ interface VideoPlayerApiCache {
         String value = content.toString();
         return value;
     }
-
-    default void saveBundle( Context context,  String url,  long position,  long duration) {
-
-        try {
-            if (null == url || url.length() == 0)
-                throw new Exception("url error: " + url);
-            JSONObject object = new JSONObject();
-            object.putOpt("url", url);
-            object.putOpt("position", position);
-            object.putOpt("duration", duration);
-            String s = object.toString();
-            setCache(context, "save_bundle", s);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => saveBundle => " + e.getMessage());
-        }
-    }
 }

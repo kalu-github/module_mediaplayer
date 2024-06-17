@@ -23,6 +23,8 @@ import androidx.annotation.StringRes;
 
 import java.io.File;
 
+import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
@@ -348,7 +350,7 @@ public interface ComponentApi {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.stop(true);
+            playerView.stop(true, true);
         } catch (Exception e) {
             LogUtil.log("ComponentApi => toggle => " + e.getMessage());
         }
@@ -365,33 +367,21 @@ public interface ComponentApi {
         }
     }
 
-    default String getUrl() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            String url = playerView.getUrl();
-            if (null == url || url.length() == 0)
-                throw new Exception("url error: " + url);
-            return url;
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => getUrl => " + e.getMessage());
-            return null;
-        }
-    }
-
-    default String getData() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            String data = playerView.getData();
-            if (null == data || data.length() == 0)
-                throw new Exception("data error: " + data);
-            return data;
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => getData => " + e.getMessage());
-            return null;
-        }
-    }
+//    default String getUrl() {
+//        try {
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("playerView error: null");
+//            StartArgs tag = ((VideoPlayerApi) playerView).getTag();
+//            if(null == tag)
+//                throw new Exception("");
+//            String url = playerView.getUrl();
+//            if (null == url || url.length() == 0)
+//                throw new Exception("url error: " + url);
+//            return url;
+//        } catch (Exception e) {
+//            LogUtil.log("ComponentApi => getUrl => " + e.getMessage());
+//            return null;
+//        }
+//    }
 }

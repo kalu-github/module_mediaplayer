@@ -42,17 +42,7 @@ public class LogBuriedEvent implements BuriedEvent {
     }
 
     @Override
-    public void onWindowFull(String url, long position, long duration) {
-
-    }
-
-    @Override
-    public void onWindowFloat(String url, long position, long duration) {
-
-    }
-
-    @Override
-    public void onWindowSimple(String url, long position, long duration) {
+    public void onWindow(int value, String url, long position, long duration) {
 
     }
 }

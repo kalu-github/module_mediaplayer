@@ -3,9 +3,6 @@ package lib.kalu.mediaplayer.test;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -27,7 +24,7 @@ import lib.kalu.mediaplayer.core.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.component.ComponentBuffering;
 import lib.kalu.mediaplayer.core.component.ComponentPause;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
-import lib.kalu.mediaplayer.core.component.ComponentTry;
+import lib.kalu.mediaplayer.core.component.ComponentTryToSee;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
@@ -199,7 +196,7 @@ public final class TestActivity extends Activity {
         ComponentPause pause = new ComponentPause(getApplicationContext());
         componentApis.add(pause);
         // try
-        ComponentTry trys = new ComponentTry(getApplicationContext());
+        ComponentTryToSee trys = new ComponentTryToSee(getApplicationContext());
         componentApis.add(trys);
         // insert-component
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
@@ -337,8 +334,10 @@ public final class TestActivity extends Activity {
         builder.setSeek(seek);
         builder.setMax(max);
         builder.setLive(live);
+        builder.setMediaUrl(url);
+        StartArgs build = builder.build();
         PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-        videoLayout.start(builder.build(), url);
+        videoLayout.start(build);
     }
 
     private void startFull() {
@@ -382,24 +381,24 @@ public final class TestActivity extends Activity {
         super.finish();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-        videoLayout.resume(false);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-        videoLayout.pause(false);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-        videoLayout.release(true);
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+//        videoLayout.resume(false);
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+//        videoLayout.pause(false);
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+//        videoLayout.release(true);
+//    }
 }

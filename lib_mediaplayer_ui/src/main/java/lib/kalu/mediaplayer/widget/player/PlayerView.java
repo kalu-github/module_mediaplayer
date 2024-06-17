@@ -45,6 +45,24 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     }
 
     @Override
+    protected void onDetachedFromWindow() {
+        detachedFromWindow();
+        super.onDetachedFromWindow();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        attachedToWindow();
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        windowVisibilityChanged(visibility);
+        super.onWindowVisibilityChanged(visibility);
+    }
+
+    @Override
     public void addComponent(ComponentApi componentApi) {
         VideoPlayerApi.super.addComponent(componentApi);
     }

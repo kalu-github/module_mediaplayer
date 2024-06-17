@@ -1,25 +1,7 @@
 <resources>
 
     <item name="module_mediaplayer_id_seek_position" type="id" />
-
-    <!-- string -->
-    <item name="module_mediaplayer_id_player_position" type="id" />
-    <item name="module_mediaplayer_id_player_url" type="id" />
-    <item name="module_mediaplayer_id_player_data" type="id" />
-    <!-- boolean -->
-    <item name="module_mediaplayer_id_player_looping" type="id" />
-    <item name="module_mediaplayer_id_player_looping_release" type="id" />
-    <!--    <item name="module_mediaplayer_id_player_event_release" type="id" />-->
-    <item name="module_mediaplayer_id_player_window_visibility_changed_release" type="id" />
-    <item name="module_mediaplayer_id_player_switch_window_check_playing" type="id" />
-
-    <!-- external music -->
-    <!-- string -->
-    <item name="module_mediaplayer_id_player_external_music_url" type="id" />
-    <!-- boolean -->
-    <item name="module_mediaplayer_id_player_external_music_looping" type="id" />
-    <item name="module_mediaplayer_id_player_external_music_seek" type="id" />
-    <item name="module_mediaplayer_id_player_external_music_play_when_ready" type="id" />
+    <item name="module_mediaplayer_id_startargs" type="id" />
 
     <!-- id -->
     <item name="module_mediaplayer_root" type="id" />

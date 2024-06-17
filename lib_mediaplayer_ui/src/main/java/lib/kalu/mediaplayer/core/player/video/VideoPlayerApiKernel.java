@@ -23,113 +23,65 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         VideoPlayerApiRender,
         VideoPlayerApiDevice {
 
-    default void setData(String data) {
+    default void setTags(StartArgs args) {
         try {
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_data, data);
+            ((View) this).setTag(R.id.module_mediaplayer_id_startargs, args);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => setData => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => setTags => " + e.getMessage());
         }
     }
 
-    default String getData() {
+    default StartArgs getTags() {
         try {
-            Object tag = ((View) this).getTag(R.id.module_mediaplayer_id_player_data);
+            Object tag = ((View) this).getTag(R.id.module_mediaplayer_id_startargs);
             if (null == tag)
-                throw new Exception("tag error: null");
-            return (String) tag;
+                throw new Exception("warning: tag null");
+            return (StartArgs) tag;
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => getData => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => getTags => " + e.getMessage());
             return null;
         }
     }
 
     default void start(String url) {
-        StartArgs.Builder builder = new StartArgs.Builder();
-        StartArgs build = builder.build();
-        start(build, url, false);
-    }
-
-
-    default void start(StartArgs builder, String playUrl) {
-        start(builder, playUrl, false);
+        StartArgs build = new StartArgs.Builder().setMediaUrl(url).build();
+        start(build);
     }
 
     @Override
-    default void start(StartArgs args, String playUrl, boolean retryBuffering) {
+    default void start(StartArgs args) {
         try {
-            if (null == playUrl || playUrl.length() == 0)
-                throw new Exception("playUrl error: " + playUrl);
+            String url = args.getMediaUrl();
+            if (null == url)
+                throw new Exception("error: url null");
             callEventListener(PlayerType.StateType.STATE_INIT);
             // 1
-            PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
-            LogUtil.setLogger(playerBuilder);
+            boolean log = args.isLog();
+            LogUtil.setLogger(log);
             // 2
-            setScreenKeep(true);
-            // 3
-            boolean kernelAlwaysRelease = playerBuilder.isKernelAlwaysRelease();
-            if (!kernelAlwaysRelease) {
-                stop(false);
+            boolean initRelease = args.isInitRelease();
+            if (initRelease) {
+                release(true, true, false);
+            } else {
+                stop(true, true);
             }
+            // 3
+            int kernelType = args.getKernelType();
+            checkKernelNull(kernelType, false);
             // 4
-            int kernelType = playerBuilder.getKernel();
-            checkKernelNull(kernelAlwaysRelease, kernelType);
+            int renderType = args.getRenderType();
+            checkRenderNull(renderType, false);
             // 5
-            int renderType = playerBuilder.getRender();
-            checkRenderNull(kernelAlwaysRelease, renderType);
-            // 6
             attachRenderKernel();
+            // 6
+            setKernelEvent(args);
             // 7
-            boolean bufferingTimeoutRetry = playerBuilder.getBufferingTimeoutRetry();
-            boolean log = playerBuilder.isLog();
-            int seekParameters = playerBuilder.getExoSeekParameters();
-            int connectTimeout = playerBuilder.getConnectTimeout();
-            boolean live = args.isLive();
-            // 0: url
-            // 1: connentTimeout
-            // 2: log
-            // 3: seekParams
-            // 4: bufferingTimeoutRetry
-            // 5: kernelAlwaysRelease
-            // 6: live
-            Object[] objects = new Object[]{playUrl, connectTimeout, log, seekParameters, bufferingTimeoutRetry, kernelAlwaysRelease, live};
-            setKernelEvent(args, objects);
-            // 4
-            startDecoder(playUrl, args, objects);
+            startDecoder(args);
             // 8
-            updatePlayerData(args, playUrl);
+            setTags(args);
+            setScreenKeep(true);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());
-        }
-    }
-
-    default void updatePlayerData(StartArgs data, String playUrl) {
-        try {
-            if (null == data)
-                throw new Exception("data error: null");
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_url, playUrl);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_looping, data.isLooping());
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_looping_release, data.isLoopingRelease());
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release, data.isWindowVisibilityChangedRelease());
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => updatePlayerData => " + e.getMessage());
-        }
-    }
-
-    default StartArgs getStartBuilder() {
-        try {
-            String url = getUrl();
-            if (null == url || url.length() <= 0) throw new Exception();
-            StartArgs.Builder builder = new StartArgs.Builder();
-            builder.setMax(getMax());
-            builder.setSeek(getSeek());
-            builder.setLooping(isLooping());
-            builder.setLoopingRelease(isLoopingRelease());
-            builder.setLive(isLive());
-            builder.setMute(isMute());
-            builder.setWindowVisibilityChangedRelease(isWindowVisibilityChangedRelease());
-            return builder.build();
-        } catch (Exception e) {
-            return null;
         }
     }
 
@@ -188,34 +140,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
 
-    default void release() {
-        release(true, true, true);
-    }
-
-    default void release(boolean releaseTag, boolean isFromUser) {
-        release(true, releaseTag, isFromUser);
-    }
-
-    default void release(boolean clearListener, boolean releaseTag, boolean isFromUser) {
-        try {
-            if (releaseTag) {
-                setData(null);
-                releaseTag();
-            }
-            releaseRender();
-            releaseKernel(isFromUser);
-            if (clearListener) {
-                removeOnPlayerEventListener();
-                removeOnPlayerProgressListener();
-                removeOnPlayerWindowListener();
-            }
-            callEventListener(PlayerType.StateType.STATE_RELEASE);
-        } catch (Exception e) {
-            callEventListener(PlayerType.StateType.STATE_RELEASE_EXCEPTION);
-            LogUtil.log("VideoPlayerApiKernel => release => " + e.getMessage());
-        }
-    }
-
     default void toggle() {
         toggle(true);
     }
@@ -247,34 +171,57 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void stop() {
-        stop(true);
+        stop(true, true);
     }
 
-    default void stop(boolean callEvent) {
-        releaseTag();
-        releaseSeek();
-        setPlayWhenReady(false);
+    default void stop(boolean clearTag, boolean callEvent) {
+        if (clearTag) {
+            setTags(null);
+        }
         setScreenKeep(false);
         stopKernel(callEvent);
     }
 
-    default void restart() {
-        restart(0, false, true);
+    default void release() {
+        release(true, true, true);
     }
 
-    default void restart(long seek, boolean retryBuffering, boolean callEvent) {
+    default void release(boolean clearListener, boolean clearTag, boolean isFromUser) {
         try {
-            String url = getUrl();
-            if (null == url || url.length() == 0)
-                throw new Exception("url error: " + url);
-            setSeek(seek);
-            StartArgs builder = getStartBuilder();
-            if (null == builder)
-                throw new Exception("builder error: null");
+            if (clearTag) {
+                setTags(null);
+            }
+            releaseRender();
+            releaseKernel(isFromUser);
+            if (clearListener) {
+                removeOnPlayerEventListener();
+                removeOnPlayerProgressListener();
+                removeOnPlayerWindowListener();
+            }
+            callEventListener(PlayerType.StateType.STATE_RELEASE);
+        } catch (Exception e) {
+            callEventListener(PlayerType.StateType.STATE_RELEASE_EXCEPTION);
+            LogUtil.log("VideoPlayerApiKernel => release => " + e.getMessage());
+        }
+    }
+
+    default void restart() {
+        restart(0L, true);
+    }
+
+    default void restart(long position, boolean callEvent) {
+        try {
+            StartArgs args = getTags();
+            if (null == args)
+                throw new Exception("error: args null");
+            String url = args.getMediaUrl();
+            if (null == url)
+                throw new Exception("error: url null");
             if (callEvent) {
                 callEventListener(PlayerType.StateType.STATE_RESTAER);
             }
-            start(builder, url, retryBuffering);
+            StartArgs build = args.newBuilder().setSeek(position).build();
+            start(build);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => restart => " + e.getMessage());
         }
@@ -285,7 +232,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void resume(boolean callEvent) {
-        setPlayWhenReady(true);
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -293,68 +239,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             resumeVideoKernel(callEvent);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => resume => " + e.getMessage());
-        }
-    }
-
-    default boolean isLooping() {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            return kernel.isLooping();
-        } catch (Exception e) {
-            return (boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_looping);
-        }
-    }
-
-    default boolean isLoopingRelease() {
-        try {
-            return (Boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_looping_release);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    default boolean isWindowVisibilityChangedRelease() {
-        try {
-            return (Boolean) ((View) this).getTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    default long getSeek() {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            Object tag = ((View) this).getTag(R.id.module_mediaplayer_id_player_position);
-            if (null != tag) {
-                kernel.setSeek((Long) tag);
-            }
-            return kernel.getSeek();
-        } catch (Exception e) {
-            return 0L;
-        }
-    }
-
-    default void setSeek(long position) {
-        try {
-            if (position < 0)
-                throw new Exception("position error: " + position);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_position, position);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => setSeek => " + e.getMessage());
-        }
-    }
-
-    default void releaseSeek() {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("kernel error: null");
-            long position = kernel.getPosition();
-            if (position < 0)
-                throw new Exception("position error: " + position);
-            setSeek(position);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => releaseSeek => " + e.getMessage());
         }
     }
 
@@ -367,77 +251,19 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default String getUrl() {
+    default void seekTo(long position) {
         try {
-            return (String) ((View) this).getTag(R.id.module_mediaplayer_id_player_url);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    default void releaseTag() {
-        try {
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_url, null);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_position, null);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_looping, null);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_looping_release, null);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_window_visibility_changed_release, null);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_external_music_url, null);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_external_music_looping, null);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_external_music_seek, null);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_external_music_play_when_ready, null);
-        } catch (Exception e) {
-        }
-    }
-
-    default void seekTo(boolean force) {
-        StartArgs.Builder builder = new StartArgs.Builder();
-        builder.setMax(getMax());
-        builder.setSeek(getSeek());
-        builder.setLooping(isLooping());
-        builder.setLoopingRelease(isLoopingRelease());
-        builder.setLive(isLive());
-        builder.setMute(isMute());
-        builder.setWindowVisibilityChangedRelease(isWindowVisibilityChangedRelease());
-        StartArgs build = builder.build();
-        seekTo(force, build);
-    }
-
-    default void seekTo(long seek) {
-        seekTo(false, seek, getMax(), isLooping());
-    }
-
-    default void seekTo(long seek, long max) {
-        seekTo(false, seek, max, isLooping());
-    }
-
-    default void seekTo(boolean force, long seek) {
-        seekTo(force, seek, getMax(), isLooping());
-    }
-
-    default void seekTo(boolean force, long seek, long max, boolean looping) {
-        StartArgs.Builder builder = new StartArgs.Builder();
-        builder.setMax(max);
-        builder.setSeek(seek);
-        builder.setLooping(looping);
-        builder.setLoopingRelease(isLoopingRelease());
-        builder.setLive(isLive());
-        builder.setWindowVisibilityChangedRelease(isWindowVisibilityChangedRelease());
-        StartArgs build = builder.build();
-        seekTo(force, build);
-    }
-
-    default void seekTo(boolean force, StartArgs builder) {
-        try {
+            if (position < 0) {
+                position = 0;
+            }
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            if (force) {
-                updateVideoKernel(builder);
-            }
-            long seek = builder.getSeek();
-            seekToVideoKernel(seek);
+            kernel.seekTo(position);
+            setScreenKeep(true);
+            callEventListener(PlayerType.StateType.STATE_INIT_SEEK);
         } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => seekToVideoKernel => " + e.getMessage());
         }
     }
 
@@ -497,7 +323,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     /*********************/
 
     default void resumeVideoKernel(boolean callEvent) {
-        setPlayWhenReady(true);
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -542,48 +367,29 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void seekToVideoKernel(long milliSeconds) {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
-            kernel.seekTo(milliSeconds);
-            setScreenKeep(true);
-            if (milliSeconds <= 0)
-                return;
-            callEventListener(PlayerType.StateType.STATE_INIT_SEEK);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => seekToVideoKernel => " + e.getMessage());
-        }
-    }
+//    default void updateVideoKernel(StartArgs builder) {
+//        try {
+//            VideoKernelApi kernel = getVideoKernel();
+//            if (null == kernel)
+//                throw new Exception("warning: kernel null");
+//            long seek = builder.getSeek();
+//            long max = builder.getMax();
+//            boolean loop = builder.isLooping();
+//            kernel.update(seek, max, loop);
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApiKernel => updateVideoKernel => " + e.getMessage());
+//        }
+//    }
 
-    default void updateVideoKernel(StartArgs builder) {
+    default void startDecoder(StartArgs args) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            long seek = builder.getSeek();
-            long max = builder.getMax();
-            boolean loop = builder.isLooping();
-            kernel.update(seek, max, loop);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => updateVideoKernel => " + e.getMessage());
-        }
-    }
-
-    default void startDecoder(String playUrl, StartArgs args, Object... o) {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
-            kernel.initDecoder(getBaseContext(), playUrl, args, o);
+            kernel.initDecoder(getBaseContext(), args);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => startDecoder => " + e.getMessage());
         }
-    }
-
-    default void playEnd() {
-        setScreenKeep(false);
     }
 
     /***************************/
@@ -601,9 +407,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void checkKernelNull(boolean releaseKernel, int kernelType) {
+    default void checkKernelNull(int kernelType, boolean release) {
         try {
-            if (releaseKernel) {
+            if (release) {
                 releaseKernel(false);
             }
             VideoKernelApi videoKernel = getVideoKernel();
@@ -617,7 +423,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void setKernelEvent(StartArgs args, Object... o) {
+    default void setKernelEvent(StartArgs args) {
 
         try {
             VideoKernelApi videoKernel = getVideoKernel();
@@ -627,24 +433,30 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             videoKernel.setKernelApi(new VideoKernelApiEvent() {
 
                 @Override
-                public void onUpdateProgress(boolean isLooping, long max, long position, long duration) {
+                public void onUpdateProgress(long position, long duration) {
 
-                    callProgressListener(max, position, duration);
                     try {
-                        if (max <= 0 || position <= max)
-                            throw new Exception("time warning: max = " + max + ", position = " + position + ", duration = " + duration + ", isLooping = " + isLooping);
-                        callEventListener(PlayerType.StateType.STATE_TRY_COMPLETE);
-                        // 试看1
-                        if (isLooping) {
-                            seekTo(true);
-                        }
-                        // 试看2
-                        else {
+                        long max = args.getMax();
+                        callProgressListener(max, position, duration);
+                    } catch (Exception e) {
+                    }
+
+                    // 试看
+                    try {
+                        long max = args.getMax();
+                        if (max <= 0)
+                            throw new Exception("warning: max <= 0");
+                        if (max <= position)
+                            throw new Exception("warning: max <= position");
+                        callEventListener(PlayerType.StateType.STATE_TRY_TO_SEE_FINISH);
+                        boolean looping = args.isLooping();
+                        if (looping) {
+                            seekTo(0);
+                        } else {
                             pause(true);
-                            playEnd();
+                            setScreenKeep(false);
                         }
                     } catch (Exception e) {
-//                        MPLogUtil.log("VideoPlayerApiKernel => onUpdateTimeMillis => " + e.getMessage());
                     }
                 }
 
@@ -674,12 +486,15 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             // 3: seekParams
                             // 4: bufferingTimeoutRetry
                             // 5: kernelAlwaysRelease
-                            getVideoKernel().startCheckLoadBufferingTimeout((boolean) o[5], (boolean) o[4], (int) o[1]);
+                            // 6: live
+//                            boolean bufferingTimeoutRetry = (boolean) o[4];
+//                            int connentTimeout = (int) o[1];
+//                            getVideoKernel().startCheckBufferingTimeout(bufferingTimeoutRetry, connentTimeout);
                             break;
                         // 缓冲结束
                         case PlayerType.EventType.EVENT_BUFFERING_STOP:
                             callEventListener(PlayerType.StateType.STATE_BUFFERING_STOP);
-                            getVideoKernel().stopCheckLoadBufferingTimeout();
+//                            getVideoKernel().stopCheckPreparedPlaying();
                             break;
 //                        // 播放开始
 //                        case PlayerType.EventType.EVENT_VIDEO_START_903:
@@ -745,10 +560,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                            // step3
                             checkVideoView();
                             // step4
-                            boolean playWhenReady2 = isPlayWhenReady();
-                            if (!playWhenReady2) {
+                            boolean playWhenReady = args.isPlayWhenReady();
+                            if (!playWhenReady) {
                                 pause();
-                                setPlayWhenReady(true);
                                 callEventListener(PlayerType.StateType.STATE_START_PLAY_WHEN_READY_PAUSE);
                             }
                             break;
@@ -759,6 +573,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         case PlayerType.EventType.EVENT_ERROR_SOURCE:
                         case PlayerType.EventType.EVENT_ERROR_PARSE:
                         case PlayerType.EventType.EVENT_ERROR_NET:
+                        case PlayerType.EventType.EVENT_ERROR_BUFFERING_TIMEOUT:
                             // 埋点
                             onBuriedEventError();
                             setScreenKeep(false);
@@ -770,20 +585,11 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             // 埋点
                             onBuriedEventCompletion();
 
-                            boolean looping = isLooping();
-                            boolean loopingRelease = isLoopingRelease();
-                            // loop1
-                            if (looping && loopingRelease) {
-                                release(false, false);
+                            boolean looping = args.isLooping();
+                            if (looping) {
                                 restart();
-                            }
-                            // loop2
-                            else if (looping) {
-                                seekTo(true, args);
-                            }
-                            // sample
-                            else {
-                                playEnd();
+                            } else {
+                                setScreenKeep(false);
                             }
                             break;
                     }

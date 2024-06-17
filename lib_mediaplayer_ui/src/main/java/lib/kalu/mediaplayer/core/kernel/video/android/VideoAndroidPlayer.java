@@ -14,6 +14,7 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
 
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -57,29 +58,23 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
-//        LogUtil.log("VideoAndroidPlayer => startDecoder => mMediaPlayer = " + mMediaPlayer + ", url = " + url + ", prepareAsync = " + prepareAsync);
-        clear();
+    public void startDecoder(Context context, StartArgs args) {
         try {
-            if (url == null || url.length() == 0)
-                throw new IllegalArgumentException("url error: " + url);
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
-            initOptions(context, o);
+            String url = args.getMediaUrl();
+            if (url == null)
+                throw new Exception("url error: " + url);
             // 拉流
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_START);
             initListener();
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);
+            boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
                 mMediaPlayer.prepareAsync();
             } else {
                 mMediaPlayer.prepare();
             }
-            // 监测网络连接超时
-        } catch (IllegalArgumentException e) {
-            LogUtil.log("VideoAndroidPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_ERROR_URL);
         } catch (Exception e) {
             LogUtil.log("VideoAndroidPlayer => startDecoder => " + e.getMessage());
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
@@ -88,21 +83,15 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void initOptions(Context context, Object... o) {
+    public void initOptions(Context context, StartArgs args) {
         // 拉流超时
         try {
-            // 0: url
-            // 1: connentTimeout
-            // 2: log
-            // 3: seekParams
-            // 4: bufferingTimeoutRetry
-            // 5: kernelAlwaysRelease
-            // 6: live
-            int connectTimeout = (int) o[1];
-            boolean releaseKernel = (boolean) o[5];
-            long startTime = System.currentTimeMillis();
-            startCheckOpenUrlTimeout(releaseKernel, startTime, connectTimeout);
+            if (null == mMediaPlayer)
+                throw new Exception("mMediaPlayer error: null");
+            long connectTimeout = args.getConnectTimout();
+            startCheckConnectTimeout(PlayerType.KernelType.ANDROID, connectTimeout);
         } catch (Exception e) {
+            LogUtil.log("VideoAndroidPlayer => initOptions => " + e.getMessage());
         }
     }
 

@@ -26,10 +26,12 @@ public class SeekActivity extends Activity {
             }
         });
 
+        String url = getIntent().getStringExtra(INTENT_URL);
+        StartArgs build = new StartArgs.Builder().setMediaUrl(url).build();
+
         PlayerLayout playerViewGroup = findViewById(R.id.seek_video);
         playerViewGroup.addComponent(new ComponentSeek(this));
         playerViewGroup.addComponent(new ComponentLoading(this));
-        String url = getIntent().getStringExtra(INTENT_URL);
-        playerViewGroup.start(new StartArgs.Builder().build(), url);
+        playerViewGroup.start(build);
     }
 }

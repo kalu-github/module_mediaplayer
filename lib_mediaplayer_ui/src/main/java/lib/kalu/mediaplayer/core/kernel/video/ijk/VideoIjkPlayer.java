@@ -25,6 +25,7 @@ import lib.kalu.ijkplayer.inter.OnTimedTextListener;
 import lib.kalu.ijkplayer.inter.OnVideoSizeChangedListener;
 import lib.kalu.ijkplayer.misc.IMediaFormat;
 import lib.kalu.ijkplayer.misc.IjkTrackInfo;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -70,17 +71,17 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
-        clear();
+    public void startDecoder(Context context, StartArgs args) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
+            String url = args.getMediaUrl();
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
-            initOptions(context, o);
             initListener();
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
+            boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
                 mIjkPlayer.prepareAsync();
             } else {
@@ -93,26 +94,33 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
     // player => ff_ffplay_options.h
     @Override
-    public void initOptions(Context context, Object... o) {
+    public void initOptions(Context context, StartArgs args) {
+
+        // log
+        try {
+            if (null == mIjkPlayer)
+                throw new Exception("mIjkPlayer error: null");
+            Class<?> clazz = Class.forName("lib.kalu.ijkplayer.util.IjkLogUtil");
+            if (null == clazz)
+                throw new Exception("warning: lib.kalu.ijkplayer.util.IjkLogUtil not find");
+            boolean log = args.isLog();
+            lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(log);
+        } catch (Exception e) {
+        }
 
         // 拉流超时
         try {
-            // 0: url
-            // 1: connentTimeout
-            // 2: log
-            // 3: seekParams
-            // 4: bufferingTimeoutRetry
-            // 5: kernelAlwaysRelease
-            // 6: live
-            int connectTimeout = (int) o[1];
-            boolean releaseKernel = (boolean) o[5];
-            long startTime = System.currentTimeMillis();
-            startCheckOpenUrlTimeout(releaseKernel, startTime, connectTimeout);
+            if (null == mIjkPlayer)
+                throw new Exception("mIjkPlayer error: null");
+            long connectTimeout = args.getConnectTimout();
+            startCheckConnectTimeout(isIjkMediaCodec() ? PlayerType.KernelType.IJK_MEDIACODEC : PlayerType.KernelType.IJK, connectTimeout);
         } catch (Exception e) {
         }
 
         // ijk options
         try {
+            if (null == mIjkPlayer)
+                throw new Exception("mIjkPlayer error: null");
             int player = IjkMediaPlayer.OPT_CATEGORY_PLAYER;
             // 禁用音频
             mIjkPlayer.setOption(player, "an", 0);
@@ -155,7 +163,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // 4: bufferingTimeoutRetry
             // 5: kernelAlwaysRelease
             // 6: live
-            boolean isLive = (boolean) o[6];
+            boolean isLive = args.isLive();
             mIjkPlayer.setOption(player, "infbuf", isLive ? 1 : 0);
             // 预读数据的缓冲区大小 => [0, 15 * 1024 * 1024]
             mIjkPlayer.setOption(player, "max-buffer-size", 400 * 1024); // 400KB

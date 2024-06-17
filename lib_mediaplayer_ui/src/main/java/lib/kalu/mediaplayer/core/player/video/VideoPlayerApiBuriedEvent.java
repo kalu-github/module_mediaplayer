@@ -1,5 +1,6 @@
 package lib.kalu.mediaplayer.core.player.video;
 
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -13,7 +14,13 @@ interface VideoPlayerApiBuriedEvent {
             BuriedEvent buriedEvent = PlayerSDK.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
-            String url = ((VideoPlayerApi) this).getUrl();
+
+            String url = null;
+            StartArgs tags = ((VideoPlayerApi) this).getTags();
+            if (null != tags) {
+                url = tags.getMediaUrl();
+            }
+
             long position = ((VideoPlayerApi) this).getPosition();
             long duration = ((VideoPlayerApi) this).getDuration();
             buriedEvent.onPlaying(url, position, duration);
@@ -29,7 +36,13 @@ interface VideoPlayerApiBuriedEvent {
             BuriedEvent buriedEvent = PlayerSDK.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
-            String url = ((VideoPlayerApi) this).getUrl();
+
+            String url = null;
+            StartArgs tags = ((VideoPlayerApi) this).getTags();
+            if (null != tags) {
+                url = tags.getMediaUrl();
+            }
+
             long position = ((VideoPlayerApi) this).getPosition();
             long duration = ((VideoPlayerApi) this).getDuration();
             buriedEvent.onPause(url, position, duration);
@@ -45,7 +58,13 @@ interface VideoPlayerApiBuriedEvent {
             BuriedEvent buriedEvent = PlayerSDK.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
-            String url = ((VideoPlayerApi) this).getUrl();
+
+            String url = null;
+            StartArgs tags = ((VideoPlayerApi) this).getTags();
+            if (null != tags) {
+                url = tags.getMediaUrl();
+            }
+
             long position = ((VideoPlayerApi) this).getPosition();
             long duration = ((VideoPlayerApi) this).getDuration();
             buriedEvent.onResume(url, position, duration);
@@ -61,7 +80,13 @@ interface VideoPlayerApiBuriedEvent {
             BuriedEvent buriedEvent = PlayerSDK.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
-            String url = ((VideoPlayerApi) this).getUrl();
+
+            String url = null;
+            StartArgs tags = ((VideoPlayerApi) this).getTags();
+            if (null != tags) {
+                url = tags.getMediaUrl();
+            }
+
             long position = ((VideoPlayerApi) this).getPosition();
             long duration = ((VideoPlayerApi) this).getDuration();
             buriedEvent.onError(url, position, duration);
@@ -77,7 +102,13 @@ interface VideoPlayerApiBuriedEvent {
             BuriedEvent buriedEvent = PlayerSDK.init().getPlayerBuilder().getBuriedEvent();
             if (null == buriedEvent)
                 throw new Exception("buriedEvent warning: null");
-            String url = ((VideoPlayerApi) this).getUrl();
+
+            String url = null;
+            StartArgs tags = ((VideoPlayerApi) this).getTags();
+            if (null != tags) {
+                url = tags.getMediaUrl();
+            }
+
             long position = ((VideoPlayerApi) this).getPosition();
             long duration = ((VideoPlayerApi) this).getDuration();
             buriedEvent.onCompletion(url, position, duration);

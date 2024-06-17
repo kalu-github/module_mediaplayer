@@ -226,36 +226,11 @@ interface VideoPlayerApiBase {
         }
     }
 
-    default void setPlayWhenReady(boolean playWhenReady) {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("kernel error: null");
-            kernel.setPlayWhenReady(playWhenReady);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => setPlayWhenReady => " + e.getMessage());
-        }
-    }
-
-    default boolean isPlayWhenReady() {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("kernel error: null");
-            return kernel.isPlayWhenReady();
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => isPlayWhenReady => " + e.getMessage());
-            return false;
-        }
-    }
-
     VideoKernelApi getVideoKernel();
 
     void setVideoKernel(VideoKernelApi kernel);
 
     void start(String url);
 
-    void start(StartArgs builder, String playUrl);
-
-    void start(StartArgs builder, String playUrl, boolean retryBuffering);
+    void start(StartArgs builder);
 }

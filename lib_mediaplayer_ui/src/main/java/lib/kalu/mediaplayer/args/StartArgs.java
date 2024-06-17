@@ -1,139 +1,332 @@
 package lib.kalu.mediaplayer.args;
 
 
+import lib.kalu.mediaplayer.PlayerSDK;
+import lib.kalu.mediaplayer.type.PlayerType;
+
 public class StartArgs {
+    private int exoCacheType;
+
+    public int getExoCacheType() {
+        return exoCacheType;
+    }
+
+    private int exoCacheMax;
+
+    public int getExoCacheMax() {
+        return exoCacheMax;
+    }
+
+    private String exoCacheDir;
+
+    public String getExoCacheDir() {
+        return exoCacheDir;
+    }
+
+    @PlayerType.ExoFFmpegType.Value
+    private int exoFFmpegType;
+
+    public int getExoFFmpegType() {
+        return exoFFmpegType;
+    }
+
+    @PlayerType.ExoSeekType
+    private int exoSeekType;
+
+    public int getExoSeekType() {
+        return exoSeekType;
+    }
+
+    // 视频渲染类型
+    @PlayerType.RenderType.Value
+    private int renderType;
+
+    public int getRenderType() {
+        return renderType;
+    }
+
+    // 视频解码类型
+    @PlayerType.KernelType.Value
+    private int kernelType;
+
+    public int getKernelType() {
+        return kernelType;
+    }
+
+    // 超时时间
+    private long connectTimout;
+
+    public long getConnectTimout() {
+        return connectTimout;
+    }
+
+    // 日志
+    private boolean log;
+
+    public boolean isLog() {
+        return log;
+    }
+
+    // 缓冲超时, 是否重新播放
+    private boolean bufferingTimeoutRetry;
+
+    public boolean isBufferingTimeoutRetry() {
+        return bufferingTimeoutRetry;
+    }
+
+    // 开始播放前，是否销毁已存在的播放器相关实例
+    private boolean initRelease;
+
+    public boolean isInitRelease() {
+        return initRelease;
+    }
+
+    // View生命周期, 自动暂停&续播&销毁...
+    private boolean supportViewLifecycle;
+
+    public boolean isSupportViewLifecycle() {
+        return supportViewLifecycle;
+    }
+
+    // 视频url
+    private String mediaUrl;
+
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    // 字幕url
+    private String subtitleUrl;
+
+    public String getSubtitleUrl() {
+        return subtitleUrl;
+    }
+
+    // 试看时长
     private long max;
-    private long seek;
-    private boolean live;
-    private boolean looping;
-    private boolean loopingRelease;
-    private boolean mute;
-    private boolean playWhenReady;
-    private boolean prepareAsync;
-    private boolean windowVisibilityChangedRelease; // 不可见, release
 
     public long getMax() {
         return max;
     }
 
+    // 起播快进指定位置
+    private long seek;
+
     public long getSeek() {
         return seek;
     }
+
+    // 是否直播源
+    private boolean live;
 
     public boolean isLive() {
         return live;
     }
 
+    // 循环播放
+    private boolean looping;
+
     public boolean isLooping() {
         return looping;
     }
 
-    public boolean isLoopingRelease() {
-        return loopingRelease;
-    }
+    // 静音
+    private boolean mute;
 
     public boolean isMute() {
         return mute;
     }
 
+    // 默认自动开播
+    private boolean playWhenReady;
+
     public boolean isPlayWhenReady() {
         return playWhenReady;
     }
+
+    // 默认异步初始化
+    private boolean prepareAsync;
 
     public boolean isPrepareAsync() {
         return prepareAsync;
     }
 
-    public boolean isWindowVisibilityChangedRelease() {
-        return windowVisibilityChangedRelease;
+    @Override
+    public String toString() {
+        return "StartArgs{" +
+                "exoCacheType=" + exoCacheType +
+                ", exoCacheMax=" + exoCacheMax +
+                ", exoCacheDir='" + exoCacheDir + '\'' +
+                ", exoFFmpegType=" + exoFFmpegType +
+                ", exoSeekType=" + exoSeekType +
+                ", renderType=" + renderType +
+                ", kernelType=" + kernelType +
+                ", connectTimout=" + connectTimout +
+                ", log=" + log +
+                ", bufferingTimeoutRetry=" + bufferingTimeoutRetry +
+                ", initRelease=" + initRelease +
+                ", supportViewLifecycle=" + supportViewLifecycle +
+                ", mediaUrl='" + mediaUrl + '\'' +
+                ", subtitleUrl='" + subtitleUrl + '\'' +
+                ", max=" + max +
+                ", seek=" + seek +
+                ", live=" + live +
+                ", looping=" + looping +
+                ", mute=" + mute +
+                ", playWhenReady=" + playWhenReady +
+                ", prepareAsync=" + prepareAsync +
+                '}';
     }
 
     public StartArgs(Builder builder) {
+        this.exoCacheType = builder.exoCacheType;
+        this.exoCacheMax = builder.exoCacheMax;
+        this.exoCacheDir = builder.exoCacheDir;
+        this.exoFFmpegType = builder.exoFFmpegType;
+        this.exoSeekType = builder.exoSeekType;
+        this.renderType = builder.renderType;
+        this.kernelType = builder.kernelType;
+        this.connectTimout = builder.connectTimout;
+        this.log = builder.log;
+        this.bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
+        this.initRelease = builder.initRelease;
+        this.supportViewLifecycle = builder.supportViewLifecycle;
+        this.mediaUrl = builder.mediaUrl;
+        this.subtitleUrl = builder.subtitleUrl;
         this.max = builder.max;
         this.seek = builder.seek;
-        this.mute = builder.mute;
         this.live = builder.live;
         this.looping = builder.looping;
-        this.loopingRelease = builder.loopingRelease;
-        this.prepareAsync = builder.prepareAsync;
+        this.mute = builder.mute;
         this.playWhenReady = builder.playWhenReady;
-        this.windowVisibilityChangedRelease = builder.windowVisibilityChangedRelease;
+        this.prepareAsync = builder.prepareAsync;
     }
 
     public Builder newBuilder() {
         Builder builder = new Builder();
+        builder.exoCacheType = exoCacheType;
+        builder.exoCacheMax = exoCacheMax;
+        builder.exoCacheDir = exoCacheDir;
+        builder.exoFFmpegType = exoFFmpegType;
+        builder.exoSeekType = exoSeekType;
+        builder.renderType = renderType;
+        builder.kernelType = kernelType;
+        builder.connectTimout = connectTimout;
+        builder.log = log;
+        builder.bufferingTimeoutRetry = bufferingTimeoutRetry;
+        builder.initRelease = initRelease;
+        builder.supportViewLifecycle = supportViewLifecycle;
+        builder.mediaUrl = mediaUrl;
+        builder.subtitleUrl = subtitleUrl;
         builder.max = max;
         builder.seek = seek;
-        builder.mute = mute;
         builder.live = live;
         builder.looping = looping;
-        builder.loopingRelease = loopingRelease;
-        builder.prepareAsync = prepareAsync;
+        builder.mute = mute;
         builder.playWhenReady = playWhenReady;
-        builder.windowVisibilityChangedRelease = windowVisibilityChangedRelease;
+        builder.prepareAsync = prepareAsync;
         return builder;
     }
 
-    
     public static class Builder {
 
-        private long max = 0;
-        private long seek = 0;
-        private boolean live = false;
-        private boolean looping = false;
-        private boolean loopingRelease = false;
-        private boolean mute = false;
-        private boolean playWhenReady = true; // 默认自动开播
-        private boolean prepareAsync = true; // 默认异步初始化
+        private final PlayerArgs playerArgs = PlayerSDK.init().getPlayerBuilder();
+        private int exoCacheType = playerArgs.getExoCacheType();
+        private int exoCacheMax = playerArgs.getExoCacheMax();
+        private String exoCacheDir = playerArgs.getExoCacheDir();
+        @PlayerType.ExoFFmpegType.Value
+        private int exoFFmpegType = playerArgs.getExoFFmpeg();
+        @PlayerType.ExoSeekType
+        private int exoSeekType = playerArgs.getExoSeekType();
+        // 视频渲染类型
+        @PlayerType.RenderType.Value
+        private int renderType = playerArgs.getRender();
+        // 视频解码类型
+        @PlayerType.KernelType.Value
+        private int kernelType = playerArgs.getKernel();
+        // 超时时间
+        private long connectTimout = playerArgs.getConnectTimeout();
+        // 日志
+        private boolean log = playerArgs.isLog();
+        // 缓冲超时, 是否重新播放
+        private boolean bufferingTimeoutRetry = playerArgs.getBufferingTimeoutRetry();
+        // 开始播放前，是否销毁已存在的播放器相关实例
+        private boolean initRelease = playerArgs.isInitRelease();
+        // View生命周期, 自动暂停&续播&销毁...
+        private boolean supportViewLifecycle = playerArgs.isSupportViewLifecycle();
+        // 视频url
+        private String mediaUrl;
 
-        private boolean windowVisibilityChangedRelease = false; // 不可见, release
+        public Builder setMediaUrl(String mediaUrl) {
+            this.mediaUrl = mediaUrl;
+            return this;
+        }
+
+        // 字幕url
+        private String subtitleUrl;
+
+        public Builder setSubtitleUrl(String subtitleUrl) {
+            this.subtitleUrl = subtitleUrl;
+            return this;
+        }
+
+        // 试看时长
+        private long max = 0;
+
+        public Builder setMax(long max) {
+            this.max = max;
+            return this;
+        }
+
+        // 起播快进指定位置
+        private long seek = 0;
+
+        public Builder setSeek(long seek) {
+            this.seek = seek;
+            return this;
+        }
+
+        // 是否直播源
+        private boolean live = false;
+
+        public Builder setLive(boolean live) {
+            this.live = live;
+            return this;
+        }
+
+        // 循环播放
+        private boolean looping = false;
+
+        public Builder setLooping(boolean looping) {
+            this.looping = looping;
+            return this;
+        }
+
+        // 静音
+        private boolean mute = false;
+
+        public Builder setMute(boolean mute) {
+            this.mute = mute;
+            return this;
+        }
+
+        // 默认自动开播
+        private boolean playWhenReady = true;
+
+        public Builder setPlayWhenReady(boolean playWhenReady) {
+            this.playWhenReady = playWhenReady;
+            return this;
+        }
+
+        // 默认异步初始化
+        private boolean prepareAsync = true;
+
+        public Builder setPrepareAsync(boolean prepareAsync) {
+            this.prepareAsync = prepareAsync;
+            return this;
+        }
 
         public Builder() {
-        }
-
-        public Builder setPrepareAsync(boolean v) {
-            this.prepareAsync = v;
-            return this;
-        }
-
-        public Builder setPlayWhenReady(boolean v) {
-            this.playWhenReady = v;
-            return this;
-        }
-
-        public Builder setMute(boolean v) {
-            this.mute = v;
-            return this;
-        }
-
-        public Builder setMax(long v) {
-            this.max = v;
-            return this;
-        }
-
-        public Builder setSeek(long v) {
-            this.seek = v;
-            return this;
-        }
-
-        public Builder setLive(boolean v) {
-            this.live = v;
-            return this;
-        }
-
-        public Builder setLooping(boolean v) {
-            this.looping = v;
-            return this;
-        }
-
-        public Builder setLoopingRelease(boolean v) {
-            this.loopingRelease = v;
-            return this;
-        }
-
-        public Builder setWindowVisibilityChangedRelease(boolean v) {
-            this.windowVisibilityChangedRelease = v;
-            return this;
         }
 
         public StartArgs build() {

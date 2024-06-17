@@ -88,68 +88,9 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        try {
-            boolean enableDetachedFromWindowTodo = enableDetachedFromWindowTodo();
-            if (!enableDetachedFromWindowTodo)
-                throw new Exception("enableDetachedFromWindowTodo warning: false");
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            boolean releaseTag = enableReleaseTag();
-            playerView.checkOnDetachedFromWindow(releaseTag);
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => onDetachedFromWindow => " + e.getMessage());
-        }
-        super.onDetachedFromWindow();
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        try {
-            boolean enableAttachedToWindowTodo = enableAttachedToWindowTodo();
-            if (!enableAttachedToWindowTodo)
-                throw new Exception("enableAttachedToWindowTodo warning: false");
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.checkOnAttachedToWindow();
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => onAttachedToWindow => " + e.getMessage());
-        }
-        super.onAttachedToWindow();
-    }
-
-    @Override
-    protected void onWindowVisibilityChanged(int visibility) {
-        try {
-            boolean enableWindowVisibilityChangedTodo = enableWindowVisibilityChangedTodo(visibility);
-            if (!enableWindowVisibilityChangedTodo)
-                throw new Exception("enableWindowVisibilityChangedTodo warning: false");
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.checkOnWindowVisibilityChanged(visibility);
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => onWindowVisibilityChanged => " + e.getMessage());
-        }
-        super.onWindowVisibilityChanged(visibility);
-    }
-
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        try {
-            getPlayerView().onSaveBundle();
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => onSaveInstanceState => " + e.getMessage());
-        }
-        return super.onSaveInstanceState();
-    }
-
     /**********/
 
-    private final ViewGroup findDecorView(View view) {
+    private ViewGroup findDecorView(View view) {
         try {
             View parent = (View) view.getParent();
             if (null == parent) {
@@ -191,18 +132,6 @@ public class PlayerLayout extends RelativeLayout {
             throw new Exception("not find");
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => getPlayerView => " + e.getMessage());
-            return null;
-        }
-    }
-
-    private StartArgs getStartBuilder() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            return playerView.getStartBuilder();
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getStartBuilder => " + e.getMessage());
             return null;
         }
     }
@@ -258,8 +187,8 @@ public class PlayerLayout extends RelativeLayout {
     public final void startFull(boolean checkUrl, boolean rememberPlaying) {
         try {
             if (checkUrl) {
-                String url = getUrl();
-                if (null == url || url.length() <= 0)
+                String mediaUrl = getMediaUrl();
+                if (null == mediaUrl)
                     throw new Exception("url error: null");
             }
             PlayerView playerView = getPlayerView();
@@ -291,8 +220,8 @@ public class PlayerLayout extends RelativeLayout {
     public final void startFloat(boolean checkUrl, boolean rememberPlaying) {
         try {
             if (checkUrl) {
-                String url = getUrl();
-                if (null == url || url.length() <= 0)
+                String mediaUrl = getMediaUrl();
+                if (null == mediaUrl)
                     throw new Exception("url error: null");
             }
             PlayerView playerView = getPlayerView();
@@ -490,12 +419,12 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void release(boolean releaseTag) {
+    public final void release(boolean claerTag) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.release(releaseTag, false);
+            playerView.release(true, claerTag, false);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => release => " + e.getMessage());
         }
@@ -521,7 +450,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.stop(callEvent);
+            playerView.stop(true, callEvent);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => stop => " + e.getMessage());
         }
@@ -551,14 +480,32 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final String getUrl() {
+    public final String getSubtitleUrl() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.getUrl();
+            StartArgs tag = ((VideoPlayerApi) playerView).getTags();
+            if (null == tag)
+                throw new Exception("error: tag null");
+            return tag.getSubtitleUrl();
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getUrl => " + e.getMessage());
+            LogUtil.log("PlayerLayout => getSubtitleUrl => " + e.getMessage());
+            return null;
+        }
+    }
+
+    public final String getMediaUrl() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            StartArgs tag = ((VideoPlayerApi) playerView).getTags();
+            if (null == tag)
+                throw new Exception("error: tag null");
+            return tag.getMediaUrl();
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => getMediaUrl => " + e.getMessage());
             return null;
         }
     }
@@ -574,32 +521,6 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public void setData(String playerUrl) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.setData(playerUrl);
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => setData => " + e.getMessage());
-        }
-    }
-
-    public String getData() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            String data = playerView.getData();
-            if (null == data || data.length() == 0)
-                throw new Exception("data error: " + data);
-            return data;
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getData => " + e.getMessage());
-            return null;
-        }
-    }
-
     public void start(String playerUrl) {
         try {
             PlayerView playerView = getPlayerView();
@@ -611,12 +532,12 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public void start(StartArgs data, String playerUrl) {
+    public void start(StartArgs args) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.start(data, playerUrl);
+            playerView.start(args);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => start => " + e.getMessage());
         }
@@ -646,45 +567,40 @@ public class PlayerLayout extends RelativeLayout {
 
     public final long getSeek() {
         try {
-            StartArgs startBuilder = getStartBuilder();
-            if (null == startBuilder)
-                throw new Exception("startBuilder error: null");
-            return startBuilder.getSeek();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            StartArgs tag = playerView.getTags();
+            if (null == tag)
+                throw new Exception("error: tag null");
+            return tag.getSeek();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => getSeek => " + e.getMessage());
-            return 0;
+            return 0L;
         }
     }
 
     public final long getMax() {
         try {
-            StartArgs startBuilder = getStartBuilder();
-            if (null == startBuilder)
-                throw new Exception("startBuilder error: null");
-            return startBuilder.getMax();
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            StartArgs tag = playerView.getTags();
+            if (null == tag)
+                throw new Exception("error: tag null");
+            return tag.getMax();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => getMax => " + e.getMessage());
             return 0;
         }
     }
 
-    public final void seekTo(boolean force, long seek) {
+    public final void seekTo(long postion) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.seekTo(force, seek);
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => seekTo => " + e.getMessage());
-        }
-    }
-
-    public final void seekTo(boolean force, long seek, long max, boolean loop) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.seekTo(force, seek, max, loop);
+            playerView.seekTo(postion);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => seekTo => " + e.getMessage());
         }
@@ -698,47 +614,6 @@ public class PlayerLayout extends RelativeLayout {
             playerView.callEventListener(state);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => callEventListener => " + e.getMessage());
-        }
-    }
-
-    public final void setPlayWhenReady(boolean playWhenReady) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.setPlayWhenReady(playWhenReady);
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => setPlayWhenReady => " + e.getMessage());
-        }
-    }
-
-    public final boolean containsKernel() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            VideoKernelApi videoKernel = playerView.getVideoKernel();
-            if (null == videoKernel)
-                throw new Exception("error: videoKernel null");
-            return true;
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => containsKernel => " + e.getMessage());
-            return false;
-        }
-    }
-
-    public final <T extends VideoKernelApi> T getVideoKernel() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            T kernel = (T) playerView.getVideoKernel();
-            if (null == kernel)
-                throw new Exception("kernel error: null");
-            return kernel;
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getKernel => " + e.getMessage());
-            return null;
         }
     }
 
@@ -820,51 +695,6 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-//    public final void releaseRender() {
-//        try {
-//            PlayerView playerView = getPlayerView();
-//            if (null == playerView)
-//                throw new Exception("playerView error: null");
-//            playerView.releaseRender(false);
-//        } catch (Exception e) {
-//            MPLogUtil.log("PlayerLayout => releaseRender => " + e.getMessage());
-//        }
-//    }
-
-//    public final void resetRender() {
-//        try {
-//            PlayerView playerView = getPlayerView();
-//            if (null == playerView)
-//                throw new Exception("playerView error: null");
-//            playerView.resetRender();
-//        } catch (Exception e) {
-//            MPLogUtil.log("PlayerLayout => resetRender => " + e.getMessage());
-//        }
-//    }
-
-    /*******************/
-
-//    public void setInterceptKeycodeDpadUp(boolean enable) {
-//        try {
-//            PlayerView playerView = getPlayerView();
-//            if (null == playerView)
-//                throw new Exception("playerView error: null");
-//            playerView.setInterceptKeycodeDpadUp(enable);
-//        } catch (Exception e) {
-//            MPLogUtil.log("PlayerLayout => setInterceptKeycodeDpadUp => " + e.getMessage());
-//        }
-//    }
-//
-//    public void setInterceptKeycodeDpadDown(boolean enable) {
-//        try {
-//            PlayerView playerView = getPlayerView();
-//            if (null == playerView)
-//                throw new Exception("playerView error: null");
-//            playerView.setInterceptKeycodeDpadUp(enable);
-//        } catch (Exception e) {
-//            MPLogUtil.log("PlayerLayout => setInterceptKeycodeDpadDown => " + e.getMessage());
-//        }
-//    }
     public final OnPlayerEventListener getOnPlayerEventListener() {
         try {
             PlayerView playerView = getPlayerView();

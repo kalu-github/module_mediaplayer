@@ -17,6 +17,7 @@ import lib.kalu.ffplayer.inter.OnInfoListener;
 import lib.kalu.ffplayer.inter.OnPreparedListener;
 import lib.kalu.ffplayer.inter.OnSeekCompleteListener;
 import lib.kalu.ffplayer.inter.OnVideoSizeChangedListener;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -59,20 +60,16 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
-        clear();
+    public void startDecoder(Context context, StartArgs args) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
-            if (url == null || url.length() == 0)
-                throw new IllegalArgumentException("url error: " + url);
+            String url = args.getMediaUrl();
+            if (url == null)
+                throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_START);
             mFFmpegPlayer.setDataSource(context, Uri.parse(url), null);
             mFFmpegPlayer.prepare();
-        } catch (IllegalArgumentException e) {
-            LogUtil.log("VideoFFmpegPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_ERROR_URL);
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => startDecoder => " + e.getMessage());
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_STOP);

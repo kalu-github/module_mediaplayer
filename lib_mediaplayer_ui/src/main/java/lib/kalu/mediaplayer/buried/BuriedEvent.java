@@ -1,6 +1,8 @@
 package lib.kalu.mediaplayer.buried;
 
 
+import lib.kalu.mediaplayer.type.PlayerType;
+
 public interface BuriedEvent {
 
     void onPlaying(String url, long position, long duration);
@@ -17,9 +19,5 @@ public interface BuriedEvent {
 
     void onSeek(String url, long position, long duration);
 
-    void onWindowFull(String url, long position, long duration);
-
-    void onWindowFloat(String url, long position, long duration);
-
-    void onWindowSimple(String url, long position, long duration);
+    void onWindow(@PlayerType.WindowType.Value int value, String url, long position, long duration);
 }

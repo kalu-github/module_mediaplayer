@@ -13,7 +13,8 @@ import lib.kalu.mediaplayer.type.PlayerType;
 public final class PlayerArgs {
 
     private boolean log;// 日志log
-    private boolean kernelAlwaysRelease;
+    private boolean initRelease;
+    private boolean supportViewLifecycle;
     private int connectTimeout;
     private boolean bufferingTimeoutRetry;
     @PlayerType.KernelType.Value
@@ -30,10 +31,10 @@ public final class PlayerArgs {
     private BuriedEvent buriedEvent;  // 埋点事件log
     private KeycodeApi keycodeApi; // 遥控code
 
-    @PlayerType.SeekType.Value
-    private int exoSeekParameters = PlayerType.SeekType.EXO_SEEK_DEFAULT;
-    @PlayerType.FFmpegType.Value
-    private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
+    @PlayerType.ExoSeekType.Value
+    private int exoSeekType = PlayerType.ExoSeekType.EXO_SEEK_DEFAULT;
+    @PlayerType.ExoFFmpegType.Value
+    private int exoFFmpeg = PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
     private boolean exoUseOkhttp;
     @PlayerType.CacheType
     private int exoCacheType = PlayerType.CacheType.NONE;
@@ -56,8 +57,8 @@ public final class PlayerArgs {
         return exoFFmpeg;
     }
 
-    public int getExoSeekParameters() {
-        return exoSeekParameters;
+    public int getExoSeekType() {
+        return exoSeekType;
     }
 
     public int getExoCacheType() {
@@ -76,8 +77,12 @@ public final class PlayerArgs {
         return log;
     }
 
-    public boolean isKernelAlwaysRelease() {
-        return kernelAlwaysRelease;
+    public boolean isInitRelease() {
+        return initRelease;
+    }
+
+    public boolean isSupportViewLifecycle() {
+        return supportViewLifecycle;
     }
 
     public int getExtrAudioKernel() {
@@ -121,7 +126,8 @@ public final class PlayerArgs {
 
     private PlayerArgs(Builder builder) {
         log = builder.log;
-        kernelAlwaysRelease = builder.kernelAlwaysRelease;
+        initRelease = builder.initRelease;
+        supportViewLifecycle = builder.supportViewLifecycle;
         connectTimeout = builder.connectTimeout;
         bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         externalAudioKernel = builder.externalAudioKernel;
@@ -133,7 +139,7 @@ public final class PlayerArgs {
         checkOrientation = builder.checkOrientation;
         buriedEvent = builder.buriedEvent;
         keycodeApi = builder.keycodeApi;
-        exoSeekParameters = builder.exoSeekParameters;
+        exoSeekType = builder.exoSeekType;
         exoFFmpeg = builder.exoFFmpeg;
         exoUseOkhttp = builder.exoUseOkhttp;
         exoCacheType = builder.exoCacheType;
@@ -144,7 +150,8 @@ public final class PlayerArgs {
     public Builder newBuilder() {
         Builder builder = new Builder();
         builder.setLog(this.log);
-        builder.setKernelAlwaysRelease(this.kernelAlwaysRelease);
+        builder.setInitRelease(this.initRelease);
+        builder.setSupportViewLifecycle(this.supportViewLifecycle);
         builder.setConnectTimeout(this.connectTimeout);
         builder.setBufferingTimeoutRetry(this.bufferingTimeoutRetry);
         builder.setExternalAudioKernel(this.externalAudioKernel);
@@ -156,7 +163,7 @@ public final class PlayerArgs {
         builder.setCheckOrientation(this.checkOrientation);
         builder.setBuriedEvent(this.buriedEvent);
         builder.setKeycodeApi(this.keycodeApi);
-        builder.setExoSeekParameters(this.exoSeekParameters);
+        builder.setExoSeekType(this.exoSeekType);
         builder.setExoFFmpeg(this.exoFFmpeg);
         builder.setExoUseOkhttp(this.exoUseOkhttp);
         builder.setExoCacheType(this.exoCacheType);
@@ -169,13 +176,14 @@ public final class PlayerArgs {
     public final static class Builder {
 
         private boolean log = false;// 日志log
+        private boolean initRelease = false;
+        private boolean supportViewLifecycle = true;
         private int connectTimeout = 10 * 1000;  // 连接超时
         private boolean bufferingTimeoutRetry = false; // 缓冲失败重试
         @PlayerType.KernelType.Value
         private int externalAudioKernel = PlayerType.KernelType.ANDROID; // 音频播放器内核
         @PlayerType.KernelType.Value
         private int kernel = PlayerType.KernelType.ANDROID; // 视频播放器内核
-        private boolean kernelAlwaysRelease = false;
         @PlayerType.RenderType.Value
         private int render = PlayerType.RenderType.SURFACE_VIEW; // 视频渲染类型
         @PlayerType.ScaleType
@@ -187,10 +195,10 @@ public final class PlayerArgs {
         private KeycodeApi keycodeApi = null; // 遥控code
 
 
-        @PlayerType.SeekType.Value
-        private int exoSeekParameters = PlayerType.SeekType.EXO_SEEK_DEFAULT;
-        @PlayerType.FFmpegType.Value
-        private int exoFFmpeg = PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
+        @PlayerType.ExoSeekType.Value
+        private int exoSeekType = PlayerType.ExoSeekType.EXO_SEEK_DEFAULT;
+        @PlayerType.ExoFFmpegType.Value
+        private int exoFFmpeg = PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
         /**
          * 本地视频缓存
          */
@@ -216,13 +224,13 @@ public final class PlayerArgs {
             return this;
         }
 
-        public Builder setExoFFmpeg(@PlayerType.FFmpegType int v) {
+        public Builder setExoFFmpeg(@PlayerType.ExoFFmpegType int v) {
             exoFFmpeg = v;
             return this;
         }
 
-        public Builder setExoSeekParameters(@PlayerType.SeekType int v) {
-            exoSeekParameters = v;
+        public Builder setExoSeekType(@PlayerType.ExoSeekType int v) {
+            exoSeekType = v;
             return this;
         }
 
@@ -246,8 +254,12 @@ public final class PlayerArgs {
             return this;
         }
 
-        public Builder setKernelAlwaysRelease(boolean v) {
-            kernelAlwaysRelease = v;
+        public Builder setInitRelease(boolean v) {
+            initRelease = v;
+            return this;
+        }
+        public Builder setSupportViewLifecycle(boolean v) {
+            supportViewLifecycle = v;
             return this;
         }
 

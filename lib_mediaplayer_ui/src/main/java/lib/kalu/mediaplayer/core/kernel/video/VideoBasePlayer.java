@@ -42,9 +42,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
             long duration = getDuration();
             if (duration < 0)
                 duration = 0;
-            long max = getMax();
-            boolean looping = isLooping();
-            eventApi.onUpdateProgress(looping, max, position, duration);
+            eventApi.onUpdateProgress(position, duration);
         } catch (Exception e) {
         }
     }
@@ -73,19 +71,5 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
 
     public final void setEvent(VideoKernelApiEvent eventApi) {
         this.eventApi = eventApi;
-    }
-
-    public final void clear() {
-        mSeek[0] = 0L;
-        mMax[0] = 0L;
-        mLooping[0] = false;
-        mLive[0] = false;
-        mMute[0] = false;
-        mPlayWhenReady[0] = true;
-        mPrepared[0] = false;
-        mIjkMediaCodec[0] = true;
-        stopCheckOpenUrlTimeout();
-        stopCheckPreparedPlaying();
-        stopCheckLoadBufferingTimeout();
     }
 }

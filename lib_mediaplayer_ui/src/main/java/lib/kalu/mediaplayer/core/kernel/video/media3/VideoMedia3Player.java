@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
@@ -56,6 +55,7 @@ import java.util.concurrent.TimeUnit;
 
 import lib.kalu.mediaplayer.args.PlayerArgs;
 import lib.kalu.mediaplayer.PlayerSDK;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -67,7 +67,7 @@ import okhttp3.OkHttpClient;
 public final class VideoMedia3Player extends VideoBasePlayer {
 
     private ExoPlayer mExoPlayer;
-    private AnalyticsListener mAnalyticsListener;
+    private ExoPlayer.Builder mExoPlayerBuilder;
 
     @Override
     public ExoPlayer getPlayer() {
@@ -94,122 +94,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             if (null != mExoPlayer)
                 throw new Exception("warning: null != mExoPlayer");
             // 2
-            ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
-            // 3
-            initOptions(context, builder);
-            if (null != mAnalyticsListener) {
-                mAnalyticsListener = null;
-            }
-            mAnalyticsListener = new AnalyticsListener() {
-                @Override
-                public void onPlayWhenReadyChanged(EventTime eventTime, boolean playWhenReady, int reason) {
-//        MPLogUtil.log("VideoMedia3Player => onPlayWhenReadyChanged => playWhenReady = " + playWhenReady + ", reason = " + reason);
-                }
-
-                @Override
-                public void onPlayerError(EventTime eventTime, PlaybackException error) {
-                    try {
-                        if (null == error)
-                            throw new Exception("PlaybackException error: null");
-                        if (!(error instanceof ExoPlaybackException))
-                            throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_SOURCE);
-                    } catch (Exception e) {
-                        LogUtil.log("VideoMedia3Player => onPlayerError => error = " + error.getMessage());
-                    }
-                }
-
-                @Override
-                public void onTimelineChanged(EventTime eventTime, int reason) {
-                    LogUtil.log("VideoMedia3Player => onTimelineChanged => reason = " + reason + ", totalBufferedDurationMs = " + eventTime.totalBufferedDurationMs + ", realtimeMs = " + eventTime.realtimeMs);
-                }
-
-                @Override
-                public void onEvents(Player player, Events events) {
-//                    MediaLogUtil.log("VideoMedia3Player => onEvents => isPlaying = " + player.isPlaying());
-                }
-
-                @Override
-                public void onVideoSizeChanged(EventTime eventTime, VideoSize videoSize) {
-                    onUpdateSizeChanged(PlayerType.KernelType.EXO_V2, videoSize.width, videoSize.height, videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.Rotation_0);
-                }
-
-                @Override
-                public void onIsPlayingChanged(EventTime eventTime, boolean isPlaying) {
-                    LogUtil.log("VideoMedia3Player => onIsPlayingChanged => isPlaying = " + isPlaying + ", mPlayWhenReady = " + mPlayWhenReady + ", mPrepared = " + mPrepared);
-                }
-
-                @Override
-                public void onPlaybackStateChanged(EventTime eventTime, int state) {
-                    LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => state = " + state + ", mute = " + isMute());
-
-                    // 播放错误
-                    if (state == Player.STATE_IDLE) {
-                        LogUtil.log("VideoMedia3Player => onPlaybackStateChanged[播放错误] =>");
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_SOURCE);
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
-                    }
-                    // 播放结束
-                    else if (state == Player.STATE_ENDED) {
-                        LogUtil.log("VideoMedia3Player => onPlaybackStateChanged[播放结束] =>");
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_END);
-                    }
-                    // 播放开始
-                    else if (state == Player.STATE_READY) {
-                        try {
-                            if (isPrepared())
-                                throw new Exception("mPrepared warning: true");
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_START);
-                            try {
-                                long seek = getSeek();
-                                if (seek <= 0)
-                                    throw new Exception("seek warning: " + seek);
-                                setSeek(0);
-                                seekTo(seek);
-                            } catch (Exception e) {
-                                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => " + e.getMessage());
-                            }
-                        } catch (Exception e) {
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
-                        }
-                        setPrepared(true);
-                    }
-                    // 播放缓冲
-                    else if (state == Player.STATE_BUFFERING) {
-                        LogUtil.log("VideoMedia3Player => onPlaybackStateChanged[播放缓冲] =>");
-                        try {
-                            if (!isPrepared())
-                                throw new Exception("mPrepared warning: false");
-                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_START);
-                        } catch (Exception e) {
-                            LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_READY => " + e.getMessage());
-                        }
-                    }
-                    // 未知??
-                    else {
-                        LogUtil.log("VideoMedia3Player => onPlaybackStateChanged[未知??] =>");
-                    }
-                }
-
-                @Override
-                public void onRenderedFirstFrame(EventTime eventTime, Object output, long renderTimeMs) {
-                    LogUtil.log("VideoMedia3Player => onRenderedFirstFrame =>");
-                }
-
-                @Override
-                public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
-                    LogUtil.log("VideoMedia3Player => onVideoInputFormatChanged[出画面] =>");
-                }
-
-                @Override
-                public void onAudioInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
-                    LogUtil.log("VideoMedia3Player => onAudioInputFormatChanged =>");
-                }
-            };
-            mExoPlayer.addAnalyticsListener(mAnalyticsListener);
-
+            mExoPlayerBuilder = new ExoPlayer.Builder(context);
 //            if (mSpeedPlaybackParameters != null) {
 //                mExoPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
 //            }
@@ -225,22 +110,100 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, boolean prepareAsync, String url, Object... o) {
-        clear();
+    public void startDecoder(Context context, StartArgs args) {
+
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            if (url == null || url.length() == 0)
-                throw new Exception("url error: " + url);
-            initOptions(context, o);
-            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_START);
-            PlayerArgs config = PlayerSDK.init().getPlayerBuilder();
-            int cacheType = config.getExoCacheType();
-            int cacheMax = config.getExoCacheMax();
-            String cacheDir = config.getExoCacheDir();
-            if (isLive()) {
-                cacheType = PlayerType.CacheType.NONE;
+            String url = args.getMediaUrl();
+            if (null == url)
+                throw new Exception("error: url null");
+            mExoPlayerBuilder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
+            mExoPlayerBuilder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
+            mExoPlayerBuilder.setLoadControl(new DefaultLoadControl());
+            mExoPlayerBuilder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));
+            mExoPlayerBuilder.setTrackSelector(new DefaultTrackSelector(context));
+
+            int exoFFmpeg = args.getExoFFmpegType();
+            // only_mediacodec
+            if (exoFFmpeg == PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_MEDIACODEC) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
+                if (null == clazz)
+                    throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
+                mExoPlayerBuilder.setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory(context));
             }
+            // only_mediacodec_audio
+            else if (exoFFmpeg == PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_AUDIO) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory");
+                if (null == clazz)
+                    throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory");
+                mExoPlayerBuilder.setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory(context));
+            }
+            // only_mediacodec_video
+            else if (exoFFmpeg == PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_VIDEO) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory");
+                if (null == clazz)
+                    throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory");
+                mExoPlayerBuilder.setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory(context));
+            }
+            // only_ffmpeg
+            else if (exoFFmpeg == PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_FFMPEG) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory");
+                if (null == clazz)
+                    throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory");
+                mExoPlayerBuilder.setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory(context));
+            }
+            // only_ffmpeg_audio
+            else if (exoFFmpeg == PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_FFMPEG_AUDIO) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory");
+                if (null == clazz)
+                    throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory");
+                mExoPlayerBuilder.setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory(context));
+            }
+            // only_ffmpeg_video
+            else if (exoFFmpeg == PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_FFMPEG_VIDEO) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory");
+                if (null == clazz)
+                    throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory");
+                mExoPlayerBuilder.setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory(context));
+            }
+            // video_mediacodec_audio_ffmpeg
+            else if (exoFFmpeg == PlayerType.ExoFFmpegType.EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory");
+                if (null == clazz)
+                    throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory");
+                mExoPlayerBuilder.setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory(context));
+            }
+            // video_ffmpeg_audio_mediacodec
+            else if (exoFFmpeg == PlayerType.ExoFFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory");
+                if (null == clazz)
+                    throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory");
+                mExoPlayerBuilder.setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory(context));
+            }
+        } catch (Exception e) {
+        }
+
+
+        try {
+            if (null != mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            String url = args.getMediaUrl();
+            if (null == url)
+                throw new Exception("error: url null");
+            mExoPlayer = mExoPlayerBuilder.build();
+            mExoPlayer.setRepeatMode(androidx.media3.exoplayer.ExoPlayer.REPEAT_MODE_OFF);
+        } catch (Exception e) {
+        }
+
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            String url = args.getMediaUrl();
+            if (null == url)
+                throw new Exception("error: url null");
+            mExoPlayer.addAnalyticsListener(mAnalyticsListener);
+            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_START);
 //            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
 //                @Override
 //                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
@@ -253,15 +216,11 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 //                }
 //            });
 
-            // 0: url
-            // 1: connentTimeout
-            // 2: log
-            // 3: seekParams
-            // 4: bufferingTimeoutRetry
-            // 5: kernelAlwaysRelease
-            MediaSource mediaSource = buildMediaSource(context, (int) o[1], url, null, cacheType, cacheMax, cacheDir);
+            MediaSource mediaSource = buildMediaSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
-            mExoPlayer.setPlayWhenReady(isPlayWhenReady());
+            boolean playWhenReady = args.isPlayWhenReady();
+            mExoPlayer.setPlayWhenReady(playWhenReady);
+            boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
                 mExoPlayer.prepare();
             } else {
@@ -275,116 +234,48 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void initOptions(Context context, Object... o) {
+    public void initOptions(Context context, StartArgs args) {
         try {
-            if (null == o)
-                throw new Exception("exoBuilder error: null");
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
 
-            // 1
-            if(o.length == 1 && (o[0] instanceof androidx.media3.exoplayer.ExoPlayer.Builder)){
-
-                ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
-                ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
-                ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setLoadControl(new DefaultLoadControl());
-                ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setMediaSourceFactory(new DefaultMediaSourceFactory(context));
-                ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setTrackSelector(new DefaultTrackSelector(context));
-
-                PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
-                if (null == playerBuilder)
-                    throw new Exception("playerBuilder error: null");
-                int exoFFmpeg = playerBuilder.getExoFFmpeg();
-                // only_mediacodec
-                if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC) {
-                    Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
-                    if (null == clazz)
-                        throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
-                    ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory(context));
-                }
-                // only_mediacodec_audio
-                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_AUDIO) {
-                    Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory");
-                    if (null == clazz)
-                        throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory");
-                    ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory(context));
-                }
-                // only_mediacodec_video
-                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_VIDEO) {
-                    Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory");
-                    if (null == clazz)
-                        throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory");
-                    ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory(context));
-                }
-                // only_ffmpeg
-                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG) {
-                    Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory");
-                    if (null == clazz)
-                        throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory");
-                    ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory(context));
-                }
-                // only_ffmpeg_audio
-                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG_AUDIO) {
-                    Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory");
-                    if (null == clazz)
-                        throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory");
-                    ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory(context));
-                }
-                // only_ffmpeg_video
-                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_ONLY_FFMPEG_VIDEO) {
-                    Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory");
-                    if (null == clazz)
-                        throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory");
-                    ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory(context));
-                }
-                // video_mediacodec_audio_ffmpeg
-                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG) {
-                    Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory");
-                    if (null == clazz)
-                        throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory");
-                    ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory(context));
-                }
-                // video_ffmpeg_audio_mediacodec
-                else if (exoFFmpeg == PlayerType.FFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC) {
-                    Class<?> clazz = Class.forName("lib.kalu.mediax.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory");
-                    if (null == clazz)
-                        throw new Exception("not find: lib.kalu.mediax.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory");
-                    ((androidx.media3.exoplayer.ExoPlayer.Builder) o[0]).setRenderersFactory(new lib.kalu.mediax.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory(context));
-                }
-            }
-            // 2
-            else{
-
-                // 0: url
-                // 1: connentTimeout
-                // 2: log
-                // 3: seekParams
-                // 4: bufferingTimeoutRetry
-                // 5: kernelAlwaysRelease
-
-                int seekParameters = (int) o[3];
-                // seek model
-                if (seekParameters == PlayerType.SeekType.EXO_SEEK_CLOSEST_SYNC) {
-                    mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.CLOSEST_SYNC);
-                } else if (seekParameters == PlayerType.SeekType.EXO_SEEK_PREVIOUS_SYNC) {
-                    mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.PREVIOUS_SYNC);
-                } else if (seekParameters == PlayerType.SeekType.EXO_SEEK_NEXT_SYNC) {
-                    mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.NEXT_SYNC);
-                } else {
-                    mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.DEFAULT);
-                }
-
-                boolean log = (boolean) o[2];
-                // log
-                try {
-                    Class<?> clazz = Class.forName("androidx.media3.decoder.ffmpeg.FfmpegLibrary");
-                    if (null != clazz) {
-                        androidx.media3.decoder.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
-                    }
-                } catch (Exception e) {
-                }
-
+            int seekParameters = args.getExoSeekType();
+            // seek model
+            if (seekParameters == PlayerType.ExoSeekType.EXO_SEEK_CLOSEST_SYNC) {
+                mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.CLOSEST_SYNC);
+            } else if (seekParameters == PlayerType.ExoSeekType.EXO_SEEK_PREVIOUS_SYNC) {
+                mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.PREVIOUS_SYNC);
+            } else if (seekParameters == PlayerType.ExoSeekType.EXO_SEEK_NEXT_SYNC) {
+                mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.NEXT_SYNC);
+            } else {
+                mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.DEFAULT);
             }
         } catch (Exception e) {
             LogUtil.log("VideoExo2Player => initOptionsExo => " + e.getMessage());
+        }
+
+        // log
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            Class<?> clazz = Class.forName("androidx.media3.decoder.ffmpeg.FfmpegLibrary");
+            if (null == clazz)
+                throw new Exception("warning: androidx.media3.decoder.ffmpeg.FfmpegLibrary not find");
+            boolean log = args.isLog();
+            androidx.media3.decoder.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
+        } catch (Exception e) {
+        }
+
+        // log-jni
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            Class<?> clazz = Class.forName("androidx.media3.decoder.ffmpeg.FfmpegLibrary");
+            if (null == clazz)
+                throw new Exception("warning: androidx.media3.decoder.ffmpeg.FfmpegLibrary not find");
+            boolean log = args.isLog();
+            androidx.media3.decoder.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
+        } catch (Exception e) {
         }
     }
 
@@ -556,18 +447,23 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     @Override
     public void release() {
         clear();
+
         try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
-            if (null != mAnalyticsListener) {
-                mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
+            if (null != mExoPlayerBuilder) {
+                mExoPlayerBuilder = null;
             }
-            mAnalyticsListener = null;
-            mExoPlayer.setPlaybackParameters(null);
-            mExoPlayer.setPlayWhenReady(false);
-            mExoPlayer.setVideoSurface(null);
-            mExoPlayer.release();
-            mExoPlayer = null;
+        } catch (Exception e) {
+        }
+
+        try {
+            if (null != mExoPlayer) {
+                mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
+                mExoPlayer.setPlaybackParameters(null);
+                mExoPlayer.setPlayWhenReady(false);
+                mExoPlayer.setVideoSurface(null);
+                mExoPlayer.release();
+                mExoPlayer = null;
+            }
         } catch (Exception e) {
             LogUtil.log("VideoMedia3Player => release => " + e.getMessage());
         }
@@ -621,20 +517,9 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
     /************************/
 
-    public MediaSource buildMediaSource(Context context,
-                                        int timeout,
-                                        String mediaUrl,
-                                        @Nullable String subtitleUrl,
-                                        @PlayerType.CacheType int cacheType,
-                                        int cacheMax,
-                                        String cacheDir) {
+    public MediaSource buildMediaSource(Context context, StartArgs args) {
 
-        LogUtil.log("VideoMedia3Player => createMediaSource => mediaUrl = " + mediaUrl);
-        LogUtil.log("VideoMedia3Player => createMediaSource => subtitleUrl = " + subtitleUrl);
-        LogUtil.log("VideoMedia3Player => createMediaSource => cacheType = " + cacheType);
-        LogUtil.log("VideoMedia3Player => createMediaSource => cacheMax = " + cacheMax);
-        LogUtil.log("VideoMedia3Player => createMediaSource => cacheDir = " + cacheDir);
-
+        String mediaUrl = args.getMediaUrl();
         String scheme;
         Uri uri = Uri.parse(mediaUrl);
         try {
@@ -687,6 +572,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             // 2
             MediaItem.Builder builder = new MediaItem.Builder();
             builder.setUri(Uri.parse(mediaUrl));
+            String subtitleUrl = args.getSubtitleUrl();
             if (null != subtitleUrl && subtitleUrl.length() > 0) {
                 MediaItem.SubtitleConfiguration.Builder subtitle = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(mediaUrl));
                 subtitle.setMimeType(MimeTypes.APPLICATION_SUBRIP);
@@ -718,8 +604,9 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 Class<?> clazz = Class.forName("okhttp3.OkHttpClient");
                 if (null == clazz)
                     throw new Exception();
+                long connectTimeout = args.getConnectTimout();
                 OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                        .connectTimeout(timeout, TimeUnit.MILLISECONDS)
+                        .connectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
                         .connectionPool(new ConnectionPool(10, 60, TimeUnit.MINUTES))
                         .retryOnConnectionFailure(true)
                         .proxySelector(new ProxySelector() { // 禁止抓包
@@ -746,6 +633,12 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 dataSourceFactory = httpFactory;
             }
 
+            int cacheType = args.getExoCacheType();
+            boolean live = args.isLive();
+            if (live) {
+                cacheType = PlayerType.CacheType.NONE;
+            }
+
             DataSource.Factory dataSource;
             if (cacheType == PlayerType.CacheType.NONE) {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
@@ -755,6 +648,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 //                dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
 
 //                // a
+                int cacheMax = args.getExoCacheMax();
+                String cacheDir = args.getExoCacheDir();
                 CacheDataSource.Factory dataSource1 = new CacheDataSource.Factory();
                 SimpleCache simpleCache1 = VideoMedia3PlayerSimpleCache.getSimpleCache(context, cacheMax, cacheDir);
                 dataSource1.setCache(simpleCache1);
@@ -789,4 +684,113 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             }
         }
     }
+
+    private final AnalyticsListener mAnalyticsListener = new AnalyticsListener() {
+        @Override
+        public void onPlayWhenReadyChanged(AnalyticsListener.EventTime eventTime, boolean playWhenReady, int reason) {
+//        MPLogUtil.log("VideoMedia3Player => onPlayWhenReadyChanged => playWhenReady = " + playWhenReady + ", reason = " + reason);
+        }
+
+        @Override
+        public void onPlayerError(AnalyticsListener.EventTime eventTime, PlaybackException error) {
+            try {
+                if (null == error)
+                    throw new Exception("PlaybackException error: null");
+                if (!(error instanceof ExoPlaybackException))
+                    throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
+                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
+                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_SOURCE);
+            } catch (Exception e) {
+                LogUtil.log("VideoMedia3Player => onPlayerError => error = " + error.getMessage());
+            }
+        }
+
+        @Override
+        public void onTimelineChanged(AnalyticsListener.EventTime eventTime, int reason) {
+            LogUtil.log("VideoMedia3Player => onTimelineChanged => reason = " + reason + ", totalBufferedDurationMs = " + eventTime.totalBufferedDurationMs + ", realtimeMs = " + eventTime.realtimeMs);
+        }
+
+        @Override
+        public void onEvents(Player player, AnalyticsListener.Events events) {
+//                    MediaLogUtil.log("VideoMedia3Player => onEvents => isPlaying = " + player.isPlaying());
+        }
+
+        @Override
+        public void onVideoSizeChanged(AnalyticsListener.EventTime eventTime, VideoSize videoSize) {
+            onUpdateSizeChanged(PlayerType.KernelType.EXO_V2, videoSize.width, videoSize.height, videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.Rotation_0);
+        }
+
+        @Override
+        public void onIsPlayingChanged(AnalyticsListener.EventTime eventTime, boolean isPlaying) {
+            LogUtil.log("VideoMedia3Player => onIsPlayingChanged => isPlaying = " + isPlaying + ", mPlayWhenReady = " + mPlayWhenReady + ", mPrepared = " + mPrepared);
+        }
+
+        @Override
+        public void onPlaybackStateChanged(AnalyticsListener.EventTime eventTime, int state) {
+            LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => state = " + state + ", mute = " + isMute());
+
+            // 播放错误
+            if (state == Player.STATE_IDLE) {
+                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged[播放错误] =>");
+                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_ERROR_SOURCE);
+                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
+            }
+            // 播放结束
+            else if (state == Player.STATE_ENDED) {
+                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged[播放结束] =>");
+                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_END);
+            }
+            // 播放开始
+            else if (state == Player.STATE_READY) {
+                try {
+                    if (isPrepared())
+                        throw new Exception("mPrepared warning: true");
+                    onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_LOADING_STOP);
+                    onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_VIDEO_START);
+                    try {
+                        long seek = getSeek();
+                        if (seek <= 0)
+                            throw new Exception("seek warning: " + seek);
+                        setSeek(0);
+                        seekTo(seek);
+                    } catch (Exception e) {
+                        LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => " + e.getMessage());
+                    }
+                } catch (Exception e) {
+                    onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                }
+                setPrepared(true);
+            }
+            // 播放缓冲
+            else if (state == Player.STATE_BUFFERING) {
+                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged[播放缓冲] =>");
+                try {
+                    if (!isPrepared())
+                        throw new Exception("mPrepared warning: false");
+                    onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.EVENT_BUFFERING_START);
+                } catch (Exception e) {
+                    LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_READY => " + e.getMessage());
+                }
+            }
+            // 未知??
+            else {
+                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged[未知??] =>");
+            }
+        }
+
+        @Override
+        public void onRenderedFirstFrame(AnalyticsListener.EventTime eventTime, Object output, long renderTimeMs) {
+            LogUtil.log("VideoMedia3Player => onRenderedFirstFrame =>");
+        }
+
+        @Override
+        public void onVideoInputFormatChanged(AnalyticsListener.EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
+            LogUtil.log("VideoMedia3Player => onVideoInputFormatChanged[出画面] =>");
+        }
+
+        @Override
+        public void onAudioInputFormatChanged(AnalyticsListener.EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
+            LogUtil.log("VideoMedia3Player => onAudioInputFormatChanged =>");
+        }
+    };
 }

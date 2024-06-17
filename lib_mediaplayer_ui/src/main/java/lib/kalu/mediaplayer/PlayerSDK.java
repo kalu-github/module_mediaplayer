@@ -1,6 +1,8 @@
 package lib.kalu.mediaplayer;
 
 
+import android.app.Application;
+
 import lib.kalu.mediaplayer.args.PlayerArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.buried.BuriedEvent;
@@ -43,13 +45,13 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setExoFFmpeg(@PlayerType.FFmpegType int v) {
+    public PlayerSDK setExoFFmpeg(@PlayerType.ExoFFmpegType int v) {
         mPlayerBuilder.setExoFFmpeg(v);
         return this;
     }
 
-    public PlayerSDK setExoSeekParameters(@PlayerType.SeekType int v) {
-        mPlayerBuilder.setExoSeekParameters(v);
+    public PlayerSDK setExoSeekType(@PlayerType.ExoSeekType int v) {
+        mPlayerBuilder.setExoSeekType(v);
         return this;
     }
 
@@ -73,8 +75,13 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setKernelAlwaysRelease(boolean v) {
-        mPlayerBuilder.setKernelAlwaysRelease(v);
+    public PlayerSDK setInitRelease(boolean v) {
+        mPlayerBuilder.setInitRelease(v);
+        return this;
+    }
+
+    public PlayerSDK setSupportViewLifecycle(boolean v) {
+        mPlayerBuilder.setSupportViewLifecycle(v);
         return this;
     }
 

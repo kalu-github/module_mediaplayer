@@ -18,7 +18,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
     default String screenshot() {
         try {
             VideoRenderApi render = getVideoRender();
-            return render.screenshot(getPlayerLayout().getUrl(), getPlayerLayout().getPosition());
+            return render.screenshot(getPlayerLayout().getMediaUrl(), getPlayerLayout().getPosition());
         } catch (Exception e) {
             return null;
         }
@@ -55,30 +55,30 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    default void checkPlaying() {
-        try {
-            if (!(this instanceof VideoPlayerApiKernel))
-                throw new Exception("this error: not instanceof PlayerApiKernel");
-            boolean playing = ((VideoPlayerApiKernel) this).isPlaying();
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_switch_window_check_playing, playing);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => checkPlaying => " + e.getMessage());
-        }
-    }
+//    default void checkPlaying() {
+//        try {
+//            if (!(this instanceof VideoPlayerApiKernel))
+//                throw new Exception("this error: not instanceof PlayerApiKernel");
+//            boolean playing = ((VideoPlayerApiKernel) this).isPlaying();
+//            ((View) this).setTag(R.id.module_mediaplayer_id_player_switch_window_check_playing, playing);
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApiRender => checkPlaying => " + e.getMessage());
+//        }
+//    }
 
-    default void switchPlaying() {
-        try {
-            if (!(this instanceof VideoPlayerApiKernel))
-                throw new Exception("this error: not instanceof PlayerApiKernel");
-            Object tag = ((View) this).getTag(R.id.module_mediaplayer_id_player_switch_window_check_playing);
-            ((View) this).setTag(R.id.module_mediaplayer_id_player_switch_window_check_playing, null);
-            if (null == tag || ((boolean) tag))
-                throw new Exception("tag warning: null");
-            ((VideoPlayerApiKernel) this).pause(true);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => switchPlaying => " + e.getMessage());
-        }
-    }
+//    default void switchPlaying() {
+//        try {
+//            if (!(this instanceof VideoPlayerApiKernel))
+//                throw new Exception("this error: not instanceof PlayerApiKernel");
+//            Object tag = ((View) this).getTag(R.id.module_mediaplayer_id_player_switch_window_check_playing);
+//            ((View) this).setTag(R.id.module_mediaplayer_id_player_switch_window_check_playing, null);
+//            if (null == tag || ((boolean) tag))
+//                throw new Exception("tag warning: null");
+//            ((VideoPlayerApiKernel) this).pause(true);
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApiRender => switchPlaying => " + e.getMessage());
+//        }
+//    }
 
     default boolean startFull(boolean rememberPlaying) {
         return startFull(rememberPlaying, true);
@@ -99,7 +99,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
                 callWindowListener(PlayerType.WindowType.FULL);
             }
             if (rememberPlaying) {
-                checkPlaying();
+//                checkPlaying();
             }
             return b;
         } catch (Exception e) {
@@ -118,7 +118,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             if (!isFull)
                 throw new Exception("not full");
             boolean b = switchToPlayerLayout();
-            switchPlaying();
+//            switchPlaying();
             if (b) {
                 if (resetSurface) {
                     resetRenderView(true);
@@ -146,7 +146,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
                 callWindowListener(PlayerType.WindowType.FLOAT);
             }
             if (rememberPlaying) {
-                checkPlaying();
+//                checkPlaying();
             }
             return switchToDecorView;
         } catch (Exception e) {
@@ -161,7 +161,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             if (!isFloat)
                 throw new Exception("not Float");
             boolean switchToPlayerLayout = switchToPlayerLayout();
-            switchPlaying();
+//            switchPlaying();
             if (switchToPlayerLayout) {
                 resetRenderView(true);
                 callEventListener(PlayerType.StateType.STATE_FLOAT_STOP);
@@ -336,9 +336,9 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    default void checkRenderNull(boolean releaseKernel, int renderType) {
+    default void checkRenderNull(int renderType, boolean release) {
         try {
-            if (releaseKernel) {
+            if (release) {
                 releaseRender();
             }
             ViewGroup renderGroup = getBaseVideoViewGroup();
@@ -381,7 +381,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
                 int render = playerBuilder.getRender();
                 if (render == PlayerType.RenderType.SURFACE_VIEW) {
                     releaseRender();
-                    checkRenderNull(true, PlayerType.RenderType.SURFACE_VIEW);
+                    checkRenderNull(PlayerType.RenderType.SURFACE_VIEW, true);
                     attachRenderKernel();
                 }
             } else if (kernel == PlayerType.KernelType.IJK_MEDIACODEC) {

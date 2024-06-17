@@ -4,19 +4,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
 
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-public class ComponentTry extends RelativeLayout implements ComponentApi {
+public class ComponentTryToSee extends RelativeLayout implements ComponentApi {
 
-    public ComponentTry( Context context) {
+    public ComponentTryToSee(Context context) {
         super(context);
-        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_try, this, true);
+        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_try_to_see, this, true);
     }
 
     @Override
@@ -26,8 +24,7 @@ public class ComponentTry extends RelativeLayout implements ComponentApi {
                 LogUtil.log("ComponentTry[show] => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.STATE_TRY_COMPLETE:
-                Toast.makeText(getContext(), "试看结束", Toast.LENGTH_SHORT).show();
+            case PlayerType.StateType.STATE_TRY_TO_SEE_FINISH:
                 LogUtil.log("ComponentTry[gone] => playState = " + playState);
                 hide();
                 break;

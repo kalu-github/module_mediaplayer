@@ -82,7 +82,7 @@ public @interface PlayerType {
         int STATE_START_SEEK = 3_013; // 开始播放
         int STATE_START_PLAY_WHEN_READY_PAUSE = 3_014; // 开始播放
         int STATE_END = 3_015; // 播放完成
-        int STATE_TRY_COMPLETE = 3_016; // 试看完成
+        int STATE_TRY_TO_SEE_FINISH = 3_016; // 试看完成
         int STATE_PAUSE = 3_017; // 暂停播放
         int STATE_RESUME = 3_019; // 恢复播放
         int STATE_RESTAER = 3_021; // 重播一次
@@ -138,7 +138,7 @@ public @interface PlayerType {
                 STATE_BUFFERING_START,
                 STATE_BUFFERING_STOP,
                 STATE_LOADING_STOP,
-                STATE_TRY_COMPLETE,
+                STATE_TRY_TO_SEE_FINISH,
                 STATE_END,
                 STATE_START_ABORT,
                 STATE_LOADING_START,
@@ -247,7 +247,7 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface SeekType {
+    @interface ExoSeekType {
 
         int EXO_SEEK_DEFAULT = 9_001;
         int EXO_SEEK_CLOSEST_SYNC = 9_002;
@@ -258,10 +258,10 @@ public @interface PlayerType {
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {
-                SeekType.EXO_SEEK_DEFAULT,
-                SeekType.EXO_SEEK_CLOSEST_SYNC,
-                SeekType.EXO_SEEK_PREVIOUS_SYNC,
-                SeekType.EXO_SEEK_NEXT_SYNC})
+                ExoSeekType.EXO_SEEK_DEFAULT,
+                ExoSeekType.EXO_SEEK_CLOSEST_SYNC,
+                ExoSeekType.EXO_SEEK_PREVIOUS_SYNC,
+                ExoSeekType.EXO_SEEK_NEXT_SYNC})
         @interface Value {
         }
     }
@@ -269,7 +269,7 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface FFmpegType {
+    @interface ExoFFmpegType {
         int EXO_RENDERER_ONLY_MEDIACODEC = 10_001;
         int EXO_RENDERER_ONLY_MEDIACODEC_AUDIO = 10_002;
         int EXO_RENDERER_ONLY_MEDIACODEC_VIDEO = 10_003;
@@ -283,14 +283,14 @@ public @interface PlayerType {
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {
-                FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC,
-                FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_AUDIO,
-                FFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_VIDEO,
-                FFmpegType.EXO_RENDERER_ONLY_FFMPEG,
-                FFmpegType.EXO_RENDERER_ONLY_FFMPEG_AUDIO,
-                FFmpegType.EXO_RENDERER_ONLY_FFMPEG_VIDEO,
-                FFmpegType.EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG,
-                FFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC})
+                ExoFFmpegType.EXO_RENDERER_ONLY_MEDIACODEC,
+                ExoFFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_AUDIO,
+                ExoFFmpegType.EXO_RENDERER_ONLY_MEDIACODEC_VIDEO,
+                ExoFFmpegType.EXO_RENDERER_ONLY_FFMPEG,
+                ExoFFmpegType.EXO_RENDERER_ONLY_FFMPEG_AUDIO,
+                ExoFFmpegType.EXO_RENDERER_ONLY_FFMPEG_VIDEO,
+                ExoFFmpegType.EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG,
+                ExoFFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC})
         @interface Value {
         }
     }
@@ -331,6 +331,7 @@ public @interface PlayerType {
         int EVENT_ERROR_SOURCE = 7_003;
         int EVENT_ERROR_PARSE = 7_004;
         int EVENT_ERROR_NET = 7_005;
+        int EVENT_ERROR_BUFFERING_TIMEOUT = 7_006;
         int EVENT_LOADING_START = 7_007; // 开始转圈
         int EVENT_LOADING_START_IGNORE = 7_008; // 开始转圈
         int EVENT_LOADING_STOP = 7_009; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放
@@ -373,6 +374,7 @@ public @interface PlayerType {
                 EVENT_ERROR_SOURCE,
                 EVENT_ERROR_PARSE,
                 EVENT_ERROR_NET,
+                EVENT_ERROR_BUFFERING_TIMEOUT,
 //                EVENT_OPEN_INPUT,
                 EVENT_LOADING_START,
                 EVENT_LOADING_START_IGNORE,
