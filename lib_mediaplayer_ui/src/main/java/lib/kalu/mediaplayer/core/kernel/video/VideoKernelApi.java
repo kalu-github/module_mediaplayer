@@ -34,6 +34,7 @@ public interface VideoKernelApi extends VideoKernelApiCheck, VideoKernelApiBase,
     }
 
     default void clear() {
+        mDoWindowing[0] = false;
         mConnectTimeout[0] = 0L;
         mBufferingTimeoutRetry[0] = false;
         mSeek[0] = 0L;

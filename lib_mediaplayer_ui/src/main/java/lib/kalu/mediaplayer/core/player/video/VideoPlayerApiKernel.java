@@ -23,6 +23,27 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         VideoPlayerApiRender,
         VideoPlayerApiDevice {
 
+    default boolean isDoWindowing() {
+        try {
+            VideoKernelApi videoKernel = getVideoKernel();
+            if (null == videoKernel)
+                throw new Exception("error: videoKernel null");
+            return videoKernel.isDoWindowing();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    default void setDoWindowing(boolean v) {
+        try {
+            VideoKernelApi videoKernel = getVideoKernel();
+            if (null == videoKernel)
+                throw new Exception("error: videoKernel null");
+            videoKernel.setDoWindowing(v);
+        } catch (Exception e) {
+        }
+    }
+
     default void setTags(StartArgs args) {
         try {
             ((View) this).setTag(R.id.module_mediaplayer_id_startargs, args);
@@ -556,7 +577,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             }
                             callEventListener(PlayerType.StateType.STATE_START);
                             // ijk需要刷新RenderView
-                            resetRenderView(false);
+                            int kernelType = args.getKernelType();
+                            int renderType = args.getRenderType();
+                            initRenderView(kernelType, renderType);
 //                            // step3
                             checkVideoView();
                             // step4

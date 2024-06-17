@@ -16,6 +16,19 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoKernelApiBase {
 
+    /***************/
+
+    // 正在切换window
+    boolean[] mDoWindowing = new boolean[]{false};
+
+    default void setDoWindowing(boolean v) {
+        mDoWindowing[0] = v;
+    }
+
+    default boolean isDoWindowing() {
+        return mDoWindowing[0];
+    }
+
     /*****/
 
     long[] mConnectTimeout = new long[]{0L};

@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.player.video;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.RelativeLayout;
 
 import lib.kalu.mediaplayer.R;
@@ -12,6 +13,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderFactoryManager;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListener {
 
@@ -24,36 +26,19 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    default void requestFocusFull() {
-        try {
-            ViewGroup decorView = findDecorView((View) this);
-            if (null == decorView)
-                throw new Exception("decorView error: null");
-            View focus = decorView.findFocus();
-            if (null == focus)
-                throw new Exception("focus error: null");
-            ((View) this).setTag(R.id.module_mediaplayer_window_id, focus);
-            ((View) ((View) this).getParent()).setFocusable(true);
-            ((View) this).setFocusable(true);
-            ((View) this).requestFocus();
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => requestFocusFull => " + e.getMessage());
-        }
-    }
-
-    default void cleanFocusFull() {
-        try {
-            Object tag = ((View) this).getTag(R.id.module_mediaplayer_window_id);
-            if (null == tag)
-                throw new Exception("tag error: null");
-            ((View) this).setTag(R.id.module_mediaplayer_window_id, null);
-            ((View) ((View) this).getParent()).setFocusable(false);
-            ((View) this).setFocusable(false);
-            ((View) tag).requestFocus();
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => cleanFocusFull => " + e.getMessage());
-        }
-    }
+//    default void cleanFocusFull() {
+//        try {
+//            Object tag = ((View) this).getTag(R.id.module_mediaplayer_window_id);
+//            if (null == tag)
+//                throw new Exception("tag error: null");
+//            ((View) this).setTag(R.id.module_mediaplayer_window_id, null);
+//            ((View) ((View) this).getParent()).setFocusable(false);
+//            ((View) this).setFocusable(false);
+//            ((View) tag).requestFocus();
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApiRender => cleanFocusFull => " + e.getMessage());
+//        }
+//    }
 
 //    default void checkPlaying() {
 //        try {
@@ -80,96 +65,174 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
 //        }
 //    }
 
-    default boolean startFull(boolean rememberPlaying) {
-        return startFull(rememberPlaying, true);
-    }
-
-    default boolean startFull(boolean rememberPlaying, boolean resetSurface) {
+    default boolean startFull(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
         try {
-            boolean isPhoneWindow = isParentEqualsPhoneWindow();
-            if (isPhoneWindow)
-                throw new Exception("always full");
-            requestFocusFull();
-            boolean b = switchToDecorView(true);
-            if (b) {
-                if (resetSurface) {
-                    resetRenderView(true);
-                }
-                callEventListener(PlayerType.StateType.STATE_FULL_START);
-                callWindowListener(PlayerType.WindowType.FULL);
-            }
-            if (rememberPlaying) {
-//                checkPlaying();
-            }
-            return b;
+            callEventListener(PlayerType.StateType.STATE_FULL_START);
+            boolean full = isFull();
+            if (full)
+                throw new Exception("warning: full true");
+            ViewGroup decorView = findDecorView((View) this);
+            if (null == decorView)
+                throw new Exception("decorView error: null");
+            // 1
+            ViewGroup viewRoot = decorView.findViewById(R.id.module_mediaplayer_root);
+            if (null == viewRoot)
+                throw new Exception("viewRoot error: null");
+            Object tag = viewRoot.getTag(R.id.module_mediaplayer_root_parent_id);
+            if (null == tag)
+                throw new Exception("warning: tagId null");
+            // 2
+            ((PlayerView) viewRoot).setDoWindowing(true);
+            // 2
+            ViewGroup viewParent = decorView.findViewById((int) tag);
+            viewParent.removeView(viewRoot);
+            // 2
+            int childCount = decorView.getChildCount();
+            decorView.addView(viewRoot, childCount);
+            // 3
+            viewRoot.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+            viewRoot.requestFocus();
+            // 4
+            initRenderView(kernelType, renderType);
+            // 5
+            ((PlayerView) viewRoot).setDoWindowing(false);
+            callEventListener(PlayerType.StateType.STATE_FULL_SUCC);
+            callWindowListener(PlayerType.WindowType.FULL);
+            return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => startFull => " + e.getMessage());
+            callEventListener(PlayerType.StateType.STATE_FULL_FAIL);
             return false;
         }
     }
 
-    default boolean stopFull() {
-        return stopFull(true);
-    }
-
-    default boolean stopFull(boolean resetSurface) {
+    default boolean stopFull(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
         try {
+            callEventListener(PlayerType.StateType.STATE_FULL_START);
             boolean isFull = isFull();
             if (!isFull)
                 throw new Exception("not full");
-            boolean b = switchToPlayerLayout();
-//            switchPlaying();
-            if (b) {
-                if (resetSurface) {
-                    resetRenderView(true);
-                }
-                cleanFocusFull();
-                callEventListener(PlayerType.StateType.STATE_FULL_STOP);
-                callWindowListener(PlayerType.WindowType.NORMAL);
-            }
-            return b;
+            ViewGroup decorView = findDecorView((View) this);
+            if (null == decorView)
+                throw new Exception("decorView error: null");
+            // 1
+            ViewGroup viewRoot = decorView.findViewById(R.id.module_mediaplayer_root);
+            if (null == viewRoot)
+                throw new Exception("viewRoot error: null");
+            Object tag = viewRoot.getTag(R.id.module_mediaplayer_root_parent_id);
+            if (null == tag)
+                throw new Exception("warning: tagId null");
+            // 2
+            ((PlayerView) viewRoot).setDoWindowing(true);
+            // 2
+            decorView.removeView(viewRoot);
+            // 2
+            ViewGroup viewParent = decorView.findViewById((int) tag);
+            viewParent.addView(viewRoot, 0);
+            // 3
+            viewRoot.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+            viewRoot.requestFocus();
+            // 4
+            initRenderView(kernelType, renderType);
+            // 5
+            ((PlayerView) viewRoot).setDoWindowing(false);
+            callEventListener(PlayerType.StateType.STATE_FULL_SUCC);
+            callWindowListener(PlayerType.WindowType.NORMAL);
+            return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => stopFull => " + e.getMessage());
+            callEventListener(PlayerType.StateType.STATE_FULL_FAIL);
             return false;
         }
     }
 
-    default boolean startFloat(boolean rememberPlaying) {
+    default boolean startFloat(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
         try {
-            boolean isPhoneWindow = isParentEqualsPhoneWindow();
-            if (isPhoneWindow)
-                throw new Exception("always Float");
-            boolean switchToDecorView = switchToDecorView(false);
-            if (switchToDecorView) {
-                resetRenderView(true);
-                callEventListener(PlayerType.StateType.STATE_FLOAT_START);
-                callWindowListener(PlayerType.WindowType.FLOAT);
-            }
-            if (rememberPlaying) {
-//                checkPlaying();
-            }
-            return switchToDecorView;
+            callEventListener(PlayerType.StateType.STATE_FLOAT_START);
+            boolean full = isFull();
+            if (full)
+                throw new Exception("warning: full true");
+            ViewGroup decorView = findDecorView((View) this);
+            if (null == decorView)
+                throw new Exception("decorView error: null");
+            // 1
+            ViewGroup viewRoot = decorView.findViewById(R.id.module_mediaplayer_root);
+            if (null == viewRoot)
+                throw new Exception("viewRoot error: null");
+            Object tag = viewRoot.getTag(R.id.module_mediaplayer_root_parent_id);
+            if (null == tag)
+                throw new Exception("warning: tagId null");
+            // 2
+            ((PlayerView) viewRoot).setDoWindowing(true);
+            // 2
+            ViewGroup viewParent = decorView.findViewById((int) tag);
+            viewParent.removeView(viewRoot);
+            // 2
+            int width = getBaseContext().getResources().getDimensionPixelOffset(R.dimen.module_mediaplayer_dimen_float_width);
+            int height = width * 9 / 16;
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
+            layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            viewRoot.setLayoutParams(layoutParams);
+            // 2
+            int childCount = decorView.getChildCount();
+            decorView.addView(viewRoot, childCount);
+            // 3
+            viewRoot.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+            viewRoot.requestFocus();
+            // 4
+            initRenderView(kernelType, renderType);
+            // 5
+            ((PlayerView) viewRoot).setDoWindowing(false);
+            callEventListener(PlayerType.StateType.STATE_FLOAT_SUCC);
+            callWindowListener(PlayerType.WindowType.FLOAT);
+            return true;
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => startFloat => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiRender => startFull => " + e.getMessage());
+            callEventListener(PlayerType.StateType.STATE_FLOAT_FAIL);
             return false;
         }
     }
 
-    default boolean stopFloat() {
+    default boolean stopFloat(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
         try {
+            callEventListener(PlayerType.StateType.STATE_FLOAT_START);
             boolean isFloat = isFloat();
             if (!isFloat)
                 throw new Exception("not Float");
-            boolean switchToPlayerLayout = switchToPlayerLayout();
-//            switchPlaying();
-            if (switchToPlayerLayout) {
-                resetRenderView(true);
-                callEventListener(PlayerType.StateType.STATE_FLOAT_STOP);
-                callWindowListener(PlayerType.WindowType.NORMAL);
-            }
-            return switchToPlayerLayout;
+            ViewGroup decorView = findDecorView((View) this);
+            if (null == decorView)
+                throw new Exception("decorView error: null");
+            // 1
+            ViewGroup viewRoot = decorView.findViewById(R.id.module_mediaplayer_root);
+            if (null == viewRoot)
+                throw new Exception("viewRoot error: null");
+            Object tag = viewRoot.getTag(R.id.module_mediaplayer_root_parent_id);
+            if (null == tag)
+                throw new Exception("warning: tagId null");
+            // 2
+            ((PlayerView) viewRoot).setDoWindowing(true);
+            // 2
+            decorView.removeView(viewRoot);
+            // 2
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            viewRoot.setLayoutParams(layoutParams);
+            // 2
+            ViewGroup viewParent = decorView.findViewById((int) tag);
+            viewParent.addView(viewRoot, 0);
+            // 3
+            viewRoot.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+            viewRoot.requestFocus();
+            // 4
+            initRenderView(kernelType, renderType);
+            // 5
+            ((PlayerView) viewRoot).setDoWindowing(false);
+            callEventListener(PlayerType.StateType.STATE_FULL_SUCC);
+            callWindowListener(PlayerType.WindowType.NORMAL);
+            return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => stopFloat => " + e.getMessage());
+            callEventListener(PlayerType.StateType.STATE_FLOAT_FAIL);
             return false;
         }
     }
@@ -371,29 +434,23 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    default void resetRenderView(boolean isWindow) {
+    default void initRenderView(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
         try {
-            PlayerArgs playerBuilder = PlayerSDK.init().getPlayerBuilder();
-            if (null == playerBuilder)
-                throw new Exception("error: null playerBuilder");
-            int kernel = playerBuilder.getKernel();
-            if (kernel == PlayerType.KernelType.IJK_MEDIACODEC && isWindow) {
-                int render = playerBuilder.getRender();
-                if (render == PlayerType.RenderType.SURFACE_VIEW) {
-                    releaseRender();
-                    checkRenderNull(PlayerType.RenderType.SURFACE_VIEW, true);
-                    attachRenderKernel();
-                }
-            } else if (kernel == PlayerType.KernelType.IJK_MEDIACODEC) {
+            if (kernelType == PlayerType.KernelType.IJK_MEDIACODEC && renderType == PlayerType.RenderType.SURFACE_VIEW) {
+                releaseRender();
+                checkRenderNull(PlayerType.RenderType.SURFACE_VIEW, true);
+                attachRenderKernel();
+            } else if (kernelType == PlayerType.KernelType.IJK_MEDIACODEC) {
                 VideoRenderApi videoRender = getVideoRender();
                 videoRender.reset();
-            } else if (kernel == PlayerType.KernelType.IJK) {
+            } else if (kernelType == PlayerType.KernelType.IJK) {
                 VideoRenderApi videoRender = getVideoRender();
                 videoRender.reset();
             } else {
                 throw new Exception("warning: kernel not ijk");
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             LogUtil.log("VideoPlayerApiRender => resetRenderView => " + e.getMessage());
         }
     }

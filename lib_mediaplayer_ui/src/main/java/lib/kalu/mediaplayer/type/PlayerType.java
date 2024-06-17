@@ -103,9 +103,11 @@ public @interface PlayerType {
         int STATE_RELEASE_EXCEPTION = 3_036;
 
         int STATE_FULL_START = 3_037;
-        int STATE_FULL_STOP = 3_038;
-        int STATE_FLOAT_START = 3_039;
-        int STATE_FLOAT_STOP = 3_040;
+        int STATE_FULL_SUCC = 3_038;
+        int STATE_FULL_FAIL = 3_039;
+        int STATE_FLOAT_START = 3_040;
+        int STATE_FLOAT_SUCC = 3_041;
+        int STATE_FLOAT_FAIL = 3_042;
 
         @Documented
         @Retention(CLASS)
@@ -114,9 +116,11 @@ public @interface PlayerType {
                 STATE_INIT,
                 STATE_INIT_SEEK,
                 STATE_FULL_START,
-                STATE_FULL_STOP,
+                STATE_FULL_SUCC,
+                STATE_FULL_FAIL,
                 STATE_FLOAT_START,
-                STATE_FLOAT_STOP,
+                STATE_FLOAT_SUCC,
+                STATE_FLOAT_FAIL,
                 STATE_FAST_FORWARD_START,
                 STATE_FAST_FORWARD_STOP,
                 STATE_FAST_REWIND_START,

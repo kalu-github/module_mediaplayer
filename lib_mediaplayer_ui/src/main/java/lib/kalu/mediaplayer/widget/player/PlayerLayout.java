@@ -64,6 +64,7 @@ public class PlayerLayout extends RelativeLayout {
             if (childCount > 0)
                 throw new Exception("childCount warning: " + childCount);
             PlayerView playerView = new PlayerView(getContext());
+            playerView.setTag(R.id.module_mediaplayer_root_parent_id, getId());
             playerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
             addView(playerView);
         } catch (Exception e) {
@@ -181,20 +182,19 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     public final void startFull() {
-        startFull(false, false);
-    }
-
-    public final void startFull(boolean checkUrl, boolean rememberPlaying) {
         try {
-            if (checkUrl) {
-                String mediaUrl = getMediaUrl();
-                if (null == mediaUrl)
-                    throw new Exception("url error: null");
-            }
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            boolean startFull = playerView.startFull(rememberPlaying, true);
+            StartArgs tags = playerView.getTags();
+            if (null == tags)
+                throw new Exception("warning: tags null");
+            String mediaUrl = tags.getMediaUrl();
+            if (null == mediaUrl)
+                throw new Exception("warning: mediaUrl null");
+            int kernelType = tags.getKernelType();
+            int renderType = tags.getRenderType();
+            boolean startFull = playerView.startFull(kernelType, renderType);
             LogUtil.log("PlayerLayout => startFull => status = " + startFull);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => startFull => " + e.getMessage());
@@ -206,7 +206,15 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            boolean stopFull = playerView.stopFull(true);
+            StartArgs tags = playerView.getTags();
+            if (null == tags)
+                throw new Exception("warning: tags null");
+            String mediaUrl = tags.getMediaUrl();
+            if (null == mediaUrl)
+                throw new Exception("warning: mediaUrl null");
+            int kernelType = tags.getKernelType();
+            int renderType = tags.getRenderType();
+            boolean stopFull = playerView.stopFull(kernelType, renderType);
             LogUtil.log("PlayerLayout => stopFull => status = " + stopFull);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => stopFull => " + e.getMessage());
@@ -214,33 +222,40 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     public final void startFloat() {
-        startFloat(false, false);
-    }
-
-    public final void startFloat(boolean checkUrl, boolean rememberPlaying) {
         try {
-            if (checkUrl) {
-                String mediaUrl = getMediaUrl();
-                if (null == mediaUrl)
-                    throw new Exception("url error: null");
-            }
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            boolean startFloat = playerView.startFloat(rememberPlaying);
-            LogUtil.log("PlayerLayout => startFloat => status = " + startFloat);
+            StartArgs tags = playerView.getTags();
+            if (null == tags)
+                throw new Exception("warning: tags null");
+            String mediaUrl = tags.getMediaUrl();
+            if (null == mediaUrl)
+                throw new Exception("warning: mediaUrl null");
+            int kernelType = tags.getKernelType();
+            int renderType = tags.getRenderType();
+            boolean startFull = playerView.startFloat(kernelType, renderType);
+            LogUtil.log("PlayerLayout => startFloat => status = " + startFull);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => startFloat => " + e.getMessage());
         }
     }
-
+//
     public final void stopFloat() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            boolean stopFloat = playerView.stopFloat();
-            LogUtil.log("PlayerLayout => stopFloat => status = " + stopFloat);
+            StartArgs tags = playerView.getTags();
+            if (null == tags)
+                throw new Exception("warning: tags null");
+            String mediaUrl = tags.getMediaUrl();
+            if (null == mediaUrl)
+                throw new Exception("warning: mediaUrl null");
+            int kernelType = tags.getKernelType();
+            int renderType = tags.getRenderType();
+            boolean stopFull = playerView.stopFloat(kernelType, renderType);
+            LogUtil.log("PlayerLayout => stopFloat => status = " + stopFull);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => stopFloat => " + e.getMessage());
         }

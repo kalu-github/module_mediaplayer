@@ -5,8 +5,8 @@
 
     <!-- id -->
     <item name="module_mediaplayer_root" type="id" />
+    <item name="module_mediaplayer_root_parent_id" type="id" />
     <item name="module_mediaplayer_video" type="id" />
     <item name="module_mediaplayer_component" type="id" />
-    <item name="module_mediaplayer_window_id" type="id" />
 
 </resources>

@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.test;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -57,8 +58,15 @@ public final class TestActivity extends Activity {
     public static final String INTENT_TIME_LENGTH = "intent_time_length"; // 视频总时长
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public boolean dispatchKeyEvent(KeyEvent event) {
+
+        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        boolean dispatchKeyEvent = playerLayout.dispatchKeyEvent(event);
+        if(dispatchKeyEvent){
+            return true;
+        }
+
+        return super.dispatchKeyEvent(event);
     }
 
     @Override

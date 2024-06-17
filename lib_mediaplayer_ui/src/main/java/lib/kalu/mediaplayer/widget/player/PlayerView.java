@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
@@ -18,6 +19,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 
 public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
@@ -36,12 +38,12 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
         LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         layoutPlayer.setLayoutParams(layoutParams);
-        addView(layoutPlayer);
+        addView(layoutPlayer, 0);
         // control
         RelativeLayout controlPlayer = new RelativeLayout(getContext());
         controlPlayer.setId(R.id.module_mediaplayer_component);
         controlPlayer.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-        addView(controlPlayer);
+        addView(controlPlayer, 1);
     }
 
     @Override
@@ -79,17 +81,35 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        LogUtil.log("PlayerView => dispatchKeyEvent => action = " + event.getAction() + ", code = " + event.getKeyCode());
         try {
             // onBackPressed
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+
                 // stopFull
                 if (isFull()) {
-                    stopFull();
+                    try {
+                        StartArgs tags = getTags();
+                        if (null == tags)
+                            throw new Exception();
+                        int kernelType = tags.getKernelType();
+                        int renderType = tags.getRenderType();
+                        stopFull(kernelType, renderType);
+                    } catch (Exception e) {
+                    }
                     return true;
                 }
                 //  stopFloat();
                 else if (isFloat()) {
-                    stopFloat();
+                    try {
+                        StartArgs tags = getTags();
+                        if (null == tags)
+                            throw new Exception();
+                        int kernelType = tags.getKernelType();
+                        int renderType = tags.getRenderType();
+                        stopFloat(kernelType, renderType);
+                    } catch (Exception e) {
+                    }
                     return true;
                 }
             }
@@ -225,4 +245,6 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     public void removeOnPlayerItemsListener() {
         this.mOnPlayerItemsLiatener = null;
     }
+
+    /***************/
 }

@@ -3,12 +3,19 @@ package lib.kalu.mediaplayer.core.player.video;
 import android.view.View;
 
 import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApiKernel {
 
     default void detachedFromWindow() {
         try {
+            VideoKernelApi videoKernel = getVideoKernel();
+            if (null == videoKernel)
+                throw new Exception("error: videoKernel null");
+            boolean doWindowing = videoKernel.isDoWindowing();
+            if (doWindowing)
+                throw new Exception("warning: doWindowing true");
             StartArgs tags = getTags();
             if (null == tags)
                 throw new Exception("warning: tags null");
@@ -27,6 +34,12 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
 
     default void attachedToWindow() {
         try {
+            VideoKernelApi videoKernel = getVideoKernel();
+            if (null == videoKernel)
+                throw new Exception("error: videoKernel null");
+            boolean doWindowing = videoKernel.isDoWindowing();
+            if (doWindowing)
+                throw new Exception("warning: doWindowing true");
             StartArgs tags = getTags();
             if (null == tags)
                 throw new Exception("warning: tags null");
@@ -44,6 +57,12 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
 
     default void windowVisibilityChanged(int visibility) {
         try {
+            VideoKernelApi videoKernel = getVideoKernel();
+            if (null == videoKernel)
+                throw new Exception("error: videoKernel null");
+            boolean doWindowing = videoKernel.isDoWindowing();
+            if (doWindowing)
+                throw new Exception("warning: doWindowing true");
             StartArgs tags = getTags();
             if (null == tags)
                 throw new Exception("warning: tags null");

@@ -97,7 +97,6 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
 
     default void callProgressListener(long max, long position, long duration) {
 
-
         // component
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
