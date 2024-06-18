@@ -71,7 +71,6 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     @Override
     public final void hide() {
         try {
-
             findViewById(R.id.module_mediaplayer_component_loading_bg).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_loading_pb).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_loading_message).setVisibility(View.GONE);
