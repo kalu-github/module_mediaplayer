@@ -6,7 +6,7 @@
     android:focusable="false">
 
     <RelativeLayout
-        android:id="@+id/module_mediaplayer_component_info_root"
+        android:id="@+id/module_mediaplayer_component_warning_play_info_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
@@ -15,7 +15,7 @@
 
         <!-- 标题 -->
         <TextView
-            android:id="@+id/module_mediaplayer_component_info_title"
+            android:id="@+id/module_mediaplayer_component_warning_play_info_title"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:background="@drawable/module_mediaplayer_shape_shandow_up_to_down"
@@ -39,7 +39,7 @@
             android:padding="24dp">
 
             <TextView
-                android:id="@+id/module_mediaplayer_component_info_position"
+                android:id="@+id/module_mediaplayer_component_warning_play_info_position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="4dp"
@@ -49,7 +49,7 @@
                 android:textSize="12sp" />
 
             <SeekBar
-                android:id="@+id/module_mediaplayer_component_info_seekbar"
+                android:id="@+id/module_mediaplayer_component_warning_play_info_seekbar"
                 android:layout_width="0dp"
                 android:layout_height="16dp"
                 android:layout_weight="1"
@@ -66,7 +66,7 @@
                 android:thumbOffset="0dp" />
 
             <TextView
-                android:id="@+id/module_mediaplayer_component_info_duration"
+                android:id="@+id/module_mediaplayer_component_warning_play_info_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

@@ -13,9 +13,9 @@ import org.json.JSONArray;
 import java.util.LinkedList;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.core.component.ComponentInfo;
+import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
-import lib.kalu.mediaplayer.core.component.ComponentSeekPlayRecord;
+import lib.kalu.mediaplayer.core.component.ComponentWarningPlayRecord;
 import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
@@ -209,10 +209,10 @@ public final class TestActivity extends Activity {
         ComponentTrySee trys = new ComponentTrySee(getApplicationContext());
         componentApis.add(trys);
         // 续播
-        ComponentSeekPlayRecord playRecord = new ComponentSeekPlayRecord(getApplicationContext());
+        ComponentWarningPlayRecord playRecord = new ComponentWarningPlayRecord(getApplicationContext());
         componentApis.add(playRecord);
         // 起播详情
-        ComponentInfo info = new ComponentInfo(getApplicationContext());
+        ComponentWarningPlayInfo info = new ComponentWarningPlayInfo(getApplicationContext());
         componentApis.add(info);
         // insert-component
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);

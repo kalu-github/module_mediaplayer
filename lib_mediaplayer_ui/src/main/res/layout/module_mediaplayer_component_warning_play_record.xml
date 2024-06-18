@@ -6,7 +6,7 @@
     android:focusable="false">
 
     <TextView
-        android:id="@+id/module_mediaplayer_component_seek_play_record_root"
+        android:id="@+id/module_mediaplayer_component_warning_play_record_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

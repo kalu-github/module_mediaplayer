@@ -18,12 +18,12 @@ import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.TimeUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 
-public class ComponentInfo extends RelativeLayout implements ComponentApi {
+public class ComponentWarningPlayInfo extends RelativeLayout implements ComponentApi {
 
-    public ComponentInfo(Context context) {
+    public ComponentWarningPlayInfo(Context context) {
         super(context);
         setEnabled(true);
-        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_info, this, true);
+        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_warning_play_info, this, true);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ComponentInfo extends RelativeLayout implements ComponentApi {
     public void callEventListener(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_START:
-                LogUtil.log("ComponentPlayInfo => playState = " + playState);
+                LogUtil.log("ComponentWarningPlayInfo => playState = " + playState);
                 show();
                 break;
         }
@@ -63,7 +63,7 @@ public class ComponentInfo extends RelativeLayout implements ComponentApi {
         try {
             if (position < 0 || duration < 0)
                 throw new Exception();
-            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_info_seekbar);
+            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_play_info_seekbar);
             seekBar.setProgress((int) position);
             seekBar.setSecondaryProgress((int) position);
             seekBar.setMax((int) (max > 0 ? max : duration));
@@ -73,7 +73,7 @@ public class ComponentInfo extends RelativeLayout implements ComponentApi {
         // position
         try {
             String optString = TimeUtil.formatTimeMillis(position, (max > 0 ? max : duration));
-            TextView textView = findViewById(R.id.module_mediaplayer_component_info_position);
+            TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_position);
             textView.setText(optString);
         } catch (Exception e) {
         }
@@ -81,7 +81,7 @@ public class ComponentInfo extends RelativeLayout implements ComponentApi {
         // duration
         try {
             String optString = TimeUtil.formatTimeMillis(max > 0 ? max : duration);
-            TextView textView = findViewById(R.id.module_mediaplayer_component_info_duration);
+            TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_duration);
             textView.setText(optString);
         } catch (Exception e) {
         }
@@ -90,7 +90,7 @@ public class ComponentInfo extends RelativeLayout implements ComponentApi {
     @Override
     public boolean isComponentShowing() {
         try {
-            return findViewById(R.id.module_mediaplayer_component_info_root).getVisibility() == View.VISIBLE;
+            return findViewById(R.id.module_mediaplayer_component_warning_play_info_root).getVisibility() == View.VISIBLE;
         } catch (Exception e) {
             return false;
         }
@@ -107,14 +107,14 @@ public class ComponentInfo extends RelativeLayout implements ComponentApi {
             if (null == tags)
                 throw new Exception("error: tags null");
             String mediaTitle = tags.getMediaTitle();
-            TextView textView = findViewById(R.id.module_mediaplayer_component_info_title);
+            TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_title);
             textView.setText(mediaTitle);
         } catch (Exception e) {
         }
 
 
         try {
-            findViewById(R.id.module_mediaplayer_component_info_root).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_warning_play_info_root).setVisibility(View.VISIBLE);
         } catch (Exception e) {
         }
 
@@ -138,7 +138,7 @@ public class ComponentInfo extends RelativeLayout implements ComponentApi {
 
 //        setEnabled(false);
 //        try {
-//            findViewById(R.id.module_mediaplayer_component_info_root).setVisibility(View.GONE);
+//            findViewById(R.id.module_mediaplayer_component_warning_play_info_root).setVisibility(View.GONE);
 //        } catch (Exception e) {
 //        }
     }
