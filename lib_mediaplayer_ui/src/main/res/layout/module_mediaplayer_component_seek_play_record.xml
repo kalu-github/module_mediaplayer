@@ -6,14 +6,15 @@
     android:focusable="false">
 
     <TextView
-        android:id="@+id/module_mediaplayer_component_play_record_root"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:id="@+id/module_mediaplayer_component_seek_play_record_root"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/holo_red_light"
-        android:gravity="left|center_vertical"
-        android:text="即将续播"
-        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="140dp"
+        android:focusable="false"
+        android:textColor="@color/module_mediaplayer_color_ffffff"
+        android:textSize="20sp"
         android:visibility="gone" />
 
 </RelativeLayout>

@@ -43,8 +43,8 @@ public interface VideoKernelApiCheck extends VideoKernelApiBase, VideoKernelApiE
                                 } else {
                                     onEvent(kernelType, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
                                     // 起播快进
-                                    onEvent(kernelType, PlayerType.EventType.EVENT_SEEK_PLAY_RECORD);
-//                                    seekTo(seek);
+                                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_SEEK_PLAY_RECORD);
+                                    seekTo(seek);
                                 }
                             } else {
                                 mHandlerPreparedPlaying[0].sendEmptyMessageDelayed(10001, 100);

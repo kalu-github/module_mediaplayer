@@ -14,36 +14,31 @@
         android:focusable="false"
         android:gravity="center_vertical|left"
         android:orientation="vertical"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp"
-        android:paddingBottom="8dp"
+        android:padding="24dp"
         android:visibility="gone">
 
         <TextView
             android:id="@+id/module_mediaplayer_component_try_see_message"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:focusable="false"
             android:gravity="center_vertical|left"
             android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
-        <!-- 快进快退 -->
+        <!-- 进度条 -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/module_mediaplayer_shape_shandow_down_to_up"
-            android:gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:focusable="false"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/module_mediaplayer_component_try_see_position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentBottom="true"
                 android:background="#00000000"
                 android:focusable="false"
                 android:gravity="center"

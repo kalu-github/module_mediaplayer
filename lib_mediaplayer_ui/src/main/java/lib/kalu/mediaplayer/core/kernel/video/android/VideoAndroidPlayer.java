@@ -395,9 +395,9 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
                         } else {
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
-                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_SEEK_PLAY_RECORD);
                             // 起播快进
-//                            seekTo(seek);
+                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_SEEK_PLAY_RECORD);
+                            seekTo(seek);
                         }
                     } catch (Exception e) {
                         LogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", msg = " + e.getMessage());
@@ -429,7 +429,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         public void onPrepared(MediaPlayer mp) {
             LogUtil.log("VideoAndroidPlayer => onPrepared =>");
             start();
-         //   startCheckPreparedPlaying(PlayerType.KernelType.ANDROID);
+            startCheckPreparedPlaying(PlayerType.KernelType.ANDROID);
         }
     };
 

@@ -14,7 +14,7 @@ import java.util.LinkedList;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
-import lib.kalu.mediaplayer.core.component.ComponentPlayRecord;
+import lib.kalu.mediaplayer.core.component.ComponentSeekPlayRecord;
 import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
@@ -208,7 +208,7 @@ public final class TestActivity extends Activity {
         ComponentTrySee trys = new ComponentTrySee(getApplicationContext());
         componentApis.add(trys);
         // 续播
-        ComponentPlayRecord playRecord = new ComponentPlayRecord(getApplicationContext());
+        ComponentSeekPlayRecord playRecord = new ComponentSeekPlayRecord(getApplicationContext());
         componentApis.add(playRecord);
         // insert-component
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
@@ -347,7 +347,7 @@ public final class TestActivity extends Activity {
         // 续播 10s
         boolean isSeek = getIntent().getBooleanExtra(INTENT_SEEK, false);
         if (isSeek) {
-            builder.setSeek(10000L);
+            builder.setSeek(33000L);
         } else {
             builder.setSeek(0L);
         }

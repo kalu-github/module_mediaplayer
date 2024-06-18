@@ -307,7 +307,7 @@
                 android:layout_height="20dp"
                 android:layout_marginLeft="6dp"
                 android:gravity="center_vertical|left"
-                android:text="起播快进"
+                android:text="续播"
                 android:textSize="14sp" />
 
             <RadioGroup
@@ -320,17 +320,15 @@
                     android:id="@+id/main_seek_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="false"
-                    android:enabled="true"
-                    android:text="起播快进" />
+                    android:checked="true"
+                    android:text="开启" />
 
                 <RadioButton
                     android:id="@+id/main_seek_no"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="true"
-                    android:enabled="true"
-                    android:text="起播正常" />
+                    android:checked="false"
+                    android:text="关闭" />
 
             </RadioGroup>
 
@@ -339,7 +337,7 @@
                 android:layout_height="20dp"
                 android:layout_marginLeft="6dp"
                 android:gravity="center_vertical|left"
-                android:text="试看1分钟"
+                android:text="试看"
                 android:textSize="14sp" />
 
             <RadioGroup
@@ -352,19 +350,25 @@
                     android:id="@+id/main_trysee_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="false"
-                    android:enabled="true"
-                    android:text="开启试看" />
+                    android:checked="true"
+                    android:text="开启" />
 
                 <RadioButton
                     android:id="@+id/main_trysee_no"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="true"
-                    android:enabled="true"
-                    android:text="关闭试看" />
+                    android:checked="false"
+                    android:text="关闭" />
 
             </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginLeft="6dp"
+                android:gravity="center_vertical|left"
+                android:text="边看边缓存【仅支持exo】"
+                android:textSize="14sp" />
 
             <RadioGroup
                 android:id="@+id/main_cache"
@@ -378,7 +382,7 @@
                     android:layout_height="match_parent"
                     android:checked="false"
                     android:enabled="true"
-                    android:text="开启：边看边缓存" />
+                    android:text="开启" />
 
                 <RadioButton
                     android:id="@+id/main_cache_null"
@@ -386,7 +390,7 @@
                     android:layout_height="match_parent"
                     android:checked="true"
                     android:enabled="true"
-                    android:text="关闭：边看边缓存" />
+                    android:text="关闭" />
 
             </RadioGroup>
 

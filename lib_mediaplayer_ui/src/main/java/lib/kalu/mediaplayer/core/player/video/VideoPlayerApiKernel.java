@@ -271,6 +271,15 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
+    default long getSeek() {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            return kernel.getSeek();
+        } catch (Exception e) {
+            return 0L;
+        }
+    }
+
     default void seekTo(long position) {
         try {
             if (position < 0) {
