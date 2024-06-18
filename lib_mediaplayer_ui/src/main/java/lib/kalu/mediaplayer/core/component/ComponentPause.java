@@ -69,6 +69,13 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
 
     @Override
     public final void hide() {
+
+        try {
+            TextView textView = findViewById(R.id.module_mediaplayer_component_pause_title);
+            textView.setText("");
+        } catch (Exception e) {
+        }
+
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -87,6 +94,21 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
 
     @Override
     public final void show() {
+
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("error: playerView null");
+            StartArgs tags = playerView.getTags();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            String mediaTitle = tags.getMediaTitle();
+            TextView textView = findViewById(R.id.module_mediaplayer_component_pause_title);
+            textView.setText(mediaTitle);
+        } catch (Exception e) {
+        }
+
+
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -135,62 +157,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     /*************/
 
     @Override
-    public final void setComponentBackgroundColorInt(int value) {
-        try {
-            setBackgroundColorInt(this, R.id.module_mediaplayer_component_pause_bg, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentBackgroundResource(int resid) {
-        try {
-            setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_pause_bg, resid);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentImageResource(int resid) {
-        try {
-            setImageResource(this, R.id.module_mediaplayer_component_pause_icon, resid);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentImageUrl(String url) {
-        try {
-            setImageUrl(this, R.id.module_mediaplayer_component_pause_icon, url);
-        } catch (Exception e) {
-        }
-    }
-
-    public final void setComponentTitleText(int value) {
-        try {
-            setText(this, R.id.module_mediaplayer_component_pause_title, value);
-        } catch (Exception e) {
-        }
-    }
-
-    public final void setComponentTitleText(String value) {
-        try {
-            setText(this, R.id.module_mediaplayer_component_pause_title, value);
-        } catch (Exception e) {
-        }
-    }
-
-    public final void setComponentTitleTextSize(int value) {
-        try {
-            setTextSize(this, R.id.module_mediaplayer_component_pause_title, value);
-        } catch (Exception e) {
-        }
-    }
-
-    public final void setComponentTitleTextColor(int color) {
-        try {
-            setTextColor(this, R.id.module_mediaplayer_component_pause_title, color);
-        } catch (Exception e) {
-        }
+    public int initLayoutIdComponentBackground() {
+        return R.id.module_mediaplayer_component_pause_bg;
     }
 }

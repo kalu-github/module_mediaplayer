@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import java.util.LinkedList;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.core.component.ComponentInfo;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
 import lib.kalu.mediaplayer.core.component.ComponentSeekPlayRecord;
 import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
@@ -210,6 +211,9 @@ public final class TestActivity extends Activity {
         // 续播
         ComponentSeekPlayRecord playRecord = new ComponentSeekPlayRecord(getApplicationContext());
         componentApis.add(playRecord);
+        // 起播详情
+        ComponentInfo info = new ComponentInfo(getApplicationContext());
+        componentApis.add(info);
         // insert-component
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
         playerLayout.addAllComponent(componentApis);
@@ -353,6 +357,7 @@ public final class TestActivity extends Activity {
         }
 
         builder.setLive(live);
+        builder.setMediaTitle("测试title");
         builder.setMediaUrl(url);
         StartArgs build = builder.build();
         PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);

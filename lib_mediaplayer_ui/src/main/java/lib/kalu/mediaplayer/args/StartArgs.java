@@ -94,6 +94,12 @@ public class StartArgs {
     public String getMediaUrl() {
         return mediaUrl;
     }
+    // 视频title
+    private String mediaTitle;
+
+    public String getMediaTitle() {
+        return mediaTitle;
+    }
 
     // 字幕url
     private String subtitleUrl;
@@ -173,6 +179,7 @@ public class StartArgs {
                 ", initRelease=" + initRelease +
                 ", supportViewLifecycle=" + supportViewLifecycle +
                 ", mediaUrl='" + mediaUrl + '\'' +
+                ", mediaTitle='" + mediaTitle + '\'' +
                 ", subtitleUrl='" + subtitleUrl + '\'' +
                 ", maxDuration=" + maxDuration +
                 ", trySee=" + trySee +
@@ -199,6 +206,7 @@ public class StartArgs {
         this.initRelease = builder.initRelease;
         this.supportViewLifecycle = builder.supportViewLifecycle;
         this.mediaUrl = builder.mediaUrl;
+        this.mediaTitle = builder.mediaTitle;
         this.subtitleUrl = builder.subtitleUrl;
         this.maxDuration = builder.maxDuration;
         this.trySee = builder.trySee;
@@ -225,6 +233,7 @@ public class StartArgs {
         builder.initRelease = initRelease;
         builder.supportViewLifecycle = supportViewLifecycle;
         builder.mediaUrl = mediaUrl;
+        builder.mediaTitle = mediaTitle;
         builder.subtitleUrl = subtitleUrl;
         builder.maxDuration = maxDuration;
         builder.trySee = trySee;
@@ -268,6 +277,14 @@ public class StartArgs {
 
         public Builder setMediaUrl(String mediaUrl) {
             this.mediaUrl = mediaUrl;
+            return this;
+        }
+
+        // 视频title
+        private String mediaTitle;
+
+        public Builder setMediaTitle(String mediaTitle) {
+            this.mediaTitle = mediaTitle;
             return this;
         }
 

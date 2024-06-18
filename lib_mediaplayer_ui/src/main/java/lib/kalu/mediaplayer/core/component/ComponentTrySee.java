@@ -111,34 +111,7 @@ public class ComponentTrySee extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void setComponentText(int value) {
-        try {
-            setText(this, R.id.module_mediaplayer_component_try_see_message, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentText(String value) {
-        try {
-            setText(this, R.id.module_mediaplayer_component_try_see_message, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentTextSize(int value) {
-        try {
-            setTextSize(this, R.id.module_mediaplayer_component_try_see_message, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentTextColor(int color) {
-        try {
-            setTextColor(this, R.id.module_mediaplayer_component_try_see_message, color);
-        } catch (Exception e) {
-        }
+    public int initLayoutIdText() {
+        return R.id.module_mediaplayer_component_try_see_message;
     }
 }

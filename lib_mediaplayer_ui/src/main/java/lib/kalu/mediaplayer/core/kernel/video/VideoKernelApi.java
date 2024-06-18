@@ -28,6 +28,8 @@ public interface VideoKernelApi extends VideoKernelApiCheck, VideoKernelApiBase,
     }
 
     default void clear() {
+        mMediaTitle[0] = null;
+        mMediaUrl[0] = null;
         mDoWindowing[0] = false;
         mConnectTimeout[0] = 0L;
         mBufferingTimeoutRetry[0] = false;
@@ -51,6 +53,15 @@ public interface VideoKernelApi extends VideoKernelApiCheck, VideoKernelApiBase,
         LogUtil.log("VideoKernelApi => initDecoder => " + args.toString());
 
         try {
+
+            String subtitleUrl = args.getSubtitleUrl();
+            setSubtitleUrl(subtitleUrl);
+
+            String mediaTitle = args.getMediaTitle();
+            setMediaTitle(mediaTitle);
+
+            String mediaUrl = args.getMediaUrl();
+            setMediaUrl(mediaUrl);
 
             long connectTimout = args.getConnectTimout();
             setConnectTimeout(connectTimout);

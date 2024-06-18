@@ -16,6 +16,42 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoKernelApiBase {
 
+    /*********/
+
+    String[] mSubtitleUrl = new String[]{null};
+
+    default void setSubtitleUrl(String v){
+        mSubtitleUrl[0] = v;
+    }
+
+    default String getSubtitleUrl(){
+        return mSubtitleUrl[0];
+    }
+
+    /*********/
+
+    String[] mMediaUrl = new String[]{null};
+
+    default void setMediaUrl(String v){
+        mMediaUrl[0] = v;
+    }
+
+    default String getMediaUrl(){
+        return mMediaUrl[0];
+    }
+
+    /*********/
+
+    String[] mMediaTitle = new String[]{null};
+
+    default void setMediaTitle(String v){
+        mMediaTitle[0] = v;
+    }
+
+    default String getMediaTitle(){
+        return mMediaTitle[0];
+    }
+
     /***************/
 
     // 正在切换window

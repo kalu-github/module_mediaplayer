@@ -240,8 +240,7 @@
                     android:id="@+id/main_kernel_android"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="false"
-                    android:enabled="true"
+                    android:checked="true"
                     android:text="android" />
 
                 <RadioButton
@@ -249,23 +248,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:checked="false"
-                    android:enabled="true"
                     android:text="media3" />
 
                 <RadioButton
                     android:id="@+id/main_kernel_ijk"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="true"
-                    android:enabled="true"
+                    android:checked="false"
                     android:text="ijk" />
 
                 <RadioButton
                     android:id="@+id/main_kernel_ijk_mediacodec"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="true"
-                    android:enabled="true"
+                    android:checked="false"
                     android:text="ijk_mediacodec" />
 
                 <RadioButton
@@ -273,7 +269,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:checked="false"
-                    android:enabled="true"
                     android:text="exo1" />
 
                 <RadioButton
@@ -281,7 +276,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:checked="false"
-                    android:enabled="true"
                     android:text="exo2" />
 
                 <RadioButton
@@ -289,7 +283,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:checked="false"
-                    android:enabled="true"
                     android:text="vlc" />
 
                 <RadioButton
@@ -297,7 +290,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:checked="false"
-                    android:enabled="true"
                     android:text="ffplayer" />
 
             </RadioGroup>

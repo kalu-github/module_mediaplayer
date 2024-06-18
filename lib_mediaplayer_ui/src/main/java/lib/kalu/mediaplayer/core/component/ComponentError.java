@@ -55,66 +55,12 @@ public class ComponentError extends RelativeLayout implements ComponentApi {
     /*************/
 
     @Override
-    public final void setComponentBackgroundColorInt(int value) {
-        try {
-            setBackgroundColorInt(this, R.id.module_mediaplayer_component_error_bg, value);
-        } catch (Exception e) {
-        }
+    public int initLayoutIdComponentBackground() {
+        return R.id.module_mediaplayer_component_error_bg;
     }
 
     @Override
-    public final void setComponentBackgroundResource(int resid) {
-        try {
-            setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_error_bg, resid);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentImageResource(int resid) {
-        try {
-            setImageResource(this, R.id.module_mediaplayer_component_error_icon, resid);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentImageUrl( String url) {
-        try {
-            setImageUrl(this, R.id.module_mediaplayer_component_error_icon, url);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentText(int value) {
-        try {
-            setText(this, R.id.module_mediaplayer_component_error_message, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentText( String value) {
-        try {
-            setText(this, R.id.module_mediaplayer_component_error_message, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentTextSize(int value) {
-        try {
-            setTextSize(this, R.id.module_mediaplayer_component_error_message, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentTextColor(int color) {
-        try {
-            setTextColor(this, R.id.module_mediaplayer_component_error_message, color);
-        } catch (Exception e) {
-        }
+    public int initLayoutIdImage() {
+        return R.id.module_mediaplayer_component_error_icon;
     }
 }

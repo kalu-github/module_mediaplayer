@@ -54,66 +54,7 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
     /*************/
 
     @Override
-    public final void setComponentBackgroundColorInt(int value) {
-        try {
-            setBackgroundColorInt(this, R.id.module_mediaplayer_component_init_bg, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentBackgroundResource(int resid) {
-        try {
-            setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_init_bg, resid);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentImageResource(int resid) {
-        try {
-            setImageResource(this, R.id.module_mediaplayer_component_init_bg, resid);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentImageUrl( String url) {
-        try {
-            setImageUrl(this, R.id.module_mediaplayer_component_init_bg, url);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentText(int value) {
-        try {
-            setText(this, R.id.module_mediaplayer_component_init_txt, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentText( String value) {
-        try {
-            setText(this, R.id.module_mediaplayer_component_init_txt, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentTextSize(int value) {
-        try {
-            setTextSize(this, R.id.module_mediaplayer_component_init_txt, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentTextColor(int color) {
-        try {
-            setTextColor(this, R.id.module_mediaplayer_component_init_txt, color);
-        } catch (Exception e) {
-        }
+    public int initLayoutIdComponentBackground() {
+        return R.id.module_mediaplayer_component_init_bg;
     }
 }

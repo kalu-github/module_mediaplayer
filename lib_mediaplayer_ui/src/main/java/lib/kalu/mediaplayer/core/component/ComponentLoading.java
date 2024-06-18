@@ -83,74 +83,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     /*************/
 
     @Override
-    public final void setComponentBackgroundColorInt(int value) {
-        try {
-            setBackgroundColorInt(this, R.id.module_mediaplayer_component_loading_bg, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentBackgroundResource(int resid) {
-        try {
-            setBackgroundDrawableRes(this, R.id.module_mediaplayer_component_loading_bg, resid);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentImageResource(int resid) {
-        try {
-            setImageResource(this, R.id.module_mediaplayer_component_loading_bg, resid);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentImageUrl(String url) {
-        try {
-            setImageUrl(this, R.id.module_mediaplayer_component_loading_bg, url);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public void setComponentImageFile(String filepath) {
-        try {
-            setImageFile(this, R.id.module_mediaplayer_component_loading_bg, filepath);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentText(int value) {
-        try {
-            setText(this, R.id.module_mediaplayer_component_loading_message, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentText(String value) {
-        try {
-            setText(this, R.id.module_mediaplayer_component_loading_message, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentTextSize(int value) {
-        try {
-            setTextSize(this, R.id.module_mediaplayer_component_loading_message, value);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void setComponentTextColor(int color) {
-        try {
-            setTextColor(this, R.id.module_mediaplayer_component_loading_message, color);
-        } catch (Exception e) {
-        }
+    public int initLayoutIdComponentBackground() {
+        return R.id.module_mediaplayer_component_loading_bg;
     }
 }
