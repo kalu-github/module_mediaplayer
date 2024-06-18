@@ -2,8 +2,16 @@ package lib.kalu.mediaplayer.util;
 
 public final class TimeUtil {
 
-    public static final String formatTimeMillis(long v) {
+    public static String formatTimeMillis(long v) {
         if (v <= 3600000) {
+            return formatTimeMillis1(v);
+        } else {
+            return formatTimeMillis2(v);
+        }
+    }
+
+    public static String formatTimeMillis(long v, long max) {
+        if (max <= 3600000) {
             return formatTimeMillis1(v);
         } else {
             return formatTimeMillis2(v);

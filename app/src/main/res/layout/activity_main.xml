@@ -320,14 +320,14 @@
                     android:id="@+id/main_seek_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="true"
+                    android:checked="false"
                     android:text="开启" />
 
                 <RadioButton
                     android:id="@+id/main_seek_no"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="false"
+                    android:checked="true"
                     android:text="关闭" />
 
             </RadioGroup>
@@ -350,14 +350,14 @@
                     android:id="@+id/main_trysee_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="true"
+                    android:checked="false"
                     android:text="开启" />
 
                 <RadioButton
                     android:id="@+id/main_trysee_no"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="false"
+                    android:checked="true"
                     android:text="关闭" />
 
             </RadioGroup>

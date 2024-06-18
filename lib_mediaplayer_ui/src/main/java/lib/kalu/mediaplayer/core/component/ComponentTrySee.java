@@ -13,6 +13,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.TimeUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public class ComponentTrySee extends RelativeLayout implements ComponentApi {
@@ -76,45 +77,19 @@ public class ComponentTrySee extends RelativeLayout implements ComponentApi {
         } catch (Exception e) {
         }
 
+        // position
         try {
-            if (position < 0 || duration < 0)
-                throw new Exception();
-            // ms => s
-            long c = position / 1000;
-            long c1 = c / 60;
-            long c2 = c % 60;
-            StringBuilder builderPosition = new StringBuilder();
-            if (c1 < 10) {
-                builderPosition.append("0");
-            }
-            builderPosition.append(c1);
-            builderPosition.append(":");
-            if (c2 < 10) {
-                builderPosition.append("0");
-            }
-            builderPosition.append(c2);
-            String strPosition = builderPosition.toString();
+            String optString = TimeUtil.formatTimeMillis(position, (max > 0 ? max : duration));
+            TextView textView = findViewById(R.id.module_mediaplayer_component_try_see_position);
+            textView.setText(optString);
+        } catch (Exception e) {
+        }
 
-            // ms => s
-            StringBuilder builderDuration = new StringBuilder();
-            long d = (max > 0 ? max : duration) / 1000;
-            long d1 = d / 60;
-            long d2 = d % 60;
-            if (d1 < 10) {
-                builderDuration.append("0");
-            }
-            builderDuration.append(d1);
-            builderDuration.append(":");
-            if (d2 < 10) {
-                builderDuration.append("0");
-            }
-            builderDuration.append(d2);
-            String strDuration = builderDuration.toString();
-
-            TextView viewMax = findViewById(R.id.module_mediaplayer_component_try_see_duration);
-            viewMax.setText(strDuration);
-            TextView viewPosition = findViewById(R.id.module_mediaplayer_component_try_see_position);
-            viewPosition.setText(strPosition);
+        // duration
+        try {
+            String optString = TimeUtil.formatTimeMillis(max > 0 ? max : duration);
+            TextView textView = findViewById(R.id.module_mediaplayer_component_try_see_duration);
+            textView.setText(optString);
         } catch (Exception e) {
         }
     }

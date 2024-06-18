@@ -12,6 +12,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.TimeUtil;
 
 
 public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
@@ -122,8 +123,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     @Override
     public final void show() {
         try {
-            findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_seek_ui).setVisibility(View.VISIBLE);
+            findViewById(R.id.module_mediaplayer_component_seek_root).setVisibility(View.VISIBLE);
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => show => " + e.getMessage());
         }
@@ -136,8 +136,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     @Override
     public final void hide() {
         try {
-            findViewById(R.id.module_mediaplayer_component_seek_bg).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_seek_ui).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_seek_root).setVisibility(View.GONE);
         } catch (Exception e) {
         }
         try {
@@ -170,71 +169,19 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
         } catch (Exception e) {
         }
 
-        // 进度时间
+        // position
         try {
-            TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
-            if (null == viewMax)
-                throw new Exception("warning: null == viewMax");
-            Object tag = viewMax.getTag();
-            if (null != tag && !isFromUser)
-                throw new Exception("warning: user touch");
-            if (null == tag && !isFromUser) {
-                int visibility = viewMax.getVisibility();
-                if (visibility != View.VISIBLE) {
-                    throw new Exception("warning: visibility != View.VISIBLE");
-                }
-            }
-            // ms => s
-            StringBuilder builder = new StringBuilder();
-            long d = (max > 0 ? max : duration) / 1000;
-            long d1 = d / 60;
-            long d2 = d % 60;
-            if (d1 < 10) {
-                builder.append("0");
-            }
-            builder.append(d1);
-            builder.append(":");
-            if (d2 < 10) {
-                builder.append("0");
-            }
-            builder.append(d2);
-
-            String s = builder.toString();
-            viewMax.setText(s);
+            String optString = TimeUtil.formatTimeMillis(position, (max > 0 ? max : duration));
+            TextView textView = findViewById(R.id.module_mediaplayer_component_seek_position);
+            textView.setText(optString);
         } catch (Exception e) {
         }
 
-        // 总时间
+        // duration
         try {
-            TextView viewPosition = findViewById(R.id.module_mediaplayer_component_seek_position);
-            if (null == viewPosition)
-                throw new Exception("warning: null == viewPosition");
-            Object tag = viewPosition.getTag();
-            if (null != tag && !isFromUser)
-                throw new Exception("warning: user touch");
-            if (null == tag && !isFromUser) {
-                int visibility = viewPosition.getVisibility();
-                if (visibility != View.VISIBLE) {
-                    throw new Exception("warning: visibility != View.VISIBLE");
-                }
-            }
-
-            // ms => s
-            long c = position / 1000;
-            long c1 = c / 60;
-            long c2 = c % 60;
-            StringBuilder builder = new StringBuilder();
-            if (c1 < 10) {
-                builder.append("0");
-            }
-            builder.append(c1);
-            builder.append(":");
-            if (c2 < 10) {
-                builder.append("0");
-            }
-            builder.append(c2);
-            String s = builder.toString();
-            viewPosition.setText(s);
+            String optString = TimeUtil.formatTimeMillis(max > 0 ? max : duration);
+            TextView textView = findViewById(R.id.module_mediaplayer_component_seek_dutation);
+            textView.setText(optString);
         } catch (Exception e) {
         }
     }
@@ -250,7 +197,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             LogUtil.log("ComponentSeek => setUserTouch => " + e.getMessage());
         }
         try {
-            TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_max);
+            TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_dutation);
             if (null == viewMax)
                 throw new Exception("warning: null == viewMax");
             viewMax.setTag(status ? true : null);
