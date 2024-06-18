@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -128,10 +129,17 @@ public class ComponentInfo extends RelativeLayout implements ComponentApi {
 
     @Override
     public final void hide() {
-        setEnabled(false);
+
         try {
-            findViewById(R.id.module_mediaplayer_component_info_root).setVisibility(View.GONE);
+            ViewGroup viewGroup = (ViewGroup) getParent();
+            viewGroup.removeView(this);
         } catch (Exception e) {
         }
+
+//        setEnabled(false);
+//        try {
+//            findViewById(R.id.module_mediaplayer_component_info_root).setVisibility(View.GONE);
+//        } catch (Exception e) {
+//        }
     }
 }

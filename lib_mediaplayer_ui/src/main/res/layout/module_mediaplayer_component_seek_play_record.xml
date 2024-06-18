@@ -11,10 +11,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="140dp"
+        android:layout_marginBottom="80dp"
         android:focusable="false"
         android:textColor="@color/module_mediaplayer_color_ffffff"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:visibility="gone" />
 
 </RelativeLayout>

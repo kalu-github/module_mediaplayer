@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ public class ComponentSeekPlayRecord extends RelativeLayout implements Component
     @Override
     public void callEventListener(int playState) {
         // 续播
-        if (playState == PlayerType.StateType.STATE_SEEK_PLAY_RECORD) {
+        if (playState == PlayerType.StateType.STATE_START) {
             LogUtil.log("ComponentSeekPlayRecord => playStatus = " + playState);
             show();
         }
@@ -35,16 +36,17 @@ public class ComponentSeekPlayRecord extends RelativeLayout implements Component
     public final void hide() {
 
         try {
-            TextView textView = findViewById(R.id.module_mediaplayer_component_seek_play_record_root);
-            textView.setText("");
+            ViewGroup viewGroup = (ViewGroup) getParent();
+            viewGroup.removeView(this);
         } catch (Exception e) {
         }
 
-        try {
-            findViewById(R.id.module_mediaplayer_component_seek_play_record_root).setVisibility(View.GONE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeekPlayRecord => hide => Exception " + e.getMessage());
-        }
+//        setComponentText("");
+//        try {
+//            findViewById(R.id.module_mediaplayer_component_seek_play_record_root).setVisibility(View.GONE);
+//        } catch (Exception e) {
+//            LogUtil.log("ComponentSeekPlayRecord => hide => Exception " + e.getMessage());
+//        }
     }
 
     @Override
@@ -54,8 +56,7 @@ public class ComponentSeekPlayRecord extends RelativeLayout implements Component
             long seek = getPlayerView().getSeek();
             String optString = TimeUtil.formatTimeMillis(seek);
             String string = getResources().getString(R.string.module_mediaplayer_string_play_record, optString);
-            TextView textView = findViewById(R.id.module_mediaplayer_component_seek_play_record_root);
-            textView.setText(string);
+            setComponentText(string);
         } catch (Exception e) {
         }
 
@@ -70,5 +71,10 @@ public class ComponentSeekPlayRecord extends RelativeLayout implements Component
                 hide();
             }
         }, 2000);
+    }
+
+    @Override
+    public int initLayoutIdText() {
+        return R.id.module_mediaplayer_component_seek_play_record_root;
     }
 }
