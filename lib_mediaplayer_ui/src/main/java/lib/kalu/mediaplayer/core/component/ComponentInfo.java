@@ -21,7 +21,7 @@ public class ComponentInfo extends RelativeLayout implements ComponentApi {
 
     public ComponentInfo(Context context) {
         super(context);
-        setEnabled(false);
+        setEnabled(true);
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_info, this, true);
     }
 
@@ -54,6 +54,7 @@ public class ComponentInfo extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
+
         boolean enabled = isEnabled();
         if (!enabled)
             return;
