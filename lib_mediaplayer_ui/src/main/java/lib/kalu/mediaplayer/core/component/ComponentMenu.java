@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -21,28 +22,51 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     public ComponentMenu(Context context) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu, this, true);
+
+        findViewById(R.id.module_mediaplayer_component_menu_tab_no0).setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                updateTabChecked(R.id.module_mediaplayer_component_menu_tab_no0);
+            }
+        });
+        findViewById(R.id.module_mediaplayer_component_menu_tab_no1).setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                updateTabChecked(R.id.module_mediaplayer_component_menu_tab_no1);
+            }
+        });
+        findViewById(R.id.module_mediaplayer_component_menu_tab_no2).setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                updateTabChecked(R.id.module_mediaplayer_component_menu_tab_no2);
+            }
+        });
+        RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                updateTabUI(true);
+            }
+        });
     }
 
     @Override
     public void callEventListener(int playState) {
         if (playState == PlayerType.StateType.STATE_END) {
-            try {
-                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
-                Object tag = radioGroup.getTag();
-                if (null == tag)
-                    throw new Exception("error: null == tag");
-                int count = (int) tag;
-                if (count <= 1)
-                    throw new Exception("warning: count <= 1");
-                int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-                RadioButton radioButton = radioGroup.findViewById(checkedRadioButtonId);
-                int num = Integer.parseInt(radioButton.getText().toString());
-                if (num >= count)
-                    throw new Exception("warning: num >= count");
-                setItemsChecked(num);
-            } catch (Exception e) {
-                LogUtil.log("ComponentMenu => callEventListener => Exception " + e.getMessage());
-            }
+//            try {
+//                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+//                Object tag = radioGroup.getTag();
+//                if (null == tag) throw new Exception("error: null == tag");
+//                int count = (int) tag;
+//                if (count <= 1) throw new Exception("warning: count <= 1");
+//                int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+//                RadioButton radioButton = radioGroup.findViewById(checkedRadioButtonId);
+//                int num = Integer.parseInt(radioButton.getText().toString());
+//                if (num >= count) throw new Exception("warning: num >= count");
+//                setItemsChecked(num);
+//            } catch (Exception e) {
+//                LogUtil.log("ComponentMenu => callEventListener => Exception " + e.getMessage());
+//            }
         }
     }
 
@@ -50,63 +74,73 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     public boolean dispatchKeyEvent(KeyEvent event) {
         // down
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
-
-            boolean showing = isComponentShowing();
-            if (showing) {
-                startDelayedMsg();
-                View focus = findFocus();
-                ViewParent parent = focus.getParent();
-                int id = ((View) parent).getId();
-                if (id == R.id.module_mediaplayer_component_menu_items_group) {
-                    showSpeeds();
-                }
-            } else {
-                show();
-            }
-            return true;
-        }
-        // up
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
-            boolean showing = isComponentShowing();
-            if (showing) {
-                startDelayedMsg();
-                View focus = findFocus();
-                ViewParent parent = focus.getParent();
-                int id = ((View) parent).getId();
-                if (id == R.id.module_mediaplayer_component_menu_speeds_group) {
-                    showItems();
+            try {
+                boolean componentShowing = isComponentShowing();
+                if (componentShowing) {
+                    View focus = findFocus();
+                    if (null == focus) throw new Exception("warning: focus null");
+                    ViewParent parent = focus.getParent();
+                    if (null == parent) throw new Exception("warning: parent null");
+                    int id = ((View) parent.getParent()).getId();
+                    if (id != R.id.module_mediaplayer_component_menu_top_group)
+                        throw new Exception("warning: id not R.id.module_mediaplayer_component_menu_top_group");
+                    RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
+                    int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+                    if (checkedRadioButtonId == -1) {
+                        checkedRadioButtonId = R.id.module_mediaplayer_component_menu_tab_no0;
+                    }
+                    findViewById(checkedRadioButtonId).requestFocus();
+                } else {
+                    show();
+                    updateTabUI(false);
+                    startDelayedMsg();
                 }
                 return true;
+            } catch (Exception e) {
             }
         }
         // left
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            boolean showing = isComponentShowing();
-            if (showing) {
+            try {
+                boolean componentShowing = isComponentShowing();
+                if (!componentShowing)
+                    throw new Exception("warning: showing false");
                 startDelayedMsg();
                 View focus = findFocus();
                 int id = focus.getId();
                 if (id == R.id.module_mediaplayer_component_menu_speed_0_5) {
                     return true;
-                } else if (id == R.id.module_mediaplayer_component_menu_items_no1) {
+                } else if (id == R.id.module_mediaplayer_component_menu_scale_type0) {
+                    return true;
+                } else if (id == R.id.module_mediaplayer_component_menu_tab_no0) {
+                    return true;
+                } else if (id == R.id.module_mediaplayer_component_menu_episode_no1) {
                     scrollNextItem(KeyEvent.KEYCODE_DPAD_LEFT);
                     return true;
                 }
+            } catch (Exception e) {
             }
         }
         // right
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            boolean showing = isComponentShowing();
-            if (showing) {
+            try {
+                boolean showing = isComponentShowing();
+                if (!showing)
+                    throw new Exception("warning: showing false");
                 startDelayedMsg();
                 View focus = findFocus();
                 int id = focus.getId();
                 if (id == R.id.module_mediaplayer_component_menu_speed_3_0) {
                     return true;
-                } else if (id == R.id.module_mediaplayer_component_menu_items_no10) {
+                } else if (id == R.id.module_mediaplayer_component_menu_scale_type4) {
+                    return true;
+                } else if (id == R.id.module_mediaplayer_component_menu_tab_no2) {
+                    return true;
+                } else if (id == R.id.module_mediaplayer_component_menu_episode_no10) {
                     scrollNextItem(KeyEvent.KEYCODE_DPAD_RIGHT);
                     return true;
                 }
+            } catch (Exception e) {
             }
         }
         // back
@@ -119,62 +153,29 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
         // center
         else if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER || event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-            boolean componentShowing = isComponentShowing();
-            if (componentShowing) {
+            try {
+                boolean componentShowing = isComponentShowing();
+                if (!componentShowing)
+                    throw new Exception("warning: componentShowing false");
                 startDelayedMsg();
                 View focus = findFocus();
-                int id = ((View) focus.getParent()).getId();
-                if (id == R.id.module_mediaplayer_component_menu_speeds_group) {
-                    int focusId = focus.getId();
-                    ((RadioGroup) focus.getParent()).check(focusId);
-                    if (focusId == R.id.module_mediaplayer_component_menu_speeds_group) {
-                        setSpeed(0.5F);
-                    } else if (focusId == R.id.module_mediaplayer_component_menu_speed_1_0) {
-                        setSpeed(1.0F);
-                    } else if (focusId == R.id.module_mediaplayer_component_menu_speed_1_5) {
-                        setSpeed(1.5F);
-                    } else if (focusId == R.id.module_mediaplayer_component_menu_speed_2_0) {
-                        setSpeed(2.0F);
-                    } else if (focusId == R.id.module_mediaplayer_component_menu_speed_2_5) {
-                        setSpeed(2.5F);
-                    } else if (focusId == R.id.module_mediaplayer_component_menu_speed_3_0) {
-                        setSpeed(3.0F);
-                    }
-                } else if (id == R.id.module_mediaplayer_component_menu_items_group) {
-
-                    try {
-                        CharSequence hint = ((RadioButton) focus).getHint();
-                        int playPos = Integer.parseInt(hint.toString());
-
-                        CharSequence text = ((RadioButton) focus).getText();
-                        int numPos = Integer.parseInt(text.toString());
-
-                        // 判断在播pos
-                        if (playPos + 1 == numPos)
-                            throw new Exception("warning: playPos+1== numPos");
-
-                        int newPos = numPos - 1;
-
-                        // 1
-                        int childCount = ((RadioGroup) focus.getParent()).getChildCount();
-                        for (int i = 0; i < childCount; i++) {
-                            RadioButton radioButton = (RadioButton) ((RadioGroup) focus.getParent()).getChildAt(i);
-                            radioButton.setHint(String.valueOf(newPos));
-                            CharSequence tempText = radioButton.getText();
-                            int tempPos = Integer.parseInt(tempText.toString());
-                            radioButton.setSelected(newPos + 1 == tempPos);
-                        }
-
-                        // 2
-                        hide();
-                        stop();
-                        ((RadioGroup) focus.getParent()).check(focus.getId());
-                        callItemsClickListener(newPos);
-                    } catch (Exception e) {
-                        LogUtil.log("ComponentMenu => dispatchKeyEvent => Exception " + e.getMessage());
-                    }
+                if (null == focus)
+                    throw new Exception("warning: focus null");
+                int id = ((ViewGroup) focus.getParent()).getId();
+                // 画面比例
+                if (id == R.id.module_mediaplayer_component_menu_scale_group) {
+                    clickScale(focus.getId());
+                }
+                // 倍速
+                else if (id == R.id.module_mediaplayer_component_menu_speeds_group) {
+                    clickSpeed(focus.getId());
+                }
+                // 选集
+                else if (id == R.id.module_mediaplayer_component_menu_episode_group) {
+                    clickEpisode(focus.getId());
                 }
                 return true;
+            } catch (Exception e) {
             }
         }
         return false;
@@ -185,17 +186,14 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         if (action == KeyEvent.KEYCODE_DPAD_LEFT) {
             try {
                 View focus = findFocus();
-                if (null == focus)
-                    throw new Exception("error: null == focus");
+                if (null == focus) throw new Exception("error: null == focus");
                 if (!(focus instanceof RadioButton))
                     throw new Exception("error: focus not RadioButton");
                 CharSequence text = ((RadioButton) focus).getText();
-                if (null == text || text.length() == 0)
-                    throw new Exception("error: text null");
+                if (null == text || text.length() == 0) throw new Exception("error: text null");
                 int num = Integer.parseInt(String.valueOf(text));
-                if (num <= 1)
-                    throw new Exception("error: num <= 1");
-                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+                if (num <= 1) throw new Exception("error: num <= 1");
+                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_group);
                 int childCount = radioGroup.getChildCount();
                 int pos = --num;
                 int start = pos - 1;
@@ -217,21 +215,17 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         } else if (action == KeyEvent.KEYCODE_DPAD_RIGHT) {
             try {
                 View focus = findFocus();
-                if (null == focus)
-                    throw new Exception("error: null == focus");
+                if (null == focus) throw new Exception("error: null == focus");
                 if (!(focus instanceof RadioButton))
                     throw new Exception("error: focus not RadioButton");
                 CharSequence text = ((RadioButton) focus).getText();
-                if (null == text || text.length() == 0)
-                    throw new Exception("error: text null");
-                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+                if (null == text || text.length() == 0) throw new Exception("error: text null");
+                RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_group);
                 Object tag = radioGroup.getTag();
-                if (null == tag)
-                    throw new Exception("error: null == tag");
+                if (null == tag) throw new Exception("error: null == tag");
                 int count = (int) tag;
                 int num = Integer.parseInt(String.valueOf(text));
-                if (num >= count)
-                    throw new Exception("error: num >= " + count);
+                if (num >= count) throw new Exception("error: num >= " + count);
                 int childCount = radioGroup.getChildCount();
                 int pos = --num;
                 int length = (pos + 2);
@@ -257,7 +251,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     public void setItemsChecked(int position) {
 
         try {
-            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_group);
             int childCount = radioGroup.getChildCount();
             for (int i = 0; i < childCount; i++) {
                 RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
@@ -271,7 +265,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
 
         try {
-            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_group);
             int childCount = radioGroup.getChildCount();
             RadioButton radioButton1 = (RadioButton) radioGroup.getChildAt(0);
             RadioButton radioButton2 = (RadioButton) radioGroup.getChildAt(childCount - 1);
@@ -308,7 +302,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         checkComponentPause2();
         try {
             findViewById(R.id.module_mediaplayer_component_menu_root).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_menu_items_group).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_menu_episode_group).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.GONE);
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => hide => " + e.getMessage());
@@ -325,15 +319,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => show => " + e.getMessage());
         }
-
-        showItems();
-        startDelayedMsg();
     }
 
     @Override
     public void setItemsData(int pos, int count) {
 
-        RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+        RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_group);
         radioGroup.setTag(count);
         int childCount = radioGroup.getChildCount();
 
@@ -372,13 +363,168 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public void showItems() {
+    public void updateTabUI(boolean isFromUser) {
         try {
-            findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_menu_items_group).setVisibility(View.VISIBLE);
+            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
+            int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+            if (checkedRadioButtonId == -1) {
+                checkedRadioButtonId = R.id.module_mediaplayer_component_menu_tab_no0;
+            }
+
+            if (!isFromUser) {
+                findViewById(checkedRadioButtonId).requestFocus();
+            }
+
+            // 选集
+            if (checkedRadioButtonId == R.id.module_mediaplayer_component_menu_tab_no0) {
+                findViewById(R.id.module_mediaplayer_component_menu_episode_group).setVisibility(View.VISIBLE);
+                findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.GONE);
+                findViewById(R.id.module_mediaplayer_component_menu_scale_group).setVisibility(View.GONE);
+            }
+            // 倍速
+            else if (checkedRadioButtonId == R.id.module_mediaplayer_component_menu_tab_no1) {
+                findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.VISIBLE);
+                findViewById(R.id.module_mediaplayer_component_menu_episode_group).setVisibility(View.GONE);
+                findViewById(R.id.module_mediaplayer_component_menu_scale_group).setVisibility(View.GONE);
+            }
+            // 画面比例
+            else if (checkedRadioButtonId == R.id.module_mediaplayer_component_menu_tab_no2) {
+                findViewById(R.id.module_mediaplayer_component_menu_scale_group).setVisibility(View.VISIBLE);
+                findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.GONE);
+                findViewById(R.id.module_mediaplayer_component_menu_episode_group).setVisibility(View.GONE);
+            }
         } catch (Exception e) {
-            LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
         }
+    }
+
+    @Override
+    public void updateTabChecked(int id) {
+        startDelayedMsg();
+        RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
+        radioGroup.check(id);
+//        int childCount = radioGroup.getChildCount();
+//        for (int i = 0; i < childCount; i++) {
+//            View childAt = radioGroup.getChildAt(i);
+//            if (null == childAt)
+//                continue;
+//            int childAtId = childAt.getId();
+//            ((RadioButton) childAt).setChecked(childAtId == id);
+//        }
+    }
+
+    @Override
+    public void clickScale(int focusId) {
+        // 画面比例
+        if (focusId == R.id.module_mediaplayer_component_menu_scale_type0) {
+            Toast.makeText(getContext(), "type0", Toast.LENGTH_LONG).show();
+            setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH);
+        }
+        // 画面比例
+        else if (focusId == R.id.module_mediaplayer_component_menu_scale_type1) {
+            Toast.makeText(getContext(), "type1", Toast.LENGTH_LONG).show();
+            setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_4_3);
+        }
+        // 画面比例
+        else if (focusId == R.id.module_mediaplayer_component_menu_scale_type2) {
+            Toast.makeText(getContext(), "type2", Toast.LENGTH_LONG).show();
+            setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);
+        }
+        // 画面比例
+        else if (focusId == R.id.module_mediaplayer_component_menu_scale_type3) {
+            Toast.makeText(getContext(), "type3", Toast.LENGTH_LONG).show();
+            setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_SCREEN_CROP);
+        }
+        // 画面比例
+        else if (focusId == R.id.module_mediaplayer_component_menu_scale_type4) {
+            Toast.makeText(getContext(), "type4", Toast.LENGTH_LONG).show();
+            setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_VIDEO_ORIGINAL);
+        }
+    }
+
+    @Override
+    public void clickSpeed(int focusId) {
+        if (focusId == R.id.module_mediaplayer_component_menu_speeds_group) {
+            setSpeed(0.5F);
+        } else if (focusId == R.id.module_mediaplayer_component_menu_speed_1_0) {
+            setSpeed(1.0F);
+        } else if (focusId == R.id.module_mediaplayer_component_menu_speed_1_5) {
+            setSpeed(1.5F);
+        } else if (focusId == R.id.module_mediaplayer_component_menu_speed_2_0) {
+            setSpeed(2.0F);
+        } else if (focusId == R.id.module_mediaplayer_component_menu_speed_2_5) {
+            setSpeed(2.5F);
+        } else if (focusId == R.id.module_mediaplayer_component_menu_speed_3_0) {
+            setSpeed(3.0F);
+        }
+    }
+
+    @Override
+    public void clickEpisode(int focusId) {
+        try {
+            RadioButton radioButton = findViewById(focusId);
+
+            CharSequence hint = radioButton.getHint();
+            int playPos = Integer.parseInt(hint.toString());
+
+            CharSequence text = radioButton.getText();
+            int numPos = Integer.parseInt(text.toString());
+
+            // 判断在播pos
+            if (playPos + 1 == numPos)
+                throw new Exception("warning: playPos+1== numPos");
+
+            int newPos = numPos - 1;
+
+            // 1
+            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_group);
+            int childCount = radioGroup.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                RadioButton button = (RadioButton) radioGroup.getChildAt(i);
+                button.setHint(String.valueOf(newPos));
+                CharSequence tempText = button.getText();
+                int tempPos = Integer.parseInt(tempText.toString());
+                button.setSelected(newPos + 1 == tempPos);
+            }
+
+            // 2
+            hide();
+            stop();
+            radioGroup.check(focusId);
+            callItemsClickListener(newPos);
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => clickEpisode => Exception " + e.getMessage());
+        }
+    }
+
+    //    @Override
+//    public void showSpeeds() {
+//        try {
+//            findViewById(R.id.module_mediaplayer_component_menu_items_group).setVisibility(View.GONE);
+//            findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.VISIBLE);
+//        } catch (Exception e) {
+//            LogUtil.log("ComponentMenu => showSpeeds => " + e.getMessage());
+//        }
+//        try {
+//            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_speeds_group);
+//            int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+//            if (checkedRadioButtonId == -1) {
+//                radioGroup.check(R.id.module_mediaplayer_component_menu_speed_1_0);
+//                checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+//            }
+//            findViewById(checkedRadioButtonId).requestFocus();
+//        } catch (Exception e) {
+//            LogUtil.log("ComponentMenu => showSpeeds => " + e.getMessage());
+//        }
+//    }
+
+//    @Override
+//    public void showItems() {
+//        try {
+//            findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.GONE);
+//            findViewById(R.id.module_mediaplayer_component_menu_items_group).setVisibility(View.VISIBLE);
+//        } catch (Exception e) {
+//            LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
+//        }
 
 //        try {
 //            int playIndex = -1;
@@ -408,37 +554,16 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 //        } catch (Exception e) {
 //            LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
 //        }
-        try {
-            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
-            int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-            if (checkedRadioButtonId == -1) {
-                radioGroup.check(R.id.module_mediaplayer_component_menu_items_no1);
-                checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-            }
-            findViewById(checkedRadioButtonId).requestFocus();
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void showSpeeds() {
-        try {
-            findViewById(R.id.module_mediaplayer_component_menu_items_group).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => showSpeeds => " + e.getMessage());
-        }
-        try {
-            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_speeds_group);
-            int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-            if (checkedRadioButtonId == -1) {
-                radioGroup.check(R.id.module_mediaplayer_component_menu_speed_1_0);
-                checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
-            }
-            findViewById(checkedRadioButtonId).requestFocus();
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => showSpeeds => " + e.getMessage());
-        }
-    }
+//        try {
+//            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_items_group);
+//            int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+//            if (checkedRadioButtonId == -1) {
+//                radioGroup.check(R.id.module_mediaplayer_component_menu_items_no1);
+//                checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+//            }
+//            findViewById(checkedRadioButtonId).requestFocus();
+//        } catch (Exception e) {
+//            LogUtil.log("ComponentMenu => showItems => " + e.getMessage());
+//        }
+//    }
 }

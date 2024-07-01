@@ -26,6 +26,7 @@ import java.io.File;
 
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
@@ -477,6 +478,17 @@ public interface ComponentApi {
             playerView.setSpeed(v);
         } catch (Exception e) {
             LogUtil.log("ComponentApi => setSpeed => " + e.getMessage());
+        }
+    }
+
+    default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.setVideoScaleType(scaleType);
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => setVideoScaleType => " + e.getMessage());
         }
     }
 }

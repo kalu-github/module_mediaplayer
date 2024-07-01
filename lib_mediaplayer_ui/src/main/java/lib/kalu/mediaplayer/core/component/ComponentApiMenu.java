@@ -27,10 +27,20 @@ public interface ComponentApiMenu extends ComponentApi {
     default void scrollNextItem(int action) {
     }
 
-    default void showItems(){
+    default void updateTabUI(boolean isFromUser) {
     }
 
-    default void showSpeeds(){
+    default void updateTabChecked(int id) {
+    }
+
+    default void clickScale(int focusId) {
+    }
+
+    default void clickSpeed(int focusId) {
+
+    }
+
+    default void clickEpisode(int focusId) {
 
     }
 
