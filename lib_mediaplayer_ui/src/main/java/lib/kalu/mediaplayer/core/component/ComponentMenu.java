@@ -99,6 +99,21 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             } catch (Exception e) {
             }
         }
+        // up
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
+            try {
+                boolean componentShowing = isComponentShowing();
+                if (!componentShowing)
+                    throw new Exception("warning: componentShowing false");
+                startDelayedMsg();
+                View focus = findFocus();
+                int id = ((View) focus.getParent()).getId();
+                if (id != R.id.module_mediaplayer_component_menu_episode_group)
+                    throw new Exception("warning: id not R.id.module_mediaplayer_component_menu_episode_group");
+                return true;
+            } catch (Exception e) {
+            }
+        }
         // left
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             try {
@@ -132,7 +147,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 int id = focus.getId();
                 if (id == R.id.module_mediaplayer_component_menu_speed_3_0) {
                     return true;
-                } else if (id == R.id.module_mediaplayer_component_menu_scale_type4) {
+                } else if (id == R.id.module_mediaplayer_component_menu_scale_type3) {
                     return true;
                 } else if (id == R.id.module_mediaplayer_component_menu_tab_no2) {
                     return true;
@@ -164,15 +179,15 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 int id = ((ViewGroup) focus.getParent()).getId();
                 // 画面比例
                 if (id == R.id.module_mediaplayer_component_menu_scale_group) {
-                    clickScale(focus.getId());
+                    toggleScale(focus.getId());
                 }
                 // 倍速
                 else if (id == R.id.module_mediaplayer_component_menu_speeds_group) {
-                    clickSpeed(focus.getId());
+                    toggleSpeed(focus.getId());
                 }
                 // 选集
                 else if (id == R.id.module_mediaplayer_component_menu_episode_group) {
-                    clickEpisode(focus.getId());
+                    toggleEpisode(focus.getId());
                 }
                 return true;
             } catch (Exception e) {
@@ -413,36 +428,27 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public void clickScale(int focusId) {
-        // 画面比例
+    public void toggleScale(int focusId) {
+        // 4:3
         if (focusId == R.id.module_mediaplayer_component_menu_scale_type0) {
-            Toast.makeText(getContext(), "type0", Toast.LENGTH_LONG).show();
-            setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH);
-        }
-        // 画面比例
-        else if (focusId == R.id.module_mediaplayer_component_menu_scale_type1) {
-            Toast.makeText(getContext(), "type1", Toast.LENGTH_LONG).show();
             setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_4_3);
         }
-        // 画面比例
-        else if (focusId == R.id.module_mediaplayer_component_menu_scale_type2) {
-            Toast.makeText(getContext(), "type2", Toast.LENGTH_LONG).show();
+        // 16:9
+        else if (focusId == R.id.module_mediaplayer_component_menu_scale_type1) {
             setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);
         }
-        // 画面比例
-        else if (focusId == R.id.module_mediaplayer_component_menu_scale_type3) {
-            Toast.makeText(getContext(), "type3", Toast.LENGTH_LONG).show();
-            setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_SCREEN_CROP);
+        // 全屏
+        else if (focusId == R.id.module_mediaplayer_component_menu_scale_type2) {
+            setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH);
         }
-        // 画面比例
-        else if (focusId == R.id.module_mediaplayer_component_menu_scale_type4) {
-            Toast.makeText(getContext(), "type4", Toast.LENGTH_LONG).show();
+        // 原始大小
+        else if (focusId == R.id.module_mediaplayer_component_menu_scale_type3) {
             setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_VIDEO_ORIGINAL);
         }
     }
 
     @Override
-    public void clickSpeed(int focusId) {
+    public void toggleSpeed(int focusId) {
         if (focusId == R.id.module_mediaplayer_component_menu_speeds_group) {
             setSpeed(0.5F);
         } else if (focusId == R.id.module_mediaplayer_component_menu_speed_1_0) {
@@ -459,7 +465,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public void clickEpisode(int focusId) {
+    public void toggleEpisode(int focusId) {
         try {
             RadioButton radioButton = findViewById(focusId);
 

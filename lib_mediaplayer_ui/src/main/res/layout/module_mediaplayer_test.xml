@@ -35,11 +35,6 @@
             android:layout_height="wrap_content"
             android:text="切换音轨3" />
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="倍速" />
 
         <Button
             android:id="@+id/module_mediaplayer_test_button8"

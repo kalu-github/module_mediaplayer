@@ -105,20 +105,6 @@ public final class TestActivity extends Activity {
                 playerLayout.switchTrack(2);
             }
         });
-        // 倍速
-        findViewById(R.id.module_mediaplayer_test_button9).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                float speed = playerLayout.getSpeed();
-                Toast.makeText(getApplicationContext(), "speed = " + speed, Toast.LENGTH_SHORT).show();
-                if (speed > 1F) {
-                    playerLayout.setSpeed(1f);
-                } else {
-                    playerLayout.setSpeed(1.5f);
-                }
-            }
-        });
         // 信息
         findViewById(R.id.module_mediaplayer_test_button8).setOnClickListener(new View.OnClickListener() {
             @Override

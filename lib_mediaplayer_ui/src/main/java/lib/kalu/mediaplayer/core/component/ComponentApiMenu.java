@@ -33,14 +33,14 @@ public interface ComponentApiMenu extends ComponentApi {
     default void updateTabChecked(int id) {
     }
 
-    default void clickScale(int focusId) {
+    default void toggleScale(int focusId) {
     }
 
-    default void clickSpeed(int focusId) {
+    default void toggleSpeed(int focusId) {
 
     }
 
-    default void clickEpisode(int focusId) {
+    default void toggleEpisode(int focusId) {
 
     }
 
