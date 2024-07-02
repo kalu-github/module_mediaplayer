@@ -26,10 +26,10 @@ import lib.kalu.mediaplayer.util.LogUtil;
  */
 public class VideoRenderTextureView extends TextureView implements VideoRenderApi {
 
-    private SurfaceTexture mSurfaceTexture;
     @Nullable
     private VideoKernelApi mKernel;
     private Surface mSurface;
+    private SurfaceTexture mSurfaceTexture;
     private SurfaceTextureListener mSurfaceTextureListener;
 
     public VideoRenderTextureView(Context context) {
@@ -71,17 +71,11 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
                 LogUtil.log("VideoRenderTextureView => onSurfaceTextureAvailable => " + this);
-                if (mSurfaceTexture != null) {
-                    setSurfaceTexture(mSurfaceTexture);
-                } else {
-                    mSurfaceTexture = surfaceTexture;
-                    mSurface = new Surface(surfaceTexture);
-                    if (mKernel != null) {
-                        int w = getWidth();
-                        int h = getHeight();
-                        mKernel.setSurface(mSurface, w, h);
-                    }
-                }
+//                VideoRenderTextureView.this.mSurfaceTexture = surfaceTexture;
+//                setSurfaceTexture(VideoRenderTextureView.this.mSurfaceTexture);
+//                setSurface(true);
+                mSurfaceTexture = surfaceTexture;
+                setSurface(true);
                 startUpdateProgress();
             }
 
@@ -91,6 +85,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
              */
             @Override
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                LogUtil.log("VideoRenderTextureView => onSurfaceTextureDestroyed => " + this);
                 stopUpdateProgress();
                 return false;
             }
@@ -103,6 +98,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
              */
             @Override
             public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+                LogUtil.log("VideoRenderTextureView => onSurfaceTextureSizeChanged => " + this);
             }
 
             /**
@@ -111,12 +107,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
              */
             @Override
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-//                try {
-//                    if (null == mKernel) throw new Exception("mKernel error: null");
-//                    mKernel.onUpdateTimeMillis();
-//                } catch (Exception e) {
-//                    MPLogUtil.log("VideoRenderTextureView => onSurfaceTextureUpdated => " + e.getMessage());
-//                }
+                LogUtil.log("VideoRenderTextureView => onSurfaceTextureUpdated => " + this);
             }
         };
         setSurfaceTextureListener(mSurfaceTextureListener);
@@ -151,6 +142,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
     public void release() {
         if (mSurfaceTexture != null) {
             mSurfaceTexture.release();
+            mSurfaceTexture = null;
         }
         if (mSurface != null) {
             mSurface.release();
