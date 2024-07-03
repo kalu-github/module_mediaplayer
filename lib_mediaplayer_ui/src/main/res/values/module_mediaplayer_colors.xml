@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="module_mediaplayer_color_00000000">#00000000</color>
-    <color name="module_mediaplayer_color_aa000000">#aa000000</color>
-    <color name="module_mediaplayer_color_bc000000">#bc000000</color>
+    <color name="module_mediaplayer_color_11000000">#11000000</color>
     <color name="module_mediaplayer_color_40000000">#40000000</color>
+    <color name="module_mediaplayer_color_66000000">#66000000</color>
+    <color name="module_mediaplayer_color_aa000000">#aa000000</color>
+    <color name="module_mediaplayer_color_bb000000">#bb000000</color>
+    <color name="module_mediaplayer_color_bc000000">#bc000000</color>
+    <color name="module_mediaplayer_color_000000">#000000</color>
     <color name="module_mediaplayer_color_ffffff">#ffffff</color>
+    <color name="module_mediaplayer_color_f85a55">#f85a55</color>
+    <color name="module_mediaplayer_color_aaf85a55">#aaf85a55</color>
+    <color name="module_mediaplayer_color_dcdcdc">#dcdcdc</color>
 </resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/module_mediaplayer_color_00000000"
@@ -48,7 +49,7 @@
                 android:textColor="#ffffff"
                 android:textSize="12sp" />
 
-            <SeekBar
+            <lib.kalu.mediaplayer.widget.seek.TvSeekBar
                 android:id="@+id/module_mediaplayer_component_seek_sb"
                 android:layout_width="0dp"
                 android:layout_height="16dp"

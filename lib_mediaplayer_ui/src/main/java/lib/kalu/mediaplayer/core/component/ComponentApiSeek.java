@@ -24,7 +24,11 @@ public interface ComponentApiSeek extends ComponentApi {
 
     void setUserTouch(boolean status);
 
-    SeekBar findSeekBar();
+    View findSeekBar();
+
+    int getSeekBarMax();
+
+    int getSeekBarProgress();
 
     void initSeekBarChangeListener();
 
@@ -41,14 +45,14 @@ public interface ComponentApiSeek extends ComponentApi {
         }
 
         if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            SeekBar seekBar = findSeekBar();
-            int duration = seekBar.getMax();
+            int duration = getSeekBarMax();
             if (duration > 0) {
                 long maxDuration = getPlayerView().getMaxDuration();
                 if (repeatCount == 0) {
+                    View seekBar = findSeekBar();
                     Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                     if (null == tag) {
-                        int progress = seekBar.getProgress();
+                        int progress = getSeekBarProgress();
                         seekBar.setTag(R.id.module_mediaplayer_id_seek_position, progress);
                         getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_FORWARD_START);
                     } else {
@@ -82,6 +86,7 @@ public interface ComponentApiSeek extends ComponentApi {
                         onUpdateProgress(true, maxDuration, range, duration);
                     }
                 } else {
+                    View seekBar = findSeekBar();
                     int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                     if (range >= duration) {
                         return;
@@ -114,14 +119,14 @@ public interface ComponentApiSeek extends ComponentApi {
                 }
             }
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-            SeekBar seekBar = findSeekBar();
-            int duration = seekBar.getMax();
+            int duration = getSeekBarMax();
             if (duration > 0) {
                 long maxDuration = getPlayerView().getMaxDuration();
                 if (repeatCount == 0) {
+                    View seekBar = findSeekBar();
                     Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                     if (null == tag) {
-                        int progress = seekBar.getProgress();
+                        int progress = getSeekBarProgress();
                         seekBar.setTag(R.id.module_mediaplayer_id_seek_position, progress);
                         getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_REWIND_START);
                     } else {
@@ -155,6 +160,7 @@ public interface ComponentApiSeek extends ComponentApi {
                         onUpdateProgress(true, maxDuration, range, duration);
                     }
                 } else {
+                    View seekBar = findSeekBar();
                     int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
                     if (range <= 0)
                         return;
@@ -193,9 +199,9 @@ public interface ComponentApiSeek extends ComponentApi {
             mHandlerDelayedMsg[0] = new Handler(Looper.getMainLooper()) {
                 @Override
                 public void handleMessage(@NonNull Message msg) {
-                    SeekBar seekBar = findSeekBar();
+                    View seekBar = findSeekBar();
                     seekBar.setTag(R.id.module_mediaplayer_id_seek_position, null);
-                    int progress = seekBar.getProgress();
+                    int progress = getSeekBarProgress();
                     seekToPosition(keyCode, progress);
                 }
             };

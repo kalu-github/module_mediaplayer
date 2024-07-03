@@ -228,6 +228,26 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
+    public int getSeekBarMax() {
+        try {
+            View seekBar = findSeekBar();
+            return ((SeekBar) seekBar).getMax();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    @Override
+    public int getSeekBarProgress() {
+        try {
+            View seekBar = findSeekBar();
+            return ((SeekBar) seekBar).getProgress();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    @Override
     public void initSeekBarChangeListener() {
         try {
             SeekBar seekBar = findSeekBar();

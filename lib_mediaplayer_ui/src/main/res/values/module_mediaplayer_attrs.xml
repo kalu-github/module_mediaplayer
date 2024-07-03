@@ -8,14 +8,11 @@
         <attr name="lv_color_round" format="color|reference" />
         <attr name="lv_delay_millis" format="integer" />
     </declare-styleable>
-    <declare-styleable name="AnimationProgress">
-        <attr name="ap_background_color" format="color|reference" />
-        <attr name="ap_progress_color" format="color|reference" />
-        <attr name="ap_line_color" format="color|reference" />
-        <attr name="ap_line_space" format="dimension|reference" />
-        <attr name="ap_line_width" format="dimension|reference" />
-        <attr name="ap_progress" format="integer" />
-        <attr name="ap_animator_time" format="integer" />
-        <attr name="ap_animator_progress_time" format="integer" />
+
+    <declare-styleable name="GradientView">
+        <attr name="ev_color_start" format="color|reference" />
+        <attr name="ev_color_end" format="color|reference" />
+        <attr name="ev_color_center" format="color|reference" />
     </declare-styleable>
+
 </resources>

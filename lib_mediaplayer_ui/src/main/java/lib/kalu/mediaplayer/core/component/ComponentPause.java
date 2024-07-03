@@ -71,8 +71,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public final void hide() {
 
         try {
-            TextView textView = findViewById(R.id.module_mediaplayer_component_pause_title);
-            textView.setText("");
+            setComponentText("");
         } catch (Exception e) {
         }
 
@@ -103,8 +102,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
             if (null == tags)
                 throw new Exception("error: tags null");
             String mediaTitle = tags.getMediaTitle();
-            TextView textView = findViewById(R.id.module_mediaplayer_component_pause_title);
-            textView.setText(mediaTitle);
+            setComponentText(mediaTitle);
         } catch (Exception e) {
         }
 
@@ -159,5 +157,10 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     @Override
     public int initLayoutIdComponentBackground() {
         return R.id.module_mediaplayer_component_pause_bg;
+    }
+
+    @Override
+    public int initLayoutIdText() {
+        return R.id.module_mediaplayer_component_pause_title;
     }
 }
