@@ -89,16 +89,16 @@ public class StartArgs {
     }
 
     // 视频url
-    private String mediaUrl;
+    private String url;
 
-    public String getMediaUrl() {
-        return mediaUrl;
+    public String getUrl() {
+        return url;
     }
     // 视频title
-    private String mediaTitle;
+    private String title;
 
-    public String getMediaTitle() {
-        return mediaTitle;
+    public String getTitle() {
+        return title;
     }
 
     // 字幕url
@@ -178,8 +178,8 @@ public class StartArgs {
                 ", bufferingTimeoutRetry=" + bufferingTimeoutRetry +
                 ", initRelease=" + initRelease +
                 ", supportViewLifecycle=" + supportViewLifecycle +
-                ", mediaUrl='" + mediaUrl + '\'' +
-                ", mediaTitle='" + mediaTitle + '\'' +
+                ", url='" + url + '\'' +
+                ", title='" + title + '\'' +
                 ", subtitleUrl='" + subtitleUrl + '\'' +
                 ", maxDuration=" + maxDuration +
                 ", trySee=" + trySee +
@@ -205,8 +205,8 @@ public class StartArgs {
         this.bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         this.initRelease = builder.initRelease;
         this.supportViewLifecycle = builder.supportViewLifecycle;
-        this.mediaUrl = builder.mediaUrl;
-        this.mediaTitle = builder.mediaTitle;
+        this.url = builder.url;
+        this.title = builder.title;
         this.subtitleUrl = builder.subtitleUrl;
         this.maxDuration = builder.maxDuration;
         this.trySee = builder.trySee;
@@ -232,8 +232,8 @@ public class StartArgs {
         builder.bufferingTimeoutRetry = bufferingTimeoutRetry;
         builder.initRelease = initRelease;
         builder.supportViewLifecycle = supportViewLifecycle;
-        builder.mediaUrl = mediaUrl;
-        builder.mediaTitle = mediaTitle;
+        builder.url = url;
+        builder.title = title;
         builder.subtitleUrl = subtitleUrl;
         builder.maxDuration = maxDuration;
         builder.trySee = trySee;
@@ -273,18 +273,18 @@ public class StartArgs {
         // View生命周期, 自动暂停&续播&销毁...
         private boolean supportViewLifecycle = playerArgs.isSupportViewLifecycle();
         // 视频url
-        private String mediaUrl;
+        private String url;
 
-        public Builder setMediaUrl(String mediaUrl) {
-            this.mediaUrl = mediaUrl;
+        public Builder setUrl(String url) {
+            this.url = url;
             return this;
         }
 
         // 视频title
-        private String mediaTitle;
+        private String title;
 
-        public Builder setMediaTitle(String mediaTitle) {
-            this.mediaTitle = mediaTitle;
+        public Builder setTitle(String title) {
+            this.title = title;
             return this;
         }
 

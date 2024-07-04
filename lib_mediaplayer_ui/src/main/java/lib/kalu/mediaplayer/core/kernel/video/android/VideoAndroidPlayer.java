@@ -62,7 +62,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
-            String url = args.getMediaUrl();
+            String url = args.getUrl();
             if (url == null)
                 throw new Exception("url error: " + url);
             // 拉流

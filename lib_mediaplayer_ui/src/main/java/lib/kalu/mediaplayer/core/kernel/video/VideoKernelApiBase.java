@@ -36,7 +36,7 @@ interface VideoKernelApiBase {
         mMediaUrl[0] = v;
     }
 
-    default String getMediaUrl(){
+    default String getUrl(){
         return mMediaUrl[0];
     }
 
@@ -48,7 +48,7 @@ interface VideoKernelApiBase {
         mMediaTitle[0] = v;
     }
 
-    default String getMediaTitle(){
+    default String getTitle(){
         return mMediaTitle[0];
     }
 

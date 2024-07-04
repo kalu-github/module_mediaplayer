@@ -115,7 +115,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            String url = args.getMediaUrl();
+            String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
             mExoPlayerBuilder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
@@ -188,7 +188,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
         try {
             if (null != mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            String url = args.getMediaUrl();
+            String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
             mExoPlayer = mExoPlayerBuilder.build();
@@ -199,7 +199,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-            String url = args.getMediaUrl();
+            String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
             mExoPlayer.addAnalyticsListener(mAnalyticsListener);
@@ -515,7 +515,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
     public MediaSource buildMediaSource(Context context, StartArgs args) {
 
-        String mediaUrl = args.getMediaUrl();
+        String mediaUrl = args.getUrl();
         String scheme;
         Uri uri = Uri.parse(mediaUrl);
         try {

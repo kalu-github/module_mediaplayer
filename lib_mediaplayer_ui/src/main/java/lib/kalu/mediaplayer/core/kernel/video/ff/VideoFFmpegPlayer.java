@@ -65,7 +65,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
-            String url = args.getMediaUrl();
+            String url = args.getUrl();
             if (url == null)
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_START);

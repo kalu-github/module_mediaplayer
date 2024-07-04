@@ -106,7 +106,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             StartArgs tags = playerView.getTags();
             if (null == tags)
                 throw new Exception("error: tags null");
-            String mediaTitle = tags.getMediaTitle();
+            String mediaTitle = tags.getTitle();
             TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_title);
             textView.setText(mediaTitle);
         } catch (Exception e) {

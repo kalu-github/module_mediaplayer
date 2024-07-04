@@ -57,10 +57,10 @@ public interface VideoKernelApi extends VideoKernelApiCheck, VideoKernelApiBase,
             String subtitleUrl = args.getSubtitleUrl();
             setSubtitleUrl(subtitleUrl);
 
-            String mediaTitle = args.getMediaTitle();
+            String mediaTitle = args.getTitle();
             setMediaTitle(mediaTitle);
 
-            String mediaUrl = args.getMediaUrl();
+            String mediaUrl = args.getUrl();
             setMediaUrl(mediaUrl);
 
             long connectTimout = args.getConnectTimout();

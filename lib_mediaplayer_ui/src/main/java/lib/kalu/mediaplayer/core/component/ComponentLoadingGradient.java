@@ -46,7 +46,7 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
             StartArgs tags = playerView.getTags();
             if (null == tags)
                 throw new Exception("error: tags null");
-            String mediaTitle = tags.getMediaTitle();
+            String mediaTitle = tags.getTitle();
             setComponentText(mediaTitle);
         } catch (Exception e) {
         }
@@ -74,15 +74,25 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
         }
     }
 
+    @Override
+    public boolean isComponentShowing() {
+        try {
+            int visibility = findViewById(R.id.module_mediaplayer_component_loading_gradient_root).getVisibility();
+            return visibility == View.VISIBLE;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     /*************/
 
     @Override
     public int initLayoutIdComponentBackground() {
-        return R.id.module_mediaplayer_component_loading_bg;
+        return R.id.module_mediaplayer_component_loading_gradient_bg;
     }
 
     @Override
     public int initLayoutIdText() {
-        return R.id.module_mediaplayer_component_loading_message;
+        return R.id.module_mediaplayer_component_loading_gradient_message;
     }
 }

@@ -346,8 +346,8 @@ public final class TestActivity extends Activity {
         }
 
         builder.setLive(live);
-        builder.setMediaTitle("测试title");
-        builder.setMediaUrl(url);
+        builder.setTitle("测试title");
+        builder.setUrl(url);
         StartArgs build = builder.build();
         PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
         videoLayout.start(build);

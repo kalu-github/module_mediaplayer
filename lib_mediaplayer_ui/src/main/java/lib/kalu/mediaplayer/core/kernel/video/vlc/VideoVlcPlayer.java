@@ -58,7 +58,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
-            String url = args.getMediaUrl();
+            String url = args.getUrl();
             if (url == null)
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.EVENT_LOADING_START);

@@ -18,7 +18,7 @@ interface VideoPlayerApiBuriedEvent {
             String url = null;
             StartArgs tags = ((VideoPlayerApi) this).getTags();
             if (null != tags) {
-                url = tags.getMediaUrl();
+                url = tags.getUrl();
             }
 
             long position = ((VideoPlayerApi) this).getPosition();
@@ -40,7 +40,7 @@ interface VideoPlayerApiBuriedEvent {
             String url = null;
             StartArgs tags = ((VideoPlayerApi) this).getTags();
             if (null != tags) {
-                url = tags.getMediaUrl();
+                url = tags.getUrl();
             }
 
             long position = ((VideoPlayerApi) this).getPosition();
@@ -62,7 +62,7 @@ interface VideoPlayerApiBuriedEvent {
             String url = null;
             StartArgs tags = ((VideoPlayerApi) this).getTags();
             if (null != tags) {
-                url = tags.getMediaUrl();
+                url = tags.getUrl();
             }
 
             long position = ((VideoPlayerApi) this).getPosition();
@@ -84,7 +84,7 @@ interface VideoPlayerApiBuriedEvent {
             String url = null;
             StartArgs tags = ((VideoPlayerApi) this).getTags();
             if (null != tags) {
-                url = tags.getMediaUrl();
+                url = tags.getUrl();
             }
 
             long position = ((VideoPlayerApi) this).getPosition();
@@ -106,7 +106,7 @@ interface VideoPlayerApiBuriedEvent {
             String url = null;
             StartArgs tags = ((VideoPlayerApi) this).getTags();
             if (null != tags) {
-                url = tags.getMediaUrl();
+                url = tags.getUrl();
             }
 
             long position = ((VideoPlayerApi) this).getPosition();

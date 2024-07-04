@@ -189,7 +189,7 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs tags = playerView.getTags();
             if (null == tags)
                 throw new Exception("warning: tags null");
-            String mediaUrl = tags.getMediaUrl();
+            String mediaUrl = tags.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
             int kernelType = tags.getKernelType();
@@ -209,7 +209,7 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs tags = playerView.getTags();
             if (null == tags)
                 throw new Exception("warning: tags null");
-            String mediaUrl = tags.getMediaUrl();
+            String mediaUrl = tags.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
             int kernelType = tags.getKernelType();
@@ -229,7 +229,7 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs tags = playerView.getTags();
             if (null == tags)
                 throw new Exception("warning: tags null");
-            String mediaUrl = tags.getMediaUrl();
+            String mediaUrl = tags.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
             int kernelType = tags.getKernelType();
@@ -249,7 +249,7 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs tags = playerView.getTags();
             if (null == tags)
                 throw new Exception("warning: tags null");
-            String mediaUrl = tags.getMediaUrl();
+            String mediaUrl = tags.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
             int kernelType = tags.getKernelType();
@@ -510,7 +510,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final String getMediaUrl() {
+    public final String getUrl() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -518,7 +518,7 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs tag = ((VideoPlayerApi) playerView).getTags();
             if (null == tag)
                 throw new Exception("error: tag null");
-            return tag.getMediaUrl();
+            return tag.getUrl();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => getMediaUrl => " + e.getMessage());
             return null;

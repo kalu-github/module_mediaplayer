@@ -115,7 +115,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
             StartArgs tags = playerView.getTags();
             if (null == tags)
                 throw new Exception("error: tags null");
-            String mediaTitle = tags.getMediaTitle();
+            String mediaTitle = tags.getTitle();
             setComponentText(mediaTitle);
         } catch (Exception e) {
         }

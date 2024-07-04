@@ -75,7 +75,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            String url = args.getMediaUrl();
+            String url = args.getUrl();
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
             initListener();

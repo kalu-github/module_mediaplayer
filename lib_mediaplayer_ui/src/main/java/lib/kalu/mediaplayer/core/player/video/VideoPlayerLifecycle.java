@@ -22,7 +22,7 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             boolean supportViewLifecycle = tags.isSupportViewLifecycle();
             if (!supportViewLifecycle)
                 throw new Exception("warning: supportViewLifecycle false");
-            String mediaUrl = tags.getMediaUrl();
+            String mediaUrl = tags.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
             stop(true, false);
@@ -46,7 +46,7 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             boolean supportViewLifecycle = tags.isSupportViewLifecycle();
             if (!supportViewLifecycle)
                 throw new Exception("warning: supportViewLifecycle false");
-            String mediaUrl = tags.getMediaUrl();
+            String mediaUrl = tags.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
 //            resume(false);

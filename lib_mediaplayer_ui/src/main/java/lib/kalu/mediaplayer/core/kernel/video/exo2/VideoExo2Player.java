@@ -123,7 +123,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
         try {
             if (null == mExoPlayerBuilder)
                 throw new Exception("error: mExoPlayerBuilder null");
-            String url = args.getMediaUrl();
+            String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
             int ffmpegType = args.getExoFFmpegType();
@@ -195,7 +195,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
         try {
             if (null != mExoPlayer)
                 throw new Exception("warning: mExoPlayer not null");
-            String url = args.getMediaUrl();
+            String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
             if (null != mExoPlayer)
@@ -206,7 +206,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
 
         try {
-            String url = args.getMediaUrl();
+            String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
             mExoPlayer.addAnalyticsListener(mAnalyticsListener);
@@ -571,7 +571,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
     public MediaSource buildMediaSource(Context context, StartArgs args) {
 
-        String url = args.getMediaUrl();
+        String url = args.getUrl();
         String scheme;
         Uri uri = Uri.parse(url);
         try {

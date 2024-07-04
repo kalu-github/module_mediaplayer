@@ -65,7 +65,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void start(String url) {
-        StartArgs build = new StartArgs.Builder().setMediaUrl(url).build();
+        StartArgs build = new StartArgs.Builder().setUrl(url).build();
         start(build);
     }
 
@@ -74,7 +74,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         try {
             if (null == args)
                 throw new Exception("error: args null");
-            String url = args.getMediaUrl();
+            String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
             // 1
@@ -234,7 +234,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             StartArgs args = getTags();
             if (null == args)
                 throw new Exception("error: args null");
-            String url = args.getMediaUrl();
+            String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
             if (callEvent) {
