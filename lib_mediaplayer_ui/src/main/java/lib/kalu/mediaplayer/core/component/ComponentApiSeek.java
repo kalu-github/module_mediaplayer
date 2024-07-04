@@ -5,11 +5,15 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.exoplayer2.util.Log;
+
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface ComponentApiSeek extends ComponentApi {
 
@@ -40,153 +44,79 @@ public interface ComponentApiSeek extends ComponentApi {
             mHandlerDelayedMsg[0] = null;
         }
 
-        if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            int duration = getSeekBarMax();
-            if (duration > 0) {
-                long maxDuration = getPlayerView().getMaxDuration();
-                if (repeatCount == 0) {
-                    View seekBar = findSeekBar();
-                    Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                    if (null == tag) {
-                        int progress = getSeekBarProgress();
-                        seekBar.setTag(R.id.module_mediaplayer_id_seek_position, progress);
-                        getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_FORWARD_START);
-                    } else {
-                        int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                        if (range >= duration)
-                            return;
-                        // >=2H 2 * 60 * 60 * 1000
-                        if (duration >= 7200000) {
-                            range += 8000;
-                        }
-                        // >=1H 60*60*1000
-                        else if (duration >= 3600000) {
-                            range += 4000;
-                        }
-                        // >=30MIN 30*60*1000
-                        else if (duration >= 1800000) {
-                            range += 1000;
-                        }
-                        // 10MIN 10*60*1000
-                        else if (duration >= 600000) {
-                            range += 400;
-                        }
-                        // 时间太短了
-                        else {
-                            range += 100;
-                        }
-                        if (range >= duration) {
-                            range = duration;
-                        }
-                        seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
-                        onUpdateProgress(true, maxDuration, range, duration);
-                    }
-                } else {
-                    View seekBar = findSeekBar();
-                    int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                    if (range >= duration) {
-                        return;
-                    }
-                    // >=2H 2 * 60 * 60 * 1000
-                    if (duration >= 7200000) {
-                        range += 60000;
-                    }
-                    // >=1H 60*60*1000
-                    else if (duration >= 3600000) {
-                        range += 30000;
-                    }
-                    // >=30MIN 30*60*1000
-                    else if (duration >= 1800000) {
-                        range += 10000;
-                    }
-                    // 10MIN 10*60*1000
-                    else if (duration >= 600000) {
-                        range += 5000;
-                    }
-                    // 时间太短了
-                    else {
-                        range += 1000;
-                    }
-                    if (range >= duration) {
-                        range = duration;
-                    }
-                    seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
-                    onUpdateProgress(true, maxDuration, range, duration);
-                }
+        try {
+            long duration = getDuration();
+            if (duration <= 0)
+                throw new Exception("warning: duration <=0");
+            boolean componentShowing = isComponentShowing();
+            // gone
+            if (!componentShowing) {
+                getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_FORWARD_START);
             }
-        } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-            int duration = getSeekBarMax();
-            if (duration > 0) {
-                long maxDuration = getPlayerView().getMaxDuration();
-                if (repeatCount == 0) {
-                    View seekBar = findSeekBar();
-                    Object tag = seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                    if (null == tag) {
-                        int progress = getSeekBarProgress();
-                        seekBar.setTag(R.id.module_mediaplayer_id_seek_position, progress);
-                        getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_REWIND_START);
-                    } else {
-                        int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                        if (range <= 0)
-                            return;
-                        // >=2H 2 * 60 * 60 * 1000
-                        if (duration >= 7200000) {
-                            range -= 8000;
-                        }
-                        // >=1H 60*60*1000
-                        else if (duration >= 3600000) {
-                            range -= 4000;
-                        }
-                        // >=30MIN 30*60*1000
-                        else if (duration >= 1800000) {
-                            range -= 1000;
-                        }
-                        // 10MIN 10*60*1000
-                        else if (duration >= 600000) {
-                            range -= 400;
-                        }
-                        // 时间太短了
-                        else {
-                            range -= 100;
-                        }
-                        if (range <= 0) {
-                            range = 0;
-                        }
-                        seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
-                        onUpdateProgress(true, maxDuration, range, duration);
-                    }
-                } else {
-                    View seekBar = findSeekBar();
-                    int range = (int) seekBar.getTag(R.id.module_mediaplayer_id_seek_position);
-                    if (range <= 0)
-                        return;
-                    // >=2H 2 * 60 * 60 * 1000
-                    if (duration >= 7200000) {
-                        range -= 60000;
-                    }
-                    // >=1H 60*60*1000
-                    else if (duration >= 3600000) {
-                        range -= 30000;
-                    }
-                    // >=30MIN 30*60*1000
-                    else if (duration >= 1800000) {
-                        range -= 10000;
-                    }
-                    // 10MIN 10*60*1000
-                    else if (duration >= 600000) {
-                        range -= 5000;
-                    }
-                    // 时间太短了
-                    else {
-                        range -= 1000;
-                    }
-                    if (range <= 0) {
-                        range = 0;
-                    }
-                    seekBar.setTag(R.id.module_mediaplayer_id_seek_position, range);
-                    onUpdateProgress(true, maxDuration, range, duration);
+            // click
+            else if (repeatCount == 0) {
+                int progress = getSeekBarProgress();
+                if (progress >= duration)
+                    throw new Exception("warning: range >= duration");
+                // >=2H 2 * 60 * 60 * 1000
+                if (duration >= 7200000) {
+                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 8000 : -8000);
                 }
+                // >=1H 60*60*1000
+                else if (duration >= 3600000) {
+                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 4000 : -4000);
+                }
+                // >=30MIN 30*60*1000
+                else if (duration >= 1800000) {
+                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 1000 : -1000);
+                }
+                // 10MIN 10*60*1000
+                else if (duration >= 600000) {
+                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 400 : -400);
+                }
+                // 时间太短了
+                else {
+                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 100 : -100);
+                }
+                if (progress >= duration) {
+                    progress = (int) duration;
+                }
+                long maxDuration = getPlayerView().getMaxDuration();
+                onUpdateProgress(true, maxDuration, progress, duration);
             }
+            // long click
+            else {
+                int progress = getSeekBarProgress();
+                if (progress >= duration)
+                    throw new Exception("warning: progress > duration");
+                // >=2H 2 * 60 * 60 * 1000
+                if (duration >= 7200000) {
+                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 60000 : -60000);
+                }
+                // >=1H 60*60*1000
+                else if (duration >= 3600000) {
+                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 30000 : -30000);
+                }
+                // >=30MIN 30*60*1000
+                else if (duration >= 1800000) {
+                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 10000 : -10000);
+                }
+                // 10MIN 10*60*1000
+                else if (duration >= 600000) {
+                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 5000 : -5000);
+                }
+                // 时间太短了
+                else {
+                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 1000 : -1000);
+                }
+                if (progress >= duration) {
+                    progress = (int) duration;
+                }
+                long maxDuration = getPlayerView().getMaxDuration();
+                onUpdateProgress(true, maxDuration, progress, duration);
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiSeek => startInitMsg => Exception " + e.getMessage());
         }
     }
 
@@ -196,7 +126,7 @@ public interface ComponentApiSeek extends ComponentApi {
                 @Override
                 public void handleMessage(@NonNull Message msg) {
                     View seekBar = findSeekBar();
-                    seekBar.setTag(R.id.module_mediaplayer_id_seek_position, null);
+//                    seekBar.setTag(R.id.module_mediaplayer_id_seek_position, null);
                     int progress = getSeekBarProgress();
                     seekToPosition(keyCode, progress);
                 }

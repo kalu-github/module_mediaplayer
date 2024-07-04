@@ -66,6 +66,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
                 duration = 0;
             }
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_play_info_seekbar);
+            seekBar.requestLayout();
             seekBar.setProgress((int) position);
             seekBar.setMax((int) (max > 0 ? max : duration));
         } catch (Exception e) {

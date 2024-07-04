@@ -22,7 +22,6 @@ import lib.kalu.mediaplayer.util.TimeUtil;
 
 public final class SeekBar extends android.widget.SeekBar {
 
-    private long playPosition;
     private Paint mPaint = null;
     private int mTextColor = Color.WHITE;
     private int mTextSize = 10;
@@ -65,19 +64,22 @@ public final class SeekBar extends android.widget.SeekBar {
 
             if (null == mPaint) {
                 mPaint = new Paint();
-                mPaint.setAntiAlias(true);
-                mPaint.setTextSize(mTextSize);
-                mPaint.setColor(mTextColor);
             }
+            mPaint.setAntiAlias(true);
+            mPaint.setTextSize(mTextSize);
+            mPaint.setColor(mTextColor);
 
             String text = TimeUtil.formatTimeMillis(duration);
             float textWidth = mPaint.measureText(text);
+            LogUtil.log("SeekBar => onMeasure => text = "+text+", textWidth = "+textWidth);
+
             int left = (int) (textWidth + mTextProgressPaddingLeft + mTextProgressPaddingRight);
             int right = (int) (textWidth + mTextDurationPaddingLeft + mTextDurationPaddingRight);
             int top = getPaddingTop();
             int bottom = getPaddingBottom();
             setPadding(left, top, right, bottom);
         } catch (Exception e) {
+            LogUtil.log("SeekBar => onMeasure => Exception "+e.getMessage());
         }
 
         super.onMeasure(widthMeasureSpec, -2);
@@ -103,10 +105,10 @@ public final class SeekBar extends android.widget.SeekBar {
 
             if (null == mPaint) {
                 mPaint = new Paint();
-                mPaint.setAntiAlias(true);
-                mPaint.setTextSize(mTextSize);
-                mPaint.setColor(mTextColor);
             }
+            mPaint.setAntiAlias(true);
+            mPaint.setTextSize(mTextSize);
+            mPaint.setColor(mTextColor);
 
             String text = TimeUtil.formatTimeMillis(duration);
             float textWidth = mPaint.measureText(text);
@@ -152,10 +154,10 @@ public final class SeekBar extends android.widget.SeekBar {
 
             if (null == mPaint) {
                 mPaint = new Paint();
-                mPaint.setAntiAlias(true);
-                mPaint.setTextSize(mTextSize);
-                mPaint.setColor(mTextColor);
             }
+            mPaint.setAntiAlias(true);
+            mPaint.setTextSize(mTextSize);
+            mPaint.setColor(mTextColor);
 
             long progress;
             if (mMode == 2) {
@@ -210,10 +212,11 @@ public final class SeekBar extends android.widget.SeekBar {
             }
 
             if (null == mPaint) {
-                mPaint.setAntiAlias(true);
-                mPaint.setTextSize(mTextSize);
-                mPaint.setColor(mTextColor);
+                mPaint = new Paint();
             }
+            mPaint.setAntiAlias(true);
+            mPaint.setTextSize((float) (mTextSize * 1.1));
+            mPaint.setColor(mTextColor);
 
             String text = TimeUtil.formatTimeMillis(progress, duration);
             float textWidth = mPaint.measureText(text);
@@ -261,6 +264,9 @@ public final class SeekBar extends android.widget.SeekBar {
         setPlayPosition(0);
         setThumbOffset(0);
     }
+
+
+    private long playPosition;
 
     public long getPlayPosition() {
         return playPosition;
