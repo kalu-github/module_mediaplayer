@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
@@ -36,7 +37,6 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             boolean componentShowing = isComponentShowing();
             if (componentShowing) {
                 hide();
-                return true;
             }
         }
         return false;
@@ -54,7 +54,6 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
-
         try {
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
@@ -66,7 +65,6 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
                 duration = 0;
             }
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_play_info_seekbar);
-            seekBar.requestLayout();
             seekBar.setProgress((int) position);
             seekBar.setMax((int) (max > 0 ? max : duration));
         } catch (Exception e) {
@@ -86,20 +84,6 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     public final void show() {
 
         try {
-            for(int i=0;i<2;i++){
-                long duration = getDuration();
-                if (duration <= 0)
-                    throw new Exception("warning: duration<=0");
-                long position = getPosition();
-                long maxDuration = getMaxDuration();
-                SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_pause_sb);
-                seekBar.setProgress((int) position);
-                seekBar.setMax((int) (maxDuration > 0 ? maxDuration : duration));
-            }
-        } catch (Exception e) {
-        }
-
-        try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("error: playerView null");
@@ -112,6 +96,17 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
         } catch (Exception e) {
         }
 
+        try {
+            long duration = getDuration();
+            if (duration <= 0)
+                throw new Exception("warning: duration<=0");
+            long position = getPosition();
+            long maxDuration = getMaxDuration();
+            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_play_info_seekbar);
+            seekBar.setProgress((int) position);
+            seekBar.setMax((int) (maxDuration > 0 ? maxDuration : duration));
+        } catch (Exception e) {
+        }
 
         try {
             findViewById(R.id.module_mediaplayer_component_warning_play_info_root).setVisibility(View.VISIBLE);

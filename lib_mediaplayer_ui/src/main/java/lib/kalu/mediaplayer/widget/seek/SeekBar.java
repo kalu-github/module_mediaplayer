@@ -81,7 +81,6 @@ public final class SeekBar extends android.widget.SeekBar {
         } catch (Exception e) {
             LogUtil.log("SeekBar => onMeasure => Exception " + e.getMessage());
         }
-
         super.onMeasure(widthMeasureSpec, -2);
     }
 
