@@ -17,7 +17,6 @@
             android:id="@+id/module_mediaplayer_component_loading_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/module_mediaplayer_color_aa000000"
             android:focusable="false" />
 
 
@@ -35,16 +34,29 @@
             app:lv_radius="10dp"
             app:lv_rate="0.9" />
 
-        <!-- 提示 -->
+        <!-- 名称 -->
         <TextView
-            android:id="@+id/module_mediaplayer_component_loading_message"
+            android:id="@+id/module_mediaplayer_component_loading_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/module_mediaplayer_component_loading_pb"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="24dp"
+            android:focusable="false"
+            android:textColor="@color/module_mediaplayer_color_ffffff"
+            android:textSize="30sp" />
+
+        <!-- 网速 -->
+        <TextView
+            android:id="@+id/module_mediaplayer_component_loading_net"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/module_mediaplayer_component_loading_pb"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
             android:focusable="false"
             android:textColor="@color/module_mediaplayer_color_ffffff"
-            android:textSize="30sp" />
+            android:textSize="14sp" />
 
         <!--        <LinearLayout-->
         <!--            android:layout_width="match_parent"-->

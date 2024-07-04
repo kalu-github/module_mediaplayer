@@ -45,7 +45,6 @@
             android:textColor="@color/module_mediaplayer_color_ffffff"
             android:textSize="14sp" />
 
-
     </RelativeLayout>
 
 </RelativeLayout>

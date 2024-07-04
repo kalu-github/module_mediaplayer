@@ -39,6 +39,21 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     }
 
     @Override
+    public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
+        try {
+            TextView textView = findViewById(R.id.module_mediaplayer_component_loading_net);
+            if (null == textView)
+                throw new Exception("textView error: null");
+            int viewVisibility = textView.getVisibility();
+            if (viewVisibility != View.VISIBLE)
+                throw new Exception("viewVisibility warning: " + viewVisibility);
+            String speed = getNetSpeed();
+            textView.setText(speed);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
     public final void show() {
 
         try {
@@ -96,6 +111,6 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
 
     @Override
     public int initLayoutIdText() {
-        return R.id.module_mediaplayer_component_loading_message;
+        return R.id.module_mediaplayer_component_loading_name;
     }
 }
