@@ -20,43 +20,69 @@
             android:background="@color/module_mediaplayer_color_aa000000"
             android:focusable="false" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+
+        <!-- 转圈 -->
+        <lib.kalu.mediaplayer.widget.loading.MPLoadingView
+            android:id="@+id/module_mediaplayer_component_loading_pb"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_centerInParent="true"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingLeft="200dp"
-            android:paddingRight="200dp">
+            android:focusable="false"
+            android:indeterminateDuration="2000"
+            android:longClickable="false"
+            app:lv_color_round="@color/module_mediaplayer_color_ffffff"
+            app:lv_count="8"
+            app:lv_radius="10dp"
+            app:lv_rate="0.9" />
 
-            <!-- 提示 -->
-            <TextView
-                android:id="@+id/module_mediaplayer_component_loading_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:textColor="@color/module_mediaplayer_color_ffffff"
-                android:textSize="30sp" />
+        <!-- 提示 -->
+        <TextView
+            android:id="@+id/module_mediaplayer_component_loading_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/module_mediaplayer_component_loading_pb"
+            android:layout_marginBottom="24dp"
+            android:focusable="false"
+            android:textColor="@color/module_mediaplayer_color_ffffff"
+            android:textSize="30sp" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="24dp" />
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_centerInParent="true"-->
+        <!--            android:gravity="center_horizontal"-->
+        <!--            android:orientation="vertical"-->
+        <!--            android:paddingLeft="200dp"-->
+        <!--            android:paddingRight="200dp">-->
 
-            <!-- 转圈 -->
-            <lib.kalu.mediaplayer.widget.loading.MPLoadingView
-                android:id="@+id/module_mediaplayer_component_loading_pb"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerInParent="true"
-                android:focusable="false"
-                android:indeterminateDuration="2000"
-                android:longClickable="false"
-                app:lv_color_round="@color/module_mediaplayer_color_ffffff"
-                app:lv_count="8"
-                app:lv_radius="10dp"
-                app:lv_rate="0.9" />
+        <!--            &lt;!&ndash; 提示 &ndash;&gt;-->
+        <!--            <TextView-->
+        <!--                android:id="@+id/module_mediaplayer_component_loading_message"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:focusable="false"-->
+        <!--                android:textColor="@color/module_mediaplayer_color_ffffff"-->
+        <!--                android:textSize="30sp" />-->
 
-        </LinearLayout>
+        <!--            <Space-->
+        <!--                android:layout_width="0dp"-->
+        <!--                android:layout_height="24dp" />-->
+
+        <!--            &lt;!&ndash; 转圈 &ndash;&gt;-->
+        <!--            <lib.kalu.mediaplayer.widget.loading.MPLoadingView-->
+        <!--                android:id="@+id/module_mediaplayer_component_loading_pb"-->
+        <!--                android:layout_width="80dp"-->
+        <!--                android:layout_height="80dp"-->
+        <!--                android:layout_centerInParent="true"-->
+        <!--                android:focusable="false"-->
+        <!--                android:indeterminateDuration="2000"-->
+        <!--                android:longClickable="false"-->
+        <!--                app:lv_color_round="@color/module_mediaplayer_color_ffffff"-->
+        <!--                app:lv_count="8"-->
+        <!--                app:lv_radius="10dp"-->
+        <!--                app:lv_rate="0.9" />-->
+
+        <!--        </LinearLayout>-->
 
     </RelativeLayout>
 
