@@ -119,7 +119,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             public void run() {
                 hide();
             }
-        }, 4000);
+        }, 2000);
     }
 
     @Override

@@ -71,7 +71,7 @@ public final class SeekBar extends android.widget.SeekBar {
 
             String text = TimeUtil.formatTimeMillis(duration);
             float textWidth = mPaint.measureText(text);
-            LogUtil.log("SeekBar => onMeasure => text = " + text + ", textWidth = " + textWidth);
+//            LogUtil.log("SeekBar => onMeasure => text = " + text + ", textWidth = " + textWidth);
 
             int left = (int) (textWidth + mTextProgressPaddingLeft + mTextProgressPaddingRight);
             int right = (int) (textWidth + mTextDurationPaddingLeft + mTextDurationPaddingRight);
@@ -110,8 +110,8 @@ public final class SeekBar extends android.widget.SeekBar {
             mPaint.setColor(mTextColor);
 
             String text = TimeUtil.formatTimeMillis(duration);
-            float textWidth = mPaint.measureText(text);
-            LogUtil.log("SeekBar => onDraw => duration = " + duration + ", text = " + text + ", textWidth = " + textWidth);
+//            float textWidth = mPaint.measureText(text);
+//            LogUtil.log("SeekBar => onDraw => duration = " + duration + ", text = " + text + ", textWidth = " + textWidth);
             Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
             float textHeight = fontMetrics.bottom - fontMetrics.top;
 
@@ -169,7 +169,7 @@ public final class SeekBar extends android.widget.SeekBar {
             }
 
             String text = TimeUtil.formatTimeMillis(progress, duration);
-            LogUtil.log("SeekBar => onDraw => duration = " + duration + ", progress = " + progress + ", text = " + text + ", playPosition = " + playPosition + ", mMode = " + mMode);
+//            LogUtil.log("SeekBar => onDraw => duration = " + duration + ", progress = " + progress + ", text = " + text + ", playPosition = " + playPosition + ", mMode = " + mMode);
             Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
             float textHeight = fontMetrics.bottom - fontMetrics.top;
 
@@ -222,7 +222,7 @@ public final class SeekBar extends android.widget.SeekBar {
 
             Rect rect = getProgressDrawable().getBounds();
             int width = rect.width();
-            int paddingLeft = getPaddingLeft();
+//            int paddingLeft = getPaddingLeft();
 
             int range = (int) (width * progress / duration);
             int x = (int) (range + mTextProgressPaddingLeft + mTextProgressPaddingRight + textWidth * 0.5);

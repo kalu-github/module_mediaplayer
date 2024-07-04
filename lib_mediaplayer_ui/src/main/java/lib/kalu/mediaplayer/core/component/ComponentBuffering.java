@@ -7,7 +7,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -22,7 +21,7 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
         try {
-            if(!showSpeed)
+            if (!showSpeed)
                 throw new Exception();
             TextView textView = findViewById(R.id.module_mediaplayer_component_buffering_message);
             if (null == textView)
@@ -48,11 +47,13 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
     public void callEventListener(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_BUFFERING_START:
+            case PlayerType.EventType.EVENT_SEEK_START:
                 LogUtil.log("ComponentNet => onPlayStateChanged => playState = " + playState);
                 show();
                 break;
             case PlayerType.StateType.STATE_INIT:
             case PlayerType.StateType.STATE_BUFFERING_STOP:
+            case PlayerType.EventType.EVENT_SEEK_FINISH:
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_RELEASE:
             case PlayerType.StateType.STATE_RELEASE_EXCEPTION:
@@ -63,12 +64,22 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
     }
 
     @Override
+    public boolean isComponentShowing() {
+        try {
+            int visibility = findViewById(R.id.module_mediaplayer_component_buffering_root).getVisibility();
+            return visibility == View.VISIBLE;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
     public final void hide() {
         try {
-            
-            findViewById(R.id.module_mediaplayer_component_buffering_bg).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_buffering_pb).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_buffering_message).setVisibility(View.GONE);
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            findViewById(R.id.module_mediaplayer_component_buffering_root).setVisibility(View.GONE);
         } catch (Exception e) {
         }
     }
@@ -76,10 +87,10 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
     @Override
     public final void show() {
         try {
-            
-            findViewById(R.id.module_mediaplayer_component_buffering_bg).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_buffering_pb).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_buffering_message).setVisibility(View.VISIBLE);
+            boolean componentShowing = isComponentShowing();
+            if (componentShowing)
+                throw new Exception("warning: componentShowing true");
+            findViewById(R.id.module_mediaplayer_component_buffering_root).setVisibility(View.VISIBLE);
         } catch (Exception e) {
         }
     }

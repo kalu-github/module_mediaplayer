@@ -75,7 +75,7 @@ public interface VideoRenderApi {
                                 int videoWidth, int videoHeight,
                                 @PlayerType.ScaleType.Value int videoScaleType,
                                 @PlayerType.RotationType.Value int videoRotation) {
-        LogUtil.log("VideoRenderApi => doMeasureSpec => screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
+//        LogUtil.log("VideoRenderApi => doMeasureSpec => screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
 
         if (videoScaleType == 0) {
             videoScaleType = PlayerSDK.init().getPlayerBuilder().getScaleType();
