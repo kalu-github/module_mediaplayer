@@ -6,13 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.util.TimeUtil;
 
 
 public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
@@ -20,6 +18,11 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     public ComponentSeek(Context context) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_seek, this, true);
+    }
+
+    @Override
+    public boolean enableDispatchKeyEvent() {
+        return true;
     }
 
     @Override
@@ -121,67 +124,32 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public final void show() {
-        try {
-            findViewById(R.id.module_mediaplayer_component_seek_root).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => show => " + e.getMessage());
-        }
-        try {
-            setTag(R.id.module_mediaplayer_component_seek_sb, true);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void hide() {
-        try {
-            findViewById(R.id.module_mediaplayer_component_seek_root).setVisibility(View.GONE);
-        } catch (Exception e) {
-        }
-        try {
-            setTag(R.id.module_mediaplayer_component_seek_sb, false);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
 //        LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", max = " + max + ", position = " + position + ", duration = " + duration);
 
         // 进度条
         try {
-            SeekBar seekBar = findSeekBar();
-            if (null == seekBar)
-                throw new Exception("warning: null == seekBar");
-            Object tag = seekBar.getTag();
-            if (null != tag && !isFromUser)
-                throw new Exception("warning: user touch");
-            if (null == tag && !isFromUser) {
-                int visibility = seekBar.getVisibility();
-                if (visibility != View.VISIBLE) {
-                    throw new Exception("warning: visibility != View.VISIBLE");
-                }
+//            boolean componentShowing = isComponentShowing();
+//            if (!componentShowing)
+//                throw new Exception("warning: componentShowing false");
+            if (position < 0) {
+                position = 0;
             }
-            seekBar.setProgress((int) position);
-            seekBar.setSecondaryProgress((int) position);
+            if (duration < 0) {
+                duration = 0;
+            }
+
+            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findSeekBar();
+            // 拖动进度条
+            if (isFromUser) {
+                seekBar.setProgress((int) position);
+            }
+            // 默认
+            else {
+                seekBar.setPlayPosition(position);
+            }
+
             seekBar.setMax((int) (max > 0 ? max : duration));
-        } catch (Exception e) {
-        }
-
-        // position
-        try {
-            String optString = TimeUtil.formatTimeMillis(position, (max > 0 ? max : duration));
-            TextView textView = findViewById(R.id.module_mediaplayer_component_seek_position);
-            textView.setText(optString);
-        } catch (Exception e) {
-        }
-
-        // duration
-        try {
-            String optString = TimeUtil.formatTimeMillis(max > 0 ? max : duration);
-            TextView textView = findViewById(R.id.module_mediaplayer_component_seek_dutation);
-            textView.setText(optString);
         } catch (Exception e) {
         }
     }
@@ -189,40 +157,24 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     @Override
     public void setUserTouch(boolean status) {
         try {
-            SeekBar seekBar = findSeekBar();
+            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findSeekBar();
             if (null == seekBar)
                 throw new Exception("seekBar error: null");
             seekBar.setTag(status ? true : null);
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => setUserTouch => " + e.getMessage());
         }
-        try {
-            TextView viewMax = findViewById(R.id.module_mediaplayer_component_seek_dutation);
-            if (null == viewMax)
-                throw new Exception("warning: null == viewMax");
-            viewMax.setTag(status ? true : null);
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => setUserTouch => " + e.getMessage());
-        }
-        try {
-            TextView viewPosition = findViewById(R.id.module_mediaplayer_component_seek_position);
-            if (null == viewPosition)
-                throw new Exception("warning: null == viewPosition");
-            viewPosition.setTag(status ? true : null);
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => setUserTouch => " + e.getMessage());
-        }
     }
 
     @Override
-    public SeekBar findSeekBar() {
+    public lib.kalu.mediaplayer.widget.seek.SeekBar findSeekBar() {
         try {
-            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
             if (null == seekBar)
                 throw new Exception("seekBar error: null");
             return seekBar;
         } catch (Exception e) {
-            LogUtil.log("ComponentSeek => findSeekBar => " + e.getMessage());
+//            LogUtil.log("ComponentSeek => findSeekBar => " + e.getMessage());
             return null;
         }
     }
@@ -240,8 +192,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     @Override
     public int getSeekBarProgress() {
         try {
-            View seekBar = findSeekBar();
-            return ((SeekBar) seekBar).getProgress();
+            SeekBar seekBar = findSeekBar();
+            return seekBar.getProgress();
         } catch (Exception e) {
             return 0;
         }
@@ -250,7 +202,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     @Override
     public void initSeekBarChangeListener() {
         try {
-            SeekBar seekBar = findSeekBar();
+            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findSeekBar();
             if (null == seekBar)
                 throw new Exception("warning: null == seekBar");
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -277,15 +229,18 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     @Override
     public void seekToStopTrackingTouch() {
         try {
-            SeekBar seekBar = findSeekBar();
+            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findSeekBar();
             if (null == seekBar)
                 throw new Exception("warning: null == seekBar");
-            int duration = seekBar.getMax();
-            int progress = seekBar.getProgress();
-            if (progress > duration) {
-                progress = duration;
+            long max = seekBar.getMax();
+            long playPosition = seekBar.getPlayPosition();
+            seekBar.clearPlayPosition();
+            if (playPosition > max) {
+                playPosition = max;
+            } else if (playPosition <= 0) {
+                playPosition = 0;
             }
-            getPlayerView().seekTo(progress);
+            getPlayerView().seekTo(playPosition);
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => seekToStopTrackingTouch => " + e.getMessage());
         }
@@ -294,12 +249,36 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     @Override
     public boolean isComponentShowing() {
         try {
-            int visibility1 = findViewById(R.id.module_mediaplayer_component_seek_bg).getVisibility();
-            int visibility2 = findViewById(R.id.module_mediaplayer_component_seek_ui).getVisibility();
-            return visibility1 == View.VISIBLE && visibility2 == View.VISIBLE;
+            int visibility = findViewById(R.id.module_mediaplayer_component_seek_root).getVisibility();
+            return visibility == View.VISIBLE;
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => isComponentShowing => " + e.getMessage());
             return false;
+        }
+    }
+
+    @Override
+    public final void show() {
+        try {
+            findViewById(R.id.module_mediaplayer_component_seek_root).setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+            LogUtil.log("ComponentSeek => show => " + e.getMessage());
+        }
+        try {
+            setTag(R.id.module_mediaplayer_component_seek_sb, true);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public final void hide() {
+        try {
+            findViewById(R.id.module_mediaplayer_component_seek_root).setVisibility(View.GONE);
+        } catch (Exception e) {
+        }
+        try {
+            setTag(R.id.module_mediaplayer_component_seek_sb, false);
+        } catch (Exception e) {
         }
     }
 }

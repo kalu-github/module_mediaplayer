@@ -20,69 +20,38 @@
             android:focusable="false" />
 
         <!-- 快进快退 -->
-        <LinearLayout
-            android:id="@+id/module_mediaplayer_component_seek_ui"
+        <lib.kalu.mediaplayer.widget.seek.SeekBar
+            android:id="@+id/module_mediaplayer_component_seek_sb"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@drawable/module_mediaplayer_shape_shandow_down_to_up"
-            android:gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:focusable="false"
+            android:maxHeight="4dp"
+            android:minHeight="4dp"
+            android:paddingTop="44dp"
+            android:paddingBottom="24dp"
+            android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress"
+            android:thumb="@drawable/module_mediaplayer_shape_seek_thumb"
+            android:thumbOffset="0dp"
+            app:sb_mode="open"
+            app:sb_text_color="@color/module_mediaplayer_color_ffffff"
+            app:sb_text_duration_padding_left="12dp"
+            app:sb_text_duration_padding_right="24dp"
+            app:sb_text_gravity="center"
+            app:sb_text_progress_padding_left="64dp"
+            app:sb_text_progress_padding_right="12dp"
+            app:sb_text_size="16sp" />
 
-            <ImageView
-                android:id="@+id/module_mediaplayer_component_seek_status"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:focusable="false"
-                android:src="@drawable/module_mediaplayer_ic_pause" />
-
-            <TextView
-                android:id="@+id/module_mediaplayer_component_seek_position"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"
-                android:background="#00000000"
-                android:focusable="false"
-                android:gravity="center"
-                android:textColor="#ffffff"
-                android:textSize="12sp" />
-
-            <lib.kalu.mediaplayer.widget.seek.TvSeekBar
-                android:id="@+id/module_mediaplayer_component_seek_sb"
-                android:layout_width="0dp"
-                android:layout_height="16dp"
-                android:layout_alignParentTop="true"
-                android:layout_weight="1"
-                android:background="#00000000"
-                android:focusable="false"
-                android:max="0"
-                android:maxHeight="5dp"
-                android:minHeight="5dp"
-                android:paddingStart="0dp"
-                android:paddingLeft="0dp"
-                android:paddingEnd="0dp"
-                android:paddingRight="0dp"
-                android:progress="0"
-                android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress"
-                android:thumb="@drawable/module_mediaplayer_shape_seek_thumb"
-                android:thumbOffset="0dp" />
-
-            <TextView
-                android:id="@+id/module_mediaplayer_component_seek_dutation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginLeft="4dp"
-                android:background="#00000000"
-                android:focusable="false"
-                android:gravity="center"
-                android:textColor="#ffffff"
-                android:textSize="12sp" />
-
-        </LinearLayout>
+        <!-- 图标 -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="24dp"
+            android:layout_marginBottom="24dp"
+            android:focusable="false"
+            android:src="@drawable/module_mediaplayer_ic_pause" />
 
         <!--    &lt;!&ndash; 进度条 &ndash;&gt;-->
         <!--    <ProgressBar-->

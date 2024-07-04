@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import lib.kalu.mediaplayer.R;
@@ -17,12 +16,12 @@ import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.TimeUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
+import lib.kalu.mediaplayer.widget.seek.SeekBar;
 
 public class ComponentWarningPlayInfo extends RelativeLayout implements ComponentApi {
 
     public ComponentWarningPlayInfo(Context context) {
         super(context);
-        setEnabled(true);
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_warning_play_info, this, true);
     }
 
@@ -33,7 +32,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
             boolean componentShowing = isComponentShowing();
             if (componentShowing) {
                 hide();
@@ -56,33 +55,19 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
 
-        boolean enabled = isEnabled();
-        if (!enabled)
-            return;
-
         try {
-            if (position < 0 || duration < 0)
-                throw new Exception();
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            if (position < 0) {
+                position = 0;
+            }
+            if (duration < 0) {
+                duration = 0;
+            }
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_play_info_seekbar);
             seekBar.setProgress((int) position);
-            seekBar.setSecondaryProgress((int) position);
             seekBar.setMax((int) (max > 0 ? max : duration));
-        } catch (Exception e) {
-        }
-
-        // position
-        try {
-            String optString = TimeUtil.formatTimeMillis(position, (max > 0 ? max : duration));
-            TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_position);
-            textView.setText(optString);
-        } catch (Exception e) {
-        }
-
-        // duration
-        try {
-            String optString = TimeUtil.formatTimeMillis(max > 0 ? max : duration);
-            TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_duration);
-            textView.setText(optString);
         } catch (Exception e) {
         }
     }
@@ -98,7 +83,21 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
     @Override
     public final void show() {
-        setEnabled(true);
+
+        try {
+            for(int i=0;i<2;i++){
+                long duration = getDuration();
+                if (duration <= 0)
+                    throw new Exception("warning: duration<=0");
+                long position = getPosition();
+                long maxDuration = getMaxDuration();
+                SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_pause_sb);
+                seekBar.setProgress((int) position);
+                seekBar.setMax((int) (maxDuration > 0 ? maxDuration : duration));
+            }
+        } catch (Exception e) {
+        }
+
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -118,13 +117,13 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
         } catch (Exception e) {
         }
 
-        // 2s后隐藏
+        // 4s后隐藏
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 hide();
             }
-        }, 2000);
+        }, 4000);
     }
 
     @Override
@@ -135,11 +134,5 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             viewGroup.removeView(this);
         } catch (Exception e) {
         }
-
-//        setEnabled(false);
-//        try {
-//            findViewById(R.id.module_mediaplayer_component_warning_play_info_root).setVisibility(View.GONE);
-//        } catch (Exception e) {
-//        }
     }
 }

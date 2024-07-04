@@ -5,7 +5,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 
@@ -15,6 +14,7 @@ import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.TimeUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
+import lib.kalu.mediaplayer.widget.seek.SeekBar;
 import lib.kalu.mediaplayer.widget.subtitle.model.Time;
 
 public class ComponentPause extends RelativeLayout implements ComponentApiPause {
@@ -95,6 +95,20 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public final void show() {
 
         try {
+            for (int i = 0; i < 2; i++) {
+                long duration = getDuration();
+                if (duration <= 0)
+                    throw new Exception("warning: duration<=0");
+                long position = getPosition();
+                long maxDuration = getMaxDuration();
+                SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_pause_sb);
+                seekBar.setProgress((int) position);
+                seekBar.setMax((int) (maxDuration > 0 ? maxDuration : duration));
+            }
+        } catch (Exception e) {
+        }
+
+        try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("error: playerView null");
@@ -105,7 +119,6 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
             setComponentText(mediaTitle);
         } catch (Exception e) {
         }
-
 
         try {
             PlayerView playerView = getPlayerView();
@@ -120,35 +133,6 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
             findViewById(R.id.module_mediaplayer_component_pause_root).setVisibility(View.VISIBLE);
         } catch (Exception e) {
             LogUtil.log("ComponentPause => show => Exception " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
-        try {
-            if (position < 0 || duration < 0)
-                throw new Exception();
-            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_pause_sb);
-            seekBar.setProgress((int) position);
-            seekBar.setSecondaryProgress((int) position);
-            seekBar.setMax((int) (max > 0 ? max : duration));
-        } catch (Exception e) {
-        }
-
-        // position
-        try {
-            String optString = TimeUtil.formatTimeMillis(position, (max > 0 ? max : duration));
-            TextView textView = findViewById(R.id.module_mediaplayer_component_pause_position);
-            textView.setText(optString);
-        } catch (Exception e) {
-        }
-
-        // duration
-        try {
-            String optString = TimeUtil.formatTimeMillis(max > 0 ? max : duration);
-            TextView textView = findViewById(R.id.module_mediaplayer_component_pause_duration);
-            textView.setText(optString);
-        } catch (Exception e) {
         }
     }
 

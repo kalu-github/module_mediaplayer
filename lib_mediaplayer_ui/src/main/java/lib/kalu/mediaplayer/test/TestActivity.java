@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import java.util.LinkedList;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.core.component.ComponentLoadingGradient;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayRecord;
@@ -171,7 +172,7 @@ public final class TestActivity extends Activity {
         menu.setItemsData(64, 66);
         componentApis.add(menu);
         // loading
-        ComponentLoading loading = new ComponentLoading(getApplicationContext());
+        ComponentLoadingGradient loading = new ComponentLoadingGradient(getApplicationContext());
         loading.setComponentText("正在播放 第" + (64 + 1) + "集");
         componentApis.add(loading);
         // seek

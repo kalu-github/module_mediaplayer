@@ -15,4 +15,24 @@
         <attr name="ev_color_center" format="color|reference" />
     </declare-styleable>
 
+
+    <declare-styleable name="SeekBar">
+        <attr name="sb_text_progress_padding_left" format="dimension|reference" />
+        <attr name="sb_text_progress_padding_right" format="dimension|reference" />
+        <attr name="sb_text_duration_padding_left" format="dimension|reference" />
+        <attr name="sb_text_duration_padding_right" format="dimension|reference" />
+        <attr name="sb_text_size" format="dimension|reference" />
+        <attr name="sb_text_color" format="color|reference" />
+        <attr name="sb_text_gravity" format="enum">
+            <enum name="top" value="1" />
+            <enum name="center" value="2" />
+            <enum name="bottom" value="3" />
+        </attr>
+        <attr name="sb_mode" format="enum">
+            <enum name="open" value="1" />
+            <enum name="close" value="2" />
+        </attr>
+    </declare-styleable>
+
+
 </resources>

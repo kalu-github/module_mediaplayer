@@ -470,6 +470,52 @@ public interface ComponentApi {
         }
     }
 
+    default long getDuration() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            long duration = playerView.getDuration();
+            if (duration < 0)
+                throw new Exception("warning: duration<0");
+            return duration;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getDuration => " + e.getMessage());
+            return 0L;
+        }
+    }
+
+    default long getPosition() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            long position = playerView.getPosition();
+            if (position < 0)
+                throw new Exception("warning: position<0");
+            return position;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getPosition => " + e.getMessage());
+            return 0L;
+        }
+    }
+
+    default long getMaxDuration() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            StartArgs tags = playerView.getTags();
+            long maxDuration = tags.getMaxDuration();
+            if (maxDuration < 0)
+                throw new Exception("warning: maxDuration<0");
+            return maxDuration;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getMaxDuration => " + e.getMessage());
+            return 0L;
+        }
+    }
+
     default void setSpeed(float v) {
         try {
             PlayerView playerView = getPlayerView();

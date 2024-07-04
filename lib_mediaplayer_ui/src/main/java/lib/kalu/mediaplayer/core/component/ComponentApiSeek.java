@@ -5,15 +5,11 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
-import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public interface ComponentApiSeek extends ComponentApi {
 
@@ -24,7 +20,7 @@ public interface ComponentApiSeek extends ComponentApi {
 
     void setUserTouch(boolean status);
 
-    View findSeekBar();
+    <T extends android.widget.SeekBar> T findSeekBar();
 
     int getSeekBarMax();
 

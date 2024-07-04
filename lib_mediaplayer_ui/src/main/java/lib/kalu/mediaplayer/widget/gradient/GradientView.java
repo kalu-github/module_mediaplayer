@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.widget.gradual;
+package lib.kalu.mediaplayer.widget.gradient;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

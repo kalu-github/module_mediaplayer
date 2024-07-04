@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/module_mediaplayer_color_00000000"
@@ -9,7 +10,6 @@
         android:id="@+id/module_mediaplayer_component_warning_play_info_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
         android:focusable="false"
         android:visibility="gone">
 
@@ -18,6 +18,7 @@
             android:id="@+id/module_mediaplayer_component_warning_play_info_title"
             android:layout_width="match_parent"
             android:layout_height="80dp"
+            android:layout_alignParentTop="true"
             android:background="@drawable/module_mediaplayer_shape_shandow_up_to_down"
             android:ellipsize="end"
             android:focusable="false"
@@ -29,56 +30,36 @@
             android:textSize="24sp" />
 
         <!-- 进度条 -->
-        <LinearLayout
+        <lib.kalu.mediaplayer.widget.seek.SeekBar
+            android:id="@+id/module_mediaplayer_component_warning_play_info_seekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@drawable/module_mediaplayer_shape_shandow_down_to_up"
             android:focusable="false"
-            android:gravity="center_vertical"
-            android:padding="24dp">
+            android:maxHeight="4dp"
+            android:minHeight="4dp"
+            android:paddingTop="44dp"
+            android:paddingBottom="24dp"
+            android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress"
+            android:thumb="@drawable/module_mediaplayer_shape_seek_thumb"
+            android:thumbOffset="0dp"
+            app:sb_text_color="@color/module_mediaplayer_color_ffffff"
+            app:sb_text_duration_padding_left="12dp"
+            app:sb_text_duration_padding_right="24dp"
+            app:sb_text_gravity="center"
+            app:sb_text_progress_padding_left="64dp"
+            app:sb_text_progress_padding_right="12dp"
+            app:sb_text_size="16sp" />
 
-            <TextView
-                android:id="@+id/module_mediaplayer_component_warning_play_info_position"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="4dp"
-                android:focusable="false"
-                android:gravity="center"
-                android:textColor="@color/module_mediaplayer_color_ffffff"
-                android:textSize="12sp" />
-
-            <SeekBar
-                android:id="@+id/module_mediaplayer_component_warning_play_info_seekbar"
-                android:layout_width="0dp"
-                android:layout_height="16dp"
-                android:layout_weight="1"
-                android:background="#00000000"
-                android:focusable="false"
-                android:maxHeight="5dp"
-                android:minHeight="5dp"
-                android:paddingStart="0dp"
-                android:paddingLeft="0dp"
-                android:paddingEnd="0dp"
-                android:paddingRight="0dp"
-                android:progressDrawable="@drawable/module_mediaplayer_shape_seek_progress"
-                android:thumb="@drawable/module_mediaplayer_shape_seek_thumb"
-                android:thumbOffset="0dp" />
-
-            <TextView
-                android:id="@+id/module_mediaplayer_component_warning_play_info_duration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginLeft="4dp"
-                android:focusable="false"
-                android:gravity="center"
-                android:textColor="@color/module_mediaplayer_color_ffffff"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
+        <!-- 图标 -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="24dp"
+            android:focusable="false"
+            android:src="@drawable/module_mediaplayer_ic_resume" />
 
     </RelativeLayout>
 
