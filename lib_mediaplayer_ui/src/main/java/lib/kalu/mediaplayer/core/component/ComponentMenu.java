@@ -313,8 +313,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public final void hide() {
-        LogUtil.log("ComponentMenu => hide => ");
-        checkComponentPause2();
+        superCallEventListener(false, true, PlayerType.StateType.STATE_COMPONENT_MENU_HIDE);
         try {
             findViewById(R.id.module_mediaplayer_component_menu_root).setVisibility(View.GONE);
             findViewById(R.id.module_mediaplayer_component_menu_episode_group).setVisibility(View.GONE);
@@ -327,8 +326,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public final void show() {
-        LogUtil.log("ComponentMenu => show => ");
-        checkComponentPause1();
+        superCallEventListener(false, true, PlayerType.StateType.STATE_COMPONENT_MENU_SHOW);
         try {
             findViewById(R.id.module_mediaplayer_component_menu_root).setVisibility(View.VISIBLE);
         } catch (Exception e) {

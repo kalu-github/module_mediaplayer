@@ -44,44 +44,44 @@ public interface ComponentApiMenu extends ComponentApi {
 
     }
 
-    boolean[] mComponentPauseShowing = new boolean[]{false};
-
-    default void checkComponentPause1() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: null == playerView");
-            ComponentApi component = playerView.findComponent(ComponentApiPause.class);
-            if (null == component)
-                throw new Exception("error: null == component");
-            boolean componentShowing = component.isComponentShowing();
-            LogUtil.log("ComponentApiMenu => checkComponentPause1 => componentShowing = " + componentShowing);
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
-            mComponentPauseShowing[0] = true;
-            component.hide();
-        } catch (Exception e) {
-            LogUtil.log("ComponentApiMenu => checkComponentPause1 => " + e.getMessage());
-        }
-    }
-
-    default void checkComponentPause2() {
-        try {
-            LogUtil.log("ComponentApiMenu => checkComponentPause1 => mComponentPauseShowing[0] = " + mComponentPauseShowing[0]);
-            if (!mComponentPauseShowing[0])
-                throw new Exception("warning: mComponentPauseShowing[0] false");
-            mComponentPauseShowing[0] = false;
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: null == playerView");
-            ComponentApi component = playerView.findComponent(ComponentApiPause.class);
-            if (null == component)
-                throw new Exception("error: null == component");
-            component.show();
-        } catch (Exception e) {
-            LogUtil.log("ComponentApiMenu => checkComponentPause2 => " + e.getMessage());
-        }
-    }
+//    boolean[] mComponentPauseShowing = new boolean[]{false};
+//
+//    default void checkComponentPause1() {
+//        try {
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("error: null == playerView");
+//            ComponentApi component = playerView.findComponent(ComponentApiPause.class);
+//            if (null == component)
+//                throw new Exception("error: null == component");
+//            boolean componentShowing = component.isComponentShowing();
+//            LogUtil.log("ComponentApiMenu => checkComponentPause1 => componentShowing = " + componentShowing);
+//            if (!componentShowing)
+//                throw new Exception("warning: componentShowing false");
+//            mComponentPauseShowing[0] = true;
+//            component.hide();
+//        } catch (Exception e) {
+//            LogUtil.log("ComponentApiMenu => checkComponentPause1 => " + e.getMessage());
+//        }
+//    }
+//
+//    default void checkComponentPause2() {
+//        try {
+//            LogUtil.log("ComponentApiMenu => checkComponentPause1 => mComponentPauseShowing[0] = " + mComponentPauseShowing[0]);
+//            if (!mComponentPauseShowing[0])
+//                throw new Exception("warning: mComponentPauseShowing[0] false");
+//            mComponentPauseShowing[0] = false;
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("error: null == playerView");
+//            ComponentApi component = playerView.findComponent(ComponentApiPause.class);
+//            if (null == component)
+//                throw new Exception("error: null == component");
+//            component.show();
+//        } catch (Exception e) {
+//            LogUtil.log("ComponentApiMenu => checkComponentPause2 => " + e.getMessage());
+//        }
+//    }
 
     default void callItemsClickListener(int pos) {
         try {

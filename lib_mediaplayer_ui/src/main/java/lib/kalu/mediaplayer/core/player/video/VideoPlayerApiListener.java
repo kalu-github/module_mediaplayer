@@ -45,10 +45,17 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
         }
     }
 
+
     default void callEventListener(@PlayerType.StateType.Value int state) {
+        callEventListener(true, true, state);
+    }
+
+    default void callEventListener(boolean callPlayer, boolean callComponent, @PlayerType.StateType.Value int state) {
 
         // component
         try {
+            if (!callComponent)
+                throw new Exception("warning: callComponent false");
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
             if (childCount <= 0)
@@ -67,28 +74,30 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
 
         // listener
         try {
+            if (!callPlayer)
+                throw new Exception("warning: callPlayer false");
             OnPlayerEventListener eventListener = getOnPlayerEventListener();
-            if (null != eventListener) {
-                eventListener.onEvent(state);
-                if (state == PlayerType.StateType.STATE_RESTAER) {
-                    eventListener.onRestart();
-                } else if (state == PlayerType.StateType.STATE_START) {
-                    eventListener.onStart();
-                } else if (state == PlayerType.StateType.STATE_END) {
-                    eventListener.onComplete();
-                } else if (state == PlayerType.StateType.STATE_PAUSE) {
-                    eventListener.onPause();
-                } else if (state == PlayerType.StateType.STATE_RESUME) {
-                    eventListener.onResume();
-                } else if (state == PlayerType.StateType.STATE_BUFFERING_START) {
-                    eventListener.onBufferingStart();
-                } else if (state == PlayerType.StateType.STATE_BUFFERING_STOP) {
-                    eventListener.onBufferingStop();
-                } else if (state == PlayerType.StateType.STATE_LOADING_START) {
-                    eventListener.onLoadingStart();
-                } else if (state == PlayerType.StateType.STATE_LOADING_STOP) {
-                    eventListener.onLoadingStop();
-                }
+            if (null == eventListener)
+                throw new Exception("warning: eventListener null");
+            eventListener.onEvent(state);
+            if (state == PlayerType.StateType.STATE_RESTAER) {
+                eventListener.onRestart();
+            } else if (state == PlayerType.StateType.STATE_START) {
+                eventListener.onStart();
+            } else if (state == PlayerType.StateType.STATE_END) {
+                eventListener.onComplete();
+            } else if (state == PlayerType.StateType.STATE_PAUSE) {
+                eventListener.onPause();
+            } else if (state == PlayerType.StateType.STATE_RESUME) {
+                eventListener.onResume();
+            } else if (state == PlayerType.StateType.STATE_BUFFERING_START) {
+                eventListener.onBufferingStart();
+            } else if (state == PlayerType.StateType.STATE_BUFFERING_STOP) {
+                eventListener.onBufferingStop();
+            } else if (state == PlayerType.StateType.STATE_LOADING_START) {
+                eventListener.onLoadingStart();
+            } else if (state == PlayerType.StateType.STATE_LOADING_STOP) {
+                eventListener.onLoadingStop();
             }
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiBase => callEventListener => " + e.getMessage());

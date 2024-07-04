@@ -21,11 +21,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public boolean enableDispatchKeyEvent() {
-        return true;
-    }
-
-    @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
         // 试看
@@ -125,7 +120,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
-//        LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", max = " + max + ", position = " + position + ", duration = " + duration);
+        LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", max = " + max + ", position = " + position + ", duration = " + duration);
 
         // 进度条
         try {
@@ -142,13 +137,15 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findSeekBar();
             // 拖动进度条
             if (isFromUser) {
+                long playPosition = getPosition();
+                seekBar.setPlayPosition(playPosition);
                 seekBar.setProgress((int) position);
+            } else {
+                long playPosition = seekBar.getPlayPosition();
+                if (playPosition <= 0) {
+                    seekBar.setProgress((int) position);
+                }
             }
-            // 默认
-            else {
-                seekBar.setPlayPosition(position);
-            }
-
             seekBar.setMax((int) (max > 0 ? max : duration));
         } catch (Exception e) {
         }
@@ -240,7 +237,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             } else if (playPosition <= 0) {
                 playPosition = 0;
             }
-            getPlayerView().resume();
             getPlayerView().seekTo(playPosition);
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => seekToStopTrackingTouch => " + e.getMessage());

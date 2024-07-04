@@ -657,6 +657,14 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_START);
             } catch (Exception e) {
             }
+
+            try {
+                boolean playing = isPlaying();
+                if (playing)
+                    throw new Exception("warning: playing true");
+                start();
+            } catch (Exception e) {
+            }
         }
     };
 

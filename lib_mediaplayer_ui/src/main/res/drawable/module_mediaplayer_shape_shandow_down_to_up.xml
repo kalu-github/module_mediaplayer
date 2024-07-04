@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
         android:angle="90"
-        android:centerColor="@color/module_mediaplayer_color_66000000"
-        android:endColor="@color/module_mediaplayer_color_00000000"
+        android:centerColor="@color/module_mediaplayer_color_40000000"
+        android:endColor="@color/module_mediaplayer_color_04000000"
         android:startColor="@color/module_mediaplayer_color_000000" />
 </shape>

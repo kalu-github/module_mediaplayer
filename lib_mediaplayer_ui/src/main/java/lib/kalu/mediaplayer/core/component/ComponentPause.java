@@ -13,6 +13,7 @@ import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.TimeUtil;
+import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 import lib.kalu.mediaplayer.widget.seek.SeekBar;
 import lib.kalu.mediaplayer.widget.subtitle.model.Time;
@@ -26,16 +27,8 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        // toggle
-        if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-            boolean isShowing = isComponentMenuShowing();
-            if (!isShowing) {
-                toggle();
-                return true;
-            }
-        }
-        // toggle
-        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+        // keycode_enter || keycode_dpad_center
+        if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER)) {
             boolean isShowing = isComponentMenuShowing();
             if (!isShowing) {
                 toggle();
@@ -58,6 +51,22 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
             case PlayerType.StateType.STATE_FAST_REWIND_START:
                 LogUtil.log("ComponentPause[gone] => playState = " + playState);
                 hide();
+                break;
+            case PlayerType.StateType.STATE_COMPONENT_MENU_SHOW:
+                LogUtil.log("ComponentPause[show] => playState = " + playState);
+                boolean componentShowing = isComponentShowing();
+                if (componentShowing) {
+                    setTag(true);
+                    hide();
+                }
+                break;
+            case PlayerType.StateType.STATE_COMPONENT_MENU_HIDE:
+                LogUtil.log("ComponentPause[gone] => playState = " + playState);
+                Object tag = getTag();
+                if (null != tag) {
+                    setTag(null);
+                    show();
+                }
                 break;
         }
     }

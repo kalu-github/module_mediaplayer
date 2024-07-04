@@ -349,6 +349,20 @@ public interface ComponentApi {
 
     /*******************/
 
+//    default <T extends ComponentApi> T findComponent(java.lang.Class<?> cls) {
+//        try {
+//            PlayerLayout playerLayout = getPlayerLayout();
+//            if(null == playerLayout)
+//                throw new Exception("error: playerLayout null");
+//            ComponentApi component = playerLayout.findComponent(cls);
+//            if(null == component)
+//                throw new Exception("warning: component null");
+//            return (T) component;
+//        } catch (Exception e) {
+//            LogUtil.log("ComponentApi => findComponent => " + e.getMessage());
+//            return null;
+//        }
+//    }
     default PlayerLayout getPlayerLayout() {
         try {
             PlayerView playerView = getPlayerView();
@@ -387,6 +401,17 @@ public interface ComponentApi {
         } catch (Exception e) {
             LogUtil.log("ComponentApi => getPlayerView => " + e.getMessage());
             return null;
+        }
+    }
+
+    default void superCallEventListener(boolean callPlayer, boolean callComponent, @PlayerType.StateType.Value int state) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("error: playerView null");
+            playerView.callEventListener(callPlayer, callComponent, state);
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => superCallEventListener => " + e.getMessage());
         }
     }
 

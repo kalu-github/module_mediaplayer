@@ -71,7 +71,7 @@ public final class SeekBar extends android.widget.SeekBar {
 
             String text = TimeUtil.formatTimeMillis(duration);
             float textWidth = mPaint.measureText(text);
-            LogUtil.log("SeekBar => onMeasure => text = "+text+", textWidth = "+textWidth);
+            LogUtil.log("SeekBar => onMeasure => text = " + text + ", textWidth = " + textWidth);
 
             int left = (int) (textWidth + mTextProgressPaddingLeft + mTextProgressPaddingRight);
             int right = (int) (textWidth + mTextDurationPaddingLeft + mTextDurationPaddingRight);
@@ -79,7 +79,7 @@ public final class SeekBar extends android.widget.SeekBar {
             int bottom = getPaddingBottom();
             setPadding(left, top, right, bottom);
         } catch (Exception e) {
-            LogUtil.log("SeekBar => onMeasure => Exception "+e.getMessage());
+            LogUtil.log("SeekBar => onMeasure => Exception " + e.getMessage());
         }
 
         super.onMeasure(widthMeasureSpec, -2);
@@ -160,7 +160,7 @@ public final class SeekBar extends android.widget.SeekBar {
             mPaint.setColor(mTextColor);
 
             long progress;
-            if (mMode == 2) {
+            if (mMode == 2 || playPosition <= 0) {
                 progress = getProgress();
             } else {
                 progress = playPosition;

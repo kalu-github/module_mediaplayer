@@ -110,6 +110,10 @@ public @interface PlayerType {
         int STATE_FLOAT_SUCC = 3_041;
         int STATE_FLOAT_FAIL = 3_042;
 
+
+        int STATE_COMPONENT_MENU_SHOW = 3_043;
+        int STATE_COMPONENT_MENU_HIDE = 3_044;
+
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
@@ -152,7 +156,9 @@ public @interface PlayerType {
                 STATE_ERROR,
                 STATE_RELEASE,
                 STATE_RELEASE_EXCEPTION,
-                STATE_COMPONENT_SEEK_SHOW})
+                STATE_COMPONENT_SEEK_SHOW,
+                STATE_COMPONENT_MENU_SHOW,
+                STATE_COMPONENT_MENU_HIDE})
         @interface Value {
         }
     }
