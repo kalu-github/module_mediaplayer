@@ -75,10 +75,10 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     public void seekToPosition(int keyCode, int position) {
         try {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_FORWARD_STOP);
+                superCallEventListener(false, true, PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 getPlayerView().seekTo(position);
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-                getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_REWIND_STOP);
+                superCallEventListener(false, true,PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 getPlayerView().seekTo(position);
             }
         } catch (Exception e) {

@@ -51,7 +51,7 @@ public interface ComponentApiSeek extends ComponentApi {
             boolean componentShowing = isComponentShowing();
             // gone
             if (!componentShowing) {
-                getPlayerView().callEventListener(PlayerType.StateType.STATE_FAST_FORWARD_START);
+                superCallEventListener(false, true, PlayerType.StateType.STATE_FAST_FORWARD_START);
             }
             // click
             else if (repeatCount == 0) {
