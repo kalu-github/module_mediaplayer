@@ -45,7 +45,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     @Override
     public void callEventListener(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_START:
+            case PlayerType.StateType.STATE_VIDEO_RENDERING_START:
                 LogUtil.log("ComponentWarningPlayInfo => playState = " + playState);
                 show();
                 break;

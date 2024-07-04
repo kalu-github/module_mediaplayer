@@ -77,7 +77,7 @@ public @interface PlayerType {
         int STATE_LOADING_STOP = 3_007; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
         int STATE_KERNEL_STOP = 3_008;
         int STATE_KERNEL_RESUME = 3_009; // 开始播放
-        int STATE_VIDEO_RENDERING_START = 3_010; // 开始播放
+        int STATE_VIDEO_RENDERING_START = 3_010; // 出画面 视频首帧
         int STATE_START = 3_011; // 开始播放
         int STATE_START_RETRY = 3_012; // 开始播放
         int STATE_START_SEEK = 3_013; // 开始播放

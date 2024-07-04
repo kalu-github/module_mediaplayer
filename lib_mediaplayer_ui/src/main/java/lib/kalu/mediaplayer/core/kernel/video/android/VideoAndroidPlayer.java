@@ -390,11 +390,11 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                             throw new Exception("warning: mPrepared true");
                         setPrepared(true);
                         onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_LOADING_STOP);
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
                         long seek = getSeek();
                         if (seek <= 0) {
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
                         } else {
-                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
                             // 起播快进
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_SEEK_PLAY_RECORD);
                             seekTo(seek);
