@@ -268,6 +268,13 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             setTag(R.id.module_mediaplayer_component_seek_sb, true);
         } catch (Exception e) {
         }
+
+        try {
+            int progress = getSeekBarProgress();
+            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findSeekBar();
+            seekBar.setPlayPosition(progress);
+        } catch (Exception e) {
+        }
     }
 
     @Override
