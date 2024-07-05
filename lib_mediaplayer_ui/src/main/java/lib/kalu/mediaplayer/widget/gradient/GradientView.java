@@ -26,12 +26,15 @@ import java.util.Random;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.util.LogUtil;
 
+/**
+ * 渐变色 直线动画loading
+ */
 public final class GradientView extends View {
 
     private float mProgress = 0f;
-    private int mBackgroundColorStart = 0xaaff0000;
-    private int mBackgroundColorEnd = 0xaaff0000;
-    private int mBackgroundColorCenter = 0xffff0000;
+    private int mBackgroundColorStart = 0xaaf85a55;
+    private int mBackgroundColorEnd = 0xaaf85a55;
+    private int mBackgroundColorCenter = 0xfff85a55;
     private int mLightColor = 0xaaffffff;
     private int mAnimDuration = 2000;
     private Paint mPaint = null;
@@ -245,9 +248,9 @@ public final class GradientView extends View {
         TypedArray typedArray = null;
         try {
             typedArray = getContext().getApplicationContext().obtainStyledAttributes(attrs, R.styleable.GradientView);
-            mBackgroundColorStart = typedArray.getColor(R.styleable.GradientView_ev_background_color_start, 0xaaff0000);
-            mBackgroundColorEnd = typedArray.getColor(R.styleable.GradientView_ev_background_color_end, 0xaaff0000);
-            mBackgroundColorCenter = typedArray.getColor(R.styleable.GradientView_ev_background_color_center, 0xffff0000);
+            mBackgroundColorStart = typedArray.getColor(R.styleable.GradientView_ev_background_color_start, 0xaaf85a55);
+            mBackgroundColorEnd = typedArray.getColor(R.styleable.GradientView_ev_background_color_end, 0xaaf85a55);
+            mBackgroundColorCenter = typedArray.getColor(R.styleable.GradientView_ev_background_color_center, 0xfff85a55);
             mLightColor = typedArray.getColor(R.styleable.GradientView_ev_light_color, 0xaaffffff);
             mAnimDuration = typedArray.getColor(R.styleable.GradientView_ev_anim_duration, 2000);
         } catch (Exception e) {
