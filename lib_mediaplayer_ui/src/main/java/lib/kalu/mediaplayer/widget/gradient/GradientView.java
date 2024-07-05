@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.widget.gradient;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -11,6 +12,7 @@ import android.graphics.Path;
 import android.graphics.Shader;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
@@ -18,14 +20,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class GradientView extends View {
 
-    private int colorStart;
-    private int colorCenter;
-    private int colorEnd;
+    private float mProgress = 0f;
+    private int mBackgroundColorStart = 0xaaff0000;
+    private int mBackgroundColorEnd = 0xaaff0000;
+    private int mBackgroundColorCenter = 0xffff0000;
+    private int mLightColor = 0xaaffffff;
+    private int mAnimDuration = 2000;
     private Paint mPaint = null;
     private ValueAnimator mValueAnimator = null;
     private ValueAnimator.AnimatorUpdateListener mAnimatorUpdateListener = null;
@@ -115,11 +123,36 @@ public final class GradientView extends View {
 //                mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
             }
 
-            LinearGradient backGradient = new LinearGradient(width, 0, 0, 0, new int[]{colorStart, colorCenter, colorCenter, colorCenter, colorEnd}, new float[]{0, 0.4f, 0.5f, 0.6f, 1f}, Shader.TileMode.CLAMP);
+            // 背景色
+            @SuppressLint("DrawAllocation")
+            LinearGradient backGradient = new LinearGradient(0, 0, width, height,
+                    new int[]{mBackgroundColorStart, mBackgroundColorCenter, mBackgroundColorCenter, mBackgroundColorCenter, mBackgroundColorEnd},
+                    new float[]{0f, 0.2f, 0.5f, 0.8f, 1f},
+                    Shader.TileMode.CLAMP);
             mPaint.setShader(backGradient);
+            canvas.drawPath(path, mPaint);
+
+            // 光栅
+            float center = mProgress;
+            float start = center - 0.15f;
+            if (start < 0) {
+                start = 0;
+            }
+            float end = center + 0.15f;
+            if (end > 1f) {
+                end = 1f;
+            }
+            @SuppressLint("DrawAllocation")
+            LinearGradient shadowGradient = new LinearGradient(0, 0, width, height,
+                    new int[]{0x00000000, 0x00000000, mLightColor, 0x00000000, 0x00000000},
+                    new float[]{0f, start, center, end, 1f},
+//                    new float[]{0f, 0.35f, 0.5f, 0.65f, 1f},
+                    Shader.TileMode.CLAMP);
+            mPaint.setShader(shadowGradient);
 
 //            canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.FILTER_BITMAP_FLAG | Paint.ANTI_ALIAS_FLAG));
             canvas.drawPath(path, mPaint);
+
         } catch (Exception e) {
         }
     }
@@ -127,9 +160,9 @@ public final class GradientView extends View {
     private void start() {
         try {
             if (null == mValueAnimator) {
-                mValueAnimator = ValueAnimator.ofInt(100, 255);
+                mValueAnimator = ValueAnimator.ofFloat(0f, 1f);
             }
-            mValueAnimator.setDuration(1000);
+            mValueAnimator.setDuration(mAnimDuration);
             // 循环次数，INFINITE表示无限循坏
             mValueAnimator.setRepeatCount(ValueAnimator.INFINITE);
             // 重复类型，有REVERSE和RESTART两种类型，与setRepeatCount配合使用，reverse                                                                       表示倒叙回放，restart表示重新开始
@@ -144,7 +177,10 @@ public final class GradientView extends View {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
-//                        int value = (int) animation.getAnimatedValue();
+                        mProgress = (float) animation.getAnimatedValue();
+                        invalidate();
+
+                        //                        int value = (int) animation.getAnimatedValue();
 //                        for (int i = 0; i < 3; i++) {
 //                            int color = i == 0 ? colorStart : i == 1 ? colorCenter : colorEnd;
 //                            String A, R, G, B;
@@ -173,15 +209,15 @@ public final class GradientView extends View {
 //                        }
 
 //                        int value = (int) animation.getAnimatedValue();
-//                        colorStart = (colorStart & 0x00FFFFFF) | (value << 24);
-//                        colorEnd = (colorEnd & 0x00FFFFFF) | (value << 24);
-//                        colorCenter = (colorCenter & 0x00FFFFFF) | (value << 24);
+//                        int nextInt = new Random().nextInt(255);
+//                        int alpha = Math.abs(nextInt + value - 255);
+//                        colorStart = (colorStart & 0x00FFFFFF) | (alpha << 24);
+//                        colorEnd = (colorEnd & 0x00FFFFFF) | (alpha << 24);
+//                        colorCenter = (colorCenter & 0x00FFFFFF) | (alpha << 24);
 
-                        int value = (int) animation.getAnimatedValue();
-                        colorStart = Color.rgb(255, value, 255 - value);
-                        colorEnd = Color.rgb(value, 0, 255 - value);
-
-                        invalidate();
+//                        int value = (int) animation.getAnimatedValue();
+//                        colorStart = Color.rgb(255, value, 255 - value);
+//                        colorEnd = Color.rgb(value, 0, 255 - value);
                     }
                 };
             }
@@ -209,22 +245,15 @@ public final class GradientView extends View {
         TypedArray typedArray = null;
         try {
             typedArray = getContext().getApplicationContext().obtainStyledAttributes(attrs, R.styleable.GradientView);
-            colorStart = typedArray.getColor(R.styleable.GradientView_ev_color_start, 0);
-            colorEnd = typedArray.getColor(R.styleable.GradientView_ev_color_end, 0);
-            colorCenter = typedArray.getColor(R.styleable.GradientView_ev_color_center, 0);
+            mBackgroundColorStart = typedArray.getColor(R.styleable.GradientView_ev_background_color_start, 0xaaff0000);
+            mBackgroundColorEnd = typedArray.getColor(R.styleable.GradientView_ev_background_color_end, 0xaaff0000);
+            mBackgroundColorCenter = typedArray.getColor(R.styleable.GradientView_ev_background_color_center, 0xffff0000);
+            mLightColor = typedArray.getColor(R.styleable.GradientView_ev_light_color, 0xaaffffff);
+            mAnimDuration = typedArray.getColor(R.styleable.GradientView_ev_anim_duration, 2000);
         } catch (Exception e) {
         }
         if (null != typedArray) {
             typedArray.recycle();
-        }
-        if (colorStart == 0) {
-            colorStart = getResources().getColor(R.color.module_mediaplayer_color_aaf85a55);
-        }
-        if (colorEnd == 0) {
-            colorEnd = getResources().getColor(R.color.module_mediaplayer_color_aaf85a55);
-        }
-        if (colorCenter == 0) {
-            colorCenter = getResources().getColor(R.color.module_mediaplayer_color_f85a55);
         }
     }
 }
