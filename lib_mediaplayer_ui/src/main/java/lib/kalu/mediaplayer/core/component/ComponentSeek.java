@@ -60,11 +60,11 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
         }
         // seekRewind => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-//            boolean isShowing = isComponentMenuShowing();
-//            if (!isShowing) {
-//                startDelayedMsg(KeyEvent.KEYCODE_DPAD_LEFT);
-//                return true;
-//            }
+            boolean isShowing = isComponentShowing(ComponentApiMenu.class);
+            if (!isShowing) {
+                startDelayedMsg(KeyEvent.KEYCODE_DPAD_LEFT);
+                return true;
+            }
         }
 
         return false;
