@@ -21,7 +21,7 @@ import lib.kalu.mediaplayer.widget.player.PlayerView;
 public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     public ComponentMenu(Context context) {
         super(context);
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu, this, true);
+        inflate();
 
         findViewById(R.id.module_mediaplayer_component_menu_tab_no0).setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
@@ -48,6 +48,11 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 updateTabUI(true);
             }
         });
+    }
+
+    @Override
+    public int initLayoutId() {
+        return R.layout.module_mediaplayer_component_menu;
     }
 
     @Override

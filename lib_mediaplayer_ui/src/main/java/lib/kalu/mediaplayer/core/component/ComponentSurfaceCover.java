@@ -13,7 +13,12 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
 
     public ComponentSurfaceCover(Context context) {
         super(context);
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_surface_cover, this, true);
+        inflate();
+    }
+
+    @Override
+    public int initLayoutId() {
+        return R.layout.module_mediaplayer_component_surface_cover;
     }
 
     @Override

@@ -1,11 +1,13 @@
 package lib.kalu.mediaplayer.core.component;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -36,6 +38,17 @@ public interface ComponentApi {
     default boolean enableDispatchKeyEvent() {
         return false;
     }
+
+    default void inflate() {
+        try {
+            ViewGroup viewGroup = (ViewGroup) this;
+            Context context = viewGroup.getContext();
+            LayoutInflater.from(context).inflate(initLayoutId(), viewGroup, true);
+        } catch (Exception e) {
+        }
+    }
+
+    int initLayoutId();
 
     int initLayoutIdComponentRoot();
 

@@ -23,7 +23,12 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
     public ComponentWarningPlayInfo(Context context) {
         super(context);
-        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_warning_play_info, this, true);
+        inflate();
+    }
+
+    @Override
+    public int initLayoutId() {
+        return R.layout.module_mediaplayer_component_warning_play_info;
     }
 
     @Override

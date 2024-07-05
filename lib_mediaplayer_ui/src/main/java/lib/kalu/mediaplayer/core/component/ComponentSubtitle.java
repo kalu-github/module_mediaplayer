@@ -13,7 +13,12 @@ public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
 
     public ComponentSubtitle( Context context) {
         super(context);
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_subtitle, this, true);
+        inflate();
+    }
+
+    @Override
+    public int initLayoutId() {
+        return R.layout.module_mediaplayer_component_subtitle;
     }
 
     @Override

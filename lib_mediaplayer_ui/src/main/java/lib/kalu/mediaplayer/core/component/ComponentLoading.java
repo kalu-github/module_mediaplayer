@@ -13,11 +13,16 @@ import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 
-public class ComponentLoading extends RelativeLayout implements ComponentApi {
+public class ComponentLoading extends RelativeLayout implements ComponentApiLoading {
 
     public ComponentLoading(Context context) {
         super(context);
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_loading, this, true);
+        inflate();
+    }
+
+    @Override
+    public int initLayoutId() {
+        return R.layout.module_mediaplayer_component_loading;
     }
 
     @Override
@@ -40,31 +45,12 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
-        LogUtil.log("ComponentLoading => onUpdateProgress => isFromUser = " + isFromUser);
-
-        // 网速
-        try {
-            boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
-            boolean showNetSpeed = isShowNetSpeed();
-            if (!showNetSpeed)
-                throw new Exception("warning: showNetSpeed false");
-            TextView textView = findViewById(R.id.module_mediaplayer_component_loading_net);
-            if (null == textView)
-                throw new Exception("textView error: null");
-            int viewVisibility = textView.getVisibility();
-            if (viewVisibility != View.VISIBLE)
-                throw new Exception("viewVisibility warning: " + viewVisibility);
-            String speed = getNetSpeed();
-            textView.setText(speed);
-        } catch (Exception e) {
-        }
+        updateComponentNetSpeed();
     }
 
     @Override
     public void show() {
-        ComponentApi.super.show();
+        ComponentApiLoading.super.show();
 
         try {
             boolean componentShowing = isComponentShowing();
@@ -82,28 +68,12 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
         }
 
         // 网速
-        try {
-            boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
-            boolean showNetSpeed = isShowNetSpeed();
-            if (!showNetSpeed)
-                throw new Exception("warning: showNetSpeed false");
-            TextView textView = findViewById(R.id.module_mediaplayer_component_loading_net);
-            if (null == textView)
-                throw new Exception("textView error: null");
-            int viewVisibility = textView.getVisibility();
-            if (viewVisibility != View.VISIBLE)
-                throw new Exception("viewVisibility warning: " + viewVisibility);
-            String speed = getNetSpeed();
-            textView.setText(speed);
-        } catch (Exception e) {
-        }
+        updateComponentNetSpeed();
     }
 
     @Override
     public void hide() {
-        ComponentApi.super.hide();
+        ComponentApiLoading.super.hide();
 
         try {
             boolean componentShowing = isComponentShowing();
@@ -131,5 +101,10 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     @Override
     public int initLayoutIdText() {
         return R.id.module_mediaplayer_component_loading_name;
+    }
+
+    @Override
+    public int initLayoutIdNetSpeed() {
+        return R.id.module_mediaplayer_component_loading_net;
     }
 }

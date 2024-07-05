@@ -17,7 +17,12 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
     public ComponentSeek(Context context) {
         super(context);
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_seek, this, true);
+        inflate();
+    }
+
+    @Override
+    public int initLayoutId() {
+        return R.layout.module_mediaplayer_component_seek;
     }
 
     @Override

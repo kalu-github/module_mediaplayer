@@ -15,32 +15,37 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
 
     public ComponentBuffering(Context context) {
         super(context);
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_buffering, this, true);
+        inflate();
+    }
+
+    @Override
+    public int initLayoutId() {
+        return R.layout.module_mediaplayer_component_buffering;
     }
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
-        try {
-            if (!showSpeed)
-                throw new Exception();
-            TextView textView = findViewById(R.id.module_mediaplayer_component_buffering_message);
-            if (null == textView)
-                throw new Exception("textView error: null");
-            int viewVisibility = textView.getVisibility();
-            if (viewVisibility != View.VISIBLE)
-                throw new Exception("viewVisibility warning: " + viewVisibility);
-            String speed = getNetSpeed();
-            textView.setText(speed);
-//            int length = speed.length();
-//            int start = length - 4;
-//            String unit = speed.substring(start, length);
-//            String num = speed.substring(0, start);
-//            v1.setText(num);
-//            TextView v2 = findViewById(R.id.module_mediaplayer_component_buffering_unit);
-//            v2.setText(unit);
-        } catch (Exception e) {
-//            MPLogUtil.log("ComponentNet => onUpdateTimeMillis => " + e.getMessage());
-        }
+//        try {
+//            if (!showSpeed)
+//                throw new Exception();
+//            TextView textView = findViewById(R.id.module_mediaplayer_component_buffering_message);
+//            if (null == textView)
+//                throw new Exception("textView error: null");
+//            int viewVisibility = textView.getVisibility();
+//            if (viewVisibility != View.VISIBLE)
+//                throw new Exception("viewVisibility warning: " + viewVisibility);
+//            String speed = getNetSpeed();
+//            textView.setText(speed);
+////            int length = speed.length();
+////            int start = length - 4;
+////            String unit = speed.substring(start, length);
+////            String num = speed.substring(0, start);
+////            v1.setText(num);
+////            TextView v2 = findViewById(R.id.module_mediaplayer_component_buffering_unit);
+////            v2.setText(unit);
+//        } catch (Exception e) {
+////            MPLogUtil.log("ComponentNet => onUpdateTimeMillis => " + e.getMessage());
+//        }
     }
 
     @Override
@@ -66,11 +71,5 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
                 hide();
                 break;
         }
-    }
-
-    private boolean showSpeed = false;
-
-    public void enableSpeed(boolean enable) {
-        showSpeed = enable;
     }
 }

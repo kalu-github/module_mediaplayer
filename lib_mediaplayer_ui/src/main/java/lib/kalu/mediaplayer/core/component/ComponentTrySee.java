@@ -20,7 +20,12 @@ public class ComponentTrySee extends RelativeLayout implements ComponentApi {
 
     public ComponentTrySee(Context context) {
         super(context);
-        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_try_see, this, true);
+        inflate();
+    }
+
+    @Override
+    public int initLayoutId() {
+        return R.layout.module_mediaplayer_component_try_see;
     }
 
     @Override

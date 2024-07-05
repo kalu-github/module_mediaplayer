@@ -19,8 +19,13 @@ import lib.kalu.mediaplayer.util.TimeUtil;
 public class ComponentWarningPlayRecord extends RelativeLayout implements ComponentApi {
     public ComponentWarningPlayRecord(Context context) {
         super(context);
+        inflate();
         setEnabled(false);
-        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_warning_play_record, this, true);
+    }
+
+    @Override
+    public int initLayoutId() {
+        return R.layout.module_mediaplayer_component_warning_play_record;
     }
 
     @Override

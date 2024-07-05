@@ -12,7 +12,12 @@ public class ComponentGesture extends RelativeLayout implements ComponentApi {
 
     public ComponentGesture( Context context) {
         super(context);
-        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_gesture, this, true);
+        inflate();
+    }
+
+    @Override
+    public int initLayoutId() {
+        return R.layout.module_mediaplayer_component_gesture;
     }
 
     @Override

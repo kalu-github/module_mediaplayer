@@ -22,7 +22,12 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
 
     public ComponentPause(Context context) {
         super(context);
-        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_pause, this, true);
+        inflate();
+    }
+
+    @Override
+    public int initLayoutId() {
+        return R.layout.module_mediaplayer_component_pause;
     }
 
     @Override

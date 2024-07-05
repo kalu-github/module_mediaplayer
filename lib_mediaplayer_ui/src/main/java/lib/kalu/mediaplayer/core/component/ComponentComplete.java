@@ -14,7 +14,12 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
 
     public ComponentComplete(Context context) {
         super(context);
-        LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_complete, this, true);
+        inflate();
+    }
+
+    @Override
+    public int initLayoutId() {
+        return R.layout.module_mediaplayer_component_complete;
     }
 
     @Override

@@ -14,7 +14,12 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
 
     public ComponentInit( Context context) {
         super(context);
-        LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_init, this, true);
+        inflate();
+    }
+
+    @Override
+    public int initLayoutId() {
+        return R.layout.module_mediaplayer_component_init;
     }
 
     @Override
