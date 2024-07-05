@@ -15,6 +15,11 @@ public class ComponentGesture extends RelativeLayout implements ComponentApi {
         LayoutInflater.from(context).inflate(R.layout.module_mediaplayer_component_gesture, this, true);
     }
 
+    @Override
+    public int initLayoutIdComponentRoot() {
+        return 0;
+    }
+
 //    @Override
 //    public final void onStartSlide() {
 //        mControllerWrapper.hide();

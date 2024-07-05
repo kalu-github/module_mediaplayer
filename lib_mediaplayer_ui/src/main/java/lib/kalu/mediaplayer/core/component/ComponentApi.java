@@ -37,23 +37,28 @@ public interface ComponentApi {
         return false;
     }
 
-    default boolean isComponentMenuShowing() {
+    int initLayoutIdComponentRoot();
+
+    default void setComponentVisibility(@IdRes int id, int visibility) {
         try {
-            ViewGroup viewGroup = getPlayerView().getBaseComponentViewGroup();
-            int childCount = viewGroup.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                if (childAt instanceof ComponentApiMenu) {
-                    boolean componentShowing = ((ComponentApiMenu) childAt).isComponentShowing();
-                    if (componentShowing) {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            View viewById = ((View) this).findViewById(id);
+            if (null == viewById)
+                throw new Exception("error: viewById null");
+            viewById.setVisibility(visibility);
         } catch (Exception e) {
+            LogUtil.log("ComponentApi => setComponentVisibility => " + e.getMessage());
+        }
+    }
+
+    default boolean isComponentShowing() {
+        try {
+            int rootId = initLayoutIdComponentRoot();
+            View viewById = ((View) this).findViewById(rootId);
+            if (null == viewById)
+                throw new Exception("error: viewById null");
+            return viewById.getVisibility() == View.VISIBLE;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => isComponentShowing => " + e.getMessage());
             return false;
         }
     }
@@ -158,12 +163,6 @@ public interface ComponentApi {
 //        }
 //    }
 //
-
-    /******************/
-
-    default boolean isComponentShowing() {
-        return false;
-    }
 
     /******************/
 
@@ -337,9 +336,27 @@ public interface ComponentApi {
 //    /******************/
 
     default void show() {
+        try {
+            boolean componentShowing = isComponentShowing();
+            if (componentShowing)
+                throw new Exception("warning: componentShowing true");
+            int rootId = initLayoutIdComponentRoot();
+            setComponentVisibility(rootId, View.VISIBLE);
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => show => Exception " + e.getMessage());
+        }
     }
 
     default void hide() {
+        try {
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            int rootId = initLayoutIdComponentRoot();
+            setComponentVisibility(rootId, View.GONE);
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => hide => Exception " + e.getMessage());
+        }
     }
 
     /******************/
@@ -349,20 +366,36 @@ public interface ComponentApi {
 
     /*******************/
 
-//    default <T extends ComponentApi> T findComponent(java.lang.Class<?> cls) {
-//        try {
-//            PlayerLayout playerLayout = getPlayerLayout();
-//            if(null == playerLayout)
-//                throw new Exception("error: playerLayout null");
-//            ComponentApi component = playerLayout.findComponent(cls);
-//            if(null == component)
-//                throw new Exception("warning: component null");
-//            return (T) component;
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentApi => findComponent => " + e.getMessage());
-//            return null;
-//        }
-//    }
+    default <T extends ComponentApi> T findComponent(java.lang.Class<?> cls) {
+        try {
+            PlayerLayout playerLayout = getPlayerLayout();
+            if (null == playerLayout)
+                throw new Exception("error: playerLayout null");
+            ComponentApi component = playerLayout.findComponent(cls);
+            if (null == component)
+                throw new Exception("warning: component null");
+            return (T) component;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => findComponent => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default boolean isComponentShowing(Class<?> cls) {
+        try {
+            ComponentApi component = findComponent(cls);
+            if (null == component)
+                throw new Exception("warning: component null");
+            boolean componentShowing = component.isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            return true;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => isComponentApiShowing => " + e.getMessage());
+            return false;
+        }
+    }
+
     default PlayerLayout getPlayerLayout() {
         try {
             PlayerView playerView = getPlayerView();

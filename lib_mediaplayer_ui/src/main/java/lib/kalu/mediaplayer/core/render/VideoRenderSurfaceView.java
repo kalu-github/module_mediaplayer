@@ -5,6 +5,7 @@ import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
@@ -39,14 +40,17 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-//        release();
-        LogUtil.log("VideoRenderSurfaceView => onDetachedFromWindow => " + this);
+        stopUpdateProgress();
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        LogUtil.log("VideoRenderSurfaceView => onAttachedToWindow => " + this);
+    protected void onVisibilityChanged(View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        if (visibility == View.VISIBLE) {
+            startUpdateProgress();
+        } else {
+            stopUpdateProgress();
+        }
     }
 
     @Override
@@ -75,7 +79,6 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
                 public void surfaceCreated(SurfaceHolder holder) {
                     LogUtil.log("VideoRenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
                     setSurface(false);
-                    startUpdateProgress();
                 }
 
                 /**
@@ -98,7 +101,6 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
                 public void surfaceDestroyed(SurfaceHolder holder) {
                     LogUtil.log("VideoRenderSurfaceView => addListener => surfaceDestroyed => " + this);
                     setSurface(true);
-                    stopUpdateProgress();
                 }
             };
             getHolder().addCallback(mSurfaceHolderCallback);

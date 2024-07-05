@@ -17,6 +17,11 @@ public class ComponentError extends RelativeLayout implements ComponentApi {
     }
 
     @Override
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_error_root;
+    }
+
+    @Override
     public void callEventListener(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_ERROR:
@@ -31,28 +36,6 @@ public class ComponentError extends RelativeLayout implements ComponentApi {
                 break;
         }
     }
-
-    @Override
-    public final void show() {
-        try {
-            
-            findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_error_ui).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void hide() {
-        try {
-            
-            findViewById(R.id.module_mediaplayer_component_error_bg).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_error_ui).setVisibility(View.GONE);
-        } catch (Exception e) {
-        }
-    }
-
-    /*************/
 
     @Override
     public int initLayoutIdComponentBackground() {

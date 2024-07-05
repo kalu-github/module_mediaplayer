@@ -302,36 +302,23 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public boolean isComponentShowing() {
-        try {
-            int visibility = findViewById(R.id.module_mediaplayer_component_menu_root).getVisibility();
-            return visibility == View.VISIBLE;
-        } catch (Exception e) {
-            return false;
-        }
-    }
+    public void hide() {
+        ComponentApiMenu.super.hide();
 
-    @Override
-    public final void hide() {
         superCallEventListener(false, true, PlayerType.StateType.STATE_COMPONENT_MENU_HIDE);
-        try {
-            findViewById(R.id.module_mediaplayer_component_menu_root).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_menu_episode_group).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_menu_speeds_group).setVisibility(View.GONE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => hide => " + e.getMessage());
-        }
         stopDelayedMsg();
     }
 
     @Override
-    public final void show() {
+    public void show() {
+        ComponentApiMenu.super.show();
+
         superCallEventListener(false, true, PlayerType.StateType.STATE_COMPONENT_MENU_SHOW);
-        try {
-            findViewById(R.id.module_mediaplayer_component_menu_root).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => show => " + e.getMessage());
-        }
+    }
+
+    @Override
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_menu_root;
     }
 
     @Override

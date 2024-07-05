@@ -18,6 +18,11 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
     }
 
     @Override
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_init_root;
+    }
+
+    @Override
     public void callEventListener(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_INIT:
@@ -30,28 +35,6 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
                 break;
         }
     }
-
-    @Override
-    public final void hide() {
-        try {
-            
-            findViewById(R.id.module_mediaplayer_component_init_txt).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_init_bg).setVisibility(View.GONE);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void show() {
-        try {
-            
-            findViewById(R.id.module_mediaplayer_component_init_txt).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_init_bg).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-        }
-    }
-
-    /*************/
 
     @Override
     public int initLayoutIdComponentBackground() {

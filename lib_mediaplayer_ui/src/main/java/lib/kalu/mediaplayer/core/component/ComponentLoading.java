@@ -40,7 +40,11 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
+        LogUtil.log("ComponentLoading => onUpdateProgress => isFromUser = " + isFromUser);
         try {
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
             TextView textView = findViewById(R.id.module_mediaplayer_component_loading_net);
             if (null == textView)
                 throw new Exception("textView error: null");
@@ -54,9 +58,13 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void show() {
+    public void show() {
+        ComponentApi.super.show();
 
         try {
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("error: playerView null");
@@ -70,39 +78,43 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
 
 
         try {
-            findViewById(R.id.module_mediaplayer_component_loading_root).setVisibility(View.VISIBLE);
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            TextView textView = findViewById(R.id.module_mediaplayer_component_loading_net);
+            if (null == textView)
+                throw new Exception("textView error: null");
+            int viewVisibility = textView.getVisibility();
+            if (viewVisibility != View.VISIBLE)
+                throw new Exception("viewVisibility warning: " + viewVisibility);
+            String speed = getNetSpeed();
+            textView.setText(speed);
         } catch (Exception e) {
-            LogUtil.log("ComponentLoading => show => " + e.getMessage());
         }
     }
 
     @Override
-    public final void hide() {
+    public void hide() {
+        ComponentApi.super.hide();
 
         try {
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
             setComponentText("");
-        } catch (Exception e) {
-        }
-
-        try {
-            findViewById(R.id.module_mediaplayer_component_loading_root).setVisibility(View.GONE);
         } catch (Exception e) {
             LogUtil.log("ComponentLoading => gone => " + e.getMessage());
         }
     }
 
-
     @Override
-    public boolean isComponentShowing() {
-        try {
-            int visibility = findViewById(R.id.module_mediaplayer_component_loading_root).getVisibility();
-            return visibility == View.VISIBLE;
-        } catch (Exception e) {
-            return false;
-        }
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_loading_root;
     }
 
     /*************/
+
+
 
     @Override
     public int initLayoutIdComponentBackground() {

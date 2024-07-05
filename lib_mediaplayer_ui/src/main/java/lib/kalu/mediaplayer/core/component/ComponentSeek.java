@@ -34,7 +34,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
         // seekForward => start
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            boolean isShowing = isComponentMenuShowing();
+            boolean isShowing = isComponentShowing(ComponentApiMenu.class);
             if (!isShowing) {
                 int repeatCount = event.getRepeatCount();
                 startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_RIGHT);
@@ -43,7 +43,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
         }
         // seekForward => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            boolean isShowing = isComponentMenuShowing();
+            boolean isShowing = isComponentShowing(ComponentApiMenu.class);
             if (!isShowing) {
                 startDelayedMsg(KeyEvent.KEYCODE_DPAD_RIGHT);
                 return true;
@@ -51,7 +51,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
         }
         // seekRewind => start
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            boolean isShowing = isComponentMenuShowing();
+            boolean isShowing = isComponentShowing(ComponentApiMenu.class);
             if (!isShowing) {
                 int repeatCount = event.getRepeatCount();
                 startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_LEFT);
@@ -60,11 +60,11 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
         }
         // seekRewind => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            boolean isShowing = isComponentMenuShowing();
-            if (!isShowing) {
-                startDelayedMsg(KeyEvent.KEYCODE_DPAD_LEFT);
-                return true;
-            }
+//            boolean isShowing = isComponentMenuShowing();
+//            if (!isShowing) {
+//                startDelayedMsg(KeyEvent.KEYCODE_DPAD_LEFT);
+//                return true;
+//            }
         }
 
         return false;
@@ -78,12 +78,17 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 superCallEventListener(false, true, PlayerType.StateType.STATE_FAST_FORWARD_STOP);
                 getPlayerView().seekTo(position);
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-                superCallEventListener(false, true,PlayerType.StateType.STATE_FAST_REWIND_STOP);
+                superCallEventListener(false, true, PlayerType.StateType.STATE_FAST_REWIND_STOP);
                 getPlayerView().seekTo(position);
             }
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => seekToPosition => " + e.getMessage());
         }
+    }
+
+    @Override
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_seek_root;
     }
 
     @Override
@@ -240,17 +245,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             getPlayerView().seekTo(playPosition);
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => seekToStopTrackingTouch => " + e.getMessage());
-        }
-    }
-
-    @Override
-    public boolean isComponentShowing() {
-        try {
-            int visibility = findViewById(R.id.module_mediaplayer_component_seek_root).getVisibility();
-            return visibility == View.VISIBLE;
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => isComponentShowing => " + e.getMessage());
-            return false;
         }
     }
 

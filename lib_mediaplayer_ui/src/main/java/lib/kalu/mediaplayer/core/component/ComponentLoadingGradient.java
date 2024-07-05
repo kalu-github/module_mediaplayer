@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
@@ -22,7 +23,7 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
     public void callEventListener(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_START:
-                LogUtil.log("ComponentLoading => callEventListener => show => playState = " + playState);
+                LogUtil.log("ComponentLoadingGradient => callEventListener => show => playState = " + playState);
                 show();
                 break;
             case PlayerType.StateType.STATE_INIT:
@@ -30,16 +31,38 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_RELEASE:
             case PlayerType.StateType.STATE_RELEASE_EXCEPTION:
-                LogUtil.log("ComponentLoading => callEventListener => gone => playState = " + playState);
+                LogUtil.log("ComponentLoadingGradient => callEventListener => gone => playState = " + playState);
                 hide();
                 break;
         }
     }
 
     @Override
-    public final void show() {
+    public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
+        try {
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            TextView textView = findViewById(R.id.module_mediaplayer_component_loading_gradient_net);
+            if (null == textView)
+                throw new Exception("textView error: null");
+            int viewVisibility = textView.getVisibility();
+            if (viewVisibility != View.VISIBLE)
+                throw new Exception("viewVisibility warning: " + viewVisibility);
+            String speed = getNetSpeed();
+            textView.setText(speed);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void show() {
+        ComponentApi.super.show();
 
         try {
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("error: playerView null");
@@ -51,40 +74,44 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
         } catch (Exception e) {
         }
 
-
         try {
-            findViewById(R.id.module_mediaplayer_component_loading_root).setVisibility(View.VISIBLE);
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            TextView textView = findViewById(R.id.module_mediaplayer_component_loading_gradient_net);
+            if (null == textView)
+                throw new Exception("textView error: null");
+            int viewVisibility = textView.getVisibility();
+            if (viewVisibility != View.VISIBLE)
+                throw new Exception("viewVisibility warning: " + viewVisibility);
+            String speed = getNetSpeed();
+            textView.setText(speed);
         } catch (Exception e) {
-            LogUtil.log("ComponentLoading => show => " + e.getMessage());
         }
     }
 
     @Override
-    public final void hide() {
+    public void hide() {
+        ComponentApi.super.hide();
 
         try {
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
             setComponentText("");
         } catch (Exception e) {
-        }
-
-        try {
-            findViewById(R.id.module_mediaplayer_component_loading_root).setVisibility(View.GONE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentLoading => gone => " + e.getMessage());
+            LogUtil.log("ComponentLoadingGradient => gone => " + e.getMessage(), e);
         }
     }
 
     @Override
-    public boolean isComponentShowing() {
-        try {
-            int visibility = findViewById(R.id.module_mediaplayer_component_loading_gradient_root).getVisibility();
-            return visibility == View.VISIBLE;
-        } catch (Exception e) {
-            return false;
-        }
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_loading_gradient_root;
     }
 
     /*************/
+
+
 
     @Override
     public int initLayoutIdComponentBackground() {
@@ -93,6 +120,6 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
 
     @Override
     public int initLayoutIdText() {
-        return R.id.module_mediaplayer_component_loading_gradient_message;
+        return R.id.module_mediaplayer_component_loading_gradient_name;
     }
 }

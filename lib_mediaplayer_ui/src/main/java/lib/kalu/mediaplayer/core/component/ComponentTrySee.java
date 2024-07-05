@@ -95,19 +95,8 @@ public class ComponentTrySee extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public final void show() {
-        try {
-            findViewById(R.id.module_mediaplayer_component_try_see_root).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void hide() {
-        try {
-            findViewById(R.id.module_mediaplayer_component_try_see_root).setVisibility(View.GONE);
-        } catch (Exception e) {
-        }
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_try_see_root;
     }
 
     @Override

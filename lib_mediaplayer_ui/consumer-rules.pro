@@ -44,10 +44,10 @@
 -keep class lib.kalu.mediaplayer.type.PlayerType$CacheType {
     public <fields>;
 }
--keep class lib.kalu.mediaplayer.type.PlayerType$SeekType {
+-keep class lib.kalu.mediaplayer.type.PlayerType$ExoSeekType {
     public <fields>;
 }
--keep class lib.kalu.mediaplayer.type.PlayerType$FFmpegType {
+-keep class lib.kalu.mediaplayer.type.PlayerType$ExoFFmpegType {
     public <fields>;
 }
 -keep class lib.kalu.mediaplayer.type.PlayerType$StateType {

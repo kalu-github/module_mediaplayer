@@ -286,8 +286,9 @@ public interface VideoRenderApi {
                 }
             };
             mHandler[0].sendEmptyMessageDelayed(2345, 1000);
+            LogUtil.log("VideoRenderApi => startUpdateProgress => succ");
         } catch (Exception e) {
-            LogUtil.log("VideoRenderApi => startUpdateProgress => " + e.getMessage());
+            LogUtil.log("VideoRenderApi => startUpdateProgress => Exception " + e.getMessage());
         }
     }
 
@@ -297,8 +298,9 @@ public interface VideoRenderApi {
                 throw new Exception("warning: null == mHandler[0]");
             mHandler[0].removeMessages(2345);
             mHandler[0] = null;
+            LogUtil.log("VideoRenderApi => stopUpdateProgress => succ");
         } catch (Exception e) {
-            LogUtil.log("VideoRenderApi => stopUpdateProgress => " + e.getMessage());
+            LogUtil.log("VideoRenderApi => stopUpdateProgress => Exception" + e.getMessage());
         }
     }
 }

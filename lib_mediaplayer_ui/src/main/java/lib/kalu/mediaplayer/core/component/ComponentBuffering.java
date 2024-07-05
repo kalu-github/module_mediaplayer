@@ -44,6 +44,11 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
     }
 
     @Override
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_buffering_root;
+    }
+
+    @Override
     public void callEventListener(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_BUFFERING_START:
@@ -60,38 +65,6 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApi {
                 LogUtil.log("ComponentBuffering[hide] => callEventListener => playState = " + playState);
                 hide();
                 break;
-        }
-    }
-
-    @Override
-    public boolean isComponentShowing() {
-        try {
-            int visibility = findViewById(R.id.module_mediaplayer_component_buffering_root).getVisibility();
-            return visibility == View.VISIBLE;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
-    public final void hide() {
-        try {
-            boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
-            findViewById(R.id.module_mediaplayer_component_buffering_root).setVisibility(View.GONE);
-        } catch (Exception e) {
-        }
-    }
-
-    @Override
-    public final void show() {
-        try {
-            boolean componentShowing = isComponentShowing();
-            if (componentShowing)
-                throw new Exception("warning: componentShowing true");
-            findViewById(R.id.module_mediaplayer_component_buffering_root).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
         }
     }
 

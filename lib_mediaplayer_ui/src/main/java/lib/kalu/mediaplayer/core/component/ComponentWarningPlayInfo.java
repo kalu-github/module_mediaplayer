@@ -72,16 +72,8 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     }
 
     @Override
-    public boolean isComponentShowing() {
-        try {
-            return findViewById(R.id.module_mediaplayer_component_warning_play_info_root).getVisibility() == View.VISIBLE;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
-    public final void show() {
+    public void show() {
+        ComponentApi.super.show();
 
         try {
             PlayerView playerView = getPlayerView();
@@ -108,11 +100,6 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
         } catch (Exception e) {
         }
 
-        try {
-            findViewById(R.id.module_mediaplayer_component_warning_play_info_root).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-        }
-
         // 4s后隐藏
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
@@ -123,12 +110,18 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     }
 
     @Override
-    public final void hide() {
+    public void hide() {
+        ComponentApi.super.hide();
 
         try {
             ViewGroup viewGroup = (ViewGroup) getParent();
             viewGroup.removeView(this);
         } catch (Exception e) {
         }
+    }
+
+    @Override
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_warning_play_info_root;
     }
 }

@@ -7,6 +7,7 @@ import android.os.Build;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
 
 
 import androidx.annotation.Nullable;
@@ -39,15 +40,18 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
 
     @Override
     protected void onDetachedFromWindow() {
-        LogUtil.log("VideoRenderTextureView => onDetachedFromWindow => " + this);
         super.onDetachedFromWindow();
-//        release();
+        stopUpdateProgress();
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        LogUtil.log("VideoRenderTextureView => onAttachedToWindow => " + this);
-        super.onAttachedToWindow();
+    protected void onVisibilityChanged(View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        if (visibility == View.VISIBLE) {
+            startUpdateProgress();
+        } else {
+            stopUpdateProgress();
+        }
     }
 
     @Override
@@ -76,7 +80,6 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
 //                setSurface(true);
                 mSurfaceTexture = surfaceTexture;
                 setSurface(true);
-                startUpdateProgress();
             }
 
             /**
@@ -86,7 +89,6 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
             @Override
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
                 LogUtil.log("VideoRenderTextureView => onSurfaceTextureDestroyed => " + this);
-                stopUpdateProgress();
                 return false;
             }
 

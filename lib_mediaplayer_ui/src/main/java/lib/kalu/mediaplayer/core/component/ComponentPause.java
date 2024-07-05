@@ -29,13 +29,18 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public boolean dispatchKeyEvent(KeyEvent event) {
         // keycode_enter || keycode_dpad_center
         if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER)) {
-            boolean isShowing = isComponentMenuShowing();
+            boolean isShowing = isComponentShowing(ComponentApiMenu.class);
             if (!isShowing) {
                 toggle();
                 return true;
             }
         }
         return false;
+    }
+
+    @Override
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_pause_root;
     }
 
     @Override
@@ -69,11 +74,6 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                 }
                 break;
         }
-    }
-
-    @Override
-    public boolean isComponentShowing() {
-        return findViewById(R.id.module_mediaplayer_component_pause_root).getVisibility() == View.VISIBLE;
     }
 
     @Override

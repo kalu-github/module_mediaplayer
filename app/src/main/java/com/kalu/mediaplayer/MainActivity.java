@@ -172,7 +172,7 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        int exoFFmpeg;
+        int exoFFmpeg = 0;
         int exoFFmpegId = ((RadioGroup) findViewById(R.id.main_exo_ffmpeg)).getCheckedRadioButtonId();
         switch (exoFFmpegId) {
             case R.id.main_exo_vff_amc:

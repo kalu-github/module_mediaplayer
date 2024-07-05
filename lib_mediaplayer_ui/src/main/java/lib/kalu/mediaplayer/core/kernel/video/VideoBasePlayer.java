@@ -33,9 +33,9 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
         try {
             if (null == eventApi)
                 throw new Exception("eventApi warning: null");
-            boolean playing = isPlaying();
-            if (!playing)
-                throw new Exception("playing warning: false");
+//            boolean playing = isPlaying();
+//            if (!playing)
+//                throw new Exception("playing warning: false");
             long position = getPosition();
             if (position < 0)
                 position = 0;

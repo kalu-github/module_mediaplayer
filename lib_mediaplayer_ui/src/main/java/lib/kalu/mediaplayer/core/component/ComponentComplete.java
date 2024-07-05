@@ -18,6 +18,11 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_complete_root;
+    }
+
+    @Override
     public void callEventListener(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_END:
@@ -28,26 +33,6 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
                 LogUtil.log("ComponentComplete[gone] => playState = " + playState);
                 hide();
                 break;
-        }
-    }
-
-    @Override
-    public final void show() {
-        try {
-            findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.VISIBLE);
-            findViewById(R.id.module_mediaplayer_component_complete_ui).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentComplete => show => " + e.getMessage());
-        }
-    }
-
-    @Override
-    public final void hide() {
-        try {
-            findViewById(R.id.module_mediaplayer_component_complete_bg).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_complete_ui).setVisibility(View.GONE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentComplete => hide => " + e.getMessage());
         }
     }
 

@@ -55,24 +55,8 @@ public class ComponentWarningPlayRecord extends RelativeLayout implements Compon
     }
 
     @Override
-    public final void hide() {
-
-        try {
-            ViewGroup viewGroup = (ViewGroup) getParent();
-            viewGroup.removeView(this);
-        } catch (Exception e) {
-        }
-
-//        setComponentText("");
-//        try {
-//            findViewById(R.id.module_mediaplayer_component_warning_play_record_root).setVisibility(View.GONE);
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentSeekPlayRecord => hide => Exception " + e.getMessage());
-//        }
-    }
-
-    @Override
-    public final void show() {
+    public void show() {
+        ComponentApi.super.show();
 
         try {
             Object tag = getTag();
@@ -85,12 +69,6 @@ public class ComponentWarningPlayRecord extends RelativeLayout implements Compon
         } catch (Exception e) {
         }
 
-        try {
-            findViewById(R.id.module_mediaplayer_component_warning_play_record_root).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentWarningPlayRecord => show => Exception " + e.getMessage());
-        }
-
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -100,7 +78,23 @@ public class ComponentWarningPlayRecord extends RelativeLayout implements Compon
     }
 
     @Override
+    public void hide() {
+        ComponentApi.super.hide();
+
+        try {
+            ViewGroup viewGroup = (ViewGroup) getParent();
+            viewGroup.removeView(this);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
     public int initLayoutIdText() {
+        return R.id.module_mediaplayer_component_warning_play_record_root;
+    }
+
+    @Override
+    public int initLayoutIdComponentRoot() {
         return R.id.module_mediaplayer_component_warning_play_record_root;
     }
 }

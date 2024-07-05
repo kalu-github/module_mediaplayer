@@ -173,7 +173,6 @@ public final class TestActivity extends Activity {
         componentApis.add(menu);
         // loading
         ComponentLoadingGradient loading = new ComponentLoadingGradient(getApplicationContext());
-        loading.setComponentText("正在播放 第" + (64 + 1) + "集");
         componentApis.add(loading);
         // seek
         ComponentSeek seek = new ComponentSeek(getApplicationContext());

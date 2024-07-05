@@ -33,22 +33,7 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
     }
 
     @Override
-    public final void show() {
-        try {
-            
-            findViewById(R.id.module_mediaplayer_component_surface_cover_bg).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentSurfaceCover => show => " + e.getMessage());
-        }
-    }
-
-    @Override
-    public final void hide() {
-        try {
-            
-            findViewById(R.id.module_mediaplayer_component_surface_cover_bg).setVisibility(View.GONE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentSurfaceCover => hide => " + e.getMessage());
-        }
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_surface_cover_root;
     }
 }
