@@ -163,6 +163,13 @@ public class StartArgs {
         return prepareAsync;
     }
 
+    // 显示网速
+    private boolean showNetSpeed = false;
+
+    public boolean isShowNetSpeed() {
+        return showNetSpeed;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
@@ -189,6 +196,7 @@ public class StartArgs {
                 ", mute=" + mute +
                 ", playWhenReady=" + playWhenReady +
                 ", prepareAsync=" + prepareAsync +
+                ", showNetSpeed=" + showNetSpeed +
                 '}';
     }
 
@@ -216,6 +224,7 @@ public class StartArgs {
         this.mute = builder.mute;
         this.playWhenReady = builder.playWhenReady;
         this.prepareAsync = builder.prepareAsync;
+        this.showNetSpeed = builder.showNetSpeed;
     }
 
     public Builder newBuilder() {
@@ -243,6 +252,7 @@ public class StartArgs {
         builder.mute = mute;
         builder.playWhenReady = playWhenReady;
         builder.prepareAsync = prepareAsync;
+        builder.showNetSpeed = showNetSpeed;
         return builder;
     }
 
@@ -357,6 +367,14 @@ public class StartArgs {
 
         public Builder setPrepareAsync(boolean prepareAsync) {
             this.prepareAsync = prepareAsync;
+            return this;
+        }
+
+        // 显示网速
+        private boolean showNetSpeed = false;
+
+        public Builder setShowNetSpeed(boolean showNetSpeed) {
+            this.showNetSpeed = showNetSpeed;
             return this;
         }
 

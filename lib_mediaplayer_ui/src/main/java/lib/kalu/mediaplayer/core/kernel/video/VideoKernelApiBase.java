@@ -18,13 +18,24 @@ interface VideoKernelApiBase {
 
     /*********/
 
+    boolean[] mShowNetSpeed = new boolean[]{false};
+
+    default void setShowNetSpeed(boolean v) {
+        mShowNetSpeed[0] = v;
+    }
+
+    default boolean isShowNetSpeed() {
+        return mShowNetSpeed[0];
+    }
+
+    /*********/
     String[] mSubtitleUrl = new String[]{null};
 
-    default void setSubtitleUrl(String v){
+    default void setSubtitleUrl(String v) {
         mSubtitleUrl[0] = v;
     }
 
-    default String getSubtitleUrl(){
+    default String getSubtitleUrl() {
         return mSubtitleUrl[0];
     }
 
@@ -32,11 +43,11 @@ interface VideoKernelApiBase {
 
     String[] mMediaUrl = new String[]{null};
 
-    default void setMediaUrl(String v){
+    default void setMediaUrl(String v) {
         mMediaUrl[0] = v;
     }
 
-    default String getUrl(){
+    default String getUrl() {
         return mMediaUrl[0];
     }
 
@@ -44,11 +55,11 @@ interface VideoKernelApiBase {
 
     String[] mMediaTitle = new String[]{null};
 
-    default void setMediaTitle(String v){
+    default void setMediaTitle(String v) {
         mMediaTitle[0] = v;
     }
 
-    default String getTitle(){
+    default String getTitle() {
         return mMediaTitle[0];
     }
 

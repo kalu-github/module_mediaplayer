@@ -41,10 +41,15 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
         LogUtil.log("ComponentLoading => onUpdateProgress => isFromUser = " + isFromUser);
+
+        // 网速
         try {
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
                 throw new Exception("warning: componentShowing false");
+            boolean showNetSpeed = isShowNetSpeed();
+            if (!showNetSpeed)
+                throw new Exception("warning: showNetSpeed false");
             TextView textView = findViewById(R.id.module_mediaplayer_component_loading_net);
             if (null == textView)
                 throw new Exception("textView error: null");
@@ -76,11 +81,14 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
         } catch (Exception e) {
         }
 
-
+        // 网速
         try {
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
                 throw new Exception("warning: componentShowing false");
+            boolean showNetSpeed = isShowNetSpeed();
+            if (!showNetSpeed)
+                throw new Exception("warning: showNetSpeed false");
             TextView textView = findViewById(R.id.module_mediaplayer_component_loading_net);
             if (null == textView)
                 throw new Exception("textView error: null");
@@ -113,7 +121,6 @@ public class ComponentLoading extends RelativeLayout implements ComponentApi {
     }
 
     /*************/
-
 
 
     @Override

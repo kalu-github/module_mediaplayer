@@ -39,10 +39,15 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
+
+        // 网速
         try {
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
                 throw new Exception("warning: componentShowing false");
+            boolean showNetSpeed = isShowNetSpeed();
+            if (!showNetSpeed)
+                throw new Exception("warning: showNetSpeed false");
             TextView textView = findViewById(R.id.module_mediaplayer_component_loading_gradient_net);
             if (null == textView)
                 throw new Exception("textView error: null");
@@ -74,10 +79,14 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
         } catch (Exception e) {
         }
 
+        // 网速
         try {
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
                 throw new Exception("warning: componentShowing false");
+            boolean showNetSpeed = isShowNetSpeed();
+            if (!showNetSpeed)
+                throw new Exception("warning: showNetSpeed false");
             TextView textView = findViewById(R.id.module_mediaplayer_component_loading_gradient_net);
             if (null == textView)
                 throw new Exception("textView error: null");
