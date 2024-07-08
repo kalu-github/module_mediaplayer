@@ -1,23 +1,34 @@
 package lib.kalu.mediaplayer.buried;
 
 
+import org.jetbrains.annotations.NotNull;
+
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 
 public interface BuriedEvent {
 
-    void onPlaying(String url, long position, long duration);
+    void onRendering(@NotNull StartArgs args, long position, long duration);
 
-    void onExit(String url, long position, long duration);
+    void onStart(@NotNull StartArgs args, long position, long duration);
 
-    void onCompletion(String url, long position, long duration);
+    void onError(@NotNull StartArgs args, long position, long duration, @PlayerType.EventType.Value int code);
 
-    void onError(String url, long position, long duration);
+    void onPause(@NotNull StartArgs args, long position, long duration);
 
-    void onPause(String url, long position, long duration);
+    void onResume(@NotNull StartArgs args, long position, long duration);
 
-    void onResume(String url, long position, long duration);
+    void onComplete(@NotNull StartArgs args, long position, long duration);
 
-    void onSeek(String url, long position, long duration);
+    void onStop(@NotNull StartArgs args, long position, long duration);
 
-    void onWindow(@PlayerType.WindowType.Value int value, String url, long position, long duration);
+    void onBufferingStart(@NotNull StartArgs args, long position, long duration);
+
+    void onBufferingStop(@NotNull StartArgs args, long position, long duration);
+
+    void onSeekStart(@NotNull StartArgs args, long position, long duration);
+
+    void onSeekFinish(@NotNull StartArgs args, long position, long duration);
+
+    void onWindow(@NotNull StartArgs args, long position, long duration, @PlayerType.WindowType.Value int type);
 }

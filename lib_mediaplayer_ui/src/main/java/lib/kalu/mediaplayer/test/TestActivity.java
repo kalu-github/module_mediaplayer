@@ -393,24 +393,25 @@ public final class TestActivity extends Activity {
         super.finish();
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-//        videoLayout.resume(false);
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-//        videoLayout.pause(false);
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-//        videoLayout.release(true);
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+        videoLayout.resume(false);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+        videoLayout.pause(false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+        videoLayout.stop(false);
+        videoLayout.release(true);
+    }
 }

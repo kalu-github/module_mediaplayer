@@ -1,6 +1,8 @@
 package lib.kalu.mediaplayer.args;
 
 
+import org.json.JSONObject;
+
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.type.PlayerType;
 
@@ -94,6 +96,7 @@ public class StartArgs {
     public String getUrl() {
         return url;
     }
+
     // 视频title
     private String title;
 
@@ -121,6 +124,7 @@ public class StartArgs {
     public boolean isTrySee() {
         return trySee;
     }
+
     // 起播快进指定位置
     private long seek;
 
@@ -169,6 +173,12 @@ public class StartArgs {
     public boolean isShowNetSpeed() {
         return showNetSpeed;
     }
+    // 透传数据
+    private JSONObject extra;
+
+    public JSONObject getExtra() {
+        return extra;
+    }
 
     @Override
     public String toString() {
@@ -197,6 +207,7 @@ public class StartArgs {
                 ", playWhenReady=" + playWhenReady +
                 ", prepareAsync=" + prepareAsync +
                 ", showNetSpeed=" + showNetSpeed +
+                ", extra=" + extra +
                 '}';
     }
 
@@ -225,6 +236,7 @@ public class StartArgs {
         this.playWhenReady = builder.playWhenReady;
         this.prepareAsync = builder.prepareAsync;
         this.showNetSpeed = builder.showNetSpeed;
+        this.extra = builder.extra;
     }
 
     public Builder newBuilder() {
@@ -253,6 +265,7 @@ public class StartArgs {
         builder.playWhenReady = playWhenReady;
         builder.prepareAsync = prepareAsync;
         builder.showNetSpeed = showNetSpeed;
+        builder.extra = extra;
         return builder;
     }
 
@@ -282,6 +295,8 @@ public class StartArgs {
         private boolean initRelease = playerArgs.isInitRelease();
         // View生命周期, 自动暂停&续播&销毁...
         private boolean supportViewLifecycle = playerArgs.isSupportViewLifecycle();
+
+
         // 视频url
         private String url;
 
@@ -375,6 +390,14 @@ public class StartArgs {
 
         public Builder setShowNetSpeed(boolean showNetSpeed) {
             this.showNetSpeed = showNetSpeed;
+            return this;
+        }
+
+        // 透传数据
+        private JSONObject extra;
+
+        public Builder setExtra(JSONObject v) {
+            this.extra = v;
             return this;
         }
 

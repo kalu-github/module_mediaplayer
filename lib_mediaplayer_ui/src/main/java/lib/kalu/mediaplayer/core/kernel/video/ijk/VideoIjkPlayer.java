@@ -673,7 +673,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         public void onPrepared(IMediaPlayer iMediaPlayer) {
             LogUtil.log("VideoIjkPlayer => onPrepared =>");
             start();
-            startCheckPreparedPlaying(PlayerType.KernelType.IJK);
         }
     };
 

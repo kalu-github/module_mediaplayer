@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.Surface;
 
 import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
@@ -12,7 +13,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
  * @date: 2021-05-12 09:40
  */
 
-public interface VideoKernelApi extends VideoKernelApiCheck, VideoKernelApiBase, VideoKernelApiEvent {
+public interface VideoKernelApi extends VideoKernelApiHttpTimeout, VideoKernelApiBase, VideoKernelApiEvent {
 
     void onUpdateProgress();
 
@@ -87,6 +88,10 @@ public interface VideoKernelApi extends VideoKernelApiCheck, VideoKernelApiBase,
             setShowNetSpeed(showNetSpeed);
         } catch (Exception e) {
         }
+
+        stopCheckPreparedPlaying();
+        int kernelType = args.getKernelType();
+        startCheckPreparedPlaying(kernelType);
 
         initOptions(context, args);
         startDecoder(context, args);

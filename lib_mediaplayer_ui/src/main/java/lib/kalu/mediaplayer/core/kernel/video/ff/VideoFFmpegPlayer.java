@@ -358,7 +358,6 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         public void onPrepared(FFmpegPlayer mp) {
             LogUtil.log("VideoFFmpegPlayer => onPrepared =>");
             start();
-            startCheckPreparedPlaying(PlayerType.KernelType.FFPLAYER);
         }
     };
 

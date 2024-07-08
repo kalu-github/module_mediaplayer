@@ -1,6 +1,5 @@
 package lib.kalu.mediaplayer.core.player.video;
 
-import android.annotation.SuppressLint;
 import android.view.View;
 
 import androidx.annotation.FloatRange;
@@ -8,8 +7,6 @@ import androidx.annotation.FloatRange;
 import org.json.JSONArray;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.args.PlayerArgs;
-import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
@@ -18,7 +15,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoPlayerApiKernel extends VideoPlayerApiListener,
-        VideoPlayerApiBuriedEvent,
+        VideoPlayerApiBuried,
         VideoPlayerApiComponent,
         VideoPlayerApiRender,
         VideoPlayerApiDevice {
@@ -171,12 +168,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         try {
             boolean playing = isPlaying();
             if (playing) {
-                // 埋点
-                onBuriedEventPause();
                 pause(callEvent);
             } else {
-                // 埋点
-                onBuriedEventResume();
                 resume();
             }
         } catch (Exception e) {
@@ -197,25 +190,19 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         stop(true, true);
     }
 
-    default void stop(boolean clearTag, boolean callEvent) {
-        if (clearTag) {
-            setTags(null);
-        }
+    default void stop(boolean callEvent, boolean clearTag) {
         setScreenKeep(false);
-        stopKernel(callEvent);
+        stopKernel(callEvent, clearTag);
     }
 
     default void release() {
         release(true, true, true);
     }
 
-    default void release(boolean clearTag, boolean callEvent, boolean isFromUser) {
+    default void release(boolean callEvent, boolean clearTag, boolean isFromUser) {
         try {
-            if (clearTag) {
-                setTags(null);
-            }
             releaseRender();
-            releaseKernel(isFromUser);
+            releaseKernel(clearTag, isFromUser);
             if (!callEvent)
                 throw new Exception("warning: callEvent false");
             callEventListener(PlayerType.StateType.STATE_RELEASE);
@@ -256,7 +243,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            resumeVideoKernel(callEvent);
+            resumeKernel(callEvent);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => resume => " + e.getMessage());
         }
@@ -350,28 +337,19 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /*********************/
 
-    default void resumeVideoKernel(boolean callEvent) {
+    default void stopKernel(boolean callEvent, boolean clearTag) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            kernel.start();
-            setScreenKeep(true);
-            if (callEvent) {
-                callEventListener(PlayerType.StateType.STATE_RESUME);
-                callEventListener(PlayerType.StateType.STATE_KERNEL_RESUME);
-            }
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => resumeVideoKernel => " + e.getMessage());
-        }
-    }
-
-    default void stopKernel(boolean callEvent) {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
+            // 埋点
+            onBuriedStop();
+            // 执行
             kernel.stop();
+            // 数据
+            if (clearTag) {
+                setTags(null);
+            }
             if (!callEvent)
                 throw new Exception("warning: callEvent false");
             callEventListener(PlayerType.StateType.STATE_KERNEL_STOP);
@@ -386,6 +364,12 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
+            boolean prepared = isPrepared();
+            if (!prepared)
+                throw new Exception("warning: prepared false");
+            // 埋点
+            onBuriedPause();
+            // 执行
             kernel.pause();
             if (!callEvent)
                 throw new Exception("warning: callEvent false");
@@ -395,19 +379,27 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-//    default void updateVideoKernel(StartArgs builder) {
-//        try {
-//            VideoKernelApi kernel = getVideoKernel();
-//            if (null == kernel)
-//                throw new Exception("warning: kernel null");
-//            long seek = builder.getSeek();
-//            long max = builder.getMax();
-//            boolean loop = builder.isLooping();
-//            kernel.update(seek, max, loop);
-//        } catch (Exception e) {
-//            LogUtil.log("VideoPlayerApiKernel => updateVideoKernel => " + e.getMessage());
-//        }
-//    }
+    default void resumeKernel(boolean callEvent) {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            boolean prepared = isPrepared();
+            if (!prepared)
+                throw new Exception("warning: prepared false");
+            // 埋点
+            onBuriedResume();
+            // 执行
+            kernel.start();
+            setScreenKeep(true);
+            if (callEvent) {
+                callEventListener(PlayerType.StateType.STATE_RESUME);
+                callEventListener(PlayerType.StateType.STATE_KERNEL_RESUME);
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => resumeKernel => " + e.getMessage());
+        }
+    }
 
     default void startDecoder(StartArgs args) {
         try {
@@ -422,7 +414,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /***************************/
 
-    default void releaseKernel(boolean isFromUser) {
+    default void releaseKernel(boolean clearTag, boolean isFromUser) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -430,6 +422,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             kernel.releaseDecoder(isFromUser);
             setVideoKernel(null);
             setScreenKeep(false);
+            if (clearTag) {
+                setTags(null);
+            }
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => releaseKernel => " + e.getMessage());
         }
@@ -438,7 +433,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     default void checkKernelNull(int kernelType, boolean release) {
         try {
             if (release) {
-                releaseKernel(false);
+                releaseKernel(false, true);
             }
             VideoKernelApi videoKernel = getVideoKernel();
             if (null != videoKernel)
@@ -471,7 +466,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                     try {
                         boolean trySee = args.isTrySee();
-                        LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateProgress => trySee = " + trySee + ", maxDuration = " + args.getMaxDuration() + ", position = " + position);
+//                        LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateProgress => trySee = " + trySee + ", maxDuration = " + args.getMaxDuration() + ", position = " + position);
                         // 试看
                         if (trySee) {
                             long maxDuration = args.getMaxDuration();
@@ -511,6 +506,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             break;
                         // 缓冲开始
                         case PlayerType.EventType.EVENT_BUFFERING_START:
+                            // 埋点
+                            onBuriedBufferingStart();
+                            // 执行
                             callEventListener(PlayerType.StateType.STATE_BUFFERING_START);
                             // 0: url
                             // 1: connentTimeout
@@ -525,52 +523,16 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             break;
                         // 缓冲结束
                         case PlayerType.EventType.EVENT_BUFFERING_STOP:
+                            // 埋点
+                            onBuriedBufferingStop();
+                            // 执行
                             callEventListener(PlayerType.StateType.STATE_BUFFERING_STOP);
-//                            getVideoKernel().stopCheckPreparedPlaying();
                             break;
-//                        // 播放开始
-//                        case PlayerType.EventType.EVENT_VIDEO_START_903:
-//                            // step1
-//                            showVideoReal();
-//                            // step2
-//                            checkVideoReal();
-//                            break;
-//                        // 播放开始
-//                        case PlayerType.EventType.EVENT_VIDEO_START_RETRY:
-//                            callEventListener(PlayerType.StateType.STATE_START_RETRY);
-//                            // step2
-//                            showVideoReal();
-//                            // step3
-//                            checkVideoReal();
-//                            // step5
-//                            MPLogUtil.log("VideoPlayerApiKernel => onEvent => event_video_start_retry => playWhenReady = " + isPlayWhenReady());
-//                            break;
-//                        // 播放开始-快进
-//                        case PlayerType.EventType.EVENT_VIDEO_START_SEEK:
-//                            // 试看
-//                            if (null != builder) {
-//                                long max = builder.getMax();
-//                                if (max > 0) {
-//                                    callEventListener(PlayerType.StateType.STATE_TRY_BEGIN);
-//                                }
-//                            }
-//                            // step1
-//                            callEventListener(PlayerType.StateType.STATE_START_SEEK);
-//                            // step2
-//                            showVideoReal();
-//                            // step4
-//                            resume(true);
-//                            // step6
-//                            boolean playWhenReady1 = isPlayWhenReady();
-//                            MPLogUtil.log("VideoPlayerApiKernel => onEvent => event_video_start_seek => playWhenReady = " + playWhenReady1);
-//                            if (!playWhenReady1) {
-//                                pause();
-//                                setPlayWhenReady(true);
-//                                callEventListener(PlayerType.StateType.STATE_START_PLAY_WHEN_READY_PAUSE);
-//                            }
-//                            break;
                         // 视频首帧
                         case PlayerType.EventType.EVENT_VIDEO_RENDERING_START:
+                            // 埋点
+                            onBuriedRendering();
+                            // 执行
                             callEventListener(PlayerType.StateType.STATE_VIDEO_RENDERING_START);
                             break;
                         // 播放开始-默认
@@ -578,7 +540,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                        case PlayerType.EventType.EVENT_VIDEO_SEEK_RENDERING_START: // 视频开始渲染
 //            case PlayerType.MediaType.MEDIA_INFO_AUDIO_SEEK_RENDERING_START: // 视频开始渲染
                             // 埋点
-                            onBuriedEventPlaying();
+                            onBuriedStart();
+                            // 执行
                             callEventListener(PlayerType.StateType.STATE_START);
                             // ijk需要刷新RenderView
                             int kernelType = args.getKernelType();
@@ -595,17 +558,22 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             break;
                         // 快进
                         case PlayerType.EventType.EVENT_SEEK_START:
+                            // 埋点
+                            onBuriedSeekStart();
+                            // 执行
                             callEventListener(PlayerType.StateType.STATE_SEEK_START);
                             break;
                         // 快进
                         case PlayerType.EventType.EVENT_SEEK_FINISH:
+                            // 埋点
+                            onBuriedSeekFinish();
+                            // 执行
                             callEventListener(PlayerType.StateType.STATE_SEEK_FINISH);
                             break;
                         // 续播
                         case PlayerType.EventType.EVENT_SEEK_PLAY_RECORD:
                             callEventListener(PlayerType.StateType.STATE_SEEK_PLAY_RECORD);
                             break;
-
                         // 播放错误
                         case PlayerType.EventType.EVENT_ERROR_URL:
                         case PlayerType.EventType.EVENT_ERROR_RETRY:
@@ -614,15 +582,17 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         case PlayerType.EventType.EVENT_ERROR_NET:
                         case PlayerType.EventType.EVENT_ERROR_BUFFERING_TIMEOUT:
                             // 埋点
-                            onBuriedEventError();
+                            onBuriedError(event);
+                            // 执行
                             setScreenKeep(false);
                             callEventListener(PlayerType.StateType.STATE_ERROR);
                             break;
                         // 播放结束
                         case PlayerType.EventType.EVENT_VIDEO_END:
-                            callEventListener(PlayerType.StateType.STATE_END);
                             // 埋点
-                            onBuriedEventCompletion();
+                            onBuriedComplete();
+                            // 执行
+                            callEventListener(PlayerType.StateType.STATE_END);
 
                             boolean looping = args.isLooping();
                             if (looping) {

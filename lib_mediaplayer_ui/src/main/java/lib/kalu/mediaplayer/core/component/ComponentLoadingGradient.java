@@ -82,7 +82,7 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
                 throw new Exception("warning: componentShowing false");
             setComponentText("");
         } catch (Exception e) {
-            LogUtil.log("ComponentLoadingGradient => gone => " + e.getMessage(), e);
+            LogUtil.log("ComponentLoadingGradient => gone => " + e.getMessage());
         }
     }
 

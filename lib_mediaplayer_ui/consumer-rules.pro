@@ -1,13 +1,17 @@
 -dontwarn lib.kalu.mediaplayer.**
 
-# @interface
--keepattributes *Annotation*
--keepattributes InnerClasses,EnclosingMethod
+# 保护主动抛出异常
+#-keepattributes Exceptions
+#-keepattributes Exceptions,SourceFile,LineNumberTable
 
-# 泛型方法 返回值
+# 保护泛型
 -keepattributes Signature
 
-#-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
+# 保护注解
+-keepattributes *Annotation*,InnerClasses,EnclosingMethod
+#-keep @interface * {
+#    *;
+#}
 
 # sdk
 -keep class lib.kalu.mediaplayer.PlayerSDK {
@@ -17,45 +21,43 @@
 
 # args
 -keep class lib.kalu.mediaplayer.args.StartArgs {
-    public <fields>;
     public <methods>;
 }
 -keep class lib.kalu.mediaplayer.args.StartArgs$Builder {
-    public <fields>;
     public <methods>;
 }
 
 # type
--keep class lib.kalu.mediaplayer.type.PlayerType {
-    public <fields>;
+-keep @interface lib.kalu.mediaplayer.type.PlayerType {
+    *;
 }
--keep class lib.kalu.mediaplayer.type.PlayerType$KernelType {
-    public <fields>;
+-keep @interface lib.kalu.mediaplayer.type.PlayerType {
+    *;
 }
--keep class lib.kalu.mediaplayer.type.PlayerType$RenderType {
-    public <fields>;
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$KernelType {
+    *;
 }
--keep class lib.kalu.mediaplayer.type.PlayerType$WindowType {
-    public <fields>;
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$RenderType {
+    *;
 }
--keep class lib.kalu.mediaplayer.type.PlayerType$ScaleType {
-    public <fields>;
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$WindowType {
+    *;
 }
--keep class lib.kalu.mediaplayer.type.PlayerType$CacheType {
-    public <fields>;
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$ScaleType {
+    *;
 }
--keep class lib.kalu.mediaplayer.type.PlayerType$ExoSeekType {
-    public <fields>;
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$CacheType {
+    *;
 }
--keep class lib.kalu.mediaplayer.type.PlayerType$ExoFFmpegType {
-    public <fields>;
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$ExoSeekType {
+    *;
 }
--keep class lib.kalu.mediaplayer.type.PlayerType$StateType {
-    public <fields>;
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$ExoFFmpegType {
+    *;
 }
-#-keep class lib.kalu.mediaplayer.config.player.PlayerType$* {
-#    public <fields>;
-#}
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$StateType {
+    *;
+}
 
 # buried
 -keep class lib.kalu.mediaplayer.buried.BuriedEvent {

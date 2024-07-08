@@ -14,6 +14,7 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.FloatRange;
 
+import kotlin.jvm.Synchronized;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
@@ -393,8 +394,10 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                         onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
                         long seek = getSeek();
                         if (seek <= 0) {
+                            LogUtil.log("VideoAndroidPlayer => onInfo => start1-1");
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
                         } else {
+                            LogUtil.log("VideoAndroidPlayer => onInfo => start2");
                             // 起播快进
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_SEEK_PLAY_RECORD);
                             seekTo(seek);
@@ -416,9 +419,10 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             try {
                 long seek = getSeek();
                 if (seek <= 0)
-                    throw new Exception();
+                    throw new Exception("warning: seek<=0");
                 setSeek(0);
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+                LogUtil.log("VideoAndroidPlayer => onInfo => start1-2");
+                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
             } catch (Exception e) {
             }
 
@@ -437,7 +441,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         public void onPrepared(MediaPlayer mp) {
             LogUtil.log("VideoAndroidPlayer => onPrepared =>");
             start();
-            startCheckPreparedPlaying(PlayerType.KernelType.ANDROID);
         }
     };
 

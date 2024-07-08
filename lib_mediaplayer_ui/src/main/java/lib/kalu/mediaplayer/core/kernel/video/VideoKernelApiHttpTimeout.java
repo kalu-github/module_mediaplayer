@@ -14,7 +14,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
  * @date: 2021-05-12 09:40
  */
 
-public interface VideoKernelApiCheck extends VideoKernelApiBase, VideoKernelApiEvent {
+public interface VideoKernelApiHttpTimeout extends VideoKernelApiBase, VideoKernelApiEvent {
 
     /***********/
 
@@ -29,25 +29,30 @@ public interface VideoKernelApiCheck extends VideoKernelApiBase, VideoKernelApiE
                     @Override
                     public void handleMessage(@NonNull Message msg) {
                         if (msg.what == 10001) {
-                            long position = getPosition();
-                            LogUtil.log("VideoKernelApiHandler => startCheckPreparedPlaying => position = " + position);
-                            if (position > 0) {
-                                // 1
-                                stopCheckPreparedPlaying();
-                                // 2
-                                setPrepared(true);
-                                onEvent(kernelType, PlayerType.EventType.EVENT_LOADING_STOP);
-                                long seek = getSeek();
-                                if (seek <= 0) {
-                                    onEvent(kernelType, PlayerType.EventType.EVENT_VIDEO_START);
+                            try {
+                                if (isPrepared())
+                                    throw new Exception("warning: mPrepared true");
+                                long position = getPosition();
+                                if (position > 0) {
+                                    setPrepared(true);
+                                    onEvent(kernelType, PlayerType.EventType.EVENT_LOADING_STOP);
+                                    long seek = getSeek();
+                                    if (seek <= 0) {
+                                        onEvent(kernelType, PlayerType.EventType.EVENT_VIDEO_START);
+                                    } else {
+                                        onEvent(kernelType, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+                                        // 起播快进
+                                        onEvent(kernelType, PlayerType.EventType.EVENT_SEEK_PLAY_RECORD);
+                                        seekTo(seek);
+                                    }
                                 } else {
-                                    onEvent(kernelType, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
-                                    // 起播快进
-                                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_SEEK_PLAY_RECORD);
-                                    seekTo(seek);
+                                    mHandlerPreparedPlaying[0].sendEmptyMessageDelayed(10001, 100);
                                 }
-                            } else {
-                                mHandlerPreparedPlaying[0].sendEmptyMessageDelayed(10001, 100);
+
+                            } catch (Exception e) {
+                                LogUtil.log("VideoKernelApiHandler => startCheckPreparedPlaying => Exception " + e.getMessage());
+                            } finally {
+                                stopCheckPreparedPlaying();
                             }
                         }
                     }
@@ -56,7 +61,7 @@ public interface VideoKernelApiCheck extends VideoKernelApiBase, VideoKernelApiE
             mHandlerPreparedPlaying[0].removeCallbacksAndMessages(null);
             mHandlerPreparedPlaying[0].sendEmptyMessageDelayed(10001, 100);
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiCheck => startCheckPreparedPlaying => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHttpTimeout => startCheckPreparedPlaying => " + e.getMessage());
         }
     }
 
@@ -67,7 +72,7 @@ public interface VideoKernelApiCheck extends VideoKernelApiBase, VideoKernelApiE
                 mHandlerPreparedPlaying[0] = null;
             }
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiCheck => stopCheckPreparedPlaying => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHttpTimeout => stopCheckPreparedPlaying => " + e.getMessage());
         }
     }
 
@@ -112,7 +117,7 @@ public interface VideoKernelApiCheck extends VideoKernelApiBase, VideoKernelApiE
             mHandlerConnectTimeout[0].removeCallbacksAndMessages(null);
             mHandlerConnectTimeout[0].sendEmptyMessageDelayed(10002, 1000);
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiCheck => startCheckConnectTimeout => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHttpTimeout => startCheckConnectTimeout => " + e.getMessage());
         }
     }
 
@@ -123,7 +128,7 @@ public interface VideoKernelApiCheck extends VideoKernelApiBase, VideoKernelApiE
                 mHandlerConnectTimeout[0] = null;
             }
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiCheck => stopCheckConnectTimeout => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHttpTimeout => stopCheckConnectTimeout => " + e.getMessage());
         }
     }
 
@@ -179,7 +184,7 @@ public interface VideoKernelApiCheck extends VideoKernelApiBase, VideoKernelApiE
             mHandlerBufferingTimeout[0].removeCallbacksAndMessages(null);
             mHandlerBufferingTimeout[0].sendEmptyMessageDelayed(10003, timeout);
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiCheck => startCheckBufferingTimeout => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHttpTimeout => startCheckBufferingTimeout => " + e.getMessage());
         }
     }
 
@@ -190,9 +195,7 @@ public interface VideoKernelApiCheck extends VideoKernelApiBase, VideoKernelApiE
                 mHandlerBufferingTimeout[0] = null;
             }
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiCheck => stopCheckBufferingTimeout => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHttpTimeout => stopCheckBufferingTimeout => " + e.getMessage());
         }
     }
-
-/***********/
 }
