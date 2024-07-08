@@ -12,7 +12,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-interface VideoPlayerApiListener extends VideoPlayerApiBase {
+interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBuried {
 
     default void callWindowListener(@PlayerType.WindowType.Value int state) {
 
@@ -43,6 +43,9 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase {
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiBase => callWindowListener => " + e.getMessage());
         }
+
+        // 埋点
+        onBuriedWindow(state);
     }
 
 
