@@ -10,6 +10,9 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
 
     default void detachedFromWindow() {
         try {
+            boolean prepared = isPrepared();
+            if (!prepared)
+                throw new Exception("warning: prepared false");
             VideoKernelApi videoKernel = getVideoKernel();
             if (null == videoKernel)
                 throw new Exception("error: videoKernel null");
@@ -34,6 +37,9 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
 
     default void attachedToWindow() {
         try {
+            boolean prepared = isPrepared();
+            if (!prepared)
+                throw new Exception("warning: prepared false");
             VideoKernelApi videoKernel = getVideoKernel();
             if (null == videoKernel)
                 throw new Exception("error: videoKernel null");
@@ -57,6 +63,9 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
 
     default void windowVisibilityChanged(int visibility) {
         try {
+            boolean prepared = isPrepared();
+            if (!prepared)
+                throw new Exception("warning: prepared false");
             VideoKernelApi videoKernel = getVideoKernel();
             if (null == videoKernel)
                 throw new Exception("error: videoKernel null");
@@ -69,9 +78,6 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             boolean supportViewLifecycle = tags.isSupportViewLifecycle();
             if (!supportViewLifecycle)
                 throw new Exception("warning: supportViewLifecycle false");
-            boolean prepared = isPrepared();
-            if (!prepared)
-                throw new Exception("warning: prepared false");
             // show
             if (visibility == View.VISIBLE) {
                 resume(false);
