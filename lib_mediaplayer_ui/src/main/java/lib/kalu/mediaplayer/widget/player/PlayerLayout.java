@@ -2,7 +2,6 @@ package lib.kalu.mediaplayer.widget.player;
 
 import android.content.Context;
 import android.os.Build;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,11 +20,10 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
-import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
+import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
-import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
@@ -818,27 +816,27 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void removeOnPlayerItemsListener() {
+    public final void removeOnPlayerEpisodeListener() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.removeOnPlayerItemsListener();
+            playerView.removeOnPlayerEpisodeListener();
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => removeOnPlayerItemsListener => " + e.getMessage());
+            LogUtil.log("PlayerLayout => removeOnPlayerEpisodeListener => " + e.getMessage());
         }
     }
 
-    public final void setOnPlayerItemsListener(OnPlayerItemsLiatener listener) {
+    public final void setOnPlayerEpisodeListener(OnPlayerEpisodeListener listener) {
         try {
             if (null == listener)
                 throw new Exception("listener error: null");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.setOnPlayerItemsListener(listener);
+            playerView.setOnPlayerEpisodeListener(listener);
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => setOnPlayerWindowListener => " + e.getMessage());
+            LogUtil.log("PlayerLayout => setOnPlayerEpisodeListener => " + e.getMessage());
         }
     }
 }

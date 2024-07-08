@@ -18,7 +18,7 @@ import lib.kalu.mediaplayer.core.component.ComponentLoadingGradient;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayRecord;
-import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
+import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
@@ -210,9 +210,9 @@ public final class TestActivity extends Activity {
     private void initListener() {
         // playerLayout
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.setOnPlayerItemsListener(new OnPlayerItemsLiatener() {
+        playerLayout.setOnPlayerEpisodeListener(new OnPlayerEpisodeListener() {
             @Override
-            public void onItem(int pos) {
+            public void onEpisode(int pos) {
                 updateTitle(pos);
                 startPlayer();
             }

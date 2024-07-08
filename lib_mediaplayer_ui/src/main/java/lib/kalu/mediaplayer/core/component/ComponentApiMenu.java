@@ -3,11 +3,10 @@ package lib.kalu.mediaplayer.core.component;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.view.KeyEvent;
 
 import androidx.annotation.NonNull;
 
-import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
+import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 
@@ -83,17 +82,17 @@ public interface ComponentApiMenu extends ComponentApi {
 //        }
 //    }
 
-    default void callItemsClickListener(int pos) {
+    default void callEpisodeClickListener(int pos) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("error: null == playerView");
-            OnPlayerItemsLiatener listener = playerView.getOnPlayerItemsListener();
+            OnPlayerEpisodeListener listener = playerView.getOnPlayerEpisodeListener();
             if (null == listener)
                 throw new Exception("error: null == listener");
-            listener.onItem(pos);
+            listener.onEpisode(pos);
         } catch (Exception e) {
-            LogUtil.log("ComponentApiMenu => callItemsClickListener => " + e.getMessage());
+            LogUtil.log("ComponentApiMenu => callEpisodeClickListener => " + e.getMessage());
         }
     }
 

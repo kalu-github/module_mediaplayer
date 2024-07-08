@@ -20,7 +20,7 @@ import java.util.List;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.test.TestActivity;
 import lib.kalu.mediaplayer.type.PlayerType;
-import lib.kalu.mediaplayer.util.UdpMulticastUtil;
+import lib.kalu.mediaplayer.util.UdpUtil;
 
 /**
  * description:
@@ -111,7 +111,7 @@ public class MainActivity extends Activity {
         }
 
         if (videoUrl.startsWith("udp")) {
-            boolean checkUdpJoinGroup = UdpMulticastUtil.checkUdpJoinGroup(videoUrl);
+            boolean checkUdpJoinGroup = UdpUtil.checkUdpJoinGroup(videoUrl);
             Toast.makeText(getApplicationContext(), "checkUdpJoinGroup = " + checkUdpJoinGroup + ", udp = " + videoUrl, Toast.LENGTH_SHORT).show();
         }
 

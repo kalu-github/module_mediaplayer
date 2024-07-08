@@ -394,10 +394,8 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                         onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
                         long seek = getSeek();
                         if (seek <= 0) {
-                            LogUtil.log("VideoAndroidPlayer => onInfo => start1-1");
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
                         } else {
-                            LogUtil.log("VideoAndroidPlayer => onInfo => start2");
                             // 起播快进
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_SEEK_PLAY_RECORD);
                             seekTo(seek);
@@ -421,9 +419,9 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 if (seek <= 0)
                     throw new Exception("warning: seek<=0");
                 setSeek(0);
-                LogUtil.log("VideoAndroidPlayer => onInfo => start1-2");
-                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
+                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_VIDEO_START);
             } catch (Exception e) {
+                LogUtil.log("VideoAndroidPlayer => onSeekComplete => Exception1 " + e.getMessage());
             }
 
             try {
@@ -432,6 +430,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     throw new Exception("warning: playing true");
                 start();
             } catch (Exception e) {
+                LogUtil.log("VideoAndroidPlayer => onSeekComplete => Exception2 " + e.getMessage());
             }
         }
     };

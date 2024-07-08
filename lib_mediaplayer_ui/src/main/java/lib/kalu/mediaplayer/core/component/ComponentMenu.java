@@ -1,22 +1,17 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     public ComponentMenu(Context context) {
@@ -486,7 +481,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             hide();
             stop();
             radioGroup.check(focusId);
-            callItemsClickListener(newPos);
+            callEpisodeClickListener(newPos);
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => clickEpisode => Exception " + e.getMessage());
         }

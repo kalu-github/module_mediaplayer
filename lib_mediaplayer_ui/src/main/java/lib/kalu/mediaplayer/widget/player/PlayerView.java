@@ -16,7 +16,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
-import lib.kalu.mediaplayer.listener.OnPlayerItemsLiatener;
+import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -227,20 +227,20 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     /***********/
 
-    private OnPlayerItemsLiatener mOnPlayerItemsLiatener;
+    private OnPlayerEpisodeListener mOnPlayerItemsLiatener;
 
     @Override
-    public OnPlayerItemsLiatener getOnPlayerItemsListener() {
+    public OnPlayerEpisodeListener getOnPlayerEpisodeListener() {
         return this.mOnPlayerItemsLiatener;
     }
 
     @Override
-    public void setOnPlayerItemsListener(OnPlayerItemsLiatener l) {
+    public void setOnPlayerEpisodeListener(OnPlayerEpisodeListener l) {
         this.mOnPlayerItemsLiatener = l;
     }
 
     @Override
-    public void removeOnPlayerItemsListener() {
+    public void removeOnPlayerEpisodeListener() {
         this.mOnPlayerItemsLiatener = null;
     }
 

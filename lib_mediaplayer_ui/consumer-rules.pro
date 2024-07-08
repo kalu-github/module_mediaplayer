@@ -72,7 +72,7 @@
 }
 
 # util
--keep class lib.kalu.mediaplayer.util.UdpMulticastUtil {
+-keep class lib.kalu.mediaplayer.util.UdpUtil {
     public <fields>;
     public <methods>;
 }
