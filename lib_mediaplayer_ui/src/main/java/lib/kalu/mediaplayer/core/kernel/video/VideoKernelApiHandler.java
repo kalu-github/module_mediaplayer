@@ -59,7 +59,8 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     }
                 };
             }
-            mHandlerPreparedPlaying[0].removeCallbacksAndMessages(null);
+            if (mHandlerPreparedPlaying[0].hasMessages(10001))
+                throw new Exception("warning: hasMessages 10001");
             mHandlerPreparedPlaying[0].sendEmptyMessageDelayed(10001, 1000);
         } catch (Exception e) {
             LogUtil.log("VideoKernelApiHandler => startCheckPreparedPlaying => Exception1 " + e.getMessage());
@@ -121,6 +122,8 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     }
                 };
             }
+            if (mHandlerConnectTimeout[0].hasMessages(10002))
+                throw new Exception("warning: hasMessages 10002");
             mHandlerConnectTimeout[0].removeCallbacksAndMessages(null);
             Message message = Message.obtain();
             message.what = 10002;
@@ -217,7 +220,8 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     }
                 };
             }
-            mHandlerBufferingTimeout[0].removeCallbacksAndMessages(null);
+            if (mHandlerBufferingTimeout[0].hasMessages(10003))
+                throw new Exception("warning: hasMessages 10003");
             Message message = Message.obtain();
             message.what = 10003;
             long position = getPosition();

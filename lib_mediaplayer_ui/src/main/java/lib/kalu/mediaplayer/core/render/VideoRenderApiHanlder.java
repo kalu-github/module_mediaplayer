@@ -22,12 +22,14 @@ public interface VideoRenderApiHanlder extends VideoRenderApiBase {
                             if (null != kernelApi) {
                                 kernelApi.onUpdateProgress();
                             }
-                            LogUtil.log("VideoRenderApiHanlder => startUpdateProgress => loop next kernelApi = " + kernelApi);
+//                            LogUtil.log("VideoRenderApiHanlder => startUpdateProgress => loop next kernelApi = " + kernelApi);
                             mHandlerUpdateProgress[0].sendEmptyMessageDelayed(10100, 1000);
                         }
                     }
                 };
             }
+            if (mHandlerUpdateProgress[0].hasMessages(10100))
+                throw new Exception("warning: hasMessages 10100");
             mHandlerUpdateProgress[0].sendEmptyMessageDelayed(10100, 1000);
         } catch (Exception e) {
             LogUtil.log("VideoRenderApiHanlder => startUpdateProgress => Exception " + e.getMessage());
