@@ -428,6 +428,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 seek = duration;
             }
             LogUtil.log("VideoIjkPlayer => seekTo => succ");
+//            setSeeking(true);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_SEEK_START);
             mIjkPlayer.seekTo(seek);
         } catch (Exception e) {
@@ -639,6 +640,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public void onSeekComplete(IMediaPlayer iMediaPlayer) {
             LogUtil.log("VideoIjkPlayer => onSeekComplete =>");
+
+//            setSeeking(false);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_SEEK_FINISH);
             try {
                 long seek = getSeek();

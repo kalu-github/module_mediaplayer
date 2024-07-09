@@ -44,6 +44,7 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
         mPrepared[0] = false;
         mIjkMediaCodec[0] = true;
         mShowNetSpeed[0] = false;
+//        mSeeking[0] = false;
 //        stopCheckPreparedPlaying();
         stopCheckConnectTimeout();
         stopCheckBufferingTimeout();

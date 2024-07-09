@@ -91,7 +91,6 @@
 
 # view
 -keep class lib.kalu.mediaplayer.widget.player.PlayerLayout {
-    public <fields>;
     public <methods>;
 }
 -keep class lib.kalu.mediaplayer.widget.player.PlayerView{

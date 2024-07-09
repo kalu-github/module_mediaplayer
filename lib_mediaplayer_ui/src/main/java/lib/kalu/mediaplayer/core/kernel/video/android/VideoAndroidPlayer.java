@@ -225,6 +225,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 seek = duration;
             }
             LogUtil.log("VideoAndroidPlayer => seekTo => succ");
+//            setSeeking(true);
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_SEEK_START);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_CLOSEST);
@@ -404,6 +405,8 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public void onSeekComplete(MediaPlayer mediaPlayer) {
             LogUtil.log("VideoAndroidPlayer => onSeekComplete =>");
+
+//            setSeeking(false);
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.EVENT_SEEK_FINISH);
             try {
                 long seek = getSeek();

@@ -90,6 +90,18 @@ interface VideoKernelApiBase {
 
     /*****/
 
+//    boolean[] mSeeking = new boolean[]{false}; // 正在快进快退，未缓冲完毕
+//
+//    default void setSeeking(boolean v) {
+//        mSeeking[0] = v;
+//    }
+//
+//    default boolean isSeeking() {
+//        return mSeeking[0];
+//    }
+
+    /*****/
+
     boolean[] mBufferingTimeoutRetry = new boolean[]{false};
 
     default void setBufferingTimeoutRetry(boolean v) {
