@@ -367,6 +367,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             boolean prepared = isPrepared();
             if (!prepared)
                 throw new Exception("warning: prepared false");
+            boolean playing = isPlaying();
+            if (!playing)
+                throw new Exception("warning: playing false");
             // 埋点
             onBuriedPause();
             // 执行
@@ -387,6 +390,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             boolean prepared = isPrepared();
             if (!prepared)
                 throw new Exception("warning: prepared false");
+            boolean playing = isPlaying();
+            if (playing)
+                throw new Exception("warning: playing true");
             // 埋点
             onBuriedResume();
             // 执行
