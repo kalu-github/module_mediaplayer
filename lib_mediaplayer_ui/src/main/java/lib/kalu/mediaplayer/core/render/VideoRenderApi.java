@@ -27,7 +27,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
-public interface VideoRenderApi {
+public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlder {
 
     void init();
 
@@ -42,15 +42,6 @@ public interface VideoRenderApi {
     void setLayoutParams(ViewGroup.LayoutParams params);
 
     void setScaleX(float v);
-
-    /**
-     * 关联AbstractPlayer
-     *
-     * @param player player
-     */
-    void setKernel(VideoKernelApi player);
-
-    VideoKernelApi getKernel();
 
     /**
      * 截图
@@ -263,44 +254,6 @@ public interface VideoRenderApi {
             EGL14.eglTerminate(display);
         } catch (Exception e) {
             LogUtil.log("VideoRenderApi => clearSurfaceGLES => " + e.getMessage());
-        }
-    }
-
-    /*************/
-
-    android.os.Handler[] mHandler = new android.os.Handler[1];
-
-    default void startUpdateProgress() {
-        try {
-            VideoKernelApi kernelApi = getKernel();
-            if (null == kernelApi)
-                throw new Exception("warning: null == kernelApi");
-            stopUpdateProgress();
-            mHandler[0] = new Handler(Looper.getMainLooper()) {
-                @Override
-                public void handleMessage(Message msg) {
-                    if (msg.what == 2345) {
-                        kernelApi.onUpdateProgress();
-                        mHandler[0].sendEmptyMessageDelayed(2345, 1000);
-                    }
-                }
-            };
-            mHandler[0].sendEmptyMessageDelayed(2345, 1000);
-            LogUtil.log("VideoRenderApi => startUpdateProgress => succ");
-        } catch (Exception e) {
-            LogUtil.log("VideoRenderApi => startUpdateProgress => Exception " + e.getMessage());
-        }
-    }
-
-    default void stopUpdateProgress() {
-        try {
-            if (null == mHandler[0])
-                throw new Exception("warning: null == mHandler[0]");
-            mHandler[0].removeMessages(2345);
-            mHandler[0] = null;
-            LogUtil.log("VideoRenderApi => stopUpdateProgress => succ");
-        } catch (Exception e) {
-            LogUtil.log("VideoRenderApi => stopUpdateProgress => Exception" + e.getMessage());
         }
     }
 }

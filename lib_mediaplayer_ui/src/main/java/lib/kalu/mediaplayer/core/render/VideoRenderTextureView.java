@@ -39,6 +39,12 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        startUpdateProgress();
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         stopUpdateProgress();

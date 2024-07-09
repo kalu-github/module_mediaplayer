@@ -38,6 +38,12 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        startUpdateProgress();
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         stopUpdateProgress();
@@ -77,7 +83,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
                  */
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
-                    LogUtil.log("VideoRenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
+//                    LogUtil.log("VideoRenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
                     setSurface(false);
                 }
 
