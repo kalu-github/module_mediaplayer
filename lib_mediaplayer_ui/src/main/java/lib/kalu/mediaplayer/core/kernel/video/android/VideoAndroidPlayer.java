@@ -430,13 +430,15 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public void onPrepared(MediaPlayer mp) {
             LogUtil.log("VideoAndroidPlayer => onPrepared =>");
-            start();
 
             // 解决部分盒子不回调 info code=3
             try {
                 startCheckPreparedPlaying(PlayerType.KernelType.ANDROID);
             } catch (Exception e) {
             }
+
+            // 播放
+            start();
         }
     };
 
