@@ -14,7 +14,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
  * @date: 2021-05-12 09:40
  */
 
-public interface VideoKernelApiHttpTimeout extends VideoKernelApiBase, VideoKernelApiEvent {
+public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelApiEvent {
 
     /***********/
 
@@ -28,40 +28,40 @@ public interface VideoKernelApiHttpTimeout extends VideoKernelApiBase, VideoKern
                 mHandlerPreparedPlaying[0] = new android.os.Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(@NonNull Message msg) {
-                        if (msg.what == 10001) {
-                            try {
-                                if (isPrepared())
-                                    throw new Exception("warning: mPrepared true");
-                                long position = getPosition();
-                                if (position > 0) {
-                                    setPrepared(true);
-                                    onEvent(kernelType, PlayerType.EventType.EVENT_LOADING_STOP);
-                                    long seek = getSeek();
-                                    if (seek <= 0) {
-                                        onEvent(kernelType, PlayerType.EventType.EVENT_VIDEO_START);
-                                    } else {
-                                        onEvent(kernelType, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
-                                        // 起播快进
-                                        onEvent(kernelType, PlayerType.EventType.EVENT_SEEK_PLAY_RECORD);
-                                        seekTo(seek);
-                                    }
+                        try {
+                            if (msg.what != 10001)
+                                throw new Exception("warning: msg.what != 10001");
+                            if (isPrepared())
+                                throw new Exception("warning: mPrepared true");
+                            long position = getPosition();
+                            if (position > 0) {
+                                setPrepared(true);
+                                onEvent(kernelType, PlayerType.EventType.EVENT_LOADING_STOP);
+                                long seek = getSeek();
+                                if (seek <= 0) {
+                                    onEvent(kernelType, PlayerType.EventType.EVENT_VIDEO_START);
                                 } else {
-                                    mHandlerPreparedPlaying[0].sendEmptyMessageDelayed(10001, 100);
+                                    onEvent(kernelType, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+                                    // 起播快进
+                                    onEvent(kernelType, PlayerType.EventType.EVENT_SEEK_PLAY_RECORD);
+                                    seekTo(seek);
                                 }
-
-                            } catch (Exception e) {
-                                LogUtil.log("VideoKernelApiHandler => startCheckPreparedPlaying => Exception " + e.getMessage());
-                            } finally {
-                                stopCheckPreparedPlaying();
+                            } else {
+                                mHandlerPreparedPlaying[0].sendEmptyMessageDelayed(10001, 1000);
                             }
+
+                        } catch (Exception e) {
+                            LogUtil.log("VideoKernelApiHandler => startCheckPreparedPlaying => Exception " + e.getMessage());
+                            stopCheckPreparedPlaying();
                         }
                     }
                 };
             }
             mHandlerPreparedPlaying[0].removeCallbacksAndMessages(null);
-            mHandlerPreparedPlaying[0].sendEmptyMessageDelayed(10001, 100);
+            mHandlerPreparedPlaying[0].sendEmptyMessageDelayed(10001, 1000);
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHttpTimeout => startCheckPreparedPlaying => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHandler => startCheckPreparedPlaying => " + e.getMessage());
+            stopCheckPreparedPlaying();
         }
     }
 
@@ -72,7 +72,7 @@ public interface VideoKernelApiHttpTimeout extends VideoKernelApiBase, VideoKern
                 mHandlerPreparedPlaying[0] = null;
             }
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHttpTimeout => stopCheckPreparedPlaying => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHandler => stopCheckPreparedPlaying => " + e.getMessage());
         }
     }
 
@@ -84,7 +84,6 @@ public interface VideoKernelApiHttpTimeout extends VideoKernelApiBase, VideoKern
         try {
             if (isPrepared())
                 throw new Exception("warning: isPrepared true");
-            long startMillis = System.currentTimeMillis();
             if (null == mHandlerConnectTimeout[0]) {
                 mHandlerConnectTimeout[0] = new android.os.Handler(Looper.getMainLooper()) {
                     @Override
@@ -93,31 +92,39 @@ public interface VideoKernelApiHttpTimeout extends VideoKernelApiBase, VideoKern
                             if (msg.what != 10002)
                                 throw new Exception("warning: msg.what != 10002");
                             boolean prepared = isPrepared();
-                            if (prepared) {
-                                stopCheckConnectTimeout();
-                            } else {
-                                long currentMillis = System.currentTimeMillis();
-                                if (currentMillis - startMillis >= timeout) {
-                                    // 1
-                                    stopCheckConnectTimeout();
-                                    // 2
-                                    onEvent(kernelType, PlayerType.EventType.EVENT_LOADING_STOP);
-                                    onEvent(kernelType, PlayerType.EventType.EVENT_ERROR_NET);
-                                    getPlayerApi().stop(true, false);
-                                } else {
-                                    mHandlerConnectTimeout[0].sendEmptyMessageDelayed(10002, 1000);
-                                }
+                            if (prepared)
+                                throw new Exception("warning: prepared true");
+                            long start = (long) msg.obj;
+                            long current = System.currentTimeMillis();
+                            // 超时
+                            if (current - start >= timeout) {
+                                onEvent(kernelType, PlayerType.EventType.EVENT_LOADING_STOP);
+                                onEvent(kernelType, PlayerType.EventType.EVENT_ERROR_NET);
+                                getPlayerApi().stop(true, false);
+                                throw new Exception("warning: connect timeout");
+                            }
+                            // 轮询
+                            else {
+                                Message message = Message.obtain();
+                                message.what = 10002;
+                                message.obj = System.currentTimeMillis();
+                                mHandlerConnectTimeout[0].sendMessageDelayed(message, 1000);
                             }
                         } catch (Exception e) {
                             LogUtil.log("VideoKernelApiCheck => startCheckConnectTimeout => " + e.getMessage());
+                            stopCheckConnectTimeout();
                         }
                     }
                 };
             }
             mHandlerConnectTimeout[0].removeCallbacksAndMessages(null);
-            mHandlerConnectTimeout[0].sendEmptyMessageDelayed(10002, 1000);
+            Message message = Message.obtain();
+            message.what = 10002;
+            message.obj = System.currentTimeMillis();
+            mHandlerConnectTimeout[0].sendMessageDelayed(message, 1000);
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHttpTimeout => startCheckConnectTimeout => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHandler => startCheckConnectTimeout => " + e.getMessage());
+            stopCheckConnectTimeout();
         }
     }
 
@@ -128,7 +135,7 @@ public interface VideoKernelApiHttpTimeout extends VideoKernelApiBase, VideoKern
                 mHandlerConnectTimeout[0] = null;
             }
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHttpTimeout => stopCheckConnectTimeout => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHandler => stopCheckConnectTimeout => " + e.getMessage());
         }
     }
 
@@ -151,7 +158,6 @@ public interface VideoKernelApiHttpTimeout extends VideoKernelApiBase, VideoKern
                                 throw new Exception("warning: msg.what != 10003");
                             if (isPlaying())
                                 throw new Exception("warning: isPlaying true");
-
                             long currentMillis = System.currentTimeMillis();
                             if (currentMillis - startMillis >= timeout) {
                                 onEvent(kernelType, PlayerType.EventType.EVENT_ERROR_BUFFERING_TIMEOUT);
@@ -161,8 +167,6 @@ public interface VideoKernelApiHttpTimeout extends VideoKernelApiBase, VideoKern
                                 getPlayerApi().stop(true, true);
                                 if (!bufferingTimeoutRetry)
                                     throw new Exception("warning: bufferingTimeoutRetry false");
-
-
                                 boolean live = isLive();
                                 if (live) {
                                     getPlayerApi().restart();
@@ -173,18 +177,26 @@ public interface VideoKernelApiHttpTimeout extends VideoKernelApiBase, VideoKern
                                     getPlayerApi().restart(max, true);
                                 }
                             } else {
-                                mHandlerBufferingTimeout[0].sendEmptyMessageDelayed(10003, 1000);
+                                Message message = Message.obtain();
+                                message.what = 10003;
+                                message.obj = System.currentTimeMillis();
+                                mHandlerBufferingTimeout[0].sendMessageDelayed(message, 1000);
                             }
                         } catch (Exception e) {
                             LogUtil.log("VideoKernelApiCheck => startCheckBufferingTimeout => " + e.getMessage());
+                            stopCheckBufferingTimeout();
                         }
                     }
                 };
             }
             mHandlerBufferingTimeout[0].removeCallbacksAndMessages(null);
-            mHandlerBufferingTimeout[0].sendEmptyMessageDelayed(10003, timeout);
+            Message message = Message.obtain();
+            message.what = 10003;
+            message.obj = System.currentTimeMillis();
+            mHandlerBufferingTimeout[0].sendMessageDelayed(message, 1000);
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHttpTimeout => startCheckBufferingTimeout => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHandler => startCheckBufferingTimeout => " + e.getMessage());
+            stopCheckBufferingTimeout();
         }
     }
 
@@ -195,7 +207,7 @@ public interface VideoKernelApiHttpTimeout extends VideoKernelApiBase, VideoKern
                 mHandlerBufferingTimeout[0] = null;
             }
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHttpTimeout => stopCheckBufferingTimeout => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHandler => stopCheckBufferingTimeout => " + e.getMessage());
         }
     }
 }

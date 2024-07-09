@@ -13,7 +13,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
  * @date: 2021-05-12 09:40
  */
 
-public interface VideoKernelApi extends VideoKernelApiHttpTimeout, VideoKernelApiBase, VideoKernelApiEvent {
+public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBase, VideoKernelApiEvent {
 
     void onUpdateProgress();
 
@@ -44,7 +44,7 @@ public interface VideoKernelApi extends VideoKernelApiHttpTimeout, VideoKernelAp
         mPrepared[0] = false;
         mIjkMediaCodec[0] = true;
         mShowNetSpeed[0] = false;
-        stopCheckPreparedPlaying();
+//        stopCheckPreparedPlaying();
         stopCheckConnectTimeout();
         stopCheckBufferingTimeout();
     }
@@ -89,9 +89,13 @@ public interface VideoKernelApi extends VideoKernelApiHttpTimeout, VideoKernelAp
         } catch (Exception e) {
         }
 
-        stopCheckPreparedPlaying();
-        int kernelType = args.getKernelType();
-        startCheckPreparedPlaying(kernelType);
+        // 网络超时
+        try {
+            int type = args.getKernelType();
+            long connectTimeout = args.getConnectTimout();
+            startCheckConnectTimeout(type, connectTimeout);
+        } catch (Exception e) {
+        }
 
         initOptions(context, args);
         startDecoder(context, args);

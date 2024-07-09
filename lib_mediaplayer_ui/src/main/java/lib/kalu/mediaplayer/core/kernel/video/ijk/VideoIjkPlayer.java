@@ -108,15 +108,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         } catch (Exception e) {
         }
 
-        // 拉流超时
-        try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
-            long connectTimeout = args.getConnectTimout();
-            startCheckConnectTimeout(isIjkMediaCodec() ? PlayerType.KernelType.IJK_MEDIACODEC : PlayerType.KernelType.IJK, connectTimeout);
-        } catch (Exception e) {
-        }
-
         // ijk options
         try {
             if (null == mIjkPlayer)

@@ -85,15 +85,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     @Override
     public void initOptions(Context context, StartArgs args) {
-        // 拉流超时
-        try {
-            if (null == mMediaPlayer)
-                throw new Exception("mMediaPlayer error: null");
-            long connectTimeout = args.getConnectTimout();
-            startCheckConnectTimeout(PlayerType.KernelType.ANDROID, connectTimeout);
-        } catch (Exception e) {
-            LogUtil.log("VideoAndroidPlayer => initOptions => " + e.getMessage());
-        }
     }
 
     /**
@@ -440,6 +431,12 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         public void onPrepared(MediaPlayer mp) {
             LogUtil.log("VideoAndroidPlayer => onPrepared =>");
             start();
+
+            // 解决部分盒子不回调 info code=3
+            try {
+                startCheckPreparedPlaying(PlayerType.KernelType.ANDROID);
+            } catch (Exception e) {
+            }
         }
     };
 
