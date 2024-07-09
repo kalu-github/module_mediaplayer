@@ -50,17 +50,6 @@ public class MainActivity extends Activity {
         });
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            Toast.makeText(getApplication(), "dialog_show", Toast.LENGTH_SHORT).show();
-            MainDialog mainDialog = new MainDialog(this);
-            mainDialog.show();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     private void initAudio() {
 //        PlayerManager.getInstance()
 //                .setLog(true)
