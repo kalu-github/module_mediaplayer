@@ -80,8 +80,8 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setSupportViewLifecycle(boolean v) {
-        mPlayerBuilder.setSupportViewLifecycle(v);
+    public PlayerSDK setSupportAutoRelease(boolean v) {
+        mPlayerBuilder.setSupportAutoRelease(v);
         return this;
     }
 

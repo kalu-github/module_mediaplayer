@@ -14,7 +14,7 @@ public final class PlayerArgs {
 
     private boolean log;// 日志log
     private boolean initRelease;
-    private boolean supportViewLifecycle;
+    private boolean supportAutoRelease; // 自动销毁
     private int connectTimeout;
     private boolean bufferingTimeoutRetry;
     @PlayerType.KernelType.Value
@@ -81,8 +81,8 @@ public final class PlayerArgs {
         return initRelease;
     }
 
-    public boolean isSupportViewLifecycle() {
-        return supportViewLifecycle;
+    public boolean isSupportAutoRelease() {
+        return supportAutoRelease;
     }
 
     public int getExtrAudioKernel() {
@@ -127,7 +127,7 @@ public final class PlayerArgs {
     private PlayerArgs(Builder builder) {
         log = builder.log;
         initRelease = builder.initRelease;
-        supportViewLifecycle = builder.supportViewLifecycle;
+        supportAutoRelease = builder.supportAutoRelease;
         connectTimeout = builder.connectTimeout;
         bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         externalAudioKernel = builder.externalAudioKernel;
@@ -151,7 +151,7 @@ public final class PlayerArgs {
         Builder builder = new Builder();
         builder.setLog(this.log);
         builder.setInitRelease(this.initRelease);
-        builder.setSupportViewLifecycle(this.supportViewLifecycle);
+        builder.setSupportAutoRelease(this.supportAutoRelease);
         builder.setConnectTimeout(this.connectTimeout);
         builder.setBufferingTimeoutRetry(this.bufferingTimeoutRetry);
         builder.setExternalAudioKernel(this.externalAudioKernel);
@@ -177,7 +177,7 @@ public final class PlayerArgs {
 
         private boolean log = false;// 日志log
         private boolean initRelease = false;
-        private boolean supportViewLifecycle = true;
+        private boolean supportAutoRelease = true;
         private int connectTimeout = 10 * 1000;  // 连接超时
         private boolean bufferingTimeoutRetry = false; // 缓冲失败重试
         @PlayerType.KernelType.Value
@@ -258,8 +258,8 @@ public final class PlayerArgs {
             initRelease = v;
             return this;
         }
-        public Builder setSupportViewLifecycle(boolean v) {
-            supportViewLifecycle = v;
+        public Builder setSupportAutoRelease(boolean v) {
+            supportAutoRelease = v;
             return this;
         }
 

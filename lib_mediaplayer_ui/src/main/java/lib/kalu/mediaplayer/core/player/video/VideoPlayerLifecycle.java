@@ -22,9 +22,9 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             StartArgs tags = getTags();
             if (null == tags)
                 throw new Exception("warning: tags null");
-            boolean supportViewLifecycle = tags.isSupportViewLifecycle();
-            if (!supportViewLifecycle)
-                throw new Exception("warning: supportViewLifecycle false");
+            boolean supportAutoRelease = tags.isSupportAutoRelease();
+            if (!supportAutoRelease)
+                throw new Exception("warning: supportAutoRelease false");
             String mediaUrl = tags.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
@@ -49,9 +49,9 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             StartArgs tags = getTags();
             if (null == tags)
                 throw new Exception("warning: tags null");
-            boolean supportViewLifecycle = tags.isSupportViewLifecycle();
-            if (!supportViewLifecycle)
-                throw new Exception("warning: supportViewLifecycle false");
+            boolean supportAutoRelease = tags.isSupportAutoRelease();
+            if (!supportAutoRelease)
+                throw new Exception("warning: supportAutoRelease false");
             String mediaUrl = tags.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
@@ -75,9 +75,9 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             StartArgs tags = getTags();
             if (null == tags)
                 throw new Exception("warning: tags null");
-            boolean supportViewLifecycle = tags.isSupportViewLifecycle();
-            if (!supportViewLifecycle)
-                throw new Exception("warning: supportViewLifecycle false");
+            boolean supportAutoRelease = tags.isSupportAutoRelease();
+            if (!supportAutoRelease)
+                throw new Exception("warning: supportAutoRelease false");
             // show
             if (visibility == View.VISIBLE) {
                 resume(false);

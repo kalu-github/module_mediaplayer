@@ -84,10 +84,10 @@ public class StartArgs {
     }
 
     // View生命周期, 自动暂停&续播&销毁...
-    private boolean supportViewLifecycle;
+    private boolean supportAutoRelease;
 
-    public boolean isSupportViewLifecycle() {
-        return supportViewLifecycle;
+    public boolean isSupportAutoRelease() {
+        return supportAutoRelease;
     }
 
     // 视频url
@@ -173,6 +173,7 @@ public class StartArgs {
     public boolean isShowNetSpeed() {
         return showNetSpeed;
     }
+
     // 透传数据
     private JSONObject extra;
 
@@ -194,7 +195,7 @@ public class StartArgs {
                 ", log=" + log +
                 ", bufferingTimeoutRetry=" + bufferingTimeoutRetry +
                 ", initRelease=" + initRelease +
-                ", supportViewLifecycle=" + supportViewLifecycle +
+                ", supportAutoRelease=" + supportAutoRelease +
                 ", url='" + url + '\'' +
                 ", title='" + title + '\'' +
                 ", subtitleUrl='" + subtitleUrl + '\'' +
@@ -223,7 +224,7 @@ public class StartArgs {
         this.log = builder.log;
         this.bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         this.initRelease = builder.initRelease;
-        this.supportViewLifecycle = builder.supportViewLifecycle;
+        this.supportAutoRelease = builder.supportAutoRelease;
         this.url = builder.url;
         this.title = builder.title;
         this.subtitleUrl = builder.subtitleUrl;
@@ -252,7 +253,7 @@ public class StartArgs {
         builder.log = log;
         builder.bufferingTimeoutRetry = bufferingTimeoutRetry;
         builder.initRelease = initRelease;
-        builder.supportViewLifecycle = supportViewLifecycle;
+        builder.supportAutoRelease = supportAutoRelease;
         builder.url = url;
         builder.title = title;
         builder.subtitleUrl = subtitleUrl;
@@ -293,23 +294,28 @@ public class StartArgs {
         private boolean bufferingTimeoutRetry = playerArgs.getBufferingTimeoutRetry();
         // 开始播放前，是否销毁已存在的播放器相关实例
         private boolean initRelease = playerArgs.isInitRelease();
-        // View生命周期, 自动暂停&续播&销毁...
-        private boolean supportViewLifecycle = playerArgs.isSupportViewLifecycle();
 
+        // 自动暂停&续播&销毁...
+        private boolean supportAutoRelease = playerArgs.isSupportAutoRelease();
+
+        public Builder setSupportAutoRelease(boolean v) {
+            this.supportAutoRelease = v;
+            return this;
+        }
 
         // 视频url
         private String url;
 
-        public Builder setUrl(String url) {
-            this.url = url;
+        public Builder setUrl(String v) {
+            this.url = v;
             return this;
         }
 
         // 视频title
         private String title;
 
-        public Builder setTitle(String title) {
-            this.title = title;
+        public Builder setTitle(String v) {
+            this.title = v;
             return this;
         }
 
