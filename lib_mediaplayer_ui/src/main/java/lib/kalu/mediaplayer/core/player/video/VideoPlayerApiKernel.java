@@ -99,7 +99,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 7
             setKernelEvent(args);
             // 8
-            startDecoder(args);
+            initDecoder(args);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());
         }
@@ -337,13 +337,27 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     /*********************/
 
+    default void initDecoder(StartArgs args) {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            kernel.initDecoder(getBaseContext(), args);
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => initDecoder => " + e.getMessage());
+        }
+    }
+
     default void stopKernel(boolean callEvent, boolean clearTag) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
             // 埋点
-            onBuriedStop();
+            boolean prepared = isPrepared();
+            if (prepared) {
+                onBuriedStop();
+            }
             // 执行
             kernel.stop();
             // 数据
@@ -404,17 +418,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             }
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => resumeKernel => " + e.getMessage());
-        }
-    }
-
-    default void startDecoder(StartArgs args) {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
-            kernel.initDecoder(getBaseContext(), args);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => startDecoder => " + e.getMessage());
         }
     }
 
