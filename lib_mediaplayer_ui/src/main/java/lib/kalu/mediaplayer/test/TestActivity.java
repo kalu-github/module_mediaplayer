@@ -52,6 +52,7 @@ public final class TestActivity extends Activity {
 
     public static final String INTENT_DATA = "intent_data"; // 外部传入DATA
 
+    public static final String INTENT_EPISODE = "intent_episode"; // 选集
     public static final String INTENT_URL = "intent_url"; // 视频Url
 
     public static final String INTENT_SRT = "intent_srt"; // 字幕Url
@@ -168,7 +169,6 @@ public final class TestActivity extends Activity {
         LinkedList<ComponentApi> componentApis = new LinkedList<>();
         // menu
         ComponentMenu menu = new ComponentMenu(getApplicationContext());
-        menu.setItemsData(64, 66);
         componentApis.add(menu);
         // loading
         ComponentLoadingGradient loading = new ComponentLoadingGradient(getApplicationContext());
@@ -338,6 +338,15 @@ public final class TestActivity extends Activity {
             builder.setSeek(33000L);
         } else {
             builder.setSeek(0L);
+        }
+
+        boolean episode = getIntent().getBooleanExtra(INTENT_EPISODE, false);
+        if (episode) {
+            builder.setEpisodePlaying(64);
+            builder.setEpisodeCount(66);
+        } else {
+            builder.setEpisodePlaying(-1);
+            builder.setEpisodeCount(-1);
         }
 
         builder.setLive(live);

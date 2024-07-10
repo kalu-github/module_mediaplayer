@@ -174,6 +174,20 @@ public class StartArgs {
         return extra;
     }
 
+    // 多剧集 选中
+    private int episodePlaying = -1;
+
+    public int getEpisodePlaying() {
+        return episodePlaying;
+    }
+
+    // 多剧集 总数
+    private int episodeCount = -1;
+
+    public int getEpisodeCount() {
+        return episodeCount;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
@@ -201,6 +215,8 @@ public class StartArgs {
                 ", playWhenReady=" + playWhenReady +
                 ", prepareAsync=" + prepareAsync +
                 ", extra=" + extra +
+                ", episodePlaying=" + episodePlaying +
+                ", episodeCount=" + episodeCount +
                 '}';
     }
 
@@ -229,6 +245,8 @@ public class StartArgs {
         this.playWhenReady = builder.playWhenReady;
         this.prepareAsync = builder.prepareAsync;
         this.extra = builder.extra;
+        this.episodePlaying = builder.episodePlaying;
+        this.episodeCount = builder.episodeCount;
     }
 
     public Builder newBuilder() {
@@ -257,6 +275,8 @@ public class StartArgs {
         builder.playWhenReady = playWhenReady;
         builder.prepareAsync = prepareAsync;
         builder.extra = extra;
+        builder.episodePlaying = episodePlaying;
+        builder.episodeCount = episodeCount;
         return builder;
     }
 
@@ -386,6 +406,22 @@ public class StartArgs {
 
         public Builder setExtra(JSONObject v) {
             this.extra = v;
+            return this;
+        }
+
+        // 多剧集 选中
+        private int episodePlaying = -1;
+
+        public Builder setEpisodePlaying(int v) {
+            this.episodePlaying = v;
+            return this;
+        }
+
+        // 多剧集 总数
+        private int episodeCount = -1;
+
+        public Builder setEpisodeCount(int v) {
+            this.episodeCount = v;
             return this;
         }
 

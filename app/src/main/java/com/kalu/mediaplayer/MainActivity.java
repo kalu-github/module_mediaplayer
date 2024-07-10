@@ -45,6 +45,7 @@ public class MainActivity extends Activity {
                 intent.putExtra(TestActivity.INTENT_LIVE, isLive());
                 intent.putExtra(TestActivity.INTENT_SEEK, isSeek());
                 intent.putExtra(TestActivity.INTENT_TRY_SEE, isTrySee());
+                intent.putExtra(TestActivity.INTENT_EPISODE, isEpisode());
                 startActivity(intent);
             }
         });
@@ -68,6 +69,11 @@ public class MainActivity extends Activity {
     private boolean isSeek() {
         RadioGroup radioGroup = findViewById(R.id.main_seek);
         return R.id.main_seek_yes == radioGroup.getCheckedRadioButtonId();
+    }
+
+    private boolean isEpisode() {
+        RadioGroup radioGroup = findViewById(R.id.main_episode);
+        return R.id.main_episode_yes == radioGroup.getCheckedRadioButtonId();
     }
 
     private boolean isTrySee() {

@@ -3,9 +3,14 @@ package lib.kalu.mediaplayer.core.component;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 
+import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
@@ -17,16 +22,46 @@ public interface ComponentApiMenu extends ComponentApi {
         return true;
     }
 
-    default void setItemsData(int checkedPos, int count) {
+    default int getEpisodeCount() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("error: playerView null");
+            StartArgs tags = playerView.getTags();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            int episodeCount = tags.getEpisodeCount();
+            if (episodeCount <= 0)
+                throw new Exception("warning: episodeCount " + episodeCount);
+            return episodeCount;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeCount => " + e.getMessage());
+            return -1;
+        }
     }
 
-    default void setItemsChecked(int checkedPos) {
+    default int getEpisodePlaying() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("error: playerView null");
+            StartArgs tags = playerView.getTags();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            int episodePlaying = tags.getEpisodePlaying();
+            if (episodePlaying < 0)
+                throw new Exception("warning: episodePlaying " + episodePlaying);
+            return episodePlaying;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodePlaying => " + e.getMessage());
+            return -1;
+        }
     }
 
     default void scrollNextItem(int action) {
     }
 
-    default void updateTabUI(boolean isFromUser) {
+    default void updateTabCheckedChange(boolean requestFocus) {
     }
 
     default void updateTabChecked(int id) {
@@ -42,45 +77,6 @@ public interface ComponentApiMenu extends ComponentApi {
     default void toggleEpisode(int focusId) {
 
     }
-
-//    boolean[] mComponentPauseShowing = new boolean[]{false};
-//
-//    default void checkComponentPause1() {
-//        try {
-//            PlayerView playerView = getPlayerView();
-//            if (null == playerView)
-//                throw new Exception("error: null == playerView");
-//            ComponentApi component = playerView.findComponent(ComponentApiPause.class);
-//            if (null == component)
-//                throw new Exception("error: null == component");
-//            boolean componentShowing = component.isComponentShowing();
-//            LogUtil.log("ComponentApiMenu => checkComponentPause1 => componentShowing = " + componentShowing);
-//            if (!componentShowing)
-//                throw new Exception("warning: componentShowing false");
-//            mComponentPauseShowing[0] = true;
-//            component.hide();
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentApiMenu => checkComponentPause1 => " + e.getMessage());
-//        }
-//    }
-//
-//    default void checkComponentPause2() {
-//        try {
-//            LogUtil.log("ComponentApiMenu => checkComponentPause1 => mComponentPauseShowing[0] = " + mComponentPauseShowing[0]);
-//            if (!mComponentPauseShowing[0])
-//                throw new Exception("warning: mComponentPauseShowing[0] false");
-//            mComponentPauseShowing[0] = false;
-//            PlayerView playerView = getPlayerView();
-//            if (null == playerView)
-//                throw new Exception("error: null == playerView");
-//            ComponentApi component = playerView.findComponent(ComponentApiPause.class);
-//            if (null == component)
-//                throw new Exception("error: null == component");
-//            component.show();
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentApiMenu => checkComponentPause2 => " + e.getMessage());
-//        }
-//    }
 
     default void callEpisodeClickListener(int pos) {
         try {
