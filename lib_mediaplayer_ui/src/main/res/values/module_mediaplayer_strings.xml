@@ -9,6 +9,6 @@
     <string name="module_mediaplayer_string_init">初始化</string>
     <string name="module_mediaplayer_string_try">试看1分钟</string>
     <string name="module_mediaplayer_string_load">加载中...</string>
-    <string name="module_mediaplayer_string_play_record">上次观看至%1$s, 按【左键】从头播放</string>
+    <string name="module_mediaplayer_string_play_record">上次观看至%1$s, 长按【左键】从头播放</string>
 
 </resources>

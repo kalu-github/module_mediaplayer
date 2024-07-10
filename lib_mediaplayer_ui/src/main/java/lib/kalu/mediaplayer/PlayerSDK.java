@@ -131,7 +131,7 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setKeycosetWarningPlayInfoRecorddeApi(boolean v) {
+    public PlayerSDK setWarningPlayInfoRecord(boolean v) {
         mPlayerBuilder.setWarningPlayInfoRecord(v);
         return this;
     }
