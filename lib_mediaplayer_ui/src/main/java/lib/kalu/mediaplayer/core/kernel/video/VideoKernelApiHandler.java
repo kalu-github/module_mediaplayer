@@ -163,7 +163,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
     default void startCheckBufferingTimeout(@PlayerType.KernelType.Value int kernelType, boolean bufferingTimeoutRetry, long timeout) {
         try {
-            if (isPlaying())
+            if (isPrepared())
                 throw new Exception("warning: isPlaying true");
             if (null == mHandlerBufferingTimeout[0]) {
                 mHandlerBufferingTimeout[0] = new android.os.Handler(Looper.getMainLooper()) {
@@ -171,20 +171,16 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     public void handleMessage(@NonNull Message msg) {
 
                         try {
+                            if (isPrepared())
+                                throw new Exception("warning: isPrepared true");
                             if (msg.what != 10003)
                                 throw new Exception("warning: msg.what != 10003");
-                            if (isPlaying())
-                                throw new Exception("warning: isPlaying true");
-                            long[] objs = (long[]) msg.obj;
-                            long position = objs[0];
-                            long start = objs[1];
+                            long start = (long) msg.obj;
                             long current = System.currentTimeMillis();
-                            long newPosition = getPosition();
-
-                            float value = (newPosition - position) / 1000f;
+                            float cast = current - start;
 
                             // 超时
-                            if (value <= 0F && (current - start >= timeout)) {
+                            if (cast >= timeout) {
                                 onEvent(kernelType, PlayerType.EventType.EVENT_ERROR_BUFFERING_TIMEOUT);
                                 // 1
                                 stopCheckBufferingTimeout();
@@ -197,21 +193,18 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                                     getPlayerApi().restart();
                                 } else {
                                     long seek = getSeek();
-                                    long max = Math.max(newPosition, seek);
+                                    long position = getPosition();
+                                    long max = Math.max(position, seek);
                                     getPlayerApi().restart(max, true);
                                 }
                             }
                             // 轮询
-                            else if (value <= 0F) {
-                                LogUtil.log("VideoKernelApiHandler => startCheckBufferingTimeout => loop next");
+                            else {
+                                LogUtil.log("VideoKernelApiHandler => startCheckBufferingTimeout => loop next, cast = " + cast);
                                 Message message = Message.obtain();
                                 message.what = 10003;
-                                message.obj = new long[]{position, System.currentTimeMillis()};
+                                message.obj = System.currentTimeMillis();
                                 mHandlerBufferingTimeout[0].sendMessageDelayed(message, 1000);
-                            }
-                            // 缓冲开播
-                            else {
-                                LogUtil.log("VideoKernelApiHandler => startCheckBufferingTimeout => loop complete, current playing");
                             }
                         } catch (Exception e) {
                             LogUtil.log("VideoKernelApiHandler => startCheckBufferingTimeout => " + e.getMessage());
@@ -224,11 +217,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 throw new Exception("warning: hasMessages 10003");
             Message message = Message.obtain();
             message.what = 10003;
-            long position = getPosition();
-            if (position < 0) {
-                position = 0L;
-            }
-            message.obj = new long[]{position, System.currentTimeMillis()};
+            message.obj = System.currentTimeMillis();
             mHandlerBufferingTimeout[0].sendMessageDelayed(message, 1000);
         } catch (
                 Exception e) {
