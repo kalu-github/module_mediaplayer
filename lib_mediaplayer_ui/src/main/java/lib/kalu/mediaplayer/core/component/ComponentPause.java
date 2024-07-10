@@ -41,6 +41,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                 boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
                 if (bufferingShowing)
                     throw new Exception("warning: ComponentApiBuffering true");
+                boolean seekShowing = isComponentShowing(ComponentApiSeek.class);
+                if (seekShowing)
+                    throw new Exception("warning: ComponentApiSeek true");
                 toggle();
                 return true;
             } catch (Exception e) {
