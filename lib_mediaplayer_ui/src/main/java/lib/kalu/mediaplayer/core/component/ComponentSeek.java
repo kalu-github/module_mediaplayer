@@ -33,8 +33,10 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             StartArgs tags = getPlayerView().getTags();
             boolean trySee = tags.isTrySee();
             if (trySee)
-                return false;
+                throw new Exception("warning: trySee true");
         } catch (Exception e) {
+            LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception1 " + e.getMessage());
+            return false;
         }
 
         // seekForward => start
@@ -50,14 +52,19 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_RIGHT);
                 return true;
             } catch (Exception e) {
+                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception2 " + e.getMessage());
             }
         }
         // seekForward => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            boolean isShowing = isComponentShowing(ComponentApiMenu.class);
-            if (!isShowing) {
+            try {
+                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
+                if (menuShowing)
+                    throw new Exception("warning: ComponentApiMenu true");
                 startDelayedMsg(KeyEvent.KEYCODE_DPAD_RIGHT);
                 return true;
+            } catch (Exception e) {
+                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception3 " + e.getMessage());
             }
         }
         // seekRewind => start
@@ -73,17 +80,21 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_LEFT);
                 return true;
             } catch (Exception e) {
+                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception4 " + e.getMessage());
             }
         }
         // seekRewind => stop
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            boolean isShowing = isComponentShowing(ComponentApiMenu.class);
-            if (!isShowing) {
+            try {
+                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
+                if (menuShowing)
+                    throw new Exception("warning: ComponentApiMenu true");
                 startDelayedMsg(KeyEvent.KEYCODE_DPAD_LEFT);
                 return true;
+            } catch (Exception e) {
+                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception5 " + e.getMessage());
             }
         }
-
         return false;
     }
 
