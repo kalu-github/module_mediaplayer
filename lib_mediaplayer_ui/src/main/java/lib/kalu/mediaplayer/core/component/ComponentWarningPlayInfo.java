@@ -80,6 +80,27 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     public void show() {
         ComponentApi.super.show();
 
+        // 播放记录提示
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("error: playerView null");
+            StartArgs tags = playerView.getTags();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            boolean warningPlayInfoRecord = tags.isWarningPlayInfoRecord();
+            if(!warningPlayInfoRecord)
+                throw new Exception("warning: warningPlayInfoRecord false");
+            long seek = tags.getSeek();
+            if(seek<=0)
+                throw new Exception("warning: seek <=0");
+            String millis = TimeUtil.formatTimeMillis(seek);
+            String string = getResources().getString(R.string.module_mediaplayer_string_play_record, millis);
+            TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_record);
+            textView.setText(string);
+        } catch (Exception e) {
+        }
+
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -117,6 +138,13 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     @Override
     public void hide() {
         ComponentApi.super.hide();
+
+        // 播放记录提示
+        try {
+            TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_record);
+            textView.setText("");
+        } catch (Exception e) {
+        }
 
         try {
             ViewGroup viewGroup = (ViewGroup) getParent();

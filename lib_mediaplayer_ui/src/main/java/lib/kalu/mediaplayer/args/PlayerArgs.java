@@ -41,6 +41,13 @@ public final class PlayerArgs {
     private int exoCacheMax = 0;
     private String exoCacheDir = null;
 
+    // 播放记录
+    private boolean warningPlayInfoRecord = false;
+
+    public boolean isWarningPlayInfoRecord() {
+        return warningPlayInfoRecord;
+    }
+
     public boolean isExoUseOkhttp() {
         return exoUseOkhttp;
     }
@@ -145,6 +152,7 @@ public final class PlayerArgs {
         exoCacheType = builder.exoCacheType;
         exoCacheDir = builder.exoCacheDir;
         exoCacheMax = builder.exoCacheMax;
+        warningPlayInfoRecord = builder.warningPlayInfoRecord;
     }
 
     public Builder newBuilder() {
@@ -169,6 +177,7 @@ public final class PlayerArgs {
         builder.setExoCacheType(this.exoCacheType);
         builder.setExoCacheDir(this.exoCacheDir);
         builder.setExoCacheMax(this.exoCacheMax);
+        builder.setWarningPlayInfoRecord(this.warningPlayInfoRecord);
         return builder;
     }
 
@@ -207,6 +216,14 @@ public final class PlayerArgs {
         private int exoCacheMax = 0;
         private String exoCacheDir = null;
         private boolean exoUseOkhttp = true;
+
+        // 播放记录
+        private boolean warningPlayInfoRecord = false;
+
+        public Builder setWarningPlayInfoRecord(boolean v) {
+            warningPlayInfoRecord = v;
+            return this;
+        }
 
 
         public Builder setConnectTimeout(int v) {

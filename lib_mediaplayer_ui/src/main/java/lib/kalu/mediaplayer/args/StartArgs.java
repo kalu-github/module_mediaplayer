@@ -181,6 +181,13 @@ public class StartArgs {
         return extra;
     }
 
+    // 提示播放记录
+    private boolean warningPlayInfoRecord = false;
+
+    public boolean isWarningPlayInfoRecord() {
+        return warningPlayInfoRecord;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
@@ -209,6 +216,7 @@ public class StartArgs {
                 ", prepareAsync=" + prepareAsync +
                 ", showNetSpeed=" + showNetSpeed +
                 ", extra=" + extra +
+                ", warningPlayInfoRecord=" + warningPlayInfoRecord +
                 '}';
     }
 
@@ -238,6 +246,7 @@ public class StartArgs {
         this.prepareAsync = builder.prepareAsync;
         this.showNetSpeed = builder.showNetSpeed;
         this.extra = builder.extra;
+        this.warningPlayInfoRecord = builder.warningPlayInfoRecord;
     }
 
     public Builder newBuilder() {
@@ -267,6 +276,7 @@ public class StartArgs {
         builder.prepareAsync = prepareAsync;
         builder.showNetSpeed = showNetSpeed;
         builder.extra = extra;
+        builder.warningPlayInfoRecord = warningPlayInfoRecord;
         return builder;
     }
 
@@ -297,6 +307,13 @@ public class StartArgs {
 
         // 自动暂停&续播&销毁...
         private boolean supportAutoRelease = playerArgs.isSupportAutoRelease();
+        // 提示播放记录
+        private boolean warningPlayInfoRecord = playerArgs.isWarningPlayInfoRecord();
+
+        public Builder setWarningPlayInfoRecord(boolean v) {
+            this.warningPlayInfoRecord = v;
+            return this;
+        }
 
         public Builder setSupportAutoRelease(boolean v) {
             this.supportAutoRelease = v;

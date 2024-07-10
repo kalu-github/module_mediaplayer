@@ -17,7 +17,6 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.component.ComponentLoadingGradient;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
-import lib.kalu.mediaplayer.core.component.ComponentWarningPlayRecord;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
@@ -196,9 +195,6 @@ public final class TestActivity extends Activity {
         // try
         ComponentTrySee trys = new ComponentTrySee(getApplicationContext());
         componentApis.add(trys);
-        // 续播
-        ComponentWarningPlayRecord playRecord = new ComponentWarningPlayRecord(getApplicationContext());
-        componentApis.add(playRecord);
         // 起播详情
         ComponentWarningPlayInfo info = new ComponentWarningPlayInfo(getApplicationContext());
         componentApis.add(info);

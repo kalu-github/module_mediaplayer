@@ -121,13 +121,18 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setBuriedEvent(BuriedEvent buriedEvent) {
-        mPlayerBuilder.setBuriedEvent(buriedEvent);
+    public PlayerSDK setBuriedEvent(BuriedEvent v) {
+        mPlayerBuilder.setBuriedEvent(v);
         return this;
     }
 
-    public PlayerSDK setKeycodeApi(KeycodeApi keycodeApi) {
-        mPlayerBuilder.setKeycodeApi(keycodeApi);
+    public PlayerSDK setKeycodeApi(KeycodeApi v) {
+        mPlayerBuilder.setKeycodeApi(v);
+        return this;
+    }
+
+    public PlayerSDK setKeycosetWarningPlayInfoRecorddeApi(boolean v) {
+        mPlayerBuilder.setWarningPlayInfoRecord(v);
         return this;
     }
 
