@@ -17,6 +17,7 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
     public ComponentLoadingGradient(Context context) {
         super(context);
         inflate();
+        setComponentShowNetSpeed(false);
     }
 
     @Override
@@ -44,9 +45,8 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
-
         // 网速
-        updateComponentNetSpeed();
+        updateNetSpeed();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
         }
 
         // 网速
-        updateComponentNetSpeed();
+        updateNetSpeed();
     }
 
     @Override

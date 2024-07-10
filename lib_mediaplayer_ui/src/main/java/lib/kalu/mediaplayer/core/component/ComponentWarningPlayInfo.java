@@ -24,6 +24,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     public ComponentWarningPlayInfo(Context context) {
         super(context);
         inflate();
+        setComponentShowPlayInfoRecord(false);
     }
 
     @Override
@@ -82,17 +83,17 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
         // 播放记录提示
         try {
+            boolean showWarningPlayInfoRecord = isShowWarningPlayInfoRecord();
+            if (!showWarningPlayInfoRecord)
+                throw new Exception("warning: showWarningPlayInfoRecord false");
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("error: playerView null");
             StartArgs tags = playerView.getTags();
             if (null == tags)
                 throw new Exception("error: tags null");
-            boolean warningPlayInfoRecord = tags.isWarningPlayInfoRecord();
-            if(!warningPlayInfoRecord)
-                throw new Exception("warning: warningPlayInfoRecord false");
             long seek = tags.getSeek();
-            if(seek<=0)
+            if (seek <= 0)
                 throw new Exception("warning: seek <=0");
             String millis = TimeUtil.formatTimeMillis(seek);
             String string = getResources().getString(R.string.module_mediaplayer_string_play_record, millis);

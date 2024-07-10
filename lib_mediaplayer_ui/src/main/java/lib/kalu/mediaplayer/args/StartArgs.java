@@ -167,25 +167,11 @@ public class StartArgs {
         return prepareAsync;
     }
 
-    // 显示网速
-    private boolean showNetSpeed = false;
-
-    public boolean isShowNetSpeed() {
-        return showNetSpeed;
-    }
-
     // 透传数据
     private JSONObject extra;
 
     public JSONObject getExtra() {
         return extra;
-    }
-
-    // 提示播放记录
-    private boolean warningPlayInfoRecord = false;
-
-    public boolean isWarningPlayInfoRecord() {
-        return warningPlayInfoRecord;
     }
 
     @Override
@@ -214,9 +200,7 @@ public class StartArgs {
                 ", mute=" + mute +
                 ", playWhenReady=" + playWhenReady +
                 ", prepareAsync=" + prepareAsync +
-                ", showNetSpeed=" + showNetSpeed +
                 ", extra=" + extra +
-                ", warningPlayInfoRecord=" + warningPlayInfoRecord +
                 '}';
     }
 
@@ -244,9 +228,7 @@ public class StartArgs {
         this.mute = builder.mute;
         this.playWhenReady = builder.playWhenReady;
         this.prepareAsync = builder.prepareAsync;
-        this.showNetSpeed = builder.showNetSpeed;
         this.extra = builder.extra;
-        this.warningPlayInfoRecord = builder.warningPlayInfoRecord;
     }
 
     public Builder newBuilder() {
@@ -274,9 +256,7 @@ public class StartArgs {
         builder.mute = mute;
         builder.playWhenReady = playWhenReady;
         builder.prepareAsync = prepareAsync;
-        builder.showNetSpeed = showNetSpeed;
         builder.extra = extra;
-        builder.warningPlayInfoRecord = warningPlayInfoRecord;
         return builder;
     }
 
@@ -307,13 +287,6 @@ public class StartArgs {
 
         // 自动暂停&续播&销毁...
         private boolean supportAutoRelease = playerArgs.isSupportAutoRelease();
-        // 提示播放记录
-        private boolean warningPlayInfoRecord = playerArgs.isWarningPlayInfoRecord();
-
-        public Builder setWarningPlayInfoRecord(boolean v) {
-            this.warningPlayInfoRecord = v;
-            return this;
-        }
 
         public Builder setSupportAutoRelease(boolean v) {
             this.supportAutoRelease = v;
@@ -405,14 +378,6 @@ public class StartArgs {
 
         public Builder setPrepareAsync(boolean prepareAsync) {
             this.prepareAsync = prepareAsync;
-            return this;
-        }
-
-        // 显示网速
-        private boolean showNetSpeed = false;
-
-        public Builder setShowNetSpeed(boolean showNetSpeed) {
-            this.showNetSpeed = showNetSpeed;
             return this;
         }
 

@@ -18,17 +18,6 @@ interface VideoKernelApiBase {
 
     /*********/
 
-    boolean[] mShowNetSpeed = new boolean[]{false};
-
-    default void setShowNetSpeed(boolean v) {
-        mShowNetSpeed[0] = v;
-    }
-
-    default boolean isShowNetSpeed() {
-        return mShowNetSpeed[0];
-    }
-
-    /*********/
     String[] mSubtitleUrl = new String[]{null};
 
     default void setSubtitleUrl(String v) {

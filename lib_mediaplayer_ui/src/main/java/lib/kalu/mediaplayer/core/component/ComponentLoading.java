@@ -18,6 +18,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApiLoad
     public ComponentLoading(Context context) {
         super(context);
         inflate();
+        setComponentShowNetSpeed(false);
     }
 
     @Override
@@ -45,7 +46,8 @@ public class ComponentLoading extends RelativeLayout implements ComponentApiLoad
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
-        updateComponentNetSpeed();
+        // 网速
+        updateNetSpeed();
     }
 
     @Override
@@ -68,7 +70,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApiLoad
         }
 
         // 网速
-        updateComponentNetSpeed();
+        updateNetSpeed();
     }
 
     @Override

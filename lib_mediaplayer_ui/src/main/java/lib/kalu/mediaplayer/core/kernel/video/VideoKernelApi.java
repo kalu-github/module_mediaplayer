@@ -43,7 +43,6 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
         mPlayWhenReady[0] = true;
         mPrepared[0] = false;
         mIjkMediaCodec[0] = true;
-        mShowNetSpeed[0] = false;
 //        mSeeking[0] = false;
 //        stopCheckPreparedPlaying();
         stopCheckConnectTimeout();
@@ -85,8 +84,6 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
             setPlayWhenReady(playWhenReady);
             boolean prepareAsync = args.isPrepareAsync();
             setPrepareAsync(prepareAsync);
-            boolean showNetSpeed = args.isShowNetSpeed();
-            setShowNetSpeed(showNetSpeed);
         } catch (Exception e) {
         }
 

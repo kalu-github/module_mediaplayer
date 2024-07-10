@@ -131,11 +131,6 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setWarningPlayInfoRecord(boolean v) {
-        mPlayerBuilder.setWarningPlayInfoRecord(v);
-        return this;
-    }
-
     public void build() {
         mConfig = mPlayerBuilder.build();
     }

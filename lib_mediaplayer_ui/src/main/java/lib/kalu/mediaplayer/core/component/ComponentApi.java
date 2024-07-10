@@ -494,21 +494,6 @@ public interface ComponentApi {
         }
     }
 
-    default boolean isShowNetSpeed() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            StartArgs tags = playerView.getTags();
-            if (null == tags)
-                throw new Exception("warning: tags null");
-            return tags.isShowNetSpeed();
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => isShowNetSpeed => " + e.getMessage());
-            return false;
-        }
-    }
-
     default void setSpeed(float v) {
         try {
             PlayerView playerView = getPlayerView();
