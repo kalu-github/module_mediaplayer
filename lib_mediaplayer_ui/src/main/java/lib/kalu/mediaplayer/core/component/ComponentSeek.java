@@ -42,6 +42,9 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
         // seekForward => start
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
             try {
+                boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
+                if (bufferingShowing)
+                    throw new Exception("warning: ComponentApiBuffering true");
                 boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
                 if (warningPlayInfoShowing)
                     throw new Exception("warning: ComponentApiWarningPlayInfo true");
@@ -70,6 +73,9 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
         // seekRewind => start
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
             try {
+                boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
+                if (bufferingShowing)
+                    throw new Exception("warning: ComponentApiBuffering true");
                 boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
                 if (warningPlayInfoShowing)
                     throw new Exception("warning: ComponentApiWarningPlayInfo true");
