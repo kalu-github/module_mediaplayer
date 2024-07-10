@@ -93,15 +93,15 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     @Override
                     public void handleMessage(@NonNull Message msg) {
                         try {
+                            if (isPrepared())
+                                throw new Exception("warning: isPrepared true");
                             if (msg.what != 10002)
                                 throw new Exception("warning: msg.what != 10002");
-                            boolean prepared = isPrepared();
-                            if (prepared)
-                                throw new Exception("warning: prepared true");
                             long start = (long) msg.obj;
                             long current = System.currentTimeMillis();
+                            long cast = current - start;
                             // 超时
-                            if (current - start >= timeout) {
+                            if (cast >= timeout) {
                                 onEvent(kernelType, PlayerType.EventType.EVENT_LOADING_STOP);
                                 onEvent(kernelType, PlayerType.EventType.EVENT_ERROR_NET);
                                 getPlayerApi().stop(true, false);
@@ -109,10 +109,10 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                             }
                             // 轮询
                             else {
-                                LogUtil.log("VideoKernelApiHandler => startCheckConnectTimeout => loop next");
+                                LogUtil.log("VideoKernelApiHandler => startCheckConnectTimeout => loop next, cast = " + cast);
                                 Message message = Message.obtain();
                                 message.what = 10002;
-                                message.obj = System.currentTimeMillis();
+                                message.obj = start;
                                 mHandlerConnectTimeout[0].sendMessageDelayed(message, 1000);
                             }
                         } catch (Exception e) {
@@ -203,7 +203,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                                 LogUtil.log("VideoKernelApiHandler => startCheckBufferingTimeout => loop next, cast = " + cast);
                                 Message message = Message.obtain();
                                 message.what = 10003;
-                                message.obj = System.currentTimeMillis();
+                                message.obj = start;
                                 mHandlerBufferingTimeout[0].sendMessageDelayed(message, 1000);
                             }
                         } catch (Exception e) {
