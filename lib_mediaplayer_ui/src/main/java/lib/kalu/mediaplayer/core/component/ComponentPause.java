@@ -44,6 +44,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                 boolean seekShowing = isComponentShowing(ComponentApiSeek.class);
                 if (seekShowing)
                     throw new Exception("warning: ComponentApiSeek true");
+                boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
+                if (warningPlayInfoShowing)
+                    throw new Exception("warning: ComponentApiWarningPlayInfo true");
                 toggle();
                 return true;
             } catch (Exception e) {

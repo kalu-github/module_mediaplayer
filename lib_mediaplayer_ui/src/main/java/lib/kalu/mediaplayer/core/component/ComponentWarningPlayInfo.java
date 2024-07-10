@@ -19,7 +19,7 @@ import lib.kalu.mediaplayer.util.TimeUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 import lib.kalu.mediaplayer.widget.seek.SeekBar;
 
-public class ComponentWarningPlayInfo extends RelativeLayout implements ComponentApi {
+public class ComponentWarningPlayInfo extends RelativeLayout implements ComponentApiWarningPlayInfo {
 
     public ComponentWarningPlayInfo(Context context) {
         super(context);
@@ -78,7 +78,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
     @Override
     public void show() {
-        ComponentApi.super.show();
+        ComponentApiWarningPlayInfo.super.show();
 
         // 播放记录提示
         try {
@@ -137,7 +137,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
     @Override
     public void hide() {
-        ComponentApi.super.hide();
+        ComponentApiWarningPlayInfo.super.hide();
 
         // 播放记录提示
         try {

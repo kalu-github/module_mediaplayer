@@ -39,11 +39,17 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
         // seekForward => start
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            boolean isShowing = isComponentShowing(ComponentApiMenu.class);
-            if (!isShowing) {
+            try {
+                boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
+                if (warningPlayInfoShowing)
+                    throw new Exception("warning: ComponentApiWarningPlayInfo true");
+                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
+                if (menuShowing)
+                    throw new Exception("warning: ComponentApiMenu true");
                 int repeatCount = event.getRepeatCount();
                 startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_RIGHT);
                 return true;
+            } catch (Exception e) {
             }
         }
         // seekForward => stop
@@ -56,11 +62,17 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
         }
         // seekRewind => start
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            boolean isShowing = isComponentShowing(ComponentApiMenu.class);
-            if (!isShowing) {
+            try {
+                boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
+                if (warningPlayInfoShowing)
+                    throw new Exception("warning: ComponentApiWarningPlayInfo true");
+                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
+                if (menuShowing)
+                    throw new Exception("warning: ComponentApiMenu true");
                 int repeatCount = event.getRepeatCount();
                 startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_LEFT);
                 return true;
+            } catch (Exception e) {
             }
         }
         // seekRewind => stop
