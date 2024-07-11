@@ -35,7 +35,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     private IjkMediaPlayer mIjkPlayer = null;
 
     public VideoIjkPlayer(boolean useMediaCodec) {
-        resetSpeed();
         setIjkMediaCodec(useMediaCodec);
     }
 

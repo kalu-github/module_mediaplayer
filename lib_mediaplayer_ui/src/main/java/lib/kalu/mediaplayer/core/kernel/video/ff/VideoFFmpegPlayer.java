@@ -27,10 +27,6 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
     private FFmpegPlayer mFFmpegPlayer = null;
 
-    public VideoFFmpegPlayer() {
-        resetSpeed();
-    }
-
     @Override
     public VideoFFmpegPlayer getPlayer() {
         return this;

@@ -25,10 +25,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     private MediaPlayer mMediaPlayer = null;
 
-    public VideoAndroidPlayer() {
-        resetSpeed();
-    }
-
     @Override
     public VideoAndroidPlayer getPlayer() {
         return this;

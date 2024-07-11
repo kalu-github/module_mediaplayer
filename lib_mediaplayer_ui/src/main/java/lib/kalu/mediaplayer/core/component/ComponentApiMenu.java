@@ -22,7 +22,7 @@ public interface ComponentApiMenu extends ComponentApi {
         return true;
     }
 
-    default int getEpisodeCount() {
+    default int getEpisodeItemCount() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -30,17 +30,17 @@ public interface ComponentApiMenu extends ComponentApi {
             StartArgs tags = playerView.getTags();
             if (null == tags)
                 throw new Exception("error: tags null");
-            int episodeCount = tags.getEpisodeCount();
-            if (episodeCount <= 0)
-                throw new Exception("warning: episodeCount " + episodeCount);
-            return episodeCount;
+            int itemCount = tags.getEpisodeItemCount();
+            if (itemCount <= 0)
+                throw new Exception("warning: itemCount " + itemCount);
+            return itemCount;
         } catch (Exception e) {
-            LogUtil.log("ComponentApiMenu => getEpisodeCount => " + e.getMessage());
+            LogUtil.log("ComponentApiMenu => getEpisodeItemCount => " + e.getMessage());
             return -1;
         }
     }
 
-    default int getEpisodePlaying() {
+    default int getEpisodePlayingIndex() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -48,12 +48,12 @@ public interface ComponentApiMenu extends ComponentApi {
             StartArgs tags = playerView.getTags();
             if (null == tags)
                 throw new Exception("error: tags null");
-            int episodePlaying = tags.getEpisodePlaying();
-            if (episodePlaying < 0)
-                throw new Exception("warning: episodePlaying " + episodePlaying);
-            return episodePlaying;
+            int playingIndex = tags.getEpisodePlayingIndex();
+            if (playingIndex < 0)
+                throw new Exception("warning: playingIndex " + playingIndex);
+            return playingIndex;
         } catch (Exception e) {
-            LogUtil.log("ComponentApiMenu => getEpisodePlaying => " + e.getMessage());
+            LogUtil.log("ComponentApiMenu => getEpisodePlayingIndex => " + e.getMessage());
             return -1;
         }
     }
@@ -64,7 +64,7 @@ public interface ComponentApiMenu extends ComponentApi {
     default void updateTabCheckedChange(boolean requestFocus) {
     }
 
-    default void updateTabChecked(int id) {
+    default void updateTabCheckedStyle(int id) {
     }
 
     default void toggleScale(int focusId) {

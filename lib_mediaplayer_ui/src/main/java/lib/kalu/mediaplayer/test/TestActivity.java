@@ -342,11 +342,11 @@ public final class TestActivity extends Activity {
 
         boolean episode = getIntent().getBooleanExtra(INTENT_EPISODE, false);
         if (episode) {
-            builder.setEpisodePlaying(64);
-            builder.setEpisodeCount(66);
+            builder.setEpisodePlayingIndex(64);
+            builder.setEpisodeItemCount(66);
         } else {
-            builder.setEpisodePlaying(-1);
-            builder.setEpisodeCount(-1);
+            builder.setEpisodePlayingIndex(-1);
+            builder.setEpisodeItemCount(-1);
         }
 
         builder.setLive(live);

@@ -21,10 +21,6 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     private lib.kalu.vlc.widget.VlcPlayer mVlcPlayer;
     private lib.kalu.vlc.widget.OnVlcInfoChangeListener mVlcPlayerListener;
 
-    public VideoVlcPlayer() {
-        resetSpeed();
-    }
-
     @Override
     public VideoVlcPlayer getPlayer() {
         return this;

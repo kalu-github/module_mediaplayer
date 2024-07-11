@@ -21,19 +21,19 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         findViewById(R.id.module_mediaplayer_component_menu_tab_episode).setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                updateTabChecked(R.id.module_mediaplayer_component_menu_tab_episode);
+                updateTabCheckedStyle(R.id.module_mediaplayer_component_menu_tab_episode);
             }
         });
         findViewById(R.id.module_mediaplayer_component_menu_tab_speed).setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                updateTabChecked(R.id.module_mediaplayer_component_menu_tab_speed);
+                updateTabCheckedStyle(R.id.module_mediaplayer_component_menu_tab_speed);
             }
         });
         findViewById(R.id.module_mediaplayer_component_menu_tab_scale).setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                updateTabChecked(R.id.module_mediaplayer_component_menu_tab_scale);
+                updateTabCheckedStyle(R.id.module_mediaplayer_component_menu_tab_scale);
             }
         });
         RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
@@ -102,6 +102,15 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 }
                 // 倍速
                 else if (focusId == R.id.module_mediaplayer_component_menu_tab_speed) {
+                    try {
+                        RadioGroup itemGroup = findViewById(R.id.module_mediaplayer_component_menu_item_group);
+                        int checkedRadioButtonId = itemGroup.getCheckedRadioButtonId();
+                        itemGroup.findViewById(checkedRadioButtonId).requestFocus();
+                    } catch (Exception e) {
+                    }
+                }
+                // 倍速
+                else if (focusId == R.id.module_mediaplayer_component_menu_tab_episode) {
                     try {
                         RadioGroup itemGroup = findViewById(R.id.module_mediaplayer_component_menu_item_group);
                         int checkedRadioButtonId = itemGroup.getCheckedRadioButtonId();
@@ -375,12 +384,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         try {
             boolean hasEpisode;
             try {
-                int episodeCount = getEpisodeCount();
-                if (episodeCount <= 0)
-                    throw new Exception("warning: episodeCount " + episodeCount);
-                int episodePlaying = getEpisodePlaying();
-                if (episodePlaying < 0)
-                    throw new Exception("warning: episodePlaying " + episodePlaying);
+                int episodeItemCount = getEpisodeItemCount();
+                if (episodeItemCount <= 0)
+                    throw new Exception("warning: episodeItemCount " + episodeItemCount);
+                int episodePlayingIndex = getEpisodePlayingIndex();
+                if (episodePlayingIndex < 0)
+                    throw new Exception("warning: episodePlayingIndex " + episodePlayingIndex);
                 hasEpisode = true;
             } catch (Exception e) {
                 hasEpisode = false;
@@ -423,9 +432,14 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             // 画面
             int[] scales = getResources().getIntArray(R.array.module_mediaplayer_array_scales);
             // 选集
-            int episodePlaying = getEpisodePlaying();
-            int num = episodePlaying / itemCount;
+            int episodePlayingIndex = getEpisodePlayingIndex();
+            int episodeItemCount = getEpisodeItemCount();
+            int num = episodePlayingIndex / itemCount;
             int start = num * itemCount;
+            int length = start + itemCount;
+            if (length > episodeItemCount) {
+                start -= Math.abs(length - episodeItemCount);
+            }
 
             for (int i = 0; i < itemCount; i++) {
                 RadioButton radioButton = (RadioButton) itemGroup.getChildAt(i);
@@ -499,7 +513,10 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 else {
                     radioButton.setEnabled(true);
                     radioButton.setVisibility(View.VISIBLE);
-                    radioButton.setText(String.valueOf(i + start));
+
+                    int position = i + start;
+                    radioButton.setChecked(position == episodePlayingIndex);
+                    radioButton.setText(String.valueOf(position + 1));
                 }
             }
         } catch (Exception e) {
@@ -508,7 +525,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public void updateTabChecked(int id) {
+    public void updateTabCheckedStyle(int id) {
         startDelayedMsg();
         RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
         radioGroup.check(id);

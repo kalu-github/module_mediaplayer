@@ -18,11 +18,6 @@ public final class VideoExoPlayer extends VideoBasePlayer {
 
     private DemoPlayer mExoPlayer;
 
-
-    public VideoExoPlayer() {
-        resetSpeed();
-    }
-
     @Override
     public DemoPlayer getPlayer() {
         return mExoPlayer;

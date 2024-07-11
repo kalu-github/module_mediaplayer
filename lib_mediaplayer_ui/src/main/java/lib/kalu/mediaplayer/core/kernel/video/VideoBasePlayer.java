@@ -10,12 +10,6 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     private VideoPlayerApi playerApi;
     private int mVideoSpeed = PlayerType.SpeedType.Speed_Default;
 
-
-    @Override
-    public void resetSpeed() {
-        this.mVideoSpeed = PlayerType.SpeedType.Speed_Default;
-    }
-
     @Override
     public void setSpeed(@PlayerType.SpeedType.Value int speed) {
         this.mVideoSpeed = speed;

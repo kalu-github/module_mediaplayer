@@ -250,8 +250,6 @@ interface VideoKernelApiBase {
     @PlayerType.SpeedType.Value
     int getSpeed();
 
-    void resetSpeed();
-
     void start();
 
     void pause();

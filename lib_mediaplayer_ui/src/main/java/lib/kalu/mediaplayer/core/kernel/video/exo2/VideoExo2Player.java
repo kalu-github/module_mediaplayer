@@ -76,10 +76,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
     private ExoPlayer mExoPlayer;
     private ExoPlayer.Builder mExoPlayerBuilder;
 
-    public VideoExo2Player() {
-        resetSpeed();
-    }
-
     @Override
     public ExoPlayer getPlayer() {
         return mExoPlayer;

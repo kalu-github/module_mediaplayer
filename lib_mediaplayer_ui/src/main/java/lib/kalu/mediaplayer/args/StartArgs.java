@@ -175,17 +175,17 @@ public class StartArgs {
     }
 
     // 多剧集 选中
-    private int episodePlaying = -1;
+    private int episodePlayingIndex = -1;
 
-    public int getEpisodePlaying() {
-        return episodePlaying;
+    public int getEpisodePlayingIndex() {
+        return episodePlayingIndex;
     }
 
     // 多剧集 总数
-    private int episodeCount = -1;
+    private int episodeItemCount = -1;
 
-    public int getEpisodeCount() {
-        return episodeCount;
+    public int getEpisodeItemCount() {
+        return episodeItemCount;
     }
 
     @Override
@@ -215,8 +215,8 @@ public class StartArgs {
                 ", playWhenReady=" + playWhenReady +
                 ", prepareAsync=" + prepareAsync +
                 ", extra=" + extra +
-                ", episodePlaying=" + episodePlaying +
-                ", episodeCount=" + episodeCount +
+                ", episodePlayingIndex=" + episodePlayingIndex +
+                ", episodeItemCount=" + episodeItemCount +
                 '}';
     }
 
@@ -245,8 +245,8 @@ public class StartArgs {
         this.playWhenReady = builder.playWhenReady;
         this.prepareAsync = builder.prepareAsync;
         this.extra = builder.extra;
-        this.episodePlaying = builder.episodePlaying;
-        this.episodeCount = builder.episodeCount;
+        this.episodePlayingIndex = builder.episodePlayingIndex;
+        this.episodeItemCount = builder.episodeItemCount;
     }
 
     public Builder newBuilder() {
@@ -275,8 +275,8 @@ public class StartArgs {
         builder.playWhenReady = playWhenReady;
         builder.prepareAsync = prepareAsync;
         builder.extra = extra;
-        builder.episodePlaying = episodePlaying;
-        builder.episodeCount = episodeCount;
+        builder.episodePlayingIndex = episodePlayingIndex;
+        builder.episodeItemCount = episodeItemCount;
         return builder;
     }
 
@@ -410,18 +410,18 @@ public class StartArgs {
         }
 
         // 多剧集 选中
-        private int episodePlaying = -1;
+        private int episodePlayingIndex = -1;
 
-        public Builder setEpisodePlaying(int v) {
-            this.episodePlaying = v;
+        public Builder setEpisodePlayingIndex(int v) {
+            this.episodePlayingIndex = v;
             return this;
         }
 
         // 多剧集 总数
-        private int episodeCount = -1;
+        private int episodeItemCount = -1;
 
-        public Builder setEpisodeCount(int v) {
-            this.episodeCount = v;
+        public Builder setEpisodeItemCount(int v) {
+            this.episodeItemCount = v;
             return this;
         }
 
