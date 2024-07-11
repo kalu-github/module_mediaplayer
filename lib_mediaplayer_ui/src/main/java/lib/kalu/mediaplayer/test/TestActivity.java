@@ -172,6 +172,7 @@ public final class TestActivity extends Activity {
         componentApis.add(menu);
         // loading
         ComponentLoadingGradient loading = new ComponentLoadingGradient(getApplicationContext());
+        loading.setComponentShowNetSpeed(true);
         componentApis.add(loading);
         // seek
         ComponentSeek seek = new ComponentSeek(getApplicationContext());

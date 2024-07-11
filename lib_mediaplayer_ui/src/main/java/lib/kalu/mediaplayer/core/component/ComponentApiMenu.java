@@ -58,7 +58,7 @@ public interface ComponentApiMenu extends ComponentApi {
         }
     }
 
-    default void scrollNextItem(int action) {
+    default void scrollEpisode(int action) {
     }
 
     default void updateTabCheckedChange(boolean requestFocus) {
