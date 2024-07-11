@@ -407,6 +407,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 RadioButton radioButton = (RadioButton) itemGroup.getChildAt(i);
                 // 倍速
                 if (checkedRadioButtonId == R.id.module_mediaplayer_component_menu_tab_speed) {
+                    radioButton.setSelected(false);
                     radioButton.setEnabled(i < speeds.length);
                     radioButton.setVisibility(i < speeds.length ? View.VISIBLE : View.INVISIBLE);
 
@@ -445,6 +446,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 }
                 // 画面比例
                 else if (checkedRadioButtonId == R.id.module_mediaplayer_component_menu_tab_scale) {
+                    radioButton.setSelected(false);
                     radioButton.setEnabled(i < scales.length);
                     radioButton.setVisibility(i < scales.length ? View.VISIBLE : View.INVISIBLE);
 

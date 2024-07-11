@@ -295,7 +295,6 @@ public final class TestActivity extends Activity {
     }
 
     private void startPlayer() {
-        Toast.makeText(getApplicationContext(), "startPlayer", Toast.LENGTH_SHORT).show();
 
         String url = getUrl();
         if (null == url) {
