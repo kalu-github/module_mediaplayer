@@ -600,6 +600,10 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     @Override
     public void updateItemSelected(int viewId) {
         try {
+            RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
+            int checkedRadioButtonId = tabGroup.getCheckedRadioButtonId();
+            if (checkedRadioButtonId != R.id.module_mediaplayer_component_menu_tab_episode)
+                throw new Exception();
             RadioGroup itemGroup = findViewById(R.id.module_mediaplayer_component_menu_item_group);
             int itemCount = itemGroup.getChildCount();
             for (int i = 0; i < itemCount; i++) {
