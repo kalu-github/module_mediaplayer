@@ -35,11 +35,11 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/module_mediaplayer_selector_button"
-                android:button="@color/module_mediaplayer_color_00000000"
+                android:background="@drawable/module_mediaplayer_selector_background_item"
+                android:button="@null"
                 android:focusable="true"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -49,11 +49,11 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/module_mediaplayer_selector_button"
-                android:button="@color/module_mediaplayer_color_00000000"
+                android:background="@drawable/module_mediaplayer_selector_background_item"
+                android:button="@null"
                 android:focusable="true"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -63,11 +63,11 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/module_mediaplayer_selector_button"
-                android:button="@color/module_mediaplayer_color_00000000"
+                android:background="@drawable/module_mediaplayer_selector_background_item"
+                android:button="@null"
                 android:focusable="true"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -77,11 +77,11 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/module_mediaplayer_selector_button"
-                android:button="@color/module_mediaplayer_color_00000000"
+                android:background="@drawable/module_mediaplayer_selector_background_item"
+                android:button="@null"
                 android:focusable="true"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -91,11 +91,11 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/module_mediaplayer_selector_button"
-                android:button="@color/module_mediaplayer_color_00000000"
+                android:background="@drawable/module_mediaplayer_selector_background_item"
+                android:button="@null"
                 android:focusable="true"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -105,11 +105,11 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/module_mediaplayer_selector_button"
-                android:button="@color/module_mediaplayer_color_00000000"
+                android:background="@drawable/module_mediaplayer_selector_background_item"
+                android:button="@null"
                 android:focusable="true"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -119,11 +119,11 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/module_mediaplayer_selector_button"
-                android:button="@color/module_mediaplayer_color_00000000"
+                android:background="@drawable/module_mediaplayer_selector_background_item"
+                android:button="@null"
                 android:focusable="true"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -133,11 +133,11 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/module_mediaplayer_selector_button"
-                android:button="@color/module_mediaplayer_color_00000000"
+                android:background="@drawable/module_mediaplayer_selector_background_item"
+                android:button="@null"
                 android:focusable="true"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -147,11 +147,11 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/module_mediaplayer_selector_button"
-                android:button="@color/module_mediaplayer_color_00000000"
+                android:background="@drawable/module_mediaplayer_selector_background_item"
+                android:button="@null"
                 android:focusable="true"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -161,11 +161,11 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/module_mediaplayer_selector_button"
-                android:button="@color/module_mediaplayer_color_00000000"
+                android:background="@drawable/module_mediaplayer_selector_background_item"
+                android:button="@null"
                 android:focusable="true"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
         </RadioGroup>
@@ -187,12 +187,12 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/module_mediaplayer_selector_button"
-                android:button="@color/module_mediaplayer_color_00000000"
+                android:background="@drawable/module_mediaplayer_selector_background_tab"
+                android:button="@null"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="选集"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
                 android:textSize="20sp"
                 android:visibility="gone" />
 
@@ -203,12 +203,12 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/module_mediaplayer_selector_button"
-                android:button="@color/module_mediaplayer_color_00000000"
+                android:background="@drawable/module_mediaplayer_selector_background_tab"
+                android:button="@null"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="倍速"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -218,12 +218,12 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/module_mediaplayer_selector_button"
-                android:button="@color/module_mediaplayer_color_00000000"
+                android:background="@drawable/module_mediaplayer_selector_background_tab"
+                android:button="@null"
                 android:focusable="true"
                 android:gravity="center"
                 android:text="画面"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
                 android:textSize="20sp" />
 
             <RadioButton
@@ -235,7 +235,7 @@
                 android:button="@null"
                 android:focusable="false"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
                 android:textSize="20sp"
                 android:visibility="gone" />
 
@@ -248,7 +248,7 @@
                 android:button="@null"
                 android:focusable="false"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
                 android:textSize="20sp"
                 android:visibility="gone" />
 
@@ -261,7 +261,7 @@
                 android:button="@null"
                 android:focusable="false"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
                 android:textSize="20sp"
                 android:visibility="gone" />
 
@@ -274,7 +274,7 @@
                 android:button="@null"
                 android:focusable="false"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
                 android:textSize="20sp"
                 android:visibility="gone" />
 
@@ -287,7 +287,7 @@
                 android:button="@null"
                 android:focusable="false"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
                 android:textSize="20sp"
                 android:visibility="gone" />
 
@@ -300,7 +300,7 @@
                 android:button="@null"
                 android:focusable="false"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
                 android:textSize="20sp"
                 android:visibility="gone" />
 
@@ -313,7 +313,7 @@
                 android:button="@null"
                 android:focusable="false"
                 android:gravity="center"
-                android:textColor="@drawable/module_mediaplayer_selector_textcolor"
+                android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
                 android:textSize="20sp"
                 android:visibility="gone" />
 

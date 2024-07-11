@@ -58,13 +58,30 @@ public interface ComponentApiMenu extends ComponentApi {
         }
     }
 
+    default void clickEpisode(int pos) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("error: null == playerView");
+            OnPlayerEpisodeListener listener = playerView.getOnPlayerEpisodeListener();
+            if (null == listener)
+                throw new Exception("error: null == listener");
+            listener.onEpisode(pos);
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => clickEpisode => " + e.getMessage());
+        }
+    }
+
     default void scrollEpisode(int action) {
     }
 
-    default void updateTabCheckedChange(boolean requestFocus) {
+    default void updateItemSelected(int viewId) {
     }
 
-    default void updateTabCheckedStyle(int id) {
+    default void updateTabSelected(int viewId) {
+    }
+
+    default void updateTabCheckedChange(boolean requestFocus) {
     }
 
     default void toggleScale(int focusId) {
@@ -76,20 +93,6 @@ public interface ComponentApiMenu extends ComponentApi {
 
     default void toggleEpisode(int focusId) {
 
-    }
-
-    default void callEpisodeClickListener(int pos) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: null == playerView");
-            OnPlayerEpisodeListener listener = playerView.getOnPlayerEpisodeListener();
-            if (null == listener)
-                throw new Exception("error: null == listener");
-            listener.onEpisode(pos);
-        } catch (Exception e) {
-            LogUtil.log("ComponentApiMenu => callEpisodeClickListener => " + e.getMessage());
-        }
     }
 
     Handler[] mHandlerDelayedMsg = new Handler[]{null};

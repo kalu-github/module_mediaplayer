@@ -21,28 +21,44 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         findViewById(R.id.module_mediaplayer_component_menu_tab_episode).setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                updateTabCheckedStyle(R.id.module_mediaplayer_component_menu_tab_episode);
+                updateTabSelected(R.id.module_mediaplayer_component_menu_tab_episode);
             }
         });
         findViewById(R.id.module_mediaplayer_component_menu_tab_speed).setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                updateTabCheckedStyle(R.id.module_mediaplayer_component_menu_tab_speed);
+                updateTabSelected(R.id.module_mediaplayer_component_menu_tab_speed);
             }
         });
         findViewById(R.id.module_mediaplayer_component_menu_tab_scale).setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                updateTabCheckedStyle(R.id.module_mediaplayer_component_menu_tab_scale);
+                updateTabSelected(R.id.module_mediaplayer_component_menu_tab_scale);
             }
         });
-        RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+        RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
+        tabGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 updateTabCheckedChange(false);
             }
         });
+
+        RadioGroup itemGroup = findViewById(R.id.module_mediaplayer_component_menu_item_group);
+        int itemCount = itemGroup.getChildCount();
+        for (int i = 0; i < itemCount; i++) {
+            View childAt = itemGroup.getChildAt(i);
+            if (null == childAt)
+                continue;
+            childAt.setOnFocusChangeListener(new OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    int focusId = v.getId();
+                    updateItemSelected(focusId);
+                }
+            });
+        }
     }
 
     @Override
@@ -109,12 +125,21 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     } catch (Exception e) {
                     }
                 }
-                // 倍速
+                // 选集
                 else if (focusId == R.id.module_mediaplayer_component_menu_tab_episode) {
                     try {
                         RadioGroup itemGroup = findViewById(R.id.module_mediaplayer_component_menu_item_group);
-                        int checkedRadioButtonId = itemGroup.getCheckedRadioButtonId();
-                        itemGroup.findViewById(checkedRadioButtonId).requestFocus();
+                        int itemCount = itemGroup.getChildCount();
+                        for (int i = 0; i < itemCount; i++) {
+                            View childAt = itemGroup.getChildAt(i);
+                            if (null == childAt)
+                                continue;
+                            boolean selected = childAt.isSelected();
+                            if (!selected)
+                                continue;
+                            childAt.requestFocus();
+                            break;
+                        }
                     } catch (Exception e) {
                     }
                 }
@@ -198,7 +223,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 }
                 // 选集
                 else if (focusId == R.id.module_mediaplayer_component_menu_item_n9) {
-                    scrollEpisode(KeyEvent.KEYCODE_DPAD_LEFT);
+                    scrollEpisode(KeyEvent.KEYCODE_DPAD_RIGHT);
                     return true;
                 }
             } catch (Exception e) {
@@ -265,7 +290,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
             int episodeItemCount = getEpisodeItemCount();
             if (action == KeyEvent.KEYCODE_DPAD_RIGHT && index + 1 >= episodeItemCount)
-                throw new Exception("error: index >= " + episodeItemCount);
+                throw new Exception("error: index+1 >= " + episodeItemCount + ", index = " + index);
 
             RadioGroup itemGroup = findViewById(R.id.module_mediaplayer_component_menu_item_group);
             int itemCount = itemGroup.getChildCount();
@@ -274,7 +299,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             if (action == KeyEvent.KEYCODE_DPAD_LEFT) {
                 start = index - 1;
             } else if (action == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                start = index - itemCount + 1;
+                start = index - itemCount + 2;
             } else {
                 start = -1;
             }
@@ -290,7 +315,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 radioButton.setTag(position);
                 radioButton.setText(String.valueOf(position + 1));
                 radioButton.setChecked(position == episodePlayingIndex);
-                radioButton.setSelected(action == KeyEvent.KEYCODE_DPAD_LEFT ? i == 0 : i + 1 == itemCount);
             }
 
         } catch (Exception e) {
@@ -465,21 +489,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public void updateTabCheckedStyle(int id) {
-        startDelayedMsg();
-        RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
-        radioGroup.check(id);
-//        int childCount = radioGroup.getChildCount();
-//        for (int i = 0; i < childCount; i++) {
-//            View childAt = radioGroup.getChildAt(i);
-//            if (null == childAt)
-//                continue;
-//            int childAtId = childAt.getId();
-//            ((RadioButton) childAt).setChecked(childAtId == id);
-//        }
-    }
-
-    @Override
     public void toggleScale(int focusId) {
 
         // 选中状态
@@ -532,39 +541,61 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public void toggleEpisode(int focusId) {
-//        try {
-//            RadioButton radioButton = findViewById(focusId);
-//
-//            CharSequence hint = radioButton.getHint();
-//            int playPos = Integer.parseInt(hint.toString());
-//
-//            CharSequence text = radioButton.getText();
-//            int numPos = Integer.parseInt(text.toString());
-//
-//            // 判断在播pos
-//            if (playPos + 1 == numPos)
-//                throw new Exception("warning: playPos+1== numPos");
-//
-//            int newPos = numPos - 1;
-//
-//            // 1
-//            RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_group);
-//            int childCount = radioGroup.getChildCount();
-//            for (int i = 0; i < childCount; i++) {
-//                RadioButton button = (RadioButton) radioGroup.getChildAt(i);
-//                button.setHint(String.valueOf(newPos));
-//                CharSequence tempText = button.getText();
-//                int tempPos = Integer.parseInt(tempText.toString());
-//                button.setSelected(newPos + 1 == tempPos);
-//            }
-//
-//            // 2
-//            hide();
-//            stop();
-//            radioGroup.check(focusId);
-//            callEpisodeClickListener(newPos);
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentMenu => clickEpisode => Exception " + e.getMessage());
-//        }
+        try {
+
+            RadioGroup itemGroup = findViewById(R.id.module_mediaplayer_component_menu_item_group);
+            RadioButton radioButton = itemGroup.findViewById(focusId);
+            Object tag = radioButton.getTag();
+            if (null == tag)
+                throw new Exception("error: tag null");
+            int index = (int) tag;
+            int episodePlayingIndex = getEpisodePlayingIndex();
+            if (index == episodePlayingIndex)
+                throw new Exception("warning: index == episodePlayingIndex");
+
+            int itemCount = itemGroup.getChildCount();
+            for (int i = 0; i < itemCount; i++) {
+                RadioButton childAt = (RadioButton) itemGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+
+                Object tag1 = childAt.getTag();
+                if (null == tag1)
+                    continue;
+                int position = (int) tag1;
+                childAt.setSelected(position == index);
+                childAt.setChecked(position == index);
+            }
+
+            // 2
+            hide();
+            stop();
+            clickEpisode(index);
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => clickEpisode => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void updateTabSelected(int viewId) {
+        startDelayedMsg();
+        RadioGroup radioGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
+        radioGroup.check(viewId);
+    }
+
+    @Override
+    public void updateItemSelected(int viewId) {
+        try {
+            RadioGroup itemGroup = findViewById(R.id.module_mediaplayer_component_menu_item_group);
+            int itemCount = itemGroup.getChildCount();
+            for (int i = 0; i < itemCount; i++) {
+                View childAt = itemGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                int focusId = childAt.getId();
+                childAt.setSelected(focusId == viewId);
+            }
+        } catch (Exception e) {
+        }
     }
 }
