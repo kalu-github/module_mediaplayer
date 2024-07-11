@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import java.util.LinkedList;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.core.component.ComponentApiLoading;
 import lib.kalu.mediaplayer.core.component.ComponentLoadingGradient;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
@@ -210,7 +211,6 @@ public final class TestActivity extends Activity {
         playerLayout.setOnPlayerEpisodeListener(new OnPlayerEpisodeListener() {
             @Override
             public void onEpisode(int pos) {
-                updateTitle(pos);
                 startPlayer();
             }
         });
@@ -301,21 +301,15 @@ public final class TestActivity extends Activity {
         });
     }
 
-    private void updateTitle(int pos) {
-        Toast.makeText(getApplicationContext(), "切换选集 " + (pos + 1), Toast.LENGTH_SHORT).show();
-        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-        ComponentLoading loading = videoLayout.findComponent(ComponentLoading.class);
-        loading.setComponentText("正在播放 第" + (pos + 1) + "集");
-    }
-
     private String getUrl() {
         return getIntent().getStringExtra(INTENT_URL);
     }
 
     private void startPlayer() {
+        Toast.makeText(getApplicationContext(), "startPlayer", Toast.LENGTH_SHORT).show();
 
         String url = getUrl();
-        if (null == url || url.length() == 0) {
+        if (null == url) {
             onBackPressed();
             return;
         }

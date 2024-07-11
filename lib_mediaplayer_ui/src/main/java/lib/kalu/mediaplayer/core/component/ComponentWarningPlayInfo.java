@@ -146,12 +146,6 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             textView.setText("");
         } catch (Exception e) {
         }
-
-        try {
-            ViewGroup viewGroup = (ViewGroup) getParent();
-            viewGroup.removeView(this);
-        } catch (Exception e) {
-        }
     }
 
     @Override
