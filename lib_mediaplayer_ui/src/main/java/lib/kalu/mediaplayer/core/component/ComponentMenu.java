@@ -478,7 +478,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 // 选集
                 else {
 
-                    if (i + 1 < episodeItemCount) {
+                    if (i < episodeItemCount) {
                         radioButton.setEnabled(true);
                         radioButton.setVisibility(View.VISIBLE);
 
