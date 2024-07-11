@@ -11,4 +11,38 @@
     <string name="module_mediaplayer_string_load">加载中...</string>
     <string name="module_mediaplayer_string_play_record">上次观看至%1$s, 长按【左键】从头播放</string>
 
+    <!--
+        int Speed_0_5 = 8_001;
+        int Speed_1_0 = 8_002;
+        int Speed_1_5 = 8_003;
+        int Speed_2_0 = 8_004;
+        int Speed_2_5 = 8_005;
+        int Speed_3_0 = 8_006;
+        int Speed_3_5 = 8_007;
+        int Speed_4_0 = 8_008;
+        int Speed_4_5 = 8_009;
+        int Speed_5_0 = 8_010;
+    -->
+    <integer-array name="module_mediaplayer_array_speeds">
+        <item>8001</item>
+        <item>8002</item>
+        <item>8004</item>
+        <item>8006</item>
+    </integer-array>
+
+    <!--
+    int SCREEN_SCALE_SCREEN_CROP = 4_001; // 填充屏幕, 裁剪
+    int SCREEN_SCALE_SCREEN_MATCH = 4_002; // 填充屏幕, 不裁剪, 可能会变形
+    int SCREEN_SCALE_VIDEO_ORIGINAL = 4_003; // 视频尺寸, 可能存在黑边
+    int SCREEN_SCALE_16_9 = 4_004; //16：9比例类型，最为常见
+    int SCREEN_SCALE_4_3 = 4_005;  //4：3比例类型，也比较常见
+    -->
+    <integer-array name="module_mediaplayer_array_scales">
+        <item>4005</item>
+        <item>4004</item>
+        <item>4002</item>
+        <item>4003</item>
+        <item>4001</item>
+    </integer-array>
+
 </resources>

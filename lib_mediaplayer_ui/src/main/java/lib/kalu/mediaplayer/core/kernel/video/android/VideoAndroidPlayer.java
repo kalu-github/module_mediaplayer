@@ -25,6 +25,10 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     private MediaPlayer mMediaPlayer = null;
 
+    public VideoAndroidPlayer() {
+        resetSpeed();
+    }
+
     @Override
     public VideoAndroidPlayer getPlayer() {
         return this;
@@ -292,28 +296,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    @FloatRange(from = 1F, to = 4F)
-    public float getSpeed() {
-        try {
-            if (null == mMediaPlayer)
-                throw new Exception("mMediaPlayer error: null");
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-                throw new Exception("only support above Android M");
-            PlaybackParams playbackParams = mMediaPlayer.getPlaybackParams();
-            if (null == playbackParams)
-                throw new Exception("playbackParams error: null");
-            float speed = playbackParams.getSpeed();
-            if (speed < 1f)
-                throw new Exception("speed error: " + speed);
-            return speed;
-        } catch (Exception e) {
-            LogUtil.log("VideoAndroidPlayer => getSpeed => " + e.getMessage());
-            return 1F;
-        }
-    }
-
-    @Override
-    public boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
+    public boolean setSpeed(float speed) {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");

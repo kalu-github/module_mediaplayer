@@ -62,6 +62,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
 
     @Override
     public void init() {
+        this.mVideoScaleType = PlayerType.ScaleType.SCREEN_SCALE_MATCH;
 //        setDrawingCacheEnabled(true);
         setFocusable(false);
         setFocusableInTouchMode(false);
@@ -231,7 +232,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
 
     int mVideoWidth = 0;
     int mVideoHeight = 0;
-    int mVideoScaleType = 0;
+    int mVideoScaleType = PlayerType.ScaleType.SCREEN_SCALE_DEFAULT;
     int mVideoRotation = 0;
 
     @Override
@@ -291,6 +292,11 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
             this.mVideoScaleType = scaleType;
             requestLayout();
         }
+    }
+
+    @Override
+    public int getVideoScaleType() {
+        return  this.mVideoScaleType;
     }
 
     @Override

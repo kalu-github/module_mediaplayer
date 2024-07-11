@@ -18,6 +18,11 @@ public final class VideoExoPlayer extends VideoBasePlayer {
 
     private DemoPlayer mExoPlayer;
 
+
+    public VideoExoPlayer() {
+        resetSpeed();
+    }
+
     @Override
     public DemoPlayer getPlayer() {
         return mExoPlayer;
@@ -177,6 +182,11 @@ public final class VideoExoPlayer extends VideoBasePlayer {
         }
     }
 
+    @Override
+    public boolean setSpeed(float speed) {
+        return false;
+    }
+
     /**
      * 获取当前播放的位置
      */
@@ -225,43 +235,6 @@ public final class VideoExoPlayer extends VideoBasePlayer {
             mExoPlayer.setSurface(surface);
         } catch (Exception e) {
             LogUtil.log("VideoExoPlayer => setSurface => " + e.getMessage());
-        }
-    }
-
-    /**
-     * 设置播放速度
-     */
-    @Override
-    public boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
-        try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
-//            if (speed < 1f)
-//                throw new Exception("speed error: " + speed);
-//            return speed;
-            return false;
-        } catch (Exception e) {
-            LogUtil.log("VideoExoPlayer => setSpeed => " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * 获取播放速度
-     */
-    @Override
-    @FloatRange(from = 1F, to = 4F)
-    public float getSpeed() {
-        try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
-//            if (speed < 1f)
-//                throw new Exception("speed error: " + speed);
-//            return speed;
-            return 1F;
-        } catch (Exception e) {
-            LogUtil.log("VideoExoPlayer => getSpeed => " + e.getMessage());
-            return 1F;
         }
     }
 

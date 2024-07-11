@@ -574,11 +574,4 @@
 
     </ScrollView>
 
-    <lib.kalu.mediaplayer.widget.gradient.GradientView
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="200dp"
-        android:layout_marginRight="200dp" />
-
 </RelativeLayout>

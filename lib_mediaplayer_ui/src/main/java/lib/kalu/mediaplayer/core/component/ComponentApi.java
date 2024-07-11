@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -494,14 +495,27 @@ public interface ComponentApi {
         }
     }
 
-    default void setSpeed(float v) {
+    default void setSpeed(@PlayerType.SpeedType.Value int speed) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.setSpeed(v);
+            playerView.setSpeed(speed);
         } catch (Exception e) {
             LogUtil.log("ComponentApi => setSpeed => " + e.getMessage());
+        }
+    }
+
+    @PlayerType.SpeedType.Value
+    default int getSpeed() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getSpeed();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getSpeed => " + e.getMessage());
+            return PlayerType.SpeedType.Speed_Default;
         }
     }
 
@@ -513,6 +527,19 @@ public interface ComponentApi {
             playerView.setVideoScaleType(scaleType);
         } catch (Exception e) {
             LogUtil.log("ComponentApi => setVideoScaleType => " + e.getMessage());
+        }
+    }
+
+    @PlayerType.ScaleType.Value
+    default int getVideoScaleType() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getVideoScaleType();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getVideoScaleType => " + e.getMessage());
+            return PlayerType.ScaleType.SCREEN_SCALE_DEFAULT;
         }
     }
 }

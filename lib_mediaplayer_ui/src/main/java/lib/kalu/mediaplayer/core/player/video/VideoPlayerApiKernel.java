@@ -318,7 +318,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void setSpeed(float speed) {
+    default void setSpeed(@PlayerType.SpeedType.Value int speed) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             kernel.setSpeed(speed);
@@ -326,12 +326,13 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default float getSpeed() {
+    @PlayerType.SpeedType.Value
+    default int getSpeed() {
         try {
             VideoKernelApi kernel = getVideoKernel();
             return kernel.getSpeed();
         } catch (Exception e) {
-            return 1F;
+            return PlayerType.SpeedType.Speed_Default;
         }
     }
 

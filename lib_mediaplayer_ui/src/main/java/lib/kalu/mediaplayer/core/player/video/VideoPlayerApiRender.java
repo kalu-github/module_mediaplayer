@@ -249,6 +249,19 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
+    @PlayerType.ScaleType.Value
+    default int getVideoScaleType() {
+        try {
+            VideoRenderApi render = getVideoRender();
+            if (null == render)
+                throw new Exception("render error: null");
+            return render.getVideoScaleType();
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiRender => getVideoScaleType => " + e.getMessage());
+            return PlayerType.ScaleType.SCREEN_SCALE_DEFAULT;
+        }
+    }
+
     default void setVideoFormat(int width, int height, @PlayerType.RotationType.Value int rotation) {
         try {
             VideoRenderApi render = getVideoRender();

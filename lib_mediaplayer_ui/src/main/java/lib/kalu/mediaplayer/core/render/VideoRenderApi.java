@@ -58,6 +58,9 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
 
     void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType);
 
+    @PlayerType.ScaleType.Value
+    int getVideoScaleType();
+
     /**
      * 注意：VideoView的宽高一定要定死，否者以下算法不成立
      * 借鉴于网络
@@ -81,7 +84,7 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
 
         try {
             // 裁剪显示
-            if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_SCREEN_CROP) {
+            if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_CROP) {
                 if (videoWidth > 0 && videoHeight > 0) {
                     int v1 = videoWidth * screenHeight;
                     int v2 = screenWidth * videoHeight;
@@ -97,7 +100,7 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
                 }
             }
             // 视频尺寸
-            else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_VIDEO_ORIGINAL) {
+            else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL) {
                 if (videoWidth > 0 && videoHeight > 0) {
                     return new int[]{videoWidth, videoHeight};
                 }
@@ -127,7 +130,7 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
                 }
             }
             // 填充屏幕 => 竖直方向拉伸至屏幕
-            else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_SCREEN_MATCH) {
+            else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_MATCH) {
                 double v1 = ((double) screenWidth) / ((double) screenHeight);
                 double v2 = ((double) videoWidth) / ((double) videoWidth);
 

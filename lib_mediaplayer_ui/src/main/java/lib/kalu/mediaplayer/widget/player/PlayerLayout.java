@@ -238,7 +238,8 @@ public class PlayerLayout extends RelativeLayout {
             LogUtil.log("PlayerLayout => startFloat => " + e.getMessage());
         }
     }
-//
+
+    //
     public final void stopFloat() {
         try {
             PlayerView playerView = getPlayerView();
@@ -641,7 +642,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
+    public final void setSpeed(@PlayerType.SpeedType.Value int speed) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -652,8 +653,8 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    @FloatRange(from = 1F, to = 4F)
-    public final float getSpeed() {
+    @PlayerType.SpeedType.Value
+    public final int getSpeed() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -661,7 +662,7 @@ public class PlayerLayout extends RelativeLayout {
             return playerView.getSpeed();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => setPlayerBackgroundColor => " + e.getMessage());
-            return 1F;
+            return PlayerType.SpeedType.Speed_Default;
         }
     }
 

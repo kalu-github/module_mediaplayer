@@ -6,6 +6,7 @@ import androidx.annotation.FloatRange;
 import org.json.JSONArray;
 
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
@@ -242,10 +243,14 @@ interface VideoKernelApiBase {
 
     void seekTo(long position);
 
-    boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed);
+    boolean setSpeed(float speed);
 
-    @FloatRange(from = 1F, to = 4F)
-    float getSpeed();
+    void setSpeed(@PlayerType.SpeedType.Value int speed);
+
+    @PlayerType.SpeedType.Value
+    int getSpeed();
+
+    void resetSpeed();
 
     void start();
 

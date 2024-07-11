@@ -27,6 +27,10 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
     private FFmpegPlayer mFFmpegPlayer = null;
 
+    public VideoFFmpegPlayer() {
+        resetSpeed();
+    }
+
     @Override
     public VideoFFmpegPlayer getPlayer() {
         return this;
@@ -265,23 +269,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    @FloatRange(from = 1F, to = 4F)
-    public float getSpeed() {
-        try {
-            if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
-//            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-//                throw new Exception("only support above Android M");
-//            return mFFmpegPlayer.getPlaybackParams().getSpeed();
-            return 1f;
-        } catch (Exception e) {
-            LogUtil.log("VideoFFmpegPlayer => getSpeed => " + e.getMessage());
-            return 1f;
-        }
-    }
-
-    @Override
-    public boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
+    public boolean setSpeed(float speed) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");

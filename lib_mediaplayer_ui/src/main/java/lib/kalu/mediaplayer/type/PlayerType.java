@@ -170,20 +170,22 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface ScaleType {
-        int SCREEN_SCALE_SCREEN_CROP = 4_001; // 填充屏幕, 裁剪
-        int SCREEN_SCALE_SCREEN_MATCH = 4_002; // 填充屏幕, 不裁剪, 可能会变形
-        int SCREEN_SCALE_VIDEO_ORIGINAL = 4_003; // 视频尺寸, 可能存在黑边
+        int SCREEN_SCALE_CROP = 4_001; // 填充屏幕, 裁剪
+        int SCREEN_SCALE_MATCH = 4_002; // 填充屏幕, 不裁剪, 可能会变形
+        int SCREEN_SCALE_ORIGINAL = 4_003; // 视频尺寸, 可能存在黑边
         int SCREEN_SCALE_16_9 = 4_004; //16：9比例类型，最为常见
         int SCREEN_SCALE_4_3 = 4_005;  //4：3比例类型，也比较常见
+        int SCREEN_SCALE_DEFAULT = SCREEN_SCALE_MATCH; // 默认
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({SCREEN_SCALE_SCREEN_CROP,
-                SCREEN_SCALE_SCREEN_MATCH,
-                SCREEN_SCALE_VIDEO_ORIGINAL,
+        @IntDef({SCREEN_SCALE_CROP,
+                SCREEN_SCALE_MATCH,
+                SCREEN_SCALE_ORIGINAL,
                 SCREEN_SCALE_16_9,
-                SCREEN_SCALE_4_3})
+                SCREEN_SCALE_4_3,
+                SCREEN_SCALE_DEFAULT})
         @interface Value {
         }
     }
@@ -411,6 +413,40 @@ public @interface PlayerType {
 //                EVENT_AUDIO_DECODED_START,
 //                EVENT_VIDEO_DECODED_START
         })
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface SpeedType {
+        int Speed_0_5 = 8_001;
+        int Speed_1_0 = 8_002;
+        int Speed_1_5 = 8_003;
+        int Speed_2_0 = 8_004;
+        int Speed_2_5 = 8_005;
+        int Speed_3_0 = 8_006;
+        int Speed_3_5 = 8_007;
+        int Speed_4_0 = 8_008;
+        int Speed_4_5 = 8_009;
+        int Speed_5_0 = 8_010;
+        int Speed_Default = Speed_1_0;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef({Speed_0_5,
+                Speed_1_0,
+                Speed_1_5,
+                Speed_2_0,
+                Speed_2_5,
+                Speed_3_0,
+                Speed_3_5,
+                Speed_4_0,
+                Speed_4_5,
+                Speed_5_0,
+                Speed_Default})
         @interface Value {
         }
     }

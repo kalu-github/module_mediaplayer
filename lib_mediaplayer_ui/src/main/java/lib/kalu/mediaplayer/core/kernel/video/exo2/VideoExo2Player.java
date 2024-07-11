@@ -76,6 +76,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
     private ExoPlayer mExoPlayer;
     private ExoPlayer.Builder mExoPlayerBuilder;
 
+    public VideoExo2Player() {
+        resetSpeed();
+    }
+
     @Override
     public ExoPlayer getPlayer() {
         return mExoPlayer;
@@ -377,11 +381,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
     }
 
-    /**
-     * 设置播放速度
-     */
     @Override
-    public boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
+    public boolean setSpeed(float speed) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -399,24 +400,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
     }
 
-    @Override
-    @FloatRange(from = 1F, to = 4F)
-    public float getSpeed() {
-        try {
-            if (null == mExoPlayer)
-                throw new Exception("mMediaPlayer error: null");
-            PlaybackParameters playbackParameters = mExoPlayer.getPlaybackParameters();
-            if (null == playbackParameters)
-                throw new Exception("playbackParameters error: null");
-            float speed = playbackParameters.speed;
-            if (speed < 1f)
-                throw new Exception("speed error: " + speed);
-            return speed;
-        } catch (Exception e) {
-            LogUtil.log("VideoExo2Player => getSpeed => " + e.getMessage());
-            return 1F;
-        }
-    }
+    /**
+     * 设置播放速度
+     */
+
 
     @Override
     public void setVolume(float v1, float v2) {

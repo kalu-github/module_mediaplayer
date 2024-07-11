@@ -61,6 +61,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 
     @Override
     public void init() {
+        this.mVideoScaleType = PlayerType.ScaleType.SCREEN_SCALE_MATCH;
         setFocusable(false);
         setFocusableInTouchMode(false);
         setWillNotDraw(true); //禁止onDraw
@@ -293,7 +294,7 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
 
     int mVideoWidth = 0;
     int mVideoHeight = 0;
-    int mVideoScaleType = 0;
+    int mVideoScaleType = PlayerType.ScaleType.SCREEN_SCALE_DEFAULT;
     int mVideoRotation = 0;
 
     @Override
@@ -353,6 +354,11 @@ public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderAp
             this.mVideoScaleType = scaleType;
             requestLayout();
         }
+    }
+
+    @Override
+    public int getVideoScaleType() {
+        return  this.mVideoScaleType;
     }
 
     @Override

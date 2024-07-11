@@ -21,6 +21,10 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     private lib.kalu.vlc.widget.VlcPlayer mVlcPlayer;
     private lib.kalu.vlc.widget.OnVlcInfoChangeListener mVlcPlayerListener;
 
+    public VideoVlcPlayer() {
+        resetSpeed();
+    }
+
     @Override
     public VideoVlcPlayer getPlayer() {
         return this;
@@ -271,23 +275,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    @FloatRange(from = 1F, to = 4F)
-    public float getSpeed() {
-        try {
-            if (null == mVlcPlayer)
-                throw new Exception("mIjkPlayer error: null");
-            float speed = mVlcPlayer.getSpeed();
-            if (speed < 1f)
-                throw new Exception("speed error: " + speed);
-            return speed;
-        } catch (Exception e) {
-            LogUtil.log("VideoVlcPlayer => getSpeed => " + e.getMessage());
-            return 1F;
-        }
-    }
-
-    @Override
-    public boolean setSpeed(@FloatRange(from = 1F, to = 4F) float speed) {
+    public boolean setSpeed(float speed) {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mIjkPlayer error: null");
