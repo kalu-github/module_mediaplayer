@@ -170,8 +170,6 @@ public final class SeekBar extends android.widget.SeekBar {
                 progress = 0;
             }
 
-            LogUtil.log("SeekBar => onDraw => Type3 progress = " + TimeUtil.formatTimeMillis(progress));
-
             String text = TimeUtil.formatTimeMillis(progress, duration);
 //            LogUtil.log("SeekBar => onDraw => duration = " + duration + ", progress = " + progress + ", text = " + text + ", playPosition = " + playPosition + ", mMode = " + mMode);
             Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
