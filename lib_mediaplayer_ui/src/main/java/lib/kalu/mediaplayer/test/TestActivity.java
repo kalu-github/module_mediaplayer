@@ -54,6 +54,8 @@ public final class TestActivity extends Activity {
     public static final String INTENT_DATA = "intent_data"; // 外部传入DATA
 
     public static final String INTENT_EPISODE = "intent_episode"; // 选集
+    public static final String INTENT_EPISODE_PLAY_INDEX = "intent_episode_play_index"; // 选集
+    public static final String INTENT_EPISODE_ITEM_COUNT = "intent_episode_item_count"; // 选集
     public static final String INTENT_URL = "intent_url"; // 视频Url
 
     public static final String INTENT_SRT = "intent_srt"; // 字幕Url
@@ -197,6 +199,7 @@ public final class TestActivity extends Activity {
         playerLayout.setOnPlayerEpisodeListener(new OnPlayerEpisodeListener() {
             @Override
             public void onEpisode(int pos) {
+                getIntent().putExtra(INTENT_EPISODE_PLAY_INDEX, pos);
                 startPlayer();
             }
         });
@@ -300,9 +303,8 @@ public final class TestActivity extends Activity {
             return;
         }
 
-        boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
-
         StartArgs.Builder builder = new StartArgs.Builder();
+        builder.setUrl(url);
 
         // 试看 45s
         boolean trySee = getIntent().getBooleanExtra(INTENT_TRY_SEE, false);
@@ -323,16 +325,25 @@ public final class TestActivity extends Activity {
 
         boolean episode = getIntent().getBooleanExtra(INTENT_EPISODE, false);
         if (episode) {
-            builder.setEpisodePlayingIndex(64);
-            builder.setEpisodeItemCount(66);
+            int playIndex = getIntent().getIntExtra(INTENT_EPISODE_PLAY_INDEX, -1);
+            int itemCount = getIntent().getIntExtra(INTENT_EPISODE_ITEM_COUNT, -1);
+            builder.setEpisodePlayingIndex(playIndex);
+            builder.setEpisodeItemCount(itemCount);
         } else {
             builder.setEpisodePlayingIndex(-1);
             builder.setEpisodeItemCount(-1);
         }
 
+        if (episode) {
+            int playIndex = getIntent().getIntExtra(INTENT_EPISODE_PLAY_INDEX, -1);
+            builder.setTitle("测试视频 第" + (playIndex + 1) + "集");
+        } else {
+            builder.setTitle("测试视频");
+        }
+
+        boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
         builder.setLive(live);
-        builder.setTitle("测试title");
-        builder.setUrl(url);
+
         StartArgs build = builder.build();
         PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
         videoLayout.start(build);
