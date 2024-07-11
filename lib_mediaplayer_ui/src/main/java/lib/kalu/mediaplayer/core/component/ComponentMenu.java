@@ -398,9 +398,11 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             int episodeItemCount = getEpisodeItemCount();
             int num = episodePlayingIndex / itemCount;
             int start = num * itemCount;
-            int length = start + itemCount;
-            if (length > episodeItemCount) {
-                start -= Math.abs(length - episodeItemCount);
+            if (episodeItemCount > itemCount) {
+                int length = start + itemCount;
+                if (length > episodeItemCount) {
+                    start -= Math.abs(length - episodeItemCount);
+                }
             }
 
             for (int i = 0; i < itemCount; i++) {
@@ -475,14 +477,24 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 }
                 // 选集
                 else {
-                    radioButton.setEnabled(true);
-                    radioButton.setVisibility(View.VISIBLE);
 
-                    int position = i + start;
-                    radioButton.setTag(position);
-                    radioButton.setText(String.valueOf(position + 1));
-                    radioButton.setChecked(position == episodePlayingIndex);
-                    radioButton.setSelected(position == episodePlayingIndex);
+                    if (i + 1 < episodeItemCount) {
+                        radioButton.setEnabled(true);
+                        radioButton.setVisibility(View.VISIBLE);
+
+                        int position = i + start;
+                        radioButton.setTag(position);
+                        radioButton.setText(String.valueOf(position + 1));
+                        radioButton.setChecked(position == episodePlayingIndex);
+                        radioButton.setSelected(position == episodePlayingIndex);
+                    } else {
+                        radioButton.setEnabled(false);
+                        radioButton.setVisibility(View.GONE);
+                        radioButton.setTag(num);
+                        radioButton.setText("");
+                        radioButton.setChecked(false);
+                        radioButton.setSelected(false);
+                    }
                 }
             }
         } catch (Exception e) {

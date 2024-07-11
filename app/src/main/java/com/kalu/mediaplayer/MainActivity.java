@@ -46,8 +46,8 @@ public class MainActivity extends Activity {
                 intent.putExtra(TestActivity.INTENT_SEEK, isSeek());
                 intent.putExtra(TestActivity.INTENT_TRY_SEE, isTrySee());
                 intent.putExtra(TestActivity.INTENT_EPISODE, isEpisode());
-                intent.putExtra(TestActivity.INTENT_EPISODE_PLAY_INDEX, 64);
-                intent.putExtra(TestActivity.INTENT_EPISODE_ITEM_COUNT, 80);
+                intent.putExtra(TestActivity.INTENT_EPISODE_PLAY_INDEX, 1);
+                intent.putExtra(TestActivity.INTENT_EPISODE_ITEM_COUNT, 4);
                 startActivity(intent);
             }
         });
