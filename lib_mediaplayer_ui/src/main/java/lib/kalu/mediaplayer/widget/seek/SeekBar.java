@@ -94,6 +94,7 @@ public final class SeekBar extends android.widget.SeekBar {
                 throw new Exception("warning: duration <= 0");
             super.onDraw(canvas);
         } catch (Exception e) {
+            LogUtil.log("SeekBar => onDraw => Exception1 " + e.getMessage());
         }
 
         // 时长
@@ -142,6 +143,7 @@ public final class SeekBar extends android.widget.SeekBar {
             canvas.drawText(text, x, y, mPaint);
 
         } catch (Exception e) {
+            LogUtil.log("SeekBar => onDraw => Exception2 " + e.getMessage());
         }
 
         // 进度
@@ -167,6 +169,8 @@ public final class SeekBar extends android.widget.SeekBar {
             if (progress < 0) {
                 progress = 0;
             }
+
+            LogUtil.log("SeekBar => onDraw => Type3 progress = " + TimeUtil.formatTimeMillis(progress));
 
             String text = TimeUtil.formatTimeMillis(progress, duration);
 //            LogUtil.log("SeekBar => onDraw => duration = " + duration + ", progress = " + progress + ", text = " + text + ", playPosition = " + playPosition + ", mMode = " + mMode);
@@ -194,6 +198,7 @@ public final class SeekBar extends android.widget.SeekBar {
             canvas.drawText(text, x, y, mPaint);
 
         } catch (Exception e) {
+            LogUtil.log("SeekBar => onDraw => Exception3 " + e.getMessage());
         }
 
         // 快进快退 提示
@@ -235,6 +240,7 @@ public final class SeekBar extends android.widget.SeekBar {
 
             canvas.drawText(text, x, y, mPaint);
         } catch (Exception e) {
+            LogUtil.log("SeekBar => onDraw => Exception4 " + e.getMessage());
         }
     }
 
@@ -272,9 +278,7 @@ public final class SeekBar extends android.widget.SeekBar {
     }
 
     public void setPlayPosition(long playPosition) {
-        if (this.playPosition < playPosition) {
-            this.playPosition = playPosition;
-        }
+        this.playPosition = playPosition;
     }
 
     public void clearPlayPosition() {

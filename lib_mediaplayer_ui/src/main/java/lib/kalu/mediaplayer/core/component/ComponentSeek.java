@@ -11,6 +11,8 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.TimeUtil;
+import lib.kalu.mediaplayer.widget.subtitle.model.Time;
 
 
 public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
@@ -18,6 +20,11 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     public ComponentSeek(Context context) {
         super(context);
         inflate();
+    }
+
+    @Override
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_seek_root;
     }
 
     @Override
@@ -121,11 +128,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public int initLayoutIdComponentRoot() {
-        return R.id.module_mediaplayer_component_seek_root;
-    }
-
-    @Override
     public void callEventListener(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_FAST_FORWARD_START:
@@ -144,6 +146,19 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             case PlayerType.StateType.STATE_ERROR:
             case PlayerType.StateType.STATE_END:
                 onUpdateProgress(false, 0, 0, 0);
+                break;
+            case PlayerType.StateType.STATE_SEEK_FINISH:
+                try {
+                    long position = getPosition();
+                    long duration = getDuration();
+//            LogUtil.log("ComponentSeek => show => position = " + TimeUtil.formatTimeMillis(position) + ", duration = " + TimeUtil.formatTimeMillis(duration));
+
+                    lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findSeekBar();
+                    seekBar.setMax((int) duration);
+                    seekBar.setProgress((int) position);
+                    seekBar.setPlayPosition((int) position);
+                } catch (Exception e) {
+                }
                 break;
         }
     }
@@ -283,11 +298,14 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public final void show() {
+    public void show() {
+        ComponentApiSeek.super.show();
 
         try {
             long position = getPosition();
             long duration = getDuration();
+//            LogUtil.log("ComponentSeek => show => position = " + TimeUtil.formatTimeMillis(position) + ", duration = " + TimeUtil.formatTimeMillis(duration));
+
             lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findSeekBar();
             seekBar.setMax((int) duration);
             seekBar.setProgress((int) position);
@@ -296,22 +314,15 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
         }
 
         try {
-            findViewById(R.id.module_mediaplayer_component_seek_root).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => show => " + e.getMessage());
-        }
-        try {
             setTag(R.id.module_mediaplayer_component_seek_sb, true);
         } catch (Exception e) {
         }
     }
 
     @Override
-    public final void hide() {
-        try {
-            findViewById(R.id.module_mediaplayer_component_seek_root).setVisibility(View.GONE);
-        } catch (Exception e) {
-        }
+    public void hide() {
+        ComponentApiSeek.super.hide();
+
         try {
             setTag(R.id.module_mediaplayer_component_seek_sb, false);
         } catch (Exception e) {
