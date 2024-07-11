@@ -495,6 +495,36 @@ public interface ComponentApi {
         }
     }
 
+    default boolean isTrySee() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            StartArgs tags = playerView.getTags();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            return tags.isTrySee();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => isTrySee => " + e.getMessage());
+            return false;
+        }
+    }
+
+    default String getTitle() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            StartArgs tags = playerView.getTags();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            return tags.getTitle();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getTitle => " + e.getMessage());
+            return "";
+        }
+    }
+
     default void setSpeed(@PlayerType.SpeedType.Value int speed) {
         try {
             PlayerView playerView = getPlayerView();

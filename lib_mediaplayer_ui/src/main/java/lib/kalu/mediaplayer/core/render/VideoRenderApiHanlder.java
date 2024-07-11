@@ -28,8 +28,7 @@ public interface VideoRenderApiHanlder extends VideoRenderApiBase {
                     }
                 };
             }
-            if (mHandlerUpdateProgress[0].hasMessages(10100))
-                throw new Exception("warning: hasMessages 10100");
+            mHandlerUpdateProgress[0].removeCallbacksAndMessages(null);
             mHandlerUpdateProgress[0].sendEmptyMessageDelayed(10100, 1000);
         } catch (Exception e) {
             LogUtil.log("VideoRenderApiHanlder => startUpdateProgress => Exception " + e.getMessage());
@@ -40,7 +39,6 @@ public interface VideoRenderApiHanlder extends VideoRenderApiBase {
     default void stopUpdateProgress() {
         try {
             if (null != mHandlerUpdateProgress[0]) {
-                mHandlerUpdateProgress[0].removeMessages(10100);
                 mHandlerUpdateProgress[0].removeCallbacksAndMessages(null);
                 mHandlerUpdateProgress[0] = null;
                 LogUtil.log("VideoRenderApiHanlder => stopUpdateProgress => stop mHandlerUpdateProgress");

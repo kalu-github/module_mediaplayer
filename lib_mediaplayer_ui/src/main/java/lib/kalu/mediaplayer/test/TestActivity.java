@@ -4,17 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
-
-import org.json.JSONArray;
 
 import java.util.LinkedList;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.core.component.ComponentApiLoading;
 import lib.kalu.mediaplayer.core.component.ComponentLoadingGradient;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
@@ -25,11 +20,10 @@ import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.component.ComponentError;
 import lib.kalu.mediaplayer.core.component.ComponentInit;
-import lib.kalu.mediaplayer.core.component.ComponentLoading;
 import lib.kalu.mediaplayer.core.component.ComponentBuffering;
 import lib.kalu.mediaplayer.core.component.ComponentPause;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
-import lib.kalu.mediaplayer.core.component.ComponentTrySee;
+import lib.kalu.mediaplayer.core.component.ComponentWarningTrySee;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
@@ -183,7 +177,7 @@ public final class TestActivity extends Activity {
         ComponentPause pause = new ComponentPause(getApplicationContext());
         componentApis.add(pause);
         // try
-        ComponentTrySee trys = new ComponentTrySee(getApplicationContext());
+        ComponentWarningTrySee trys = new ComponentWarningTrySee(getApplicationContext());
         componentApis.add(trys);
         // 起播详情
         ComponentWarningPlayInfo info = new ComponentWarningPlayInfo(getApplicationContext());

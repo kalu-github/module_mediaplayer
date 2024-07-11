@@ -53,7 +53,16 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
         switch (playState) {
             case PlayerType.StateType.STATE_VIDEO_RENDERING_START:
                 LogUtil.log("ComponentWarningPlayInfo => playState = " + playState);
-                show();
+                try {
+                    boolean componentShowing = isComponentShowing();
+                    if (componentShowing)
+                        throw new Exception("warning: componentShowing false");
+                    boolean trySee = isTrySee();
+                    if (trySee)
+                        throw new Exception("warning: trySee true");
+                    show();
+                } catch (Exception d) {
+                }
                 break;
         }
     }
