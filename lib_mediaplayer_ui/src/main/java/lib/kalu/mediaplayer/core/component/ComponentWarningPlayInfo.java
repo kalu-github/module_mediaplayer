@@ -4,19 +4,14 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.TimeUtil;
-import lib.kalu.mediaplayer.widget.player.PlayerView;
 import lib.kalu.mediaplayer.widget.seek.SeekBar;
 
 public class ComponentWarningPlayInfo extends RelativeLayout implements ComponentApiWarningPlayInfo {
@@ -57,13 +52,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
                     boolean componentShowing = isComponentShowing();
                     if (componentShowing)
                         throw new Exception("warning: componentShowing false");
-                    boolean trySee;
-                    StartArgs args = getStartArgs();
-                    if (null == args) {
-                        trySee = false;
-                    } else {
-                        trySee = args.isTrySee();
-                    }
+                    boolean trySee = isTrySee();
                     if (trySee)
                         throw new Exception("warning: trySee true");
                     show();
@@ -101,11 +90,8 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             boolean showWarningPlayInfoRecord = isShowWarningPlayInfoRecord();
             if (!showWarningPlayInfoRecord)
                 throw new Exception("warning: showWarningPlayInfoRecord false");
-            StartArgs tags = getStartArgs();
-            if (null == tags)
-                throw new Exception("error: tags null");
-            long seek = tags.getSeek();
-            if (seek <= 0)
+            long seek = getSeek();
+            if (seek <= 0L)
                 throw new Exception("warning: seek <=0");
             String millis = TimeUtil.formatTimeMillis(seek);
             String string = getResources().getString(R.string.module_mediaplayer_string_play_record, millis);
@@ -115,10 +101,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
         }
 
         try {
-            StartArgs tags = getStartArgs();
-            if (null == tags)
-                throw new Exception("error: tags null");
-            String mediaTitle = tags.getTitle();
+            String mediaTitle = getTitle();
             TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_title);
             textView.setText(mediaTitle);
         } catch (Exception e) {
@@ -129,13 +112,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             if (duration <= 0)
                 throw new Exception("warning: duration<=0");
             long position = getPosition();
-            long max;
-            StartArgs args = getStartArgs();
-            if (null == args) {
-                max = 0L;
-            } else {
-                max = args.getMaxDuration();
-            }
+            long max = getMaxDuration();
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_play_info_seekbar);
             seekBar.setProgress((int) position);
             seekBar.setMax((int) (max > 0 ? max : duration));

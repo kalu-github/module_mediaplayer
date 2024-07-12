@@ -516,21 +516,6 @@ public interface ComponentApi {
         }
     }
 
-    default StartArgs getStartArgs() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: playerView null");
-            StartArgs tags = playerView.getTags();
-            if (null == tags)
-                throw new Exception("error: tags null");
-            return tags;
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => getStartArgs => " + e.getMessage());
-            return null;
-        }
-    }
-
     default OnPlayerEpisodeListener getOnPlayerEpisodeListener() {
         try {
             PlayerView playerView = getPlayerView();
@@ -543,6 +528,69 @@ public interface ComponentApi {
         } catch (Exception e) {
             LogUtil.log("ComponentApi => getOnPlayerEpisodeListener => " + e.getMessage());
             return null;
+        }
+    }
+
+    default StartArgs getStartArgs() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("error: playerView null");
+            StartArgs args = playerView.getTags();
+            if (null == args)
+                throw new Exception("error: args null");
+            return args;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getStartArgs => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default long getMaxDuration() {
+        try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            return args.getMaxDuration();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getMaxDuration => " + e.getMessage());
+            return 0L;
+        }
+    }
+
+    default String getTitle() {
+        try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            return args.getTitle();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getTitle => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default boolean isTrySee() {
+        try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            return args.isTrySee();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => isTrySee => " + e.getMessage());
+            return false;
+        }
+    }
+
+    default long getSeek() {
+        try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            return args.getSeek();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getSeek => " + e.getMessage());
+            return 0L;
         }
     }
 }

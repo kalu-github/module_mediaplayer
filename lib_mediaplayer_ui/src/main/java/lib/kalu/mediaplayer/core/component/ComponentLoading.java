@@ -55,13 +55,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApiLoad
         ComponentApiLoading.super.show();
 
         try {
-            boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
-            StartArgs tags = getStartArgs();
-            if (null == tags)
-                throw new Exception("error: tags null");
-            String mediaTitle = tags.getTitle();
+            String mediaTitle = getTitle();
             setComponentText(mediaTitle);
         } catch (Exception e) {
         }

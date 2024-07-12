@@ -37,13 +37,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
         // 试看
         try {
-            boolean trySee;
-            StartArgs args = getStartArgs();
-            if (null == args) {
-                trySee = false;
-            } else {
-                trySee = args.isTrySee();
-            }
+            boolean trySee = isTrySee();
             if (trySee)
                 throw new Exception("warning: trySee true");
         } catch (Exception e) {

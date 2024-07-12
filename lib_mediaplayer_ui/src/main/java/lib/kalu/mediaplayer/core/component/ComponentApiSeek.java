@@ -83,13 +83,7 @@ public interface ComponentApiSeek extends ComponentApi {
                     progress = (int) duration;
                 }
 
-                long max;
-                StartArgs tags = getStartArgs();
-                if (null == tags) {
-                    max = 0L;
-                } else {
-                    max = tags.getMaxDuration();
-                }
+                long max = getMaxDuration();
                 onUpdateProgress(true, max, progress, duration);
             }
             // long click
@@ -120,13 +114,7 @@ public interface ComponentApiSeek extends ComponentApi {
                 if (progress >= duration) {
                     progress = (int) duration;
                 }
-                long max;
-                StartArgs tags = getStartArgs();
-                if (null == tags) {
-                    max = 0L;
-                } else {
-                    max = tags.getMaxDuration();
-                }
+                long max = getMaxDuration();
                 onUpdateProgress(true, max, progress, duration);
             }
         } catch (Exception e) {

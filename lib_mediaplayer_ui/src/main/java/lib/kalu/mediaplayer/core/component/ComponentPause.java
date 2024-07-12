@@ -100,13 +100,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public void hide() {
 
         try {
-            boolean trySee;
-            StartArgs args = getStartArgs();
-            if (null == args) {
-                trySee = false;
-            } else {
-                trySee = args.isTrySee();
-            }
+            boolean trySee = isTrySee();
             if (trySee)
                 throw new Exception("warning: trySee true");
             boolean componentShowing = isComponentShowing();
@@ -127,13 +121,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public void show() {
 
         try {
-            boolean trySee;
-            StartArgs args = getStartArgs();
-            if (null == args) {
-                trySee = false;
-            } else {
-                trySee = args.isTrySee();
-            }
+            boolean trySee = isTrySee();
             if (trySee)
                 throw new Exception("warning: trySee true");
             boolean componentShowing = isComponentShowing();
@@ -150,13 +138,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                 if (duration <= 0)
                     throw new Exception("warning: duration<=0");
                 long position = getPosition();
-                long max;
-                StartArgs tags = getStartArgs();
-                if (null == tags) {
-                    max = 0L;
-                } else {
-                    max = tags.getMaxDuration();
-                }
+                long max = getMaxDuration();
                 SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_pause_sb);
                 seekBar.setProgress((int) position);
                 seekBar.setMax((int) (max > 0 ? max : duration));
@@ -165,10 +147,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
         }
 
         try {
-            StartArgs tags = getStartArgs();
-            if (null == tags)
-                throw new Exception("error: tags null");
-            String mediaTitle = tags.getTitle();
+            String mediaTitle = getTitle();
             setComponentText(mediaTitle);
         } catch (Exception e) {
         }
