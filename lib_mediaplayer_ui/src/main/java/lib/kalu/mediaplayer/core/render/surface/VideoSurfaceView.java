@@ -62,7 +62,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Override
     public void init() {
-        this.mVideoScaleType = PlayerType.ScaleType.SCREEN_SCALE_MATCH;
+        VideoRenderApi.super.init();
         setFocusable(false);
         setFocusableInTouchMode(false);
         setWillNotDraw(true); //禁止onDraw
@@ -247,119 +247,15 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
      */
     @Override
     public void setRotation(float rotation) {
-        try {
-            float v = getRotation();
-            if (v == rotation)
-                throw new Exception("rotation warning: " + rotation);
-            super.setRotation(rotation);
-            requestLayout();
-        } catch (Exception e) {
-            LogUtil.log("VideoSurfaceView => setRotation => " + e.getMessage());
-        }
-    }
-
-    /***************/
-
-//    private void drawBitmap() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Canvas canvas = null;
-//                try {
-//                    SurfaceHolder holder = getHolder();
-//                    if (null == holder)
-//                        throw new Exception("holder warning: null");
-//                    canvas = holder.lockCanvas();
-//                    Bitmap bitmap = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
-//                    bitmap.eraseColor(Color.RED);//填充颜色
-//                    canvas.drawBitmap(bitmap, 0, 0, null);
-//                } catch (Exception e) {
-//                    MPLogUtil.log("VideoSurfaceView => drawBitmap => " + e.getMessage());
-//                }
-//                try {
-//                    SurfaceHolder holder = getHolder();
-//                    if (null == holder)
-//                        throw new Exception("holder warning: null");
-//                    if (null == canvas)
-//                        throw new Exception("canvas warning: null");
-//                    //手动try catch一下这个方法，让程序在4.3的手机上不至于崩溃，部分Android13也会崩溃
-//                    getHolder().unlockCanvasAndPost(canvas);
-//                } catch (Exception e) {
-//                    MPLogUtil.log("VideoSurfaceView => drawBitmap => " + e.getMessage());
-//                }
-//            }
-//        }).start();
-//    }
-
-    /***************/
-
-    int mVideoWidth = 0;
-    int mVideoHeight = 0;
-    int mVideoScaleType = PlayerType.ScaleType.SCREEN_SCALE_DEFAULT;
-    int mVideoRotation = 0;
-
-    @Override
-    public void setVideoFormat(int videoWidth, int videoHeight, int videoRotation) {
-        LogUtil.log("VideoSurfaceView => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation);
-
-        boolean update = false;
-        if (mVideoRotation != videoRotation) {
-            update = true;
-            this.mVideoRotation = videoRotation;
-        }
-
-        if (videoWidth != 0 && mVideoWidth != videoWidth) {
-            update = true;
-            this.mVideoWidth = videoWidth;
-        }
-        if (videoHeight != 0 && mVideoHeight != videoHeight) {
-            update = true;
-            this.mVideoHeight = videoHeight;
-        }
-        if (update) {
-            requestLayout();
-        }
-    }
-
-    @Override
-    public void setVideoSize(int videoWidth, int videoHeight) {
-        LogUtil.log("VideoSurfaceView => setVideoSize => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
-
-        boolean update = false;
-        if (videoWidth != 0 && mVideoWidth != videoWidth) {
-            update = true;
-            this.mVideoWidth = videoWidth;
-        }
-        if (videoHeight != 0 && mVideoHeight != videoHeight) {
-            update = true;
-            this.mVideoHeight = videoHeight;
-        }
-        if (update) {
-            requestLayout();
-        }
-    }
-
-    @Override
-    public void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
-        LogUtil.log("VideoSurfaceView => setVideoRotation => videoRotation = " + videoRotation);
-        if (mVideoRotation != videoRotation) {
-            this.mVideoRotation = videoRotation;
-            requestLayout();
-        }
-    }
-
-    @Override
-    public void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
-        LogUtil.log("VideoSurfaceView => setVideoScaleType => scaleType = " + scaleType);
-        if (mVideoScaleType != scaleType) {
-            this.mVideoScaleType = scaleType;
-            requestLayout();
-        }
-    }
-
-    @Override
-    public int getVideoScaleType() {
-        return  this.mVideoScaleType;
+//        try {
+//            float v = getRotation();
+//            if (v == rotation)
+//                throw new Exception("rotation warning: " + rotation);
+//            super.setRotation(rotation);
+//            requestLayout();
+//        } catch (Exception e) {
+//            LogUtil.log("VideoSurfaceView => setRotation => " + e.getMessage());
+//        }
     }
 
     @Override
@@ -367,9 +263,9 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
         try {
             int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
             int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
-            int[] measureSpec = doMeasureSpec(screenWidth, screenHeight, mVideoWidth, mVideoHeight, mVideoScaleType, mVideoRotation);
-            if (null == measureSpec || measureSpec.length != 2)
-                throw new Exception("measureSpec error: " + measureSpec);
+            int[] measureSpec = doMeasureSpec(screenWidth, screenHeight);
+            if (null == measureSpec)
+                throw new Exception("warning: measureSpec null");
             int width = measureSpec[0];
             int height = measureSpec[1];
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
@@ -377,7 +273,8 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
             super.onMeasure(specW, specH);
 //            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
         } catch (Exception e) {
-            LogUtil.log("VideoSurfaceView => onMeasure => " + e.getMessage());
+            LogUtil.log("VideoSurfaceView => onMeasure => Exception " + e.getMessage());
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
 }

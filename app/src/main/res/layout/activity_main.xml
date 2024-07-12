@@ -76,34 +76,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="default" />
+                    android:text="自动" />
 
                 <RadioButton
                     android:id="@+id/main_scale2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="original" />
+                    android:text="原始" />
 
                 <RadioButton
                     android:id="@+id/main_scale3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="matchParent" />
+                    android:text="全屏" />
 
                 <RadioButton
                     android:id="@+id/main_scale4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="cropCenter" />
-
-                <RadioButton
-                    android:id="@+id/main_scale5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="4:3" />
 
                 <RadioButton
-                    android:id="@+id/main_scale6"
+                    android:id="@+id/main_scale5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="16:9" />

@@ -463,16 +463,17 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     }
 
                     if (i < scales.length) {
-                        if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL) {
+                        radioButton.setTag(scales[i]);
+                        if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_REAL) {
                             radioButton.setText("原始");
-                        } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_CROP) {
-                            radioButton.setText("裁剪");
+                        } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_FULL) {
+                            radioButton.setText("全屏");
                         } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_4_3) {
                             radioButton.setText("4:3");
                         } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_16_9) {
                             radioButton.setText("16:9");
                         } else {
-                            radioButton.setText("全屏");
+                            radioButton.setText("自动");
                         }
                     } else {
                         radioButton.setText("");
@@ -518,21 +519,11 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         RadioButton radioButton = (RadioButton) itemGroup.findViewById(focusId);
         radioButton.setChecked(true);
 
-        // 4:3
-        if (focusId == R.id.module_mediaplayer_component_menu_item_n0) {
-            setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_4_3);
-        }
-        // 16:9
-        else if (focusId == R.id.module_mediaplayer_component_menu_item_n1) {
-            setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_16_9);
-        }
-        // 全屏
-        else if (focusId == R.id.module_mediaplayer_component_menu_item_n2) {
-            setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_MATCH);
-        }
-        // 原始大小
-        else if (focusId == R.id.module_mediaplayer_component_menu_item_n3) {
-            setVideoScaleType(PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL);
+        try {
+            int tag = (int) radioButton.getTag();
+            setVideoScaleType(tag);
+            setSpeed(tag);
+        } catch (Exception e) {
         }
     }
 

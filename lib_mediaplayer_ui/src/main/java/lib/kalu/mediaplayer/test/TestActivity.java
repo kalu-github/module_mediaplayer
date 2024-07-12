@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.test;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.WindowManager;
@@ -156,6 +157,7 @@ public final class TestActivity extends Activity {
         // loading
         ComponentLoadingGradient loading = new ComponentLoadingGradient(getApplicationContext());
         loading.setComponentShowNetSpeed(true);
+        loading.setComponentBackgroundColorInt(Color.BLACK);
         componentApis.add(loading);
         // seek
         ComponentSeek seek = new ComponentSeek(getApplicationContext());

@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.Surface;
+import android.view.View;
 import android.view.ViewGroup;
 
 
@@ -29,7 +30,94 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlder {
 
-    void init();
+    /********/
+
+    int[] mVideoWidth = new int[]{0};
+    int[] mVideoHeight = new int[]{0};
+
+    default void setVideoSize(int videoWidth, int videoHeight) {
+        try {
+            if (mVideoWidth[0] == videoWidth && mVideoHeight[0] == videoWidth)
+                throw new Exception("warning: mVideoWidth && mVideoHeight not change");
+            this.mVideoWidth[0] = videoWidth;
+            this.mVideoHeight[0] = videoHeight;
+            ((View) this).requestLayout();
+        } catch (Exception e) {
+            LogUtil.log("VideoRenderApi => setVideoSize => Exception " + e.getMessage());
+        }
+    }
+
+    default int getVideoWidth() {
+        return this.mVideoWidth[0];
+    }
+
+    default int getVideoHeight() {
+        return this.mVideoHeight[0];
+    }
+
+    /********/
+
+    int[] mVideoRotation = new int[]{PlayerType.RotationType.Rotation_Default};
+
+    default void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
+        try {
+            if (mVideoRotation[0] == videoRotation)
+                throw new Exception("warning: mVideoRotation not change");
+            this.mVideoRotation[0] = videoRotation;
+            ((View) this).requestLayout();
+        } catch (Exception e) {
+            LogUtil.log("VideoRenderApi => setVideoRotation => Exception " + e.getMessage());
+        }
+    }
+
+    @PlayerType.RotationType.Value
+    default int getVideoRotation() {
+        return mVideoRotation[0];
+    }
+
+    /********/
+
+    int[] mVideoScaleType = new int[]{PlayerSDK.init().getPlayerBuilder().getScaleType()};
+
+    default void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
+        try {
+            if (mVideoScaleType[0] == scaleType)
+                throw new Exception("warning: mVideoScaleType not change");
+            this.mVideoScaleType[0] = scaleType;
+            ((View) this).requestLayout();
+        } catch (Exception e) {
+            LogUtil.log("VideoRenderApi => setVideoScaleType => Exception " + e.getMessage());
+        }
+    }
+
+    @PlayerType.ScaleType.Value
+    default int getVideoScaleType() {
+        return mVideoScaleType[0];
+    }
+
+    /********/
+
+    default void setVideoFormat(int videoWidth, int videoHeight, @PlayerType.RotationType.Value int videoRotation) {
+        try {
+            if (mVideoWidth[0] == videoWidth && mVideoHeight[0] == videoWidth && mVideoRotation[0] == videoRotation)
+                throw new Exception("warning: mVideoWidth && mVideoHeight && videoRotation not change");
+            this.mVideoWidth[0] = videoWidth;
+            this.mVideoHeight[0] = videoHeight;
+            this.mVideoRotation[0] = videoRotation;
+            ((View) this).requestLayout();
+        } catch (Exception e) {
+            LogUtil.log("VideoRenderApi => setVideoFormat => Exception " + e.getMessage());
+        }
+    }
+
+    /********/
+
+    default void init() {
+        mVideoWidth[0] = 0;
+        mVideoHeight[0] = 0;
+        mVideoRotation[0] = PlayerType.RotationType.Rotation_Default;
+        mVideoScaleType[0] = PlayerSDK.init().getPlayerBuilder().getScaleType();
+    }
 
     void addListener();
 
@@ -43,37 +131,18 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
 
     void setScaleX(float v);
 
-    /**
-     * 截图
-     *
-     * @return
-     */
     String screenshot(String url, long position);
-
-    void setVideoFormat(int videoWidth, int videoHeight, @PlayerType.RotationType.Value int videoRotation);
-
-    void setVideoRotation(@PlayerType.RotationType.Value int videoRotation);
-
-    void setVideoSize(int videoWidth, int videoHeight);
-
-    void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType);
-
-    @PlayerType.ScaleType.Value
-    int getVideoScaleType();
 
     /**
      * 注意：VideoView的宽高一定要定死，否者以下算法不成立
      * 借鉴于网络
      */
-    default int[] doMeasureSpec(int screenWidth, int screenHeight,
-                                int videoWidth, int videoHeight,
-                                @PlayerType.ScaleType.Value int videoScaleType,
-                                @PlayerType.RotationType.Value int videoRotation) {
-//        LogUtil.log("VideoRenderApi => doMeasureSpec => screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
+    default int[] doMeasureSpec(int screenWidth, int screenHeight) {
 
-        if (videoScaleType == 0) {
-            videoScaleType = PlayerSDK.init().getPlayerBuilder().getScaleType();
-        }
+        int videoScaleType = getVideoScaleType();
+        int videoRotation = getVideoRotation();
+        int videoWidth = getVideoWidth();
+        int videoHeight = getVideoHeight();
 
         // 软解码时处理旋转信息，交换宽高
         if (videoRotation == 90 || videoRotation == 270) {
@@ -81,75 +150,163 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
 //            heightMeasureSpec = widthMeasureSpec - heightMeasureSpec;
 //            widthMeasureSpec = widthMeasureSpec - heightMeasureSpec;
         }
-
-        try {
-            // 裁剪显示
-            if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_CROP) {
-                if (videoWidth > 0 && videoHeight > 0) {
-                    int v1 = videoWidth * screenHeight;
-                    int v2 = screenWidth * videoHeight;
-                    if (v1 > v2) {
-                        int realH = screenHeight;
-                        int realW = screenHeight * videoWidth / videoHeight;
-                        return new int[]{realW, realH};
-                    } else {
-                        int realW = screenWidth;
-                        int realH = screenWidth * videoHeight / videoWidth;
-                        return new int[]{realW, realH};
-                    }
-                }
+//        LogUtil.log("VideoRenderApi => doMeasureSpec => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
+        // SCREEN_SCALE_ORIGINAL
+        if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_REAL) {
+            try {
+                if (videoWidth <= 0 || videoHeight <= 0)
+                    throw new Exception("warning: videoWidth <= 0 || videoHeight <= 0");
+                if (screenWidth <= 0 || screenHeight <= 0)
+                    throw new Exception("warning: screenWidth <= 0 || screenHeight <= 0");
+                float realW = videoWidth * 1F;
+                float realH = videoHeight * 1F;
+                return new int[]{(int) realW, (int) realH};
+//                // 视频宽高 > 屏幕宽高
+//                if (videoWidth > screenWidth && videoHeight > screenHeight) {
+//                    // 屏幕比例
+//                    float v1 = (float) screenWidth / screenHeight;
+//                    // 视频比例
+//                    float v2 = (float) videoWidth / videoWidth;
+//                    // 屏幕比例 > 视频比例
+//                    if (v1 > v2) {
+//                        float realH = screenHeight * 1F;
+//                        float realW = videoWidth * realH / videoHeight;
+//                        return new int[]{(int) realW, (int) realH};
+//                    }
+//                    // 屏幕比例 < 视频比例
+//                    else {
+//                        float realW = screenWidth * 1F;
+//                        float realH = realW * videoHeight / videoWidth;
+//                        return new int[]{(int) realW, (int) realH};
+//                    }
+//                }
+//                // 视频宽 > 屏幕宽
+//                else if (videoWidth > screenWidth) {
+//                    float realW = videoWidth * 1F;
+//                    float realH = realW * videoHeight / videoWidth;
+//                    return new int[]{(int) realW, (int) realH};
+//                }
+//                // 视频高 > 屏幕高
+//                else if (videoHeight > screenHeight) {
+//                    float realH = screenHeight * 1F;
+//                    float realW = videoWidth * realH / videoHeight;
+//                    return new int[]{(int) realW, (int) realH};
+//                }
+//                // 视频宽高 < 屏幕宽高
+//                else {
+//                    float realW = videoWidth * 1F;
+//                    float realH = videoHeight * 1F;
+//                    return new int[]{(int) realW, (int) realH};
+//                }
+            } catch (Exception e) {
+                LogUtil.log("VideoRenderApi => doMeasureSpec => SCREEN_SCALE_REAL Exception " + e.getMessage());
+                return null;
             }
-            // 视频尺寸
-            else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL) {
-                if (videoWidth > 0 && videoHeight > 0) {
-                    return new int[]{videoWidth, videoHeight};
+        }
+        // SCREEN_SCALE_16_9
+        else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_16_9) {
+            try {
+                if (videoWidth <= 0 || videoHeight <= 0)
+                    throw new Exception("warning: videoWidth <= 0 || videoHeight <= 0");
+                if (screenWidth <= 0 || screenHeight <= 0)
+                    throw new Exception("warning: screenWidth <= 0 || screenHeight <= 0");
+                // 屏幕比例
+                float v1 = (float) screenWidth / screenHeight;
+                // 视频比例
+                float v2 = (float) videoWidth / videoWidth;
+                // 屏幕比例 > 视频比例
+                if (v1 > v2) {
+                    float realH = screenHeight * 1F;
+                    float realW = realH * 16F / 9F;
+                    return new int[]{(int) realW, (int) realH};
                 }
-            }
-            // 16:9
-            else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_16_9) {
-                if (videoWidth > 0 && videoHeight > 0) {
-                    double realH = ((double) screenWidth) / 16 * 9;
-                    if (screenHeight > realH) {
-                        return new int[]{screenWidth, (int) realH};
-                    } else {
-                        double realW = ((double) screenHeight) / 9 * 16;
-                        return new int[]{(int) realW, screenHeight};
-                    }
+                // 屏幕比例 < 视频比例
+                else {
+                    float realW = screenWidth * 1F;
+                    float realH = realW * 9F / 16F;
+                    return new int[]{(int) realW, (int) realH};
                 }
+            } catch (Exception e) {
+                LogUtil.log("VideoRenderApi => doMeasureSpec => SCREEN_SCALE_16_9 Exception " + e.getMessage());
+                return null;
             }
-            // 4:3
-            else if (videoWidth > 0 && videoHeight > 0 && videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_4_3) {
-                if (videoWidth > 0 && videoHeight > 0) {
-                    double realH = ((double) screenWidth) / 4 * 3;
-                    if (screenHeight > realH) {
-                        return new int[]{screenWidth, (int) realH};
-                    } else {
-                        double realW = ((double) screenHeight) / 3 * 4;
-                        return new int[]{(int) realW, screenHeight};
-                    }
+        }
+        // SCREEN_SCALE_4_3
+        else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_4_3) {
+            try {
+                if (videoWidth <= 0 || videoHeight <= 0)
+                    throw new Exception("warning: videoWidth <= 0 || videoHeight <= 0");
+                if (screenWidth <= 0 || screenHeight <= 0)
+                    throw new Exception("warning: screenWidth <= 0 || screenHeight <= 0");
+                // 屏幕比例
+                float v1 = (float) screenWidth / screenHeight;
+                // 视频比例
+                float v2 = (float) videoWidth / videoWidth;
+                // 屏幕比例 > 视频比例
+                if (v1 > v2) {
+                    float realH = screenHeight * 1F;
+                    float realW = realH * 4F / 3F;
+                    return new int[]{(int) realW, (int) realH};
                 }
+                // 屏幕比例 < 视频比例
+                else {
+                    float realW = screenWidth * 1F;
+                    float realH = realW * 3F / 4F;
+                    return new int[]{(int) realW, (int) realH};
+                }
+            } catch (Exception e) {
+                LogUtil.log("VideoRenderApi => doMeasureSpec => SCREEN_SCALE_4_3 Exception " + e.getMessage());
+                return null;
             }
-            // 填充屏幕 => 竖直方向拉伸至屏幕
-            else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_MATCH) {
-                double v1 = ((double) screenWidth) / ((double) screenHeight);
-                double v2 = ((double) videoWidth) / ((double) videoWidth);
-
+        }
+        // SCREEN_SCALE_FULL
+        else if (videoScaleType == PlayerType.ScaleType.SCREEN_SCALE_FULL) {
+            try {
+                if (videoWidth <= 0 || videoHeight <= 0)
+                    throw new Exception("warning: videoWidth <= 0 || videoHeight <= 0");
+                if (screenWidth <= 0 || screenHeight <= 0)
+                    throw new Exception("warning: screenWidth <= 0 || screenHeight <= 0");
+                float realW = screenWidth * 1F;
+                float realH = screenHeight * 1F;
+                return new int[]{(int) realW, (int) realH};
+            } catch (Exception e) {
+                LogUtil.log("VideoRenderApi => doMeasureSpec => SCREEN_SCALE_FULL Exception " + e.getMessage());
+                return null;
+            }
+        }
+        // SCREEN_SCALE_AUTO
+        else {
+            try {
+                if (videoWidth <= 0 || videoHeight <= 0)
+                    throw new Exception("warning: videoWidth <= 0 || videoHeight <= 0");
+                if (screenWidth <= 0 || screenHeight <= 0)
+                    throw new Exception("warning: screenWidth <= 0 || screenHeight <= 0");
+                // 屏幕比例
+                float v1 = (float) screenWidth / screenHeight;
+                // 视频比例
+                float v2 = (float) videoWidth / videoWidth;
                 // 视频宽高比>屏幕宽高比, 以屏幕宽度为基准缩放
                 if (v2 > v1) {
-                    double realW = ((double) screenWidth);
-                    double realH = (((double) screenWidth) / ((double) videoWidth)) * ((double) videoHeight);
+                    float realW = screenWidth * 1F;
+                    float realH = realW * videoHeight / videoWidth;
                     return new int[]{(int) realW, (int) realH};
                 }
                 // 视频宽高比<屏幕宽高比, 以屏幕高度为基准缩放
                 else if (v2 < v1) {
-                    double realH = ((double) screenHeight);
-                    double realW = (((double) screenHeight) / ((double) videoHeight)) * ((double) videoWidth);
+                    float realH = screenHeight * 1F;
+                    float realW = videoWidth * realH / videoHeight;
                     return new int[]{(int) realW, (int) realH};
                 }
+                // 正方形视频
+                else {
+                    float realH = screenHeight * 1F;
+                    float realW = videoWidth * realH / videoHeight;
+                    return new int[]{(int) realW, (int) realH};
+                }
+            } catch (Exception e) {
+                LogUtil.log("VideoRenderApi => doMeasureSpec => SCREEN_SCALE_AUTO Exception " + e.getMessage());
+                return null;
             }
-            throw new Exception();
-        } catch (Exception e) {
-            return new int[]{screenWidth, screenHeight};
         }
     }
 

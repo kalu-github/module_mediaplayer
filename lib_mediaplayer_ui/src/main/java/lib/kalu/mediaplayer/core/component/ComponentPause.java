@@ -74,6 +74,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
             case PlayerType.StateType.STATE_COMPONENT_MENU_SHOW:
                 LogUtil.log("ComponentPause[show] => playState = " + playState);
                 try {
+                    boolean componentShowing = isComponentShowing();
+                    if (!componentShowing)
+                        throw new Exception("warning: componentShowing false");
                     setTag(true);
                     hide();
                 } catch (Exception e) {
@@ -83,6 +86,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
             case PlayerType.StateType.STATE_COMPONENT_MENU_HIDE:
                 LogUtil.log("ComponentPause[gone] => playState = " + playState);
                 try {
+                    boolean componentShowing = isComponentShowing();
+                    if (componentShowing)
+                        throw new Exception("warning: componentShowing true");
                     Object tag = getTag();
                     if (null == tag)
                         throw new Exception("warning: tag null");

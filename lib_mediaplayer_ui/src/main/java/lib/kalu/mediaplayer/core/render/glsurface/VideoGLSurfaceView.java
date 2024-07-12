@@ -50,7 +50,7 @@ public class VideoGLSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Override
     public void init() {
-        this.mVideoScaleType = PlayerType.ScaleType.SCREEN_SCALE_MATCH;
+        VideoRenderApi.super.init();
         setFocusable(false);
         setFocusableInTouchMode(false);
         setWillNotDraw(true); //禁止onDraw
@@ -281,83 +281,14 @@ public class VideoGLSurfaceView extends SurfaceView implements VideoRenderApi {
 
     /***************/
 
-    int mVideoWidth = 0;
-    int mVideoHeight = 0;
-    int mVideoScaleType = PlayerType.ScaleType.SCREEN_SCALE_DEFAULT;
-    int mVideoRotation = 0;
-
-    @Override
-    public void setVideoFormat(int videoWidth, int videoHeight, int videoRotation) {
-        LogUtil.log("VideoGLSurfaceView => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation);
-
-        boolean update = false;
-        if (mVideoRotation != videoRotation) {
-            update = true;
-            this.mVideoRotation = videoRotation;
-        }
-
-        if (videoWidth != 0 && mVideoWidth != videoWidth) {
-            update = true;
-            this.mVideoWidth = videoWidth;
-        }
-        if (videoHeight != 0 && mVideoHeight != videoHeight) {
-            update = true;
-            this.mVideoHeight = videoHeight;
-        }
-        if (update) {
-            requestLayout();
-        }
-    }
-
-    @Override
-    public void setVideoSize(int videoWidth, int videoHeight) {
-        LogUtil.log("VideoGLSurfaceView => setVideoSize => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
-
-        boolean update = false;
-        if (videoWidth != 0 && mVideoWidth != videoWidth) {
-            update = true;
-            this.mVideoWidth = videoWidth;
-        }
-        if (videoHeight != 0 && mVideoHeight != videoHeight) {
-            update = true;
-            this.mVideoHeight = videoHeight;
-        }
-        if (update) {
-            requestLayout();
-        }
-    }
-
-    @Override
-    public void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
-        LogUtil.log("VideoGLSurfaceView => setVideoRotation => videoRotation = " + videoRotation);
-        if (mVideoRotation != videoRotation) {
-            this.mVideoRotation = videoRotation;
-            requestLayout();
-        }
-    }
-
-    @Override
-    public void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
-        LogUtil.log("VideoGLSurfaceView => setVideoScaleType => scaleType = " + scaleType);
-        if (mVideoScaleType != scaleType) {
-            this.mVideoScaleType = scaleType;
-            requestLayout();
-        }
-    }
-
-    @Override
-    public int getVideoScaleType() {
-        return  this.mVideoScaleType;
-    }
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         try {
             int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
             int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
-            int[] measureSpec = doMeasureSpec(screenWidth, screenHeight, mVideoWidth, mVideoHeight, mVideoScaleType, mVideoRotation);
-            if (null == measureSpec || measureSpec.length != 2)
-                throw new Exception("measureSpec error: " + measureSpec);
+            int[] measureSpec = doMeasureSpec(screenWidth, screenHeight);
+            if (null == measureSpec)
+                throw new Exception("warning: measureSpec null");
             int width = measureSpec[0];
             int height = measureSpec[1];
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
@@ -365,7 +296,8 @@ public class VideoGLSurfaceView extends SurfaceView implements VideoRenderApi {
             super.onMeasure(specW, specH);
 //            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
         } catch (Exception e) {
-            LogUtil.log("VideoGLSurfaceView => onMeasure => " + e.getMessage());
+            LogUtil.log("VideoGLSurfaceView => onMeasure => Exception " + e.getMessage());
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
 }

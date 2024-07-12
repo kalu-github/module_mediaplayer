@@ -170,19 +170,19 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface ScaleType {
-        int SCREEN_SCALE_CROP = 4_001; // 填充屏幕, 裁剪
-        int SCREEN_SCALE_MATCH = 4_002; // 填充屏幕, 不裁剪, 可能会变形
-        int SCREEN_SCALE_ORIGINAL = 4_003; // 视频尺寸, 可能存在黑边
-        int SCREEN_SCALE_16_9 = 4_004; //16：9比例类型，最为常见
-        int SCREEN_SCALE_4_3 = 4_005;  //4：3比例类型，也比较常见
-        int SCREEN_SCALE_DEFAULT = SCREEN_SCALE_MATCH; // 默认
+        int SCREEN_SCALE_AUTO = 4_001; // 自适应屏幕，可能存在黑边
+        int SCREEN_SCALE_FULL = 4_002; // 画面拉甚至全屏, 可能变形
+        int SCREEN_SCALE_REAL = 4_003; // 视频原始尺寸, 可能存在黑边
+        int SCREEN_SCALE_16_9 = 4_004; // 画面拉16：9, 可能变形
+        int SCREEN_SCALE_4_3 = 4_005;  // 画面拉4：3, 可能变形
+        int SCREEN_SCALE_DEFAULT = SCREEN_SCALE_AUTO; // 默认
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({SCREEN_SCALE_CROP,
-                SCREEN_SCALE_MATCH,
-                SCREEN_SCALE_ORIGINAL,
+        @IntDef({SCREEN_SCALE_AUTO,
+                SCREEN_SCALE_FULL,
+                SCREEN_SCALE_REAL,
                 SCREEN_SCALE_16_9,
                 SCREEN_SCALE_4_3,
                 SCREEN_SCALE_DEFAULT})
@@ -198,6 +198,7 @@ public @interface PlayerType {
         int Rotation_90 = 5_002;
         int Rotation_180 = 5_003;
         int Rotation_270 = 5_004;
+        int Rotation_Default = Rotation_0;
 
         @Documented
         @Retention(CLASS)
@@ -205,7 +206,8 @@ public @interface PlayerType {
         @IntDef({Rotation_0,
                 Rotation_90,
                 Rotation_180,
-                Rotation_270})
+                Rotation_270,
+                Rotation_Default})
         @interface Value {
         }
     }

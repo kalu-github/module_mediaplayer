@@ -213,19 +213,19 @@ public class MainActivity extends Activity {
         int scaleTypeId = ((RadioGroup) findViewById(R.id.main_scale)).getCheckedRadioButtonId();
         switch (scaleTypeId) {
             case R.id.main_scale2:
-                scaleType = PlayerType.ScaleType.SCREEN_SCALE_ORIGINAL;
+                scaleType = PlayerType.ScaleType.SCREEN_SCALE_REAL;
+                break;
+            case R.id.main_scale3:
+                scaleType = PlayerType.ScaleType.SCREEN_SCALE_FULL;
                 break;
             case R.id.main_scale4:
-                scaleType = PlayerType.ScaleType.SCREEN_SCALE_CROP;
-                break;
-            case R.id.main_scale5:
                 scaleType = PlayerType.ScaleType.SCREEN_SCALE_4_3;
                 break;
-            case R.id.main_scale6:
+            case R.id.main_scale5:
                 scaleType = PlayerType.ScaleType.SCREEN_SCALE_16_9;
                 break;
             default:
-                scaleType = PlayerType.ScaleType.SCREEN_SCALE_MATCH;
+                scaleType = PlayerType.ScaleType.SCREEN_SCALE_AUTO;
                 break;
         }
 
