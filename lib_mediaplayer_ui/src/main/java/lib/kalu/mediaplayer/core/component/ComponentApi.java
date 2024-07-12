@@ -371,6 +371,18 @@ public interface ComponentApi {
         }
     }
 
+    default boolean isPrepared() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.isPrepared();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => isPrepared => " + e.getMessage());
+            return false;
+        }
+    }
+
     default String getNetSpeed() {
         try {
             PlayerView playerView = getPlayerView();

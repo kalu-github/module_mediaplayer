@@ -32,8 +32,25 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            try {
+                boolean componentShowing = isComponentShowing();
+                if (!componentShowing)
+                    throw new Exception("warning: componentShowing false");
+                boolean prepared = isPrepared();
+                if (!prepared)
+                    throw new Exception("warning: prepared false");
+                boolean playing = isPlaying();
+                if (playing)
+                    throw new Exception("warning: playing true");
+                resume();
+                return true;
+            } catch (Exception e) {
+                LogUtil.log("ComponentPause => dispatchKeyEvent => Exception1 " + e.getMessage());
+            }
+        }
         // keycode_enter || keycode_dpad_center
-        if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER)) {
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER)) {
             try {
                 boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
                 if (menuShowing)
@@ -50,9 +67,8 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                 toggle();
                 return true;
             } catch (Exception e) {
-                LogUtil.log("ComponentPause => dispatchKeyEvent => Exception " + e.getMessage());
+                LogUtil.log("ComponentPause => dispatchKeyEvent => Exception2 " + e.getMessage());
             }
-
         }
         return false;
     }
