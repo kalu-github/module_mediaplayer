@@ -85,7 +85,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
                  */
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
-//                    LogUtil.log("VideoRenderSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
+//                    LogUtil.log("VideoSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
                     setSurface(false);
                 }
 
@@ -98,7 +98,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
                  */
                 @Override
                 public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                    LogUtil.log("VideoRenderSurfaceView => addListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
+                    LogUtil.log("VideoSurfaceView => addListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
                 }
 
                 /**
@@ -107,13 +107,13 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
                  */
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
-                    LogUtil.log("VideoRenderSurfaceView => addListener => surfaceDestroyed => " + this);
+                    LogUtil.log("VideoSurfaceView => addListener => surfaceDestroyed => " + this);
                     setSurface(true);
                 }
             };
             getHolder().addCallback(mSurfaceHolderCallback);
         } catch (Exception e) {
-            LogUtil.log("VideoRenderSurfaceView => addListener => " + e.getMessage());
+            LogUtil.log("VideoSurfaceView => addListener => " + e.getMessage());
         }
     }
 
@@ -129,13 +129,13 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
                 mKernel.setSurface(getHolder().getSurface(), 0, 0);
             }
         } catch (Exception e) {
-            LogUtil.log("VideoRenderSurfaceView => setSurface => " + e.getMessage());
+            LogUtil.log("VideoSurfaceView => setSurface => " + e.getMessage());
         }
     }
 
     @Override
     public void reset() {
-        LogUtil.log("VideoRenderSurfaceView => reset =>");
+        LogUtil.log("VideoSurfaceView => reset =>");
         setSurface(false);
     }
 
@@ -151,9 +151,9 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
                 throw new Exception("surface error: null");
 //            clearSurface(surface);
             surface.release();
-            LogUtil.log("VideoRenderSurfaceView => release => removeSurface => succ");
+            LogUtil.log("VideoSurfaceView => release => removeSurface => succ");
         } catch (Exception e) {
-            LogUtil.log("VideoRenderSurfaceView => release => removeSurface => " + e.getMessage());
+            LogUtil.log("VideoSurfaceView => release => removeSurface => " + e.getMessage());
         }
 
         // step2
@@ -165,9 +165,9 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
                 throw new Exception("surfaceHolder error: null");
             surfaceHolder.removeCallback(mSurfaceHolderCallback);
             mSurfaceHolderCallback = null;
-            LogUtil.log("VideoRenderSurfaceView => release => removeCallback => succ");
+            LogUtil.log("VideoSurfaceView => release => removeCallback => succ");
         } catch (Exception e) {
-            LogUtil.log("VideoRenderSurfaceView => release => removeCallback => " + e.getMessage());
+            LogUtil.log("VideoSurfaceView => release => removeCallback => " + e.getMessage());
         }
     }
 
@@ -254,7 +254,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
             super.setRotation(rotation);
             requestLayout();
         } catch (Exception e) {
-            LogUtil.log("VideoRenderSurfaceView => setRotation => " + e.getMessage());
+            LogUtil.log("VideoSurfaceView => setRotation => " + e.getMessage());
         }
     }
 
@@ -274,7 +274,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 //                    bitmap.eraseColor(Color.RED);//填充颜色
 //                    canvas.drawBitmap(bitmap, 0, 0, null);
 //                } catch (Exception e) {
-//                    MPLogUtil.log("VideoRenderSurfaceView => drawBitmap => " + e.getMessage());
+//                    MPLogUtil.log("VideoSurfaceView => drawBitmap => " + e.getMessage());
 //                }
 //                try {
 //                    SurfaceHolder holder = getHolder();
@@ -285,7 +285,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 //                    //手动try catch一下这个方法，让程序在4.3的手机上不至于崩溃，部分Android13也会崩溃
 //                    getHolder().unlockCanvasAndPost(canvas);
 //                } catch (Exception e) {
-//                    MPLogUtil.log("VideoRenderSurfaceView => drawBitmap => " + e.getMessage());
+//                    MPLogUtil.log("VideoSurfaceView => drawBitmap => " + e.getMessage());
 //                }
 //            }
 //        }).start();
@@ -300,7 +300,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Override
     public void setVideoFormat(int videoWidth, int videoHeight, int videoRotation) {
-        LogUtil.log("VideoRenderSurfaceView => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation);
+        LogUtil.log("VideoSurfaceView => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation);
 
         boolean update = false;
         if (mVideoRotation != videoRotation) {
@@ -323,7 +323,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Override
     public void setVideoSize(int videoWidth, int videoHeight) {
-        LogUtil.log("VideoRenderSurfaceView => setVideoSize => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
+        LogUtil.log("VideoSurfaceView => setVideoSize => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
 
         boolean update = false;
         if (videoWidth != 0 && mVideoWidth != videoWidth) {
@@ -341,7 +341,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Override
     public void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
-        LogUtil.log("VideoRenderSurfaceView => setVideoRotation => videoRotation = " + videoRotation);
+        LogUtil.log("VideoSurfaceView => setVideoRotation => videoRotation = " + videoRotation);
         if (mVideoRotation != videoRotation) {
             this.mVideoRotation = videoRotation;
             requestLayout();
@@ -350,7 +350,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Override
     public void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
-        LogUtil.log("VideoRenderSurfaceView => setVideoScaleType => scaleType = " + scaleType);
+        LogUtil.log("VideoSurfaceView => setVideoScaleType => scaleType = " + scaleType);
         if (mVideoScaleType != scaleType) {
             this.mVideoScaleType = scaleType;
             requestLayout();
@@ -377,7 +377,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
             super.onMeasure(specW, specH);
 //            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
         } catch (Exception e) {
-            LogUtil.log("VideoRenderSurfaceView => onMeasure => " + e.getMessage());
+            LogUtil.log("VideoSurfaceView => onMeasure => " + e.getMessage());
         }
     }
 }

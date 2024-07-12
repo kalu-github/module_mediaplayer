@@ -82,7 +82,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-                LogUtil.log("VideoRenderTextureView => onSurfaceTextureAvailable => " + this);
+                LogUtil.log("VideoTextureView => onSurfaceTextureAvailable => " + this);
 //                VideoRenderTextureView.this.mSurfaceTexture = surfaceTexture;
 //                setSurfaceTexture(VideoRenderTextureView.this.mSurfaceTexture);
 //                setSurface(true);
@@ -96,7 +96,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
              */
             @Override
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                LogUtil.log("VideoRenderTextureView => onSurfaceTextureDestroyed => " + this);
+                LogUtil.log("VideoTextureView => onSurfaceTextureDestroyed => " + this);
                 return false;
             }
 
@@ -108,7 +108,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
              */
             @Override
             public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-                LogUtil.log("VideoRenderTextureView => onSurfaceTextureSizeChanged => " + this);
+                LogUtil.log("VideoTextureView => onSurfaceTextureSizeChanged => " + this);
             }
 
             /**
@@ -117,7 +117,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
              */
             @Override
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-                LogUtil.log("VideoRenderTextureView => onSurfaceTextureUpdated => " + this);
+                LogUtil.log("VideoTextureView => onSurfaceTextureUpdated => " + this);
             }
         };
         setSurfaceTextureListener(mSurfaceTextureListener);
@@ -141,7 +141,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
     @Override
     public void reset() {
-        LogUtil.log("VideoRenderTextureView => reset =>");
+        LogUtil.log("VideoTextureView => reset =>");
         setSurface(false);
     }
 
@@ -238,7 +238,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
     @Override
     public void setVideoFormat(int videoWidth, int videoHeight, int videoRotation) {
-        LogUtil.log("VideoRenderTextureView => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation);
+        LogUtil.log("VideoTextureView => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation);
 
         boolean update = false;
         if (mVideoRotation != videoRotation) {
@@ -261,7 +261,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
     @Override
     public void setVideoSize(int videoWidth, int videoHeight) {
-        LogUtil.log("VideoRenderTextureView => setVideoSize => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
+        LogUtil.log("VideoTextureView => setVideoSize => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
 
         boolean update = false;
         if (videoWidth != 0 && mVideoWidth != videoWidth) {
@@ -279,7 +279,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
     @Override
     public void setVideoRotation(@PlayerType.RotationType.Value int videoRotation) {
-        LogUtil.log("VideoRenderTextureView => setVideoRotation => videoRotation = " + videoRotation);
+        LogUtil.log("VideoTextureView => setVideoRotation => videoRotation = " + videoRotation);
         if (mVideoRotation != videoRotation) {
             this.mVideoRotation = videoRotation;
             requestLayout();
@@ -288,7 +288,7 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
 
     @Override
     public void setVideoScaleType(@PlayerType.ScaleType.Value int scaleType) {
-        LogUtil.log("VideoRenderTextureView => setVideoScaleType => scaleType = " + scaleType);
+        LogUtil.log("VideoTextureView => setVideoScaleType => scaleType = " + scaleType);
         if (mVideoScaleType != scaleType) {
             this.mVideoScaleType = scaleType;
             requestLayout();
@@ -310,13 +310,13 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
                 throw new Exception("measureSpec error: " + measureSpec);
             int width = measureSpec[0];
             int height = measureSpec[1];
-            LogUtil.log("VideoRenderTextureView => onMeasure => width = " + width + ", height = " + height);
+            LogUtil.log("VideoTextureView => onMeasure => width = " + width + ", height = " + height);
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             int specH = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             super.onMeasure(specW, specH);
 //            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
         } catch (Exception e) {
-            LogUtil.log("VideoRenderTextureView => onMeasure => " + e.getMessage());
+            LogUtil.log("VideoTextureView => onMeasure => " + e.getMessage());
         }
     }
 }
