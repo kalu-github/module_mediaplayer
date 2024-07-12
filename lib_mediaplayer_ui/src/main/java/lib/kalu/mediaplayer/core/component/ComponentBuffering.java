@@ -54,7 +54,7 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApiBu
     }
 
     @Override
-    public void callEventListener(int playState) {
+    public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_BUFFERING_START:
             case PlayerType.StateType.STATE_SEEK_START:

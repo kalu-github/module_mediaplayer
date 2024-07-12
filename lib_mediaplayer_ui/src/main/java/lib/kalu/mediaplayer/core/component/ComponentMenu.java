@@ -67,8 +67,11 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public void callEventListener(int playState) {
-        if (playState == PlayerType.StateType.STATE_END) {
+    public void callEvent(int playState) {
+        switch (playState) {
+            case PlayerType.StateType.STATE_END:
+                hide();
+                break;
         }
     }
 
@@ -324,15 +327,15 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public void hide() {
+        superCallEvent(false, true, PlayerType.StateType.STATE_COMPONENT_MENU_HIDE);
         ComponentApiMenu.super.hide();
         stopDelayedMsg();
-        superCallEventListener(false, true, PlayerType.StateType.STATE_COMPONENT_MENU_HIDE);
     }
 
     @Override
     public void show() {
+        superCallEvent(false, true, PlayerType.StateType.STATE_COMPONENT_MENU_SHOW);
         ComponentApiMenu.super.show();
-        superCallEventListener(false, true, PlayerType.StateType.STATE_COMPONENT_MENU_SHOW);
     }
 
     @Override

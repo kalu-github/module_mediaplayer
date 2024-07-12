@@ -58,12 +58,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     }
 
     @Override
-    public int initLayoutIdComponentRoot() {
-        return R.id.module_mediaplayer_component_pause_root;
-    }
-
-    @Override
-    public void callEventListener(int playState) {
+    public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_PAUSE:
                 LogUtil.log("ComponentPause[show] => playState = " + playState);
@@ -78,49 +73,76 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                 break;
             case PlayerType.StateType.STATE_COMPONENT_MENU_SHOW:
                 LogUtil.log("ComponentPause[show] => playState = " + playState);
-                boolean componentShowing = isComponentShowing();
-                if (componentShowing) {
+                try {
                     setTag(true);
                     hide();
+                } catch (Exception e) {
+                    LogUtil.log("ComponentPause => callEventListener => hide => Exception2 " + playState);
                 }
                 break;
             case PlayerType.StateType.STATE_COMPONENT_MENU_HIDE:
                 LogUtil.log("ComponentPause[gone] => playState = " + playState);
-                Object tag = getTag();
-                if (null != tag) {
+                try {
+                    Object tag = getTag();
+                    if (null == tag)
+                        throw new Exception("warning: tag null");
                     setTag(null);
                     show();
+                } catch (Exception e) {
+                    LogUtil.log("ComponentPause => callEventListener => show => Exception2 " + playState);
                 }
                 break;
         }
     }
 
+
     @Override
-    public final void hide() {
+    public void hide() {
+
+        try {
+            boolean trySee;
+            StartArgs args = getStartArgs();
+            if (null == args) {
+                trySee = false;
+            } else {
+                trySee = args.isTrySee();
+            }
+            if (trySee)
+                throw new Exception("warning: trySee true");
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            ComponentApiPause.super.hide();
+        } catch (Exception e) {
+            LogUtil.log("ComponentPause => hide => Exception " + e.getMessage());
+        }
 
         try {
             setComponentText("");
         } catch (Exception e) {
         }
-
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: playerView null");
-            StartArgs tags = playerView.getTags();
-            if (null == tags)
-                throw new Exception("error: tags null");
-            boolean trySee = tags.isTrySee();
-            if (trySee)
-                throw new Exception("warning: trySee true");
-            findViewById(R.id.module_mediaplayer_component_pause_root).setVisibility(View.GONE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentPause => hide => Exception " + e.getMessage());
-        }
     }
 
     @Override
-    public final void show() {
+    public void show() {
+
+        try {
+            boolean trySee;
+            StartArgs args = getStartArgs();
+            if (null == args) {
+                trySee = false;
+            } else {
+                trySee = args.isTrySee();
+            }
+            if (trySee)
+                throw new Exception("warning: trySee true");
+            boolean componentShowing = isComponentShowing();
+            if (componentShowing)
+                throw new Exception("warning: componentShowing true");
+            ComponentApiPause.super.show();
+        } catch (Exception e) {
+            LogUtil.log("ComponentPause => show => Exception " + e.getMessage());
+        }
 
         try {
             for (int i = 0; i < 2; i++) {
@@ -128,39 +150,27 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                 if (duration <= 0)
                     throw new Exception("warning: duration<=0");
                 long position = getPosition();
-                long maxDuration = getMaxDuration();
+                long max;
+                StartArgs tags = getStartArgs();
+                if (null == tags) {
+                    max = 0L;
+                } else {
+                    max = tags.getMaxDuration();
+                }
                 SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_pause_sb);
                 seekBar.setProgress((int) position);
-                seekBar.setMax((int) (maxDuration > 0 ? maxDuration : duration));
+                seekBar.setMax((int) (max > 0 ? max : duration));
             }
         } catch (Exception e) {
         }
 
         try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: playerView null");
-            StartArgs tags = playerView.getTags();
+            StartArgs tags = getStartArgs();
             if (null == tags)
                 throw new Exception("error: tags null");
             String mediaTitle = tags.getTitle();
             setComponentText(mediaTitle);
         } catch (Exception e) {
-        }
-
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: playerView null");
-            StartArgs tags = playerView.getTags();
-            if (null == tags)
-                throw new Exception("error: tags null");
-            boolean trySee = tags.isTrySee();
-            if (trySee)
-                throw new Exception("warning: trySee true");
-            findViewById(R.id.module_mediaplayer_component_pause_root).setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            LogUtil.log("ComponentPause => show => Exception " + e.getMessage());
         }
     }
 
@@ -174,5 +184,10 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     @Override
     public int initLayoutIdText() {
         return R.id.module_mediaplayer_component_pause_title;
+    }
+
+    @Override
+    public int initLayoutIdComponentRoot() {
+        return R.id.module_mediaplayer_component_pause_root;
     }
 }

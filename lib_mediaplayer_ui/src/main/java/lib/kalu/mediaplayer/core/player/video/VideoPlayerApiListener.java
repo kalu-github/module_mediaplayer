@@ -14,7 +14,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBuried {
 
-    default void callWindowListener(@PlayerType.WindowType.Value int state) {
+    default void callWindow(@PlayerType.WindowType.Value int state) {
 
         // component
         try {
@@ -28,10 +28,10 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).callWindowEvent(state);
+                ((ComponentApi) childAt).callWindow(state);
             }
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => callWindowListener => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBase => callWindow => " + e.getMessage());
         }
 
         // listener
@@ -41,7 +41,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
                 windowListener.onWindow(state);
             }
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => callWindowListener => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBase => callWindow => " + e.getMessage());
         }
 
         // 埋点
@@ -49,11 +49,11 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
     }
 
 
-    default void callEventListener(@PlayerType.StateType.Value int state) {
-        callEventListener(true, true, state);
+    default void callEvent(@PlayerType.StateType.Value int state) {
+        callEvent(true, true, state);
     }
 
-    default void callEventListener(boolean callPlayer, boolean callComponent, @PlayerType.StateType.Value int state) {
+    default void callEvent(boolean callPlayer, boolean callComponent, @PlayerType.StateType.Value int state) {
 
         // component
         try {
@@ -69,10 +69,10 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).callEventListener(state);
+                ((ComponentApi) childAt).callEvent(state);
             }
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => callEventListener => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBase => callEvent => " + e.getMessage());
         }
 
         // listener
@@ -103,11 +103,11 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
                 eventListener.onLoadingStop();
             }
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => callEventListener => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBase => callEvent => " + e.getMessage());
         }
     }
 
-    default void callProgressListener(long maxDuration, long position, long duration) {
+    default void callProgress(long maxDuration, long position, long duration) {
 
         // component
         try {
@@ -124,7 +124,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
                 ((ComponentApi) childAt).onUpdateProgress(false, maxDuration, position, duration);
             }
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiComponent => callProgressListener => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiComponent => callProgress => " + e.getMessage());
         }
 
         // listenr
@@ -134,7 +134,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
                 progressListener.onProgress(position, duration);
             }
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiListener => callProgressListener => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiListener => callProgress => " + e.getMessage());
         }
     }
 

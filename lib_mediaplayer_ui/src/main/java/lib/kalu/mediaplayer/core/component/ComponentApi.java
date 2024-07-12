@@ -2,18 +2,12 @@ package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
@@ -21,14 +15,10 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
-
-
 import androidx.annotation.StringRes;
 
-import java.io.File;
-
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
+import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
@@ -79,10 +69,10 @@ public interface ComponentApi {
 
     /******************/
 
-    default void callEventListener(int playState) {
+    default void callEvent(int state) {
     }
 
-    default void callWindowEvent(int state) {
+    default void callWindow(int state) {
     }
 
     /******************/
@@ -287,53 +277,6 @@ public interface ComponentApi {
 
     /*******************/
 
-    default <T extends ComponentApi> T findComponent(java.lang.Class<?> cls) {
-        try {
-            PlayerLayout playerLayout = getPlayerLayout();
-            if (null == playerLayout)
-                throw new Exception("error: playerLayout null");
-            ComponentApi component = playerLayout.findComponent(cls);
-            if (null == component)
-                throw new Exception("warning: component null");
-            return (T) component;
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => findComponent => " + e.getMessage());
-            return null;
-        }
-    }
-
-    default boolean isComponentShowing(Class<?> cls) {
-        try {
-            ComponentApi component = findComponent(cls);
-            if (null == component)
-                throw new Exception("warning: component null");
-            boolean componentShowing = component.isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
-            return true;
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => isComponentApiShowing => " + e.getMessage());
-            return false;
-        }
-    }
-
-    default PlayerLayout getPlayerLayout() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                new Exception("playerView error: null");
-            ViewParent parent = playerView.getParent();
-            if (null == parent)
-                throw new Exception("parent error: null");
-            if (!(parent instanceof PlayerLayout))
-                throw new Exception("parent error: not instanceof PlayerLayout");
-            return (PlayerLayout) parent;
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => getPlayerLayout => " + e.getMessage());
-            return null;
-        }
-    }
-
     default PlayerView getPlayerView() {
         try {
             PlayerView playerView = null;
@@ -358,14 +301,49 @@ public interface ComponentApi {
         }
     }
 
-    default void superCallEventListener(boolean callPlayer, boolean callComponent, @PlayerType.StateType.Value int state) {
+    default <T extends ComponentApi> T findComponent(java.lang.Class<?> cls) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                new Exception("playerView error: null");
+            ViewParent parent = playerView.getParent();
+            if (null == parent)
+                throw new Exception("parent error: null");
+            if (!(parent instanceof PlayerLayout))
+                throw new Exception("parent error: not instanceof PlayerLayout");
+            ComponentApi component = ((PlayerLayout) parent).findComponent(cls);
+            if (null == component)
+                throw new Exception("warning: component null");
+            return (T) component;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => findComponent => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default boolean isComponentShowing(Class<?> cls) {
+        try {
+            ComponentApi component = findComponent(cls);
+            if (null == component)
+                throw new Exception("warning: component null");
+            boolean componentShowing = component.isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            return true;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => isComponentApiShowing => " + e.getMessage());
+            return false;
+        }
+    }
+
+    default void superCallEvent(boolean callPlayer, boolean callComponent, @PlayerType.StateType.Value int state) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("error: playerView null");
-            playerView.callEventListener(callPlayer, callComponent, state);
+            playerView.callEvent(callPlayer, callComponent, state);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => superCallEventListener => " + e.getMessage());
+            LogUtil.log("ComponentApi => superCallEvent => " + e.getMessage());
         }
     }
 
@@ -413,6 +391,17 @@ public interface ComponentApi {
             playerView.resume();
         } catch (Exception e) {
             LogUtil.log("ComponentApi => resume => " + e.getMessage());
+        }
+    }
+
+    default void seekTo(long position) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.seekTo(position);
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => seekTo => " + e.getMessage());
         }
     }
 
@@ -479,52 +468,6 @@ public interface ComponentApi {
         }
     }
 
-    default long getMaxDuration() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            StartArgs tags = playerView.getTags();
-            long maxDuration = tags.getMaxDuration();
-            if (maxDuration < 0)
-                throw new Exception("warning: maxDuration<0");
-            return maxDuration;
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => getMaxDuration => " + e.getMessage());
-            return 0L;
-        }
-    }
-
-    default boolean isTrySee() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            StartArgs tags = playerView.getTags();
-            if (null == tags)
-                throw new Exception("error: tags null");
-            return tags.isTrySee();
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => isTrySee => " + e.getMessage());
-            return false;
-        }
-    }
-
-    default String getTitle() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            StartArgs tags = playerView.getTags();
-            if (null == tags)
-                throw new Exception("error: tags null");
-            return tags.getTitle();
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => getTitle => " + e.getMessage());
-            return "";
-        }
-    }
-
     default void setSpeed(@PlayerType.SpeedType.Value int speed) {
         try {
             PlayerView playerView = getPlayerView();
@@ -570,6 +513,36 @@ public interface ComponentApi {
         } catch (Exception e) {
             LogUtil.log("ComponentApi => getVideoScaleType => " + e.getMessage());
             return PlayerType.ScaleType.SCREEN_SCALE_DEFAULT;
+        }
+    }
+
+    default StartArgs getStartArgs() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("error: playerView null");
+            StartArgs tags = playerView.getTags();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            return tags;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getStartArgs => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default OnPlayerEpisodeListener getOnPlayerEpisodeListener() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("error: playerView null");
+            OnPlayerEpisodeListener onPlayerEpisodeListener = playerView.getOnPlayerEpisodeListener();
+            if (null == onPlayerEpisodeListener)
+                throw new Exception("warning: onPlayerEpisodeListener null");
+            return onPlayerEpisodeListener;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getOnPlayerEpisodeListener => " + e.getMessage());
+            return null;
         }
     }
 }

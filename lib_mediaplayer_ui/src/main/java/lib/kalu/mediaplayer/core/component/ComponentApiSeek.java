@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import com.google.android.exoplayer2.util.Log;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -51,7 +52,7 @@ public interface ComponentApiSeek extends ComponentApi {
             boolean componentShowing = isComponentShowing();
             // gone
             if (!componentShowing) {
-                superCallEventListener(false, true, PlayerType.StateType.STATE_FAST_FORWARD_START);
+                superCallEvent(false, true, PlayerType.StateType.STATE_FAST_FORWARD_START);
             }
             // click
             else if (repeatCount == 0) {
@@ -81,8 +82,15 @@ public interface ComponentApiSeek extends ComponentApi {
                 if (progress >= duration) {
                     progress = (int) duration;
                 }
-                long maxDuration = getPlayerView().getMaxDuration();
-                onUpdateProgress(true, maxDuration, progress, duration);
+
+                long max;
+                StartArgs tags = getStartArgs();
+                if (null == tags) {
+                    max = 0L;
+                } else {
+                    max = tags.getMaxDuration();
+                }
+                onUpdateProgress(true, max, progress, duration);
             }
             // long click
             else {
@@ -112,8 +120,14 @@ public interface ComponentApiSeek extends ComponentApi {
                 if (progress >= duration) {
                     progress = (int) duration;
                 }
-                long maxDuration = getPlayerView().getMaxDuration();
-                onUpdateProgress(true, maxDuration, progress, duration);
+                long max;
+                StartArgs tags = getStartArgs();
+                if (null == tags) {
+                    max = 0L;
+                } else {
+                    max = tags.getMaxDuration();
+                }
+                onUpdateProgress(true, max, progress, duration);
             }
         } catch (Exception e) {
             LogUtil.log("ComponentApiSeek => startInitMsg => Exception " + e.getMessage());

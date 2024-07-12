@@ -22,7 +22,7 @@ public class ComponentSurfaceCover extends RelativeLayout implements ComponentAp
     }
 
     @Override
-    public void callEventListener(int playState) {
+    public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_START:
                 LogUtil.log("ComponentSurfaceCover => callEventListener => show => playState = " + playState);

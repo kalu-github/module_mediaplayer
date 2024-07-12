@@ -26,7 +26,7 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
     }
 
     @Override
-    public void callEventListener(int playState) {
+    public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_LOADING_START:
                 LogUtil.log("ComponentLoadingGradient => callEventListener => show => playState = " + playState);
@@ -57,10 +57,7 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
                 throw new Exception("warning: componentShowing false");
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: playerView null");
-            StartArgs tags = playerView.getTags();
+            StartArgs tags = getStartArgs();
             if (null == tags)
                 throw new Exception("error: tags null");
             String mediaTitle = tags.getTitle();

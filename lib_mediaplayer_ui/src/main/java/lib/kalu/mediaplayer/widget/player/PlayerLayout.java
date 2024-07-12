@@ -620,16 +620,16 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void callEventListener(@PlayerType.StateType.Value int state) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.callEventListener(state);
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => callEventListener => " + e.getMessage());
-        }
-    }
+//    public final void callEvent(@PlayerType.StateType.Value int state) {
+//        try {
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("playerView error: null");
+//            playerView.callEvent(state);
+//        } catch (Exception e) {
+//            LogUtil.log("PlayerLayout => callEvent => " + e.getMessage());
+//        }
+//    }
 
     public final void setPlayerBackgroundColor(@ColorInt int color) {
         try {

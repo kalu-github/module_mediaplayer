@@ -37,8 +37,13 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
         // 试看
         try {
-            StartArgs tags = getPlayerView().getTags();
-            boolean trySee = tags.isTrySee();
+            boolean trySee;
+            StartArgs args = getStartArgs();
+            if (null == args) {
+                trySee = false;
+            } else {
+                trySee = args.isTrySee();
+            }
             if (trySee)
                 throw new Exception("warning: trySee true");
         } catch (Exception e) {
@@ -116,11 +121,11 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     public void seekToPosition(int keyCode, int position) {
         try {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                superCallEventListener(false, true, PlayerType.StateType.STATE_FAST_FORWARD_STOP);
-                getPlayerView().seekTo(position);
+                superCallEvent(false, true, PlayerType.StateType.STATE_FAST_FORWARD_STOP);
+                seekTo(position);
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-                superCallEventListener(false, true, PlayerType.StateType.STATE_FAST_REWIND_STOP);
-                getPlayerView().seekTo(position);
+                superCallEvent(false, true, PlayerType.StateType.STATE_FAST_REWIND_STOP);
+                seekTo(position);
             }
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => seekToPosition => " + e.getMessage());
@@ -128,7 +133,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public void callEventListener(int playState) {
+    public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_FAST_FORWARD_START:
             case PlayerType.StateType.STATE_FAST_REWIND_START:
@@ -164,7 +169,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public void callWindowEvent(int windowState) {
+    public void callWindow(int windowState) {
         switch (windowState) {
             default:
                 hide();
@@ -291,7 +296,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             } else if (playPosition <= 0) {
                 playPosition = 0;
             }
-            getPlayerView().seekTo(playPosition);
+            seekTo(playPosition);
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => seekToStopTrackingTouch => " + e.getMessage());
         }

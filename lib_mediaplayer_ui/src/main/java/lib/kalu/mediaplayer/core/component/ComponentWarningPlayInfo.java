@@ -49,7 +49,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     }
 
     @Override
-    public void callEventListener(int playState) {
+    public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_VIDEO_RENDERING_START:
                 LogUtil.log("ComponentWarningPlayInfo => playState = " + playState);
@@ -57,7 +57,13 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
                     boolean componentShowing = isComponentShowing();
                     if (componentShowing)
                         throw new Exception("warning: componentShowing false");
-                    boolean trySee = isTrySee();
+                    boolean trySee;
+                    StartArgs args = getStartArgs();
+                    if (null == args) {
+                        trySee = false;
+                    } else {
+                        trySee = args.isTrySee();
+                    }
                     if (trySee)
                         throw new Exception("warning: trySee true");
                     show();
@@ -95,10 +101,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             boolean showWarningPlayInfoRecord = isShowWarningPlayInfoRecord();
             if (!showWarningPlayInfoRecord)
                 throw new Exception("warning: showWarningPlayInfoRecord false");
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: playerView null");
-            StartArgs tags = playerView.getTags();
+            StartArgs tags = getStartArgs();
             if (null == tags)
                 throw new Exception("error: tags null");
             long seek = tags.getSeek();
@@ -112,10 +115,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
         }
 
         try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: playerView null");
-            StartArgs tags = playerView.getTags();
+            StartArgs tags = getStartArgs();
             if (null == tags)
                 throw new Exception("error: tags null");
             String mediaTitle = tags.getTitle();
@@ -129,10 +129,16 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             if (duration <= 0)
                 throw new Exception("warning: duration<=0");
             long position = getPosition();
-            long maxDuration = getMaxDuration();
+            long max;
+            StartArgs args = getStartArgs();
+            if (null == args) {
+                max = 0L;
+            } else {
+                max = args.getMaxDuration();
+            }
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_play_info_seekbar);
             seekBar.setProgress((int) position);
-            seekBar.setMax((int) (maxDuration > 0 ? maxDuration : duration));
+            seekBar.setMax((int) (max > 0 ? max : duration));
         } catch (Exception e) {
         }
 

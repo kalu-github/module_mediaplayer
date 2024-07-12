@@ -39,18 +39,24 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public void callEventListener(int playState) {
+    public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.STATE_VIDEO_RENDERING_START:
                 LogUtil.log("ComponentTrySee => playState = " + playState);
                 try {
-                    boolean trySee = isTrySee();
+                    boolean trySee;
+                    StartArgs args = getStartArgs();
+                    if (null == args) {
+                        trySee = false;
+                    } else {
+                        trySee = args.isTrySee();
+                    }
                     if (!trySee)
                         throw new Exception("warning: trySee false");
                     boolean componentShowing = isComponentShowing();
                     if (componentShowing)
                         throw new Exception("warning: componentShowing true");
-                    String mediaTitle = getTitle();
+                    String mediaTitle = args.getTitle();
                     setComponentText(mediaTitle + " 试看开始...");
                     show();
                 } catch (Exception e) {
@@ -60,13 +66,19 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                 LogUtil.log("ComponentTrySee => playState = " + playState);
 
                 try {
-                    boolean trySee = isTrySee();
+                    boolean trySee;
+                    StartArgs args = getStartArgs();
+                    if (null == args) {
+                        trySee = false;
+                    } else {
+                        trySee = args.isTrySee();
+                    }
                     if (!trySee)
                         throw new Exception("warning: trySee false");
                     boolean componentShowing = isComponentShowing();
-                    if(!componentShowing)
+                    if (!componentShowing)
                         throw new Exception("warning: componentShowing false");
-                    String mediaTitle = getTitle();
+                    String mediaTitle = args.getTitle();
                     setComponentText(mediaTitle + " 试看结束...");
                 } catch (Exception e) {
                 }
@@ -106,10 +118,16 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
             if (duration <= 0)
                 throw new Exception("warning: duration<=0");
             long position = getPosition();
-            long maxDuration = getMaxDuration();
+            long max;
+            StartArgs args = getStartArgs();
+            if (null == args) {
+                max = 0L;
+            } else {
+                max = args.getMaxDuration();
+            }
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_try_see_seekbar);
             seekBar.setProgress((int) position);
-            seekBar.setMax((int) (maxDuration > 0 ? maxDuration : duration));
+            seekBar.setMax((int) (max > 0 ? max : duration));
         } catch (Exception e) {
         }
     }

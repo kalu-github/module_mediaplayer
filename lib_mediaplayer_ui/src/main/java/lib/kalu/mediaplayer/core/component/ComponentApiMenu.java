@@ -24,10 +24,7 @@ public interface ComponentApiMenu extends ComponentApi {
 
     default int getEpisodeItemCount() {
         try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: playerView null");
-            StartArgs tags = playerView.getTags();
+            StartArgs tags = getStartArgs();
             if (null == tags)
                 throw new Exception("error: tags null");
             int itemCount = tags.getEpisodeItemCount();
@@ -42,10 +39,7 @@ public interface ComponentApiMenu extends ComponentApi {
 
     default int getEpisodePlayingIndex() {
         try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: playerView null");
-            StartArgs tags = playerView.getTags();
+            StartArgs tags = getStartArgs();
             if (null == tags)
                 throw new Exception("error: tags null");
             int playingIndex = tags.getEpisodePlayingIndex();
@@ -60,10 +54,7 @@ public interface ComponentApiMenu extends ComponentApi {
 
     default void clickEpisode(int pos) {
         try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: null == playerView");
-            OnPlayerEpisodeListener listener = playerView.getOnPlayerEpisodeListener();
+            OnPlayerEpisodeListener listener = getOnPlayerEpisodeListener();
             if (null == listener)
                 throw new Exception("error: null == listener");
             listener.onEpisode(pos);
