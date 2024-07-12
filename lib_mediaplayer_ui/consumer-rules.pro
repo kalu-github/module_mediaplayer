@@ -117,7 +117,7 @@
     public <methods>;
 }
 
-#-keep class com.yuanxuzhen.bean.*   本包下的类名保持
-#-keep class com.yuanxuzhen.bean.**  把本包和所含子包下的类名都保持
-#-keep class com.yuanxuzhen.bean.** {*;} 把本包和所含子包下的类名都保持，同时保持里面的内容不被混淆
-#-keep class lib.kalu.kv.KVContentProvider{*;} 保持类名，同时保持里面的内容不被混淆
+#-keep class xx.xx.xx.*   本包下的类名保持
+#-keep class xx.xx.xx.**  把本包和所含子包下的类名都保持
+#-keep class xx.xx.xx.** {*;} 把本包和所含子包下的类名都保持，同时保持里面的内容不被混淆
+#-keep class xx.xx.xx{*;} 保持类名，同时保持里面的内容不被混淆

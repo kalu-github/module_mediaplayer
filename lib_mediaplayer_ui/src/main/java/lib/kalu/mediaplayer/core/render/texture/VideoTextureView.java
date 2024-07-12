@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.render;
+package lib.kalu.mediaplayer.core.render.texture;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,6 +13,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -25,7 +26,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
  *             8.必须在硬件加速的窗口中使用，占用内存比SurfaceView高，在5.0以前在主线程渲染，5.0以后有单独的渲染线程。
  * </pre>
  */
-public class VideoRenderTextureView extends TextureView implements VideoRenderApi {
+public class VideoTextureView extends TextureView implements VideoRenderApi {
 
     @Nullable
     private VideoKernelApi mKernel;
@@ -33,7 +34,7 @@ public class VideoRenderTextureView extends TextureView implements VideoRenderAp
     private SurfaceTexture mSurfaceTexture;
     private SurfaceTextureListener mSurfaceTextureListener;
 
-    public VideoRenderTextureView(Context context) {
+    public VideoTextureView(Context context) {
         super(context);
         init();
     }

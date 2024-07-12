@@ -1,6 +1,9 @@
-package lib.kalu.mediaplayer.core.render;
+package lib.kalu.mediaplayer.core.render.texture;
 
 import android.content.Context;
+
+import lib.kalu.mediaplayer.core.render.VideoRenderApi;
+import lib.kalu.mediaplayer.core.render.VideoRenderFactory;
 
 public class VideoTextureFactory implements VideoRenderFactory {
 
@@ -13,6 +16,6 @@ public class VideoTextureFactory implements VideoRenderFactory {
 
     @Override
     public VideoRenderApi create(Context context) {
-        return new VideoRenderTextureView(context);
+        return new VideoTextureView(context);
     }
 }

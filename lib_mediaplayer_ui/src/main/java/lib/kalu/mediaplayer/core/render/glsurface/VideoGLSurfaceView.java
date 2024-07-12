@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.render;
+package lib.kalu.mediaplayer.core.render.glsurface;
 
 import android.content.Context;
 import android.view.KeyEvent;
@@ -9,8 +9,9 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
+import lib.kalu.mediaplayer.core.render.VideoRenderApi;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
@@ -25,14 +26,14 @@ import lib.kalu.mediaplayer.util.LogUtil;
  * 再unlockCanvasAndPost（canvas）此视图，那么上传的这张canvas将替换原来的frontCanvas作为新的frontCanvas，
  * 原来的frontCanvas将切换到后台作为backCanvas。
  */
-public class VideoRenderSurfaceView extends SurfaceView implements VideoRenderApi {
+public class VideoGLSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Nullable
     private VideoKernelApi mKernel;
     @Nullable
     private SurfaceHolder.Callback mSurfaceHolderCallback;
 
-    public VideoRenderSurfaceView(Context context) {
+    public VideoGLSurfaceView(Context context) {
         super(context);
         init();
     }

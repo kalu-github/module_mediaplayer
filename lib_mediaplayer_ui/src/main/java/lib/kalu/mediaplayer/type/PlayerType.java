@@ -250,9 +250,11 @@ public @interface PlayerType {
     @interface RenderType {
         int TEXTURE_VIEW = 8_001;
         int SURFACE_VIEW = 8_002;
+        int GL_SURFACE_VIEW = 8_003;
 
         @IntDef({TEXTURE_VIEW,
-                SURFACE_VIEW})
+                SURFACE_VIEW,
+                GL_SURFACE_VIEW})
         @Retention(RetentionPolicy.SOURCE)
         @interface Value {
         }
