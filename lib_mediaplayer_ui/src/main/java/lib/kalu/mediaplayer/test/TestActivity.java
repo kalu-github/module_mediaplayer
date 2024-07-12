@@ -168,6 +168,7 @@ public final class TestActivity extends Activity {
         componentApis.add(end);
         // error
         ComponentError error = new ComponentError(getApplicationContext());
+        error.setComponentBackgroundColorInt(Color.BLACK);
         componentApis.add(error);
         // net
         ComponentBuffering speed = new ComponentBuffering(getApplicationContext());
