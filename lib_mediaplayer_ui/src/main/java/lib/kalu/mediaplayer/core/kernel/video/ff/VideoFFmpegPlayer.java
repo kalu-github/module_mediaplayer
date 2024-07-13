@@ -68,13 +68,13 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             String url = args.getUrl();
             if (url == null)
                 throw new Exception("url error: " + url);
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_START);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.LOADING_START);
             mFFmpegPlayer.setDataSource(context, Uri.parse(url), null);
             mFFmpegPlayer.prepare();
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_ERROR_PARSE);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.LOADING_STOP);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.ERROR_PARSE);
         }
     }
 
@@ -204,7 +204,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 seek = duration;
             }
             LogUtil.log("VideoFFmpegPlayer => seekTo => succ");
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_SEEK_START);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.SEEK_START);
             mFFmpegPlayer.seekTo((int) seek);
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => seekTo => " + e.getMessage());
@@ -285,7 +285,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             // 缓冲开始
             if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
                 if (isPrepared()) {
-                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_BUFFERING_START);
+                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_START);
                 } else {
                     LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what + ", mPrepared = false");
                 }
@@ -293,7 +293,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             // 缓冲结束
             else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
                 if (isPrepared()) {
-                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_STOP);
                 } else {
                     LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what + ", mPrepared = false");
                 }
@@ -304,12 +304,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                     if (isPrepared())
                         throw new Exception("warning: mPrepared true");
                     setPrepared(true);
-                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_STOP);
+                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.LOADING_STOP);
                     long seek = getSeek();
                     if (seek <= 0) {
-                        onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_VIDEO_START);
+                        onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_START);
                     } else {
-                        onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+                        onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_RENDERING_START);
                         // 起播快进
                         seekTo(seek);
                     }
@@ -325,13 +325,13 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         @Override
         public void onSeekComplete(FFmpegPlayer mediaPlayer) {
             LogUtil.log("VideoFFmpegPlayer => onSeekComplete =>");
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_SEEK_FINISH);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.SEEK_FINISH);
             try {
                 long seek = getSeek();
                 if (seek <= 0)
                     throw new Exception();
                 setSeek(0);
-                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_VIDEO_START);
+                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_START);
             } catch (Exception e) {
             }
         }
@@ -362,8 +362,8 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             }
             // error
             else {
-                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_LOADING_STOP);
-                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_ERROR_PARSE);
+                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.LOADING_STOP);
+                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.ERROR_PARSE);
             }
             return true;
         }
@@ -373,7 +373,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         @Override
         public void onCompletion(FFmpegPlayer mp) {
             LogUtil.log("VideoFFmpegPlayer => onCompletion =>");
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.EVENT_VIDEO_END);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_END);
         }
     };
 
@@ -385,7 +385,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 int h = o.getVideoHeight();
                 if (w < 0 || h < 0)
                     throw new Exception("w error: " + w + ", h error: " + h);
-                onUpdateSizeChanged(PlayerType.KernelType.FFPLAYER, w, h, PlayerType.RotationType.Rotation_0);
+                onUpdateSizeChanged(PlayerType.KernelType.FFPLAYER, w, h, PlayerType.RotationType.DEFAULT);
             } catch (Exception e) {
                 LogUtil.log("VideoFFmpegPlayer => onVideoSizeChanged => " + e.getMessage());
             }

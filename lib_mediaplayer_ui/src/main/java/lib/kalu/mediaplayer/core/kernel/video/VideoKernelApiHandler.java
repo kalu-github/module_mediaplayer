@@ -14,7 +14,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
  * @date: 2021-05-12 09:40
  */
 
-public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelApiEvent {
+public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelApiEvent, VideoKernelApiStartArgs {
 
     /***********/
 
@@ -36,14 +36,14 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                             // 开播
                             if (isPlaying()) {
                                 setPrepared(true);
-                                onEvent(kernelType, PlayerType.EventType.EVENT_LOADING_STOP);
+                                onEvent(kernelType, PlayerType.EventType.LOADING_STOP);
                                 long seek = getSeek();
                                 if (seek <= 0) {
-                                    onEvent(kernelType, PlayerType.EventType.EVENT_VIDEO_START);
+                                    onEvent(kernelType, PlayerType.EventType.VIDEO_START);
                                 } else {
-                                    onEvent(kernelType, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+                                    onEvent(kernelType, PlayerType.EventType.VIDEO_RENDERING_START);
                                     // 起播快进
-                                    onEvent(kernelType, PlayerType.EventType.EVENT_SEEK_PLAY_RECORD);
+                                    onEvent(kernelType, PlayerType.EventType.SEEK_PLAY_RECORD);
                                     seekTo(seek);
                                 }
                             }
@@ -101,8 +101,8 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                             long cast = current - start;
                             // 超时
                             if (cast >= timeout) {
-                                onEvent(kernelType, PlayerType.EventType.EVENT_LOADING_STOP);
-                                onEvent(kernelType, PlayerType.EventType.EVENT_ERROR_NET);
+                                onEvent(kernelType, PlayerType.EventType.LOADING_STOP);
+                                onEvent(kernelType, PlayerType.EventType.ERROR_NET);
                                 getPlayerApi().stop(true, false);
                                 throw new Exception("warning: connect timeout");
                             }
@@ -178,7 +178,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
                             // 超时
                             if (cast >= timeout) {
-                                onEvent(kernelType, PlayerType.EventType.EVENT_ERROR_BUFFERING_TIMEOUT);
+                                onEvent(kernelType, PlayerType.EventType.ERROR_BUFFERING_TIMEOUT);
                                 // 1
                                 stopCheckBufferingTimeout();
 //                              // 2

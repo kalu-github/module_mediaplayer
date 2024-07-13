@@ -4,6 +4,7 @@ package lib.kalu.mediaplayer.args;
 import org.json.JSONObject;
 
 import lib.kalu.mediaplayer.PlayerSDK;
+import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.type.PlayerType;
 
 public class StartArgs {
@@ -39,12 +40,26 @@ public class StartArgs {
         return exoSeekType;
     }
 
+    private boolean exoUseOkhttp;
+
+    public boolean isExoUseOkhttp() {
+        return exoUseOkhttp;
+    }
+
     // 视频渲染类型
     @PlayerType.RenderType.Value
     private int renderType;
 
     public int getRenderType() {
         return renderType;
+    }
+
+    // 画面缩放类型
+    @PlayerType.ScaleType.Value
+    private int renderScaleType;
+
+    public int getRenderScaleType() {
+        return renderScaleType;
     }
 
     // 视频解码类型
@@ -111,19 +126,13 @@ public class StartArgs {
         return subtitleUrl;
     }
 
-    // 限制最大时长
-    private long maxDuration;
+    // 试看时长
+    private long trySeeDuration = 0L;
 
-    public long getMaxDuration() {
-        return maxDuration;
+    public long getTrySeeDuration() {
+        return trySeeDuration;
     }
 
-    // 试看开关
-    private boolean trySee;
-
-    public boolean isTrySee() {
-        return trySee;
-    }
 
     // 起播快进指定位置
     private long seek;
@@ -188,6 +197,13 @@ public class StartArgs {
         return episodeItemCount;
     }
 
+    // 数据埋点
+    private BuriedEvent buriedEvent;
+
+    public BuriedEvent getBuriedEvent() {
+        return buriedEvent;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
@@ -196,7 +212,9 @@ public class StartArgs {
                 ", exoCacheDir='" + exoCacheDir + '\'' +
                 ", exoFFmpegType=" + exoFFmpegType +
                 ", exoSeekType=" + exoSeekType +
+                ", exoUseOkhttp=" + exoUseOkhttp +
                 ", renderType=" + renderType +
+                ", renderScaleType=" + renderScaleType +
                 ", kernelType=" + kernelType +
                 ", connectTimout=" + connectTimout +
                 ", log=" + log +
@@ -206,8 +224,7 @@ public class StartArgs {
                 ", url='" + url + '\'' +
                 ", title='" + title + '\'' +
                 ", subtitleUrl='" + subtitleUrl + '\'' +
-                ", maxDuration=" + maxDuration +
-                ", trySee=" + trySee +
+                ", trySeeDuration=" + trySeeDuration +
                 ", seek=" + seek +
                 ", live=" + live +
                 ", looping=" + looping +
@@ -217,6 +234,7 @@ public class StartArgs {
                 ", extra=" + extra +
                 ", episodePlayingIndex=" + episodePlayingIndex +
                 ", episodeItemCount=" + episodeItemCount +
+                ", buriedEvent=" + buriedEvent +
                 '}';
     }
 
@@ -226,7 +244,9 @@ public class StartArgs {
         this.exoCacheDir = builder.exoCacheDir;
         this.exoFFmpegType = builder.exoFFmpegType;
         this.exoSeekType = builder.exoSeekType;
+        this.exoUseOkhttp = builder.exoUseOkhttp;
         this.renderType = builder.renderType;
+        this.renderScaleType = builder.renderScaleType;
         this.kernelType = builder.kernelType;
         this.connectTimout = builder.connectTimout;
         this.log = builder.log;
@@ -236,8 +256,7 @@ public class StartArgs {
         this.url = builder.url;
         this.title = builder.title;
         this.subtitleUrl = builder.subtitleUrl;
-        this.maxDuration = builder.maxDuration;
-        this.trySee = builder.trySee;
+        this.trySeeDuration = builder.trySeeDuration;
         this.seek = builder.seek;
         this.live = builder.live;
         this.looping = builder.looping;
@@ -247,6 +266,7 @@ public class StartArgs {
         this.extra = builder.extra;
         this.episodePlayingIndex = builder.episodePlayingIndex;
         this.episodeItemCount = builder.episodeItemCount;
+        this.buriedEvent = builder.buriedEvent;
     }
 
     public Builder newBuilder() {
@@ -256,7 +276,9 @@ public class StartArgs {
         builder.exoCacheDir = exoCacheDir;
         builder.exoFFmpegType = exoFFmpegType;
         builder.exoSeekType = exoSeekType;
+        builder.exoUseOkhttp = exoUseOkhttp;
         builder.renderType = renderType;
+        builder.renderScaleType = renderScaleType;
         builder.kernelType = kernelType;
         builder.connectTimout = connectTimout;
         builder.log = log;
@@ -266,8 +288,7 @@ public class StartArgs {
         builder.url = url;
         builder.title = title;
         builder.subtitleUrl = subtitleUrl;
-        builder.maxDuration = maxDuration;
-        builder.trySee = trySee;
+        builder.trySeeDuration = trySeeDuration;
         builder.seek = seek;
         builder.live = live;
         builder.looping = looping;
@@ -277,6 +298,7 @@ public class StartArgs {
         builder.extra = extra;
         builder.episodePlayingIndex = episodePlayingIndex;
         builder.episodeItemCount = episodeItemCount;
+        builder.buriedEvent = buriedEvent;
         return builder;
     }
 
@@ -286,6 +308,7 @@ public class StartArgs {
         private int exoCacheType = playerArgs.getExoCacheType();
         private int exoCacheMax = playerArgs.getExoCacheMax();
         private String exoCacheDir = playerArgs.getExoCacheDir();
+        private boolean exoUseOkhttp = playerArgs.isExoUseOkhttp();
         @PlayerType.ExoFFmpegType.Value
         private int exoFFmpegType = playerArgs.getExoFFmpeg();
         @PlayerType.ExoSeekType
@@ -293,6 +316,9 @@ public class StartArgs {
         // 视频渲染类型
         @PlayerType.RenderType.Value
         private int renderType = playerArgs.getRender();
+        // 画面缩放类型
+        @PlayerType.ScaleType.Value
+        private int renderScaleType = playerArgs.getScaleType();
         // 视频解码类型
         @PlayerType.KernelType.Value
         private int kernelType = playerArgs.getKernel();
@@ -304,7 +330,8 @@ public class StartArgs {
         private boolean bufferingTimeoutRetry = playerArgs.getBufferingTimeoutRetry();
         // 开始播放前，是否销毁已存在的播放器相关实例
         private boolean initRelease = playerArgs.isInitRelease();
-
+        // 数据埋点
+        private BuriedEvent buriedEvent = playerArgs.getBuriedEvent();
         // 自动暂停&续播&销毁...
         private boolean supportAutoRelease = playerArgs.isSupportAutoRelease();
 
@@ -337,19 +364,11 @@ public class StartArgs {
             return this;
         }
 
-        // 显示最大时长
-        private long maxDuration = 0;
+        // 试看时长
+        private long trySeeDuration = playerArgs.getTrySeeDuration();
 
-        public Builder setMaxDuration(long max) {
-            this.maxDuration = max;
-            return this;
-        }
-
-        // 试看开关
-        private boolean trySee;
-
-        public Builder setTrySee(boolean v) {
-            this.trySee = v;
+        public Builder setTrySeeDuration(long v) {
+            this.trySeeDuration = v;
             return this;
         }
 

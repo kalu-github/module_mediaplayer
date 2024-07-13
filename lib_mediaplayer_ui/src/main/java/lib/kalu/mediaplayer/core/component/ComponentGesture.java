@@ -107,13 +107,13 @@ public class ComponentGesture extends RelativeLayout implements ComponentApi {
 //
 //    @Override
 //    public final void onPlayStateChanged(int playState) {
-//        if (playState == PlayerType.StateType.STATE_INIT
-//                || playState == PlayerType.StateType.STATE_START_ABORT
-//                || playState == PlayerType.StateType.STATE_LOADING_START
-//                || playState == PlayerType.StateType.STATE_LOADING_STOP
-//                || playState == PlayerType.StateType.STATE_ERROR
-//                || playState == PlayerType.StateType.STATE_BUFFERING_START
-//                || playState == PlayerType.StateType.STATE_ONCE_LIVE) {
+//        if (playState == PlayerType.StateType.INIT
+//                || playState == PlayerType.StateType.START_ABORT
+//                || playState == PlayerType.StateType.LOADING_START
+//                || playState == PlayerType.StateType.LOADING_STOP
+//                || playState == PlayerType.StateType.ERROR
+//                || playState == PlayerType.StateType.BUFFERING_START
+//                || playState == PlayerType.StateType.ONCE_LIVE) {
 //            setVisibility(GONE);
 //        } else {
 //            setVisibility(VISIBLE);

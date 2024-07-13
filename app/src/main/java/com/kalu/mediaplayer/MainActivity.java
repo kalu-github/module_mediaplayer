@@ -185,16 +185,16 @@ public class MainActivity extends Activity {
         int exoFFmpegId = ((RadioGroup) findViewById(R.id.main_exo_ffmpeg)).getCheckedRadioButtonId();
         switch (exoFFmpegId) {
             case R.id.main_exo_vff_amc:
-                exoFFmpeg = PlayerType.ExoFFmpegType.EXO_RENDERER_VIDEO_FFMPEG_AUDIO_MEDIACODEC;
+                exoFFmpeg = PlayerType.ExoFFmpegType.VIDEO_FFMPEG_AUDIO_MEDIACODEC;
                 break;
             case R.id.main_exo_vmc_aff:
-                exoFFmpeg = PlayerType.ExoFFmpegType.EXO_RENDERER_VIDEO_MEDIACODEC_AUDIO_FFMPEG;
+                exoFFmpeg = PlayerType.ExoFFmpegType.VIDEO_MEDIACODEC_AUDIO_FFMPEG;
                 break;
             case R.id.main_exo_vff_aff:
-                exoFFmpeg = PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_FFMPEG;
+                exoFFmpeg = PlayerType.ExoFFmpegType.ONLY_FFMPEG;
                 break;
             default:
-                exoFFmpeg = PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
+                exoFFmpeg = PlayerType.ExoFFmpegType.ONLY_MEDIACODEC;
                 break;
         }
 
@@ -213,19 +213,19 @@ public class MainActivity extends Activity {
         int scaleTypeId = ((RadioGroup) findViewById(R.id.main_scale)).getCheckedRadioButtonId();
         switch (scaleTypeId) {
             case R.id.main_scale2:
-                scaleType = PlayerType.ScaleType.SCREEN_SCALE_REAL;
+                scaleType = PlayerType.ScaleType.REAL;
                 break;
             case R.id.main_scale3:
-                scaleType = PlayerType.ScaleType.SCREEN_SCALE_FULL;
+                scaleType = PlayerType.ScaleType.FULL;
                 break;
             case R.id.main_scale4:
-                scaleType = PlayerType.ScaleType.SCREEN_SCALE_4_3;
+                scaleType = PlayerType.ScaleType._4_3;
                 break;
             case R.id.main_scale5:
-                scaleType = PlayerType.ScaleType.SCREEN_SCALE_16_9;
+                scaleType = PlayerType.ScaleType._16_9;
                 break;
             default:
-                scaleType = PlayerType.ScaleType.SCREEN_SCALE_AUTO;
+                scaleType = PlayerType.ScaleType.DEFAULT;
                 break;
         }
 

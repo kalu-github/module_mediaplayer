@@ -56,18 +56,18 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApiBu
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_BUFFERING_START:
-            case PlayerType.StateType.STATE_SEEK_START:
-                LogUtil.log("ComponentBuffering[show] => callEventListener => playState = " + playState);
+            case PlayerType.StateType.BUFFERING_START:
+            case PlayerType.StateType.SEEK_START:
+                LogUtil.log("ComponentBuffering[show] => callEvent => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.STATE_INIT:
-            case PlayerType.StateType.STATE_BUFFERING_STOP:
-            case PlayerType.StateType.STATE_SEEK_FINISH:
-            case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_RELEASE:
-            case PlayerType.StateType.STATE_RELEASE_EXCEPTION:
-                LogUtil.log("ComponentBuffering[hide] => callEventListener => playState = " + playState);
+            case PlayerType.StateType.INIT:
+            case PlayerType.StateType.BUFFERING_STOP:
+            case PlayerType.StateType.SEEK_FINISH:
+            case PlayerType.StateType.ERROR:
+            case PlayerType.StateType.RELEASE:
+            case PlayerType.StateType.RELEASE_EXCEPTION:
+                LogUtil.log("ComponentBuffering[hide] => callEvent => playState = " + playState);
                 hide();
                 break;
         }

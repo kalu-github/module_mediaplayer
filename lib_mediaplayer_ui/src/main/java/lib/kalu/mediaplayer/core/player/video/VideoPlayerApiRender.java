@@ -28,7 +28,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
 
     default boolean startFull(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
         try {
-            callEvent(PlayerType.StateType.STATE_FULL_START);
+            callEvent(PlayerType.StateType.FULL_START);
             boolean full = isFull();
             if (full)
                 throw new Exception("warning: full true");
@@ -57,19 +57,19 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             initRenderView(kernelType, renderType);
             // 5
             ((PlayerView) viewRoot).setDoWindowing(false);
-            callEvent(PlayerType.StateType.STATE_FULL_SUCC);
+            callEvent(PlayerType.StateType.FULL_SUCC);
             callWindow(PlayerType.WindowType.FULL);
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => startFull => " + e.getMessage());
-            callEvent(PlayerType.StateType.STATE_FULL_FAIL);
+            callEvent(PlayerType.StateType.FULL_FAIL);
             return false;
         }
     }
 
     default boolean stopFull(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
         try {
-            callEvent(PlayerType.StateType.STATE_FULL_START);
+            callEvent(PlayerType.StateType.FULL_START);
             boolean isFull = isFull();
             if (!isFull)
                 throw new Exception("not full");
@@ -97,19 +97,19 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             initRenderView(kernelType, renderType);
             // 5
             ((PlayerView) viewRoot).setDoWindowing(false);
-            callEvent(PlayerType.StateType.STATE_FULL_SUCC);
+            callEvent(PlayerType.StateType.FULL_SUCC);
             callWindow(PlayerType.WindowType.NORMAL);
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => stopFull => " + e.getMessage());
-            callEvent(PlayerType.StateType.STATE_FULL_FAIL);
+            callEvent(PlayerType.StateType.FULL_FAIL);
             return false;
         }
     }
 
     default boolean startFloat(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
         try {
-            callEvent(PlayerType.StateType.STATE_FLOAT_START);
+            callEvent(PlayerType.StateType.FLOAT_START);
             boolean full = isFull();
             if (full)
                 throw new Exception("warning: full true");
@@ -145,19 +145,19 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             initRenderView(kernelType, renderType);
             // 5
             ((PlayerView) viewRoot).setDoWindowing(false);
-            callEvent(PlayerType.StateType.STATE_FLOAT_SUCC);
+            callEvent(PlayerType.StateType.FLOAT_SUCC);
             callWindow(PlayerType.WindowType.FLOAT);
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => startFull => " + e.getMessage());
-            callEvent(PlayerType.StateType.STATE_FLOAT_FAIL);
+            callEvent(PlayerType.StateType.FLOAT_FAIL);
             return false;
         }
     }
 
     default boolean stopFloat(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
         try {
-            callEvent(PlayerType.StateType.STATE_FLOAT_START);
+            callEvent(PlayerType.StateType.FLOAT_START);
             boolean isFloat = isFloat();
             if (!isFloat)
                 throw new Exception("not Float");
@@ -188,12 +188,12 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             initRenderView(kernelType, renderType);
             // 5
             ((PlayerView) viewRoot).setDoWindowing(false);
-            callEvent(PlayerType.StateType.STATE_FULL_SUCC);
+            callEvent(PlayerType.StateType.FULL_SUCC);
             callWindow(PlayerType.WindowType.NORMAL);
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => stopFloat => " + e.getMessage());
-            callEvent(PlayerType.StateType.STATE_FLOAT_FAIL);
+            callEvent(PlayerType.StateType.FLOAT_FAIL);
             return false;
         }
     }
@@ -204,7 +204,6 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             if (null == render)
                 throw new Exception("render error: null");
             render.setVideoScaleType(scaleType);
-            PlayerSDK.init().setScaleType(scaleType);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => setVideoScaleType => " + e.getMessage());
         }
@@ -219,14 +218,14 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             return render.getVideoScaleType();
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => getVideoScaleType => " + e.getMessage());
-            return PlayerType.ScaleType.SCREEN_SCALE_DEFAULT;
+            return PlayerType.ScaleType.DEFAULT;
         }
     }
 
-    default void setVideoFormat(int width, int height, @PlayerType.RotationType.Value int rotation) {
+    default void setVideoFormat(int width, int height, @PlayerType.RotationType.Value int rotation, @PlayerType.ScaleType.Value int scaleType) {
         try {
             VideoRenderApi render = getVideoRender();
-            render.setVideoFormat(width, height, rotation);
+            render.setVideoFormat(width, height, rotation, scaleType);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => setVideoFormat => " + e.getMessage());
         }
@@ -314,10 +313,10 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
     }
 
     default void setVideoRender(@PlayerType.RenderType int v) {
-        try {
-            PlayerSDK.init().setRender(v);
-        } catch (Exception e) {
-        }
+//        try {
+//            PlayerSDK.init().setRender(v);
+//        } catch (Exception e) {
+//        }
     }
 
     default void addVideoRenderListener() {

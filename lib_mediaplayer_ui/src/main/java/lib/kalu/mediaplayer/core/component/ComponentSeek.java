@@ -37,8 +37,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
         // 试看
         try {
-            boolean trySee = isTrySee();
-            if (trySee)
+            long trySeeDuration = getTrySeeDuration();
+            if (trySeeDuration>0L)
                 throw new Exception("warning: trySee true");
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception1 " + e.getMessage());
@@ -115,10 +115,10 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     public void seekToPosition(int keyCode, int position) {
         try {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                superCallEvent(false, true, PlayerType.StateType.STATE_FAST_FORWARD_STOP);
+                superCallEvent(false, true, PlayerType.StateType.FAST_FORWARD_STOP);
                 seekTo(position);
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-                superCallEvent(false, true, PlayerType.StateType.STATE_FAST_REWIND_STOP);
+                superCallEvent(false, true, PlayerType.StateType.FAST_REWIND_STOP);
                 seekTo(position);
             }
         } catch (Exception e) {
@@ -129,24 +129,24 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_FAST_FORWARD_START:
-            case PlayerType.StateType.STATE_FAST_REWIND_START:
+            case PlayerType.StateType.FAST_FORWARD_START:
+            case PlayerType.StateType.FAST_REWIND_START:
                 LogUtil.log("ComponentSeek => callEventListener => show => playState = " + playState);
                 setUserTouch(true);
                 show();
                 break;
-            case PlayerType.StateType.STATE_FAST_FORWARD_STOP:
-            case PlayerType.StateType.STATE_FAST_REWIND_STOP:
+            case PlayerType.StateType.FAST_FORWARD_STOP:
+            case PlayerType.StateType.FAST_REWIND_STOP:
                 LogUtil.log("ComponentSeek => callEventListener => gone => playState = " + playState);
                 setUserTouch(false);
                 hide();
                 break;
-            case PlayerType.StateType.STATE_INIT:
-            case PlayerType.StateType.STATE_ERROR:
-            case PlayerType.StateType.STATE_END:
+            case PlayerType.StateType.INIT:
+            case PlayerType.StateType.ERROR:
+            case PlayerType.StateType.END:
                 onUpdateProgress(false, 0, 0, 0);
                 break;
-            case PlayerType.StateType.STATE_SEEK_FINISH:
+            case PlayerType.StateType.SEEK_FINISH:
                 try {
                     long position = getPosition();
                     long duration = getDuration();

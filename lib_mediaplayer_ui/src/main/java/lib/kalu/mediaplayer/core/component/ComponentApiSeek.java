@@ -52,7 +52,7 @@ public interface ComponentApiSeek extends ComponentApi {
             boolean componentShowing = isComponentShowing();
             // gone
             if (!componentShowing) {
-                superCallEvent(false, true, PlayerType.StateType.STATE_FAST_FORWARD_START);
+                superCallEvent(false, true, PlayerType.StateType.FAST_FORWARD_START);
             }
             // click
             else if (repeatCount == 0) {
@@ -83,8 +83,8 @@ public interface ComponentApiSeek extends ComponentApi {
                     progress = (int) duration;
                 }
 
-                long max = getMaxDuration();
-                onUpdateProgress(true, max, progress, duration);
+                long trySeeDuration = getTrySeeDuration();
+                onUpdateProgress(true, trySeeDuration, progress, duration);
             }
             // long click
             else {
@@ -114,8 +114,8 @@ public interface ComponentApiSeek extends ComponentApi {
                 if (progress >= duration) {
                     progress = (int) duration;
                 }
-                long max = getMaxDuration();
-                onUpdateProgress(true, max, progress, duration);
+                long trySeeDuration = getTrySeeDuration();
+                onUpdateProgress(true, trySeeDuration, progress, duration);
             }
         } catch (Exception e) {
             LogUtil.log("ComponentApiSeek => startInitMsg => Exception " + e.getMessage());

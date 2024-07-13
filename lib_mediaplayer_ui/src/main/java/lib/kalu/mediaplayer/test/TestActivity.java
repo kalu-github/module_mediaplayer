@@ -252,34 +252,34 @@ public final class TestActivity extends Activity {
                 LogUtil.log("onPlayStateChanged => state = " + state);
 
                 switch (state) {
-                    case PlayerType.StateType.STATE_INIT:
+                    case PlayerType.StateType.INIT:
                         //播放未开始，初始化
                         break;
-                    case PlayerType.StateType.STATE_START_ABORT:
+                    case PlayerType.StateType.START_ABORT:
                         //开始播放中止
                         break;
-                    case PlayerType.StateType.STATE_LOADING_START:
+                    case PlayerType.StateType.LOADING_START:
                         //播放准备中
                         break;
-                    case PlayerType.StateType.STATE_LOADING_STOP:
+                    case PlayerType.StateType.LOADING_STOP:
                         //播放准备就绪
                         break;
-                    case PlayerType.StateType.STATE_ERROR:
+                    case PlayerType.StateType.ERROR:
                         //播放错误
                         break;
-                    case PlayerType.StateType.STATE_BUFFERING_START:
+                    case PlayerType.StateType.BUFFERING_START:
                         //正在缓冲
                         break;
-                    case PlayerType.StateType.STATE_START:
+                    case PlayerType.StateType.START:
                         //正在播放
                         break;
-                    case PlayerType.StateType.STATE_PAUSE:
+                    case PlayerType.StateType.PAUSE:
                         //暂停播放
                         break;
-                    case PlayerType.StateType.STATE_BUFFERING_STOP:
+                    case PlayerType.StateType.BUFFERING_STOP:
                         //暂停缓冲
                         break;
-                    case PlayerType.StateType.STATE_END:
+                    case PlayerType.StateType.END:
                         //播放完成
                         break;
                 }
@@ -304,12 +304,7 @@ public final class TestActivity extends Activity {
 
         // 试看 45s
         boolean trySee = getIntent().getBooleanExtra(INTENT_TRY_SEE, false);
-        if (trySee) {
-            builder.setTrySee(true);
-            builder.setMaxDuration(45 * 1000);
-        } else {
-            builder.setTrySee(false);
-        }
+        builder.setTrySeeDuration(trySee ? 45 * 1000L : 0L);
 
         // 续播 10s
         boolean isSeek = getIntent().getBooleanExtra(INTENT_SEEK, false);

@@ -184,14 +184,14 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            StartArgs tags = playerView.getTags();
-            if (null == tags)
-                throw new Exception("warning: tags null");
-            String mediaUrl = tags.getUrl();
+            StartArgs args = playerView.getStartArgs();
+            if (null == args)
+                throw new Exception("warning: args null");
+            String mediaUrl = args.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
-            int kernelType = tags.getKernelType();
-            int renderType = tags.getRenderType();
+            int kernelType = args.getKernelType();
+            int renderType = args.getRenderType();
             boolean startFull = playerView.startFull(kernelType, renderType);
             LogUtil.log("PlayerLayout => startFull => status = " + startFull);
         } catch (Exception e) {
@@ -204,14 +204,14 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            StartArgs tags = playerView.getTags();
-            if (null == tags)
-                throw new Exception("warning: tags null");
-            String mediaUrl = tags.getUrl();
+            StartArgs args = playerView.getStartArgs();
+            if (null == args)
+                throw new Exception("warning: args null");
+            String mediaUrl = args.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
-            int kernelType = tags.getKernelType();
-            int renderType = tags.getRenderType();
+            int kernelType = args.getKernelType();
+            int renderType = args.getRenderType();
             boolean stopFull = playerView.stopFull(kernelType, renderType);
             LogUtil.log("PlayerLayout => stopFull => status = " + stopFull);
         } catch (Exception e) {
@@ -224,14 +224,14 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            StartArgs tags = playerView.getTags();
-            if (null == tags)
-                throw new Exception("warning: tags null");
-            String mediaUrl = tags.getUrl();
+            StartArgs args = playerView.getStartArgs();
+            if (null == args)
+                throw new Exception("warning: args null");
+            String mediaUrl = args.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
-            int kernelType = tags.getKernelType();
-            int renderType = tags.getRenderType();
+            int kernelType = args.getKernelType();
+            int renderType = args.getRenderType();
             boolean startFull = playerView.startFloat(kernelType, renderType);
             LogUtil.log("PlayerLayout => startFloat => status = " + startFull);
         } catch (Exception e) {
@@ -245,14 +245,14 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            StartArgs tags = playerView.getTags();
-            if (null == tags)
-                throw new Exception("warning: tags null");
-            String mediaUrl = tags.getUrl();
+            StartArgs args = playerView.getStartArgs();
+            if (null == args)
+                throw new Exception("warning: args null");
+            String mediaUrl = args.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
-            int kernelType = tags.getKernelType();
-            int renderType = tags.getRenderType();
+            int kernelType = args.getKernelType();
+            int renderType = args.getRenderType();
             boolean stopFull = playerView.stopFloat(kernelType, renderType);
             LogUtil.log("PlayerLayout => stopFloat => status = " + stopFull);
         } catch (Exception e) {
@@ -499,10 +499,10 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            StartArgs tag = ((VideoPlayerApi) playerView).getTags();
-            if (null == tag)
-                throw new Exception("error: tag null");
-            return tag.getSubtitleUrl();
+            StartArgs args = playerView.getStartArgs();
+            if (null == args)
+                throw new Exception("warning: args null");
+            return args.getSubtitleUrl();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => getSubtitleUrl => " + e.getMessage());
             return null;
@@ -514,10 +514,10 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            StartArgs tag = ((VideoPlayerApi) playerView).getTags();
-            if (null == tag)
-                throw new Exception("error: tag null");
-            return tag.getUrl();
+            StartArgs args = playerView.getStartArgs();
+            if (null == args)
+                throw new Exception("warning: args null");
+            return args.getUrl();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => getMediaUrl => " + e.getMessage());
             return null;
@@ -584,28 +584,28 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            StartArgs tag = playerView.getTags();
-            if (null == tag)
-                throw new Exception("error: tag null");
-            return tag.getSeek();
+            StartArgs args = playerView.getStartArgs();
+            if (null == args)
+                throw new Exception("warning: args null");
+            return args.getSeek();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => getSeek => " + e.getMessage());
             return 0L;
         }
     }
 
-    public final long getMaxDuration() {
+    public final long getTrySeeDuration() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            StartArgs tag = playerView.getTags();
-            if (null == tag)
-                throw new Exception("error: tag null");
-            return tag.getMaxDuration();
+            StartArgs args = playerView.getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            return args.getTrySeeDuration();
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getMaxDuration => " + e.getMessage());
-            return 0;
+            LogUtil.log("PlayerLayout => getTrySeeDuration => " + e.getMessage());
+            return 0L;
         }
     }
 
@@ -662,7 +662,7 @@ public class PlayerLayout extends RelativeLayout {
             return playerView.getSpeed();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => setPlayerBackgroundColor => " + e.getMessage());
-            return PlayerType.SpeedType.Speed_Default;
+            return PlayerType.SpeedType.DEFAULT;
         }
     }
 

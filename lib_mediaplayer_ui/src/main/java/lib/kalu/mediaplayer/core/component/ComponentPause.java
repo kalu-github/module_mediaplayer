@@ -76,18 +76,18 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_PAUSE:
+            case PlayerType.StateType.PAUSE:
                 LogUtil.log("ComponentPause[show] => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.STATE_INIT:
-            case PlayerType.StateType.STATE_RESUME:
-            case PlayerType.StateType.STATE_FAST_FORWARD_START:
-            case PlayerType.StateType.STATE_FAST_REWIND_START:
+            case PlayerType.StateType.INIT:
+            case PlayerType.StateType.RESUME:
+            case PlayerType.StateType.FAST_FORWARD_START:
+            case PlayerType.StateType.FAST_REWIND_START:
                 LogUtil.log("ComponentPause[gone] => playState = " + playState);
                 hide();
                 break;
-            case PlayerType.StateType.STATE_COMPONENT_MENU_SHOW:
+            case PlayerType.StateType.COMPONENT_MENU_SHOW:
                 LogUtil.log("ComponentPause[show] => playState = " + playState);
                 try {
                     boolean componentShowing = isComponentShowing();
@@ -99,7 +99,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                     LogUtil.log("ComponentPause => callEventListener => hide => Exception2 " + playState);
                 }
                 break;
-            case PlayerType.StateType.STATE_COMPONENT_MENU_HIDE:
+            case PlayerType.StateType.COMPONENT_MENU_HIDE:
                 LogUtil.log("ComponentPause[gone] => playState = " + playState);
                 try {
                     boolean componentShowing = isComponentShowing();
@@ -122,8 +122,8 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public void hide() {
 
         try {
-            boolean trySee = isTrySee();
-            if (trySee)
+            long trySeeDuration = getTrySeeDuration();
+            if (trySeeDuration>0L)
                 throw new Exception("warning: trySee true");
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
@@ -143,8 +143,8 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public void show() {
 
         try {
-            boolean trySee = isTrySee();
-            if (trySee)
+            long trySeeDuration = getTrySeeDuration();
+            if (trySeeDuration>0L)
                 throw new Exception("warning: trySee true");
             boolean componentShowing = isComponentShowing();
             if (componentShowing)
@@ -160,10 +160,10 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                 if (duration <= 0)
                     throw new Exception("warning: duration<=0");
                 long position = getPosition();
-                long max = getMaxDuration();
+                long trySeeDuration = getTrySeeDuration();
                 SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_pause_sb);
                 seekBar.setProgress((int) position);
-                seekBar.setMax((int) (max > 0 ? max : duration));
+                seekBar.setMax((int) (trySeeDuration > 0L ? trySeeDuration : duration));
             }
         } catch (Exception e) {
         }

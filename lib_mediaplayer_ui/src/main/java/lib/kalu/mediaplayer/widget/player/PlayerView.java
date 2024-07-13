@@ -106,11 +106,11 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 // stopFull
                 if (isFull()) {
                     try {
-                        StartArgs tags = getTags();
-                        if (null == tags)
+                        StartArgs args = getStartArgs();
+                        if (null == args)
                             throw new Exception();
-                        int kernelType = tags.getKernelType();
-                        int renderType = tags.getRenderType();
+                        int kernelType = args.getKernelType();
+                        int renderType = args.getRenderType();
                         stopFull(kernelType, renderType);
                     } catch (Exception e) {
                     }
@@ -119,11 +119,11 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 //  stopFloat();
                 else if (isFloat()) {
                     try {
-                        StartArgs tags = getTags();
-                        if (null == tags)
+                        StartArgs args = getStartArgs();
+                        if (null == args)
                             throw new Exception();
-                        int kernelType = tags.getKernelType();
-                        int renderType = tags.getRenderType();
+                        int kernelType = args.getKernelType();
+                        int renderType = args.getRenderType();
                         stopFloat(kernelType, renderType);
                     } catch (Exception e) {
                     }

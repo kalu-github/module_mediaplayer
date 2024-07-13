@@ -131,6 +131,11 @@ public final class PlayerSDK {
         return this;
     }
 
+    public PlayerSDK setTrySeeDuration(long v) {
+        mPlayerBuilder.setTrySeeDuration(v);
+        return this;
+    }
+
     public void build() {
         mConfig = mPlayerBuilder.build();
     }

@@ -69,7 +69,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_END:
+            case PlayerType.StateType.END:
                 hide();
                 break;
         }
@@ -327,14 +327,14 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public void hide() {
-        superCallEvent(false, true, PlayerType.StateType.STATE_COMPONENT_MENU_HIDE);
+        superCallEvent(false, true, PlayerType.StateType.COMPONENT_MENU_HIDE);
         ComponentApiMenu.super.hide();
         stopDelayedMsg();
     }
 
     @Override
     public void show() {
-        superCallEvent(false, true, PlayerType.StateType.STATE_COMPONENT_MENU_SHOW);
+        superCallEvent(false, true, PlayerType.StateType.COMPONENT_MENU_SHOW);
         ComponentApiMenu.super.show();
     }
 
@@ -424,23 +424,23 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     }
                     if (i < speeds.length) {
                         radioButton.setTag(speeds[i]);
-                        if (speeds[i] == PlayerType.SpeedType.Speed_0_5) {
+                        if (speeds[i] == PlayerType.SpeedType._0_5) {
                             radioButton.setText("0.5");
-                        } else if (speeds[i] == PlayerType.SpeedType.Speed_1_5) {
+                        } else if (speeds[i] == PlayerType.SpeedType._1_5) {
                             radioButton.setText("1.5");
-                        } else if (speeds[i] == PlayerType.SpeedType.Speed_2_0) {
+                        } else if (speeds[i] == PlayerType.SpeedType._2_0) {
                             radioButton.setText("2.0");
-                        } else if (speeds[i] == PlayerType.SpeedType.Speed_2_5) {
+                        } else if (speeds[i] == PlayerType.SpeedType._2_5) {
                             radioButton.setText("2.5");
-                        } else if (speeds[i] == PlayerType.SpeedType.Speed_3_0) {
+                        } else if (speeds[i] == PlayerType.SpeedType._3_0) {
                             radioButton.setText("3.0");
-                        } else if (speeds[i] == PlayerType.SpeedType.Speed_3_5) {
+                        } else if (speeds[i] == PlayerType.SpeedType._3_5) {
                             radioButton.setText("3.5");
-                        } else if (speeds[i] == PlayerType.SpeedType.Speed_4_0) {
+                        } else if (speeds[i] == PlayerType.SpeedType._4_0) {
                             radioButton.setText("4.0");
-                        } else if (speeds[i] == PlayerType.SpeedType.Speed_4_5) {
+                        } else if (speeds[i] == PlayerType.SpeedType._4_5) {
                             radioButton.setText("4.5");
-                        } else if (speeds[i] == PlayerType.SpeedType.Speed_5_0) {
+                        } else if (speeds[i] == PlayerType.SpeedType._5_0) {
                             radioButton.setText("5.0");
                         } else {
                             radioButton.setText("1.0");
@@ -464,19 +464,19 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
                     if (i < scales.length) {
                         radioButton.setTag(scales[i]);
-                        if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_REAL) {
+                        if (scales[i] == PlayerType.ScaleType.REAL) {
                             radioButton.setText("原始");
-                        } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_FULL) {
+                        } else if (scales[i] == PlayerType.ScaleType.FULL) {
                             radioButton.setText("全屏");
-                        } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_1_1) {
+                        } else if (scales[i] == PlayerType.ScaleType._1_1) {
                             radioButton.setText("1:1");
-                        } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_4_3) {
+                        } else if (scales[i] == PlayerType.ScaleType._4_3) {
                             radioButton.setText("4:3");
-                        } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_5_4) {
+                        } else if (scales[i] == PlayerType.ScaleType._5_4) {
                             radioButton.setText("5:4");
-                        } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_16_9) {
+                        } else if (scales[i] == PlayerType.ScaleType._16_9) {
                             radioButton.setText("16:9");
-                        } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_16_10) {
+                        } else if (scales[i] == PlayerType.ScaleType._16_10) {
                             radioButton.setText("16:10");
                         } else {
                             radioButton.setText("自动");

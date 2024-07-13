@@ -22,11 +22,11 @@ public final class VideoKernelFactoryManager {
     public static VideoKernelFactory getFactory(@PlayerType.KernelType int type) {
         // ijk
         if (type == PlayerType.KernelType.IJK) {
-            return VideoIjkPlayerFactory.build(false);
+            return VideoIjkPlayerFactory.build();
         }
         // ijk_mediacodec
         else if (type == PlayerType.KernelType.IJK_MEDIACODEC) {
-            return VideoIjkPlayerFactory.build(true);
+            return VideoIjkPlayerFactory.build();
         }
         // exo1
         else if (type == PlayerType.KernelType.EXO_V1) {

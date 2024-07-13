@@ -46,14 +46,14 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_VIDEO_RENDERING_START:
+            case PlayerType.StateType.VIDEO_RENDERING_START:
                 LogUtil.log("ComponentWarningPlayInfo => playState = " + playState);
                 try {
                     boolean componentShowing = isComponentShowing();
                     if (componentShowing)
                         throw new Exception("warning: componentShowing false");
-                    boolean trySee = isTrySee();
-                    if (trySee)
+                    long trySeeDuration = getTrySeeDuration();
+                    if (trySeeDuration>0L)
                         throw new Exception("warning: trySee true");
                     show();
                 } catch (Exception d) {
@@ -112,10 +112,10 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             if (duration <= 0)
                 throw new Exception("warning: duration<=0");
             long position = getPosition();
-            long max = getMaxDuration();
+            long trySeeDuration = getTrySeeDuration();
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_play_info_seekbar);
             seekBar.setProgress((int) position);
-            seekBar.setMax((int) (max > 0 ? max : duration));
+            seekBar.setMax((int) (trySeeDuration > 0L ? trySeeDuration : duration));
         } catch (Exception e) {
         }
 

@@ -19,7 +19,7 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             boolean doWindowing = videoKernel.isDoWindowing();
             if (doWindowing)
                 throw new Exception("warning: doWindowing true");
-            StartArgs tags = getTags();
+            StartArgs tags = getStartArgs();
             if (null == tags)
                 throw new Exception("warning: tags null");
             boolean supportAutoRelease = tags.isSupportAutoRelease();
@@ -46,7 +46,7 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             boolean doWindowing = videoKernel.isDoWindowing();
             if (doWindowing)
                 throw new Exception("warning: doWindowing true");
-            StartArgs tags = getTags();
+            StartArgs tags = getStartArgs();
             if (null == tags)
                 throw new Exception("warning: tags null");
             boolean supportAutoRelease = tags.isSupportAutoRelease();
@@ -72,7 +72,7 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             boolean doWindowing = videoKernel.isDoWindowing();
             if (doWindowing)
                 throw new Exception("warning: doWindowing true");
-            StartArgs tags = getTags();
+            StartArgs tags = getStartArgs();
             if (null == tags)
                 throw new Exception("warning: tags null");
             boolean supportAutoRelease = tags.isSupportAutoRelease();

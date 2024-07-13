@@ -32,14 +32,21 @@ public final class PlayerArgs {
     private KeycodeApi keycodeApi; // 遥控code
 
     @PlayerType.ExoSeekType.Value
-    private int exoSeekType = PlayerType.ExoSeekType.EXO_SEEK_DEFAULT;
+    private int exoSeekType = PlayerType.ExoSeekType.DEFAULT;
     @PlayerType.ExoFFmpegType.Value
-    private int exoFFmpeg = PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
+    private int exoFFmpeg = PlayerType.ExoFFmpegType.ONLY_MEDIACODEC;
     private boolean exoUseOkhttp;
     @PlayerType.CacheType
     private int exoCacheType = PlayerType.CacheType.NONE;
     private int exoCacheMax = 0;
     private String exoCacheDir = null;
+
+    // 试看时长
+    private long trySeeDuration;
+
+    public long getTrySeeDuration() {
+        return trySeeDuration;
+    }
 
     public boolean isExoUseOkhttp() {
         return exoUseOkhttp;
@@ -145,6 +152,7 @@ public final class PlayerArgs {
         exoCacheType = builder.exoCacheType;
         exoCacheDir = builder.exoCacheDir;
         exoCacheMax = builder.exoCacheMax;
+        trySeeDuration = builder.trySeeDuration;
     }
 
     public Builder newBuilder() {
@@ -169,6 +177,7 @@ public final class PlayerArgs {
         builder.setExoCacheType(this.exoCacheType);
         builder.setExoCacheDir(this.exoCacheDir);
         builder.setExoCacheMax(this.exoCacheMax);
+        builder.setTrySeeDuration(this.trySeeDuration);
         return builder;
     }
 
@@ -181,13 +190,13 @@ public final class PlayerArgs {
         private int connectTimeout = 10 * 1000;  // 连接超时
         private boolean bufferingTimeoutRetry = false; // 缓冲失败重试
         @PlayerType.KernelType.Value
-        private int externalAudioKernel = PlayerType.KernelType.ANDROID; // 音频播放器内核
+        private int externalAudioKernel = PlayerType.KernelType.DEFAULT; // 音频播放器内核
         @PlayerType.KernelType.Value
-        private int kernel = PlayerType.KernelType.ANDROID; // 视频播放器内核
+        private int kernel = PlayerType.KernelType.DEFAULT; // 视频播放器内核
         @PlayerType.RenderType.Value
-        private int render = PlayerType.RenderType.SURFACE_VIEW; // 视频渲染类型
+        private int render = PlayerType.RenderType.DEFAULT; // 视频渲染类型
         @PlayerType.ScaleType
-        private int scaleType = PlayerType.ScaleType.SCREEN_SCALE_DEFAULT; // 视频缩放比例
+        private int scaleType = PlayerType.ScaleType.DEFAULT; // 视频缩放比例
         private boolean checkMobileNetwork = false; // 监测手机网络环境
         private boolean fitMobileCutout = true; // 是否适配手机刘海屏，默认适配
         private boolean checkOrientation = false;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
@@ -196,9 +205,9 @@ public final class PlayerArgs {
 
 
         @PlayerType.ExoSeekType.Value
-        private int exoSeekType = PlayerType.ExoSeekType.EXO_SEEK_DEFAULT;
+        private int exoSeekType = PlayerType.ExoSeekType.DEFAULT;
         @PlayerType.ExoFFmpegType.Value
-        private int exoFFmpeg = PlayerType.ExoFFmpegType.EXO_RENDERER_ONLY_MEDIACODEC;
+        private int exoFFmpeg = PlayerType.ExoFFmpegType.ONLY_MEDIACODEC;
         /**
          * 本地视频缓存
          */
@@ -207,6 +216,14 @@ public final class PlayerArgs {
         private int exoCacheMax = 0;
         private String exoCacheDir = null;
         private boolean exoUseOkhttp = true;
+
+        // 试看时长
+        private long trySeeDuration = 0L;
+
+        public Builder setTrySeeDuration(long v) {
+            this.trySeeDuration = v;
+            return this;
+        }
 
         public Builder setConnectTimeout(int v) {
             connectTimeout = v;

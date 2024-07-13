@@ -68,8 +68,8 @@ public final class VideoExoPlayer extends VideoBasePlayer {
 //                public void onStateChanged(boolean playWhenReady, int playbackState) {
 //                    if (mIsBuffering) {
 //                        switch (playbackState) {
-//                            case ExoPlayer.STATE_ENDED:
-//                            case ExoPlayer.STATE_READY:
+//                            case ExoPlayer.ENDED:
+//                            case ExoPlayer.READY:
 //                                mIsBuffering = false;
 //                                break;
 //                        }
@@ -77,7 +77,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
 //
 //                    if (mIsPrepareing) {
 //                        switch (playbackState) {
-//                            case ExoPlayer.STATE_READY:
+//                            case ExoPlayer.READY:
 //                                mIsPrepareing = false;
 //                                mDidPrepare = false;
 //                                break;
@@ -85,19 +85,19 @@ public final class VideoExoPlayer extends VideoBasePlayer {
 //                    }
 //
 //                    switch (playbackState) {
-//                        case ExoPlayer.STATE_IDLE:
+//                        case ExoPlayer.IDLE:
 //                            break;
-//                        case ExoPlayer.STATE_PREPARING:
+//                        case ExoPlayer.PREPARING:
 //                            mIsPrepareing = true;
 //                            break;
-//                        case ExoPlayer.STATE_BUFFERING:
+//                        case ExoPlayer.BUFFERING:
 //                            mIsBuffering = true;
 //                            break;
-//                        case ExoPlayer.STATE_READY:
-//                            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
-//                            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_VIDEO_START);
+//                        case ExoPlayer.READY:
+//                            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.LOADING_STOP);
+//                            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.VIDEO_START);
 //                            break;
-//                        case ExoPlayer.STATE_ENDED:
+//                        case ExoPlayer.ENDED:
 //                            break;
 //                        default:
 //                            break;
@@ -123,17 +123,17 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     @Override
     public void startDecoder(Context context, StartArgs args) {
         try {
-            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_START);
+            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.LOADING_START);
             mExoPlayer.setPlayWhenReady(isPlayWhenReady());
             mExoPlayer.prepare();
         } catch (IllegalArgumentException e) {
             LogUtil.log("VideoExoPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_ERROR_URL);
+            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.LOADING_STOP);
+            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.ERROR_URL);
         } catch (Exception e) {
             LogUtil.log("VideoExoPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.EVENT_ERROR_PARSE);
+            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.LOADING_STOP);
+            onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.ERROR_PARSE);
         }
     }
 

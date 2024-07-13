@@ -11,18 +11,12 @@ import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 
 public class VideoIjkPlayerFactory implements VideoKernelFactory<VideoIjkPlayer> {
 
-    private boolean mUseMediaCodec;
-
-    private VideoIjkPlayerFactory(boolean useMediaCodec) {
-        mUseMediaCodec = useMediaCodec;
-    }
-
-    public static VideoIjkPlayerFactory build(boolean useMediaCodec) {
-        return new VideoIjkPlayerFactory(useMediaCodec);
+    public static VideoIjkPlayerFactory build() {
+        return new VideoIjkPlayerFactory();
     }
 
     @Override
     public VideoIjkPlayer createKernel() {
-        return new VideoIjkPlayer(mUseMediaCodec);
+        return new VideoIjkPlayer();
     }
 }

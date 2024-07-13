@@ -142,14 +142,14 @@ interface VideoPlayerApiBuried {
 
     default Object[] checkValue() {
         try {
-            BuriedEvent buriedEvent = PlayerSDK.init().getPlayerBuilder().getBuriedEvent();
-            if (null == buriedEvent)
-                throw new Exception("warning: buriedEvent null");
             if (!(this instanceof VideoPlayerApi))
                 throw new Exception("error: this not VideoPlayerApi");
-            StartArgs startArgs = ((VideoPlayerApi) this).getTags();
-            if (null == startArgs)
-                throw new Exception("error: startArgs null");
+            StartArgs args = ((VideoPlayerApi) this).getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            BuriedEvent buriedEvent = args.getBuriedEvent();
+            if(null == buriedEvent)
+                throw new Exception("error: buriedEvent null");
             long position = ((VideoPlayerApi) this).getPosition();
             if (position < 0L) {
                 position = -1L;
@@ -158,7 +158,7 @@ interface VideoPlayerApiBuried {
             if (duration < 0L) {
                 duration = -1L;
             }
-            return new Object[]{buriedEvent, startArgs, position, duration};
+            return new Object[]{buriedEvent, args, position, duration};
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiBuried => checkValue => Exception " + e.getMessage());
             return null;

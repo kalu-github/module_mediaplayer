@@ -83,23 +83,23 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
             if (null == eventListener)
                 throw new Exception("warning: eventListener null");
             eventListener.onEvent(state);
-            if (state == PlayerType.StateType.STATE_RESTAER) {
+            if (state == PlayerType.StateType.RESTAER) {
                 eventListener.onRestart();
-            } else if (state == PlayerType.StateType.STATE_START) {
+            } else if (state == PlayerType.StateType.START) {
                 eventListener.onStart();
-            } else if (state == PlayerType.StateType.STATE_END) {
+            } else if (state == PlayerType.StateType.END) {
                 eventListener.onComplete();
-            } else if (state == PlayerType.StateType.STATE_PAUSE) {
+            } else if (state == PlayerType.StateType.PAUSE) {
                 eventListener.onPause();
-            } else if (state == PlayerType.StateType.STATE_RESUME) {
+            } else if (state == PlayerType.StateType.RESUME) {
                 eventListener.onResume();
-            } else if (state == PlayerType.StateType.STATE_BUFFERING_START) {
+            } else if (state == PlayerType.StateType.BUFFERING_START) {
                 eventListener.onBufferingStart();
-            } else if (state == PlayerType.StateType.STATE_BUFFERING_STOP) {
+            } else if (state == PlayerType.StateType.BUFFERING_STOP) {
                 eventListener.onBufferingStop();
-            } else if (state == PlayerType.StateType.STATE_LOADING_START) {
+            } else if (state == PlayerType.StateType.LOADING_START) {
                 eventListener.onLoadingStart();
-            } else if (state == PlayerType.StateType.STATE_LOADING_STOP) {
+            } else if (state == PlayerType.StateType.LOADING_STOP) {
                 eventListener.onLoadingStop();
             }
         } catch (Exception e) {
@@ -107,7 +107,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
         }
     }
 
-    default void callProgress(long maxDuration, long position, long duration) {
+    default void callProgress(long trySeeDuration, long position, long duration) {
 
         // component
         try {
@@ -121,7 +121,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).onUpdateProgress(false, maxDuration, position, duration);
+                ((ComponentApi) childAt).onUpdateProgress(false, trySeeDuration, position, duration);
             }
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiComponent => callProgress => " + e.getMessage());

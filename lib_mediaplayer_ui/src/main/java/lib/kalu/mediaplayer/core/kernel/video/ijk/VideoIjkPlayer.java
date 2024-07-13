@@ -34,8 +34,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
     private IjkMediaPlayer mIjkPlayer = null;
 
-    public VideoIjkPlayer(boolean useMediaCodec) {
-        setIjkMediaCodec(useMediaCodec);
+    public VideoIjkPlayer() {
     }
 
     @Override
@@ -79,7 +78,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
             initListener();
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_START);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.LOADING_START);
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
@@ -95,6 +94,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     // player => ff_ffplay_options.h
     @Override
     public void initOptions(Context context, StartArgs args) {
+
+        boolean useMediaCodec = (getKernelType() == PlayerType.KernelType.IJK_MEDIACODEC);
 
         // log
         try {
@@ -139,9 +140,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // SDL_FCC_RV16 ---- bpp=16, RGB565
             // SDL_FCC_RV24 ---- bpp=24, RGB888
             // SDL_FCC_RV32 ---- bpp=32, RGBX8888
-            mIjkPlayer.setOption(player, "overlay-format", isIjkMediaCodec() ? IjkMediaPlayer.SDL_FCC_RV32 : IjkMediaPlayer.SDL_FCC_RV16);
+            mIjkPlayer.setOption(player, "overlay-format", useMediaCodec ? IjkMediaPlayer.SDL_FCC_RV32 : IjkMediaPlayer.SDL_FCC_RV16);
             // 允许的最大播放帧率，当视频的实际帧率大于这个数值时，将丢弃部分视频帧 => [-1,121]
-            mIjkPlayer.setOption(player, "max-fps", isIjkMediaCodec() ? 60 : 30);
+            mIjkPlayer.setOption(player, "max-fps", useMediaCodec ? 60 : 30);
             // 是否播放准备工作完成后自动开始播放
             mIjkPlayer.setOption(player, "start-on-prepared", (isPlayWhenReady() ? 1 : 0));
             // 视频帧队列大小 => [3,16]
@@ -193,27 +194,27 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // ??
             mIjkPlayer.setOption(player, "video-mime-type", null);
             // Android自动旋转角度
-            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", (isIjkMediaCodec() ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-auto-rotate", (useMediaCodec ? 1 : 0));
             // Android硬解, 是否分辨率变化时解码
-            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", (isIjkMediaCodec() ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-handle-resolution-change", (useMediaCodec ? 1 : 0));
             // Android硬解 ??
-            mIjkPlayer.setOption(player, "mediacodec-sync", (isIjkMediaCodec() ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-sync", (useMediaCodec ? 1 : 0));
             // Android硬解 ??
             mIjkPlayer.setOption(player, "mediacodec-default-name", null);
             // Android硬解
-            mIjkPlayer.setOption(player, "mediacodec-all-videos", (isIjkMediaCodec() ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-all-videos", (useMediaCodec ? 1 : 0));
             // Android硬解avc
-            mIjkPlayer.setOption(player, "mediacodec-avc", (isIjkMediaCodec() ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-avc", (useMediaCodec ? 1 : 0));
             // Android硬解hevc
-            mIjkPlayer.setOption(player, "mediacodec-hevc", (isIjkMediaCodec() ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-hevc", (useMediaCodec ? 1 : 0));
             // Android硬解mpeg2
-            mIjkPlayer.setOption(player, "mediacodec-mpeg2", (isIjkMediaCodec() ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-mpeg2", (useMediaCodec ? 1 : 0));
             // Android硬解mpeg4
-            mIjkPlayer.setOption(player, "mediacodec-mpeg4", (isIjkMediaCodec() ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-mpeg4", (useMediaCodec ? 1 : 0));
             // Android硬解vp8
-            mIjkPlayer.setOption(player, "mediacodec-vp8", (isIjkMediaCodec() ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-vp8", (useMediaCodec ? 1 : 0));
             // Android硬解vp9
-            mIjkPlayer.setOption(player, "mediacodec-vp9", (isIjkMediaCodec() ? 1 : 0));
+            mIjkPlayer.setOption(player, "mediacodec-vp9", (useMediaCodec ? 1 : 0));
             // Android音频解码opensl
             mIjkPlayer.setOption(player, "opensles", 0);
             // Android音频倍速
@@ -272,7 +273,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // IJK_AVDISCARD_NONKEY  = 32, ///< 抛弃除关键帧以外的，比如B，P帧
             // IJK_AVDISCARD_ALL     = 48, ///< 抛弃所有的帧
             // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
-            mIjkPlayer.setOption(codec, "skip_loop_filter", (isIjkMediaCodec() ? 0 : 48));
+            mIjkPlayer.setOption(codec, "skip_loop_filter", (useMediaCodec ? 0 : 48));
 //            mIjkPlayer.setOption(codec, "skip_frame", 100); // // 跳过帧
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => initOptionsIjk => OPT_CATEGORY_CODEC => " + e.getMessage());
@@ -429,7 +430,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             }
             LogUtil.log("VideoIjkPlayer => seekTo => succ");
 //            setSeeking(true);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_SEEK_START);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.SEEK_START);
             mIjkPlayer.seekTo(seek);
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => seekTo => " + e.getMessage());
@@ -563,12 +564,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     break;
                 // 拉流成功
                 case IMediaPlayer.MEDIA_INFO_COMPONENT_OPEN:
-//                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
+//                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.LOADING_STOP);
                     break;
                 // 缓冲开始
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
                     if (isPrepared()) {
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_START);
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_START);
                     } else {
                         LogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", mPrepared = false");
                     }
@@ -576,7 +577,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 // 缓冲结束
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
                     if (isPrepared()) {
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_STOP);
                     } else {
                         LogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", mPrepared = false");
                     }
@@ -587,14 +588,14 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                         if (isPrepared())
                             throw new Exception("warning: mPrepared true");
                         setPrepared(true);
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_RENDERING_START);
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.LOADING_STOP);
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_RENDERING_START);
                         long seek = getSeek();
                         if (seek <= 0) {
-                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_START);
+                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_START);
                         } else {
                             // 起播快进
-                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_SEEK_PLAY_RECORD);
+                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.SEEK_PLAY_RECORD);
                             seekTo(seek);
                         }
                     } catch (Exception e) {
@@ -606,7 +607,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 //                    try {
 //                        if (!mPrepared)
 //                            throw new Exception("error: mPrepared false");
-//                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_START_SEEK);
+//                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_START_SEEK);
 //                    } catch (Exception e) {
 //                        MPLogUtil.log("VideoIjkPlayer => onInfo => " + e.getMessage());
 //                    }
@@ -626,13 +627,13 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             LogUtil.log("VideoIjkPlayer => onSeekComplete =>");
 
 //            setSeeking(false);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_SEEK_FINISH);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.SEEK_FINISH);
             try {
                 long seek = getSeek();
                 if (seek <= 0)
                     throw new Exception();
                 setSeek(0);
-                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_START);
+                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_START);
             } catch (Exception e) {
             }
 
@@ -665,7 +666,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 LogUtil.log("VideoIjkPlayer => onVideoSizeChanged => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
                 if (videoWidth <= 0 && videoHeight <= 0)
                     throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
-                onUpdateSizeChanged(PlayerType.KernelType.IJK, videoWidth, videoHeight, PlayerType.RotationType.Rotation_0);
+                onUpdateSizeChanged(PlayerType.KernelType.IJK, videoWidth, videoHeight, PlayerType.RotationType.DEFAULT);
             } catch (Exception e) {
                 LogUtil.log("VideoIjkPlayer => onVideoSizeChanged => " + e.getMessage());
             }
@@ -686,9 +687,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
             LogUtil.log("VideoIjkPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_LOADING_STOP);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_BUFFERING_STOP);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_ERROR_PARSE);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.LOADING_STOP);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_STOP);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.ERROR_PARSE);
             return true;
         }
     };
@@ -697,7 +698,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
             LogUtil.log("VideoIjkPlayer => onCompletion =>");
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.EVENT_VIDEO_END);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_END);
         }
     };
 

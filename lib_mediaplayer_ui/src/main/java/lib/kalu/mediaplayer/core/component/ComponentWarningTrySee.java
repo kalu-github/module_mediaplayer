@@ -41,11 +41,11 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.STATE_VIDEO_RENDERING_START:
+            case PlayerType.StateType.VIDEO_RENDERING_START:
                 LogUtil.log("ComponentTrySee => playState = " + playState);
                 try {
-                    boolean trySee = isTrySee();
-                    if (!trySee)
+                    long trySeeDuration = getTrySeeDuration();
+                    if (trySeeDuration<=0L)
                         throw new Exception("warning: trySee false");
                     boolean componentShowing = isComponentShowing();
                     if (componentShowing)
@@ -56,12 +56,12 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                 } catch (Exception e) {
                 }
                 break;
-            case PlayerType.StateType.STATE_TRY_TO_SEE_FINISH:
+            case PlayerType.StateType.TRY_TO_SEE_FINISH:
                 LogUtil.log("ComponentTrySee => playState = " + playState);
 
                 try {
-                    boolean trySee = isTrySee();
-                    if (!trySee)
+                    long trySeeDuration = getTrySeeDuration();
+                    if (trySeeDuration<=0L)
                         throw new Exception("warning: trySee false");
                     boolean componentShowing = isComponentShowing();
                     if (!componentShowing)
@@ -106,10 +106,10 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
             if (duration <= 0)
                 throw new Exception("warning: duration<=0");
             long position = getPosition();
-            long max = getMaxDuration();
+            long trySeeDuration = getTrySeeDuration();
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_try_see_seekbar);
             seekBar.setProgress((int) position);
-            seekBar.setMax((int) (max > 0 ? max : duration));
+            seekBar.setMax((int) (trySeeDuration > 0L ? trySeeDuration : duration));
         } catch (Exception e) {
         }
     }

@@ -272,7 +272,7 @@ public interface ComponentApi {
 
     /******************/
 
-    default void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
+    default void onUpdateProgress(boolean isFromUser, long trySeeDuration, long position, long duration) {
     }
 
     /*******************/
@@ -500,7 +500,7 @@ public interface ComponentApi {
             return playerView.getSpeed();
         } catch (Exception e) {
             LogUtil.log("ComponentApi => getSpeed => " + e.getMessage());
-            return PlayerType.SpeedType.Speed_Default;
+            return PlayerType.SpeedType.DEFAULT;
         }
     }
 
@@ -524,7 +524,7 @@ public interface ComponentApi {
             return playerView.getVideoScaleType();
         } catch (Exception e) {
             LogUtil.log("ComponentApi => getVideoScaleType => " + e.getMessage());
-            return PlayerType.ScaleType.SCREEN_SCALE_DEFAULT;
+            return PlayerType.ScaleType.DEFAULT;
         }
     }
 
@@ -548,25 +548,13 @@ public interface ComponentApi {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("error: playerView null");
-            StartArgs args = playerView.getTags();
+            StartArgs args = playerView.getStartArgs();
             if (null == args)
                 throw new Exception("error: args null");
             return args;
         } catch (Exception e) {
             LogUtil.log("ComponentApi => getStartArgs => " + e.getMessage());
             return null;
-        }
-    }
-
-    default long getMaxDuration() {
-        try {
-            StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
-            return args.getMaxDuration();
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => getMaxDuration => " + e.getMessage());
-            return 0L;
         }
     }
 
@@ -582,15 +570,15 @@ public interface ComponentApi {
         }
     }
 
-    default boolean isTrySee() {
+    default long getTrySeeDuration() {
         try {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("error: args null");
-            return args.isTrySee();
+            return args.getTrySeeDuration();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => isTrySee => " + e.getMessage());
-            return false;
+            LogUtil.log("ComponentApi => getTrySeeDuration => " + e.getMessage());
+            return 0L;
         }
     }
 
