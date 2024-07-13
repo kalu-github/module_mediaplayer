@@ -170,11 +170,14 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface ScaleType {
-        int SCREEN_SCALE_AUTO = 4_001; // 自适应屏幕，可能存在黑边
-        int SCREEN_SCALE_FULL = 4_002; // 画面拉甚至全屏, 可能变形
-        int SCREEN_SCALE_REAL = 4_003; // 视频原始尺寸, 可能存在黑边
-        int SCREEN_SCALE_16_9 = 4_004; // 画面拉16：9, 可能变形
-        int SCREEN_SCALE_4_3 = 4_005;  // 画面拉4：3, 可能变形
+        int SCREEN_SCALE_AUTO = 4_001;  // 自适应屏幕，可能存在黑边
+        int SCREEN_SCALE_FULL = 4_002;  // 画面拉甚至全屏, 可能变形
+        int SCREEN_SCALE_REAL = 4_003;  // 视频原始尺寸, 可能存在黑边
+        int SCREEN_SCALE_16_9 = 4_004;  // 画面拉伸16：9, 可能变形
+        int SCREEN_SCALE_16_10 = 4_005; // 画面拉伸16：10, 可能变形
+        int SCREEN_SCALE_5_4 = 4_006;   // 画面拉伸5：4, 可能变形
+        int SCREEN_SCALE_4_3 = 4_007;   // 画面拉伸4：3, 可能变形
+        int SCREEN_SCALE_1_1 = 4_008;   // 画面拉伸1:1, 可能变形
         int SCREEN_SCALE_DEFAULT = SCREEN_SCALE_AUTO; // 默认
 
         @Documented
@@ -184,7 +187,10 @@ public @interface PlayerType {
                 SCREEN_SCALE_FULL,
                 SCREEN_SCALE_REAL,
                 SCREEN_SCALE_16_9,
+                SCREEN_SCALE_16_10,
+                SCREEN_SCALE_5_4,
                 SCREEN_SCALE_4_3,
+                SCREEN_SCALE_1_1,
                 SCREEN_SCALE_DEFAULT})
         @interface Value {
         }

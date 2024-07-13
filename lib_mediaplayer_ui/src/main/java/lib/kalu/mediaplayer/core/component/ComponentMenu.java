@@ -468,10 +468,16 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                             radioButton.setText("原始");
                         } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_FULL) {
                             radioButton.setText("全屏");
+                        } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_1_1) {
+                            radioButton.setText("1:1");
                         } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_4_3) {
                             radioButton.setText("4:3");
+                        } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_5_4) {
+                            radioButton.setText("5:4");
                         } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_16_9) {
                             radioButton.setText("16:9");
+                        } else if (scales[i] == PlayerType.ScaleType.SCREEN_SCALE_16_10) {
+                            radioButton.setText("16:10");
                         } else {
                             radioButton.setText("自动");
                         }
