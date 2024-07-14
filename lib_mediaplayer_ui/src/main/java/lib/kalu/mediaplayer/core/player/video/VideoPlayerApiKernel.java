@@ -472,9 +472,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         long trySeeDuration = getTrySeeDuration();
                         callProgress(trySeeDuration, position, duration);
 
-//                        LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateProgress => trySee = " + trySee + ", maxDuration = " + args.getMaxDuration() + ", position = " + position);
-                        // 试看
-                        if (trySeeDuration > 0L) {
+                        // 试看结束
+                        if (trySeeDuration > 0L && trySeeDuration >= position) {
                             pause(false);
                             callEvent(PlayerType.StateType.TRY_TO_SEE_FINISH);
                         }

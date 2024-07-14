@@ -302,9 +302,9 @@ public final class TestActivity extends Activity {
         StartArgs.Builder builder = new StartArgs.Builder();
         builder.setUrl(url);
 
-        // 试看 45s
+        // 试看 10s
         boolean trySee = getIntent().getBooleanExtra(INTENT_TRY_SEE, false);
-        builder.setTrySeeDuration(trySee ? 45 * 1000L : 0L);
+        builder.setTrySeeDuration(trySee ? 10 * 1000L : 0L);
 
         // 续播 10s
         boolean isSeek = getIntent().getBooleanExtra(INTENT_SEEK, false);
