@@ -6,7 +6,6 @@ import android.app.Application;
 import lib.kalu.mediaplayer.args.PlayerArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.buried.BuriedEvent;
-import lib.kalu.mediaplayer.keycode.KeycodeApi;
 
 
 public final class PlayerSDK {
@@ -123,11 +122,6 @@ public final class PlayerSDK {
 
     public PlayerSDK setBuriedEvent(BuriedEvent v) {
         mPlayerBuilder.setBuriedEvent(v);
-        return this;
-    }
-
-    public PlayerSDK setKeycodeApi(KeycodeApi v) {
-        mPlayerBuilder.setKeycodeApi(v);
         return this;
     }
 

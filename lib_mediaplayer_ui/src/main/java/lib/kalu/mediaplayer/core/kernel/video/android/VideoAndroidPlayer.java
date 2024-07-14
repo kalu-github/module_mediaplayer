@@ -446,13 +446,22 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
             try {
                 if (null == mp)
-                    throw new Exception("mp error: null");
+                    throw new Exception("error: MediaPlayer null");
                 int videoWidth = mp.getVideoWidth();
+                if (videoWidth <= 0)
+                    throw new Exception("error: videoWidth <=0");
                 int videoHeight = mp.getVideoHeight();
-                LogUtil.log("VideoAndroidPlayer => onVideoSizeChanged => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
-                if (videoWidth < 0 || videoHeight < 0)
-                    throw new Exception("videoWidth error: " + videoWidth + ", videoHeight error: " + videoHeight);
-                onUpdateSizeChanged(PlayerType.KernelType.ANDROID, videoWidth, videoHeight, PlayerType.RotationType.DEFAULT);
+                if (videoHeight <= 0)
+                    throw new Exception("error: videoHeight <=0");
+                boolean videoSizeChanged = isVideoSizeChanged();
+                if (videoSizeChanged)
+                    throw new Exception("warning: videoSizeChanged = true");
+                setVideoSizeChanged(true);
+                StartArgs args = getStartArgs();
+                @PlayerType.ScaleType.Value
+                int scaleType = (null == args ? PlayerType.ScaleType.DEFAULT : args.getRenderScaleType());
+                int rotation = PlayerType.RotationType.DEFAULT;
+                onUpdateSizeChanged(PlayerType.KernelType.ANDROID, videoWidth, videoHeight, rotation, scaleType);
             } catch (Exception e) {
                 LogUtil.log("VideoAndroidPlayer => onVideoSizeChanged => " + e.getMessage());
             }

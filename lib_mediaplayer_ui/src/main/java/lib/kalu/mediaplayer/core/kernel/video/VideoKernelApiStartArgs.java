@@ -163,4 +163,16 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
     default void setPrepared(boolean v) {
         mPrepared[0] = v;
     }
+
+    /*****/
+
+    boolean[] mVideoSizeChanged = new boolean[]{false};
+
+    default boolean isVideoSizeChanged() {
+        return mVideoSizeChanged[0];
+    }
+
+    default void setVideoSizeChanged(boolean v) {
+        mVideoSizeChanged[0] = v;
+    }
 }

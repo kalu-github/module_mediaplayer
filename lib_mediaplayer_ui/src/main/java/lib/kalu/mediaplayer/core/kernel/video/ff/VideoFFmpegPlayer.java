@@ -379,13 +379,25 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
     private OnVideoSizeChangedListener onVideoSizeChangedListener = new OnVideoSizeChangedListener() {
         @Override
-        public void onVideoSizeChanged(FFmpegPlayer o, int width, int height) {
+        public void onVideoSizeChanged(FFmpegPlayer mp, int width, int height) {
             try {
-                int w = o.getVideoWidth();
-                int h = o.getVideoHeight();
-                if (w < 0 || h < 0)
-                    throw new Exception("w error: " + w + ", h error: " + h);
-                onUpdateSizeChanged(PlayerType.KernelType.FFPLAYER, w, h, PlayerType.RotationType.DEFAULT);
+                if (null == mp)
+                    throw new Exception("error: MediaPlayer null");
+                int videoWidth = mp.getVideoWidth();
+                if (videoWidth <= 0)
+                    throw new Exception("error: videoWidth <=0");
+                int videoHeight = mp.getVideoHeight();
+                if (videoHeight <= 0)
+                    throw new Exception("error: videoHeight <=0");
+                boolean videoSizeChanged = isVideoSizeChanged();
+                if (videoSizeChanged)
+                    throw new Exception("warning: videoSizeChanged = true");
+                setVideoSizeChanged(true);
+                StartArgs args = getStartArgs();
+                @PlayerType.ScaleType.Value
+                int scaleType = (null == args ? PlayerType.ScaleType.DEFAULT : args.getRenderScaleType());
+                int rotation = PlayerType.RotationType.DEFAULT;
+                onUpdateSizeChanged(PlayerType.KernelType.FFPLAYER, videoWidth, videoHeight, rotation, scaleType);
             } catch (Exception e) {
                 LogUtil.log("VideoFFmpegPlayer => onVideoSizeChanged => " + e.getMessage());
             }

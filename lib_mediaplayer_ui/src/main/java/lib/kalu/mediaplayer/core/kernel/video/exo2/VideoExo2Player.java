@@ -818,8 +818,27 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
         @Override
         public void onVideoSizeChanged(AnalyticsListener.EventTime eventTime, VideoSize videoSize) {
-            LogUtil.log("VideoExo2Player => onVideoSizeChanged =>");
-            onUpdateSizeChanged(PlayerType.KernelType.EXO_V2, videoSize.width, videoSize.height, videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.DEFAULT);
+            try {
+                if (null == videoSize)
+                    throw new Exception("error: videoSize null");
+                int videoWidth = videoSize.width;
+                if (videoWidth <= 0)
+                    throw new Exception("error: videoWidth <=0");
+                int videoHeight = videoSize.height;
+                if (videoHeight <= 0)
+                    throw new Exception("error: videoHeight <=0");
+                boolean videoSizeChanged = isVideoSizeChanged();
+                if (videoSizeChanged)
+                    throw new Exception("warning: videoSizeChanged = true");
+                setVideoSizeChanged(true);
+                StartArgs args = getStartArgs();
+                @PlayerType.ScaleType.Value
+                int scaleType = (null == args ? PlayerType.ScaleType.DEFAULT : args.getRenderScaleType());
+                int rotation = (videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.DEFAULT);
+                onUpdateSizeChanged(PlayerType.KernelType.EXO_V2, videoWidth, videoHeight, rotation, scaleType);
+            } catch (Exception e) {
+                LogUtil.log("VideoExo2Player => onVideoSizeChanged => " + e.getMessage());
+            }
         }
 
         @Override

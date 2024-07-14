@@ -2,7 +2,6 @@ package lib.kalu.mediaplayer.args;
 
 
 import lib.kalu.mediaplayer.buried.BuriedEvent;
-import lib.kalu.mediaplayer.keycode.KeycodeApi;
 import lib.kalu.mediaplayer.type.PlayerType;
 
 /**
@@ -29,7 +28,6 @@ public final class PlayerArgs {
     private boolean fitMobileCutout; // 是否适配手机刘海屏，默认适配
     private boolean checkOrientation;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
     private BuriedEvent buriedEvent;  // 埋点事件log
-    private KeycodeApi keycodeApi; // 遥控code
 
     @PlayerType.ExoSeekType.Value
     private int exoSeekType = PlayerType.ExoSeekType.DEFAULT;
@@ -125,10 +123,6 @@ public final class PlayerArgs {
         return buriedEvent;
     }
 
-    public KeycodeApi getKeycodeApi() {
-        return keycodeApi;
-    }
-
     /****************/
 
     private PlayerArgs(Builder builder) {
@@ -145,7 +139,6 @@ public final class PlayerArgs {
         fitMobileCutout = builder.fitMobileCutout;
         checkOrientation = builder.checkOrientation;
         buriedEvent = builder.buriedEvent;
-        keycodeApi = builder.keycodeApi;
         exoSeekType = builder.exoSeekType;
         exoFFmpeg = builder.exoFFmpeg;
         exoUseOkhttp = builder.exoUseOkhttp;
@@ -170,7 +163,6 @@ public final class PlayerArgs {
         builder.setFitMobileCutout(this.fitMobileCutout);
         builder.setCheckOrientation(this.checkOrientation);
         builder.setBuriedEvent(this.buriedEvent);
-        builder.setKeycodeApi(this.keycodeApi);
         builder.setExoSeekType(this.exoSeekType);
         builder.setExoFFmpeg(this.exoFFmpeg);
         builder.setExoUseOkhttp(this.exoUseOkhttp);
@@ -187,7 +179,7 @@ public final class PlayerArgs {
         private boolean log = false;// 日志log
         private boolean initRelease = false;
         private boolean supportAutoRelease = true;
-        private int connectTimeout = 10 * 1000;  // 连接超时
+        private int connectTimeout = 20 * 1000;  // 连接超时
         private boolean bufferingTimeoutRetry = false; // 缓冲失败重试
         @PlayerType.KernelType.Value
         private int externalAudioKernel = PlayerType.KernelType.DEFAULT; // 音频播放器内核
@@ -201,7 +193,6 @@ public final class PlayerArgs {
         private boolean fitMobileCutout = true; // 是否适配手机刘海屏，默认适配
         private boolean checkOrientation = false;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
         private BuriedEvent buriedEvent = null;  // 埋点事件log
-        private KeycodeApi keycodeApi = null; // 遥控code
 
 
         @PlayerType.ExoSeekType.Value
@@ -317,11 +308,6 @@ public final class PlayerArgs {
 
         public Builder setBuriedEvent(BuriedEvent buriedEvent) {
             this.buriedEvent = buriedEvent;
-            return this;
-        }
-
-        public Builder setKeycodeApi(KeycodeApi keycodeApi) {
-            this.keycodeApi = keycodeApi;
             return this;
         }
 

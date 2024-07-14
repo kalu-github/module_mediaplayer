@@ -13,7 +13,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
  * @date: 2021-05-12 09:40
  */
 
-public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBase, VideoKernelApiEvent,VideoKernelApiStartArgs {
+public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBase, VideoKernelApiEvent, VideoKernelApiStartArgs {
 
     void onUpdateProgress();
 
@@ -33,6 +33,7 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
         mSeek[0] = 0L;
         mMute[0] = false;
         mPrepared[0] = false;
+        mVideoSizeChanged[0] = false;
         mStartArgs[0] = null;
         stopCheckConnectTimeout();
         stopCheckBufferingTimeout();

@@ -469,12 +469,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 public void onUpdateProgress(long position, long duration) {
 
                     try {
-
-                    } catch (Exception e) {
-                    }
-
-                    try {
-
                         long trySeeDuration = getTrySeeDuration();
                         callProgress(trySeeDuration, position, duration);
 
@@ -612,15 +606,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
 
                 @Override
-                public void onUpdateSizeChanged(int kernel, int videoWidth, int videoHeight, @PlayerType.RotationType.Value int rotation) {
-                    LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateSizeChanged = kernel = " + kernel + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", rotation = " + rotation);
-                    int scaleType;
-                    StartArgs args = getStartArgs();
-                    if (null == args) {
-                        scaleType = args.getRenderScaleType();
-                    } else {
-                        scaleType = PlayerType.ScaleType.DEFAULT;
-                    }
+                public void onUpdateSizeChanged(int kernel, int videoWidth, int videoHeight, int rotation, int scaleType) {
+                    LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateSizeChanged => kernel = " + kernel + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", rotation = " + ", scaleType = " + scaleType);
                     setVideoFormat(videoWidth, videoHeight, rotation, scaleType);
                 }
             });

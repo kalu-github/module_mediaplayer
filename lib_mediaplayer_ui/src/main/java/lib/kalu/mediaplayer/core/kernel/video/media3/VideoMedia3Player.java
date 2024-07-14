@@ -694,7 +694,27 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
         @Override
         public void onVideoSizeChanged(AnalyticsListener.EventTime eventTime, VideoSize videoSize) {
-            onUpdateSizeChanged(PlayerType.KernelType.EXO_V2, videoSize.width, videoSize.height, videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.DEFAULT);
+            try {
+                if (null == videoSize)
+                    throw new Exception("error: videoSize null");
+                int videoWidth = videoSize.width;
+                if (videoWidth <= 0)
+                    throw new Exception("error: videoWidth <=0");
+                int videoHeight = videoSize.height;
+                if (videoHeight <= 0)
+                    throw new Exception("error: videoHeight <=0");
+                boolean videoSizeChanged = isVideoSizeChanged();
+                if (videoSizeChanged)
+                    throw new Exception("warning: videoSizeChanged = true");
+                setVideoSizeChanged(true);
+                StartArgs args = getStartArgs();
+                @PlayerType.ScaleType.Value
+                int scaleType = (null == args ? PlayerType.ScaleType.DEFAULT : args.getRenderScaleType());
+                int rotation = (videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.DEFAULT);
+                onUpdateSizeChanged(PlayerType.KernelType.MEDIA_V3, videoWidth, videoHeight, rotation, scaleType);
+            } catch (Exception e) {
+                LogUtil.log("VideoMedia3Player => onVideoSizeChanged => " + e.getMessage());
+            }
         }
 
         @Override
