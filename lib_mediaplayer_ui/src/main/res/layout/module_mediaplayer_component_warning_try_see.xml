@@ -54,6 +54,7 @@
 
         <!-- 图标 -->
         <ImageView
+            android:id="@+id/module_mediaplayer_component_warning_try_see_state"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentBottom="true"

@@ -470,19 +470,14 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                     try {
                         long trySeeDuration = getTrySeeDuration();
+                        LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateProgress => trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
                         callProgress(trySeeDuration, position, duration);
 
                         // 试看结束
-                        if (trySeeDuration > 0L && trySeeDuration >= position) {
+                        if (position > 0L && duration > 0L && trySeeDuration > 0L && position >= trySeeDuration) {
+                            LogUtil.log("VideoPlayerApiKernel => setKernelEvent => 试看结束");
                             pause(false);
-                            callEvent(PlayerType.StateType.TRY_TO_SEE_FINISH);
-                        }
-                        // 默认播放结束
-                        else {
-                            boolean looping = args.isLooping();
-                            if (looping) {
-                                restart();
-                            }
+                            callEvent(PlayerType.StateType.TRY_SEE_FINISH);
                         }
                     } catch (Exception e) {
                     }

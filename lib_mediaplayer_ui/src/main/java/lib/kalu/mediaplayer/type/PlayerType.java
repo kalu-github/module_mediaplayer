@@ -83,7 +83,7 @@ public @interface PlayerType {
         int START_SEEK = 3_013; // 开始播放
         int START_PLAY_WHEN_READY_PAUSE = 3_014; // 开始播放
         int END = 3_015; // 播放完成
-        int TRY_TO_SEE_FINISH = 3_016; // 试看完成
+        int TRY_SEE_FINISH = 3_016; // 试看完成
         int PAUSE = 3_017; // 暂停播放
         int RESUME = 3_019; // 恢复播放
         int RESTAER = 3_021; // 重播一次
@@ -148,7 +148,7 @@ public @interface PlayerType {
                 BUFFERING_START,
                 BUFFERING_STOP,
                 LOADING_STOP,
-                TRY_TO_SEE_FINISH,
+                TRY_SEE_FINISH,
                 END,
                 START_ABORT,
                 LOADING_START,

@@ -1,6 +1,8 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
+import android.view.KeyEvent;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,7 +18,7 @@ import lib.kalu.mediaplayer.widget.seek.SeekBar;
 /**
  * 试看
  */
-public class ComponentWarningTrySee extends RelativeLayout implements ComponentApi {
+public class ComponentWarningTrySee extends RelativeLayout implements ComponentApiWarningTrySee {
 
     public ComponentWarningTrySee(Context context) {
         super(context);
@@ -39,13 +41,30 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
     }
 
     @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        // keycode_enter || keycode_dpad_center
+        if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER)) {
+            try {
+                boolean trySeeFinish = isTrySeeFinish();
+                if (trySeeFinish)
+                    throw new Exception("waring: trySeeFinish true");
+                toggle();
+                return true;
+            } catch (Exception e) {
+                LogUtil.log("ComponentWarningTrySee => dispatchKeyEvent => Exception " + e.getMessage());
+            }
+        }
+        return false;
+    }
+
+    @Override
     public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.VIDEO_RENDERING_START:
-                LogUtil.log("ComponentTrySee => playState = " + playState);
+                LogUtil.log("ComponentWarningTrySee => VIDEO_RENDERING_START => playState = " + playState);
                 try {
                     long trySeeDuration = getTrySeeDuration();
-                    if (trySeeDuration<=0L)
+                    if (trySeeDuration <= 0L)
                         throw new Exception("warning: trySee false");
                     boolean componentShowing = isComponentShowing();
                     if (componentShowing)
@@ -56,21 +75,20 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                 } catch (Exception e) {
                 }
                 break;
-            case PlayerType.StateType.TRY_TO_SEE_FINISH:
-                LogUtil.log("ComponentTrySee => playState = " + playState);
-
+            case PlayerType.StateType.TRY_SEE_FINISH:
+                LogUtil.log("ComponentWarningTrySee => TRY_SEE_FINISH => playState = " + playState);
                 try {
                     long trySeeDuration = getTrySeeDuration();
-                    if (trySeeDuration<=0L)
+                    if (trySeeDuration <= 0L)
                         throw new Exception("warning: trySee false");
                     boolean componentShowing = isComponentShowing();
                     if (!componentShowing)
                         throw new Exception("warning: componentShowing false");
+                    setTrySeeFinish(true);
                     String mediaTitle = getTitle();
                     setComponentText(mediaTitle + " 试看结束...");
                 } catch (Exception e) {
                 }
-
                 break;
         }
     }
@@ -99,7 +117,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
 
     @Override
     public void show() {
-        ComponentApi.super.show();
+        ComponentApiWarningTrySee.super.show();
 
         try {
             long duration = getDuration();
@@ -110,6 +128,28 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_try_see_seekbar);
             seekBar.setProgress((int) position);
             seekBar.setMax((int) (trySeeDuration > 0L ? trySeeDuration : duration));
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void pause() {
+        ComponentApiWarningTrySee.super.pause();
+
+        try {
+            ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
+            imageView.setImageResource(R.drawable.module_mediaplayer_ic_pause);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void resume() {
+        ComponentApiWarningTrySee.super.resume();
+
+        try {
+            ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
+            imageView.setImageResource(R.drawable.module_mediaplayer_ic_resume);
         } catch (Exception e) {
         }
     }
