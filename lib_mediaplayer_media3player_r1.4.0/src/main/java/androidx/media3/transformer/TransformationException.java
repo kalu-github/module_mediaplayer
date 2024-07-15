@@ -36,6 +36,7 @@ import java.lang.annotation.Target;
 /**
  * @deprecated Use {@link ExportException} instead.
  */
+@SuppressWarnings("deprecation") // Deprecated usages of own type
 @Deprecated
 @UnstableApi
 public final class TransformationException extends Exception {
@@ -201,7 +202,7 @@ public final class TransformationException extends Exception {
           .put("ERROR_CODE_VIDEO_FRAME_PROCESSING_FAILED", ERROR_CODE_VIDEO_FRAME_PROCESSING_FAILED)
           .put("ERROR_CODE_AUDIO_PROCESSING_FAILED", ERROR_CODE_AUDIO_PROCESSING_FAILED)
           .put("ERROR_CODE_MUXING_FAILED", ERROR_CODE_MUXING_FAILED)
-          .build();
+          .buildOrThrow();
 
   /** Returns the name of a given {@code errorCode}. */
   public static String getErrorCodeName(@ErrorCode int errorCode) {

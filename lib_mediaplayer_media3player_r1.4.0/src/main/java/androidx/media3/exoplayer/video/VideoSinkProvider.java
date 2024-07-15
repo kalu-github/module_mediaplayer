@@ -17,57 +17,28 @@
 package androidx.media3.exoplayer.video;
 
 import android.view.Surface;
-import androidx.media3.common.Effect;
-import androidx.media3.common.Format;
 import androidx.media3.common.util.Size;
-import java.util.List;
+import androidx.media3.common.util.UnstableApi;
 
 /** A provider of {@link VideoSink VideoSinks}. */
-/* package */ interface VideoSinkProvider {
+@UnstableApi
+public interface VideoSinkProvider {
 
   /**
-   * Initializes the provider for video frame processing. Can be called up to one time and only
-   * after video effects are {@linkplain #setVideoEffects(List) set}.
-   *
-   * @param sourceFormat The format of the compressed video.
-   * @throws VideoSink.VideoSinkException If enabling the provider failed.
+   * Returns the {@link VideoFrameReleaseControl} that will be used for releasing of video frames
+   * during rendering.
    */
-  void initialize(Format sourceFormat) throws VideoSink.VideoSinkException;
-
-  /** Returns whether this provider is initialized for frame processing. */
-  boolean isInitialized();
-
-  /** Releases the sink provider. */
-  void release();
+  VideoFrameReleaseControl getVideoFrameReleaseControl();
 
   /** Returns a {@link VideoSink} to forward video frames for processing. */
   VideoSink getSink();
 
-  /** Sets video effects on this provider. */
-  void setVideoEffects(List<Effect> videoEffects);
-
-  /**
-   * Sets the offset, in microseconds, that is added to the video frames presentation timestamps
-   * from the player.
-   *
-   * <p>Must be called after the sink provider is {@linkplain #initialize(Format) initialized}.
-   */
-  void setStreamOffsetUs(long streamOffsetUs);
-
-  /**
-   * Sets the output surface info.
-   *
-   * <p>Must be called after the sink provider is {@linkplain #initialize(Format) initialized}.
-   */
+  /** Sets the output surface info. */
   void setOutputSurfaceInfo(Surface outputSurface, Size outputResolution);
 
-  /**
-   * Clears the set output surface info.
-   *
-   * <p>Must be called after the sink provider is {@linkplain #initialize(Format) initialized}.
-   */
+  /** Clears the set output surface info. */
   void clearOutputSurfaceInfo();
 
-  /** Sets a {@link VideoFrameMetadataListener} which is used in the returned {@link VideoSink}. */
-  void setVideoFrameMetadataListener(VideoFrameMetadataListener videoFrameMetadataListener);
+  /** Releases the sink provider. */
+  void release();
 }

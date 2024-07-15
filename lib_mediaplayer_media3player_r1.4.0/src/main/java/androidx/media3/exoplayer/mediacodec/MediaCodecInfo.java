@@ -28,7 +28,8 @@ import static androidx.media3.exoplayer.DecoderReuseEvaluation.REUSE_RESULT_NO;
 import static androidx.media3.exoplayer.DecoderReuseEvaluation.REUSE_RESULT_YES_WITHOUT_RECONFIGURATION;
 import static androidx.media3.exoplayer.DecoderReuseEvaluation.REUSE_RESULT_YES_WITH_FLUSH;
 import static androidx.media3.exoplayer.DecoderReuseEvaluation.REUSE_RESULT_YES_WITH_RECONFIGURATION;
-import static java.lang.annotation.ElementType.TYPE_USE;
+import static androidx.media3.exoplayer.mediacodec.MediaCodecPerformancePointCoverageProvider.COVERAGE_RESULT_NO;
+import static androidx.media3.exoplayer.mediacodec.MediaCodecPerformancePointCoverageProvider.COVERAGE_RESULT_YES;
 
 import android.graphics.Point;
 import android.media.MediaCodec;
@@ -36,13 +37,11 @@ import android.media.MediaCodecInfo.AudioCapabilities;
 import android.media.MediaCodecInfo.CodecCapabilities;
 import android.media.MediaCodecInfo.CodecProfileLevel;
 import android.media.MediaCodecInfo.VideoCapabilities;
-import android.media.MediaCodecInfo.VideoCapabilities.PerformancePoint;
 import android.util.Pair;
-import androidx.annotation.DoNotInline;
-import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
+import androidx.media3.common.ColorInfo;
 import androidx.media3.common.Format;
 import androidx.media3.common.MimeTypes;
 import androidx.media3.common.util.Assertions;
@@ -51,12 +50,6 @@ import androidx.media3.common.util.UnstableApi;
 import androidx.media3.common.util.Util;
 import androidx.media3.exoplayer.DecoderReuseEvaluation;
 import androidx.media3.exoplayer.DecoderReuseEvaluation.DecoderDiscardReasons;
-import androidx.media3.exoplayer.DecoderReuseEvaluation.DecoderReuseResult;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.List;
 
 /** Information about a {@link MediaCodec} for a given MIME type. */
 @SuppressWarnings("InlinedApi")
@@ -363,8 +356,7 @@ public final class MediaCodecInfo {
    * format when the codec is configured to play media in the specified {@code format}.
    *
    * <p>For adaptation to succeed, the codec must also be configured with appropriate maximum values
-   * and {@link #isSeamlessAdaptationSupported(Format, Format, boolean)} must return {@code true}
-   * for the old/new formats.
+   * and {@link #canReuseCodec(Format, Format)} must return {@code true} for the old/new formats.
    *
    * @param format The format of media for which the decoder will be configured.
    * @return Whether adaptation may be possible
@@ -376,32 +368,6 @@ public final class MediaCodecInfo {
       Pair<Integer, Integer> profileLevel = MediaCodecUtil.getCodecProfileAndLevel(format);
       return profileLevel != null && profileLevel.first == CodecProfileLevel.AACObjectXHE;
     }
-  }
-
-  /**
-   * Returns whether it is possible to adapt an instance of this decoder seamlessly from {@code
-   * oldFormat} to {@code newFormat}. If {@code newFormat} may not be completely populated, pass
-   * {@code false} for {@code isNewFormatComplete}.
-   *
-   * <p>For adaptation to succeed, the codec must also be configured with maximum values that are
-   * compatible with the new format.
-   *
-   * @param oldFormat The format being decoded.
-   * @param newFormat The new format.
-   * @param isNewFormatComplete Whether {@code newFormat} is populated with format-specific
-   *     metadata.
-   * @return Whether it is possible to adapt the decoder seamlessly.
-   * @deprecated Use {@link #canReuseCodec}.
-   */
-  @Deprecated
-  public boolean isSeamlessAdaptationSupported(
-      Format oldFormat, Format newFormat, boolean isNewFormatComplete) {
-    if (!isNewFormatComplete && oldFormat.colorInfo != null && newFormat.colorInfo == null) {
-      newFormat = newFormat.buildUpon().setColorInfo(oldFormat.colorInfo).build();
-    }
-    @DecoderReuseResult int reuseResult = canReuseCodec(oldFormat, newFormat).result;
-    return reuseResult == REUSE_RESULT_YES_WITH_RECONFIGURATION
-        || reuseResult == REUSE_RESULT_YES_WITHOUT_RECONFIGURATION;
   }
 
   /**
@@ -429,7 +395,10 @@ public final class MediaCodecInfo {
           && (oldFormat.width != newFormat.width || oldFormat.height != newFormat.height)) {
         discardReasons |= DISCARD_REASON_VIDEO_RESOLUTION_CHANGED;
       }
-      if (!Util.areEqual(oldFormat.colorInfo, newFormat.colorInfo)) {
+      if ((!ColorInfo.isEquivalentToAssumedSdrDefault(oldFormat.colorInfo)
+              || !ColorInfo.isEquivalentToAssumedSdrDefault(newFormat.colorInfo))
+          && !Util.areEqual(oldFormat.colorInfo, newFormat.colorInfo)) {
+        // Don't perform detailed checks if both ColorInfos fall within the default SDR assumption.
         discardReasons |= DISCARD_REASON_VIDEO_COLOR_INFO_CHANGED;
       }
       if (needsAdaptationReconfigureWorkaround(name)
@@ -520,16 +489,18 @@ public final class MediaCodecInfo {
     }
 
     if (Util.SDK_INT >= 29) {
-      @PerformancePointCoverageResult
+      @MediaCodecPerformancePointCoverageProvider.PerformancePointCoverageResult
       int evaluation =
-          Api29.areResolutionAndFrameRateCovered(videoCapabilities, width, height, frameRate);
+          MediaCodecPerformancePointCoverageProvider.areResolutionAndFrameRateCovered(
+              videoCapabilities, width, height, frameRate);
       if (evaluation == COVERAGE_RESULT_YES) {
         return true;
       } else if (evaluation == COVERAGE_RESULT_NO) {
         logNoSupport("sizeAndRate.cover, " + width + "x" + height + "@" + frameRate);
         return false;
       }
-      // COVERAGE_RESULT_NO_EMPTY_LIST falls through to API 21+ code below
+      // If COVERAGE_RESULT_NO_PERFORMANCE_POINTS_UNSUPPORTED then logic falls through
+      // to API 21+ code below.
     }
 
     if (!areSizeAndRateSupportedV21(videoCapabilities, width, height, frameRate)) {
@@ -693,11 +664,6 @@ public final class MediaCodecInfo {
   }
 
   private static boolean isAdaptive(CodecCapabilities capabilities) {
-    return Util.SDK_INT >= 19 && isAdaptiveV19(capabilities);
-  }
-
-  @RequiresApi(19)
-  private static boolean isAdaptiveV19(CodecCapabilities capabilities) {
     return capabilities.isFeatureSupported(CodecCapabilities.FEATURE_AdaptivePlayback);
   }
 
@@ -874,63 +840,5 @@ public final class MediaCodecInfo {
     return MimeTypes.VIDEO_H265.equals(mimeType)
         && CodecProfileLevel.HEVCProfileMain10 == profile
         && ("sailfish".equals(Util.DEVICE) || "marlin".equals(Util.DEVICE));
-  }
-
-  /** Whether the device is known to have wrong {@link PerformancePoint} declarations. */
-  private static boolean needsIgnorePerformancePointsWorkaround() {
-    // See https://github.com/google/ExoPlayer/issues/10898 and [internal ref: b/267324685].
-    return /* Chromecast with Google TV */ Util.DEVICE.equals("sabrina")
-        || Util.DEVICE.equals("boreal")
-        /* Lenovo Tablet M10 FHD Plus */
-        || Util.MODEL.startsWith("Lenovo TB-X605")
-        || Util.MODEL.startsWith("Lenovo TB-X606")
-        || Util.MODEL.startsWith("Lenovo TB-X616");
-  }
-
-  /** Possible outcomes of evaluating PerformancePoint coverage */
-  @Documented
-  @Retention(RetentionPolicy.SOURCE)
-  @Target(TYPE_USE)
-  @IntDef({COVERAGE_RESULT_YES, COVERAGE_RESULT_NO, COVERAGE_RESULT_NO_EMPTY_LIST})
-  private @interface PerformancePointCoverageResult {}
-
-  /** The decoder has a PerformancePoint that covers the resolution and frame rate */
-  private static final int COVERAGE_RESULT_YES = 2;
-
-  /**
-   * The decoder has at least one PerformancePoint, but none of them cover the resolution and frame
-   * rate
-   */
-  private static final int COVERAGE_RESULT_NO = 1;
-
-  /** The VideoCapabilities does not contain any PerformancePoints */
-  private static final int COVERAGE_RESULT_NO_EMPTY_LIST = 0;
-
-  @RequiresApi(29)
-  private static final class Api29 {
-    @DoNotInline
-    public static @PerformancePointCoverageResult int areResolutionAndFrameRateCovered(
-        VideoCapabilities videoCapabilities, int width, int height, double frameRate) {
-      List<PerformancePoint> performancePointList =
-          videoCapabilities.getSupportedPerformancePoints();
-      if (performancePointList == null
-          || performancePointList.isEmpty()
-          || needsIgnorePerformancePointsWorkaround()) {
-        return COVERAGE_RESULT_NO_EMPTY_LIST;
-      }
-
-      // Round frame rate down to to avoid situations where a range check in
-      // covers fails due to slightly exceeding the limits for a standard format
-      // (e.g., 1080p at 30 fps). [Internal ref: b/134706676]
-      PerformancePoint targetPerformancePoint =
-          new PerformancePoint(width, height, (int) frameRate);
-
-      for (int i = 0; i < performancePointList.size(); i++) {
-        if (performancePointList.get(i).covers(targetPerformancePoint)) {
-          return COVERAGE_RESULT_YES;
-        }
-      }
-      return COVERAGE_RESULT_NO;
-    }
   }
 }

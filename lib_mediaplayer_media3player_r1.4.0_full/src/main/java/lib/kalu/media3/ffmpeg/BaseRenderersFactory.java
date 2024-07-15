@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
+import androidx.annotation.Nullable;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.decoder.ffmpeg.ExperimentalFfmpegVideoRenderer;
 import androidx.media3.decoder.ffmpeg.FfmpegAudioRenderer;
@@ -128,7 +128,7 @@ import lib.kalu.media3.util.MediaLogUtil;
                                            int maxDroppedFramesToNotify,
                                            @NonNull ArrayList<Renderer> out) {
         try {
-            ExperimentalFfmpegVideoRenderer ffmpegVideoRenderer = new ExperimentalFfmpegVideoRenderer(allowedJoiningTimeMs, eventHandler, eventListener, maxDroppedFramesToNotify);
+            ExperimentalFfmpegVideoRenderer  ffmpegVideoRenderer = new ExperimentalFfmpegVideoRenderer(allowedJoiningTimeMs, eventHandler, eventListener, maxDroppedFramesToNotify);
             out.add(ffmpegVideoRenderer);
         } catch (Exception e) {
             MediaLogUtil.log("BaseRenderersFactory => addFFmpegVideoRenderers => " + e.getMessage());

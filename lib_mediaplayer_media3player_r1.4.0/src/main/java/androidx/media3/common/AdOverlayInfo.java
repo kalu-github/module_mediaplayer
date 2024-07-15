@@ -25,6 +25,7 @@ import android.view.View;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 import androidx.media3.common.util.UnstableApi;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -81,6 +82,7 @@ public final class AdOverlayInfo {
      *
      * @return This builder, for convenience.
      */
+    @CanIgnoreReturnValue
     public Builder setDetailedReason(@Nullable String detailedReason) {
       this.detailedReason = detailedReason;
       return this;
@@ -107,6 +109,7 @@ public final class AdOverlayInfo {
    * @deprecated Use {@link Builder} instead.
    */
   @UnstableApi
+  @SuppressWarnings("deprecation") // Intentionally using deprecated constructor
   @Deprecated
   public AdOverlayInfo(View view, @Purpose int purpose) {
     this(view, purpose, /* detailedReason= */ null);

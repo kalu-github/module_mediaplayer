@@ -88,7 +88,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
   @Override
   public boolean isReady() {
-    return isSourceReady();
+    return true;
   }
 
   @Override
@@ -156,9 +156,14 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
     }
   }
 
-  /** Overrides the {@code inputFormat}. */
-  protected Format overrideFormat(Format inputFormat) {
-    return inputFormat;
+  /** Overrides the input {@code format}. */
+  protected Format overrideInputFormat(Format format) {
+    return format;
+  }
+
+  /** Overrides the output {@code format}. */
+  protected Format overrideOutputFormat(Format format) {
+    return format;
   }
 
   /** Called when the {@link Format} of the samples fed to the renderer is known. */
@@ -174,9 +179,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
    *
    * <p>The input buffer is cleared if it should be dropped.
    */
-  protected boolean shouldDropInputBuffer(DecoderInputBuffer inputBuffer) {
-    return false;
-  }
+  protected abstract boolean shouldDropInputBuffer(DecoderInputBuffer inputBuffer);
 
   /** Called before a {@link DecoderInputBuffer} is queued to the decoder. */
   protected void onDecoderInputReady(DecoderInputBuffer inputBuffer) {}
@@ -214,8 +217,9 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
       if (result != C.RESULT_FORMAT_READ) {
         return false;
       }
-      inputFormat = overrideFormat(checkNotNull(formatHolder.format));
+      inputFormat = overrideInputFormat(checkNotNull(formatHolder.format));
       onInputFormatRead(inputFormat);
+      // TODO: b/332708880 - Bypass MediaCodec for raw audio input.
       shouldInitDecoder =
           assetLoaderListener.onTrackAdded(
               inputFormat, SUPPORTED_OUTPUT_TYPE_DECODED | SUPPORTED_OUTPUT_TYPE_ENCODED);
@@ -259,11 +263,11 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
         if (decoderOutputFormat == null) {
           return false;
         }
-        outputFormat = decoderOutputFormat;
+        outputFormat = overrideOutputFormat(decoderOutputFormat);
       } else {
         // TODO(b/278259383): Move surface creation out of video sampleConsumer. Init decoder and
         // get decoderOutput Format before init sampleConsumer.
-        outputFormat = inputFormat;
+        outputFormat = overrideOutputFormat(inputFormat);
       }
     }
 

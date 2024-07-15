@@ -9,10 +9,6 @@
 /lib_mediaplayer_vlcplayer*
 /repo/media-1.4.0-rc01
 
-/lib_mediaplayer_media3player_common/build/
-/lib_mediaplayer_media3player_r1.2.0/build/
-/lib_mediaplayer_media3player_r1.2.0_full/.cxx/
-/lib_mediaplayer_media3player_r1.2.0_full/build/
 /lib_mediaplayer_media3player_r1.4.0/build/
 /lib_mediaplayer_media3player_r1.4.0_full/.cxx/
 /lib_mediaplayer_media3player_r1.4.0_full/build/

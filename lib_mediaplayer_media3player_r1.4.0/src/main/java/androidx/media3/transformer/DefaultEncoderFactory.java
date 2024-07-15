@@ -21,16 +21,21 @@ import static androidx.media3.common.util.Assertions.checkNotNull;
 import static androidx.media3.common.util.Assertions.checkState;
 import static androidx.media3.common.util.Assertions.checkStateNotNull;
 import static androidx.media3.common.util.MediaFormatUtil.createMediaFormatFromFormat;
+import static androidx.media3.common.util.Util.SDK_INT;
 import static java.lang.Math.abs;
 import static java.lang.Math.floor;
+import static java.lang.Math.max;
 import static java.lang.Math.round;
 
 import android.content.Context;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
+import android.os.Build;
 import android.util.Pair;
 import android.util.Size;
+import androidx.annotation.IntRange;
 import androidx.annotation.Nullable;
+import androidx.media3.common.C;
 import androidx.media3.common.ColorInfo;
 import androidx.media3.common.Format;
 import androidx.media3.common.MimeTypes;
@@ -46,25 +51,28 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 // TODO(b/224949986) Split audio and video encoder factory.
 @UnstableApi
 public final class DefaultEncoderFactory implements Codec.EncoderFactory {
+  private static final int DEFAULT_AUDIO_BITRATE = 128 * 1024;
   private static final int DEFAULT_FRAME_RATE = 30;
 
   /** Best effort, or as-fast-as-possible priority setting for {@link MediaFormat#KEY_PRIORITY}. */
   private static final int PRIORITY_BEST_EFFORT = 1;
 
-  private static final String TAG = "DefaultEncoderFactory";
-
   /** A builder for {@link DefaultEncoderFactory} instances. */
   public static final class Builder {
     private final Context context;
 
-    @Nullable private EncoderSelector videoEncoderSelector;
-    @Nullable private VideoEncoderSettings requestedVideoEncoderSettings;
+    private EncoderSelector videoEncoderSelector;
+    private VideoEncoderSettings requestedVideoEncoderSettings;
     private boolean enableFallback;
+    private @C.Priority int codecPriority;
 
     /** Creates a new {@link Builder}. */
     public Builder(Context context) {
-      this.context = context;
-      this.enableFallback = true;
+      this.context = context.getApplicationContext();
+      videoEncoderSelector = EncoderSelector.DEFAULT;
+      requestedVideoEncoderSettings = VideoEncoderSettings.DEFAULT;
+      enableFallback = true;
+      codecPriority = C.PRIORITY_PROCESSING_FOREGROUND;
     }
 
     /**
@@ -119,17 +127,32 @@ public final class DefaultEncoderFactory implements Codec.EncoderFactory {
       return this;
     }
 
+    /**
+     * Sets the codec priority.
+     *
+     * <p>Specifying codec priority allows the resource manager in the platform to reclaim less
+     * important codecs before more important codecs.
+     *
+     * <p>It is recommended to use predefined {@linkplain C.Priority priorities} like {@link
+     * C#PRIORITY_PROCESSING_FOREGROUND}, {@link C#PRIORITY_PROCESSING_BACKGROUND} or priority
+     * values defined relative to those defaults.
+     *
+     * <p>This method is a no-op on API versions before 35.
+     *
+     * <p>The default value is {@link C#PRIORITY_PROCESSING_FOREGROUND}.
+     *
+     * @param codecPriority The {@link C.Priority} for the codec. Should be at most {@link
+     *     C#PRIORITY_MAX}.
+     */
+    @CanIgnoreReturnValue
+    public Builder setCodecPriority(@IntRange(to = C.PRIORITY_MAX) @C.Priority int codecPriority) {
+      this.codecPriority = codecPriority;
+      return this;
+    }
+
     /** Creates an instance of {@link DefaultEncoderFactory}, using defaults if values are unset. */
-    @SuppressWarnings("deprecation")
     public DefaultEncoderFactory build() {
-      if (videoEncoderSelector == null) {
-        videoEncoderSelector = EncoderSelector.DEFAULT;
-      }
-      if (requestedVideoEncoderSettings == null) {
-        requestedVideoEncoderSettings = VideoEncoderSettings.DEFAULT;
-      }
-      return new DefaultEncoderFactory(
-          context, videoEncoderSelector, requestedVideoEncoderSettings, enableFallback);
+      return new DefaultEncoderFactory(this);
     }
   }
 
@@ -137,24 +160,26 @@ public final class DefaultEncoderFactory implements Codec.EncoderFactory {
   private final EncoderSelector videoEncoderSelector;
   private final VideoEncoderSettings requestedVideoEncoderSettings;
   private final boolean enableFallback;
+  private final @C.Priority int codecPriority;
 
   /**
    * @deprecated Use {@link Builder} instead.
    */
   @Deprecated
-  @SuppressWarnings("deprecation")
   public DefaultEncoderFactory(Context context) {
-    this(context, EncoderSelector.DEFAULT, /* enableFallback= */ true);
+    this(new Builder(context));
   }
 
   /**
    * @deprecated Use {@link Builder} instead.
    */
   @Deprecated
-  @SuppressWarnings("deprecation")
   public DefaultEncoderFactory(
       Context context, EncoderSelector videoEncoderSelector, boolean enableFallback) {
-    this(context, videoEncoderSelector, VideoEncoderSettings.DEFAULT, enableFallback);
+    this(
+        new Builder(context)
+            .setVideoEncoderSelector(videoEncoderSelector)
+            .setEnableFallback(enableFallback));
   }
 
   /**
@@ -166,17 +191,28 @@ public final class DefaultEncoderFactory implements Codec.EncoderFactory {
       EncoderSelector videoEncoderSelector,
       VideoEncoderSettings requestedVideoEncoderSettings,
       boolean enableFallback) {
-    this.context = context;
-    this.videoEncoderSelector = videoEncoderSelector;
-    this.requestedVideoEncoderSettings = requestedVideoEncoderSettings;
-    this.enableFallback = enableFallback;
+    this(
+        new Builder(context)
+            .setVideoEncoderSelector(videoEncoderSelector)
+            .setEnableFallback(enableFallback)
+            .setRequestedVideoEncoderSettings(requestedVideoEncoderSettings));
+  }
+
+  private DefaultEncoderFactory(Builder builder) {
+    this.context = builder.context;
+    this.videoEncoderSelector = builder.videoEncoderSelector;
+    this.requestedVideoEncoderSettings = builder.requestedVideoEncoderSettings;
+    this.enableFallback = builder.enableFallback;
+    this.codecPriority = builder.codecPriority;
   }
 
   @Override
   public DefaultCodec createForAudioEncoding(Format format) throws ExportException {
+    if (format.bitrate == Format.NO_VALUE) {
+      format = format.buildUpon().setAverageBitrate(DEFAULT_AUDIO_BITRATE).build();
+    }
     checkNotNull(format.sampleMimeType);
     MediaFormat mediaFormat = createMediaFormatFromFormat(format);
-    @Nullable
     ImmutableList<MediaCodecInfo> mediaCodecInfos =
         EncoderUtil.getSupportedEncoders(format.sampleMimeType);
     if (mediaCodecInfos.isEmpty()) {
@@ -201,7 +237,7 @@ public final class DefaultEncoderFactory implements Codec.EncoderFactory {
    */
   @Override
   public DefaultCodec createForVideoEncoding(Format format) throws ExportException {
-    if (format.frameRate == Format.NO_VALUE) {
+    if (format.frameRate == Format.NO_VALUE || deviceNeedsDefaultFrameRateWorkaround()) {
       format = format.buildUpon().setFrameRate(DEFAULT_FRAME_RATE).build();
     }
     checkArgument(format.width != Format.NO_VALUE);
@@ -321,6 +357,12 @@ public final class DefaultEncoderFactory implements Codec.EncoderFactory {
           mediaFormat.setInteger(MediaFormat.KEY_PRIORITY, supportedVideoEncoderSettings.priority);
         }
       }
+    }
+
+    if (Util.SDK_INT >= 35) {
+      // TODO: b/333552477 - Redefinition of MediaFormat.KEY_IMPORTANCE, remove after API35 is
+      //  released.
+      mediaFormat.setInteger("importance", max(0, -codecPriority));
     }
 
     return new DefaultCodec(
@@ -519,14 +561,29 @@ public final class DefaultEncoderFactory implements Codec.EncoderFactory {
 
     if (Util.SDK_INT == 26) {
       mediaFormat.setInteger(MediaFormat.KEY_OPERATING_RATE, DEFAULT_FRAME_RATE);
+    } else if (deviceNeedsLowerOperatingRateAvoidingOverflowWorkaround()) {
+      mediaFormat.setInteger(MediaFormat.KEY_OPERATING_RATE, 1000);
     } else {
       mediaFormat.setInteger(MediaFormat.KEY_OPERATING_RATE, Integer.MAX_VALUE);
     }
   }
 
+  private static boolean deviceNeedsLowerOperatingRateAvoidingOverflowWorkaround() {
+    // On these chipsets, setting an operating rate close to Integer.MAX_VALUE will cause the
+    // encoder to throw at configuration time. Setting the operating rate to 1000 avoids being close
+    // to an integer overflow limit while being higher than a maximum feasible operating rate. See
+    // [internal b/311206113, b/317297946, b/312299527].
+    return Util.SDK_INT >= 31
+        && Util.SDK_INT <= 34
+        && (Build.SOC_MODEL.equals("SM8550")
+            || Build.SOC_MODEL.equals("T612")
+            || Build.SOC_MODEL.equals("SM7450")
+            || Build.SOC_MODEL.equals("SM6450"));
+  }
+
   /**
    * Applying suggested profile/level settings from
-   * https://developer.android.com/guide/topics/media/sharing-video#b-frames_and_encoding_profiles
+   * https://developer.android.com/media/optimize/sharing#b-frames_and_encoding_profiles
    *
    * <p>The adjustment is applied in-place to {@code mediaFormat}.
    */
@@ -555,7 +612,7 @@ public final class DefaultEncoderFactory implements Codec.EncoderFactory {
         mediaFormat.setInteger(MediaFormat.KEY_PROFILE, expectedEncodingProfile);
         mediaFormat.setInteger(MediaFormat.KEY_LEVEL, supportedEncodingLevel);
       }
-    } else if (Util.SDK_INT >= 26) {
+    } else if (Util.SDK_INT >= 26 && !deviceNeedsNoH264HighProfileWorkaround()) {
       int expectedEncodingProfile = MediaCodecInfo.CodecProfileLevel.AVCProfileHigh;
       int supportedEncodingLevel =
           EncoderUtil.findHighestSupportedEncodingLevel(
@@ -566,8 +623,8 @@ public final class DefaultEncoderFactory implements Codec.EncoderFactory {
         // system versions.
         mediaFormat.setInteger(MediaFormat.KEY_PROFILE, expectedEncodingProfile);
         mediaFormat.setInteger(MediaFormat.KEY_LEVEL, supportedEncodingLevel);
-        // TODO(b/210593256): Set KEY_LATENCY to 2 to enable B-frame production after switching to
-        // in-app muxing.
+        // TODO(b/210593256): Set KEY_LATENCY to 2 to enable B-frame production after in-app muxing
+        // is the default and it supports B-frames.
         mediaFormat.setInteger(MediaFormat.KEY_LATENCY, 1);
       }
     } else if (Util.SDK_INT >= 24) {
@@ -654,8 +711,22 @@ public final class DefaultEncoderFactory implements Codec.EncoderFactory {
     return ExportException.createForCodec(
         new IllegalArgumentException(errorString),
         ExportException.ERROR_CODE_ENCODING_FORMAT_UNSUPPORTED,
-        MimeTypes.isVideo(format.sampleMimeType),
-        /* isDecoder= */ false,
-        format);
+        new ExportException.CodecInfo(
+            format.toString(),
+            MimeTypes.isVideo(format.sampleMimeType),
+            /* isDecoder= */ false,
+            /* name= */ null));
+  }
+
+  private static boolean deviceNeedsDefaultFrameRateWorkaround() {
+    // Redmi Note 9 Pro fails if KEY_FRAME_RATE is set too high (see b/278076311).
+    return SDK_INT < 30 && Util.DEVICE.equals("joyeuse");
+  }
+
+  private static boolean deviceNeedsNoH264HighProfileWorkaround() {
+    // The H.264/AVC encoder produces B-frames when high profile is chosen despite configuration to
+    // turn them off, so force not using high profile on these devices (see b/306617392).
+    // TODO(b/229420356): Remove once the in-app muxer is the default and B-frames are supported.
+    return Util.SDK_INT == 27 && (Util.DEVICE.equals("ASUS_X00T_3") || Util.DEVICE.equals("TC77"));
   }
 }

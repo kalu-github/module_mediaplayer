@@ -21,7 +21,6 @@ import android.graphics.Bitmap;
 import android.view.Surface;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
-import androidx.media3.common.ColorInfo;
 import androidx.media3.common.OnInputFrameProcessedListener;
 import androidx.media3.common.util.TimestampIterator;
 import androidx.media3.common.util.UnstableApi;
@@ -112,12 +111,12 @@ public interface SampleConsumer {
    * <p>Should only be used for image data.
    *
    * @param inputBitmap The {@link Bitmap} to queue to the consumer.
-   * @param inStreamOffsetsUs The times within the current stream that the bitmap should be
-   *     displayed at. The timestamps should be monotonically increasing.
+   * @param timestampIterator A {@link TimestampIterator} generating the exact timestamps that the
+   *     bitmap should be shown at.
    * @return The {@link InputResult} describing the result of the operation.
    */
   default @InputResult int queueInputBitmap(
-      Bitmap inputBitmap, TimestampIterator inStreamOffsetsUs) {
+      Bitmap inputBitmap, TimestampIterator timestampIterator) {
     throw new UnsupportedOperationException();
   }
 
@@ -153,15 +152,6 @@ public interface SampleConsumer {
    * <p>Should only be used for raw video data.
    */
   default Surface getInputSurface() {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * Returns the expected input {@link ColorInfo}.
-   *
-   * <p>Should only be used for raw video data.
-   */
-  default ColorInfo getExpectedInputColorInfo() {
     throw new UnsupportedOperationException();
   }
 

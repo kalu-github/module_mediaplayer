@@ -30,6 +30,7 @@ import androidx.media3.exoplayer.drm.DrmSessionManagerProvider;
 import androidx.media3.exoplayer.upstream.Allocator;
 import androidx.media3.exoplayer.upstream.CmcdConfiguration;
 import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy;
+import androidx.media3.extractor.text.SubtitleParser;
 import java.io.IOException;
 
 /**
@@ -97,6 +98,38 @@ public interface MediaSource {
      */
     @UnstableApi
     Factory setLoadErrorHandlingPolicy(LoadErrorHandlingPolicy loadErrorHandlingPolicy);
+
+    /**
+     * Sets whether subtitles should be parsed as part of extraction (before being added to the
+     * sample queue) or as part of rendering (when being taken from the sample queue). Defaults to
+     * {@code true} (i.e. subtitles will be parsed during extraction).
+     *
+     * <p>This method is experimental and will be renamed or removed in a future release.
+     *
+     * @deprecated This method (and all support for 'legacy' subtitle decoding during rendering)
+     *     will be removed in a future release.
+     * @param parseSubtitlesDuringExtraction Whether to parse subtitles during extraction or
+     *     rendering.
+     * @return This factory, for convenience.
+     */
+    @UnstableApi
+    @Deprecated
+    default Factory experimentalParseSubtitlesDuringExtraction(
+        boolean parseSubtitlesDuringExtraction) {
+      return this;
+    }
+
+    /**
+     * Sets the {@link SubtitleParser.Factory} to be used for parsing subtitles during extraction.
+     *
+     * @param subtitleParserFactory The {@link SubtitleParser.Factory} for parsing subtitles during
+     *     extraction.
+     * @return This factory, for convenience.
+     */
+    @UnstableApi
+    default Factory setSubtitleParserFactory(SubtitleParser.Factory subtitleParserFactory) {
+      return this;
+    }
 
     /**
      * Returns the {@link C.ContentType content types} supported by media sources created by this

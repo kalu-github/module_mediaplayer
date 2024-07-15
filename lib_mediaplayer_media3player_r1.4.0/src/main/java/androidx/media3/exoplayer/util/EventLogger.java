@@ -89,10 +89,11 @@ public class EventLogger implements AnalyticsListener {
    * Creates an instance.
    *
    * @param trackSelector This parameter is ignored.
-   * @deprecated Use {@link EventLogger()}
+   * @deprecated Use {@link #EventLogger()}
    */
   @UnstableApi
   @Deprecated
+  @SuppressWarnings("unused") // Maintain backwards compatibility for callers.
   public EventLogger(@Nullable MappingTrackSelector trackSelector) {
     this(DEFAULT_TAG);
   }
@@ -102,10 +103,11 @@ public class EventLogger implements AnalyticsListener {
    *
    * @param trackSelector This parameter is ignored.
    * @param tag The tag used for logging.
-   * @deprecated Use {@link EventLogger(String)}
+   * @deprecated Use {@link #EventLogger(String)}
    */
   @UnstableApi
   @Deprecated
+  @SuppressWarnings("unused") // Maintain backwards compatibility for callers.
   public EventLogger(@Nullable MappingTrackSelector trackSelector, String tag) {
     this(tag);
   }
@@ -335,7 +337,10 @@ public class EventLogger implements AnalyticsListener {
   @UnstableApi
   @Override
   public void onAudioDecoderInitialized(
-      EventTime eventTime, String decoderName, long initializationDurationMs) {
+      EventTime eventTime,
+      String decoderName,
+      long initializedTimestampMs,
+      long initializationDurationMs) {
     logd(eventTime, "audioDecoderInitialized", decoderName);
   }
 
@@ -425,7 +430,10 @@ public class EventLogger implements AnalyticsListener {
   @UnstableApi
   @Override
   public void onVideoDecoderInitialized(
-      EventTime eventTime, String decoderName, long initializationDurationMs) {
+      EventTime eventTime,
+      String decoderName,
+      long initializedTimestampMs,
+      long initializationDurationMs) {
     logd(eventTime, "videoDecoderInitialized", decoderName);
   }
 
@@ -699,6 +707,8 @@ public class EventLogger implements AnalyticsListener {
         return "SKIP";
       case Player.DISCONTINUITY_REASON_INTERNAL:
         return "INTERNAL";
+      case Player.DISCONTINUITY_REASON_SILENCE_SKIP:
+        return "SILENCE_SKIP";
       default:
         return "?";
     }

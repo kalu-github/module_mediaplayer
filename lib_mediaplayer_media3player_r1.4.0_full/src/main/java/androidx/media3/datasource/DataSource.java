@@ -15,7 +15,6 @@
  */
 package androidx.media3.datasource;
 
-import android.annotation.SuppressLint;
 import android.net.Uri;
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
@@ -27,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 /** Reads data from URI-identified resources. */
-@SuppressLint("UnsafeOptInUsageError")
 public interface DataSource extends DataReader {
 
   /** A factory for {@link DataSource} instances. */

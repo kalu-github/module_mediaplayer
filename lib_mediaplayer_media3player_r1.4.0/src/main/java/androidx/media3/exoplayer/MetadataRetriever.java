@@ -39,7 +39,7 @@ import androidx.media3.exoplayer.upstream.DefaultAllocator;
 import androidx.media3.extractor.DefaultExtractorsFactory;
 import androidx.media3.extractor.ExtractorsFactory;
 import androidx.media3.extractor.mp4.Mp4Extractor;
-import com.google.common.util.concurrent.ListenableFuture2;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
@@ -59,9 +59,9 @@ public final class MetadataRetriever {
    *
    * @param context The {@link Context}.
    * @param mediaItem The {@link MediaItem} whose metadata should be retrieved.
-   * @return A {@link ListenableFuture2} of the result.
+   * @return A {@link ListenableFuture} of the result.
    */
-  public static ListenableFuture2<TrackGroupArray> retrieveMetadata(
+  public static ListenableFuture<TrackGroupArray> retrieveMetadata(
       Context context, MediaItem mediaItem) {
     return retrieveMetadata(context, mediaItem, Clock.DEFAULT);
   }
@@ -74,15 +74,15 @@ public final class MetadataRetriever {
    * @param mediaSourceFactory mediaSourceFactory The {@link MediaSource.Factory} to use to read the
    *     data.
    * @param mediaItem The {@link MediaItem} whose metadata should be retrieved.
-   * @return A {@link ListenableFuture2} of the result.
+   * @return A {@link ListenableFuture} of the result.
    */
-  public static ListenableFuture2<TrackGroupArray> retrieveMetadata(
+  public static ListenableFuture<TrackGroupArray> retrieveMetadata(
       MediaSource.Factory mediaSourceFactory, MediaItem mediaItem) {
     return retrieveMetadata(mediaSourceFactory, mediaItem, Clock.DEFAULT);
   }
 
   @VisibleForTesting
-  /* package */ static ListenableFuture2<TrackGroupArray> retrieveMetadata(
+  /* package */ static ListenableFuture<TrackGroupArray> retrieveMetadata(
       Context context, MediaItem mediaItem, Clock clock) {
     ExtractorsFactory extractorsFactory =
         new DefaultExtractorsFactory()
@@ -93,7 +93,7 @@ public final class MetadataRetriever {
     return retrieveMetadata(mediaSourceFactory, mediaItem, clock);
   }
 
-  private static ListenableFuture2<TrackGroupArray> retrieveMetadata(
+  private static ListenableFuture<TrackGroupArray> retrieveMetadata(
       MediaSource.Factory mediaSourceFactory, MediaItem mediaItem, Clock clock) {
     // Recreate thread and handler every time this method is called so that it can be used
     // concurrently.
@@ -102,10 +102,10 @@ public final class MetadataRetriever {
 
   private static final class MetadataRetrieverInternal {
 
-    private static final int MESSAGE_PREPARE_SOURCE = 0;
-    private static final int MESSAGE_CHECK_FOR_FAILURE = 1;
-    private static final int MESSAGE_CONTINUE_LOADING = 2;
-    private static final int MESSAGE_RELEASE = 3;
+    private static final int MESSAGE_PREPARE_SOURCE = 1;
+    private static final int MESSAGE_CHECK_FOR_FAILURE = 2;
+    private static final int MESSAGE_CONTINUE_LOADING = 3;
+    private static final int MESSAGE_RELEASE = 4;
 
     private final MediaSource.Factory mediaSourceFactory;
     private final HandlerThread mediaSourceThread;
@@ -121,7 +121,7 @@ public final class MetadataRetriever {
       trackGroupsFuture = SettableFuture.create();
     }
 
-    public ListenableFuture2<TrackGroupArray> retrieveMetadata(MediaItem mediaItem) {
+    public ListenableFuture<TrackGroupArray> retrieveMetadata(MediaItem mediaItem) {
       mediaSourceHandler.obtainMessage(MESSAGE_PREPARE_SOURCE, mediaItem).sendToTarget();
       return trackGroupsFuture;
     }

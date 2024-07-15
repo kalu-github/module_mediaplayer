@@ -39,7 +39,6 @@ import java.util.concurrent.Executor;
     @Override
     public TransformerMultipleInputVideoGraph create(
         Context context,
-        ColorInfo inputColorInfo,
         ColorInfo outputColorInfo,
         DebugViewProvider debugViewProvider,
         VideoGraph.Listener listener,
@@ -49,7 +48,6 @@ import java.util.concurrent.Executor;
         long initialTimestampOffsetUs) {
       return new TransformerMultipleInputVideoGraph(
           context,
-          inputColorInfo,
           outputColorInfo,
           debugViewProvider,
           listener,
@@ -62,7 +60,6 @@ import java.util.concurrent.Executor;
 
   private TransformerMultipleInputVideoGraph(
       Context context,
-      ColorInfo inputColorInfo,
       ColorInfo outputColorInfo,
       DebugViewProvider debugViewProvider,
       Listener listener,
@@ -72,7 +69,6 @@ import java.util.concurrent.Executor;
       long initialTimestampOffsetUs) {
     super(
         context,
-        inputColorInfo,
         outputColorInfo,
         debugViewProvider,
         listener,
@@ -83,12 +79,9 @@ import java.util.concurrent.Executor;
   }
 
   @Override
-  public GraphInput createInput() throws VideoFrameProcessingException {
-    int inputId = registerInput();
+  public GraphInput createInput(int inputIndex) throws VideoFrameProcessingException {
+    registerInput(inputIndex);
     return new VideoFrameProcessingWrapper(
-        getProcessor(inputId),
-        getInputColorInfo(),
-        /* presentation= */ null,
-        getInitialTimestampOffsetUs());
+        getProcessor(inputIndex), /* presentation= */ null, getInitialTimestampOffsetUs());
   }
 }

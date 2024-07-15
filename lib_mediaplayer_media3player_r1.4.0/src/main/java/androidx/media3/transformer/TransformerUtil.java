@@ -16,19 +16,33 @@
 
 package androidx.media3.transformer;
 
+import static androidx.media3.common.ColorInfo.SDR_BT709_LIMITED;
+import static androidx.media3.common.ColorInfo.isTransferHdr;
+import static androidx.media3.transformer.Composition.HDR_MODE_KEEP_HDR;
+import static androidx.media3.transformer.Composition.HDR_MODE_TONE_MAP_HDR_TO_SDR_USING_OPEN_GL;
+import static androidx.media3.transformer.EncoderUtil.getSupportedEncodersForHdrEditing;
+import static java.lang.Math.round;
+
 import android.media.MediaCodec;
+import android.media.MediaCodecInfo;
+import android.util.Pair;
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
+import androidx.media3.common.ColorInfo;
 import androidx.media3.common.Effect;
 import androidx.media3.common.Format;
 import androidx.media3.common.Metadata;
 import androidx.media3.common.MimeTypes;
+import androidx.media3.common.util.UnstableApi;
 import androidx.media3.effect.GlEffect;
+import androidx.media3.effect.ScaleAndRotateTransformation;
 import androidx.media3.extractor.metadata.mp4.SlowMotionData;
+import androidx.media3.transformer.Composition.HdrMode;
 import com.google.common.collect.ImmutableList;
 
 /** Utility methods for Transformer. */
-/* package */ final class TransformerUtil {
+@UnstableApi
+public final class TransformerUtil {
 
   private TransformerUtil() {}
 
@@ -45,35 +59,59 @@ import com.google.common.collect.ImmutableList;
     return trackType == C.TRACK_TYPE_IMAGE ? C.TRACK_TYPE_VIDEO : trackType;
   }
 
-  /**
-   * Returns whether the collection of {@code videoEffects} would be a {@linkplain
-   * GlEffect#isNoOp(int, int) no-op}, if queued samples of this {@link Format}.
-   */
-  public static boolean areVideoEffectsAllNoOp(
-      ImmutableList<Effect> videoEffects, Format inputFormat) {
-    int decodedWidth =
-        (inputFormat.rotationDegrees % 180 == 0) ? inputFormat.width : inputFormat.height;
-    int decodedHeight =
-        (inputFormat.rotationDegrees % 180 == 0) ? inputFormat.height : inputFormat.width;
-    for (int i = 0; i < videoEffects.size(); i++) {
-      Effect videoEffect = videoEffects.get(i);
-      if (!(videoEffect instanceof GlEffect)) {
-        // We cannot confirm whether Effect instances that are not GlEffect instances are
-        // no-ops.
-        return false;
-      }
-      GlEffect glEffect = (GlEffect) videoEffect;
-      if (!glEffect.isNoOp(decodedWidth, decodedHeight)) {
-        return false;
-      }
+  /** Returns {@link MediaCodec} flags corresponding to {@link C.BufferFlags}. */
+  public static int getMediaCodecFlags(@C.BufferFlags int flags) {
+    int mediaCodecFlags = 0;
+    if ((flags & C.BUFFER_FLAG_KEY_FRAME) == C.BUFFER_FLAG_KEY_FRAME) {
+      mediaCodecFlags |= MediaCodec.BUFFER_FLAG_KEY_FRAME;
     }
-    return true;
+    if ((flags & C.BUFFER_FLAG_END_OF_STREAM) == C.BUFFER_FLAG_END_OF_STREAM) {
+      mediaCodecFlags |= MediaCodec.BUFFER_FLAG_END_OF_STREAM;
+    }
+    return mediaCodecFlags;
+  }
+
+  /** Returns whether the audio track should be transcoded. */
+  public static boolean shouldTranscodeAudio(
+      Format inputFormat,
+      Composition composition,
+      int sequenceIndex,
+      TransformationRequest transformationRequest,
+      Codec.EncoderFactory encoderFactory,
+      MuxerWrapper muxerWrapper) {
+    if (composition.sequences.size() > 1
+        || composition.sequences.get(sequenceIndex).editedMediaItems.size() > 1) {
+      return !composition.transmuxAudio;
+    }
+    if (encoderFactory.audioNeedsEncoding()) {
+      return true;
+    }
+    if (transformationRequest.audioMimeType != null
+        && !transformationRequest.audioMimeType.equals(inputFormat.sampleMimeType)) {
+      return true;
+    }
+    if (transformationRequest.audioMimeType == null
+        && !muxerWrapper.supportsSampleMimeType(inputFormat.sampleMimeType)) {
+      return true;
+    }
+    EditedMediaItem firstEditedMediaItem =
+        composition.sequences.get(sequenceIndex).editedMediaItems.get(0);
+    if (firstEditedMediaItem.flattenForSlowMotion && containsSlowMotionData(inputFormat)) {
+      return true;
+    }
+    if (!firstEditedMediaItem.effects.audioProcessors.isEmpty()) {
+      return true;
+    }
+    if (!composition.effects.audioProcessors.isEmpty()) {
+      return true;
+    }
+    return false;
   }
 
   /**
    * Returns whether the {@link Format} contains {@linkplain SlowMotionData slow motion metadata}.
    */
-  public static boolean containsSlowMotionData(Format format) {
+  private static boolean containsSlowMotionData(Format format) {
     @Nullable Metadata metadata = format.metadata;
     if (metadata == null) {
       return false;
@@ -86,15 +124,150 @@ import com.google.common.collect.ImmutableList;
     return false;
   }
 
-  /** Returns {@link MediaCodec} flags corresponding to {@link C.BufferFlags}. */
-  public static int getMediaCodecFlags(@C.BufferFlags int flags) {
-    int mediaCodecFlags = 0;
-    if ((flags & C.BUFFER_FLAG_KEY_FRAME) == C.BUFFER_FLAG_KEY_FRAME) {
-      mediaCodecFlags |= MediaCodec.BUFFER_FLAG_KEY_FRAME;
+  /** Returns whether the video track should be transcoded. */
+  public static boolean shouldTranscodeVideo(
+      Format inputFormat,
+      Composition composition,
+      int sequenceIndex,
+      TransformationRequest transformationRequest,
+      Codec.EncoderFactory encoderFactory,
+      MuxerWrapper muxerWrapper) {
+
+    if (composition.sequences.size() > 1
+        || composition.sequences.get(sequenceIndex).editedMediaItems.size() > 1) {
+      return !composition.transmuxVideo;
     }
-    if ((flags & C.BUFFER_FLAG_END_OF_STREAM) == C.BUFFER_FLAG_END_OF_STREAM) {
-      mediaCodecFlags |= MediaCodec.BUFFER_FLAG_END_OF_STREAM;
+    EditedMediaItem firstEditedMediaItem =
+        composition.sequences.get(sequenceIndex).editedMediaItems.get(0);
+    if (encoderFactory.videoNeedsEncoding()) {
+      return true;
     }
-    return mediaCodecFlags;
+    if (transformationRequest.hdrMode != HDR_MODE_KEEP_HDR) {
+      return true;
+    }
+    if (transformationRequest.videoMimeType != null
+        && !transformationRequest.videoMimeType.equals(inputFormat.sampleMimeType)) {
+      return true;
+    }
+    if (transformationRequest.videoMimeType == null
+        && !muxerWrapper.supportsSampleMimeType(inputFormat.sampleMimeType)) {
+      return true;
+    }
+    if (inputFormat.pixelWidthHeightRatio != 1f) {
+      return true;
+    }
+    ImmutableList<Effect> videoEffects = firstEditedMediaItem.effects.videoEffects;
+    return !videoEffects.isEmpty()
+        && maybeCalculateTotalRotationDegreesAppliedInEffects(videoEffects, inputFormat) == -1;
+  }
+
+  /**
+   * Returns the total rotation degrees of all the rotations in {@code videoEffects}, or {@code -1}
+   * if {@code videoEffects} contains any effects that are not no-ops or regular rotations.
+   *
+   * <p>If all the {@code videoEffects} are either noOps or regular rotations, then the rotations
+   * can be applied in the {@linkplain #maybeSetMuxerWrapperAdditionalRotationDegrees(MuxerWrapper,
+   * ImmutableList, Format) MuxerWrapper}.
+   */
+  private static float maybeCalculateTotalRotationDegreesAppliedInEffects(
+      ImmutableList<Effect> videoEffects, Format inputFormat) {
+    int width = (inputFormat.rotationDegrees % 180 == 0) ? inputFormat.width : inputFormat.height;
+    int height = (inputFormat.rotationDegrees % 180 == 0) ? inputFormat.height : inputFormat.width;
+    float totalRotationDegrees = 0;
+    for (int i = 0; i < videoEffects.size(); i++) {
+      Effect videoEffect = videoEffects.get(i);
+      if (!(videoEffect instanceof GlEffect)) {
+        // We cannot confirm whether Effect instances that are not GlEffect instances are
+        // no-ops.
+        return -1;
+      }
+      GlEffect glEffect = (GlEffect) videoEffect;
+      if (videoEffect instanceof ScaleAndRotateTransformation) {
+        ScaleAndRotateTransformation scaleAndRotateTransformation =
+            (ScaleAndRotateTransformation) videoEffect;
+        if (scaleAndRotateTransformation.scaleX != 1f
+            || scaleAndRotateTransformation.scaleY != 1f) {
+          return -1;
+        }
+        float rotationDegrees = scaleAndRotateTransformation.rotationDegrees;
+        if (rotationDegrees % 90f != 0) {
+          return -1;
+        }
+        totalRotationDegrees += rotationDegrees;
+        width = (totalRotationDegrees % 180 == 0) ? inputFormat.width : inputFormat.height;
+        height = (totalRotationDegrees % 180 == 0) ? inputFormat.height : inputFormat.width;
+        continue;
+      }
+      if (!glEffect.isNoOp(width, height)) {
+        return -1;
+      }
+    }
+    totalRotationDegrees %= 360;
+    return totalRotationDegrees % 90 == 0 ? totalRotationDegrees : -1;
+  }
+
+  /**
+   * Sets {@linkplain MuxerWrapper#setAdditionalRotationDegrees(int) the additionalRotationDegrees}
+   * on the given {@link MuxerWrapper} if the given {@code videoEffects} only contains a mix of
+   * regular rotations and no-ops. A regular rotation is a rotation divisible by 90 degrees.
+   */
+  public static void maybeSetMuxerWrapperAdditionalRotationDegrees(
+      MuxerWrapper muxerWrapper, ImmutableList<Effect> videoEffects, Format inputFormat) {
+    float rotationDegrees =
+        maybeCalculateTotalRotationDegreesAppliedInEffects(videoEffects, inputFormat);
+    if (rotationDegrees == 90f || rotationDegrees == 180f || rotationDegrees == 270f) {
+      // The MuxerWrapper rotation is clockwise while the ScaleAndRotateTransformation rotation
+      // is counterclockwise.
+      muxerWrapper.setAdditionalRotationDegrees(360 - round(rotationDegrees));
+    }
+  }
+
+  /**
+   * Adjust for invalid {@link ColorInfo} values, by defaulting to {@link
+   * ColorInfo#SDR_BT709_LIMITED}.
+   */
+  public static ColorInfo getValidColor(@Nullable ColorInfo colorInfo) {
+    if (colorInfo == null || !colorInfo.isDataSpaceValid()) {
+      return ColorInfo.SDR_BT709_LIMITED;
+    }
+    return colorInfo;
+  }
+
+  /** Returns the decoder output color taking tone mapping into account. */
+  public static ColorInfo getDecoderOutputColor(
+      ColorInfo decoderInputColor, boolean isMediaCodecToneMappingRequested) {
+    if (isMediaCodecToneMappingRequested && ColorInfo.isTransferHdr(decoderInputColor)) {
+      return SDR_BT709_LIMITED;
+    }
+    return decoderInputColor;
+  }
+
+  /**
+   * Calculate what the MIME type and {@link HdrMode} to use, applying fallback measure if
+   * necessary.
+   *
+   * @param hdrMode The {@link HdrMode}.
+   * @param requestedOutputMimeType The desired output MIME type.
+   * @param colorInfo The {@link ColorInfo}.
+   * @return a {@link Pair} of the output MIME type and {@link HdrMode}.
+   */
+  public static Pair<String, Integer> getOutputMimeTypeAndHdrModeAfterFallback(
+      @HdrMode int hdrMode, String requestedOutputMimeType, @Nullable ColorInfo colorInfo) {
+    // HdrMode fallback is only supported from HDR_MODE_KEEP_HDR to
+    // HDR_MODE_TONE_MAP_HDR_TO_SDR_USING_OPEN_GL.
+    if (hdrMode == HDR_MODE_KEEP_HDR && isTransferHdr(colorInfo)) {
+      ImmutableList<MediaCodecInfo> hdrEncoders =
+          getSupportedEncodersForHdrEditing(requestedOutputMimeType, colorInfo);
+      if (hdrEncoders.isEmpty()) {
+        // Fallback H.265/HEVC codecs for HDR content to avoid tonemapping.
+        hdrEncoders = getSupportedEncodersForHdrEditing(MimeTypes.VIDEO_H265, colorInfo);
+        if (!hdrEncoders.isEmpty()) {
+          requestedOutputMimeType = MimeTypes.VIDEO_H265;
+        } else {
+          hdrMode = HDR_MODE_TONE_MAP_HDR_TO_SDR_USING_OPEN_GL;
+        }
+      }
+    }
+    return Pair.create(requestedOutputMimeType, hdrMode);
   }
 }

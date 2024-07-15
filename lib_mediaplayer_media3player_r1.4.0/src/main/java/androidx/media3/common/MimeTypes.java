@@ -25,6 +25,8 @@ import com.google.common.base.Ascii;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.dataflow.qual.Pure;
 
 /** Defines common MIME types and helper methods. */
 public final class MimeTypes {
@@ -159,10 +161,14 @@ public final class MimeTypes {
   // image/ MIME types
 
   public static final String IMAGE_JPEG = BASE_TYPE_IMAGE + "/jpeg";
+  @UnstableApi public static final String IMAGE_JPEG_R = BASE_TYPE_IMAGE + "/jpeg_r";
   @UnstableApi public static final String IMAGE_PNG = BASE_TYPE_IMAGE + "/png";
   @UnstableApi public static final String IMAGE_HEIF = BASE_TYPE_IMAGE + "/heif";
+  @UnstableApi public static final String IMAGE_HEIC = BASE_TYPE_IMAGE + "/heic";
+  @UnstableApi public static final String IMAGE_AVIF = BASE_TYPE_IMAGE + "/avif";
   @UnstableApi public static final String IMAGE_BMP = BASE_TYPE_IMAGE + "/bmp";
   @UnstableApi public static final String IMAGE_WEBP = BASE_TYPE_IMAGE + "/webp";
+  @UnstableApi public static final String IMAGE_RAW = BASE_TYPE_IMAGE + "/raw";
 
   /**
    * A non-standard codec string for E-AC3-JOC. Use of this constant allows for disambiguation
@@ -217,7 +223,9 @@ public final class MimeTypes {
    * Returns whether the given string is a text MIME type, including known text types that use
    * &quot;application&quot; as their base type.
    */
+  @SuppressWarnings("deprecation") // Supporting deprecated MIME types
   @UnstableApi
+  @Pure
   public static boolean isText(@Nullable String mimeType) {
     return BASE_TYPE_TEXT.equals(getTopLevelType(mimeType))
         || APPLICATION_MEDIA3_CUES.equals(mimeType)
@@ -509,6 +517,8 @@ public final class MimeTypes {
       case 0x69:
       case 0x6B:
         return MimeTypes.AUDIO_MPEG;
+      case 0x6C:
+        return MimeTypes.IMAGE_JPEG;
       case 0xA3:
         return MimeTypes.VIDEO_VC1;
       case 0xB1:
@@ -633,18 +643,30 @@ public final class MimeTypes {
   /**
    * Normalizes the MIME type provided so that equivalent MIME types are uniquely represented.
    *
-   * @param mimeType A MIME type to normalize.
+   * @param mimeType A MIME type to normalize, or null.
    * @return The normalized MIME type, or the argument MIME type if its normalized form is unknown.
    */
   @UnstableApi
-  public static String normalizeMimeType(String mimeType) {
+  public static @PolyNull String normalizeMimeType(@PolyNull String mimeType) {
+    if (mimeType == null) {
+      return null;
+    }
+    mimeType = Ascii.toLowerCase(mimeType);
     switch (mimeType) {
+        // Normalize uncommon versions of some audio MIME types to their standard equivalent.
       case BASE_TYPE_AUDIO + "/x-flac":
         return AUDIO_FLAC;
       case BASE_TYPE_AUDIO + "/mp3":
         return AUDIO_MPEG;
       case BASE_TYPE_AUDIO + "/x-wav":
         return AUDIO_WAV;
+        // Normalize MIME types that are often written with upper-case letters to their common form.
+      case "application/x-mpegurl":
+        return APPLICATION_M3U8;
+      case "audio/mpeg-l1":
+        return AUDIO_MPEG_L1;
+      case "audio/mpeg-l2":
+        return AUDIO_MPEG_L2;
       default:
         return mimeType;
     }

@@ -117,9 +117,7 @@ public final class H265Reader implements ElementaryStreamReader {
   @Override
   public void packetStarted(long pesTimeUs, @TsPayloadReader.Flags int flags) {
     // TODO (Internal b/32267012): Consider using random access indicator.
-    if (pesTimeUs != C.TIME_UNSET) {
-      this.pesTimeUs = pesTimeUs;
-    }
+    this.pesTimeUs = pesTimeUs;
   }
 
   @Override
@@ -274,6 +272,7 @@ public final class H265Reader implements ElementaryStreamReader {
                 .setChromaBitdepth(spsData.bitDepthChromaMinus8 + 8)
                 .build())
         .setPixelWidthHeightRatio(spsData.pixelWidthHeightRatio)
+        .setMaxNumReorderSamples(spsData.maxNumReorderPics)
         .setInitializationData(Collections.singletonList(csdData))
         .build();
   }
@@ -379,6 +378,17 @@ public final class H265Reader implements ElementaryStreamReader {
       }
     }
 
+    public void end(long position) {
+      sampleIsKeyframe = nalUnitHasKeyframeData;
+      // Output a sample with the NAL units since the current nalUnitPosition
+      outputSample(/* offset= */ (int) (position - nalUnitPosition));
+      // Output a final sample with the remaining NAL units up to the passed position
+      samplePosition = nalUnitPosition;
+      nalUnitPosition = position;
+      outputSample(/* offset= */ 0);
+      readingSample = false;
+    }
+
     private void outputSample(int offset) {
       if (sampleTimeUs == C.TIME_UNSET) {
         return;
@@ -386,13 +396,6 @@ public final class H265Reader implements ElementaryStreamReader {
       @C.BufferFlags int flags = sampleIsKeyframe ? C.BUFFER_FLAG_KEY_FRAME : 0;
       int size = (int) (nalUnitPosition - samplePosition);
       output.sampleMetadata(sampleTimeUs, flags, size, offset, null);
-    }
-
-    public void end(long position) {
-      // Output a final sample with the NAL units currently held
-      nalUnitPosition = position;
-      outputSample(/* offset= */ 0);
-      readingSample = false;
     }
 
     /** Returns whether a NAL unit type is one that occurs before any VCL NAL units in a sample. */

@@ -29,7 +29,6 @@ import android.os.Message;
 import android.os.SystemClock;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.media3.common.C;
 import androidx.media3.common.DrmInitData;
 import androidx.media3.common.DrmInitData.SchemeData;
@@ -68,7 +67,6 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
  * <p>This implementation supports pre-acquisition of sessions using {@link
  * #preacquireSession(DrmSessionEventListener.EventDispatcher, Format)}.
  */
-@RequiresApi(18)
 @UnstableApi
 public class DefaultDrmSessionManager implements DrmSessionManager {
 
@@ -98,17 +96,20 @@ public class DefaultDrmSessionManager implements DrmSessionManager {
      *       FrameworkMediaDrm#DEFAULT_PROVIDER}.
      *   <li>{@link #setMultiSession multiSession}: {@code false}.
      *   <li>{@link #setUseDrmSessionsForClearContent useDrmSessionsForClearContent}: No tracks.
-     *   <li>{@link #setPlayClearSamplesWithoutKeys playClearSamplesWithoutKeys}: {@code false}.
+     *   <li>{@link #setPlayClearSamplesWithoutKeys playClearSamplesWithoutKeys}: {@code true}.
      *   <li>{@link #setLoadErrorHandlingPolicy LoadErrorHandlingPolicy}: {@link
      *       DefaultLoadErrorHandlingPolicy}.
+     *   <li>{@link #setSessionKeepaliveMs sessionKeepaliveMs}: {@link
+     *       #DEFAULT_SESSION_KEEPALIVE_MS}.
      * </ul>
      */
     public Builder() {
       keyRequestParameters = new HashMap<>();
       uuid = C.WIDEVINE_UUID;
       exoMediaDrmProvider = FrameworkMediaDrm.DEFAULT_PROVIDER;
-      loadErrorHandlingPolicy = new DefaultLoadErrorHandlingPolicy();
       useDrmSessionsForClearContentTrackTypes = new int[0];
+      playClearSamplesWithoutKeys = true;
+      loadErrorHandlingPolicy = new DefaultLoadErrorHandlingPolicy();
       sessionKeepaliveMs = DEFAULT_SESSION_KEEPALIVE_MS;
     }
 
@@ -654,11 +655,12 @@ public class DefaultDrmSessionManager implements DrmSessionManager {
   }
 
   private static boolean acquisitionFailedIndicatingResourceShortage(DrmSession session) {
-    // ResourceBusyException is only available at API 19, so on earlier versions we
-    // assume any error indicates resource shortage (ensuring we retry).
-    return session.getState() == DrmSession.STATE_ERROR
-        && (Util.SDK_INT < 19
-            || checkNotNull(session.getError()).getCause() instanceof ResourceBusyException);
+    if (session.getState() != DrmSession.STATE_ERROR) {
+      return false;
+    }
+    @Nullable Throwable cause = checkNotNull(session.getError()).getCause();
+    return cause instanceof ResourceBusyException
+        || DrmUtil.isFailureToConstructResourceBusyException(cause);
   }
 
   /**

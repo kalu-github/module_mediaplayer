@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
 
-    namespace 'androidx.media3'
+    namespace 'lib.kalu.media3player'
     compileSdkVersion 34
     buildToolsVersion "34.0.0"
     compileOptions.encoding = "UTF-8"
@@ -36,7 +36,6 @@ android {
         }
     }
 
-    //jdk1.8
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -53,7 +52,16 @@ dependencies {
     compileOnly('androidx.appcompat:appcompat:1.6.1')
     compileOnly('androidx.exifinterface:exifinterface:1.3.6')
     compileOnly('com.squareup.okhttp3:okhttp:3.14.9')
-    // tools
-    api files('libs/lib_mediaplayer_media3player_common.jar')
-//    implementation project(path: ':lib_mediaplayer_mediaxplayer_common')
+
+    compileOnly files('libs/checker-qual-android-3.45.0.jar')
+    compileOnly files('libs/jsr305-3.0.2.jar')
+    compileOnly files('libs/j2objc-annotations-3.0.0.jar')
+
+    // guava
+    api files('libs/guava-33.2.1-android.jar')
+    api files('libs/guava-failureaccess-1.0.2.jar')
+    compileOnly files('libs/guava-error_prone_annotations-2.28.0.jar')
+
+    // midi
+    api files('libs/jsyn-20170815.jar')
 }

@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
 
-    namespace 'androidx.media3'
+    namespace 'lib.kalu.media3player'
     compileSdkVersion 34
     buildToolsVersion "34.0.0"
     compileOptions.encoding = "UTF-8"
@@ -66,7 +66,6 @@ android {
             path "/src/main/cpp/CMakeLists.txt"
         }
     }
-    namespace 'com.google.android.exoplayer2'
 }
 
 repositories {

@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@UnstableApi /** Reads data from URI-identified resources. */
+/** Reads data from URI-identified resources. */
 public interface DataSource extends DataReader {
 
   /** A factory for {@link DataSource} instances. */

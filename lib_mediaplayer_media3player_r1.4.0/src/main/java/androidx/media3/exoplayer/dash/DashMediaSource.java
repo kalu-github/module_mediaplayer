@@ -77,7 +77,6 @@ import androidx.media3.exoplayer.upstream.Loader.LoadErrorAction;
 import androidx.media3.exoplayer.upstream.LoaderErrorThrower;
 import androidx.media3.exoplayer.upstream.ParsingLoadable;
 import androidx.media3.exoplayer.util.SntpClient;
-import androidx.media3.extractor.text.DefaultSubtitleParserFactory;
 import androidx.media3.extractor.text.SubtitleParser;
 import com.google.common.base.Charsets;
 import com.google.common.math.LongMath;
@@ -114,7 +113,6 @@ public final class DashMediaSource extends BaseMediaSource {
     private DrmSessionManagerProvider drmSessionManagerProvider;
     private CompositeSequenceableLoaderFactory compositeSequenceableLoaderFactory;
     private LoadErrorHandlingPolicy loadErrorHandlingPolicy;
-    @Nullable private SubtitleParser.Factory subtitleParserFactory;
     private long fallbackTargetLiveOffsetMs;
     private long minLiveStartPositionUs;
     @Nullable private ParsingLoadable.Parser<? extends DashManifest> manifestParser;
@@ -165,6 +163,7 @@ public final class DashMediaSource extends BaseMediaSource {
       fallbackTargetLiveOffsetMs = DEFAULT_FALLBACK_TARGET_LIVE_OFFSET_MS;
       minLiveStartPositionUs = MIN_LIVE_DEFAULT_START_POSITION_US;
       compositeSequenceableLoaderFactory = new DefaultCompositeSequenceableLoaderFactory();
+      experimentalParseSubtitlesDuringExtraction(true);
     }
 
     @CanIgnoreReturnValue
@@ -199,37 +198,19 @@ public final class DashMediaSource extends BaseMediaSource {
       return this;
     }
 
-    /**
-     * Sets whether subtitles should be parsed as part of extraction (before the sample queue) or as
-     * part of rendering (after the sample queue). Defaults to false (i.e. subtitles will be parsed
-     * as part of rendering).
-     *
-     * <p>This method is experimental. Its default value may change, or it may be renamed or removed
-     * in a future release.
-     *
-     * <p>This method may only be used with {@link DefaultDashChunkSource.Factory}.
-     *
-     * @param parseSubtitlesDuringExtraction Whether to parse subtitles during extraction or
-     *     rendering.
-     * @return This factory, for convenience.
-     */
-    // TODO: b/289916598 - Flip the default of this to true (probably wired up to a single method on
-    //  DefaultMediaSourceFactory via the MediaSource.Factory interface).
+    @Override
+    @CanIgnoreReturnValue
+    public Factory setSubtitleParserFactory(SubtitleParser.Factory subtitleParserFactory) {
+      chunkSourceFactory.setSubtitleParserFactory(checkNotNull(subtitleParserFactory));
+      return this;
+    }
+
+    @Override
+    @Deprecated
+    @CanIgnoreReturnValue
     public Factory experimentalParseSubtitlesDuringExtraction(
         boolean parseSubtitlesDuringExtraction) {
-      if (parseSubtitlesDuringExtraction) {
-        if (subtitleParserFactory == null) {
-          this.subtitleParserFactory = new DefaultSubtitleParserFactory();
-        }
-      } else {
-        this.subtitleParserFactory = null;
-      }
-      if (chunkSourceFactory instanceof DefaultDashChunkSource.Factory) {
-        ((DefaultDashChunkSource.Factory) chunkSourceFactory)
-            .setSubtitleParserFactory(subtitleParserFactory);
-      } else {
-        throw new IllegalStateException();
-      }
+      chunkSourceFactory.experimentalParseSubtitlesDuringExtraction(parseSubtitlesDuringExtraction);
       return this;
     }
 
@@ -352,7 +333,6 @@ public final class DashMediaSource extends BaseMediaSource {
           cmcdConfiguration,
           drmSessionManagerProvider.get(mediaItem),
           loadErrorHandlingPolicy,
-          subtitleParserFactory,
           fallbackTargetLiveOffsetMs,
           minLiveStartPositionUs);
     }
@@ -391,7 +371,6 @@ public final class DashMediaSource extends BaseMediaSource {
           cmcdConfiguration,
           drmSessionManagerProvider.get(mediaItem),
           loadErrorHandlingPolicy,
-          subtitleParserFactory,
           fallbackTargetLiveOffsetMs,
           minLiveStartPositionUs);
     }
@@ -407,11 +386,6 @@ public final class DashMediaSource extends BaseMediaSource {
    * if no value is defined in the {@link MediaItem} or the manifest.
    */
   public static final long DEFAULT_FALLBACK_TARGET_LIVE_OFFSET_MS = 30_000;
-
-  /**
-   * @deprecated Use {@link #DEFAULT_FALLBACK_TARGET_LIVE_OFFSET_MS} instead.
-   */
-  @Deprecated public static final long DEFAULT_LIVE_PRESENTATION_DELAY_MS = 30_000;
 
   /** The media id used by media items of dash media sources without a manifest URI. */
   public static final String DEFAULT_MEDIA_ID = "DashMediaSource";
@@ -450,7 +424,6 @@ public final class DashMediaSource extends BaseMediaSource {
   private final Runnable simulateManifestRefreshRunnable;
   private final PlayerEmsgCallback playerEmsgCallback;
   private final LoaderErrorThrower manifestLoadErrorThrower;
-  @Nullable private final SubtitleParser.Factory subtitleParserFactory;
 
   private DataSource dataSource;
   private Loader loader;
@@ -486,7 +459,6 @@ public final class DashMediaSource extends BaseMediaSource {
       @Nullable CmcdConfiguration cmcdConfiguration,
       DrmSessionManager drmSessionManager,
       LoadErrorHandlingPolicy loadErrorHandlingPolicy,
-      @Nullable SubtitleParser.Factory subtitleParserFactory,
       long fallbackTargetLiveOffsetMs,
       long minLiveStartPositionUs) {
     this.mediaItem = mediaItem;
@@ -500,7 +472,6 @@ public final class DashMediaSource extends BaseMediaSource {
     this.cmcdConfiguration = cmcdConfiguration;
     this.drmSessionManager = drmSessionManager;
     this.loadErrorHandlingPolicy = loadErrorHandlingPolicy;
-    this.subtitleParserFactory = subtitleParserFactory;
     this.fallbackTargetLiveOffsetMs = fallbackTargetLiveOffsetMs;
     this.minLiveStartPositionUs = minLiveStartPositionUs;
     this.compositeSequenceableLoaderFactory = compositeSequenceableLoaderFactory;
@@ -606,8 +577,7 @@ public final class DashMediaSource extends BaseMediaSource {
             allocator,
             compositeSequenceableLoaderFactory,
             playerEmsgCallback,
-            getPlayerId(),
-            subtitleParserFactory);
+            getPlayerId());
     periodsById.put(mediaPeriod.id, mediaPeriod);
     return mediaPeriod;
   }
@@ -629,7 +599,6 @@ public final class DashMediaSource extends BaseMediaSource {
     }
     manifestLoadStartTimestampMs = 0;
     manifestLoadEndTimestampMs = 0;
-    manifest = sideloadedManifest ? manifest : null;
     manifestUri = initialManifestUri;
     manifestFatalError = null;
     if (handler != null) {
@@ -689,8 +658,7 @@ public final class DashMediaSource extends BaseMediaSource {
         // After discarding old periods, we should never have more periods than listed in the new
         // manifest. That would mean that a previously announced period is no longer advertised. If
         // this condition occurs, assume that we are hitting a manifest server that is out of sync
-        // and
-        // behind.
+        // and behind.
         Log.w(TAG, "Loaded out of sync manifest");
         isManifestStale = true;
       } else if (expiredManifestPublishTimeUs != C.TIME_UNSET
@@ -723,6 +691,7 @@ public final class DashMediaSource extends BaseMediaSource {
     manifestLoadPending &= manifest.dynamic;
     manifestLoadStartTimestampMs = elapsedRealtimeMs - loadDurationMs;
     manifestLoadEndTimestampMs = elapsedRealtimeMs;
+    firstPeriodId += removedPeriodCount;
 
     synchronized (manifestUriLock) {
       // Checks whether replaceManifestUri(Uri) was called to manually replace the URI between the
@@ -738,18 +707,14 @@ public final class DashMediaSource extends BaseMediaSource {
       }
     }
 
-    if (oldPeriodCount == 0) {
-      if (manifest.dynamic) {
-        if (manifest.utcTiming != null) {
-          resolveUtcTimingElement(manifest.utcTiming);
-        } else {
-          loadNtpTimeOffset();
-        }
+    if (manifest.dynamic && elapsedRealtimeOffsetMs == C.TIME_UNSET) {
+      // Determine elapsedRealtimeOffsetMs before processing the manifest further.
+      if (manifest.utcTiming != null) {
+        resolveUtcTimingElement(manifest.utcTiming);
       } else {
-        processManifest(true);
+        loadNtpTimeOffset();
       }
     } else {
-      firstPeriodId += removedPeriodCount;
       processManifest(true);
     }
   }
@@ -902,6 +867,7 @@ public final class DashMediaSource extends BaseMediaSource {
   private void onUtcTimestampResolutionError(IOException error) {
     Log.e(TAG, "Failed to resolve time offset.", error);
     // Be optimistic and continue in the hope that the device clock is correct.
+    this.elapsedRealtimeOffsetMs = System.currentTimeMillis() - SystemClock.elapsedRealtime();
     processManifest(true);
   }
 

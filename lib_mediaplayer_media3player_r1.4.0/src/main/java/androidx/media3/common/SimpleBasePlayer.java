@@ -46,7 +46,7 @@ import androidx.media3.common.util.Util;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture2;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.ForOverride;
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  *       commands} to indicate which {@link Player} methods are supported.
  *   <li>All setter-like player methods (for example, {@link #setPlayWhenReady}) forward to
  *       overridable methods (for example, {@link #handleSetPlayWhenReady}) that can be used to
- *       handle these requests. These methods return a {@link ListenableFuture2} to indicate when the
+ *       handle these requests. These methods return a {@link ListenableFuture} to indicate when the
  *       request has been handled and is fully reflected in the values returned from {@link
  *       #getState}. This class will automatically request a state update once the request is done.
  *       If the state changes can be handled synchronously, these methods can return Guava's {@link
@@ -1466,7 +1466,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
        * playback, in microseconds.
        *
        * <p>The default position must be less or equal to the {@linkplain #setDurationUs duration},
-       * is set.
+       * if set.
        *
        * @param defaultPositionUs The default position relative to the start of the media item at
        *     which to begin playback, in microseconds.
@@ -2012,7 +2012,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
   private final ListenerSet<Listener> listeners;
   private final Looper applicationLooper;
   private final HandlerWrapper applicationHandler;
-  private final HashSet<ListenableFuture2<?>> pendingOperations;
+  private final HashSet<ListenableFuture<?>> pendingOperations;
   private final Timeline.Period period;
 
   private @MonotonicNonNull State state;
@@ -2352,19 +2352,24 @@ public abstract class SimpleBasePlayer extends BasePlayer {
       @Player.Command int seekCommand,
       boolean isRepeatingCurrentItem) {
     verifyApplicationThreadAndInitState();
-    checkArgument(mediaItemIndex >= 0);
+    checkArgument(mediaItemIndex == C.INDEX_UNSET || mediaItemIndex >= 0);
     // Use a local copy to ensure the lambda below uses the current state value.
     State state = this.state;
-    if (!shouldHandleCommand(seekCommand)
-        || isPlayingAd()
-        || (!state.playlist.isEmpty() && mediaItemIndex >= state.playlist.size())) {
+    if (!shouldHandleCommand(seekCommand)) {
       return;
     }
+    boolean ignoreSeekForPlaceholderState =
+        mediaItemIndex == C.INDEX_UNSET
+            || isPlayingAd()
+            || (!state.playlist.isEmpty() && mediaItemIndex >= state.playlist.size());
     updateStateForPendingOperation(
         /* pendingOperation= */ handleSeek(mediaItemIndex, positionMs, seekCommand),
         /* placeholderStateSupplier= */ () ->
-            getStateWithNewPlaylistAndPosition(state, state.playlist, mediaItemIndex, positionMs),
-        /* seeked= */ true,
+            ignoreSeekForPlaceholderState
+                ? state
+                : getStateWithNewPlaylistAndPosition(
+                    state, state.playlist, mediaItemIndex, positionMs),
+        /* forceSeekDiscontinuity= */ !ignoreSeekForPlaceholderState,
         isRepeatingCurrentItem);
   }
 
@@ -2767,6 +2772,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
   /**
    * @deprecated Use {@link #setDeviceVolume(int, int)} instead.
    */
+  @SuppressWarnings("deprecation") // Using deprecated command code
   @Deprecated
   @Override
   public final void setDeviceVolume(int volume) {
@@ -2797,6 +2803,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
   /**
    * @deprecated Use {@link #increaseDeviceVolume(int)} instead.
    */
+  @SuppressWarnings("deprecation") // Using deprecated command code
   @Deprecated
   @Override
   public final void increaseDeviceVolume() {
@@ -2829,6 +2836,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
   /**
    * @deprecated Use {@link #decreaseDeviceVolume(int)} instead.
    */
+  @SuppressWarnings("deprecation") // Using deprecated command code
   @Deprecated
   @Override
   public final void decreaseDeviceVolume() {
@@ -2861,6 +2869,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
   /**
    * @deprecated Use {@link #setDeviceMuted(boolean, int)} instead.
    */
+  @SuppressWarnings("deprecation") // Using deprecated command code
   @Deprecated
   @Override
   public final void setDeviceMuted(boolean muted) {
@@ -2917,7 +2926,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
       return;
     }
     updateStateAndInformListeners(
-        getState(), /* seeked= */ false, /* isRepeatingCurrentItem= */ false);
+        getState(), /* forceSeekDiscontinuity= */ false, /* isRepeatingCurrentItem= */ false);
   }
 
   /**
@@ -2979,11 +2988,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_PLAY_PAUSE} is available.
    *
    * @param playWhenReady The requested {@link State#playWhenReady}
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleSetPlayWhenReady(boolean playWhenReady) {
+  protected ListenableFuture<?> handleSetPlayWhenReady(boolean playWhenReady) {
     throw new IllegalStateException("Missing implementation to handle COMMAND_PLAY_PAUSE");
   }
 
@@ -2992,11 +3001,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * <p>Will only be called if {@link Player#COMMAND_PREPARE} is available.
    *
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handlePrepare() {
+  protected ListenableFuture<?> handlePrepare() {
     throw new IllegalStateException("Missing implementation to handle COMMAND_PREPARE");
   }
 
@@ -3005,11 +3014,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * <p>Will only be called if {@link Player#COMMAND_STOP} is available.
    *
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleStop() {
+  protected ListenableFuture<?> handleStop() {
     throw new IllegalStateException("Missing implementation to handle COMMAND_STOP");
   }
 
@@ -3018,11 +3027,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * <p>Will only be called if {@link Player#COMMAND_RELEASE} is available.
    *
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleRelease() {
+  protected ListenableFuture<?> handleRelease() {
     throw new IllegalStateException("Missing implementation to handle COMMAND_RELEASE");
   }
 
@@ -3032,11 +3041,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_SET_REPEAT_MODE} is available.
    *
    * @param repeatMode The requested {@link RepeatMode}.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleSetRepeatMode(@RepeatMode int repeatMode) {
+  protected ListenableFuture<?> handleSetRepeatMode(@RepeatMode int repeatMode) {
     throw new IllegalStateException("Missing implementation to handle COMMAND_SET_REPEAT_MODE");
   }
 
@@ -3046,11 +3055,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_SET_SHUFFLE_MODE} is available.
    *
    * @param shuffleModeEnabled Whether shuffle mode was requested to be enabled.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleSetShuffleModeEnabled(boolean shuffleModeEnabled) {
+  protected ListenableFuture<?> handleSetShuffleModeEnabled(boolean shuffleModeEnabled) {
     throw new IllegalStateException("Missing implementation to handle COMMAND_SET_SHUFFLE_MODE");
   }
 
@@ -3060,11 +3069,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_SET_SPEED_AND_PITCH} is available.
    *
    * @param playbackParameters The requested {@link PlaybackParameters}.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleSetPlaybackParameters(PlaybackParameters playbackParameters) {
+  protected ListenableFuture<?> handleSetPlaybackParameters(PlaybackParameters playbackParameters) {
     throw new IllegalStateException("Missing implementation to handle COMMAND_SET_SPEED_AND_PITCH");
   }
 
@@ -3074,11 +3083,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_SET_TRACK_SELECTION_PARAMETERS} is available.
    *
    * @param trackSelectionParameters The requested {@link TrackSelectionParameters}.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleSetTrackSelectionParameters(
+  protected ListenableFuture<?> handleSetTrackSelectionParameters(
       TrackSelectionParameters trackSelectionParameters) {
     throw new IllegalStateException(
         "Missing implementation to handle COMMAND_SET_TRACK_SELECTION_PARAMETERS");
@@ -3090,11 +3099,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if {@link Player#COMMAND_SET_PLAYLIST_METADATA} is available.
    *
    * @param playlistMetadata The requested {@linkplain MediaMetadata playlist metadata}.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleSetPlaylistMetadata(MediaMetadata playlistMetadata) {
+  protected ListenableFuture<?> handleSetPlaylistMetadata(MediaMetadata playlistMetadata) {
     throw new IllegalStateException(
         "Missing implementation to handle COMMAND_SET_PLAYLIST_METADATA");
   }
@@ -3106,11 +3115,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * @param volume The requested audio volume, with 0 being silence and 1 being unity gain (signal
    *     unchanged).
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleSetVolume(@FloatRange(from = 0, to = 1.0) float volume) {
+  protected ListenableFuture<?> handleSetVolume(@FloatRange(from = 0, to = 1.0) float volume) {
     throw new IllegalStateException("Missing implementation to handle COMMAND_SET_VOLUME");
   }
 
@@ -3123,11 +3132,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * @param deviceVolume The requested device volume.
    * @param flags Either 0 or a bitwise combination of one or more {@link C.VolumeFlags}.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleSetDeviceVolume(
+  protected ListenableFuture<?> handleSetDeviceVolume(
       @IntRange(from = 0) int deviceVolume, int flags) {
     throw new IllegalStateException(
         "Missing implementation to handle COMMAND_SET_DEVICE_VOLUME or"
@@ -3142,11 +3151,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * Player#COMMAND_ADJUST_DEVICE_VOLUME_WITH_FLAGS} is available.
    *
    * @param flags Either 0 or a bitwise combination of one or more {@link C.VolumeFlags}.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleIncreaseDeviceVolume(@C.VolumeFlags int flags) {
+  protected ListenableFuture<?> handleIncreaseDeviceVolume(@C.VolumeFlags int flags) {
     throw new IllegalStateException(
         "Missing implementation to handle COMMAND_ADJUST_DEVICE_VOLUME or"
             + " COMMAND_ADJUST_DEVICE_VOLUME_WITH_FLAGS");
@@ -3160,11 +3169,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * Player#COMMAND_ADJUST_DEVICE_VOLUME_WITH_FLAGS} is available.
    *
    * @param flags Either 0 or a bitwise combination of one or more {@link C.VolumeFlags}.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleDecreaseDeviceVolume(@C.VolumeFlags int flags) {
+  protected ListenableFuture<?> handleDecreaseDeviceVolume(@C.VolumeFlags int flags) {
     throw new IllegalStateException(
         "Missing implementation to handle COMMAND_ADJUST_DEVICE_VOLUME or"
             + " COMMAND_ADJUST_DEVICE_VOLUME_WITH_FLAGS");
@@ -3179,11 +3188,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * @param muted Whether the device was requested to be muted.
    * @param flags Either 0 or a bitwise combination of one or more {@link C.VolumeFlags}.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleSetDeviceMuted(boolean muted, @C.VolumeFlags int flags) {
+  protected ListenableFuture<?> handleSetDeviceMuted(boolean muted, @C.VolumeFlags int flags) {
     throw new IllegalStateException(
         "Missing implementation to handle COMMAND_ADJUST_DEVICE_VOLUME or"
             + " COMMAND_ADJUST_DEVICE_VOLUME_WITH_FLAGS");
@@ -3196,11 +3205,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * @param audioAttributes The attributes to use for audio playback.
    * @param handleAudioFocus True if the player should handle audio focus, false otherwise.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleSetAudioAttributes(
+  protected ListenableFuture<?> handleSetAudioAttributes(
       AudioAttributes audioAttributes, boolean handleAudioFocus) {
     throw new IllegalStateException(
         "Missing implementation to handle COMMAND_SET_AUDIO_ATTRIBUTES");
@@ -3213,11 +3222,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *
    * @param videoOutput The requested video output. This is either a {@link Surface}, {@link
    *     SurfaceHolder}, {@link TextureView} or {@link SurfaceView}.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleSetVideoOutput(Object videoOutput) {
+  protected ListenableFuture<?> handleSetVideoOutput(Object videoOutput) {
     throw new IllegalStateException("Missing implementation to handle COMMAND_SET_VIDEO_SURFACE");
   }
 
@@ -3230,11 +3239,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *     non-null, the output should only be cleared if it matches the provided argument. This is
    *     either a {@link Surface}, {@link SurfaceHolder}, {@link TextureView} or {@link
    *     SurfaceView}.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleClearVideoOutput(@Nullable Object videoOutput) {
+  protected ListenableFuture<?> handleClearVideoOutput(@Nullable Object videoOutput) {
     throw new IllegalStateException("Missing implementation to handle COMMAND_SET_VIDEO_SURFACE");
   }
 
@@ -3250,11 +3259,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *     at the default item.
    * @param startPositionMs The position in milliseconds to start playback from, or {@link
    *     C#TIME_UNSET} to start at the default position in the media item.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleSetMediaItems(
+  protected ListenableFuture<?> handleSetMediaItems(
       List<MediaItem> mediaItems, int startIndex, long startPositionMs) {
     throw new IllegalStateException("Missing implementation to handle COMMAND_SET_MEDIA_ITEM(S)");
   }
@@ -3267,11 +3276,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * @param index The index at which to add the items. The index is in the range 0 &lt;= {@code
    *     index} &lt;= {@link #getMediaItemCount()}.
    * @param mediaItems The media items to add.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleAddMediaItems(int index, List<MediaItem> mediaItems) {
+  protected ListenableFuture<?> handleAddMediaItems(int index, List<MediaItem> mediaItems) {
     throw new IllegalStateException("Missing implementation to handle COMMAND_CHANGE_MEDIA_ITEMS");
   }
 
@@ -3287,11 +3296,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *     #getMediaItemCount()}.
    * @param newIndex The new index of the first moved item. The index is in the range {@code 0}
    *     &lt;= {@code newIndex} &lt; {@link #getMediaItemCount() - (toIndex - fromIndex)}.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleMoveMediaItems(int fromIndex, int toIndex, int newIndex) {
+  protected ListenableFuture<?> handleMoveMediaItems(int fromIndex, int toIndex, int newIndex) {
     throw new IllegalStateException("Missing implementation to handle COMMAND_CHANGE_MEDIA_ITEMS");
   }
 
@@ -3305,14 +3314,14 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * @param toIndex The index of the first item not to be replaced (exclusive). The index is in the
    *     range {@code fromIndex} &lt; {@code toIndex} &lt;= {@link #getMediaItemCount()}.
    * @param mediaItems The media items to replace the specified range with.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleReplaceMediaItems(
+  protected ListenableFuture<?> handleReplaceMediaItems(
       int fromIndex, int toIndex, List<MediaItem> mediaItems) {
-    ListenableFuture2<?> addFuture = handleAddMediaItems(toIndex, mediaItems);
-    ListenableFuture2<?> removeFuture = handleRemoveMediaItems(fromIndex, toIndex);
+    ListenableFuture<?> addFuture = handleAddMediaItems(toIndex, mediaItems);
+    ListenableFuture<?> removeFuture = handleRemoveMediaItems(fromIndex, toIndex);
     return Util.transformFutureAsync(addFuture, unused -> removeFuture);
   }
 
@@ -3325,11 +3334,11 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    *     &lt;= {@code fromIndex} &lt; {@link #getMediaItemCount()}.
    * @param toIndex The index of the first item to be kept (exclusive). The index is in the range
    *     {@code fromIndex} &lt; {@code toIndex} &lt;= {@link #getMediaItemCount()}.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleRemoveMediaItems(int fromIndex, int toIndex) {
+  protected ListenableFuture<?> handleRemoveMediaItems(int fromIndex, int toIndex) {
     throw new IllegalStateException("Missing implementation to handle COMMAND_CHANGE_MEDIA_ITEMS");
   }
 
@@ -3340,18 +3349,40 @@ public abstract class SimpleBasePlayer extends BasePlayer {
    * <p>Will only be called if the appropriate {@link Player.Command}, for example {@link
    * Player#COMMAND_SEEK_TO_MEDIA_ITEM} or {@link Player#COMMAND_SEEK_TO_NEXT}, is available.
    *
-   * @param mediaItemIndex The media item index to seek to. The index is in the range 0 &lt;= {@code
-   *     mediaItemIndex} &lt; {@code mediaItems.size()}.
+   * @param mediaItemIndex The media item index to seek to. If the original seek operation did not
+   *     directly specify an index, this is the most likely implied index based on the available
+   *     player state. If the implied action is to do nothing, this will be {@link C#INDEX_UNSET}.
    * @param positionMs The position in milliseconds to start playback from, or {@link C#TIME_UNSET}
-   *     to start at the default position in the media item.
+   *     to start at the default position in the media item. If the original seek operation did not
+   *     directly specify a position, this is the most likely implied position based on the
+   *     available player state.
    * @param seekCommand The {@link Player.Command} used to trigger the seek.
-   * @return A {@link ListenableFuture2} indicating the completion of all immediate {@link State}
+   * @return A {@link ListenableFuture} indicating the completion of all immediate {@link State}
    *     changes caused by this call.
    */
   @ForOverride
-  protected ListenableFuture2<?> handleSeek(
+  protected ListenableFuture<?> handleSeek(
       int mediaItemIndex, long positionMs, @Player.Command int seekCommand) {
     throw new IllegalStateException("Missing implementation to handle one of the COMMAND_SEEK_*");
+  }
+
+  /**
+   * Throws an {@link IllegalStateException} if the the thread calling this method does not match
+   * the {@link Looper} thread that was specified upon construction of this instance.
+   *
+   * <p>Subclasses can use this method to verify that their own defined methods are also accessed by
+   * the correct thread.
+   */
+  protected final void verifyApplicationThread() {
+    if (Thread.currentThread() != applicationLooper.getThread()) {
+      String message =
+          Util.formatInvariant(
+              "Player is accessed on the wrong thread.\n"
+                  + "Current thread: '%s'\n"
+                  + "Expected thread: '%s'\n",
+              Thread.currentThread().getName(), applicationLooper.getThread().getName());
+      throw new IllegalStateException(message);
+    }
   }
 
   @RequiresNonNull("state")
@@ -3362,7 +3393,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
   @SuppressWarnings("deprecation") // Calling deprecated listener methods.
   @RequiresNonNull("state")
   private void updateStateAndInformListeners(
-      State newState, boolean seeked, boolean isRepeatingCurrentItem) {
+      State newState, boolean forceSeekDiscontinuity, boolean isRepeatingCurrentItem) {
     State previousState = state;
     // Assign new state immediately such that all getters return the right values, but use a
     // snapshot of the previous and new state so that listener invocations are triggered correctly.
@@ -3384,7 +3415,8 @@ public abstract class SimpleBasePlayer extends BasePlayer {
     MediaMetadata previousMediaMetadata = getMediaMetadataInternal(previousState);
     MediaMetadata newMediaMetadata = getMediaMetadataInternal(newState);
     int positionDiscontinuityReason =
-        getPositionDiscontinuityReason(previousState, newState, seeked, window, period);
+        getPositionDiscontinuityReason(
+            previousState, newState, forceSeekDiscontinuity, window, period);
     boolean timelineChanged = !previousState.timeline.equals(newState.timeline);
     int mediaItemTransitionReason =
         getMediaItemTransitionReason(
@@ -3582,17 +3614,7 @@ public abstract class SimpleBasePlayer extends BasePlayer {
 
   @EnsuresNonNull("state")
   private void verifyApplicationThreadAndInitState() {
-    if (Thread.currentThread() != applicationLooper.getThread()) {
-      String message =
-          Util.formatInvariant(
-              "Player is accessed on the wrong thread.\n"
-                  + "Current thread: '%s'\n"
-                  + "Expected thread: '%s'\n"
-                  + "See https://developer.android.com/guide/topics/media/issues/"
-                  + "player-accessed-on-wrong-thread",
-              Thread.currentThread().getName(), applicationLooper.getThread().getName());
-      throw new IllegalStateException(message);
-    }
+    verifyApplicationThread();
     if (state == null) {
       // First time accessing state.
       state = getState();
@@ -3601,34 +3623,38 @@ public abstract class SimpleBasePlayer extends BasePlayer {
 
   @RequiresNonNull("state")
   private void updateStateForPendingOperation(
-      ListenableFuture2<?> pendingOperation, Supplier<State> placeholderStateSupplier) {
+      ListenableFuture<?> pendingOperation, Supplier<State> placeholderStateSupplier) {
     updateStateForPendingOperation(
         pendingOperation,
         placeholderStateSupplier,
-        /* seeked= */ false,
+        /* forceSeekDiscontinuity= */ false,
         /* isRepeatingCurrentItem= */ false);
   }
 
   @RequiresNonNull("state")
   private void updateStateForPendingOperation(
-      ListenableFuture2<?> pendingOperation,
+      ListenableFuture<?> pendingOperation,
       Supplier<State> placeholderStateSupplier,
-      boolean seeked,
+      boolean forceSeekDiscontinuity,
       boolean isRepeatingCurrentItem) {
     if (pendingOperation.isDone() && pendingOperations.isEmpty()) {
-      updateStateAndInformListeners(getState(), seeked, isRepeatingCurrentItem);
+      updateStateAndInformListeners(getState(), forceSeekDiscontinuity, isRepeatingCurrentItem);
     } else {
       pendingOperations.add(pendingOperation);
       State suggestedPlaceholderState = placeholderStateSupplier.get();
       updateStateAndInformListeners(
-          getPlaceholderState(suggestedPlaceholderState), seeked, isRepeatingCurrentItem);
+          getPlaceholderState(suggestedPlaceholderState),
+          forceSeekDiscontinuity,
+          isRepeatingCurrentItem);
       pendingOperation.addListener(
           () -> {
             castNonNull(state); // Already checked by method @RequiresNonNull pre-condition.
             pendingOperations.remove(pendingOperation);
             if (pendingOperations.isEmpty() && !released) {
               updateStateAndInformListeners(
-                  getState(), /* seeked= */ false, /* isRepeatingCurrentItem= */ false);
+                  getState(),
+                  /* forceSeekDiscontinuity= */ false,
+                  /* isRepeatingCurrentItem= */ false);
             }
           },
           this::postOrRunOnApplicationHandler);
@@ -3727,14 +3753,14 @@ public abstract class SimpleBasePlayer extends BasePlayer {
   private static int getPositionDiscontinuityReason(
       State previousState,
       State newState,
-      boolean seeked,
+      boolean forceSeekDiscontinuity,
       Timeline.Window window,
       Timeline.Period period) {
     if (newState.hasPositionDiscontinuity) {
       // We were asked to report a discontinuity.
       return newState.positionDiscontinuityReason;
     }
-    if (seeked) {
+    if (forceSeekDiscontinuity) {
       return Player.DISCONTINUITY_REASON_SEEK;
     }
     if (previousState.playlist.isEmpty()) {

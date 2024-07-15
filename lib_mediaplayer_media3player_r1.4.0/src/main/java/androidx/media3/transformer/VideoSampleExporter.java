@@ -16,21 +16,23 @@
 
 package androidx.media3.transformer;
 
+import static androidx.media3.common.C.COLOR_RANGE_FULL;
+import static androidx.media3.common.C.COLOR_SPACE_BT2020;
+import static androidx.media3.common.C.COLOR_TRANSFER_HLG;
 import static androidx.media3.common.ColorInfo.SDR_BT709_LIMITED;
 import static androidx.media3.common.ColorInfo.SRGB_BT709_FULL;
 import static androidx.media3.common.ColorInfo.isTransferHdr;
 import static androidx.media3.common.util.Assertions.checkArgument;
 import static androidx.media3.common.util.Assertions.checkNotNull;
 import static androidx.media3.transformer.Composition.HDR_MODE_KEEP_HDR;
-import static androidx.media3.transformer.Composition.HDR_MODE_TONE_MAP_HDR_TO_SDR_USING_MEDIACODEC;
 import static androidx.media3.transformer.Composition.HDR_MODE_TONE_MAP_HDR_TO_SDR_USING_OPEN_GL;
-import static androidx.media3.transformer.EncoderUtil.getSupportedEncodersForHdrEditing;
+import static androidx.media3.transformer.TransformerUtil.getOutputMimeTypeAndHdrModeAfterFallback;
 
 import android.content.Context;
 import android.media.MediaCodec;
-import android.media.MediaCodecInfo;
 import android.util.Pair;
 import android.view.Surface;
+import androidx.annotation.IntRange;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.media3.common.C;
@@ -44,16 +46,13 @@ import androidx.media3.common.VideoFrameProcessingException;
 import androidx.media3.common.VideoFrameProcessor;
 import androidx.media3.common.VideoGraph;
 import androidx.media3.common.util.Consumer;
-import androidx.media3.common.util.Log;
 import androidx.media3.common.util.Util;
 import androidx.media3.decoder.DecoderInputBuffer;
-import androidx.media3.effect.DebugTraceUtil;
 import androidx.media3.effect.VideoCompositorSettings;
-import androidx.media3.exoplayer.mediacodec.MediaCodecUtil;
-import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.MoreExecutors;
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.Objects;
 import org.checkerframework.checker.initialization.qual.Initialized;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.dataflow.qual.Pure;
@@ -96,50 +95,41 @@ import org.checkerframework.dataflow.qual.Pure;
     this.initialTimestampOffsetUs = initialTimestampOffsetUs;
     finalFramePresentationTimeUs = C.TIME_UNSET;
 
-    ColorInfo decoderInputColor;
-    if (firstInputFormat.colorInfo == null || !firstInputFormat.colorInfo.isDataSpaceValid()) {
-      Log.d(TAG, "colorInfo is null or invalid. Defaulting to SDR_BT709_LIMITED.");
-      decoderInputColor = ColorInfo.SDR_BT709_LIMITED;
+    ColorInfo videoGraphInputColor = checkNotNull(firstInputFormat.colorInfo);
+    ColorInfo videoGraphOutputColor;
+    if (videoGraphInputColor.colorTransfer == C.COLOR_TRANSFER_SRGB) {
+      // The sRGB color transfer is only used for images.
+      // When an Ultra HDR image transcoded into a video, we use BT2020 HLG full range colors in the
+      // resulting HDR video.
+      // When an SDR image gets transcoded into a video, we use the SMPTE 170M transfer function for
+      // the resulting video.
+      videoGraphOutputColor =
+          Objects.equals(firstInputFormat.sampleMimeType, MimeTypes.IMAGE_JPEG_R)
+              ? new ColorInfo.Builder()
+                  .setColorSpace(COLOR_SPACE_BT2020)
+                  .setColorTransfer(COLOR_TRANSFER_HLG)
+                  .setColorRange(COLOR_RANGE_FULL)
+                  .build()
+              : SDR_BT709_LIMITED;
     } else {
-      decoderInputColor = firstInputFormat.colorInfo;
+      videoGraphOutputColor = videoGraphInputColor;
     }
+
     encoderWrapper =
         new EncoderWrapper(
             encoderFactory,
-            firstInputFormat.buildUpon().setColorInfo(decoderInputColor).build(),
+            firstInputFormat.buildUpon().setColorInfo(videoGraphOutputColor).build(),
             muxerWrapper.getSupportedSampleMimeTypes(C.TRACK_TYPE_VIDEO),
             transformationRequest,
             fallbackListener);
     encoderOutputBuffer =
         new DecoderInputBuffer(DecoderInputBuffer.BUFFER_REPLACEMENT_MODE_DISABLED);
 
-    @Composition.HdrMode int hdrModeAfterFallback = encoderWrapper.getHdrModeAfterFallback();
-    boolean isMediaCodecToneMapping =
-        hdrModeAfterFallback == HDR_MODE_TONE_MAP_HDR_TO_SDR_USING_MEDIACODEC
-            && ColorInfo.isTransferHdr(decoderInputColor);
-    ColorInfo videoGraphInputColor =
-        isMediaCodecToneMapping ? SDR_BT709_LIMITED : decoderInputColor;
-
     boolean isGlToneMapping =
-        hdrModeAfterFallback == HDR_MODE_TONE_MAP_HDR_TO_SDR_USING_OPEN_GL
-            && ColorInfo.isTransferHdr(decoderInputColor);
-    ColorInfo videoGraphOutputColor;
-    if (videoGraphInputColor.colorTransfer == C.COLOR_TRANSFER_SRGB) {
-      // The sRGB color transfer is only used for images, so when an image gets transcoded into a
-      // video, we use the SMPTE 170M transfer function for the resulting video.
+        encoderWrapper.getHdrModeAfterFallback() == HDR_MODE_TONE_MAP_HDR_TO_SDR_USING_OPEN_GL
+            && ColorInfo.isTransferHdr(videoGraphInputColor);
+    if (isGlToneMapping) {
       videoGraphOutputColor = SDR_BT709_LIMITED;
-    } else if (isGlToneMapping) {
-      // For consistency with the Android platform, OpenGL tone mapping outputs colors with
-      // C.COLOR_TRANSFER_GAMMA_2_2 instead of C.COLOR_TRANSFER_SDR, and outputs this as
-      // C.COLOR_TRANSFER_SDR to the encoder.
-      videoGraphOutputColor =
-          new ColorInfo.Builder()
-              .setColorSpace(C.COLOR_SPACE_BT709)
-              .setColorRange(C.COLOR_RANGE_LIMITED)
-              .setColorTransfer(C.COLOR_TRANSFER_GAMMA_2_2)
-              .build();
-    } else {
-      videoGraphOutputColor = videoGraphInputColor;
     }
 
     try {
@@ -149,7 +139,6 @@ import org.checkerframework.dataflow.qual.Pure;
               hasMultipleInputs
                   ? new TransformerMultipleInputVideoGraph.Factory()
                   : new TransformerSingleInputVideoGraph.Factory(videoFrameProcessorFactory),
-              videoGraphInputColor,
               videoGraphOutputColor,
               errorConsumer,
               debugViewProvider,
@@ -162,10 +151,10 @@ import org.checkerframework.dataflow.qual.Pure;
   }
 
   @Override
-  public GraphInput getInput(EditedMediaItem editedMediaItem, Format format)
+  public GraphInput getInput(EditedMediaItem editedMediaItem, Format format, int inputIndex)
       throws ExportException {
     try {
-      return videoGraph.createInput();
+      return videoGraph.createInput(inputIndex);
     } catch (VideoFrameProcessingException e) {
       throw ExportException.createForVideoFrameProcessingException(e);
     }
@@ -203,8 +192,6 @@ import org.checkerframework.dataflow.qual.Pure;
         hasMuxedTimestampZero = true;
       }
     }
-    DebugTraceUtil.logEvent(
-        DebugTraceUtil.EVENT_ENCODER_ENCODED_FRAME, bufferInfo.presentationTimeUs);
     encoderOutputBuffer.timeUs = bufferInfo.presentationTimeUs;
     encoderOutputBuffer.setFlags(bufferInfo.flags);
     return encoderOutputBuffer;
@@ -276,27 +263,8 @@ import org.checkerframework.dataflow.qual.Pure;
         requestedOutputMimeType = inputSampleMimeType;
       }
 
-      // HdrMode fallback is only supported from HDR_MODE_KEEP_HDR to
-      // HDR_MODE_TONE_MAP_HDR_TO_SDR_USING_OPEN_GL.
-      @Composition.HdrMode int hdrMode = transformationRequest.hdrMode;
-      if (hdrMode == HDR_MODE_KEEP_HDR && isTransferHdr(inputFormat.colorInfo)) {
-        ImmutableList<MediaCodecInfo> hdrEncoders =
-            getSupportedEncodersForHdrEditing(requestedOutputMimeType, inputFormat.colorInfo);
-        if (hdrEncoders.isEmpty()) {
-          @Nullable
-          String alternativeMimeType = MediaCodecUtil.getAlternativeCodecMimeType(inputFormat);
-          if (alternativeMimeType != null) {
-            requestedOutputMimeType = alternativeMimeType;
-            hdrEncoders =
-                getSupportedEncodersForHdrEditing(alternativeMimeType, inputFormat.colorInfo);
-          }
-        }
-        if (hdrEncoders.isEmpty()) {
-          hdrMode = HDR_MODE_TONE_MAP_HDR_TO_SDR_USING_OPEN_GL;
-        }
-      }
-
-      return Pair.create(requestedOutputMimeType, hdrMode);
+      return getOutputMimeTypeAndHdrModeAfterFallback(
+          transformationRequest.hdrMode, requestedOutputMimeType, inputFormat.colorInfo);
     }
 
     public @Composition.HdrMode int getHdrModeAfterFallback() {
@@ -317,6 +285,10 @@ import org.checkerframework.dataflow.qual.Pure;
       // frame before encoding, so the encoded frame's width >= height, and sets
       // rotationDegrees in the output Format to ensure the frame is displayed in the correct
       // orientation.
+      // VideoGraph rotates the decoded video frames counter-clockwise by outputRotationDegrees.
+      // Instruct the muxer to signal clockwise rotation by outputRotationDegrees.
+      // When both VideoGraph and muxer rotations are applied, the video will be displayed the right
+      // way up.
       if (requestedWidth < requestedHeight) {
         int temp = requestedWidth;
         requestedWidth = requestedHeight;
@@ -324,6 +296,15 @@ import org.checkerframework.dataflow.qual.Pure;
         outputRotationDegrees = 90;
       }
 
+      // Try to match the inputFormat's rotation, but preserve landscape mode.
+      // This is a best-effort attempt to preserve input video properties
+      // (helpful for trim optimization), but is not guaranteed to work when effects are applied.
+      if (inputFormat.rotationDegrees % 180 == outputRotationDegrees % 180) {
+        outputRotationDegrees = inputFormat.rotationDegrees;
+      }
+
+      // Rotation is handled by this class. The encoder must see a landscape video with zero
+      // degrees rotation.
       Format requestedEncoderFormat =
           new Format.Builder()
               .setWidth(requestedWidth)
@@ -332,6 +313,7 @@ import org.checkerframework.dataflow.qual.Pure;
               .setFrameRate(inputFormat.frameRate)
               .setSampleMimeType(requestedOutputMimeType)
               .setColorInfo(getSupportedInputColor())
+              .setCodecs(inputFormat.codecs)
               .build();
 
       encoder =
@@ -400,7 +382,7 @@ import org.checkerframework.dataflow.qual.Pure;
         Format requestedFormat,
         Format supportedFormat,
         @Composition.HdrMode int supportedHdrMode) {
-      // TODO(b/259570024): Consider including bitrate in the revised fallback design.
+      // TODO(b/255953153): Consider including bitrate in the revised fallback.
 
       TransformationRequest.Builder supportedRequestBuilder = transformationRequest.buildUpon();
       if (transformationRequest.hdrMode != supportedHdrMode) {
@@ -476,7 +458,6 @@ import org.checkerframework.dataflow.qual.Pure;
     public VideoGraphWrapper(
         Context context,
         TransformerVideoGraph.Factory videoGraphFactory,
-        ColorInfo videoFrameProcessorInputColor,
         ColorInfo videoFrameProcessorOutputColor,
         Consumer<ExportException> errorConsumer,
         DebugViewProvider debugViewProvider,
@@ -492,7 +473,6 @@ import org.checkerframework.dataflow.qual.Pure;
       videoGraph =
           videoGraphFactory.create(
               context,
-              videoFrameProcessorInputColor,
               videoFrameProcessorOutputColor,
               debugViewProvider,
               /* listener= */ thisRef,
@@ -514,7 +494,7 @@ import org.checkerframework.dataflow.qual.Pure;
     }
 
     @Override
-    public void onOutputFrameAvailableForRendering(long presentationTimeUs) {
+    public void onOutputFrameAvailableForRendering(long framePresentationTimeUs) {
       // Do nothing.
     }
 
@@ -539,18 +519,19 @@ import org.checkerframework.dataflow.qual.Pure;
     }
 
     @Override
-    public int registerInput() throws VideoFrameProcessingException {
-      return videoGraph.registerInput();
+    public void registerInput(@IntRange(from = 0) int inputIndex)
+        throws VideoFrameProcessingException {
+      videoGraph.registerInput(inputIndex);
     }
 
     @Override
-    public VideoFrameProcessor getProcessor(int inputId) {
-      return videoGraph.getProcessor(inputId);
+    public VideoFrameProcessor getProcessor(int inputIndex) {
+      return videoGraph.getProcessor(inputIndex);
     }
 
     @Override
-    public GraphInput createInput() throws VideoFrameProcessingException {
-      return videoGraph.createInput();
+    public GraphInput createInput(int inputIndex) throws VideoFrameProcessingException {
+      return videoGraph.createInput(inputIndex);
     }
 
     @Override

@@ -32,7 +32,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /** Information about the playback device. */
-public final class DeviceInfo implements Bundleable {
+public final class DeviceInfo {
 
   /** Types of playback. One of {@link #PLAYBACK_TYPE_LOCAL} or {@link #PLAYBACK_TYPE_REMOTE}. */
   @Documented
@@ -191,15 +191,12 @@ public final class DeviceInfo implements Bundleable {
     return result;
   }
 
-  // Bundleable implementation.
-
   private static final String FIELD_PLAYBACK_TYPE = Util.intToStringMaxRadix(0);
   private static final String FIELD_MIN_VOLUME = Util.intToStringMaxRadix(1);
   private static final String FIELD_MAX_VOLUME = Util.intToStringMaxRadix(2);
   private static final String FIELD_ROUTING_CONTROLLER_ID = Util.intToStringMaxRadix(3);
 
   @UnstableApi
-  @Override
   public Bundle toBundle() {
     Bundle bundle = new Bundle();
     if (playbackType != PLAYBACK_TYPE_LOCAL) {
@@ -217,19 +214,18 @@ public final class DeviceInfo implements Bundleable {
     return bundle;
   }
 
-  /** Object that can restore {@link DeviceInfo} from a {@link Bundle}. */
+  /** Restores a {@code DeviceInfo} from a {@link Bundle}. */
   @UnstableApi
-  public static final Creator<DeviceInfo> CREATOR =
-      bundle -> {
-        int playbackType =
-            bundle.getInt(FIELD_PLAYBACK_TYPE, /* defaultValue= */ PLAYBACK_TYPE_LOCAL);
-        int minVolume = bundle.getInt(FIELD_MIN_VOLUME, /* defaultValue= */ 0);
-        int maxVolume = bundle.getInt(FIELD_MAX_VOLUME, /* defaultValue= */ 0);
-        @Nullable String routingControllerId = bundle.getString(FIELD_ROUTING_CONTROLLER_ID);
-        return new DeviceInfo.Builder(playbackType)
-            .setMinVolume(minVolume)
-            .setMaxVolume(maxVolume)
-            .setRoutingControllerId(routingControllerId)
-            .build();
-      };
+  public static DeviceInfo fromBundle(Bundle bundle) {
+    int playbackType = bundle.getInt(FIELD_PLAYBACK_TYPE, /* defaultValue= */ PLAYBACK_TYPE_LOCAL);
+    int minVolume = bundle.getInt(FIELD_MIN_VOLUME, /* defaultValue= */ 0);
+    int maxVolume = bundle.getInt(FIELD_MAX_VOLUME, /* defaultValue= */ 0);
+    @Nullable String routingControllerId = bundle.getString(FIELD_ROUTING_CONTROLLER_ID);
+    return new DeviceInfo.Builder(playbackType)
+        .setMinVolume(minVolume)
+        .setMaxVolume(maxVolume)
+        .setRoutingControllerId(routingControllerId)
+        .build();
+  }
+  ;
 }
