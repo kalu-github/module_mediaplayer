@@ -86,7 +86,7 @@ dependencies {
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_full_release_20240509.aar')
     // media3
-    api files('libs/lib_mediaplayer_media3_r1.2.0_full_release_20240715.aar')
+    api files('libs/lib_mediaplayer_media3_r1.4.0_release_20240715.aar')
     // exo1
 //    api files('libs/lib_mediaplayer_exo_r1.5.15_release_20230424.aar')
     // exo2
