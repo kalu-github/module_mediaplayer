@@ -26,11 +26,11 @@ public class StartArgs {
         return exoCacheDir;
     }
 
-    @PlayerType.ExoFFmpegType.Value
-    private int exoFFmpegType;
+    @PlayerType.ExoRenderersType.Value
+    private int exoRenderersType;
 
-    public int getExoFFmpegType() {
-        return exoFFmpegType;
+    public int getExoRenderersType() {
+        return exoRenderersType;
     }
 
     @PlayerType.ExoSeekType
@@ -210,7 +210,7 @@ public class StartArgs {
                 "exoCacheType=" + exoCacheType +
                 ", exoCacheMax=" + exoCacheMax +
                 ", exoCacheDir='" + exoCacheDir + '\'' +
-                ", exoFFmpegType=" + exoFFmpegType +
+                ", exoRenderersType=" + exoRenderersType +
                 ", exoSeekType=" + exoSeekType +
                 ", exoUseOkhttp=" + exoUseOkhttp +
                 ", renderType=" + renderType +
@@ -242,7 +242,7 @@ public class StartArgs {
         this.exoCacheType = builder.exoCacheType;
         this.exoCacheMax = builder.exoCacheMax;
         this.exoCacheDir = builder.exoCacheDir;
-        this.exoFFmpegType = builder.exoFFmpegType;
+        this.exoRenderersType = builder.exoRenderersType;
         this.exoSeekType = builder.exoSeekType;
         this.exoUseOkhttp = builder.exoUseOkhttp;
         this.renderType = builder.renderType;
@@ -274,7 +274,7 @@ public class StartArgs {
         builder.exoCacheType = exoCacheType;
         builder.exoCacheMax = exoCacheMax;
         builder.exoCacheDir = exoCacheDir;
-        builder.exoFFmpegType = exoFFmpegType;
+        builder.exoRenderersType = exoRenderersType;
         builder.exoSeekType = exoSeekType;
         builder.exoUseOkhttp = exoUseOkhttp;
         builder.renderType = renderType;
@@ -309,8 +309,8 @@ public class StartArgs {
         private int exoCacheMax = playerArgs.getExoCacheMax();
         private String exoCacheDir = playerArgs.getExoCacheDir();
         private boolean exoUseOkhttp = playerArgs.isExoUseOkhttp();
-        @PlayerType.ExoFFmpegType.Value
-        private int exoFFmpegType = playerArgs.getExoFFmpeg();
+        @PlayerType.ExoRenderersType.Value
+        private int exoRenderersType = playerArgs.getExoRenderersType();
         @PlayerType.ExoSeekType
         private int exoSeekType = playerArgs.getExoSeekType();
         // 视频渲染类型

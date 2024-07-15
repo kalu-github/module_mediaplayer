@@ -126,7 +126,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
-            int ffmpegType = args.getExoFFmpegType();
+            int ffmpegType = args.getExoRenderersType();
             mExoPlayerBuilder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
             mExoPlayerBuilder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
             mExoPlayerBuilder.setLoadControl(new DefaultLoadControl());
