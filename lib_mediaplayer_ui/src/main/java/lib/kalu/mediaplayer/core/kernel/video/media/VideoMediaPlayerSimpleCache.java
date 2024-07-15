@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.video.media3;
+package lib.kalu.mediaplayer.core.kernel.video.media;
 
 import android.content.Context;
 
@@ -11,7 +11,7 @@ import androidx.media3.datasource.cache.SimpleCache;
 import java.io.File;
 
 @UnstableApi
-public final class VideoMedia3PlayerSimpleCache {
+public final class VideoMediaPlayerSimpleCache {
 
     private static SimpleCache mSimpleCache;
 

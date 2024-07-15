@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.video.media3;
+package lib.kalu.mediaplayer.core.kernel.video.media;
 
 import static com.google.android.exoplayer2.util.Assertions.checkNotNull;
 import static com.google.android.exoplayer2.util.Util.castNonNull;
@@ -56,10 +56,10 @@ import java.util.Map;
  * written into the cache.
  */
 @UnstableApi
-public final class VideoMedia3PlayerSimpleCacheDataSource implements DataSource {
+public final class VideoMediaPlayerSimpleCacheDataSource implements DataSource {
 
     /**
-     * {@link DataSource.Factory} for {@link VideoMedia3PlayerSimpleCacheDataSource} instances.
+     * {@link DataSource.Factory} for {@link VideoMediaPlayerSimpleCacheDataSource} instances.
      */
     public static final class Factory implements DataSource.Factory {
 
@@ -186,10 +186,10 @@ public final class VideoMedia3PlayerSimpleCacheDataSource implements DataSource 
          * exists a higher priority task then {@link PriorityTaskManager.PriorityTooLowException} will
          * be thrown instead.
          *
-         * <p>Note that requests to {@link VideoMedia3PlayerSimpleCacheDataSource} instances are intended to be used as parts
+         * <p>Note that requests to {@link VideoMediaPlayerSimpleCacheDataSource} instances are intended to be used as parts
          * of (possibly larger) tasks that are registered with the {@link PriorityTaskManager}, and
-         * hence {@link VideoMedia3PlayerSimpleCacheDataSource} does <em>not</em> register a task by itself. This must be done
-         * by the surrounding code that uses the {@link VideoMedia3PlayerSimpleCacheDataSource} instances.
+         * hence {@link VideoMediaPlayerSimpleCacheDataSource} does <em>not</em> register a task by itself. This must be done
+         * by the surrounding code that uses the {@link VideoMediaPlayerSimpleCacheDataSource} instances.
          *
          * <p>The default is {@code null}.
          *
@@ -256,7 +256,7 @@ public final class VideoMedia3PlayerSimpleCacheDataSource implements DataSource 
         }
 
         @Override
-        public VideoMedia3PlayerSimpleCacheDataSource createDataSource() {
+        public VideoMediaPlayerSimpleCacheDataSource createDataSource() {
             return createDataSourceInternal(
                     upstreamDataSourceFactory != null ? upstreamDataSourceFactory.createDataSource() : null,
                     flags,
@@ -274,7 +274,7 @@ public final class VideoMedia3PlayerSimpleCacheDataSource implements DataSource 
          *
          * @return An instance suitable for downloading content.
          */
-        public VideoMedia3PlayerSimpleCacheDataSource createDataSourceForDownloading() {
+        public VideoMediaPlayerSimpleCacheDataSource createDataSourceForDownloading() {
             return createDataSourceInternal(
                     upstreamDataSourceFactory != null ? upstreamDataSourceFactory.createDataSource() : null,
                     flags | FLAG_BLOCK_ON_CACHE,
@@ -295,12 +295,12 @@ public final class VideoMedia3PlayerSimpleCacheDataSource implements DataSource 
          *
          * @return An instance suitable for reading cached content as part of removing a download.
          */
-        public VideoMedia3PlayerSimpleCacheDataSource createDataSourceForRemovingDownload() {
+        public VideoMediaPlayerSimpleCacheDataSource createDataSourceForRemovingDownload() {
             return createDataSourceInternal(
                     /* upstreamDataSource= */ null, flags | FLAG_BLOCK_ON_CACHE, C.PRIORITY_DOWNLOAD);
         }
 
-        private VideoMedia3PlayerSimpleCacheDataSource createDataSourceInternal(
+        private VideoMediaPlayerSimpleCacheDataSource createDataSourceInternal(
                 @Nullable DataSource upstreamDataSource, @Flags int flags, int upstreamPriority) {
             Cache cache = checkNotNull(this.cache);
             @Nullable DataSink cacheWriteDataSink;
@@ -311,7 +311,7 @@ public final class VideoMedia3PlayerSimpleCacheDataSource implements DataSource 
             } else {
                 cacheWriteDataSink = new CacheDataSink.Factory().setCache(cache).createDataSink();
             }
-            return new VideoMedia3PlayerSimpleCacheDataSource(
+            return new VideoMediaPlayerSimpleCacheDataSource(
                     cache,
                     upstreamDataSource,
                     cacheReadDataSourceFactory.createDataSource(),
@@ -325,7 +325,7 @@ public final class VideoMedia3PlayerSimpleCacheDataSource implements DataSource 
     }
 
     /**
-     * Listener of {@link VideoMedia3PlayerSimpleCacheDataSource} events.
+     * Listener of {@link VideoMediaPlayerSimpleCacheDataSource} events.
      */
     public interface EventListener {
 
@@ -460,7 +460,7 @@ public final class VideoMedia3PlayerSimpleCacheDataSource implements DataSource 
      * @param upstreamDataSource A {@link DataSource} for reading data not in the cache. If null,
      *                           reading will fail if a cache miss occurs.
      */
-    public VideoMedia3PlayerSimpleCacheDataSource(Cache cache, @Nullable DataSource upstreamDataSource) {
+    public VideoMediaPlayerSimpleCacheDataSource(Cache cache, @Nullable DataSource upstreamDataSource) {
         this(cache, upstreamDataSource, /* flags= */ 0);
     }
 
@@ -474,7 +474,7 @@ public final class VideoMedia3PlayerSimpleCacheDataSource implements DataSource 
      * @param flags              A combination of {@link #FLAG_BLOCK_ON_CACHE}, {@link #FLAG_IGNORE_CACHE_ON_ERROR}
      *                           and {@link #FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS}, or 0.
      */
-    public VideoMedia3PlayerSimpleCacheDataSource(Cache cache, @Nullable DataSource upstreamDataSource, @Flags int flags) {
+    public VideoMediaPlayerSimpleCacheDataSource(Cache cache, @Nullable DataSource upstreamDataSource, @Flags int flags) {
         this(
                 cache,
                 upstreamDataSource,
@@ -499,7 +499,7 @@ public final class VideoMedia3PlayerSimpleCacheDataSource implements DataSource 
      *                            and {@link #FLAG_IGNORE_CACHE_FOR_UNSET_LENGTH_REQUESTS}, or 0.
      * @param eventListener       An optional {@link EventListener} to receive events.
      */
-    public VideoMedia3PlayerSimpleCacheDataSource(
+    public VideoMediaPlayerSimpleCacheDataSource(
             Cache cache,
             @Nullable DataSource upstreamDataSource,
             DataSource cacheReadDataSource,
@@ -532,7 +532,7 @@ public final class VideoMedia3PlayerSimpleCacheDataSource implements DataSource 
      * @param eventListener       An optional {@link EventListener} to receive events.
      * @param cacheKeyFactory     An optional factory for cache keys.
      */
-    public VideoMedia3PlayerSimpleCacheDataSource(
+    public VideoMediaPlayerSimpleCacheDataSource(
             Cache cache,
             @Nullable DataSource upstreamDataSource,
             DataSource cacheReadDataSource,
@@ -552,7 +552,7 @@ public final class VideoMedia3PlayerSimpleCacheDataSource implements DataSource 
                 eventListener);
     }
 
-    private VideoMedia3PlayerSimpleCacheDataSource(
+    private VideoMediaPlayerSimpleCacheDataSource(
             Cache cache,
             @Nullable DataSource upstreamDataSource,
             DataSource cacheReadDataSource,
