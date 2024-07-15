@@ -17,9 +17,9 @@ import java.util.ArrayList;
 import lib.kalu.media3.util.MediaLogUtil;
 
 @UnstableApi
-public class OnlyVideoMediaCodecRenderersFactory extends BaseRenderersFactory {
+public class OnlyVideoCodecRenderersFactory extends BaseRenderersFactory {
 
-    public OnlyVideoMediaCodecRenderersFactory(Context context) {
+    public OnlyVideoCodecRenderersFactory(Context context) {
         super(context);
         MediaLogUtil.log("BaseRenderersFactory => BaseOnlyMediaCodecVideoRenderersFactory =>");
     }

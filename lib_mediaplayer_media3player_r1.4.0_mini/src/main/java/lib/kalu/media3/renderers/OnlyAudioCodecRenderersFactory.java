@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.Renderer;
 import androidx.media3.exoplayer.mediacodec.MediaCodecSelector;
@@ -15,19 +14,11 @@ import java.util.ArrayList;
 import lib.kalu.media3.util.MediaLogUtil;
 
 @UnstableApi
-public class OnlyAudioMediaCodecRenderersFactory extends BaseRenderersFactory {
+public class OnlyAudioCodecRenderersFactory extends BaseRenderersFactory {
 
-    public OnlyAudioMediaCodecRenderersFactory(Context context) {
+    public OnlyAudioCodecRenderersFactory(Context context) {
         super(context);
         MediaLogUtil.log("BaseRenderersFactory => BaseOnlyMediaCodecAudioRenderersFactory =>");
-    }
-
-    @Override
-    protected void addAudioFFmpegRenderers(@NonNull ArrayList<Renderer> out) {
-    }
-
-    @Override
-    protected void addVideoFFmpegRenderers(long allowedJoiningTimeMs, @Nullable Handler eventHandler, @Nullable VideoRendererEventListener eventListener, int maxDroppedFramesToNotify, @NonNull ArrayList<Renderer> out) {
     }
 
     @Override
