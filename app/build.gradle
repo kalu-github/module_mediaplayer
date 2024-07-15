@@ -62,7 +62,6 @@ android {
         abortOnError false
     }
 
-    //jdk1.8
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -75,12 +74,15 @@ repositories {
     }
 }
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation ('androidx.appcompat:appcompat:1.6.1')
+//    implementation ('androidx.appcompat:appcompat:1.6.1'){
+//        exclude group: 'com.google.guava', module: 'listenablefuture'
+//    }
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // ui
-//    implementation project(path: ':lib_mediaplayer_ui')
-    api files('libs/lib_mediaplayer_ui_release_20240715.aar')
+    implementation project(path: ':lib_mediaplayer_ui')
+//    api files('libs/lib_mediaplayer_ui_release_20240715.aar')
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_full_release_20240509.aar')
     // media3
