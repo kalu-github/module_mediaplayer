@@ -19,7 +19,7 @@
 
 # kalu
 -dontwarn lib.kalu.media3.**
--keep class lib.kalu.media3.ffmpeg.*{
+-keep class lib.kalu.media3.renderers.*{
     public <fields>;
     public <methods>;
 }
@@ -163,6 +163,10 @@
 -dontwarn com.google.j2objc.annotations.**
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -keepclassmembernames class com.google.common.base.Function { *; }
+-keep class androidx.media3.common.MediaLibraryInfo {
+    public <fields>;
+    public <methods>;
+}
 -keep class androidx.media3.common.DataReader {
     public <fields>;
     public <methods>;
@@ -354,6 +358,16 @@
     public <methods>;
 }
 -keep class androidx.media3.datasource.rtmp.RtmpDataSource$Factory {
+    public <fields>;
+    public <methods>;
+}
+
+# datasource okhttp
+-keep class androidx.media3.datasource.okhttp.OkHttpDataSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.okhttp.OkHttpDataSource$Factory {
     public <fields>;
     public <methods>;
 }

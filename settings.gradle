@@ -1,2 +1,2 @@
-include ':lib_mediaplayer_media3player_r1.4.0'
+include ':lib_mediaplayer_media3player_r1.4.0_mini'
 include ':lib_mediaplayer_media3player_r1.4.0_full'

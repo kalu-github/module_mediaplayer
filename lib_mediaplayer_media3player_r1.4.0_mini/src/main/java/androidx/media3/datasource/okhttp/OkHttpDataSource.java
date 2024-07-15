@@ -148,7 +148,7 @@ public class OkHttpDataSource extends BaseDataSource implements HttpDataSource {
 
         /**
          * Sets a content type {@link Predicate}. If a content type is rejected by the predicate then a
-         * {@link HttpDataSource.InvalidContentTypeException} is thrown from {@link
+         * {@link InvalidContentTypeException} is thrown from {@link
          * OkHttpDataSource#open(DataSpec)}.
          *
          * <p>The default is {@code null}.

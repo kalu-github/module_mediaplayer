@@ -1,14 +1,11 @@
-package lib.kalu.media3.ffmpeg;
+package lib.kalu.media3.renderers;
 
 import android.content.Context;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
-
 import androidx.annotation.Nullable;
 import androidx.media3.common.util.UnstableApi;
-import androidx.media3.decoder.ffmpeg.ExperimentalFfmpegVideoRenderer;
-import androidx.media3.decoder.ffmpeg.FfmpegAudioRenderer;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.Renderer;
 import androidx.media3.exoplayer.audio.AudioRendererEventListener;
@@ -22,7 +19,8 @@ import java.util.ArrayList;
 
 import lib.kalu.media3.util.MediaLogUtil;
 
-@UnstableApi class BaseRenderersFactory extends DefaultRenderersFactory {
+@UnstableApi
+class BaseRenderersFactory extends DefaultRenderersFactory {
 
     public BaseRenderersFactory(Context context) {
         super(context);
@@ -41,8 +39,7 @@ import lib.kalu.media3.util.MediaLogUtil;
                                        @NonNull AudioRendererEventListener eventListener,
                                        @NonNull ArrayList<Renderer> out) {
         logAudioRenderer(out);
-        addFFmpegAudioRenderers(out);
-        addMediaCodecAudioRenderer(context, extensionRendererMode, mediaCodecSelector, enableDecoderFallback, audioSink, eventHandler, eventListener, out);
+        addAudioCodecRenderer(context, extensionRendererMode, mediaCodecSelector, enableDecoderFallback, audioSink, eventHandler, eventListener, out);
         logAudioRenderer(out);
     }
 
@@ -57,8 +54,7 @@ import lib.kalu.media3.util.MediaLogUtil;
                                        @NonNull long allowedVideoJoiningTimeMs,
                                        @NonNull ArrayList<Renderer> out) {
         logVideoRenderer(out);
-        addFFmpegVideoRenderers(allowedVideoJoiningTimeMs, eventHandler, eventListener, 50, out);
-        addMediaCodecVideoRenderers(context, extensionRendererMode, mediaCodecSelector, enableDecoderFallback, eventHandler, eventListener, allowedVideoJoiningTimeMs, out);
+        addVideoCodecRenderers(context, extensionRendererMode, mediaCodecSelector, enableDecoderFallback, eventHandler, eventListener, allowedVideoJoiningTimeMs, out);
         logVideoRenderer(out);
     }
 
@@ -66,14 +62,14 @@ import lib.kalu.media3.util.MediaLogUtil;
         return DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF;
     }
 
-    protected void addMediaCodecAudioRenderer(@NonNull Context context,
-                                              @ExtensionRendererMode int extensionRendererMode,
-                                              @NonNull MediaCodecSelector mediaCodecSelector,
-                                              @NonNull boolean enableDecoderFallback,
-                                              @NonNull AudioSink audioSink,
-                                              @NonNull Handler eventHandler,
-                                              @NonNull AudioRendererEventListener eventListener,
-                                              @NonNull ArrayList<Renderer> out) {
+    protected void addAudioCodecRenderer(@NonNull Context context,
+                                         @ExtensionRendererMode int extensionRendererMode,
+                                         @NonNull MediaCodecSelector mediaCodecSelector,
+                                         @NonNull boolean enableDecoderFallback,
+                                         @NonNull AudioSink audioSink,
+                                         @NonNull Handler eventHandler,
+                                         @NonNull AudioRendererEventListener eventListener,
+                                         @NonNull ArrayList<Renderer> out) {
         try {
             MediaCodecAudioRenderer audioRenderer = new MediaCodecAudioRenderer(
                     context,
@@ -85,27 +81,18 @@ import lib.kalu.media3.util.MediaLogUtil;
                     audioSink);
             out.add(audioRenderer);
         } catch (Exception e) {
-            MediaLogUtil.log("BaseRenderersFactory => addMediaCodecAudioRenderer => " + e.getMessage());
+            MediaLogUtil.log("BaseRenderersFactory => addAudioCodecRenderer => " + e.getMessage());
         }
     }
 
-    protected void addFFmpegAudioRenderers(@NonNull ArrayList<Renderer> out) {
-        try {
-            FfmpegAudioRenderer ffmpegAudioRenderer = new FfmpegAudioRenderer();
-            out.add(ffmpegAudioRenderer);
-        } catch (Exception e) {
-            MediaLogUtil.log("BaseRenderersFactory => addFFmpegAudioRenderers => " + e.getMessage());
-        }
-    }
-
-    protected void addMediaCodecVideoRenderers(@NonNull Context context,
-                                               @ExtensionRendererMode int extensionRendererMode,
-                                               @NonNull MediaCodecSelector mediaCodecSelector,
-                                               @NonNull boolean enableDecoderFallback,
-                                               @NonNull Handler eventHandler,
-                                               @NonNull VideoRendererEventListener eventListener,
-                                               @NonNull long allowedVideoJoiningTimeMs,
-                                               @NonNull ArrayList<Renderer> out) {
+    protected void addVideoCodecRenderers(@NonNull Context context,
+                                          @ExtensionRendererMode int extensionRendererMode,
+                                          @NonNull MediaCodecSelector mediaCodecSelector,
+                                          @NonNull boolean enableDecoderFallback,
+                                          @NonNull Handler eventHandler,
+                                          @NonNull VideoRendererEventListener eventListener,
+                                          @NonNull long allowedVideoJoiningTimeMs,
+                                          @NonNull ArrayList<Renderer> out) {
         try {
             MediaCodecVideoRenderer videoRenderer = new MediaCodecVideoRenderer(
                     context,
@@ -118,20 +105,7 @@ import lib.kalu.media3.util.MediaLogUtil;
                     MAX_DROPPED_VIDEO_FRAME_COUNT_TO_NOTIFY);
             out.add(videoRenderer);
         } catch (Exception e) {
-            MediaLogUtil.log("BaseRenderersFactory => addMediaCodecVideoRenderers => " + e.getMessage());
-        }
-    }
-
-    protected void addFFmpegVideoRenderers(long allowedJoiningTimeMs,
-                                           @Nullable Handler eventHandler,
-                                           @Nullable VideoRendererEventListener eventListener,
-                                           int maxDroppedFramesToNotify,
-                                           @NonNull ArrayList<Renderer> out) {
-        try {
-            ExperimentalFfmpegVideoRenderer  ffmpegVideoRenderer = new ExperimentalFfmpegVideoRenderer(allowedJoiningTimeMs, eventHandler, eventListener, maxDroppedFramesToNotify);
-            out.add(ffmpegVideoRenderer);
-        } catch (Exception e) {
-            MediaLogUtil.log("BaseRenderersFactory => addFFmpegVideoRenderers => " + e.getMessage());
+            MediaLogUtil.log("BaseRenderersFactory => addVideoCodecRenderers => " + e.getMessage());
         }
     }
 
