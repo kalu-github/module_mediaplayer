@@ -433,7 +433,12 @@ public interface ComponentApi {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.toggle();
+            boolean playing = playerView.isPlaying();
+            if (playing) {
+                pause();
+            } else {
+                resume();
+            }
         } catch (Exception e) {
             LogUtil.log("ComponentApi => toggle => " + e.getMessage());
         }

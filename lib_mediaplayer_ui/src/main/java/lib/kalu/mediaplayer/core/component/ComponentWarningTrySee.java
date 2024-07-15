@@ -138,22 +138,24 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
     @Override
     public void pause() {
         ComponentApiWarningTrySee.super.pause();
-
+//        LogUtil.log("ComponentWarningTrySee => pause =>");
         try {
             ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
             imageView.setImageResource(R.drawable.module_mediaplayer_ic_pause);
         } catch (Exception e) {
+            LogUtil.log("ComponentWarningTrySee => pause => Exception " + e.getMessage());
         }
     }
 
     @Override
     public void resume() {
         ComponentApiWarningTrySee.super.resume();
-
+//        LogUtil.log("ComponentWarningTrySee => resume =>");
         try {
             ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
             imageView.setImageResource(R.drawable.module_mediaplayer_ic_resume);
         } catch (Exception e) {
+            LogUtil.log("ComponentWarningTrySee => resume => Exception " + e.getMessage());
         }
     }
 }
