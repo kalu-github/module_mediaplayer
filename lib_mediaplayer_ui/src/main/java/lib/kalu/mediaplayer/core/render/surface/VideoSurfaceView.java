@@ -171,12 +171,12 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
     }
 
     @Override
-    public void setKernel(VideoKernelApi kernel) {
+    public void setVideoKernel(VideoKernelApi kernel) {
         this.mKernel = kernel;
     }
 
     @Override
-    public VideoKernelApi getKernel() {
+    public VideoKernelApi getVideoKernel() {
         return this.mKernel;
     }
 

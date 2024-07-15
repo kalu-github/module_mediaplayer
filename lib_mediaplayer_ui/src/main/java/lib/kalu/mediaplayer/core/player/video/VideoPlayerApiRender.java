@@ -347,6 +347,14 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
 //        }
 //    }
 
+    default void stopRender() {
+        try {
+            VideoRenderApi videoRender = getVideoRender();
+            videoRender.stopUpdateProgress();
+        } catch (Exception e) {
+        }
+    }
+
     default void releaseRender() {
         try {
             ViewGroup renderGroup = getBaseVideoViewGroup();
@@ -398,7 +406,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             VideoKernelApi videoKernel = getVideoKernel();
             if (null == videoKernel)
                 throw new Exception("error: null == videoKernel");
-            videoRender.setKernel(videoKernel);
+            videoRender.setVideoKernel(videoKernel);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => attachRenderKernel => " + e.getMessage());
         }

@@ -162,12 +162,12 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
     }
 
     @Override
-    public void setKernel(VideoKernelApi player) {
+    public void setVideoKernel(VideoKernelApi player) {
         this.mKernel = player;
     }
 
     @Override
-    public VideoKernelApi getKernel() {
+    public VideoKernelApi getVideoKernel() {
         return this.mKernel;
     }
 

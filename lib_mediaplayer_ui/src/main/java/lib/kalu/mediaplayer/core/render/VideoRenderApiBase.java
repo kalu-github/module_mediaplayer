@@ -5,7 +5,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 
 public interface VideoRenderApiBase {
 
-    void setKernel(VideoKernelApi player);
+    void setVideoKernel(VideoKernelApi player);
 
-    VideoKernelApi getKernel();
+    VideoKernelApi getVideoKernel();
 }

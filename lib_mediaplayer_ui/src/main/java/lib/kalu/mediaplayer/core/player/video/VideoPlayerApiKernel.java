@@ -11,6 +11,7 @@ import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
+import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -192,6 +193,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void stop(boolean callEvent, boolean clearTag) {
         setScreenKeep(false);
+        stopRender();
         stopKernel(callEvent, clearTag);
     }
 
@@ -470,15 +472,18 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                     try {
                         long trySeeDuration = getTrySeeDuration();
-                        LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateProgress => trySeeDuration = " + trySeeDuration + ", position = " + position + ", duration = " + duration);
                         callProgress(trySeeDuration, position, duration);
 
+                        if (trySeeDuration < 0L)
+                            throw new Exception("waning: trySeeDuration<=0L");
+                        if (position <= 0L)
+                            throw new Exception("waning: position<=0L");
+                        if (position < trySeeDuration)
+                            throw new Exception("waning: position<trySeeDuration");
                         // 试看结束
-                        if (position > 0L && duration > 0L && trySeeDuration > 0L && position >= trySeeDuration) {
-                            LogUtil.log("VideoPlayerApiKernel => setKernelEvent => 试看结束");
-                            pause(false);
-                            callEvent(PlayerType.StateType.TRY_SEE_FINISH);
-                        }
+                        LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateProgress => TRY_SEE_FINISH");
+                        stop(false, true);
+                        callEvent(PlayerType.StateType.TRY_SEE_FINISH);
                     } catch (Exception e) {
                     }
                 }
