@@ -1,24 +1,11 @@
-# Project exclude paths
 /.gradle/
 /.idea
-
-#ui
 /app/
 /lib_mediaplayer_ui/
-
-# exoplayer
-/lib_mediaplayer_exoplayer_r2.18.6_full/
-/lib_mediaplayer_exoplayer_r2.18.7_full/
-/lib_mediaplayer_exoplayer_r2.19.0_full/
-/lib_mediaplayer_exoplayer_r2.19.1_full/
-/lib_mediaplayer_mediaxplayer_common/
-/lib_mediaplayer_mediaxplayer_r1.2.0/
-/lib_mediaplayer_mediaxplayer_r1.2.0_full/
-
-#ffplayer
-/lib_mediaplayer_ffplayer_ff3.4.13_full/
-/lib_mediaplayer_ffplayer_ff3.4.13_lite/
-/lib_mediaplayer_ffplayer_ff3.4.13_mini/
+/lib_mediaplayer_exoplayer*
+/lib_mediaplayer_ffplayer*
+/lib_mediaplayer_vlcplayer*
+/lib_mediaplayer_mediaplayer*
 
 #ijk
 /lib_mediaplayer_ijkplayer_k0.8.8_ff3.4.13_mini/.cxx/
