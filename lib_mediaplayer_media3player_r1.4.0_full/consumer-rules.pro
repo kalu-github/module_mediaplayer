@@ -26,37 +26,17 @@
 -keep class com.softsynth.**
 
 # exoplayer
--keep class androidx.media3.exoplayer.** {
+-keep class androidx.media3.exoplayer.ExoPlayer {
     public <fields>;
     public <methods>;
 }
--dontnote androidx.media3.decoder.vp9.LibvpxVideoRenderer
--keepclassmembers class androidx.media3.decoder.vp9.LibvpxVideoRenderer {
-  <init>(long, android.os.Handler, androidx.media3.exoplayer.video.VideoRendererEventListener, int);
+-keep class androidx.media3.exoplayer.ExoPlayer$* {
+    public <fields>;
+    public <methods>;
 }
--dontnote androidx.media3.decoder.av1.Libgav1VideoRenderer
--keepclassmembers class androidx.media3.decoder.av1.Libgav1VideoRenderer {
-  <init>(long, android.os.Handler, androidx.media3.exoplayer.video.VideoRendererEventListener, int);
-}
--dontnote androidx.media3.decoder.ffmpeg.ExperimentalFfmpegVideoRenderer
--keepclassmembers class androidx.media3.decoder.ffmpeg.ExperimentalFfmpegVideoRenderer {
-  <init>(long, android.os.Handler, androidx.media3.exoplayer.video.VideoRendererEventListener, int);
-}
--dontnote androidx.media3.decoder.opus.LibopusAudioRenderer
--keepclassmembers class androidx.media3.decoder.opus.LibopusAudioRenderer {
-  <init>(android.os.Handler, androidx.media3.exoplayer.audio.AudioRendererEventListener, androidx.media3.exoplayer.audio.AudioSink);
-}
--dontnote androidx.media3.decoder.flac.LibflacAudioRenderer
--keepclassmembers class androidx.media3.decoder.flac.LibflacAudioRenderer {
-  <init>(android.os.Handler, androidx.media3.exoplayer.audio.AudioRendererEventListener, androidx.media3.exoplayer.audio.AudioSink);
-}
--dontnote androidx.media3.decoder.ffmpeg.FfmpegAudioRenderer
--keepclassmembers class androidx.media3.decoder.ffmpeg.FfmpegAudioRenderer {
-  <init>(android.os.Handler, androidx.media3.exoplayer.audio.AudioRendererEventListener, androidx.media3.exoplayer.audio.AudioSink);
-}
--dontnote androidx.media3.decoder.midi.MidiRenderer
--keepclassmembers class androidx.media3.decoder.midi.MidiRenderer {
-  <init>(android.content.Context);
+-keep class androidx.media3.exoplayer.** {
+    public <fields>;
+    public <methods>;
 }
 -dontnote androidx.media3.exoplayer.dash.offline.DashDownloader
 -keepclassmembers class androidx.media3.exoplayer.dash.offline.DashDownloader {
@@ -150,6 +130,10 @@
 -dontwarn org.conscrypt.**
 
 # decoder av1
+-dontnote androidx.media3.decoder.av1.Libgav1VideoRenderer
+-keepclassmembers class androidx.media3.decoder.av1.Libgav1VideoRenderer {
+  <init>(long, android.os.Handler, androidx.media3.exoplayer.video.VideoRendererEventListener, int);
+}
 -keepclasseswithmembernames class * {
     native <methods>;
 }
@@ -158,6 +142,15 @@
 }
 
 # decoder ffmpeg
+-dontnote androidx.media3.decoder.ffmpeg.ExperimentalFfmpegVideoRenderer
+-keepclassmembers class androidx.media3.decoder.ffmpeg.ExperimentalFfmpegVideoRenderer {
+  <init>(long, android.os.Handler, androidx.media3.exoplayer.video.VideoRendererEventListener, int);
+}
+
+-dontnote androidx.media3.decoder.ffmpeg.FfmpegAudioRenderer
+-keepclassmembers class androidx.media3.decoder.ffmpeg.FfmpegAudioRenderer {
+  <init>(android.os.Handler, androidx.media3.exoplayer.audio.AudioRendererEventListener, androidx.media3.exoplayer.audio.AudioSink);
+}
 -keep class androidx.media3.decoder.ffmpeg.FfmpegLibrary {
     *;
 }
@@ -169,6 +162,10 @@
 }
 
 # decoder flac
+-dontnote androidx.media3.decoder.flac.LibflacAudioRenderer
+-keepclassmembers class androidx.media3.decoder.flac.LibflacAudioRenderer {
+  <init>(android.os.Handler, androidx.media3.exoplayer.audio.AudioRendererEventListener, androidx.media3.exoplayer.audio.AudioSink);
+}
 -keepclasseswithmembernames class * {
     native <methods>;
 }
@@ -183,6 +180,10 @@
 }
 
 # decoder opus
+-dontnote androidx.media3.decoder.opus.LibopusAudioRenderer
+-keepclassmembers class androidx.media3.decoder.opus.LibopusAudioRenderer {
+  <init>(android.os.Handler, androidx.media3.exoplayer.audio.AudioRendererEventListener, androidx.media3.exoplayer.audio.AudioSink);
+}
 -keepclasseswithmembernames class * {
     native <methods>;
 }
@@ -191,11 +192,21 @@
 }
 
 # decoder vp9
+-dontnote androidx.media3.decoder.vp9.LibvpxVideoRenderer
+-keepclassmembers class androidx.media3.decoder.vp9.LibvpxVideoRenderer {
+  <init>(long, android.os.Handler, androidx.media3.exoplayer.video.VideoRendererEventListener, int);
+}
 -keepclasseswithmembernames class * {
     native <methods>;
 }
 -keep class androidx.media3.decoder.VideoDecoderOutputBuffer {
     *;
+}
+
+# decoder midi
+-dontnote androidx.media3.decoder.midi.MidiRenderer
+-keepclassmembers class androidx.media3.decoder.midi.MidiRenderer {
+  <init>(android.content.Context);
 }
 
 #-keep class xx.xx.xx.*   本包下的类名保持
