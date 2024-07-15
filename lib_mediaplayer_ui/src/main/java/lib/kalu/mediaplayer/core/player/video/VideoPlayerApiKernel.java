@@ -566,8 +566,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             callEvent(PlayerType.StateType.SEEK_FINISH);
                             break;
                         // 续播
-                        case PlayerType.EventType.SEEK_PLAY_RECORD:
-                            callEvent(PlayerType.StateType.SEEK_PLAY_RECORD);
+                        case PlayerType.EventType.VIDEO_RENDERING_START_SEEK:
+                            callEvent(PlayerType.StateType.VIDEO_RENDERING_START_SEEK);
                             break;
                         // 播放错误
                         case PlayerType.EventType.ERROR_URL:

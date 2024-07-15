@@ -368,7 +368,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START);
                         } else {
                             // 起播快进
-                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.SEEK_PLAY_RECORD);
+                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
                             seekTo(seek);
                         }
                     } catch (Exception e) {

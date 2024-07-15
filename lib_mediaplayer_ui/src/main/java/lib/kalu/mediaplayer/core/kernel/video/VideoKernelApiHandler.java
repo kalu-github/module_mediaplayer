@@ -43,7 +43,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                                 } else {
                                     onEvent(kernelType, PlayerType.EventType.VIDEO_RENDERING_START);
                                     // 起播快进
-                                    onEvent(kernelType, PlayerType.EventType.SEEK_PLAY_RECORD);
+                                    onEvent(kernelType, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
                                     seekTo(seek);
                                 }
                             }

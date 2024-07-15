@@ -597,7 +597,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                             onEvent(kernelType, PlayerType.EventType.VIDEO_START);
                         } else {
                             // 起播快进
-                            onEvent(kernelType, PlayerType.EventType.SEEK_PLAY_RECORD);
+                            onEvent(kernelType, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
                             seekTo(seek);
                         }
                     } catch (Exception e) {

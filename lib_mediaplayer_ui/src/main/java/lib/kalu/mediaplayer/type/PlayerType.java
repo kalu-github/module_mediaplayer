@@ -69,15 +69,15 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface StateType {
         int INIT = 3_001; // 播放未开始，即将进行
-        int SEEK_PLAY_RECORD = 3_002; // 续播
-        int SEEK_START = 3_003; // 开始快进
-        int SEEK_FINISH = 3_004; // 结束快进
-        int CLEAN = 3_005; //
-        int LOADING_START = 3_006; // 开始转圈
-        int LOADING_STOP = 3_007; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int KERNEL_STOP = 3_008;
-        int KERNEL_RESUME = 3_009; // 开始播放
-        int VIDEO_RENDERING_START = 3_010; // 出画面 视频首帧
+        int SEEK_START = 3_002; // 开始快进
+        int SEEK_FINISH = 3_003; // 结束快进
+        int CLEAN = 3_004; //
+        int LOADING_START = 3_005; // 开始转圈
+        int LOADING_STOP = 3_006; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
+        int KERNEL_STOP = 3_007;
+        int KERNEL_RESUME = 3_008; // 开始播放
+        int VIDEO_RENDERING_START = 3_009; // 出画面 视频首帧
+        int VIDEO_RENDERING_START_SEEK = 3_010; // 续播
         int START = 3_011; // 开始播放
         int START_RETRY = 3_012; // 开始播放
         int START_SEEK = 3_013; // 开始播放
@@ -119,7 +119,6 @@ public @interface PlayerType {
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
                 INIT,
-                SEEK_PLAY_RECORD,
                 SEEK_START,
                 SEEK_FINISH,
                 FULL_START,
@@ -136,6 +135,7 @@ public @interface PlayerType {
                 KERNEL_STOP,
                 KERNEL_RESUME,
                 VIDEO_RENDERING_START,
+                VIDEO_RENDERING_START_SEEK,
                 START,
                 START_RETRY,
                 START_SEEK,
@@ -371,9 +371,10 @@ public @interface PlayerType {
 //        int AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
         // 首帧画面
         int VIDEO_RENDERING_START = 7_010;
+        int VIDEO_RENDERING_START_SEEK = 7_011;
         // 视频开播
-        int VIDEO_START = 7_011;
-        int VIDEO_END = 7_012;
+        int VIDEO_START = 7_012;
+        int VIDEO_END = 7_013;
 //        int VIDEO_START_RETRY = 7_011;
 //        int VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE;
         //        int VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
@@ -383,12 +384,11 @@ public @interface PlayerType {
         // 缓冲开始
 //        int OPEN_INPUT = IMediaPlayer.MEDIA_INFO_OPEN_INPUT;
         // 缓冲开始
-        int BUFFERING_START = 7_013;
+        int BUFFERING_START = 7_014;
         // 缓冲结束
-        int BUFFERING_STOP = 7_014;
-        int SEEK_START = 7_015;
-        int SEEK_FINISH = 7_016;
-        int SEEK_PLAY_RECORD = 7_017;
+        int BUFFERING_STOP = 7_015;
+        int SEEK_START = 7_016;
+        int SEEK_FINISH = 7_017;
         // 视频旋转信息
 //        int VIDEO_ROTATION_CHANGED = IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
 //        int AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;
@@ -412,6 +412,7 @@ public @interface PlayerType {
 //                AUDIO_SEEK_RENDERING_START,
 //                AUDIO_RENDERING_START,
                 VIDEO_RENDERING_START,
+                VIDEO_RENDERING_START_SEEK,
                 VIDEO_START,
 //                VIDEO_START_RETRY,
 //                VIDEO_START_SEEK,
@@ -422,7 +423,6 @@ public @interface PlayerType {
                 BUFFERING_STOP,
                 SEEK_START,
                 SEEK_FINISH,
-                SEEK_PLAY_RECORD,
 //                VIDEO_ROTATION_CHANGED,
 //                AUDIO_DECODED_START,
 //                VIDEO_DECODED_START

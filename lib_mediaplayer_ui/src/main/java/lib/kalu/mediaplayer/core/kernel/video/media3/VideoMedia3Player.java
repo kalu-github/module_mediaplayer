@@ -118,7 +118,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             mExoPlayerBuilder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));
             mExoPlayerBuilder.setTrackSelector(new DefaultTrackSelector(context));
 
-            int exoFFmpeg = args.getExoFFmpegType();
+            int exoFFmpeg = args.getExoRenderersType();
             // only_mediacodec
             if (exoFFmpeg == PlayerType.ExoRenderersType.CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoCodecAudioCodecRenderersFactory");
@@ -734,50 +734,59 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
             // 播放错误
             if (state == Player.STATE_IDLE) {
-                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged[播放错误] =>");
+                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_IDLE =>");
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_SOURCE);
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_STOP);
             }
-            // 播放结束
+            // 播放完成
             else if (state == Player.STATE_ENDED) {
-                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged[播放结束] =>");
+                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_ENDED =>");
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_END);
             }
             // 播放开始
             else if (state == Player.STATE_READY) {
+                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_READY =>");
                 try {
-                    if (isPrepared())
-                        throw new Exception("mPrepared warning: true");
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_STOP);
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_START);
+                    if (!isPrepared())
+                        throw new Exception("warning: isPrepared false");
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_FINISH);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_STOP);
                     try {
                         long seek = getSeek();
-                        if (seek <= 0)
-                            throw new Exception("seek warning: " + seek);
+                        if (seek <= 0L)
+                            throw new Exception("warning: seek<=0");
                         setSeek(0);
-                        seekTo(seek);
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_START);
                     } catch (Exception e) {
-                        LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => " + e.getMessage());
+                        LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_READY => Exception1 " + e.getMessage());
+                    }
+
+                    try {
+                        boolean playing = isPlaying();
+                        if (playing)
+                            throw new Exception("warning: playing true");
+                        start();
+                    } catch (Exception e) {
+                        LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_READY => Exception2 " + e.getMessage());
                     }
                 } catch (Exception e) {
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_STOP);
+                    LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_READY => Exception3 " + e.getMessage());
                 }
-                setPrepared(true);
             }
             // 播放缓冲
             else if (state == Player.STATE_BUFFERING) {
-                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged[播放缓冲] =>");
+                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_BUFFERING =>");
                 try {
                     if (!isPrepared())
                         throw new Exception("mPrepared warning: false");
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_START);
                 } catch (Exception e) {
-                    LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => READY => " + e.getMessage());
+                    LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_BUFFERING => Exception " + e.getMessage());
                 }
             }
-            // 未知??
+            // UNKNOW
             else {
-                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged[未知??] =>");
+                LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => UNKNOW => state = " + state);
             }
         }
 
@@ -789,6 +798,23 @@ public final class VideoMedia3Player extends VideoBasePlayer {
         @Override
         public void onVideoInputFormatChanged(AnalyticsListener.EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
             LogUtil.log("VideoMedia3Player => onVideoInputFormatChanged[出画面] =>");
+            try {
+                if (isPrepared())
+                    throw new Exception("warning: isPrepared true");
+                setPrepared(true);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_STOP);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
+                long seek = getSeek();
+                if (seek <= 0L) {
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_START);
+                } else {
+                    // 起播快进
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
+                    seekTo(seek);
+                }
+            } catch (Exception e) {
+                LogUtil.log("VideoMedia3Player => onVideoInputFormatChanged => Exception " + e.getMessage());
+            }
         }
 
         @Override
