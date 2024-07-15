@@ -166,6 +166,8 @@ public final class FfmpegLibrary {
         }
     }
 
+    public static native void ffmpegLogger(boolean enable);
+
     private static native String ffmpegGetVersion();
 
     private static native int ffmpegGetInputBufferPaddingSize();

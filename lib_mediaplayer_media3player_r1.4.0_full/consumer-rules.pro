@@ -1,3 +1,22 @@
+# 保护泛型
+-keepattributes Signature
+
+# 保护主动抛出异常
+-keepattributes Exceptions
+
+# 抛出异常时保留代码行号
+-keepattributes SourceFile,LineNumberTable
+
+# Lambda
+-dontwarn java.lang.invoke.*
+-dontwarn **$$Lambda$*
+
+# 保护注解
+-keepattributes *Annotation*,InnerClasses,EnclosingMethod
+#-keep @interface * {
+#    *;
+#}
+
 # kalu
 -dontwarn lib.kalu.media3.**
 -keep class lib.kalu.media3.ffmpeg.*{
@@ -13,28 +32,84 @@
     *;
 }
 
-# guave
--dontwarn com.google.**
--keep class com.google.common.**
--keep class com.google.thirdparty.publicsuffix.**
--keep class com.google.errorprone.annotations.**
-
-# midi
--dontwarn com.jsyn.**
--dontwarn com.softsynth.**
--keep class com.jsyn.**
--keep class com.softsynth.**
-
 # exoplayer
 -keep class androidx.media3.exoplayer.ExoPlayer {
     public <fields>;
     public <methods>;
 }
--keep class androidx.media3.exoplayer.ExoPlayer$* {
+-keep class androidx.media3.exoplayer.ExoPlayer$Builder {
     public <fields>;
     public <methods>;
 }
--keep class androidx.media3.exoplayer.** {
+-keep class androidx.media3.exoplayer.SeekParameters {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.DecoderReuseEvaluation {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.DefaultLoadControl {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.ExoPlaybackException {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.analytics.AnalyticsListener {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.analytics.AnalyticsListener$EventTime {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.analytics.AnalyticsListener$Events {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.analytics.DefaultAnalyticsCollector {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.dash.DashMediaSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.hls.HlsMediaSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.rtsp.RtspMediaSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.smoothstreaming.SsMediaSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.source.DefaultMediaSourceFactory {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.source.MediaSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.source.ProgressiveMediaSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.source.ProgressiveMediaSource$Factory {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.trackselection.DefaultTrackSelector {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.upstream.DefaultBandwidthMeter {
     public <fields>;
     public <methods>;
 }
@@ -75,22 +150,6 @@
   androidx.media3.effect.DefaultVideoFrameProcessor$Factory build();
 }
 
-# extractor
--dontnote androidx.media3.decoder.flac.FlacExtractor
--keepclassmembers class androidx.media3.decoder.flac.FlacExtractor {
-  <init>(int);
-}
--dontnote androidx.media3.decoder.flac.FlacLibrary
--keepclassmembers class androidx.media3.decoder.flac.FlacLibrary {
-  public static boolean isAvailable();
-}
--dontnote androidx.media3.decoder.midi.MidiExtractor
--keepclassmembers class androidx.media3.decoder.midi.MidiExtractor {
-  <init>();
-}
--dontwarn org.checkerframework.**
--dontwarn kotlin.annotations.jvm.**
--dontwarn javax.annotation.**
 
 # common
 -dontwarn org.checkerframework.**
@@ -104,13 +163,197 @@
 -dontwarn com.google.j2objc.annotations.**
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -keepclassmembernames class com.google.common.base.Function { *; }
--keep class androidx.media3.common.** {
+-keep class androidx.media3.common.DataReader {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.PriorityTaskManager {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.PriorityTaskManager$PriorityTooLowException {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.C {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.Format {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.MediaItem {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.MediaItem$Builder {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.MediaItem$SubtitleConfiguration {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.MediaItem$SubtitleConfiguration$Builder {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.MimeTypes {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.PlaybackException {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.PlaybackParameters {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.Player {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.VideoSize {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.util.Assertions {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.util.Clock {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.common.util.UnstableApi {
     public <fields>;
     public <methods>;
 }
 
 # datasource
--keep class androidx.media3.datasource.** {
+-keep class androidx.media3.datasource.DataSink {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.DataSink$Factory {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.TransferListener {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.TeeDataSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.PriorityDataSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.PlaceholderDataSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.FileDataSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.FileDataSource$Factory {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.DataSpec {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.DataSpec$Builder {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.DataSourceException {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.DataSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.DataSource$Factory {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.DefaultDataSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.DefaultDataSource$Factory {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.DefaultHttpDataSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.DefaultHttpDataSource$Factory {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.cache.CacheDataSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.cache.CacheDataSource$Factory {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.cache.SimpleCache {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.cache.Cache {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.cache.Cache$CacheException {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.cache.CacheDataSink {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.cache.CacheDataSink$Factory {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.cache.CacheKeyFactory {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.cache.CacheSpan {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.cache.ContentMetadata {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.cache.ContentMetadataMutations {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.rtmp.RtmpDataSource {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.datasource.rtmp.RtmpDataSource$Factory {
     public <fields>;
     public <methods>;
 }
@@ -172,12 +415,6 @@
 -keep class androidx.media3.decoder.flac.FlacDecoderJni {
     *;
 }
--keep class androidx.media3.extractor.FlacStreamMetadata {
-    *;
-}
--keep class androidx.media3.extractor.metadata.flac.PictureFrame {
-    *;
-}
 
 # decoder opus
 -dontnote androidx.media3.decoder.opus.LibopusAudioRenderer
@@ -207,6 +444,39 @@
 -dontnote androidx.media3.decoder.midi.MidiRenderer
 -keepclassmembers class androidx.media3.decoder.midi.MidiRenderer {
   <init>(android.content.Context);
+}
+
+# extractor
+-keep class androidx.media3.extractor.DefaultExtractorsFactory {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.extractor.FlacStreamMetadata {
+    *;
+}
+-keep class androidx.media3.extractor.metadata.flac.PictureFrame {
+    *;
+}
+-dontnote androidx.media3.decoder.flac.FlacExtractor
+-keepclassmembers class androidx.media3.decoder.flac.FlacExtractor {
+  <init>(int);
+}
+-dontnote androidx.media3.decoder.flac.FlacLibrary
+-keepclassmembers class androidx.media3.decoder.flac.FlacLibrary {
+  public static boolean isAvailable();
+}
+-dontnote androidx.media3.decoder.midi.MidiExtractor
+-keepclassmembers class androidx.media3.decoder.midi.MidiExtractor {
+  <init>();
+}
+-dontwarn org.checkerframework.**
+-dontwarn kotlin.annotations.jvm.**
+-dontwarn javax.annotation.**
+
+# database
+-keep class androidx.media3.database.StandaloneDatabaseProvider {
+    public <fields>;
+    public <methods>;
 }
 
 #-keep class xx.xx.xx.*   本包下的类名保持
