@@ -482,7 +482,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             throw new Exception("waning: position<trySeeDuration");
                         // 试看结束
                         LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateProgress => TRY_SEE_FINISH");
-                        stop(false, true);
+                        stop(false, false);
                         callEvent(PlayerType.StateType.TRY_SEE_FINISH);
                     } catch (Exception e) {
                     }
