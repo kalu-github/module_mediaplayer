@@ -133,7 +133,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             mExoPlayerBuilder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));
             mExoPlayerBuilder.setTrackSelector(new DefaultTrackSelector(context));
             // only_mediacodec
-            if (ffmpegType == PlayerType.ExoFFmpegType.ONLY_MEDIACODEC) {
+            if (ffmpegType == PlayerType.ExoRenderersType.ONLY_MEDIACODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
                 if (null == clazz)
                     throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
