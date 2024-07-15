@@ -245,13 +245,13 @@ public final class C {
   @UnstableApi public static final int ENCODING_PCM_16BIT_BIG_ENDIAN = 0x10000000;
 
   /** PCM encoding with 24 bits per sample. */
-  @UnstableApi public static final int ENCODING_PCM_24BIT = 0x20000000;
+  @UnstableApi public static final int ENCODING_PCM_24BIT = AudioFormat.ENCODING_PCM_24BIT_PACKED;
 
   /** Like {@link #ENCODING_PCM_24BIT} but with the bytes in big endian order. */
   @UnstableApi public static final int ENCODING_PCM_24BIT_BIG_ENDIAN = 0x50000000;
 
   /** PCM encoding with 32 bits per sample. */
-  @UnstableApi public static final int ENCODING_PCM_32BIT = 0x30000000;
+  @UnstableApi public static final int ENCODING_PCM_32BIT = AudioFormat.ENCODING_PCM_32BIT;
 
   /** Like {@link #ENCODING_PCM_32BIT} but with the bytes in big endian order. */
   @UnstableApi public static final int ENCODING_PCM_32BIT_BIG_ENDIAN = 0x60000000;
@@ -613,12 +613,18 @@ public final class C {
   public static final int ALLOW_CAPTURE_BY_SYSTEM = AudioAttributes.ALLOW_CAPTURE_BY_SYSTEM;
 
   /**
-   * Flags which can apply to a buffer containing a media sample. Possible flag values are {@link
-   * #BUFFER_FLAG_KEY_FRAME}, {@link #BUFFER_FLAG_END_OF_STREAM}, {@link #BUFFER_FLAG_FIRST_SAMPLE},
-   * {@link #BUFFER_FLAG_LAST_SAMPLE}, {@link #BUFFER_FLAG_ENCRYPTED} and {@link
-   * #BUFFER_FLAG_DECODE_ONLY}.
+   * Flags which can apply to a buffer containing a media sample.
+   *
+   * <p>Possible flag values are:
+   *
+   * <ul>
+   *   <li>{@link #BUFFER_FLAG_KEY_FRAME}
+   *   <li>{@link #BUFFER_FLAG_END_OF_STREAM}
+   *   <li>{@link #BUFFER_FLAG_FIRST_SAMPLE}
+   *   <li>{@link #BUFFER_FLAG_LAST_SAMPLE}
+   *   <li>{@link #BUFFER_FLAG_ENCRYPTED}
+   * </ul>
    */
-  @SuppressWarnings("deprecation") // Includes deprecated BUFFER_FLAG_DECODE_ONLY flag.
   @UnstableApi
   @Documented
   @Retention(RetentionPolicy.SOURCE)
@@ -631,8 +637,7 @@ public final class C {
         BUFFER_FLAG_FIRST_SAMPLE,
         BUFFER_FLAG_HAS_SUPPLEMENTAL_DATA,
         BUFFER_FLAG_LAST_SAMPLE,
-        BUFFER_FLAG_ENCRYPTED,
-        BUFFER_FLAG_DECODE_ONLY
+        BUFFER_FLAG_ENCRYPTED
       })
   public @interface BufferFlags {}
 
@@ -654,13 +659,6 @@ public final class C {
 
   /** Indicates that a buffer is (at least partially) encrypted. */
   @UnstableApi public static final int BUFFER_FLAG_ENCRYPTED = 1 << 30; // 0x40000000
-
-  /**
-   * @deprecated Renderers and decoders will check whether the buffer time is greater or equal to
-   *     the desired start time without the need to set this flag. Custom decoders can mark other
-   *     buffers with {@code DecoderOutputBuffer.shouldBeSkipped} if needed.
-   */
-  @UnstableApi @Deprecated public static final int BUFFER_FLAG_DECODE_ONLY = 1 << 31; // 0x80000000
 
   /** A realtime {@linkplain MediaFormat#KEY_PRIORITY codec priority}. */
   @UnstableApi public static final int MEDIA_CODEC_PRIORITY_REALTIME = 0;
@@ -1237,18 +1235,67 @@ public final class C {
   @UnstableApi public static final int PROJECTION_MESH = 3;
 
   /**
-   * Priority for media playback.
+   * A value indicating the priority of a operation.
    *
-   * <p>Larger values indicate higher priorities.
+   * <p>Larger values indicate higher priorities, but values should not exceed {@link
+   * #PRIORITY_MAX}.
+   *
+   * <p>The predefined priority values are used by default and it's recommended to align any custom
+   * values relative to these defaults (for example, {@code C.PRIORITY_PLAYBACK - 1}.
+   *
+   * <p>Predefined values are (in descending priority order):
+   *
+   * <ul>
+   *   <li>{@link #PRIORITY_MAX}
+   *   <li>{@link #PRIORITY_PLAYBACK}
+   *   <li>{@link #PRIORITY_PROCESSING_FOREGROUND}
+   *   <li>{@link #PRIORITY_PLAYBACK_PRELOAD}
+   *   <li>{@link #PRIORITY_PROCESSING_BACKGROUND}
+   *   <li>{@link #PRIORITY_DOWNLOAD}
+   * </ul>
    */
-  @UnstableApi public static final int PRIORITY_PLAYBACK = 0;
+  @Documented
+  @UnstableApi
+  @Retention(RetentionPolicy.SOURCE)
+  @Target(TYPE_USE)
+  @IntDef(
+      open = true,
+      value = {
+        PRIORITY_MAX,
+        PRIORITY_PLAYBACK,
+        PRIORITY_DOWNLOAD,
+        PRIORITY_PLAYBACK_PRELOAD,
+        PRIORITY_PROCESSING_BACKGROUND,
+        PRIORITY_PROCESSING_FOREGROUND
+      })
+  public @interface Priority {}
+
+  /** The maximum supported {@link Priority}. */
+  @UnstableApi public static final int PRIORITY_MAX = 0;
+
+  /** {@link Priority} for active media playback. */
+  @UnstableApi public static final int PRIORITY_PLAYBACK = PRIORITY_MAX - 1000;
 
   /**
-   * Priority for media downloading.
-   *
-   * <p>Larger values indicate higher priorities.
+   * {@link Priority} for processing media in the foreground (for example, while the user is waiting
+   * for the processing to complete).
    */
-  @UnstableApi public static final int PRIORITY_DOWNLOAD = PRIORITY_PLAYBACK - 1000;
+  @UnstableApi public static final int PRIORITY_PROCESSING_FOREGROUND = PRIORITY_PLAYBACK - 1000;
+
+  /**
+   * {@link Priority} for preloading media playback resources before the playback becomes active.
+   */
+  @UnstableApi
+  public static final int PRIORITY_PLAYBACK_PRELOAD = PRIORITY_PROCESSING_FOREGROUND - 1000;
+
+  /** {@link Priority} for media downloading unrelated to active playback. */
+  @UnstableApi public static final int PRIORITY_DOWNLOAD = PRIORITY_PLAYBACK_PRELOAD - 1000;
+
+  /**
+   * {@link Priority} for processing media in the background (for example, when the user is not
+   * waiting for the processing to complete).
+   */
+  @UnstableApi public static final int PRIORITY_PROCESSING_BACKGROUND = PRIORITY_DOWNLOAD;
 
   /**
    * Network connection type. One of {@link #NETWORK_TYPE_UNKNOWN}, {@link #NETWORK_TYPE_OFFLINE},

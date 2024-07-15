@@ -47,7 +47,11 @@ public final class Loader implements LoaderErrorThrower {
   public static final class UnexpectedLoaderException extends IOException {
 
     public UnexpectedLoaderException(Throwable cause) {
-      super("Unexpected " + cause.getClass().getSimpleName() + ": " + cause.getMessage(), cause);
+      super(
+          "Unexpected "
+              + cause.getClass().getSimpleName()
+              + (cause.getMessage() != null ? ": " + cause.getMessage() : ""),
+          cause);
     }
   }
 
@@ -322,10 +326,10 @@ public final class Loader implements LoaderErrorThrower {
 
     private static final String TAG = "LoadTask";
 
-    private static final int MSG_START = 0;
-    private static final int MSG_FINISH = 1;
-    private static final int MSG_IO_EXCEPTION = 2;
-    private static final int MSG_FATAL_ERROR = 3;
+    private static final int MSG_START = 1;
+    private static final int MSG_FINISH = 2;
+    private static final int MSG_IO_EXCEPTION = 3;
+    private static final int MSG_FATAL_ERROR = 4;
 
     public final int defaultMinRetryCount;
 

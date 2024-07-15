@@ -1,4 +1,4 @@
-package lib.kalu.mediax.rtmp;
+package lib.kalu.media3.rtmp;
 
 import java.io.IOException;
 

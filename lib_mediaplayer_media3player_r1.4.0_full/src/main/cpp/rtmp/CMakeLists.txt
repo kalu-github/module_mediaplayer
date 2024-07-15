@@ -3,7 +3,7 @@ add_definitions(-DNDEBUG)
 add_definitions(-DNO_CRYPTO)
 
 add_library( # Sets the name of the library.
-        mediax-rtmp
+        media3-rtmp
 
         # Sets the library as a shared library.
         SHARED
@@ -35,7 +35,7 @@ include_directories(flvmuxer)
 
 target_link_libraries(
         # Specifies the target library.
-        mediax-rtmp
+        media3-rtmp
 
         # Links the target library to the log library
         # included in the NDK.

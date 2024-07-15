@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The Android Open Source Project
+ * Copyright 2023 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,41 +15,47 @@
  */
 package androidx.media3.muxer;
 
+import static androidx.media3.common.util.Assertions.checkArgument;
 import static androidx.media3.common.util.Assertions.checkNotNull;
 import static androidx.media3.common.util.Assertions.checkState;
+import static androidx.media3.muxer.AnnexBUtils.doesSampleContainAnnexBNalUnits;
+import static androidx.media3.muxer.Boxes.BOX_HEADER_SIZE;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-import android.media.MediaCodec;
 import android.media.MediaCodec.BufferInfo;
-import android.util.Pair;
 import androidx.media3.common.Format;
-import androidx.media3.common.MimeTypes;
 import androidx.media3.common.util.Util;
-import androidx.media3.muxer.Mp4Muxer.TrackToken;
-import com.google.common.collect.ImmutableList;
+import androidx.media3.muxer.Muxer.TrackToken;
 import com.google.common.collect.Range;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/** Writes MP4 data to the disk. */
+/** Writes all media samples into a single mdat box. */
 /* package */ final class Mp4Writer {
   private static final long INTERLEAVE_DURATION_US = 1_000_000L;
+  private static final int DEFAULT_MOOV_BOX_SIZE_BYTES = 400_000;
+  private static final String FREE_BOX_TYPE = "free";
 
-  private final AtomicBoolean hasWrittenSamples;
-  private final Mp4MoovStructure moovGenerator;
-  private final List<Track> tracks;
-  private final AnnexBToAvccConverter annexBToAvccConverter;
   private final FileOutputStream outputStream;
   private final FileChannel output;
+  private final Mp4MoovStructure moovGenerator;
+  private final AnnexBToAvccConverter annexBToAvccConverter;
+  private final List<Track> tracks;
+  private final AtomicBoolean hasWrittenSamples;
+  private final boolean sampleCopyEnabled;
+
+  // Stores location of the space reserved for the moov box at the beginning of the file (after ftyp
+  // box)
+  private long reservedMoovSpaceStart;
+  private long reservedMoovSpaceEnd;
+  private boolean canWriteMoovAtStart;
   private long mdatStart;
   private long mdatEnd;
   private long mdatDataEnd; // Always <= mdatEnd
@@ -65,31 +71,38 @@ import java.util.concurrent.atomic.AtomicBoolean;
    * @param annexBToAvccConverter The {@link AnnexBToAvccConverter} to be used to convert H.264 and
    *     H.265 NAL units from the Annex-B format (using start codes to delineate NAL units) to the
    *     AVCC format (which uses length prefixes).
+   * @param sampleCopyEnabled Whether sample copying is enabled.
+   * @param attemptStreamableOutputEnabled Whether to attempt to write a streamable output.
    */
   public Mp4Writer(
       FileOutputStream outputStream,
       Mp4MoovStructure moovGenerator,
-      AnnexBToAvccConverter annexBToAvccConverter) {
-    this.moovGenerator = moovGenerator;
+      AnnexBToAvccConverter annexBToAvccConverter,
+      boolean sampleCopyEnabled,
+      boolean attemptStreamableOutputEnabled) {
     this.outputStream = outputStream;
     this.output = outputStream.getChannel();
+    this.moovGenerator = moovGenerator;
     this.annexBToAvccConverter = annexBToAvccConverter;
-    hasWrittenSamples = new AtomicBoolean(false);
+    this.sampleCopyEnabled = sampleCopyEnabled;
+    canWriteMoovAtStart = attemptStreamableOutputEnabled;
     tracks = new ArrayList<>();
+    hasWrittenSamples = new AtomicBoolean(false);
     lastMoovWritten = Range.closed(0L, 0L);
   }
 
   public TrackToken addTrack(int sortKey, Format format) {
-    Track track = new Track(format, sortKey);
+    Track track = new Track(format, sortKey, sampleCopyEnabled);
     tracks.add(track);
     Collections.sort(tracks, (a, b) -> Integer.compare(a.sortKey, b.sortKey));
     return track;
   }
 
-  public void writeSampleData(TrackToken token, ByteBuffer byteBuf, BufferInfo bufferInfo)
+  public void writeSampleData(TrackToken token, ByteBuffer byteBuffer, BufferInfo bufferInfo)
       throws IOException {
-    checkState(token instanceof Track);
-    ((Track) token).writeSampleData(byteBuf, bufferInfo);
+    checkArgument(token instanceof Track);
+    ((Track) token).writeSampleData(byteBuffer, bufferInfo);
+    doInterleave();
   }
 
   public void close() throws IOException {
@@ -112,9 +125,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
     output.position(0L);
     output.write(Boxes.ftyp());
 
+    if (canWriteMoovAtStart) {
+      // Reserve some space for moov box by adding a free box.
+      reservedMoovSpaceStart = output.position();
+      output.write(
+          BoxUtils.wrapIntoBox(FREE_BOX_TYPE, ByteBuffer.allocate(DEFAULT_MOOV_BOX_SIZE_BYTES)));
+      reservedMoovSpaceEnd = output.position();
+    }
+
     // Start with an empty mdat box.
     mdatStart = output.position();
-
     ByteBuffer header = ByteBuffer.allocate(4 + 4 + 8);
     header.putInt(1); // 4 bytes, indicating a 64-bit length field
     header.put(Util.getUtf8Bytes("mdat")); // 4 bytes
@@ -124,7 +144,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
     // The box includes only its type and length.
     mdatDataEnd = mdatStart + 16;
-    mdatEnd = mdatDataEnd;
+    mdatEnd = canWriteMoovAtStart ? Long.MAX_VALUE : mdatDataEnd;
   }
 
   private ByteBuffer assembleCurrentMoovData() {
@@ -140,7 +160,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
     ByteBuffer moovHeader;
     if (minInputPtsUs != Long.MAX_VALUE) {
-      moovHeader = moovGenerator.moovMetadataHeader(tracks, minInputPtsUs);
+      moovHeader =
+          moovGenerator.moovMetadataHeader(tracks, minInputPtsUs, /* isFragmentedMp4= */ false);
     } else {
       // Skip moov box, if there are no samples.
       moovHeader = ByteBuffer.allocate(0);
@@ -163,14 +184,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
    * @param newMoovBoxData The new moov box data.
    * @throws IOException If there is any error while writing data to the disk.
    */
-  private void safelyReplaceMoov(long newMoovBoxPosition, ByteBuffer newMoovBoxData)
+  private void safelyReplaceMoovAtEnd(long newMoovBoxPosition, ByteBuffer newMoovBoxData)
       throws IOException {
     checkState(newMoovBoxPosition >= lastMoovWritten.upperEndpoint());
     checkState(newMoovBoxPosition >= mdatEnd);
 
     // Write a free box to the end of the file, with the new moov box wrapped into it.
     output.position(newMoovBoxPosition);
-    output.write(BoxUtils.wrapIntoBox("free", newMoovBoxData.duplicate()));
+    output.write(BoxUtils.wrapIntoBox(FREE_BOX_TYPE, newMoovBoxData.duplicate()));
 
     // The current state is:
     // | ftyp | mdat .. .. .. | previous moov | free (new moov)|
@@ -178,10 +199,39 @@ import java.util.concurrent.atomic.AtomicBoolean;
     // Increase the length of the mdat box so that it now extends to
     // the previous moov box and the header of the free box.
     mdatEnd = newMoovBoxPosition + 8;
-    updateMdatSize();
+    updateMdatSize(mdatEnd - mdatStart);
 
     lastMoovWritten =
         Range.closed(newMoovBoxPosition, newMoovBoxPosition + newMoovBoxData.remaining());
+  }
+
+  /**
+   * Attempts to write moov box at the start (after the ftyp box). If this is not possible, the moov
+   * box is written at the end of the file (after the mdat box).
+   */
+  private void maybeWriteMoovAtStart() throws IOException {
+    ByteBuffer moovBox = assembleCurrentMoovData();
+    int moovBoxSize = moovBox.remaining();
+    // Keep some space for free box to fill the remaining space.
+    if (moovBox.remaining() + BOX_HEADER_SIZE <= reservedMoovSpaceEnd - reservedMoovSpaceStart) {
+      output.position(reservedMoovSpaceStart);
+      output.write(moovBox);
+      // Write free box in the remaining space.
+      int freeSpace = (int) (reservedMoovSpaceEnd - output.position() - BOX_HEADER_SIZE);
+      output.write(BoxUtils.wrapIntoBox(FREE_BOX_TYPE, ByteBuffer.allocate(freeSpace)));
+    } else {
+      // Write moov at the end (after mdat).
+      canWriteMoovAtStart = false;
+      mdatEnd = mdatDataEnd;
+      output.position(mdatEnd);
+      output.write(moovBox);
+      lastMoovWritten = Range.closed(mdatEnd, mdatEnd + moovBoxSize);
+      // Replace previously written moov box (after ftyp box) with a free box.
+      int freeSpace = (int) (reservedMoovSpaceEnd - reservedMoovSpaceStart - BOX_HEADER_SIZE);
+      ByteBuffer freeBox = BoxUtils.wrapIntoBox(FREE_BOX_TYPE, ByteBuffer.allocate(freeSpace));
+      output.write(freeBox, reservedMoovSpaceStart);
+    }
+    updateMdatSize(mdatDataEnd - mdatStart);
   }
 
   /**
@@ -192,6 +242,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
    * @throws IOException If there is any error while writing data to the disk.
    */
   private void writeMoovAndTrim() throws IOException {
+    if (canWriteMoovAtStart) {
+      maybeWriteMoovAtStart();
+      return;
+    }
+
     // The current state is:
     // | ftyp | mdat .. .. .. (00 00 00) | moov |
 
@@ -207,7 +262,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
     if (mdatEnd - mdatDataEnd < moovAndFreeBytesNeeded) {
       // If the gap is not big enough for the moov box, then extend the mdat box once again. This
       // involves writing moov box farther away one more time.
-      safelyReplaceMoov(lastMoovWritten.upperEndpoint() + moovAndFreeBytesNeeded, currentMoovData);
+      safelyReplaceMoovAtEnd(
+          lastMoovWritten.upperEndpoint() + moovAndFreeBytesNeeded, currentMoovData);
       checkState(mdatEnd - mdatDataEnd >= moovAndFreeBytesNeeded);
     }
 
@@ -224,10 +280,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
     ByteBuffer freeHeader = ByteBuffer.allocate(4 + 4);
     freeHeader.putInt((int) remainingLength);
-    freeHeader.put((byte) 'f');
-    freeHeader.put((byte) 'r');
-    freeHeader.put((byte) 'e');
-    freeHeader.put((byte) 'e');
+    freeHeader.put(Util.getUtf8Bytes(FREE_BOX_TYPE));
     freeHeader.flip();
     output.write(freeHeader);
 
@@ -237,7 +290,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
     // Now change this to:
     // | ftyp | mdat .. .. .. | new moov | free (00 00 00) (old moov) |
     mdatEnd = newMoovLocation;
-    updateMdatSize();
+    updateMdatSize(mdatEnd - mdatStart);
     lastMoovWritten = Range.closed(newMoovLocation, newMoovLocation + currentMoovData.limit());
 
     // Remove the free box.
@@ -255,12 +308,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
     ByteBuffer currentMoovData = assembleCurrentMoovData();
 
-    safelyReplaceMoov(newMoovStart, currentMoovData);
+    safelyReplaceMoovAtEnd(newMoovStart, currentMoovData);
   }
 
   /** Writes out any pending samples to the file. */
   private void flushPending(Track track) throws IOException {
-    if (track.pendingSamples.isEmpty()) {
+    checkState(track.pendingSamplesByteBuffer.size() == track.pendingSamplesBufferInfo.size());
+    if (track.pendingSamplesBufferInfo.isEmpty()) {
       return;
     }
 
@@ -270,66 +324,82 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
     // Calculate the additional space required.
     long bytesNeededInMdat = 0L;
-    for (Pair<BufferInfo, ByteBuffer> sample : track.pendingSamples) {
-      bytesNeededInMdat += sample.second.limit();
+    for (ByteBuffer sample : track.pendingSamplesByteBuffer) {
+      bytesNeededInMdat += sample.limit();
     }
 
-    // If the required number of bytes doesn't fit in the gap between the actual data and the moov
-    // box, extend the file and write out the moov box to the end again.
-    if (mdatDataEnd + bytesNeededInMdat >= mdatEnd) {
-      // Reserve some extra space than required, so that mdat box extension is less frequent.
-      rewriteMoovWithMdatEmptySpace(
-          /* bytesNeeded= */ getMdatExtensionAmount(mdatDataEnd) + bytesNeededInMdat);
-    }
+    maybeExtendMdatAndRewriteMoov(bytesNeededInMdat);
 
     track.writtenChunkOffsets.add(mdatDataEnd);
-    track.writtenChunkSampleCounts.add(track.pendingSamples.size());
+    track.writtenChunkSampleCounts.add(track.pendingSamplesBufferInfo.size());
 
     do {
-      Pair<BufferInfo, ByteBuffer> pendingPacket = track.pendingSamples.removeFirst();
-      BufferInfo info = pendingPacket.first;
-      ByteBuffer buffer = pendingPacket.second;
-
-      track.writtenSamples.add(info);
+      BufferInfo currentSampleBufferInfo = track.pendingSamplesBufferInfo.removeFirst();
+      ByteBuffer currentSampleByteBuffer = track.pendingSamplesByteBuffer.removeFirst();
 
       // Convert the H.264/H.265 samples from Annex-B format (output by MediaCodec) to
       // Avcc format (required by MP4 container).
-      if (MimeTypes.isVideo(track.format.sampleMimeType)) {
-        annexBToAvccConverter.process(buffer);
+      if (doesSampleContainAnnexBNalUnits(checkNotNull(track.format.sampleMimeType))) {
+        currentSampleByteBuffer = annexBToAvccConverter.process(currentSampleByteBuffer);
+        currentSampleBufferInfo.set(
+            currentSampleByteBuffer.position(),
+            currentSampleByteBuffer.remaining(),
+            currentSampleBufferInfo.presentationTimeUs,
+            currentSampleBufferInfo.flags);
       }
 
-      buffer.rewind();
+      // If the original sample had 3 bytes NAL start code instead of 4 bytes, then after AnnexB to
+      // Avcc conversion it will have 1 additional byte.
+      maybeExtendMdatAndRewriteMoov(currentSampleByteBuffer.remaining());
 
-      mdatDataEnd += output.write(buffer, mdatDataEnd);
-    } while (!track.pendingSamples.isEmpty());
-
+      mdatDataEnd += output.write(currentSampleByteBuffer, mdatDataEnd);
+      track.writtenSamples.add(currentSampleBufferInfo);
+    } while (!track.pendingSamplesBufferInfo.isEmpty());
     checkState(mdatDataEnd <= mdatEnd);
   }
 
-  private void updateMdatSize() throws IOException {
-    // Assuming that the mdat box has a 64-bit length, skip the box type (4 bytes) and
-    // the 32-bit box length field (4 bytes).
-    output.position(mdatStart + 8);
+  private void maybeExtendMdatAndRewriteMoov(long additionalBytesNeeded) throws IOException {
+    // The mdat box can be written till the end of the file.
+    if (canWriteMoovAtStart) {
+      return;
+    }
+    // If the required number of bytes doesn't fit in the gap between the actual data and the moov
+    // box, extend the file and write out the moov box to the end again.
+    if (mdatDataEnd + additionalBytesNeeded >= mdatEnd) {
+      // Reserve some extra space than required, so that mdat box extension is less frequent.
+      rewriteMoovWithMdatEmptySpace(
+          /* bytesNeeded= */ getMdatExtensionAmount(mdatDataEnd) + additionalBytesNeeded);
+    }
+  }
 
-    ByteBuffer mdatSize = ByteBuffer.allocate(8); // one long
-    mdatSize.putLong(mdatEnd - mdatStart);
-    mdatSize.flip();
-    output.write(mdatSize);
+  private void updateMdatSize(long mdatSize) throws IOException {
+    // The mdat box has a 64-bit length, so skip the box type (4 bytes) and the default box length
+    // (4 bytes).
+    output.position(mdatStart + BOX_HEADER_SIZE);
+    ByteBuffer mdatSizeBuffer = ByteBuffer.allocate(8); // One long
+    mdatSizeBuffer.putLong(mdatSize);
+    mdatSizeBuffer.flip();
+    output.write(mdatSizeBuffer);
   }
 
   private void doInterleave() throws IOException {
+    boolean newSamplesWritten = false;
     for (int i = 0; i < tracks.size(); i++) {
       Track track = tracks.get(i);
-      // TODO: b/270583563 - check if we need to consider the global timestamp instead.
-      if (track.pendingSamples.size() > 2) {
-        BufferInfo firstSampleInfo = checkNotNull(track.pendingSamples.peekFirst()).first;
-        BufferInfo lastSampleInfo = checkNotNull(track.pendingSamples.peekLast()).first;
+      // TODO: b/270583563 - Check if we need to consider the global timestamp instead.
+      if (track.pendingSamplesBufferInfo.size() > 2) {
+        BufferInfo firstSampleInfo = checkNotNull(track.pendingSamplesBufferInfo.peekFirst());
+        BufferInfo lastSampleInfo = checkNotNull(track.pendingSamplesBufferInfo.peekLast());
 
         if (lastSampleInfo.presentationTimeUs - firstSampleInfo.presentationTimeUs
             > INTERLEAVE_DURATION_US) {
+          newSamplesWritten = true;
           flushPending(track);
         }
       }
+    }
+    if (newSamplesWritten && canWriteMoovAtStart) {
+      maybeWriteMoovAtStart();
     }
   }
 
@@ -350,76 +420,5 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
     return min(
         maxBytesToExtend, max(minBytesToExtend, (long) (extensionRatio * currentFileLength)));
-  }
-
-  private class Track implements TrackToken, Mp4MoovStructure.TrackMetadataProvider {
-    private final Format format;
-    private final int sortKey;
-    private final List<BufferInfo> writtenSamples;
-    private final List<Long> writtenChunkOffsets;
-    private final List<Integer> writtenChunkSampleCounts;
-    private final Deque<Pair<BufferInfo, ByteBuffer>> pendingSamples;
-
-    private boolean hadKeyframe = false;
-
-    private Track(Format format, int sortKey) {
-      this.format = format;
-      this.sortKey = sortKey;
-      writtenSamples = new ArrayList<>();
-      writtenChunkOffsets = new ArrayList<>();
-      writtenChunkSampleCounts = new ArrayList<>();
-      pendingSamples = new ArrayDeque<>();
-    }
-
-    public void writeSampleData(ByteBuffer byteBuffer, BufferInfo bufferInfo) throws IOException {
-      // TODO: b/279931840 - Confirm whether muxer should throw when writing empty samples.
-      // Skip empty samples.
-      if (bufferInfo.size == 0 || byteBuffer.remaining() == 0) {
-        return;
-      }
-
-      if ((bufferInfo.flags & MediaCodec.BUFFER_FLAG_KEY_FRAME) > 0) {
-        hadKeyframe = true;
-      }
-
-      if (!hadKeyframe && MimeTypes.isVideo(format.sampleMimeType)) {
-        return;
-      }
-
-      pendingSamples.addLast(Pair.create(bufferInfo, byteBuffer));
-      doInterleave();
-    }
-
-    @Override
-    public int videoUnitTimebase() {
-      return MimeTypes.isAudio(format.sampleMimeType)
-          ? 48_000 // TODO: b/270583563 - Update these with actual values from mediaFormat.
-          : 90_000;
-    }
-
-    @Override
-    public int sortKey() {
-      return sortKey;
-    }
-
-    @Override
-    public ImmutableList<BufferInfo> writtenSamples() {
-      return ImmutableList.copyOf(writtenSamples);
-    }
-
-    @Override
-    public ImmutableList<Long> writtenChunkOffsets() {
-      return ImmutableList.copyOf(writtenChunkOffsets);
-    }
-
-    @Override
-    public ImmutableList<Integer> writtenChunkSampleCounts() {
-      return ImmutableList.copyOf(writtenChunkSampleCounts);
-    }
-
-    @Override
-    public Format format() {
-      return format;
-    }
   }
 }

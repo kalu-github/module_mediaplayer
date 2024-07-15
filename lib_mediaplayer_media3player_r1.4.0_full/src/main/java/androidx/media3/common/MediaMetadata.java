@@ -15,6 +15,7 @@
  */
 package androidx.media3.common;
 
+import static androidx.media3.common.util.Assertions.checkArgument;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
 import static java.lang.annotation.ElementType.METHOD;
@@ -41,7 +42,7 @@ import java.util.List;
  * Metadata of a {@link MediaItem}, playlist, or a combination of multiple sources of {@link
  * Metadata}.
  */
-public final class MediaMetadata implements Bundleable {
+public final class MediaMetadata {
 
   /** A builder for {@link MediaMetadata} instances. */
   public static final class Builder {
@@ -53,6 +54,7 @@ public final class MediaMetadata implements Bundleable {
     @Nullable private CharSequence displayTitle;
     @Nullable private CharSequence subtitle;
     @Nullable private CharSequence description;
+    @Nullable private Long durationMs;
     @Nullable private Rating userRating;
     @Nullable private Rating overallRating;
     @Nullable private byte[] artworkData;
@@ -95,6 +97,7 @@ public final class MediaMetadata implements Bundleable {
       this.displayTitle = mediaMetadata.displayTitle;
       this.subtitle = mediaMetadata.subtitle;
       this.description = mediaMetadata.description;
+      this.durationMs = mediaMetadata.durationMs;
       this.userRating = mediaMetadata.userRating;
       this.overallRating = mediaMetadata.overallRating;
       this.artworkData = mediaMetadata.artworkData;
@@ -173,6 +176,23 @@ public final class MediaMetadata implements Bundleable {
     @CanIgnoreReturnValue
     public Builder setDescription(@Nullable CharSequence description) {
       this.description = description;
+      return this;
+    }
+
+    /**
+     * Sets the optional duration, non-negative and in milliseconds.
+     *
+     * <p>The duration is populated by the app when building the metadata object and is for
+     * informational purpose only. For retrieving the duration of the media item currently being
+     * played, use {@link Player#getDuration()} instead.
+     *
+     * @throws IllegalArgumentException if the duration is negative.
+     */
+    @UnstableApi
+    @CanIgnoreReturnValue
+    public Builder setDurationMs(@Nullable Long durationMs) {
+      checkArgument(durationMs == null || durationMs >= 0);
+      this.durationMs = durationMs;
       return this;
     }
 
@@ -462,7 +482,12 @@ public final class MediaMetadata implements Bundleable {
       return this;
     }
 
-    /** Populates all the fields from {@code mediaMetadata}, provided they are non-null. */
+    /**
+     * Populates all the fields from {@code mediaMetadata}.
+     *
+     * <p>Fields are populated when they are non-null with an exception that both {@code artworkUri}
+     * and {@code artworkData} are populated, when at least one of them is non-null.
+     */
     @SuppressWarnings("deprecation") // Populating deprecated fields.
     @CanIgnoreReturnValue
     @UnstableApi
@@ -491,17 +516,18 @@ public final class MediaMetadata implements Bundleable {
       if (mediaMetadata.description != null) {
         setDescription(mediaMetadata.description);
       }
+      if (mediaMetadata.durationMs != null) {
+        setDurationMs(mediaMetadata.durationMs);
+      }
       if (mediaMetadata.userRating != null) {
         setUserRating(mediaMetadata.userRating);
       }
       if (mediaMetadata.overallRating != null) {
         setOverallRating(mediaMetadata.overallRating);
       }
-      if (mediaMetadata.artworkData != null) {
-        setArtworkData(mediaMetadata.artworkData, mediaMetadata.artworkDataType);
-      }
-      if (mediaMetadata.artworkUri != null) {
+      if (mediaMetadata.artworkUri != null || mediaMetadata.artworkData != null) {
         setArtworkUri(mediaMetadata.artworkUri);
+        setArtworkData(mediaMetadata.artworkData, mediaMetadata.artworkDataType);
       }
       if (mediaMetadata.trackNumber != null) {
         setTrackNumber(mediaMetadata.trackNumber);
@@ -975,6 +1001,15 @@ public final class MediaMetadata implements Bundleable {
   /** Optional description. */
   @Nullable public final CharSequence description;
 
+  /**
+   * Optional duration, non-negative and in milliseconds.
+   *
+   * <p>This field is populated by the app when building the metadata object and is for
+   * informational purpose only. For retrieving the duration of the media item currently being
+   * played, use {@link Player#getDuration()} instead.
+   */
+  @UnstableApi @Nullable public final Long durationMs;
+
   /** Optional user {@link Rating}. */
   @Nullable public final Rating userRating;
 
@@ -1082,8 +1117,9 @@ public final class MediaMetadata implements Bundleable {
   /**
    * Optional extras {@link Bundle}.
    *
-   * <p>Given the complexities of checking the equality of two {@link Bundle}s, this is not
-   * considered in the {@link #equals(Object)} or {@link #hashCode()}.
+   * <p>Given the complexities of checking the equality of two {@link Bundle} instances, the
+   * contents of these extras are not considered in the {@link #equals(Object)} and {@link
+   * #hashCode()} implementation.
    */
   @Nullable public final Bundle extras;
 
@@ -1112,6 +1148,7 @@ public final class MediaMetadata implements Bundleable {
     this.displayTitle = builder.displayTitle;
     this.subtitle = builder.subtitle;
     this.description = builder.description;
+    this.durationMs = builder.durationMs;
     this.userRating = builder.userRating;
     this.overallRating = builder.overallRating;
     this.artworkData = builder.artworkData;
@@ -1146,6 +1183,7 @@ public final class MediaMetadata implements Bundleable {
     return new Builder(/* mediaMetadata= */ this);
   }
 
+  /** Note: Equality checking does not consider {@link #extras}. */
   @SuppressWarnings("deprecation") // Comparing deprecated fields.
   @Override
   public boolean equals(@Nullable Object obj) {
@@ -1163,6 +1201,7 @@ public final class MediaMetadata implements Bundleable {
         && Util.areEqual(displayTitle, that.displayTitle)
         && Util.areEqual(subtitle, that.subtitle)
         && Util.areEqual(description, that.description)
+        && Util.areEqual(durationMs, that.durationMs)
         && Util.areEqual(userRating, that.userRating)
         && Util.areEqual(overallRating, that.overallRating)
         && Arrays.equals(artworkData, that.artworkData)
@@ -1187,7 +1226,8 @@ public final class MediaMetadata implements Bundleable {
         && Util.areEqual(genre, that.genre)
         && Util.areEqual(compilation, that.compilation)
         && Util.areEqual(station, that.station)
-        && Util.areEqual(mediaType, that.mediaType);
+        && Util.areEqual(mediaType, that.mediaType)
+        && ((extras == null) == (that.extras == null));
   }
 
   @SuppressWarnings("deprecation") // Hashing deprecated fields.
@@ -1201,6 +1241,7 @@ public final class MediaMetadata implements Bundleable {
         displayTitle,
         subtitle,
         description,
+        durationMs,
         userRating,
         overallRating,
         Arrays.hashCode(artworkData),
@@ -1225,10 +1266,9 @@ public final class MediaMetadata implements Bundleable {
         genre,
         compilation,
         station,
-        mediaType);
+        mediaType,
+        extras == null);
   }
-
-  // Bundleable implementation.
 
   private static final String FIELD_TITLE = Util.intToStringMaxRadix(0);
   private static final String FIELD_ARTIST = Util.intToStringMaxRadix(1);
@@ -1263,11 +1303,11 @@ public final class MediaMetadata implements Bundleable {
   private static final String FIELD_STATION = Util.intToStringMaxRadix(30);
   private static final String FIELD_MEDIA_TYPE = Util.intToStringMaxRadix(31);
   private static final String FIELD_IS_BROWSABLE = Util.intToStringMaxRadix(32);
+  private static final String FIELD_DURATION_MS = Util.intToStringMaxRadix(33);
   private static final String FIELD_EXTRAS = Util.intToStringMaxRadix(1000);
 
   @SuppressWarnings("deprecation") // Bundling deprecated fields.
   @UnstableApi
-  @Override
   public Bundle toBundle() {
     Bundle bundle = new Bundle();
     if (title != null) {
@@ -1290,6 +1330,9 @@ public final class MediaMetadata implements Bundleable {
     }
     if (description != null) {
       bundle.putCharSequence(FIELD_DESCRIPTION, description);
+    }
+    if (durationMs != null) {
+      bundle.putLong(FIELD_DURATION_MS, durationMs);
     }
     if (artworkData != null) {
       bundle.putByteArray(FIELD_ARTWORK_DATA, artworkData);
@@ -1372,11 +1415,10 @@ public final class MediaMetadata implements Bundleable {
     return bundle;
   }
 
-  /** Object that can restore {@link MediaMetadata} from a {@link Bundle}. */
-  @UnstableApi public static final Creator<MediaMetadata> CREATOR = MediaMetadata::fromBundle;
-
+  /** Restores a {@code MediaMetadata} from a {@link Bundle}. */
+  @UnstableApi
   @SuppressWarnings("deprecation") // Unbundling deprecated fields.
-  private static MediaMetadata fromBundle(Bundle bundle) {
+  public static MediaMetadata fromBundle(Bundle bundle) {
     Builder builder = new Builder();
     builder
         .setTitle(bundle.getCharSequence(FIELD_TITLE))
@@ -1403,14 +1445,17 @@ public final class MediaMetadata implements Bundleable {
     if (bundle.containsKey(FIELD_USER_RATING)) {
       @Nullable Bundle fieldBundle = bundle.getBundle(FIELD_USER_RATING);
       if (fieldBundle != null) {
-        builder.setUserRating(Rating.CREATOR.fromBundle(fieldBundle));
+        builder.setUserRating(Rating.fromBundle(fieldBundle));
       }
     }
     if (bundle.containsKey(FIELD_OVERALL_RATING)) {
       @Nullable Bundle fieldBundle = bundle.getBundle(FIELD_OVERALL_RATING);
       if (fieldBundle != null) {
-        builder.setOverallRating(Rating.CREATOR.fromBundle(fieldBundle));
+        builder.setOverallRating(Rating.fromBundle(fieldBundle));
       }
+    }
+    if (bundle.containsKey(FIELD_DURATION_MS)) {
+      builder.setDurationMs(bundle.getLong(FIELD_DURATION_MS));
     }
     if (bundle.containsKey(FIELD_TRACK_NUMBER)) {
       builder.setTrackNumber(bundle.getInt(FIELD_TRACK_NUMBER));

@@ -1,4 +1,4 @@
-package lib.kalu.mediax.util;
+package lib.kalu.media3.util;
 
 import android.util.Log;
 

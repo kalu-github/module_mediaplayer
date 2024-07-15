@@ -33,6 +33,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
+import com.google.common.io.ByteStreams;
 import com.google.common.net.HttpHeaders;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.IOException;
@@ -74,6 +75,7 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
     private int connectTimeoutMs;
     private int readTimeoutMs;
     private boolean allowCrossProtocolRedirects;
+    private boolean crossProtocolRedirectsForceOriginal;
     private boolean keepPostFor302Redirects;
 
     /** Creates an instance. */
@@ -154,6 +156,23 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
     }
 
     /**
+     * Sets whether cross protocol redirects should be forced to follow original protocol. This
+     * should only be set if {@code allowCrossProtocolRedirects} is false.
+     *
+     * <p>The default is {@code false}.
+     *
+     * @param crossProtocolRedirectsForceOriginal Whether to force original protocol.
+     * @return This factory.
+     */
+    @CanIgnoreReturnValue
+    @UnstableApi
+    public Factory setCrossProtocolRedirectsForceOriginal(
+        boolean crossProtocolRedirectsForceOriginal) {
+      this.crossProtocolRedirectsForceOriginal = crossProtocolRedirectsForceOriginal;
+      return this;
+    }
+
+    /**
      * Sets a content type {@link Predicate}. If a content type is rejected by the predicate then a
      * {@link HttpDataSource.InvalidContentTypeException} is thrown from {@link
      * DefaultHttpDataSource#open(DataSpec)}.
@@ -208,6 +227,7 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
               connectTimeoutMs,
               readTimeoutMs,
               allowCrossProtocolRedirects,
+              crossProtocolRedirectsForceOriginal,
               defaultRequestProperties,
               contentTypePredicate,
               keepPostFor302Redirects);
@@ -231,14 +251,15 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
   private static final long MAX_BYTES_TO_DRAIN = 2048;
 
   private final boolean allowCrossProtocolRedirects;
+  private final boolean crossProtocolRedirectsForceOriginal;
   private final int connectTimeoutMillis;
   private final int readTimeoutMillis;
   @Nullable private final String userAgent;
   @Nullable private final RequestProperties defaultRequestProperties;
   private final RequestProperties requestProperties;
+  @Nullable private final Predicate<String> contentTypePredicate;
   private final boolean keepPostFor302Redirects;
 
-  @Nullable private Predicate<String> contentTypePredicate;
   @Nullable private DataSpec dataSpec;
   @Nullable private HttpURLConnection connection;
   @Nullable private InputStream inputStream;
@@ -247,68 +268,12 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
   private long bytesToRead;
   private long bytesRead;
 
-  /**
-   * @deprecated Use {@link DefaultHttpDataSource.Factory} instead.
-   */
-  @UnstableApi
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public DefaultHttpDataSource() {
-    this(/* userAgent= */ null, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
-  }
-
-  /**
-   * @deprecated Use {@link DefaultHttpDataSource.Factory} instead.
-   */
-  @UnstableApi
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public DefaultHttpDataSource(@Nullable String userAgent) {
-    this(userAgent, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
-  }
-
-  /**
-   * @deprecated Use {@link DefaultHttpDataSource.Factory} instead.
-   */
-  @UnstableApi
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public DefaultHttpDataSource(
-      @Nullable String userAgent, int connectTimeoutMillis, int readTimeoutMillis) {
-    this(
-        userAgent,
-        connectTimeoutMillis,
-        readTimeoutMillis,
-        /* allowCrossProtocolRedirects= */ false,
-        /* defaultRequestProperties= */ null);
-  }
-
-  /**
-   * @deprecated Use {@link DefaultHttpDataSource.Factory} instead.
-   */
-  @UnstableApi
-  @Deprecated
-  public DefaultHttpDataSource(
-      @Nullable String userAgent,
-      int connectTimeoutMillis,
-      int readTimeoutMillis,
-      boolean allowCrossProtocolRedirects,
-      @Nullable RequestProperties defaultRequestProperties) {
-    this(
-        userAgent,
-        connectTimeoutMillis,
-        readTimeoutMillis,
-        allowCrossProtocolRedirects,
-        defaultRequestProperties,
-        /* contentTypePredicate= */ null,
-        /* keepPostFor302Redirects= */ false);
-  }
-
   private DefaultHttpDataSource(
       @Nullable String userAgent,
       int connectTimeoutMillis,
       int readTimeoutMillis,
       boolean allowCrossProtocolRedirects,
+      boolean crossProtocolRedirectsForceOriginal,
       @Nullable RequestProperties defaultRequestProperties,
       @Nullable Predicate<String> contentTypePredicate,
       boolean keepPostFor302Redirects) {
@@ -317,20 +282,16 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
     this.connectTimeoutMillis = connectTimeoutMillis;
     this.readTimeoutMillis = readTimeoutMillis;
     this.allowCrossProtocolRedirects = allowCrossProtocolRedirects;
+    this.crossProtocolRedirectsForceOriginal = crossProtocolRedirectsForceOriginal;
+    if (allowCrossProtocolRedirects && crossProtocolRedirectsForceOriginal) {
+      throw new IllegalArgumentException(
+          "crossProtocolRedirectsForceOriginal should not be set if allowCrossProtocolRedirects is"
+              + " true");
+    }
     this.defaultRequestProperties = defaultRequestProperties;
     this.contentTypePredicate = contentTypePredicate;
     this.requestProperties = new RequestProperties();
     this.keepPostFor302Redirects = keepPostFor302Redirects;
-  }
-
-  /**
-   * @deprecated Use {@link DefaultHttpDataSource.Factory#setContentTypePredicate(Predicate)}
-   *     instead.
-   */
-  @UnstableApi
-  @Deprecated
-  public void setContentTypePredicate(@Nullable Predicate<String> contentTypePredicate) {
-    this.contentTypePredicate = contentTypePredicate;
   }
 
   @UnstableApi
@@ -423,7 +384,7 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
       byte[] errorResponseBody;
       try {
         errorResponseBody =
-            errorStream != null ? Util.toByteArray(errorStream) : Util.EMPTY_BYTE_ARRAY;
+            errorStream != null ? ByteStreams.toByteArray(errorStream) : Util.EMPTY_BYTE_ARRAY;
       } catch (IOException e) {
         errorResponseBody = Util.EMPTY_BYTE_ARRAY;
       }
@@ -553,7 +514,9 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
     long length = dataSpec.length;
     boolean allowGzip = dataSpec.isFlagSet(DataSpec.FLAG_ALLOW_GZIP);
 
-    if (!allowCrossProtocolRedirects && !keepPostFor302Redirects) {
+    if (!allowCrossProtocolRedirects
+        && !crossProtocolRedirectsForceOriginal
+        && !keepPostFor302Redirects) {
       // HttpURLConnection disallows cross-protocol redirects, but otherwise performs redirection
       // automatically. This is the behavior we want, so use it.
       return makeConnection(
@@ -726,15 +689,27 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
           HttpDataSourceException.TYPE_OPEN);
     }
     if (!allowCrossProtocolRedirects && !protocol.equals(originalUrl.getProtocol())) {
-      throw new HttpDataSourceException(
-          "Disallowed cross-protocol redirect ("
-              + originalUrl.getProtocol()
-              + " to "
-              + protocol
-              + ")",
-          dataSpec,
-          PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,
-          HttpDataSourceException.TYPE_OPEN);
+      if (!crossProtocolRedirectsForceOriginal) {
+        throw new HttpDataSourceException(
+            "Disallowed cross-protocol redirect ("
+                + originalUrl.getProtocol()
+                + " to "
+                + protocol
+                + ")",
+            dataSpec,
+            PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,
+            HttpDataSourceException.TYPE_OPEN);
+      } else {
+        try {
+          url = new URL(url.toString().replaceFirst(protocol, originalUrl.getProtocol()));
+        } catch (MalformedURLException e) {
+          throw new HttpDataSourceException(
+              e,
+              dataSpec,
+              PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,
+              HttpDataSourceException.TYPE_OPEN);
+        }
+      }
     }
     return url;
   }
@@ -822,7 +797,7 @@ public class DefaultHttpDataSource extends BaseDataSource implements HttpDataSou
    */
   private static void maybeTerminateInputStream(
       @Nullable HttpURLConnection connection, long bytesRemaining) {
-    if (connection == null || Util.SDK_INT < 19 || Util.SDK_INT > 20) {
+    if (connection == null || Util.SDK_INT > 20) {
       return;
     }
 

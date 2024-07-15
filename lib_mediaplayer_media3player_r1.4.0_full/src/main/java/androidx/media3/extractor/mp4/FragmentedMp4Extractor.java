@@ -49,11 +49,15 @@ import androidx.media3.extractor.ExtractorsFactory;
 import androidx.media3.extractor.GaplessInfoHolder;
 import androidx.media3.extractor.PositionHolder;
 import androidx.media3.extractor.SeekMap;
+import androidx.media3.extractor.SniffFailure;
 import androidx.media3.extractor.TrackOutput;
 import androidx.media3.extractor.metadata.emsg.EventMessage;
 import androidx.media3.extractor.metadata.emsg.EventMessageEncoder;
 import androidx.media3.extractor.mp4.Atom.ContainerAtom;
 import androidx.media3.extractor.mp4.Atom.LeafAtom;
+import androidx.media3.extractor.text.SubtitleParser;
+import androidx.media3.extractor.text.SubtitleTranscodingExtractorOutput;
+import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -71,9 +75,13 @@ import java.util.UUID;
 @UnstableApi
 public class FragmentedMp4Extractor implements Extractor {
 
-  /** Factory for {@link FragmentedMp4Extractor} instances. */
-  public static final ExtractorsFactory FACTORY =
-      () -> new Extractor[] {new FragmentedMp4Extractor()};
+  /**
+   * Creates a factory for {@link FragmentedMp4Extractor} instances with the provided {@link
+   * SubtitleParser.Factory}.
+   */
+  public static ExtractorsFactory newFactory(SubtitleParser.Factory subtitleParserFactory) {
+    return () -> new Extractor[] {new FragmentedMp4Extractor(subtitleParserFactory)};
+  }
 
   /**
    * Flags controlling the behavior of the extractor. Possible flag values are {@link
@@ -89,7 +97,8 @@ public class FragmentedMp4Extractor implements Extractor {
         FLAG_WORKAROUND_EVERY_VIDEO_FRAME_IS_SYNC_FRAME,
         FLAG_WORKAROUND_IGNORE_TFDT_BOX,
         FLAG_ENABLE_EMSG_TRACK,
-        FLAG_WORKAROUND_IGNORE_EDIT_LISTS
+        FLAG_WORKAROUND_IGNORE_EDIT_LISTS,
+        FLAG_EMIT_RAW_SUBTITLE_DATA
       })
   public @interface Flags {}
 
@@ -114,6 +123,23 @@ public class FragmentedMp4Extractor implements Extractor {
   /** Flag to ignore any edit lists in the stream. */
   public static final int FLAG_WORKAROUND_IGNORE_EDIT_LISTS = 1 << 4; // 16
 
+  /**
+   * Flag to use the source subtitle formats without modification. If unset, subtitles will be
+   * transcoded to {@link MimeTypes#APPLICATION_MEDIA3_CUES} during extraction.
+   */
+  public static final int FLAG_EMIT_RAW_SUBTITLE_DATA = 1 << 5; // 32
+
+  /**
+   * @deprecated Use {@link #newFactory(SubtitleParser.Factory)} instead.
+   */
+  @Deprecated
+  public static final ExtractorsFactory FACTORY =
+      () ->
+          new Extractor[] {
+            new FragmentedMp4Extractor(
+                SubtitleParser.Factory.UNSUPPORTED, /* flags= */ FLAG_EMIT_RAW_SUBTITLE_DATA)
+          };
+
   private static final String TAG = "FragmentedMp4Extractor";
 
   @SuppressWarnings("ConstantCaseForConstants")
@@ -134,7 +160,7 @@ public class FragmentedMp4Extractor implements Extractor {
   private static final int STATE_READING_SAMPLE_START = 3;
   private static final int STATE_READING_SAMPLE_CONTINUE = 4;
 
-  // Workarounds.
+  private final SubtitleParser.Factory subtitleParserFactory;
   private final @Flags int flags;
   @Nullable private final Track sideloadedTrack;
 
@@ -162,6 +188,7 @@ public class FragmentedMp4Extractor implements Extractor {
   private final ArrayDeque<MetadataSampleInfo> pendingMetadataSampleInfos;
   @Nullable private final TrackOutput additionalEmsgTrackOutput;
 
+  private ImmutableList<SniffFailure> lastSniffFailures;
   private int parserState;
   private int atomType;
   private long atomSize;
@@ -187,53 +214,113 @@ public class FragmentedMp4Extractor implements Extractor {
   // Whether extractorOutput.seekMap has been called.
   private boolean haveOutputSeekMap;
 
+  /**
+   * @deprecated Use {@link #FragmentedMp4Extractor(SubtitleParser.Factory)} instead
+   */
+  @Deprecated
   public FragmentedMp4Extractor() {
-    this(0);
+    this(
+        SubtitleParser.Factory.UNSUPPORTED,
+        /* flags= */ FLAG_EMIT_RAW_SUBTITLE_DATA,
+        /* timestampAdjuster= */ null,
+        /* sideloadedTrack= */ null,
+        /* closedCaptionFormats= */ ImmutableList.of(),
+        /* additionalEmsgTrackOutput= */ null);
   }
 
   /**
-   * @param flags Flags that control the extractor's behavior.
+   * Constructs an instance.
+   *
+   * @param subtitleParserFactory The {@link SubtitleParser.Factory} for parsing subtitles during
+   *     extraction.
    */
+  public FragmentedMp4Extractor(SubtitleParser.Factory subtitleParserFactory) {
+    this(
+        subtitleParserFactory,
+        /* flags= */ 0,
+        /* timestampAdjuster= */ null,
+        /* sideloadedTrack= */ null,
+        /* closedCaptionFormats= */ ImmutableList.of(),
+        /* additionalEmsgTrackOutput= */ null);
+  }
+
+  /**
+   * @deprecated Use {@link #FragmentedMp4Extractor(SubtitleParser.Factory, int)} instead
+   */
+  @Deprecated
   public FragmentedMp4Extractor(@Flags int flags) {
-    this(flags, /* timestampAdjuster= */ null);
+    this(
+        SubtitleParser.Factory.UNSUPPORTED,
+        flags | FLAG_EMIT_RAW_SUBTITLE_DATA,
+        /* timestampAdjuster= */ null,
+        /* sideloadedTrack= */ null,
+        /* closedCaptionFormats= */ ImmutableList.of(),
+        /* additionalEmsgTrackOutput= */ null);
   }
 
   /**
+   * Constructs an instance.
+   *
+   * @param subtitleParserFactory The {@link SubtitleParser.Factory} for parsing subtitles during
+   *     extraction.
    * @param flags Flags that control the extractor's behavior.
-   * @param timestampAdjuster Adjusts sample timestamps. May be null if no adjustment is needed.
    */
+  public FragmentedMp4Extractor(SubtitleParser.Factory subtitleParserFactory, @Flags int flags) {
+    this(
+        subtitleParserFactory,
+        flags,
+        /* timestampAdjuster= */ null,
+        /* sideloadedTrack= */ null,
+        /* closedCaptionFormats= */ ImmutableList.of(),
+        /* additionalEmsgTrackOutput= */ null);
+  }
+
+  /**
+   * @deprecated Use {@link #FragmentedMp4Extractor(SubtitleParser.Factory, int, TimestampAdjuster,
+   *     Track, List, TrackOutput)} instead
+   */
+  @Deprecated
   public FragmentedMp4Extractor(@Flags int flags, @Nullable TimestampAdjuster timestampAdjuster) {
-    this(flags, timestampAdjuster, /* sideloadedTrack= */ null, Collections.emptyList());
+    this(
+        SubtitleParser.Factory.UNSUPPORTED,
+        flags | FLAG_EMIT_RAW_SUBTITLE_DATA,
+        timestampAdjuster,
+        /* sideloadedTrack= */ null,
+        /* closedCaptionFormats= */ ImmutableList.of(),
+        /* additionalEmsgTrackOutput= */ null);
   }
 
   /**
-   * @param flags Flags that control the extractor's behavior.
-   * @param timestampAdjuster Adjusts sample timestamps. May be null if no adjustment is needed.
-   * @param sideloadedTrack Sideloaded track information, in the case that the extractor will not
-   *     receive a moov box in the input data. Null if a moov box is expected.
+   * @deprecated Use {@link #FragmentedMp4Extractor(SubtitleParser.Factory, int, TimestampAdjuster,
+   *     Track, List, TrackOutput)} instead
    */
+  @Deprecated
   public FragmentedMp4Extractor(
       @Flags int flags,
       @Nullable TimestampAdjuster timestampAdjuster,
       @Nullable Track sideloadedTrack) {
-    this(flags, timestampAdjuster, sideloadedTrack, Collections.emptyList());
+    this(
+        SubtitleParser.Factory.UNSUPPORTED,
+        flags | FLAG_EMIT_RAW_SUBTITLE_DATA,
+        timestampAdjuster,
+        sideloadedTrack,
+        /* closedCaptionFormats= */ ImmutableList.of(),
+        /* additionalEmsgTrackOutput= */ null);
   }
 
   /**
-   * @param flags Flags that control the extractor's behavior.
-   * @param timestampAdjuster Adjusts sample timestamps. May be null if no adjustment is needed.
-   * @param sideloadedTrack Sideloaded track information, in the case that the extractor will not
-   *     receive a moov box in the input data. Null if a moov box is expected.
-   * @param closedCaptionFormats For tracks that contain SEI messages, the formats of the closed
-   *     caption channels to expose.
+   * @deprecated Use {@link #FragmentedMp4Extractor(SubtitleParser.Factory, int, TimestampAdjuster,
+   *     Track, List, TrackOutput)} instead
    */
+  @Deprecated
   public FragmentedMp4Extractor(
       @Flags int flags,
       @Nullable TimestampAdjuster timestampAdjuster,
       @Nullable Track sideloadedTrack,
       List<Format> closedCaptionFormats) {
     this(
-        flags,
+        SubtitleParser.Factory.UNSUPPORTED,
+        flags | FLAG_EMIT_RAW_SUBTITLE_DATA,
         timestampAdjuster,
         sideloadedTrack,
         closedCaptionFormats,
@@ -241,6 +328,30 @@ public class FragmentedMp4Extractor implements Extractor {
   }
 
   /**
+   * @deprecated Use {@link #FragmentedMp4Extractor(SubtitleParser.Factory, int, TimestampAdjuster,
+   *     Track, List, TrackOutput)} instead
+   */
+  @Deprecated
+  public FragmentedMp4Extractor(
+      @Flags int flags,
+      @Nullable TimestampAdjuster timestampAdjuster,
+      @Nullable Track sideloadedTrack,
+      List<Format> closedCaptionFormats,
+      @Nullable TrackOutput additionalEmsgTrackOutput) {
+    this(
+        SubtitleParser.Factory.UNSUPPORTED,
+        flags | FLAG_EMIT_RAW_SUBTITLE_DATA,
+        timestampAdjuster,
+        sideloadedTrack,
+        closedCaptionFormats,
+        additionalEmsgTrackOutput);
+  }
+
+  /**
+   * Constructs an instance.
+   *
+   * @param subtitleParserFactory The {@link SubtitleParser.Factory} for parsing subtitles during
+   *     extraction.
    * @param flags Flags that control the extractor's behavior.
    * @param timestampAdjuster Adjusts sample timestamps. May be null if no adjustment is needed.
    * @param sideloadedTrack Sideloaded track information, in the case that the extractor will not
@@ -252,11 +363,13 @@ public class FragmentedMp4Extractor implements Extractor {
    *     handling of emsg messages for players is not required.
    */
   public FragmentedMp4Extractor(
+      SubtitleParser.Factory subtitleParserFactory,
       @Flags int flags,
       @Nullable TimestampAdjuster timestampAdjuster,
       @Nullable Track sideloadedTrack,
       List<Format> closedCaptionFormats,
       @Nullable TrackOutput additionalEmsgTrackOutput) {
+    this.subtitleParserFactory = subtitleParserFactory;
     this.flags = flags;
     this.timestampAdjuster = timestampAdjuster;
     this.sideloadedTrack = sideloadedTrack;
@@ -272,6 +385,7 @@ public class FragmentedMp4Extractor implements Extractor {
     containerAtoms = new ArrayDeque<>();
     pendingMetadataSampleInfos = new ArrayDeque<>();
     trackBundles = new SparseArray<>();
+    lastSniffFailures = ImmutableList.of();
     durationUs = C.TIME_UNSET;
     pendingSeekTimeUs = C.TIME_UNSET;
     segmentIndexEarliestPresentationTimeUs = C.TIME_UNSET;
@@ -282,12 +396,22 @@ public class FragmentedMp4Extractor implements Extractor {
 
   @Override
   public boolean sniff(ExtractorInput input) throws IOException {
-    return Sniffer.sniffFragmented(input);
+    @Nullable SniffFailure sniffFailure = Sniffer.sniffFragmented(input);
+    lastSniffFailures = sniffFailure != null ? ImmutableList.of(sniffFailure) : ImmutableList.of();
+    return sniffFailure == null;
+  }
+
+  @Override
+  public ImmutableList<SniffFailure> getSniffFailureDetails() {
+    return lastSniffFailures;
   }
 
   @Override
   public void init(ExtractorOutput output) {
-    extractorOutput = output;
+    extractorOutput =
+        (flags & FLAG_EMIT_RAW_SUBTITLE_DATA) == 0
+            ? new SubtitleTranscodingExtractorOutput(output, subtitleParserFactory)
+            : output;
     enterReadingAtomHeaderState();
     initExtraTracks();
     if (sideloadedTrack != null) {

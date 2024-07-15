@@ -32,7 +32,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 import java.io.IOException;
 
-import lib.kalu.mediax.rtmp.RtmpClient;
+import lib.kalu.media3.rtmp.RtmpClient;
 
 @UnstableApi
 public final class RtmpDataSource extends BaseDataSource {

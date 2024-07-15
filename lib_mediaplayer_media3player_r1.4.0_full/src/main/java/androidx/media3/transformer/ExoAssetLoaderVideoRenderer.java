@@ -17,6 +17,7 @@ package androidx.media3.transformer;
 
 import static androidx.media3.common.util.Assertions.checkNotNull;
 import static androidx.media3.common.util.Assertions.checkStateNotNull;
+import static androidx.media3.transformer.TransformerUtil.getDecoderOutputColor;
 
 import android.media.MediaCodec;
 import androidx.annotation.Nullable;
@@ -24,7 +25,6 @@ import androidx.media3.common.C;
 import androidx.media3.common.ColorInfo;
 import androidx.media3.common.Format;
 import androidx.media3.decoder.DecoderInputBuffer;
-import androidx.media3.effect.DebugTraceUtil;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
   private final boolean flattenForSlowMotion;
   private final Codec.DecoderFactory decoderFactory;
-  private final boolean forceInterpretHdrAsSdr;
+  private final @Composition.HdrMode int hdrMode;
   private final List<Long> decodeOnlyPresentationTimestamps;
 
   private @MonotonicNonNull SefSlowMotionFlattener sefVideoSlowMotionFlattener;
@@ -46,13 +46,13 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
   public ExoAssetLoaderVideoRenderer(
       boolean flattenForSlowMotion,
       Codec.DecoderFactory decoderFactory,
-      boolean forceInterpretHdrAsSdr,
+      @Composition.HdrMode int hdrMode,
       TransformerMediaClock mediaClock,
       AssetLoader.Listener assetLoaderListener) {
     super(C.TRACK_TYPE_VIDEO, mediaClock, assetLoaderListener);
     this.flattenForSlowMotion = flattenForSlowMotion;
     this.decoderFactory = decoderFactory;
-    this.forceInterpretHdrAsSdr = forceInterpretHdrAsSdr;
+    this.hdrMode = hdrMode;
     decodeOnlyPresentationTimestamps = new ArrayList<>();
   }
 
@@ -62,17 +62,28 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
   }
 
   @Override
-  protected Format overrideFormat(Format inputFormat) {
-    if (forceInterpretHdrAsSdr && ColorInfo.isTransferHdr(inputFormat.colorInfo)) {
-      return inputFormat.buildUpon().setColorInfo(ColorInfo.SDR_BT709_LIMITED).build();
+  protected Format overrideInputFormat(Format format) {
+    if (hdrMode == Composition.HDR_MODE_EXPERIMENTAL_FORCE_INTERPRET_HDR_AS_SDR
+        && ColorInfo.isTransferHdr(format.colorInfo)) {
+      return format.buildUpon().setColorInfo(ColorInfo.SDR_BT709_LIMITED).build();
     }
-    return inputFormat;
+    return format;
+  }
+
+  @Override
+  protected Format overrideOutputFormat(Format format) {
+    // Gets the expected output color from the decoder, based on the input track format, if
+    // tone-mapping is applied.
+    ColorInfo validColor = TransformerUtil.getValidColor(format.colorInfo);
+    boolean isDecoderToneMappingRequested =
+        hdrMode == Composition.HDR_MODE_TONE_MAP_HDR_TO_SDR_USING_MEDIACODEC;
+    ColorInfo outputColor = getDecoderOutputColor(validColor, isDecoderToneMappingRequested);
+
+    return format.buildUpon().setColorInfo(outputColor).build();
   }
 
   @Override
   protected void onInputFormatRead(Format inputFormat) {
-    DebugTraceUtil.logEvent(
-        DebugTraceUtil.EVENT_VIDEO_INPUT_FORMAT, C.TIME_UNSET, inputFormat.toString());
     if (flattenForSlowMotion) {
       sefVideoSlowMotionFlattener = new SefSlowMotionFlattener(inputFormat);
     }
@@ -81,11 +92,11 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
   @Override
   protected void initDecoder(Format inputFormat) throws ExportException {
     // TODO(b/278259383): Move surface creation out of sampleConsumer. Init decoder before
-    // sampleConsumer.
+    //  sampleConsumer.
     checkStateNotNull(sampleConsumer);
     boolean isDecoderToneMappingRequired =
         ColorInfo.isTransferHdr(inputFormat.colorInfo)
-            && !ColorInfo.isTransferHdr(sampleConsumer.getExpectedInputColorInfo());
+            && hdrMode == Composition.HDR_MODE_TONE_MAP_HDR_TO_SDR_USING_MEDIACODEC;
     decoder =
         decoderFactory.createForVideoDecoding(
             inputFormat,
@@ -115,6 +126,10 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
     if (decoder == null) {
       inputBuffer.timeUs -= streamStartPositionUs;
+      if (inputBuffer.timeUs < 0) {
+        inputBuffer.clear();
+        return true;
+      }
     }
     return false;
   }
@@ -130,7 +145,6 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
   @RequiresNonNull({"sampleConsumer", "decoder"})
   protected boolean feedConsumerFromDecoder() throws ExportException {
     if (decoder.isEnded()) {
-      DebugTraceUtil.logEvent(DebugTraceUtil.EVENT_DECODER_SIGNAL_EOS, C.TIME_END_OF_SOURCE);
       sampleConsumer.signalEndOfVideoInput();
       isEnded = true;
       return false;
@@ -157,7 +171,6 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
     }
 
     decoder.releaseOutputBuffer(presentationTimeUs);
-    DebugTraceUtil.logEvent(DebugTraceUtil.EVENT_DECODER_DECODED_FRAME, presentationTimeUs);
     return true;
   }
 

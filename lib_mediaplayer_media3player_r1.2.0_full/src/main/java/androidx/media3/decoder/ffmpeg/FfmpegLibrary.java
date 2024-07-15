@@ -23,7 +23,7 @@ import androidx.media3.common.util.UnstableApi;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
-import lib.kalu.mediax.util.ExoLogUtil;
+import lib.kalu.media3.util.ExoLogUtil;
 
 @UnstableApi /**
  * Configures and queries the underlying native library.

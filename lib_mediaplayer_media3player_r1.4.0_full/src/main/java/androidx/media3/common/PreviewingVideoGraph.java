@@ -31,7 +31,6 @@ public interface PreviewingVideoGraph extends VideoGraph {
      * Creates a new {@link PreviewingVideoGraph} instance.
      *
      * @param context A {@link Context}.
-     * @param inputColorInfo The {@link ColorInfo} for the input frames.
      * @param outputColorInfo The {@link ColorInfo} for the output frames.
      * @param debugViewProvider A {@link DebugViewProvider}.
      * @param listener A {@link Listener}.
@@ -44,7 +43,6 @@ public interface PreviewingVideoGraph extends VideoGraph {
      */
     PreviewingVideoGraph create(
         Context context,
-        ColorInfo inputColorInfo,
         ColorInfo outputColorInfo,
         DebugViewProvider debugViewProvider,
         Listener listener,
@@ -53,4 +51,22 @@ public interface PreviewingVideoGraph extends VideoGraph {
         long initialTimestampOffsetUs)
         throws VideoFrameProcessingException;
   }
+
+  /**
+   * Renders the oldest unrendered output frame that has become {@linkplain
+   * Listener#onOutputFrameAvailableForRendering(long) available for rendering} at the given {@code
+   * renderTimeNs}.
+   *
+   * <p>This will either render the output frame to the {@linkplain #setOutputSurfaceInfo output
+   * surface}, or drop the frame, per {@code renderTimeNs}.
+   *
+   * <p>The {@code renderTimeNs} may be passed to {@link
+   * android.opengl.EGLExt#eglPresentationTimeANDROID} depending on the implementation.
+   *
+   * @param renderTimeNs The render time to use for the frame, in nanoseconds. The render time can
+   *     be before or after the current system time. Use {@link
+   *     VideoFrameProcessor#DROP_OUTPUT_FRAME} to drop the frame, or {@link
+   *     VideoFrameProcessor#RENDER_OUTPUT_FRAME_IMMEDIATELY} to render the frame immediately.
+   */
+  void renderOutputFrame(long renderTimeNs);
 }

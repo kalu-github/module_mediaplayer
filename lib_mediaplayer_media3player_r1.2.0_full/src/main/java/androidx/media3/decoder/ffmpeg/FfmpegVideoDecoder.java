@@ -30,7 +30,7 @@ import androidx.media3.decoder.VideoDecoderOutputBuffer;
 import java.nio.ByteBuffer;
 import java.util.List;
 
-import lib.kalu.mediax.util.ExoLogUtil;
+import lib.kalu.media3.util.ExoLogUtil;
 
 @UnstableApi /**
  * Ffmpeg Video decoder.

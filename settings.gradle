@@ -1,3 +1,5 @@
-include ':lib_mediaplayer_mediaxplayer_common'
-include ':lib_mediaplayer_mediaxplayer_r1.2.0'
-include ':lib_mediaplayer_mediaxplayer_r1.2.0_full'
+include ':lib_mediaplayer_media3player_common'
+include ':lib_mediaplayer_media3player_r1.2.0'
+include ':lib_mediaplayer_media3player_r1.2.0_full'
+include ':lib_mediaplayer_media3player_r1.4.0'
+include ':lib_mediaplayer_media3player_r1.4.0_full'

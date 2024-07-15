@@ -15,6 +15,7 @@
  */
 package androidx.media3.exoplayer.mediacodec;
 
+import android.content.Context;
 import android.media.MediaCodec;
 import android.media.MediaCrypto;
 import android.media.MediaFormat;
@@ -120,8 +121,22 @@ public interface MediaCodecAdapter {
   /** A factory for {@link MediaCodecAdapter} instances. */
   interface Factory {
 
-    /** Default factory used in most cases. */
+    /**
+     * @deprecated Use {@link #getDefault} instead.
+     */
+    @Deprecated
+    @SuppressWarnings("deprecation") // Forwarding to deprecated method.
     Factory DEFAULT = new DefaultMediaCodecAdapterFactory();
+
+    /**
+     * Returns the default factory that should be used in most cases.
+     *
+     * @param context A {@link Context}.
+     * @return The default factory.
+     */
+    static Factory getDefault(Context context) {
+      return new DefaultMediaCodecAdapterFactory(context);
+    }
 
     /** Creates a {@link MediaCodecAdapter} instance. */
     MediaCodecAdapter createAdapter(Configuration configuration) throws IOException;
@@ -134,6 +149,23 @@ public interface MediaCodecAdapter {
    */
   interface OnFrameRenderedListener {
     void onFrameRendered(MediaCodecAdapter codec, long presentationTimeUs, long nanoTime);
+  }
+
+  /** Listener to be called when an input or output buffer becomes available. */
+  interface OnBufferAvailableListener {
+    /**
+     * Called when an input buffer becomes available.
+     *
+     * @see MediaCodec.Callback#onInputBufferAvailable(MediaCodec, int)
+     */
+    default void onInputBufferAvailable() {}
+
+    /**
+     * Called when an output buffer becomes available.
+     *
+     * @see MediaCodec.Callback#onOutputBufferAvailable(MediaCodec, int, MediaCodec.BufferInfo)
+     */
+    default void onOutputBufferAvailable() {}
   }
 
   /**
@@ -238,6 +270,21 @@ public interface MediaCodecAdapter {
   void setOnFrameRenderedListener(OnFrameRenderedListener listener, Handler handler);
 
   /**
+   * Registers a listener that will be called when an input or output buffer becomes available.
+   *
+   * <p>Returns false if listener was not successfully registered for callbacks.
+   *
+   * @see MediaCodec.Callback#onInputBufferAvailable
+   * @see MediaCodec.Callback#onOutputBufferAvailable
+   * @return Whether listener was successfully registered.
+   */
+  @RequiresApi(21)
+  default boolean registerOnBufferAvailableListener(
+      MediaCodecAdapter.OnBufferAvailableListener listener) {
+    return false;
+  }
+
+  /**
    * Dynamically sets the output surface of a {@link MediaCodec}.
    *
    * @see MediaCodec#setOutputSurface(Surface)
@@ -250,7 +297,6 @@ public interface MediaCodecAdapter {
    *
    * @see MediaCodec#setParameters(Bundle)
    */
-  @RequiresApi(19)
   void setParameters(Bundle params);
 
   /**

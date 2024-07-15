@@ -20,7 +20,6 @@ import static androidx.media3.exoplayer.audio.AudioSink.SINK_FORMAT_SUPPORTED_WI
 import static androidx.media3.exoplayer.audio.AudioSink.SINK_FORMAT_UNSUPPORTED;
 
 import android.os.Handler;
-
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
 import androidx.media3.common.Format;
@@ -33,9 +32,11 @@ import androidx.media3.common.util.Util;
 import androidx.media3.decoder.CryptoConfig;
 import androidx.media3.exoplayer.audio.AudioRendererEventListener;
 import androidx.media3.exoplayer.audio.AudioSink;
+import androidx.media3.exoplayer.audio.AudioSink.SinkFormatSupport;
 import androidx.media3.exoplayer.audio.DecoderAudioRenderer;
 import androidx.media3.exoplayer.audio.DefaultAudioSink;
 
+/** Decodes and renders audio using FFmpeg. */
 @UnstableApi
 public final class FfmpegAudioRenderer extends DecoderAudioRenderer<FfmpegAudioDecoder> {
 
@@ -43,6 +44,7 @@ public final class FfmpegAudioRenderer extends DecoderAudioRenderer<FfmpegAudioD
 
   /** The number of input and output buffers. */
   private static final int NUM_BUFFERS = 16;
+
   /** The default input buffer size. */
   private static final int DEFAULT_INPUT_BUFFER_SIZE = 960 * 6;
 
@@ -109,7 +111,11 @@ public final class FfmpegAudioRenderer extends DecoderAudioRenderer<FfmpegAudioD
     return ADAPTIVE_NOT_SEAMLESS;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @hide
+   */
   @Override
   protected FfmpegAudioDecoder createDecoder(Format format, @Nullable CryptoConfig cryptoConfig)
       throws FfmpegDecoderException {
@@ -123,7 +129,11 @@ public final class FfmpegAudioRenderer extends DecoderAudioRenderer<FfmpegAudioD
     return decoder;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * {@inheritDoc}
+   *
+   * @hide
+   */
   @Override
   protected Format getOutputFormat(FfmpegAudioDecoder decoder) {
     Assertions.checkNotNull(decoder);
@@ -150,7 +160,7 @@ public final class FfmpegAudioRenderer extends DecoderAudioRenderer<FfmpegAudioD
       return true;
     }
 
-    @AudioSink.SinkFormatSupport
+    @SinkFormatSupport
     int formatSupport =
         getSinkFormatSupport(
             Util.getPcmFormat(

@@ -15,26 +15,33 @@
  */
 package androidx.media3.effect;
 
+import static android.opengl.GLES20.GL_FALSE;
+import static android.opengl.GLES20.GL_TRUE;
 import static androidx.media3.common.VideoFrameProcessor.INPUT_TYPE_BITMAP;
 import static androidx.media3.common.util.Assertions.checkArgument;
 import static androidx.media3.common.util.Assertions.checkState;
+import static androidx.media3.effect.DefaultVideoFrameProcessor.WORKING_COLOR_SPACE_LINEAR;
 
 import android.content.Context;
+import android.graphics.Gainmap;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import androidx.annotation.RequiresApi;
 import androidx.media3.common.C;
 import androidx.media3.common.ColorInfo;
-import androidx.media3.common.Format;
 import androidx.media3.common.VideoFrameProcessingException;
 import androidx.media3.common.VideoFrameProcessor.InputType;
 import androidx.media3.common.util.GlProgram;
 import androidx.media3.common.util.GlUtil;
+import androidx.media3.common.util.GlUtil.GlException;
 import androidx.media3.common.util.Size;
-import androidx.media3.common.util.UnstableApi;
+import androidx.media3.common.util.Util;
+import androidx.media3.effect.DefaultVideoFrameProcessor.WorkingColorSpace;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**
  * Applies a sequence of {@link MatrixTransformation MatrixTransformations} in the vertex shader and
@@ -52,10 +59,9 @@ import java.util.List;
  *
  * <p>Can copy frames from an external texture and apply color transformations for HDR if needed.
  */
-@UnstableApi
 @SuppressWarnings("FunctionalInterfaceClash") // b/228192298
 /* package */ final class DefaultShaderProgram extends BaseGlShaderProgram
-    implements ExternalShaderProgram {
+    implements ExternalShaderProgram, RepeatingGainmapShaderProgram {
 
   private static final String VERTEX_SHADER_TRANSFORMATION_PATH =
       "shaders/vertex_shader_transformation_es2.glsl";
@@ -63,6 +69,7 @@ import java.util.List;
       "shaders/vertex_shader_transformation_es3.glsl";
   private static final String FRAGMENT_SHADER_TRANSFORMATION_PATH =
       "shaders/fragment_shader_transformation_es2.glsl";
+  private static final String FRAGMENT_SHADER_COPY_PATH = "shaders/fragment_shader_copy_es2.glsl";
   private static final String FRAGMENT_SHADER_OETF_ES3_PATH =
       "shaders/fragment_shader_oetf_es3.glsl";
   private static final String FRAGMENT_SHADER_TRANSFORMATION_SDR_OETF_ES2_PATH =
@@ -73,6 +80,8 @@ import java.util.List;
       "shaders/fragment_shader_transformation_sdr_external_es2.glsl";
   private static final String FRAGMENT_SHADER_TRANSFORMATION_HDR_INTERNAL_ES3_PATH =
       "shaders/fragment_shader_transformation_hdr_internal_es3.glsl";
+  private static final String FRAGMENT_SHADER_TRANSFORMATION_ULTRA_HDR_ES3_PATH =
+      "shaders/fragment_shader_transformation_ultra_hdr_es3.glsl";
   private static final String FRAGMENT_SHADER_TRANSFORMATION_SDR_INTERNAL_PATH =
       "shaders/fragment_shader_transformation_sdr_internal_es2.glsl";
   private static final ImmutableList<float[]> NDC_SQUARE =
@@ -96,8 +105,7 @@ import java.util.List;
     1.6853f, -0.6530f, 0.0000f,
   };
 
-  private static final int GL_FALSE = 0;
-  private static final int GL_TRUE = 1;
+  private final GlProgram glProgram;
 
   /** The {@link MatrixTransformation MatrixTransformations} to apply. */
   private final ImmutableList<GlMatrixTransformation> matrixTransformations;
@@ -142,8 +150,11 @@ import java.util.List;
    */
   private ImmutableList<float[]> visiblePolygon;
 
-  private final GlProgram glProgram;
+  private @MonotonicNonNull Gainmap lastGainmap;
+  private int gainmapTexId;
   private @C.ColorTransfer int outputColorTransfer;
+  private boolean shouldRepeatLastFrame;
+  private boolean isRepeatingFrameDrawn;
 
   /**
    * Creates a new instance.
@@ -166,11 +177,16 @@ import java.util.List;
       List<RgbMatrix> rgbMatrices,
       boolean useHdr)
       throws VideoFrameProcessingException {
+    String fragmentShaderFilePath =
+        rgbMatrices.isEmpty()
+            // Ensure colors not multiplied by a uRgbMatrix (even the identity) as it can create
+            // color shifts on electrical pq tonemapped content.
+            ? FRAGMENT_SHADER_COPY_PATH
+            : FRAGMENT_SHADER_TRANSFORMATION_PATH;
     GlProgram glProgram =
-        createGlProgram(
-            context, VERTEX_SHADER_TRANSFORMATION_PATH, FRAGMENT_SHADER_TRANSFORMATION_PATH);
+        createGlProgram(context, VERTEX_SHADER_TRANSFORMATION_PATH, fragmentShaderFilePath);
 
-    // No transfer functions needed, because input and output are both optical colors.
+    // No transfer functions needed/applied, because input and output are in the same color space.
     return new DefaultShaderProgram(
         glProgram,
         ImmutableList.copyOf(matrixTransformations),
@@ -185,54 +201,67 @@ import java.util.List;
    * <p>Input will be sampled from an internal (i.e. regular) texture.
    *
    * <p>Applies the {@linkplain ColorInfo#colorTransfer inputColorInfo EOTF} to convert from
-   * electrical color input, to intermediate optical {@link GlShaderProgram} color output, before
-   * {@code matrixTransformations} and {@code rgbMatrices} are applied. Also applies the {@linkplain
-   * ColorInfo#colorTransfer outputColorInfo OETF}, if needed, to convert back to an electrical
-   * color output.
+   * electrical color input, to intermediate optical {@link GlShaderProgram} color output. Also
+   * applies the {@linkplain ColorInfo#colorTransfer outputColorInfo OETF}, if needed, to convert
+   * back to an electrical color output.
    *
    * @param context The {@link Context}.
-   * @param matrixTransformations The {@link GlMatrixTransformation GlMatrixTransformations} to
-   *     apply to each frame in order. Can be empty to apply no vertex transformations.
-   * @param rgbMatrices The {@link RgbMatrix RgbMatrices} to apply to each frame in order. Can be
-   *     empty to apply no color transformations.
    * @param inputColorInfo The input electrical (nonlinear) {@link ColorInfo}.
    * @param outputColorInfo The output electrical (nonlinear) or optical (linear) {@link ColorInfo}.
    *     If this is an optical color, it must be BT.2020 if {@code inputColorInfo} is {@linkplain
    *     ColorInfo#isTransferHdr(ColorInfo) HDR}, and RGB BT.709 if not.
-   * @param enableColorTransfers Whether to transfer colors to an intermediate color space when
-   *     applying effects. If the input or output is HDR, this must be {@code true}.
+   * @param sdrWorkingColorSpace The {@link WorkingColorSpace} to apply effects in.
    * @throws VideoFrameProcessingException If a problem occurs while reading shader files or an
    *     OpenGL operation fails or is unsupported.
    */
   public static DefaultShaderProgram createWithInternalSampler(
       Context context,
-      List<GlMatrixTransformation> matrixTransformations,
-      List<RgbMatrix> rgbMatrices,
       ColorInfo inputColorInfo,
       ColorInfo outputColorInfo,
-      boolean enableColorTransfers,
+      @WorkingColorSpace int sdrWorkingColorSpace,
       @InputType int inputType)
       throws VideoFrameProcessingException {
     checkState(
         inputColorInfo.colorTransfer != C.COLOR_TRANSFER_SRGB || inputType == INPUT_TYPE_BITMAP);
     boolean isInputTransferHdr = ColorInfo.isTransferHdr(inputColorInfo);
+    boolean isUsingUltraHdr =
+        inputType == INPUT_TYPE_BITMAP && outputColorInfo.colorSpace == C.COLOR_SPACE_BT2020;
     String vertexShaderFilePath =
-        isInputTransferHdr
+        isInputTransferHdr || isUsingUltraHdr
             ? VERTEX_SHADER_TRANSFORMATION_ES3_PATH
             : VERTEX_SHADER_TRANSFORMATION_PATH;
     String fragmentShaderFilePath =
-        isInputTransferHdr
-            ? FRAGMENT_SHADER_TRANSFORMATION_HDR_INTERNAL_ES3_PATH
-            : FRAGMENT_SHADER_TRANSFORMATION_SDR_INTERNAL_PATH;
+        isUsingUltraHdr
+            ? FRAGMENT_SHADER_TRANSFORMATION_ULTRA_HDR_ES3_PATH
+            : isInputTransferHdr
+                ? FRAGMENT_SHADER_TRANSFORMATION_HDR_INTERNAL_ES3_PATH
+                : FRAGMENT_SHADER_TRANSFORMATION_SDR_INTERNAL_PATH;
     GlProgram glProgram = createGlProgram(context, vertexShaderFilePath, fragmentShaderFilePath);
-    glProgram.setIntUniform("uInputColorTransfer", inputColorInfo.colorTransfer);
+    if (!isUsingUltraHdr) {
+      checkArgument(
+          isInputTransferHdr
+              || inputColorInfo.colorTransfer == C.COLOR_TRANSFER_SRGB
+              || inputColorInfo.colorTransfer == C.COLOR_TRANSFER_SDR);
+      glProgram.setIntUniform("uInputColorTransfer", inputColorInfo.colorTransfer);
+    }
+    if (isInputTransferHdr) {
+      glProgram.setIntUniform(
+          "uApplyHdrToSdrToneMapping",
+          outputColorInfo.colorSpace != C.COLOR_SPACE_BT2020 ? GL_TRUE : GL_FALSE);
+    }
+    ImmutableList<GlMatrixTransformation> matrixTransformations = ImmutableList.of();
+    if (inputType == INPUT_TYPE_BITMAP) {
+      matrixTransformations =
+          ImmutableList.of(
+              (MatrixTransformation)
+                  presentationTimeUs -> {
+                    android.graphics.Matrix mirrorY = new android.graphics.Matrix();
+                    mirrorY.setScale(/* sx= */ 1, /* sy= */ -1);
+                    return mirrorY;
+                  });
+    }
     return createWithSampler(
-        glProgram,
-        matrixTransformations,
-        rgbMatrices,
-        inputColorInfo,
-        outputColorInfo,
-        enableColorTransfers);
+        glProgram, inputColorInfo, outputColorInfo, sdrWorkingColorSpace, matrixTransformations);
   }
 
   /**
@@ -243,32 +272,26 @@ import java.util.List;
    * external texture.
    *
    * <p>Applies the {@linkplain ColorInfo#colorTransfer inputColorInfo EOTF} to convert from
-   * electrical color input, to intermediate optical {@link GlShaderProgram} color output, before
-   * {@code matrixTransformations} and {@code rgbMatrices} are applied. Also applies the {@linkplain
-   * ColorInfo#colorTransfer outputColorInfo OETF}, if needed, to convert back to an electrical
-   * color output.
+   * electrical color input, to intermediate optical {@link GlShaderProgram} color output. Also
+   * applies the {@linkplain ColorInfo#colorTransfer outputColorInfo OETF}, if needed, to convert
+   * back to an electrical color output.
    *
    * @param context The {@link Context}.
-   * @param matrixTransformations The {@link GlMatrixTransformation GlMatrixTransformations} to
-   *     apply to each frame in order. Can be empty to apply no vertex transformations.
-   * @param rgbMatrices The {@link RgbMatrix RgbMatrices} to apply to each frame in order. Can be
-   *     empty to apply no color transformations.
    * @param inputColorInfo The input electrical (nonlinear) {@link ColorInfo}.
    * @param outputColorInfo The output electrical (nonlinear) or optical (linear) {@link ColorInfo}.
    *     If this is an optical color, it must be BT.2020 if {@code inputColorInfo} is {@linkplain
    *     ColorInfo#isTransferHdr(ColorInfo) HDR}, and RGB BT.709 if not.
-   * @param enableColorTransfers Whether to transfer colors to an intermediate color space when
-   *     applying effects. If the input or output is HDR, this must be {@code true}.
+   * @param sdrWorkingColorSpace The {@link WorkingColorSpace} to apply effects in.
+   * @param sampleWithNearest Whether external textures require GL_NEAREST sampling.
    * @throws VideoFrameProcessingException If a problem occurs while reading shader files or an
    *     OpenGL operation fails or is unsupported.
    */
   public static DefaultShaderProgram createWithExternalSampler(
       Context context,
-      List<GlMatrixTransformation> matrixTransformations,
-      List<RgbMatrix> rgbMatrices,
       ColorInfo inputColorInfo,
       ColorInfo outputColorInfo,
-      boolean enableColorTransfers)
+      @WorkingColorSpace int sdrWorkingColorSpace,
+      boolean sampleWithNearest)
       throws VideoFrameProcessingException {
     boolean isInputTransferHdr = ColorInfo.isTransferHdr(inputColorInfo);
     String vertexShaderFilePath =
@@ -292,15 +315,18 @@ import java.util.List;
               ? BT2020_FULL_RANGE_YUV_TO_RGB_COLOR_TRANSFORM_MATRIX
               : BT2020_LIMITED_RANGE_YUV_TO_RGB_COLOR_TRANSFORM_MATRIX);
       glProgram.setIntUniform("uInputColorTransfer", inputColorInfo.colorTransfer);
+      glProgram.setIntUniform(
+          "uApplyHdrToSdrToneMapping",
+          outputColorInfo.colorSpace != C.COLOR_SPACE_BT2020 ? GL_TRUE : GL_FALSE);
     }
+    glProgram.setExternalTexturesRequireNearestSampling(sampleWithNearest);
 
     return createWithSampler(
         glProgram,
-        matrixTransformations,
-        rgbMatrices,
         inputColorInfo,
         outputColorInfo,
-        enableColorTransfers);
+        sdrWorkingColorSpace,
+        /* matrixTransformations= */ ImmutableList.of());
   }
 
   /**
@@ -319,6 +345,7 @@ import java.util.List;
    * @param rgbMatrices The {@link RgbMatrix RgbMatrices} to apply to each frame in order. Can be
    *     empty to apply no color transformations.
    * @param outputColorInfo The electrical (non-linear) {@link ColorInfo} describing output colors.
+   * @param sdrWorkingColorSpace The {@link WorkingColorSpace} to apply effects in.
    * @throws VideoFrameProcessingException If a problem occurs while reading shader files or an
    *     OpenGL operation fails or is unsupported.
    */
@@ -327,18 +354,22 @@ import java.util.List;
       List<GlMatrixTransformation> matrixTransformations,
       List<RgbMatrix> rgbMatrices,
       ColorInfo outputColorInfo,
-      boolean enableColorTransfers)
+      @WorkingColorSpace int sdrWorkingColorSpace)
       throws VideoFrameProcessingException {
     boolean outputIsHdr = ColorInfo.isTransferHdr(outputColorInfo);
+    boolean shouldApplyOetf = sdrWorkingColorSpace == WORKING_COLOR_SPACE_LINEAR;
     String vertexShaderFilePath =
         outputIsHdr ? VERTEX_SHADER_TRANSFORMATION_ES3_PATH : VERTEX_SHADER_TRANSFORMATION_PATH;
     String fragmentShaderFilePath =
         outputIsHdr
             ? FRAGMENT_SHADER_OETF_ES3_PATH
-            : FRAGMENT_SHADER_TRANSFORMATION_SDR_OETF_ES2_PATH;
-    if (!enableColorTransfers) {
-      fragmentShaderFilePath = FRAGMENT_SHADER_TRANSFORMATION_PATH;
-    }
+            : shouldApplyOetf
+                ? FRAGMENT_SHADER_TRANSFORMATION_SDR_OETF_ES2_PATH
+                : rgbMatrices.isEmpty()
+                    // Ensure colors not multiplied by a uRgbMatrix (even the identity) as it can
+                    // create color shifts on electrical pq tonemapped content.
+                    ? FRAGMENT_SHADER_COPY_PATH
+                    : FRAGMENT_SHADER_TRANSFORMATION_PATH;
     GlProgram glProgram = createGlProgram(context, vertexShaderFilePath, fragmentShaderFilePath);
 
     @C.ColorTransfer int outputColorTransfer = outputColorInfo.colorTransfer;
@@ -346,9 +377,8 @@ import java.util.List;
       checkArgument(
           outputColorTransfer == C.COLOR_TRANSFER_HLG
               || outputColorTransfer == C.COLOR_TRANSFER_ST2084);
-      checkArgument(enableColorTransfers);
       glProgram.setIntUniform("uOutputColorTransfer", outputColorTransfer);
-    } else if (enableColorTransfers) {
+    } else if (shouldApplyOetf) {
       checkArgument(
           outputColorTransfer == C.COLOR_TRANSFER_SDR
               || outputColorTransfer == C.COLOR_TRANSFER_GAMMA_2_2);
@@ -365,25 +395,37 @@ import java.util.List;
 
   private static DefaultShaderProgram createWithSampler(
       GlProgram glProgram,
-      List<GlMatrixTransformation> matrixTransformations,
-      List<RgbMatrix> rgbMatrices,
       ColorInfo inputColorInfo,
       ColorInfo outputColorInfo,
-      boolean enableColorTransfers) {
+      @WorkingColorSpace int sdrWorkingColorSpace,
+      ImmutableList<GlMatrixTransformation> matrixTransformations) {
     boolean isInputTransferHdr = ColorInfo.isTransferHdr(inputColorInfo);
+    boolean isExpandingColorGamut =
+        (inputColorInfo.colorSpace == C.COLOR_SPACE_BT709
+                || inputColorInfo.colorSpace == C.COLOR_SPACE_BT601)
+            && outputColorInfo.colorSpace == C.COLOR_SPACE_BT2020;
     @C.ColorTransfer int outputColorTransfer = outputColorInfo.colorTransfer;
     if (isInputTransferHdr) {
-      checkArgument(inputColorInfo.colorSpace == C.COLOR_SPACE_BT2020);
-      checkArgument(enableColorTransfers);
       // TODO(b/239735341): Add a setBooleanUniform method to GlProgram.
-      glProgram.setIntUniform(
-          "uApplyHdrToSdrToneMapping",
-          /* value= */ (outputColorInfo.colorSpace != C.COLOR_SPACE_BT2020) ? GL_TRUE : GL_FALSE);
+      if (outputColorTransfer == C.COLOR_TRANSFER_SDR) {
+        // When tone-mapping from HDR to SDR, COLOR_TRANSFER_SDR is interpreted as
+        // COLOR_TRANSFER_GAMMA_2_2.
+        outputColorTransfer = C.COLOR_TRANSFER_GAMMA_2_2;
+      }
       checkArgument(
-          outputColorTransfer != Format.NO_VALUE && outputColorTransfer != C.COLOR_TRANSFER_SDR);
+          outputColorTransfer == C.COLOR_TRANSFER_LINEAR
+              || outputColorTransfer == C.COLOR_TRANSFER_GAMMA_2_2
+              || outputColorTransfer == C.COLOR_TRANSFER_ST2084
+              || outputColorTransfer == C.COLOR_TRANSFER_HLG);
+      glProgram.setIntUniform("uOutputColorTransfer", outputColorTransfer);
+    } else if (isExpandingColorGamut) {
+      checkArgument(
+          outputColorTransfer == C.COLOR_TRANSFER_LINEAR
+              || outputColorTransfer == C.COLOR_TRANSFER_ST2084
+              || outputColorTransfer == C.COLOR_TRANSFER_HLG);
       glProgram.setIntUniform("uOutputColorTransfer", outputColorTransfer);
     } else {
-      glProgram.setIntUniform("uEnableColorTransfer", enableColorTransfers ? GL_TRUE : GL_FALSE);
+      glProgram.setIntUniform("uSdrWorkingColorSpace", sdrWorkingColorSpace);
       checkArgument(
           outputColorTransfer == C.COLOR_TRANSFER_SDR
               || outputColorTransfer == C.COLOR_TRANSFER_LINEAR);
@@ -393,10 +435,10 @@ import java.util.List;
 
     return new DefaultShaderProgram(
         glProgram,
-        ImmutableList.copyOf(matrixTransformations),
-        ImmutableList.copyOf(rgbMatrices),
+        matrixTransformations,
+        /* rgbMatrices= */ ImmutableList.of(),
         outputColorInfo.colorTransfer,
-        isInputTransferHdr);
+        /* useHdr= */ isInputTransferHdr || isExpandingColorGamut);
   }
 
   /**
@@ -430,6 +472,7 @@ import java.util.List;
     compositeRgbMatrixArray = GlUtil.create4x4IdentityMatrix();
     tempResultMatrix = new float[16];
     visiblePolygon = NDC_SQUARE;
+    gainmapTexId = C.INDEX_UNSET;
   }
 
   private static GlProgram createGlProgram(
@@ -460,17 +503,24 @@ import java.util.List;
   @Override
   public void drawFrame(int inputTexId, long presentationTimeUs)
       throws VideoFrameProcessingException {
-    updateCompositeRgbMatrixArray(presentationTimeUs);
-    updateCompositeTransformationMatrixAndVisiblePolygon(presentationTimeUs);
+    boolean compositeRgbMatrixArrayChanged = updateCompositeRgbMatrixArray(presentationTimeUs);
+    boolean compositeTransformationMatrixAndVisiblePolygonChanged =
+        updateCompositeTransformationMatrixAndVisiblePolygon(presentationTimeUs);
+    boolean uniformsChanged =
+        compositeRgbMatrixArrayChanged || compositeTransformationMatrixAndVisiblePolygonChanged;
     if (visiblePolygon.size() < 3) {
       return; // Need at least three visible vertices for a triangle.
     }
 
+    if (shouldRepeatLastFrame && !uniformsChanged && isRepeatingFrameDrawn) {
+      return;
+    }
     try {
       glProgram.use();
+      setGainmapSamplerAndUniforms();
       glProgram.setSamplerTexIdUniform("uTexSampler", inputTexId, /* texUnitIndex= */ 0);
       glProgram.setFloatsUniform("uTransformationMatrix", compositeTransformationMatrixArray);
-      glProgram.setFloatsUniform("uRgbMatrix", compositeRgbMatrixArray);
+      glProgram.setFloatsUniformIfPresent("uRgbMatrix", compositeRgbMatrixArray);
       glProgram.setBufferAttribute(
           "aFramePosition",
           GlUtil.createVertexBuffer(visiblePolygon),
@@ -482,6 +532,7 @@ import java.util.List;
     } catch (GlUtil.GlException e) {
       throw new VideoFrameProcessingException(e, presentationTimeUs);
     }
+    isRepeatingFrameDrawn = true;
   }
 
   @Override
@@ -489,9 +540,48 @@ import java.util.List;
     super.release();
     try {
       glProgram.delete();
+      if (gainmapTexId != C.INDEX_UNSET) {
+        GlUtil.deleteTexture(gainmapTexId);
+      }
     } catch (GlUtil.GlException e) {
       throw new VideoFrameProcessingException(e);
     }
+  }
+
+  /**
+   * Sets the {@link Gainmap} applied to the input frame to create a HDR output frame.
+   *
+   * <p>The gainmap is ignored if {@code useHdr} is {@code false}.
+   */
+  @Override
+  @RequiresApi(34) // getGainmapContents() added in API level 34.
+  public void setGainmap(Gainmap gainmap) throws GlException {
+    if (!useHdr) {
+      return;
+    }
+    if (lastGainmap != null && GainmapUtil.equals(this.lastGainmap, gainmap)) {
+      return;
+    }
+    isRepeatingFrameDrawn = false;
+    this.lastGainmap = gainmap;
+    if (gainmapTexId == C.INDEX_UNSET) {
+      gainmapTexId = GlUtil.createTexture(gainmap.getGainmapContents());
+    } else {
+      GlUtil.setTexture(gainmapTexId, gainmap.getGainmapContents());
+    }
+  }
+
+  @Override
+  public void signalNewRepeatingFrameSequence() {
+    // Skipping drawFrame() is only allowed if there's only one possible output texture.
+    checkState(outputTexturePool.capacity() == 1);
+    shouldRepeatLastFrame = true;
+    isRepeatingFrameDrawn = false;
+  }
+
+  @Override
+  public boolean shouldClearTextureBuffer() {
+    return !(isRepeatingFrameDrawn && shouldRepeatLastFrame);
   }
 
   /**
@@ -514,8 +604,10 @@ import java.util.List;
   /**
    * Updates {@link #compositeTransformationMatrixArray} and {@link #visiblePolygon} based on the
    * given frame timestamp.
+   *
+   * <p>Returns whether the transformation matrix or visible polygon has changed.
    */
-  private void updateCompositeTransformationMatrixAndVisiblePolygon(long presentationTimeUs) {
+  private boolean updateCompositeTransformationMatrixAndVisiblePolygon(long presentationTimeUs) {
     float[][] matricesAtPresentationTime = new float[matrixTransformations.size()][16];
     for (int i = 0; i < matrixTransformations.size(); i++) {
       matricesAtPresentationTime[i] =
@@ -523,7 +615,7 @@ import java.util.List;
     }
 
     if (!updateMatrixCache(transformationMatrixCache, matricesAtPresentationTime)) {
-      return;
+      return false;
     }
 
     // Compute the compositeTransformationMatrix and transform and clip the visiblePolygon for each
@@ -549,7 +641,7 @@ import java.util.List;
               MatrixUtils.transformPoints(transformationMatrix, visiblePolygon));
       if (visiblePolygon.size() < 3) {
         // Can ignore remaining matrices as there are not enough vertices left to form a polygon.
-        return;
+        return true;
       }
     }
     // Calculate the input frame vertices corresponding to the output frame's visible polygon.
@@ -559,17 +651,22 @@ import java.util.List;
         compositeTransformationMatrixArray,
         /* mOffset= */ 0);
     visiblePolygon = MatrixUtils.transformPoints(tempResultMatrix, visiblePolygon);
+    return true;
   }
 
-  /** Updates {@link #compositeRgbMatrixArray} based on the given frame timestamp. */
-  private void updateCompositeRgbMatrixArray(long presentationTimeUs) {
+  /**
+   * Updates {@link #compositeRgbMatrixArray} based on the given frame timestamp.
+   *
+   * <p>Returns whether the {@link #compositeRgbMatrixArray} has changed.
+   */
+  private boolean updateCompositeRgbMatrixArray(long presentationTimeUs) {
     float[][] matricesCurrTimestamp = new float[rgbMatrices.size()][16];
     for (int i = 0; i < rgbMatrices.size(); i++) {
       matricesCurrTimestamp[i] = rgbMatrices.get(i).getMatrix(presentationTimeUs, useHdr);
     }
 
     if (!updateMatrixCache(rgbMatrixCache, matricesCurrTimestamp)) {
-      return;
+      return false;
     }
 
     GlUtil.setToIdentity(compositeRgbMatrixArray);
@@ -589,6 +686,7 @@ import java.util.List;
           /* destPost= */ 0,
           /* length= */ tempResultMatrix.length);
     }
+    return true;
   }
 
   /**
@@ -615,5 +713,16 @@ import java.util.List;
       }
     }
     return matrixChanged;
+  }
+
+  private void setGainmapSamplerAndUniforms() throws GlUtil.GlException {
+    if (lastGainmap == null) {
+      return;
+    }
+    if (Util.SDK_INT < 34) {
+      throw new IllegalStateException("Gainmaps not supported under API 34.");
+    }
+    glProgram.setSamplerTexIdUniform("uGainmapTexSampler", gainmapTexId, /* texUnitIndex= */ 1);
+    GainmapUtil.setGainmapUniforms(glProgram, lastGainmap, C.INDEX_UNSET);
   }
 }
