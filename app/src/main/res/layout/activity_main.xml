@@ -176,11 +176,11 @@
                     android:text="android" />
 
                 <RadioButton
-                    android:id="@+id/main_kernel_media"
+                    android:id="@+id/main_kernel_media3"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:checked="false"
-                    android:text="androidx media" />
+                    android:text="media3" />
 
                 <RadioButton
                     android:id="@+id/main_kernel_ijk"

@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                int visable = (i == R.id.main_kernel_exo_v2 || i == R.id.main_kernel_mediax ? View.VISIBLE : View.GONE);
+                int visable = (i == R.id.main_kernel_exo_v2 || i == R.id.main_kernel_media3 ? View.VISIBLE : View.GONE);
                 findViewById(R.id.main_exo_ffmpeg).setVisibility(visable);
                 findViewById(R.id.main_exo_ffmpeg_title).setVisibility(visable);
                 findViewById(R.id.main_cache).setVisibility(visable);
@@ -189,8 +189,8 @@ public class MainActivity extends Activity {
             case R.id.main_kernel_ffplayer:
                 kernelType = PlayerType.KernelType.FFPLAYER;
                 break;
-            case R.id.main_kernel_media:
-                kernelType = PlayerType.KernelType.MEDIA;
+            case R.id.main_kernel_media3:
+                kernelType = PlayerType.KernelType.MEDIA_V3;
                 break;
             default:
                 kernelType = PlayerType.KernelType.ANDROID;
