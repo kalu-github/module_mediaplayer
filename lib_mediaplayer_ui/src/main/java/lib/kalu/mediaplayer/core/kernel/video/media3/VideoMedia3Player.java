@@ -257,7 +257,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             if (null == clazz)
                 throw new Exception("warning: androidx.media3.decoder.ffmpeg.FfmpegLibrary not find");
             boolean log = args.isLog();
-            androidx.media3.decoder.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
+//            androidx.media3.decoder.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
         } catch (Exception e) {
         }
 
@@ -269,7 +269,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             if (null == clazz)
                 throw new Exception("warning: androidx.media3.decoder.ffmpeg.FfmpegLibrary not find");
             boolean log = args.isLog();
-            androidx.media3.decoder.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
+//            androidx.media3.decoder.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
         } catch (Exception e) {
         }
     }
