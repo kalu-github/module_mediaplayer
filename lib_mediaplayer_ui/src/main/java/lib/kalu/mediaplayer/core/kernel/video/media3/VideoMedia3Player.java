@@ -50,6 +50,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import M3d.g;
+import c.M3d;
+import c.M3p;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
@@ -59,6 +61,9 @@ import okhttp3.OkHttpClient;
 
 @UnstableApi
 public final class VideoMedia3Player extends VideoBasePlayer {
+
+    private boolean mSeeking = false;
+    private boolean mBuffering = false;
 
     private ExoPlayer mExoPlayer;
     private ExoPlayer.Builder mExoPlayerBuilder;
@@ -109,7 +114,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             if (null == mExoPlayerBuilder)
                 throw new Exception("error: mExoPlayerBuilder null");
             StartArgs args = getStartArgs();
-            if(null == args)
+            if (null == args)
                 throw new Exception("error: args null");
             String url = args.getUrl();
             if (null == url)
@@ -201,7 +206,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             if (null != mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             StartArgs args = getStartArgs();
-            if(null == args)
+            if (null == args)
                 throw new Exception("error: args null");
             String url = args.getUrl();
             if (null == url)
@@ -215,24 +220,13 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             StartArgs args = getStartArgs();
-            if(null == args)
+            if (null == args)
                 throw new Exception("error: args null");
             String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
             mExoPlayer.addAnalyticsListener(mAnalyticsListener);
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_START);
-//            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
-//                @Override
-//                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
-//                    MediaLogUtil.log("onEXOLoadStarted => ");
-//                }
-//
-//                @Override
-//                public void onLoadCompleted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
-//                    MediaLogUtil.log("onEXOLoadCompleted => ");
-//                }
-//            });
 
             MediaSource mediaSource = buildMediaSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
@@ -257,7 +251,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
             StartArgs args = getStartArgs();
-            if(null == args)
+            if (null == args)
                 throw new Exception("error: args null");
             int seekParameters = args.getExoSeekType();
             // seek model
@@ -279,7 +273,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
             StartArgs args = getStartArgs();
-            if(null == args)
+            if (null == args)
                 throw new Exception("error: args null");
             Class<?> clazz = Class.forName("androidx.media3.decoder.ffmpeg.FfmpegLibrary");
             if (null == clazz)
@@ -341,6 +335,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             if (seek > duration) {
                 seek = duration;
             }
+            mSeeking = true;
             LogUtil.log("VideoMedia3Player => seekTo => succ");
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_START);
             mExoPlayer.seekTo(seek);
@@ -741,14 +736,17 @@ public final class VideoMedia3Player extends VideoBasePlayer {
         }
 
         @Override
+        public void onLoadError(EventTime eventTime, M3p m3p, M3d m3d, IOException e, boolean b) {
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_SOURCE);
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_STOP);
+        }
+
+        @Override
         public void onPlaybackStateChanged(AnalyticsListener.EventTime eventTime, int state) {
-            LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => state = " + state + ", mute = " + isMute());
 
             // 播放错误
             if (state == Player.STATE_IDLE) {
                 LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_IDLE =>");
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_SOURCE);
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_STOP);
             }
             // 播放完成
             else if (state == Player.STATE_ENDED) {
@@ -761,26 +759,36 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 try {
                     if (!isPrepared())
                         throw new Exception("warning: isPrepared false");
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_FINISH);
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_STOP);
-                    try {
-                        long seek = getSeek();
-                        if (seek <= 0L)
-                            throw new Exception("warning: seek<=0");
-                        setSeek(0);
-                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_START);
-                    } catch (Exception e) {
-                        LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_READY => Exception1 " + e.getMessage());
+
+                    if (mBuffering) {
+                        mBuffering = false;
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_STOP);
                     }
 
-                    try {
-                        boolean playing = isPlaying();
-                        if (playing)
-                            throw new Exception("warning: playing true");
-                        start();
-                    } catch (Exception e) {
-                        LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_READY => Exception2 " + e.getMessage());
+                    if (mSeeking) {
+                        mSeeking = false;
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_FINISH);
+
+                        try {
+                            long seek = getSeek();
+                            if (seek <= 0L)
+                                throw new Exception("warning: seek<=0");
+                            setSeek(0);
+                            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_START);
+                        } catch (Exception e) {
+                            LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_READY => Exception1 " + e.getMessage());
+                        }
+
+                        try {
+                            boolean playing = isPlaying();
+                            if (playing)
+                                throw new Exception("warning: playing true");
+                            start();
+                        } catch (Exception e) {
+                            LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_READY => Exception2 " + e.getMessage());
+                        }
                     }
+
                 } catch (Exception e) {
                     LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_READY => Exception3 " + e.getMessage());
                 }
@@ -791,6 +799,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 try {
                     if (!isPrepared())
                         throw new Exception("mPrepared warning: false");
+                    mBuffering = true;
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_START);
                 } catch (Exception e) {
                     LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_BUFFERING => Exception " + e.getMessage());
@@ -800,11 +809,6 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             else {
                 LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => UNKNOW => state = " + state);
             }
-        }
-
-        @Override
-        public void onRenderedFirstFrame(AnalyticsListener.EventTime eventTime, Object output, long renderTimeMs) {
-            LogUtil.log("VideoMedia3Player => onRenderedFirstFrame =>");
         }
 
         @Override
@@ -830,8 +834,28 @@ public final class VideoMedia3Player extends VideoBasePlayer {
         }
 
         @Override
+        public void onRenderedFirstFrame(AnalyticsListener.EventTime eventTime, Object output, long renderTimeMs) {
+            LogUtil.log("VideoMedia3Player => onRenderedFirstFrame =>");
+        }
+
+        @Override
         public void onAudioInputFormatChanged(AnalyticsListener.EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
             LogUtil.log("VideoMedia3Player => onAudioInputFormatChanged =>");
+        }
+
+        @Override
+        public void onSeekStarted(EventTime eventTime) {
+            LogUtil.log("VideoMedia3Player => onSeekStarted =>");
+        }
+
+        @Override
+        public void onSeekBackIncrementChanged(EventTime eventTime, long l) {
+            LogUtil.log("VideoMedia3Player => onSeekBackIncrementChanged =>");
+        }
+
+        @Override
+        public void onSeekForwardIncrementChanged(EventTime eventTime, long l) {
+            LogUtil.log("VideoMedia3Player => onSeekForwardIncrementChanged =>");
         }
     };
 }
