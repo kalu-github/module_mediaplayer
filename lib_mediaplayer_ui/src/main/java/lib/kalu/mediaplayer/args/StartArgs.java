@@ -26,11 +26,11 @@ public class StartArgs {
         return exoCacheDir;
     }
 
-    @PlayerType.ExoRenderersType.Value
-    private int exoRenderersType;
+    @PlayerType.DecoderType.Value
+    private int decoderType;
 
-    public int getExoRenderersType() {
-        return exoRenderersType;
+    public int getDecoderType() {
+        return decoderType;
     }
 
     @PlayerType.ExoSeekType
@@ -56,10 +56,10 @@ public class StartArgs {
 
     // 画面缩放类型
     @PlayerType.ScaleType.Value
-    private int renderScaleType;
+    private int scaleType;
 
-    public int getRenderScaleType() {
-        return renderScaleType;
+    public int getscaleType() {
+        return scaleType;
     }
 
     // 视频解码类型
@@ -204,17 +204,25 @@ public class StartArgs {
         return buriedEvent;
     }
 
+    // 旋转角度
+    @PlayerType.RotationType.Value
+    private int rotation;
+
+    public int getRotation() {
+        return rotation;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
                 "exoCacheType=" + exoCacheType +
                 ", exoCacheMax=" + exoCacheMax +
                 ", exoCacheDir='" + exoCacheDir + '\'' +
-                ", exoRenderersType=" + exoRenderersType +
                 ", exoSeekType=" + exoSeekType +
                 ", exoUseOkhttp=" + exoUseOkhttp +
                 ", renderType=" + renderType +
-                ", renderScaleType=" + renderScaleType +
+                ", scaleType=" + scaleType +
+                ", decoderType=" + decoderType +
                 ", kernelType=" + kernelType +
                 ", connectTimout=" + connectTimout +
                 ", log=" + log +
@@ -235,6 +243,7 @@ public class StartArgs {
                 ", episodePlayingIndex=" + episodePlayingIndex +
                 ", episodeItemCount=" + episodeItemCount +
                 ", buriedEvent=" + buriedEvent +
+                ", rotation=" + rotation +
                 '}';
     }
 
@@ -242,11 +251,11 @@ public class StartArgs {
         this.exoCacheType = builder.exoCacheType;
         this.exoCacheMax = builder.exoCacheMax;
         this.exoCacheDir = builder.exoCacheDir;
-        this.exoRenderersType = builder.exoRenderersType;
+        this.decoderType = builder.decoderType;
         this.exoSeekType = builder.exoSeekType;
         this.exoUseOkhttp = builder.exoUseOkhttp;
         this.renderType = builder.renderType;
-        this.renderScaleType = builder.renderScaleType;
+        this.scaleType = builder.scaleType;
         this.kernelType = builder.kernelType;
         this.connectTimout = builder.connectTimout;
         this.log = builder.log;
@@ -267,6 +276,7 @@ public class StartArgs {
         this.episodePlayingIndex = builder.episodePlayingIndex;
         this.episodeItemCount = builder.episodeItemCount;
         this.buriedEvent = builder.buriedEvent;
+        this.rotation = builder.rotation;
     }
 
     public Builder newBuilder() {
@@ -274,11 +284,11 @@ public class StartArgs {
         builder.exoCacheType = exoCacheType;
         builder.exoCacheMax = exoCacheMax;
         builder.exoCacheDir = exoCacheDir;
-        builder.exoRenderersType = exoRenderersType;
         builder.exoSeekType = exoSeekType;
         builder.exoUseOkhttp = exoUseOkhttp;
+        builder.decoderType = decoderType;
         builder.renderType = renderType;
-        builder.renderScaleType = renderScaleType;
+        builder.scaleType = scaleType;
         builder.kernelType = kernelType;
         builder.connectTimout = connectTimout;
         builder.log = log;
@@ -299,6 +309,7 @@ public class StartArgs {
         builder.episodePlayingIndex = episodePlayingIndex;
         builder.episodeItemCount = episodeItemCount;
         builder.buriedEvent = buriedEvent;
+        builder.rotation = rotation;
         return builder;
     }
 
@@ -309,19 +320,23 @@ public class StartArgs {
         private int exoCacheMax = playerArgs.getExoCacheMax();
         private String exoCacheDir = playerArgs.getExoCacheDir();
         private boolean exoUseOkhttp = playerArgs.isExoUseOkhttp();
-        @PlayerType.ExoRenderersType.Value
-        private int exoRenderersType = playerArgs.getExoRenderersType();
         @PlayerType.ExoSeekType
         private int exoSeekType = playerArgs.getExoSeekType();
+        // 解码器类型
+        @PlayerType.DecoderType.Value
+        private int decoderType = playerArgs.getDecoderType();
         // 视频渲染类型
         @PlayerType.RenderType.Value
-        private int renderType = playerArgs.getRender();
-        // 画面缩放类型
-        @PlayerType.ScaleType.Value
-        private int renderScaleType = playerArgs.getScaleType();
+        private int renderType = playerArgs.getRenderType();
         // 视频解码类型
         @PlayerType.KernelType.Value
-        private int kernelType = playerArgs.getKernel();
+        private int kernelType = playerArgs.getKernelType();
+        // 画面缩放类型
+        @PlayerType.ScaleType.Value
+        private int scaleType = playerArgs.getScaleType();
+        // 旋转角度
+        @PlayerType.RotationType.Value
+        private int rotation = playerArgs.getRotation();
         // 超时时间
         private long connectTimout = playerArgs.getConnectTimeout();
         // 日志

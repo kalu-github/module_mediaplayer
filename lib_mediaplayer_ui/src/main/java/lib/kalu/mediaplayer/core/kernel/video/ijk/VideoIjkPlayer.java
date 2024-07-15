@@ -4,9 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Surface;
-import android.view.SurfaceHolder;
-
-import androidx.annotation.FloatRange;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,8 +23,8 @@ import lib.kalu.ijkplayer.inter.OnVideoSizeChangedListener;
 import lib.kalu.ijkplayer.misc.IMediaFormat;
 import lib.kalu.ijkplayer.misc.IjkTrackInfo;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class VideoIjkPlayer extends VideoBasePlayer {
@@ -70,10 +67,13 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, StartArgs args) {
+    public void startDecoder(Context context) {
         try {
             if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
+                throw new Exception("error: mIjkPlayer null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             String url = args.getUrl();
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
@@ -94,7 +94,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
     // player => ff_ffplay_options.h
     @Override
-    public void initOptions(Context context, StartArgs args) {
+    public void initOptions(Context context) {
 
         boolean useMediaCodec = (getKernelType() == PlayerType.KernelType.IJK_MEDIACODEC);
 
@@ -102,6 +102,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             Class<?> clazz = Class.forName("lib.kalu.ijkplayer.util.IjkLogUtil");
             if (null == clazz)
                 throw new Exception("warning: lib.kalu.ijkplayer.util.IjkLogUtil not find");
@@ -114,6 +117,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             int player = IjkMediaPlayer.OPT_CATEGORY_PLAYER;
             // 禁用音频
             mIjkPlayer.setOption(player, "an", 0);
@@ -673,11 +679,13 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 boolean videoSizeChanged = isVideoSizeChanged();
                 if (videoSizeChanged)
                     throw new Exception("warning: videoSizeChanged = true");
-                setVideoSizeChanged(true);
                 StartArgs args = getStartArgs();
+                if (null == args)
+                    throw new Exception("error: args null");
+                setVideoSizeChanged(true);
                 @PlayerType.ScaleType.Value
-                int scaleType = (null == args ? PlayerType.ScaleType.DEFAULT : args.getRenderScaleType());
-                int rotation = PlayerType.RotationType.DEFAULT;
+                int scaleType = args.getscaleType();
+                int rotation = args.getRotation();
                 int kernelType = getKernelType();
                 onUpdateSizeChanged(kernelType, videoWidth, videoHeight, rotation, scaleType);
             } catch (Exception e) {

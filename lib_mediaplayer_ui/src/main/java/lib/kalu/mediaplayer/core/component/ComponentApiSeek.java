@@ -5,14 +5,9 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.exoplayer2.util.Log;
-
-import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 

@@ -1,6 +1,5 @@
 package lib.kalu.mediaplayer.core.player.video;
 
-import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.type.PlayerType;

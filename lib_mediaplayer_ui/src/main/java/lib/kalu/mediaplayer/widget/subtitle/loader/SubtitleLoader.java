@@ -26,6 +26,7 @@
 package lib.kalu.mediaplayer.widget.subtitle.loader;
 
 import android.text.TextUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

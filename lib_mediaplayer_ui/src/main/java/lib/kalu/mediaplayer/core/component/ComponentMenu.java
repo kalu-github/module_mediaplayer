@@ -3,8 +3,6 @@ package lib.kalu.mediaplayer.core.component;
 import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;

@@ -262,7 +262,7 @@
             </RadioGroup>
 
             <TextView
-                android:id="@+id/main_exo_ffmpeg_title"
+                android:id="@+id/main_exo_decoder_title"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:layout_marginLeft="6dp"
@@ -272,43 +272,60 @@
                 android:visibility="gone" />
 
             <RadioGroup
-                android:id="@+id/main_exo_ffmpeg"
+                android:id="@+id/main_exo_decoder"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
                 <RadioButton
-                    android:id="@+id/main_exo_vmc_amc"
+                    android:id="@+id/main_exo_decoder_all_codec"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:checked="true"
-                    android:enabled="true"
-                    android:text="视频硬解_音频硬解" />
+                    android:text="硬解码" />
 
                 <RadioButton
-                    android:id="@+id/main_exo_vmc_aff"
+                    android:id="@+id/main_exo_decoder_all_ffmpeg"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="false"
-                    android:enabled="true"
-                    android:text="视频硬解_音频软解" />
+                    android:text="软解码" />
 
                 <RadioButton
-                    android:id="@+id/main_exo_vff_amc"
+                    android:id="@+id/main_exo_decoder_video_codec_audio_ffmpeg"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="false"
-                    android:enabled="true"
-                    android:text="视频软解_音频硬解" />
+                    android:text="视频硬解@音频软解" />
 
                 <RadioButton
-                    android:id="@+id/main_exo_vff_aff"
+                    android:id="@+id/main_exo_decoder_video_ffmpeg_audio_codec"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="false"
-                    android:enabled="true"
-                    android:text="视频软解_音频软解" />
+                    android:text="视频软解@音频硬解" />
+
+                <RadioButton
+                    android:id="@+id/main_exo_decoder_only_video_codec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="视频硬解" />
+
+                <RadioButton
+                    android:id="@+id/main_exo_decoder_only_video_ffmpeg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="视频软解" />
+
+                <RadioButton
+                    android:id="@+id/main_exo_decoder_only_audio_codec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="音频硬解" />
+
+                <RadioButton
+                    android:id="@+id/main_exo_decoder_only_audio_ffmpeg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="音频软解" />
 
             </RadioGroup>
 

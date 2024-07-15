@@ -2,17 +2,12 @@ package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.util.TimeUtil;
-import lib.kalu.mediaplayer.widget.subtitle.model.Time;
 
 
 public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {

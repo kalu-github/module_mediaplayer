@@ -2,7 +2,6 @@ package lib.kalu.mediaplayer.core.render;
 
 import android.content.Context;
 
-
 import lib.kalu.mediaplayer.core.render.glsurface.VideoGLSurfaceFactory;
 import lib.kalu.mediaplayer.core.render.surface.VideoSurfaceFactory;
 import lib.kalu.mediaplayer.core.render.texture.VideoTextureFactory;

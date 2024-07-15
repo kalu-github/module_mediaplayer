@@ -5,9 +5,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.Surface;
-import android.view.SurfaceHolder;
-
-import androidx.annotation.FloatRange;
 
 import lib.kalu.ffplayer.FFmpegPlayer;
 import lib.kalu.ffplayer.inter.OnBufferingUpdateListener;
@@ -18,8 +15,8 @@ import lib.kalu.ffplayer.inter.OnPreparedListener;
 import lib.kalu.ffplayer.inter.OnSeekCompleteListener;
 import lib.kalu.ffplayer.inter.OnVideoSizeChangedListener;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
@@ -61,10 +58,13 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, StartArgs args) {
+    public void startDecoder(Context context) {
         try {
             if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
+                throw new Exception("error: mFFmpegPlayer null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             String url = args.getUrl();
             if (url == null)
                 throw new Exception("url error: " + url);
@@ -392,11 +392,13 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 boolean videoSizeChanged = isVideoSizeChanged();
                 if (videoSizeChanged)
                     throw new Exception("warning: videoSizeChanged = true");
-                setVideoSizeChanged(true);
                 StartArgs args = getStartArgs();
+                if (null == args)
+                    throw new Exception("error: args null");
+                setVideoSizeChanged(true);
                 @PlayerType.ScaleType.Value
-                int scaleType = (null == args ? PlayerType.ScaleType.DEFAULT : args.getRenderScaleType());
-                int rotation = PlayerType.RotationType.DEFAULT;
+                int scaleType = args.getscaleType();
+                int rotation = args.getRotation();
                 onUpdateSizeChanged(PlayerType.KernelType.FFPLAYER, videoWidth, videoHeight, rotation, scaleType);
             } catch (Exception e) {
                 LogUtil.log("VideoFFmpegPlayer => onVideoSizeChanged => " + e.getMessage());

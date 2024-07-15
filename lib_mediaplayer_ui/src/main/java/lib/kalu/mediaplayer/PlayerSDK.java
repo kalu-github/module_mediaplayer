@@ -1,11 +1,9 @@
 package lib.kalu.mediaplayer;
 
 
-import android.app.Application;
-
 import lib.kalu.mediaplayer.args.PlayerArgs;
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.buried.BuriedEvent;
+import lib.kalu.mediaplayer.type.PlayerType;
 
 
 public final class PlayerSDK {
@@ -41,11 +39,6 @@ public final class PlayerSDK {
 
     public PlayerSDK setBufferingTimeoutRetry(boolean v) {
         this.mPlayerBuilder.setBufferingTimeoutRetry(v);
-        return this;
-    }
-
-    public PlayerSDK setExoRenderersType(@PlayerType.ExoRenderersType.Value int v) {
-        mPlayerBuilder.setExoRenderersType(v);
         return this;
     }
 
@@ -89,13 +82,18 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setKernel(@PlayerType.KernelType.Value int v) {
-        mPlayerBuilder.setKernel(v);
+    public PlayerSDK setKernelType(@PlayerType.KernelType.Value int v) {
+        mPlayerBuilder.setKernelType(v);
         return this;
     }
 
-    public PlayerSDK setRender(@PlayerType.RenderType.Value int v) {
-        mPlayerBuilder.setRender(v);
+    public PlayerSDK setRenderType(@PlayerType.RenderType.Value int v) {
+        mPlayerBuilder.setRenderType(v);
+        return this;
+    }
+
+    public PlayerSDK setDecoderType(@PlayerType.DecoderType.Value int v) {
+        mPlayerBuilder.setDecoderType(v);
         return this;
     }
 

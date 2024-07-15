@@ -38,12 +38,12 @@ import java.util.List;
 import java.util.TreeMap;
 
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
+import lib.kalu.mediaplayer.widget.subtitle.cache.SubtitleCache;
 import lib.kalu.mediaplayer.widget.subtitle.finder.SubtitleFinder;
 import lib.kalu.mediaplayer.widget.subtitle.loader.SubtitleLoader;
-import lib.kalu.mediaplayer.widget.subtitle.task.UIRenderTask;
-import lib.kalu.mediaplayer.widget.subtitle.cache.SubtitleCache;
 import lib.kalu.mediaplayer.widget.subtitle.model.Subtitle;
 import lib.kalu.mediaplayer.widget.subtitle.model.TimedTextObject;
+import lib.kalu.mediaplayer.widget.subtitle.task.UIRenderTask;
 
 /**
  * @author AveryZhong.

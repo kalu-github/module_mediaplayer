@@ -2,15 +2,12 @@ package lib.kalu.mediaplayer.core.kernel.video.exo1;
 
 import android.content.Context;
 import android.view.Surface;
-import android.view.SurfaceHolder;
-
-import androidx.annotation.FloatRange;
 
 import com.google.android.exoplayer.ExoPlayer;
 
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import tv.kalu.android.exoplayer.player.DemoPlayer;
 
@@ -121,7 +118,7 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, StartArgs args) {
+    public void startDecoder(Context context) {
         try {
             onEvent(PlayerType.KernelType.EXO_V1, PlayerType.EventType.LOADING_START);
             mExoPlayer.setPlayWhenReady(isPlayWhenReady());
@@ -138,8 +135,11 @@ public final class VideoExoPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void initOptions(Context context, StartArgs args) {
+    public void initOptions(Context context) {
         try {
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             Class<?> clazz = Class.forName("lib.kalu.exoplayer.util.ExoLogUtil");
             if (null == clazz)
                 throw new Exception("warning: lib.kalu.exoplayer.util.ExoLogUtil not find");

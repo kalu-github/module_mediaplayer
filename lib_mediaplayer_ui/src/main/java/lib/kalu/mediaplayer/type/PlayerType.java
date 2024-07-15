@@ -8,7 +8,6 @@ import static java.lang.annotation.ElementType.PACKAGE;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.CLASS;
 
-
 import androidx.annotation.IntDef;
 import androidx.annotation.StringDef;
 
@@ -275,6 +274,37 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface DecoderType {
+        int ALL_CODEC = 10_001;
+        int ALL_FFMPEG = 10_004;
+        int ONLY_AUDIO_CODEC = 10_002;
+        int ONLY_VIDEO_CODEC = 10_003;
+        int ONLY_AUDIO_FFMPEG = 10_005;
+        int ONLY_VIDEO_FFMPEG = 10_006;
+        int VIDEO_CODEC_AUDIO_FFMPEG = 10_007;
+        int VIDEO_FFMPEG_AUDIO_CODEC = 10_008;
+        int DEFAULT = ALL_CODEC;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef(value = {
+                DecoderType.ALL_CODEC,
+                DecoderType.ALL_FFMPEG,
+                DecoderType.DEFAULT,
+                DecoderType.ONLY_AUDIO_CODEC,
+                DecoderType.ONLY_VIDEO_CODEC,
+                DecoderType.ONLY_AUDIO_FFMPEG,
+                DecoderType.ONLY_VIDEO_FFMPEG,
+                DecoderType.VIDEO_CODEC_AUDIO_FFMPEG,
+                DecoderType.VIDEO_FFMPEG_AUDIO_CODEC})
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface ExoSeekType {
 
         int DEFAULT = 9_001;
@@ -290,35 +320,6 @@ public @interface PlayerType {
                 ExoSeekType.CLOSEST_SYNC,
                 ExoSeekType.PREVIOUS_SYNC,
                 ExoSeekType.NEXT_SYNC})
-        @interface Value {
-        }
-    }
-
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface ExoRenderersType {
-        int CODEC = 10_001;
-        int FFMPEG = 10_004;
-        int ONLY_AUDIO_CODEC = 10_002;
-        int ONLY_VIDEO_CODEC = 10_003;
-        int ONLY_AUDIO_FFMPEG = 10_005;
-        int ONLY_VIDEO_FFMPEG = 10_006;
-        int VIDEO_CODEC_AUDIO_FFMPEG = 10_007;
-        int VIDEO_FFMPEG_AUDIO_CODEC = 10_008;
-
-        @Documented
-        @Retention(CLASS)
-        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef(value = {
-                ExoRenderersType.CODEC,
-                ExoRenderersType.FFMPEG,
-                ExoRenderersType.ONLY_AUDIO_CODEC,
-                ExoRenderersType.ONLY_VIDEO_CODEC,
-                ExoRenderersType.ONLY_AUDIO_FFMPEG,
-                ExoRenderersType.ONLY_VIDEO_FFMPEG,
-                ExoRenderersType.VIDEO_CODEC_AUDIO_FFMPEG,
-                ExoRenderersType.VIDEO_FFMPEG_AUDIO_CODEC})
         @interface Value {
         }
     }

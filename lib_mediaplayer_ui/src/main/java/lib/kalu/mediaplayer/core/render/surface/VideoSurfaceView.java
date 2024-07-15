@@ -9,9 +9,8 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import lib.kalu.mediaplayer.core.render.VideoRenderApi;
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
+import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 /**

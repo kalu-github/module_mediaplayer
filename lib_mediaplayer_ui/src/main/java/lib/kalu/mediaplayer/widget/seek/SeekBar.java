@@ -8,13 +8,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
-import java.lang.reflect.Field;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.util.LogUtil;

@@ -2,8 +2,6 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import lib.kalu.mediaplayer.R;

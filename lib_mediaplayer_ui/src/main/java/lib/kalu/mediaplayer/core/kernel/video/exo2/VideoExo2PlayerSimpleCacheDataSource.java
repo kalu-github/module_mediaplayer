@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.SystemClock;
 import android.text.TextUtils;
 
-
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 

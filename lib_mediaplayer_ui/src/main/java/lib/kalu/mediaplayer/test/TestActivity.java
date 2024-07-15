@@ -7,27 +7,26 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
-
 import java.util.LinkedList;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.core.component.ComponentLoadingGradient;
-import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
-import lib.kalu.mediaplayer.core.component.ComponentMenu;
-import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
+import lib.kalu.mediaplayer.core.component.ComponentBuffering;
 import lib.kalu.mediaplayer.core.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.component.ComponentError;
 import lib.kalu.mediaplayer.core.component.ComponentInit;
-import lib.kalu.mediaplayer.core.component.ComponentBuffering;
+import lib.kalu.mediaplayer.core.component.ComponentLoadingGradient;
+import lib.kalu.mediaplayer.core.component.ComponentMenu;
 import lib.kalu.mediaplayer.core.component.ComponentPause;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
+import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentWarningTrySee;
+import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 

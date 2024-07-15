@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.FloatRange;
-
-
 import androidx.annotation.RequiresApi;
 
 import org.json.JSONArray;
@@ -19,14 +16,13 @@ import org.json.JSONArray;
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
-import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
+import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 

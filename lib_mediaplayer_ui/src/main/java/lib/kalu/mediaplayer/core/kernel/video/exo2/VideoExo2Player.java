@@ -4,10 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Surface;
-import android.view.SurfaceHolder;
-
-import androidx.annotation.FloatRange;
-import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -61,11 +57,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import lib.kalu.mediaplayer.args.PlayerArgs;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
@@ -118,71 +113,75 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, StartArgs args) {
+    public void startDecoder(Context context) {
 
         try {
             if (null == mExoPlayerBuilder)
                 throw new Exception("error: mExoPlayerBuilder null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
-            int ffmpegType = args.getExoRenderersType();
             mExoPlayerBuilder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
             mExoPlayerBuilder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
             mExoPlayerBuilder.setLoadControl(new DefaultLoadControl());
             mExoPlayerBuilder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));
             mExoPlayerBuilder.setTrackSelector(new DefaultTrackSelector(context));
+
+            int decoderType = args.getDecoderType();
             // only_mediacodec
-            if (ffmpegType == PlayerType.ExoRenderersType.CODEC) {
+            if (decoderType == PlayerType.DecoderType.ALL_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
                 if (null == clazz)
                     throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory");
                 mExoPlayerBuilder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioMediaCodecRenderersFactory(context));
             }
             // only_mediacodec_audio
-            else if (ffmpegType == PlayerType.ExoRenderersType.ONLY_AUDIO_CODEC) {
+            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory");
                 if (null == clazz)
                     throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory");
                 mExoPlayerBuilder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecAudioRenderersFactory(context));
             }
             // only_mediacodec_video
-            else if (ffmpegType == PlayerType.ExoRenderersType.ONLY_VIDEO_CODEC) {
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory");
                 if (null == clazz)
                     throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory");
                 mExoPlayerBuilder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyMediaCodecVideoRenderersFactory(context));
             }
             // only_ffmpeg
-            else if (ffmpegType == PlayerType.ExoRenderersType.FFMPEG) {
+            else if (decoderType == PlayerType.DecoderType.ALL_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory");
                 mExoPlayerBuilder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioFFmpegRenderersFactory(context));
             }
             // only_ffmpeg_audio
-            else if (ffmpegType == PlayerType.ExoRenderersType.ONLY_AUDIO_FFMPEG) {
+            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory");
                 if (null == clazz)
                     throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory");
                 mExoPlayerBuilder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegAudioRenderersFactory(context));
             }
             // only_ffmpeg_video
-            else if (ffmpegType == PlayerType.ExoRenderersType.ONLY_VIDEO_FFMPEG) {
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory");
                 if (null == clazz)
                     throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory");
                 mExoPlayerBuilder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseOnlyFFmpegVideoRenderersFactory(context));
             }
             // video_mediacodec_audio_ffmpeg
-            else if (ffmpegType == PlayerType.ExoRenderersType.VIDEO_CODEC_AUDIO_FFMPEG) {
+            else if (decoderType == PlayerType.DecoderType.VIDEO_CODEC_AUDIO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory");
                 mExoPlayerBuilder.setRenderersFactory(new lib.kalu.exoplayer2.ffmpeg.BaseVideoMediaCodecAudioFFmpegRenderersFactory(context));
             }
             // video_ffmpeg_audio_mediacodec
-            else if (ffmpegType == PlayerType.ExoRenderersType.VIDEO_FFMPEG_AUDIO_CODEC) {
+            else if (decoderType == PlayerType.DecoderType.VIDEO_FFMPEG_AUDIO_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory");
                 if (null == clazz)
                     throw new Exception("not find: lib.kalu.exoplayer2.ffmpeg.BaseVideoFFmpegAudioMediaCodecRenderersFactory");
@@ -195,6 +194,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
         try {
             if (null != mExoPlayer)
                 throw new Exception("warning: mExoPlayer not null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
@@ -206,6 +208,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
 
         try {
+            if (null != mExoPlayer)
+                throw new Exception("warning: mExoPlayer not null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
@@ -241,10 +248,13 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void initOptions(Context context, StartArgs args) {
+    public void initOptions(Context context) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             int seekType = args.getExoSeekType();
             if (seekType == PlayerType.ExoSeekType.CLOSEST_SYNC) {
                 mExoPlayer.setSeekParameters(SeekParameters.CLOSEST_SYNC);
@@ -262,7 +272,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
         // log
         try {
             if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+                throw new Exception("error: mExoPlayer null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             Class<?> clazz = Class.forName("lib.kalu.exoplayer2.util.ExoLogUtil");
             if (null == clazz)
                 throw new Exception("warning: lib.kalu.exoplayer2.util.ExoLogUtil not find");
@@ -274,7 +287,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
         // log-jni
         try {
             if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+                throw new Exception("error: mExoPlayer null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             Class<?> clazz = Class.forName("com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary");
             if (null == clazz)
                 throw new Exception("warning: com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary not find");
@@ -830,11 +846,14 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 boolean videoSizeChanged = isVideoSizeChanged();
                 if (videoSizeChanged)
                     throw new Exception("warning: videoSizeChanged = true");
-                setVideoSizeChanged(true);
                 StartArgs args = getStartArgs();
+                if (null == args)
+                    throw new Exception("error: args null");
+                setVideoSizeChanged(true);
                 @PlayerType.ScaleType.Value
-                int scaleType = (null == args ? PlayerType.ScaleType.DEFAULT : args.getRenderScaleType());
-                int rotation = (videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.DEFAULT);
+                int scaleType = args.getscaleType();
+                int rotation = args.getRotation();
+//                int rotation = (videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.DEFAULT);
                 onUpdateSizeChanged(PlayerType.KernelType.EXO_V2, videoWidth, videoHeight, rotation, scaleType);
             } catch (Exception e) {
                 LogUtil.log("VideoExo2Player => onVideoSizeChanged => " + e.getMessage());

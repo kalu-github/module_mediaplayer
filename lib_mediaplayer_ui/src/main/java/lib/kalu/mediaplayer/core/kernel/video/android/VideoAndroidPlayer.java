@@ -6,18 +6,11 @@ import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.SystemClock;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 
-import androidx.annotation.FloatRange;
-
-import kotlin.jvm.Synchronized;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
@@ -59,10 +52,13 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, StartArgs args) {
+    public void startDecoder(Context context) {
         try {
             if (null == mMediaPlayer)
-                throw new Exception("mMediaPlayer error: null");
+                throw new Exception("error: mMediaPlayer null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             String url = args.getUrl();
             if (url == null)
                 throw new Exception("url error: " + url);
@@ -84,7 +80,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void initOptions(Context context, StartArgs args) {
+    public void initOptions(Context context) {
     }
 
     /**
@@ -456,11 +452,13 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 boolean videoSizeChanged = isVideoSizeChanged();
                 if (videoSizeChanged)
                     throw new Exception("warning: videoSizeChanged = true");
-                setVideoSizeChanged(true);
                 StartArgs args = getStartArgs();
+                if (null == args)
+                    throw new Exception("error: args null");
+                setVideoSizeChanged(true);
                 @PlayerType.ScaleType.Value
-                int scaleType = (null == args ? PlayerType.ScaleType.DEFAULT : args.getRenderScaleType());
-                int rotation = PlayerType.RotationType.DEFAULT;
+                int scaleType = args.getscaleType();
+                int rotation = args.getRotation();
                 onUpdateSizeChanged(PlayerType.KernelType.ANDROID, videoWidth, videoHeight, rotation, scaleType);
             } catch (Exception e) {
                 LogUtil.log("VideoAndroidPlayer => onVideoSizeChanged => " + e.getMessage());

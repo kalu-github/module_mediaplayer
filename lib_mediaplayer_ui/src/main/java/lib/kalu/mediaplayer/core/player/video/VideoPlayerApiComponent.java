@@ -1,18 +1,14 @@
 package lib.kalu.mediaplayer.core.player.video;
 
 import android.annotation.SuppressLint;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
 
 import java.util.LinkedList;
 import java.util.List;
 
 import lib.kalu.mediaplayer.core.component.ComponentApi;
-import lib.kalu.mediaplayer.core.component.ComponentApiPause;
-import lib.kalu.mediaplayer.core.component.ComponentApiSeek;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoPlayerApiComponent extends VideoPlayerApiBase {

@@ -2,8 +2,6 @@ package lib.kalu.mediaplayer.util;
 
 import android.net.Uri;
 
-
-
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;

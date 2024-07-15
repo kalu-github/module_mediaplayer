@@ -9,13 +9,11 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 
-
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import lib.kalu.mediaplayer.core.render.VideoRenderApi;
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
+import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 

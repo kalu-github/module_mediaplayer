@@ -3,13 +3,10 @@ package lib.kalu.mediaplayer.core.kernel.video.vlc;
 import android.content.Context;
 import android.net.Uri;
 import android.view.Surface;
-import android.view.SurfaceHolder;
-
-import androidx.annotation.FloatRange;
 
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.vlc.util.VlcLogUtil;
 import lib.kalu.vlc.widget.OnVlcInfoChangeListener;
@@ -54,10 +51,13 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, StartArgs args) {
+    public void startDecoder(Context context) {
         try {
             if (null == mVlcPlayer)
-                throw new Exception("mVlcPlayer error: null");
+                throw new Exception("error: mVlcPlayer null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             String url = args.getUrl();
             if (url == null)
                 throw new Exception("url error: " + url);
@@ -71,10 +71,13 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void initOptions(Context context, StartArgs args) {
+    public void initOptions(Context context) {
         try {
             if (null == mVlcPlayer)
-                throw new Exception("mVlcPlayer error: null");
+                throw new Exception("error: mVlcPlayer null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             Class<?> clazz = Class.forName("lib.kalu.vlc.util.VlcLogUtil");
             if (null == clazz)
                 throw new Exception("warning: lib.kalu.vlc.util.VlcLogUtil not find");

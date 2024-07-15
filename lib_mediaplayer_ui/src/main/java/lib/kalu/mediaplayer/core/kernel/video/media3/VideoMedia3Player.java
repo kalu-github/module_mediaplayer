@@ -104,11 +104,13 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void startDecoder(Context context, StartArgs args) {
-
+    public void startDecoder(Context context) {
         try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+            if (null == mExoPlayerBuilder)
+                throw new Exception("error: mExoPlayerBuilder null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
@@ -118,68 +120,76 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             mExoPlayerBuilder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));
             mExoPlayerBuilder.setTrackSelector(new DefaultTrackSelector(context));
 
-            int exoFFmpeg = args.getExoRenderersType();
+            int decoderType = args.getDecoderType();
             // only_mediacodec
-            if (exoFFmpeg == PlayerType.ExoRenderersType.CODEC) {
+            if (decoderType == PlayerType.DecoderType.ALL_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoCodecAudioCodecRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoCodecAudioCodecRenderersFactory");
+                LogUtil.log("VideoMedia3Player => startDecoder => ALL_CODEC");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // only_mediacodec_audio
-            else if (exoFFmpeg == PlayerType.ExoRenderersType.ONLY_AUDIO_CODEC) {
+            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.OnlyAudioCodecRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.OnlyAudioCodecRenderersFactory");
+                LogUtil.log("VideoMedia3Player => startDecoder => ONLY_AUDIO_CODEC");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // only_mediacodec_video
-            else if (exoFFmpeg == PlayerType.ExoRenderersType.ONLY_VIDEO_CODEC) {
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.OnlyVideoCodecRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.OnlyVideoCodecRenderersFactory");
+                LogUtil.log("VideoMedia3Player => startDecoder => ONLY_VIDEO_CODEC");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // only_ffmpeg
-            else if (exoFFmpeg == PlayerType.ExoRenderersType.FFMPEG) {
+            else if (decoderType == PlayerType.DecoderType.ALL_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
+                LogUtil.log("VideoMedia3Player => startDecoder => ALL_FFMPEG");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // only_ffmpeg_audio
-            else if (exoFFmpeg == PlayerType.ExoRenderersType.ONLY_AUDIO_FFMPEG) {
+            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.OnlyAudioFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.OnlyAudioFFmpegRenderersFactory");
+                LogUtil.log("VideoMedia3Player => startDecoder => ONLY_AUDIO_FFMPEG");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // only_ffmpeg_video
-            else if (exoFFmpeg == PlayerType.ExoRenderersType.ONLY_VIDEO_FFMPEG) {
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.OnlyVideoFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.OnlyVideoFFmpegRenderersFactory");
+                LogUtil.log("VideoMedia3Player => startDecoder => ONLY_VIDEO_FFMPEG");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // video_mediacodec_audio_ffmpeg
-            else if (exoFFmpeg == PlayerType.ExoRenderersType.VIDEO_CODEC_AUDIO_FFMPEG) {
+            else if (decoderType == PlayerType.DecoderType.VIDEO_CODEC_AUDIO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoCodecAudioFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoCodecAudioFFmpegRenderersFactory");
+                LogUtil.log("VideoMedia3Player => startDecoder => VIDEO_CODEC_AUDIO_FFMPEG");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // video_ffmpeg_audio_mediacodec
-            else if (exoFFmpeg == PlayerType.ExoRenderersType.VIDEO_FFMPEG_AUDIO_CODEC) {
+            else if (decoderType == PlayerType.DecoderType.VIDEO_FFMPEG_AUDIO_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoFFmpegAudioCodecRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoFFmpegAudioCodecRenderersFactory");
+                LogUtil.log("VideoMedia3Player => startDecoder => VIDEO_FFMPEG_AUDIO_CODEC");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
@@ -190,6 +200,9 @@ public final class VideoMedia3Player extends VideoBasePlayer {
         try {
             if (null != mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
@@ -201,6 +214,9 @@ public final class VideoMedia3Player extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
@@ -236,11 +252,13 @@ public final class VideoMedia3Player extends VideoBasePlayer {
     }
 
     @Override
-    public void initOptions(Context context, StartArgs args) {
+    public void initOptions(Context context) {
         try {
             if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
-
+                throw new Exception("error: mExoPlayer null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             int seekParameters = args.getExoSeekType();
             // seek model
             if (seekParameters == PlayerType.ExoSeekType.CLOSEST_SYNC) {
@@ -256,22 +274,13 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             LogUtil.log("VideoExo2Player => initOptionsExo => " + e.getMessage());
         }
 
-        // log
-        try {
-            if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
-            Class<?> clazz = Class.forName("androidx.media3.decoder.ffmpeg.FfmpegLibrary");
-            if (null == clazz)
-                throw new Exception("warning: androidx.media3.decoder.ffmpeg.FfmpegLibrary not find");
-            boolean log = args.isLog();
-//            androidx.media3.decoder.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
-        } catch (Exception e) {
-        }
-
         // log-jni
         try {
             if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+                throw new Exception("error: mExoPlayer null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             Class<?> clazz = Class.forName("androidx.media3.decoder.ffmpeg.FfmpegLibrary");
             if (null == clazz)
                 throw new Exception("warning: androidx.media3.decoder.ffmpeg.FfmpegLibrary not find");
@@ -712,11 +721,14 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 boolean videoSizeChanged = isVideoSizeChanged();
                 if (videoSizeChanged)
                     throw new Exception("warning: videoSizeChanged = true");
-                setVideoSizeChanged(true);
                 StartArgs args = getStartArgs();
+                if (null == args)
+                    throw new Exception("error: args null");
+                setVideoSizeChanged(true);
                 @PlayerType.ScaleType.Value
-                int scaleType = (null == args ? PlayerType.ScaleType.DEFAULT : args.getRenderScaleType());
-                int rotation = (videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.DEFAULT);
+                int scaleType = args.getscaleType();
+                int rotation = args.getRotation();
+//                int rotation = (videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.DEFAULT);
                 onUpdateSizeChanged(PlayerType.KernelType.MEDIA_V3, videoWidth, videoHeight, rotation, scaleType);
             } catch (Exception e) {
                 LogUtil.log("VideoMedia3Player => onVideoSizeChanged => " + e.getMessage());

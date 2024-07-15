@@ -19,9 +19,11 @@ public final class PlayerArgs {
     @PlayerType.KernelType.Value
     private int externalAudioKernel; // 音频播放器内核
     @PlayerType.KernelType.Value
-    private int kernel; // 视频播放器内核
+    private int kernelType; // 视频播放器内核
     @PlayerType.RenderType.Value
-    private int render; // 视频渲染类型
+    private int renderType; // 视频渲染类型
+    @PlayerType.DecoderType.Value
+    private int decoderType; // 解码器类型
     @PlayerType.ScaleType
     private int scaleType; // 视频缩放比例
     private boolean checkMobileNetwork; // 监测手机网络环境
@@ -31,13 +33,19 @@ public final class PlayerArgs {
 
     @PlayerType.ExoSeekType.Value
     private int exoSeekType;
-    @PlayerType.ExoRenderersType.Value
-    private int exoRenderersType;
     private boolean exoUseOkhttp;
     @PlayerType.CacheType
     private int exoCacheType = PlayerType.CacheType.NONE;
     private int exoCacheMax = 0;
     private String exoCacheDir = null;
+
+    // 旋转角度
+    @PlayerType.RotationType.Value
+    private int rotation;
+
+    public int getRotation() {
+        return rotation;
+    }
 
     // 试看时长
     private long trySeeDuration;
@@ -56,10 +64,6 @@ public final class PlayerArgs {
 
     public boolean getBufferingTimeoutRetry() {
         return bufferingTimeoutRetry;
-    }
-
-    public int getExoRenderersType() {
-        return exoRenderersType;
     }
 
     public int getExoSeekType() {
@@ -94,12 +98,19 @@ public final class PlayerArgs {
         return externalAudioKernel;
     }
 
-    public int getKernel() {
-        return kernel;
+    @PlayerType.KernelType.Value
+    public int getKernelType() {
+        return kernelType;
     }
 
-    public int getRender() {
-        return render;
+    @PlayerType.RenderType.Value
+    public int getRenderType() {
+        return renderType;
+    }
+
+    @PlayerType.DecoderType.Value
+    public int getDecoderType() {
+        return decoderType;
     }
 
     @PlayerType.ScaleType.Value
@@ -132,20 +143,21 @@ public final class PlayerArgs {
         connectTimeout = builder.connectTimeout;
         bufferingTimeoutRetry = builder.bufferingTimeoutRetry;
         externalAudioKernel = builder.externalAudioKernel;
-        kernel = builder.kernel;
-        render = builder.render;
+        kernelType = builder.kernelType;
+        renderType = builder.renderType;
+        decoderType = builder.decoderType;
         scaleType = builder.scaleType;
         checkMobileNetwork = builder.checkMobileNetwork;
         fitMobileCutout = builder.fitMobileCutout;
         checkOrientation = builder.checkOrientation;
         buriedEvent = builder.buriedEvent;
         exoSeekType = builder.exoSeekType;
-        exoRenderersType = builder.exoRenderersType;
         exoUseOkhttp = builder.exoUseOkhttp;
         exoCacheType = builder.exoCacheType;
         exoCacheDir = builder.exoCacheDir;
         exoCacheMax = builder.exoCacheMax;
         trySeeDuration = builder.trySeeDuration;
+        rotation = builder.rotation;
     }
 
     public Builder newBuilder() {
@@ -156,20 +168,21 @@ public final class PlayerArgs {
         builder.setConnectTimeout(this.connectTimeout);
         builder.setBufferingTimeoutRetry(this.bufferingTimeoutRetry);
         builder.setExternalAudioKernel(this.externalAudioKernel);
-        builder.setKernel(this.kernel);
-        builder.setRender(this.render);
+        builder.setKernelType(this.kernelType);
+        builder.setRenderType(this.renderType);
+        builder.setDecoderType(this.decoderType);
         builder.setScaleType(this.scaleType);
         builder.setCheckMobileNetwork(this.checkMobileNetwork);
         builder.setFitMobileCutout(this.fitMobileCutout);
         builder.setCheckOrientation(this.checkOrientation);
         builder.setBuriedEvent(this.buriedEvent);
         builder.setExoSeekType(this.exoSeekType);
-        builder.setExoRenderersType(this.exoRenderersType);
         builder.setExoUseOkhttp(this.exoUseOkhttp);
         builder.setExoCacheType(this.exoCacheType);
         builder.setExoCacheDir(this.exoCacheDir);
         builder.setExoCacheMax(this.exoCacheMax);
         builder.setTrySeeDuration(this.trySeeDuration);
+        builder.setRotation(this.rotation);
         return builder;
     }
 
@@ -184,9 +197,11 @@ public final class PlayerArgs {
         @PlayerType.KernelType.Value
         private int externalAudioKernel = PlayerType.KernelType.DEFAULT; // 音频播放器内核
         @PlayerType.KernelType.Value
-        private int kernel = PlayerType.KernelType.DEFAULT; // 视频播放器内核
+        private int kernelType = PlayerType.KernelType.DEFAULT; // 视频播放器内核
         @PlayerType.RenderType.Value
-        private int render = PlayerType.RenderType.DEFAULT; // 视频渲染类型
+        private int renderType = PlayerType.RenderType.DEFAULT; // 视频渲染类型
+        @PlayerType.DecoderType.Value
+        private int decoderType = PlayerType.DecoderType.DEFAULT; // 解码器类型
         @PlayerType.ScaleType
         private int scaleType = PlayerType.ScaleType.DEFAULT; // 视频缩放比例
         private boolean checkMobileNetwork = false; // 监测手机网络环境
@@ -197,16 +212,23 @@ public final class PlayerArgs {
 
         @PlayerType.ExoSeekType.Value
         private int exoSeekType = PlayerType.ExoSeekType.DEFAULT;
-        @PlayerType.ExoRenderersType.Value
-        private int exoRenderersType = PlayerType.ExoRenderersType.CODEC;
         /**
          * 本地视频缓存
          */
-        @PlayerType.CacheType
+        @PlayerType.CacheType.Value
         private int exoCacheType = PlayerType.CacheType.NONE;
         private int exoCacheMax = 0;
         private String exoCacheDir = null;
         private boolean exoUseOkhttp = true;
+
+        // 旋转角度
+        @PlayerType.RotationType.Value
+        private int rotation = PlayerType.RotationType.DEFAULT;
+
+        public Builder setRotation(int v) {
+            this.rotation = v;
+            return this;
+        }
 
         // 试看时长
         private long trySeeDuration = 0L;
@@ -231,8 +253,8 @@ public final class PlayerArgs {
             return this;
         }
 
-        public Builder setExoRenderersType(@PlayerType.ExoRenderersType int v) {
-            exoRenderersType = v;
+        public Builder setDecoderType(@PlayerType.DecoderType int v) {
+            decoderType = v;
             return this;
         }
 
@@ -276,13 +298,13 @@ public final class PlayerArgs {
             return this;
         }
 
-        public Builder setKernel(@PlayerType.KernelType.Value int v) {
-            kernel = v;
+        public Builder setKernelType(@PlayerType.KernelType.Value int v) {
+            kernelType = v;
             return this;
         }
 
-        public Builder setRender(@PlayerType.RenderType.Value int v) {
-            render = v;
+        public Builder setRenderType(@PlayerType.RenderType.Value int v) {
+            renderType = v;
             return this;
         }
 

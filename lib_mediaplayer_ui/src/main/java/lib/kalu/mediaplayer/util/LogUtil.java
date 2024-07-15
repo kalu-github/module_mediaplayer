@@ -2,12 +2,7 @@ package lib.kalu.mediaplayer.util;
 
 import android.util.Log;
 
-
 import androidx.annotation.Nullable;
-
-import lib.kalu.mediaplayer.args.PlayerArgs;
-import lib.kalu.mediaplayer.type.PlayerType;
-import lib.kalu.vlc.util.VlcLogUtil;
 
 public final class LogUtil {
 

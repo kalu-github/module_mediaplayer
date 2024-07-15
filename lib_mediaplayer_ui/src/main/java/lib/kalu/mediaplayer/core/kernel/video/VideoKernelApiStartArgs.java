@@ -1,9 +1,6 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
-import org.json.JSONArray;
-
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 

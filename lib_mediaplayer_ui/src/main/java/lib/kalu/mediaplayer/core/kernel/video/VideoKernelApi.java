@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.Surface;
 
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
@@ -23,9 +22,9 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
 
     void createDecoder(Context context);
 
-    void startDecoder(Context context, StartArgs args);
+    void startDecoder(Context context);
 
-    default void initOptions(Context context, StartArgs args) {
+    default void initOptions(Context context) {
     }
 
     default void clear() {
@@ -67,8 +66,8 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
         } catch (Exception e) {
         }
 
-        initOptions(context, args);
-        startDecoder(context, args);
+        initOptions(context);
+        startDecoder(context);
     }
 
     /***********/
