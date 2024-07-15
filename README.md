@@ -2,10 +2,10 @@
 # support
 ####   
 
-| 版本 | android mediaplayer | androidx media | exoplayer2 | ijkplayer | ffmplayer | vlcplayer |
-|:----:|:-------------------:|:--------:|:----------:|:---------:|:---------:|:--------:|
-| 硬解 | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; | &#10007; |
-| 软解 | &#10007; | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; |
+| 版本 | android mediaplayer | androidx media3 | exoplayer2 | ijkplayer | ffmplayer | vlcplayer |
+|:----:|:-------------------:|:---------------:|:----------:|:---------:|:---------:|:--------:|
+| 硬解 | &#10004; |    &#10004;     | &#10004; | &#10004; | &#10004; | &#10007; |
+| 软解 | &#10007; |    &#10004;     | &#10004; | &#10004; | &#10004; | &#10004; |
 
 #
 #### ijkplayer
@@ -16,6 +16,7 @@
 | lite | &#10004; | &#10004; | &#10007; | &#10004; | &#10004; | &#10004; |
 | full | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; | &#10004; |
 
+#
 #### androidx media3
 
 |  支持  | ffmpeg-audio | ffmpeg-video |   rtmp   |
@@ -23,6 +24,7 @@
 | mini |   &#10007;   |   &#10007;   | &#10007; |
 | full |   &#10004;   |   &#10004;   | &#10004; |
 
+#
 #### exoplayer v2
 
 |  支持  | ffmpeg-audio | ffmpeg-video |   rtmp   |
@@ -30,6 +32,7 @@
 | mini |   &#10007;   |   &#10007;   | &#10007; |
 | full |   &#10004;   |   &#10004;   | &#10004; |
 
+#
 #### 更新
 
 ```
@@ -259,6 +262,7 @@
 2. 重构lib_mediaplayer_ui模块
 ```
 
+#
 #### 资料
 
 ```
@@ -271,6 +275,7 @@ https://code.videolan.org/videolan/vlc-android
 https://mvnrepository.com/artifact/org.videolan.android/libvlc-all
 ```
 
+#
 #### 优化
 
 ```
@@ -278,6 +283,7 @@ adb shell am start -n com.kalu.mediaplayer/com.kalu.mediaplayer.MainActivity
 https://hejunlin.blog.csdn.net/article/details/57075026?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-57075026-blog-80149176.235%5Ev31%5Epc_relevant_increate_t0_download_v2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-57075026-blog-80149176.235%5Ev31%5Epc_relevant_increate_t0_download_v2&utm_relevant_index=2
 ```
 
+#
 #### 编译
 
 ```
