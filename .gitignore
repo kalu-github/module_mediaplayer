@@ -3,7 +3,7 @@
 /app/build
 /app/release/
 /lib_mediaplayer_ui/build
-/lib_mediaplayer_mediaplayer*
+/lib_mediaplayer_media3player*
 /lib_mediaplayer_exoplayer*
 /lib_mediaplayer_ijkplayer*
 /lib_mediaplayer_ffplayer*
