@@ -1,6 +1,5 @@
-
-# support
-####   
+# 
+#### support
 
 | 版本 | android mediaplayer | androidx media3 | exoplayer2 | ijkplayer | ffplayer | vlcplayer |
 |:----:|:-------------------:|:---------------:|:----------:|:---------:|:--------:|:--------:|
