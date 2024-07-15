@@ -201,16 +201,16 @@ public class MainActivity extends Activity {
         int exoFFmpegId = ((RadioGroup) findViewById(R.id.main_exo_ffmpeg)).getCheckedRadioButtonId();
         switch (exoFFmpegId) {
             case R.id.main_exo_vff_amc:
-                exoFFmpeg = PlayerType.ExoFFmpegType.VIDEO_FFMPEG_AUDIO_MEDIACODEC;
+                exoFFmpeg = PlayerType.ExoRenderersType.VIDEO_FFMPEG_AUDIO_CODEC;
                 break;
             case R.id.main_exo_vmc_aff:
-                exoFFmpeg = PlayerType.ExoFFmpegType.VIDEO_MEDIACODEC_AUDIO_FFMPEG;
+                exoFFmpeg = PlayerType.ExoRenderersType.VIDEO_CODEC_AUDIO_FFMPEG;
                 break;
             case R.id.main_exo_vff_aff:
-                exoFFmpeg = PlayerType.ExoFFmpegType.ONLY_FFMPEG;
+                exoFFmpeg = PlayerType.ExoRenderersType.FFMPEG;
                 break;
             default:
-                exoFFmpeg = PlayerType.ExoFFmpegType.ONLY_MEDIACODEC;
+                exoFFmpeg = PlayerType.ExoRenderersType.CODEC;
                 break;
         }
 
@@ -282,7 +282,7 @@ public class MainActivity extends Activity {
                 .setKernel(kernelType)
                 .setRender(renderType)
                 .setScaleType(scaleType)
-                .setExoFFmpeg(exoFFmpeg)
+                .setExoRenderersType(exoFFmpeg)
                 .setExoUseOkhttp(exoUseOkhttp).setExoCacheType(cacheFlag ? PlayerType.CacheType.DOWNLOAD : PlayerType.CacheType.NONE)
                 .setBuriedEvent(new LogBuriedEvent())
                 .build();

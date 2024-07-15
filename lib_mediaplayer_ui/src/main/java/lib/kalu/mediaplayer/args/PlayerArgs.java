@@ -30,9 +30,9 @@ public final class PlayerArgs {
     private BuriedEvent buriedEvent;  // 埋点事件log
 
     @PlayerType.ExoSeekType.Value
-    private int exoSeekType = PlayerType.ExoSeekType.DEFAULT;
-    @PlayerType.ExoFFmpegType.Value
-    private int exoFFmpeg = PlayerType.ExoFFmpegType.ONLY_MEDIACODEC;
+    private int exoSeekType;
+    @PlayerType.ExoRenderersType.Value
+    private int exoRenderersType;
     private boolean exoUseOkhttp;
     @PlayerType.CacheType
     private int exoCacheType = PlayerType.CacheType.NONE;
@@ -58,8 +58,8 @@ public final class PlayerArgs {
         return bufferingTimeoutRetry;
     }
 
-    public int getExoFFmpeg() {
-        return exoFFmpeg;
+    public int getExoRenderersType() {
+        return exoRenderersType;
     }
 
     public int getExoSeekType() {
@@ -140,7 +140,7 @@ public final class PlayerArgs {
         checkOrientation = builder.checkOrientation;
         buriedEvent = builder.buriedEvent;
         exoSeekType = builder.exoSeekType;
-        exoFFmpeg = builder.exoFFmpeg;
+        exoRenderersType = builder.exoRenderersType;
         exoUseOkhttp = builder.exoUseOkhttp;
         exoCacheType = builder.exoCacheType;
         exoCacheDir = builder.exoCacheDir;
@@ -164,7 +164,7 @@ public final class PlayerArgs {
         builder.setCheckOrientation(this.checkOrientation);
         builder.setBuriedEvent(this.buriedEvent);
         builder.setExoSeekType(this.exoSeekType);
-        builder.setExoFFmpeg(this.exoFFmpeg);
+        builder.setExoRenderersType(this.exoRenderersType);
         builder.setExoUseOkhttp(this.exoUseOkhttp);
         builder.setExoCacheType(this.exoCacheType);
         builder.setExoCacheDir(this.exoCacheDir);
@@ -197,8 +197,8 @@ public final class PlayerArgs {
 
         @PlayerType.ExoSeekType.Value
         private int exoSeekType = PlayerType.ExoSeekType.DEFAULT;
-        @PlayerType.ExoFFmpegType.Value
-        private int exoFFmpeg = PlayerType.ExoFFmpegType.ONLY_MEDIACODEC;
+        @PlayerType.ExoRenderersType.Value
+        private int exoRenderersType = PlayerType.ExoRenderersType.CODEC;
         /**
          * 本地视频缓存
          */
@@ -231,8 +231,8 @@ public final class PlayerArgs {
             return this;
         }
 
-        public Builder setExoFFmpeg(@PlayerType.ExoFFmpegType int v) {
-            exoFFmpeg = v;
+        public Builder setExoRenderersType(@PlayerType.ExoRenderersType int v) {
+            exoRenderersType = v;
             return this;
         }
 

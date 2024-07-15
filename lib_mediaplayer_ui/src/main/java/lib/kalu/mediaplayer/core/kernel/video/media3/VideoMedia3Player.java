@@ -120,7 +120,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
             int exoFFmpeg = args.getExoFFmpegType();
             // only_mediacodec
-            if (exoFFmpeg == PlayerType.ExoFFmpegType.ONLY_MEDIACODEC) {
+            if (exoFFmpeg == PlayerType.ExoRenderersType.CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoCodecAudioCodecRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoCodecAudioCodecRenderersFactory");
@@ -128,23 +128,23 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // only_mediacodec_audio
-            else if (exoFFmpeg == PlayerType.ExoFFmpegType.ONLY_MEDIACODEC_AUDIO) {
-                Class<?> clazz = Class.forName("lib.kalu.media3.renderers.OnlyAudioMediaCodecRenderersFactory");
+            else if (exoFFmpeg == PlayerType.ExoRenderersType.ONLY_AUDIO_CODEC) {
+                Class<?> clazz = Class.forName("lib.kalu.media3.renderers.OnlyAudioCodecRenderersFactory");
                 if (null == clazz)
-                    throw new Exception("warning: not lib.kalu.media3.renderers.OnlyAudioMediaCodecRenderersFactory");
+                    throw new Exception("warning: not lib.kalu.media3.renderers.OnlyAudioCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // only_mediacodec_video
-            else if (exoFFmpeg == PlayerType.ExoFFmpegType.ONLY_MEDIACODEC_VIDEO) {
-                Class<?> clazz = Class.forName("lib.kalu.media3.renderers.OnlyVideoMediaCodecRenderersFactory");
+            else if (exoFFmpeg == PlayerType.ExoRenderersType.ONLY_VIDEO_CODEC) {
+                Class<?> clazz = Class.forName("lib.kalu.media3.renderers.OnlyVideoCodecRenderersFactory");
                 if (null == clazz)
-                    throw new Exception("warning: not lib.kalu.media3.renderers.OnlyVideoMediaCodecRenderersFactory");
+                    throw new Exception("warning: not lib.kalu.media3.renderers.OnlyVideoCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // only_ffmpeg
-            else if (exoFFmpeg == PlayerType.ExoFFmpegType.ONLY_FFMPEG) {
+            else if (exoFFmpeg == PlayerType.ExoRenderersType.FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
@@ -152,7 +152,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // only_ffmpeg_audio
-            else if (exoFFmpeg == PlayerType.ExoFFmpegType.ONLY_FFMPEG_AUDIO) {
+            else if (exoFFmpeg == PlayerType.ExoRenderersType.ONLY_AUDIO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.OnlyAudioFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.OnlyAudioFFmpegRenderersFactory");
@@ -160,7 +160,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // only_ffmpeg_video
-            else if (exoFFmpeg == PlayerType.ExoFFmpegType.ONLY_FFMPEG_VIDEO) {
+            else if (exoFFmpeg == PlayerType.ExoRenderersType.ONLY_VIDEO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.OnlyVideoFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.OnlyVideoFFmpegRenderersFactory");
@@ -168,7 +168,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // video_mediacodec_audio_ffmpeg
-            else if (exoFFmpeg == PlayerType.ExoFFmpegType.VIDEO_MEDIACODEC_AUDIO_FFMPEG) {
+            else if (exoFFmpeg == PlayerType.ExoRenderersType.VIDEO_CODEC_AUDIO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoCodecAudioFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoCodecAudioFFmpegRenderersFactory");
@@ -176,7 +176,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((g) newInstance);
             }
             // video_ffmpeg_audio_mediacodec
-            else if (exoFFmpeg == PlayerType.ExoFFmpegType.VIDEO_FFMPEG_AUDIO_MEDIACODEC) {
+            else if (exoFFmpeg == PlayerType.ExoRenderersType.VIDEO_FFMPEG_AUDIO_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoFFmpegAudioCodecRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoFFmpegAudioCodecRenderersFactory");

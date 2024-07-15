@@ -297,28 +297,28 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface ExoFFmpegType {
-        int ONLY_MEDIACODEC = 10_001;
-        int ONLY_MEDIACODEC_AUDIO = 10_002;
-        int ONLY_MEDIACODEC_VIDEO = 10_003;
-        int ONLY_FFMPEG = 10_004;
-        int ONLY_FFMPEG_AUDIO = 10_005;
-        int ONLY_FFMPEG_VIDEO = 10_006;
-        int VIDEO_MEDIACODEC_AUDIO_FFMPEG = 10_007;
-        int VIDEO_FFMPEG_AUDIO_MEDIACODEC = 10_008;
+    @interface ExoRenderersType {
+        int CODEC = 10_001;
+        int FFMPEG = 10_004;
+        int ONLY_AUDIO_CODEC = 10_002;
+        int ONLY_VIDEO_CODEC = 10_003;
+        int ONLY_AUDIO_FFMPEG = 10_005;
+        int ONLY_VIDEO_FFMPEG = 10_006;
+        int VIDEO_CODEC_AUDIO_FFMPEG = 10_007;
+        int VIDEO_FFMPEG_AUDIO_CODEC = 10_008;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {
-                ExoFFmpegType.ONLY_MEDIACODEC,
-                ExoFFmpegType.ONLY_MEDIACODEC_AUDIO,
-                ExoFFmpegType.ONLY_MEDIACODEC_VIDEO,
-                ExoFFmpegType.ONLY_FFMPEG,
-                ExoFFmpegType.ONLY_FFMPEG_AUDIO,
-                ExoFFmpegType.ONLY_FFMPEG_VIDEO,
-                ExoFFmpegType.VIDEO_MEDIACODEC_AUDIO_FFMPEG,
-                ExoFFmpegType.VIDEO_FFMPEG_AUDIO_MEDIACODEC})
+                ExoRenderersType.CODEC,
+                ExoRenderersType.FFMPEG,
+                ExoRenderersType.ONLY_AUDIO_CODEC,
+                ExoRenderersType.ONLY_VIDEO_CODEC,
+                ExoRenderersType.ONLY_AUDIO_FFMPEG,
+                ExoRenderersType.ONLY_VIDEO_FFMPEG,
+                ExoRenderersType.VIDEO_CODEC_AUDIO_FFMPEG,
+                ExoRenderersType.VIDEO_FFMPEG_AUDIO_CODEC})
         @interface Value {
         }
     }

@@ -44,12 +44,12 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setExoFFmpeg(@PlayerType.ExoFFmpegType int v) {
-        mPlayerBuilder.setExoFFmpeg(v);
+    public PlayerSDK setExoRenderersType(@PlayerType.ExoRenderersType.Value int v) {
+        mPlayerBuilder.setExoRenderersType(v);
         return this;
     }
 
-    public PlayerSDK setExoSeekType(@PlayerType.ExoSeekType int v) {
+    public PlayerSDK setExoSeekType(@PlayerType.ExoSeekType.Value int v) {
         mPlayerBuilder.setExoSeekType(v);
         return this;
     }

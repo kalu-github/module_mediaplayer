@@ -52,7 +52,7 @@
 -keep @interface lib.kalu.mediaplayer.type.PlayerType$ExoSeekType {
     *;
 }
--keep @interface lib.kalu.mediaplayer.type.PlayerType$ExoFFmpegType {
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$ExoRenderersType {
     *;
 }
 -keep @interface lib.kalu.mediaplayer.type.PlayerType$StateType {
