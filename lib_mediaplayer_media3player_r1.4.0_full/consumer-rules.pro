@@ -26,6 +26,10 @@
 -keep class com.softsynth.**
 
 # exoplayer
+-keep class androidx.media3.exoplayer.** {
+    public <fields>;
+    public <methods>;
+}
 -dontnote androidx.media3.decoder.vp9.LibvpxVideoRenderer
 -keepclassmembers class androidx.media3.decoder.vp9.LibvpxVideoRenderer {
   <init>(long, android.os.Handler, androidx.media3.exoplayer.video.VideoRendererEventListener, int);
@@ -91,7 +95,6 @@
   androidx.media3.effect.DefaultVideoFrameProcessor$Factory build();
 }
 
-
 # extractor
 -dontnote androidx.media3.decoder.flac.FlacExtractor
 -keepclassmembers class androidx.media3.decoder.flac.FlacExtractor {
@@ -121,6 +124,16 @@
 -dontwarn com.google.j2objc.annotations.**
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -keepclassmembernames class com.google.common.base.Function { *; }
+-keep class androidx.media3.common.** {
+    public <fields>;
+    public <methods>;
+}
+
+# datasource
+-keep class androidx.media3.datasource.** {
+    public <fields>;
+    public <methods>;
+}
 
 # datasource rtmp
 -keepclassmembers class androidx.media3.datasource.RawResourceDataSource {
