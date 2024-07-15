@@ -474,10 +474,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         long trySeeDuration = getTrySeeDuration();
                         callProgress(trySeeDuration, position, duration);
 
-                        if (trySeeDuration < 0L)
+                        if (trySeeDuration <= 0L)
                             throw new Exception("waning: trySeeDuration<=0L");
-                        if (position <= 0L)
-                            throw new Exception("waning: position<=0L");
+                        if (position < 0L)
+                            throw new Exception("waning: position<0L");
                         if (position < trySeeDuration)
                             throw new Exception("waning: position<trySeeDuration");
                         // 试看结束
