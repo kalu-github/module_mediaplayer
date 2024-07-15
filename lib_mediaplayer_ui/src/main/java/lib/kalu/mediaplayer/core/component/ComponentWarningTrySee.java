@@ -63,6 +63,22 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
     @Override
     public void callEvent(int playState) {
         switch (playState) {
+            case PlayerType.StateType.PAUSE:
+                try {
+                    ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
+                    imageView.setImageResource(R.drawable.module_mediaplayer_ic_pause);
+                } catch (Exception e) {
+                    LogUtil.log("ComponentWarningTrySee => callEvent => PAUSE => Exception " + e.getMessage());
+                }
+                break;
+            case PlayerType.StateType.RESUME:
+                try {
+                    ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
+                    imageView.setImageResource(R.drawable.module_mediaplayer_ic_resume);
+                } catch (Exception e) {
+                    LogUtil.log("ComponentWarningTrySee => callEvent => RESUME => Exception " + e.getMessage());
+                }
+                break;
             case PlayerType.StateType.VIDEO_RENDERING_START:
                 LogUtil.log("ComponentWarningTrySee => VIDEO_RENDERING_START => playState = " + playState);
                 try {
@@ -138,24 +154,10 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
     @Override
     public void pause() {
         ComponentApiWarningTrySee.super.pause();
-//        LogUtil.log("ComponentWarningTrySee => pause =>");
-        try {
-            ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
-            imageView.setImageResource(R.drawable.module_mediaplayer_ic_pause);
-        } catch (Exception e) {
-            LogUtil.log("ComponentWarningTrySee => pause => Exception " + e.getMessage());
-        }
     }
 
     @Override
     public void resume() {
         ComponentApiWarningTrySee.super.resume();
-//        LogUtil.log("ComponentWarningTrySee => resume =>");
-        try {
-            ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
-            imageView.setImageResource(R.drawable.module_mediaplayer_ic_resume);
-        } catch (Exception e) {
-            LogUtil.log("ComponentWarningTrySee => resume => Exception " + e.getMessage());
-        }
     }
 }

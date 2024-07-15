@@ -170,7 +170,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (playing) {
                 pause(callEvent);
             } else {
-                resume();
+                resume(callEvent);
             }
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => toggle => " + e.getMessage());
