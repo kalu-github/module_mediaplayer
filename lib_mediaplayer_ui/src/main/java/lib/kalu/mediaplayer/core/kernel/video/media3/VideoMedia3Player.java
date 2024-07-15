@@ -723,7 +723,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
         @Override
         public void onIsPlayingChanged(AnalyticsListener.EventTime eventTime, boolean isPlaying) {
-            LogUtil.log("VideoMedia3Player => onIsPlayingChanged => isPlaying = " + isPlaying + ", mPrepared = " + mPrepared);
+            LogUtil.log("VideoMedia3Player => onIsPlayingChanged => isPlaying = " + isPlaying);
         }
 
         @Override
