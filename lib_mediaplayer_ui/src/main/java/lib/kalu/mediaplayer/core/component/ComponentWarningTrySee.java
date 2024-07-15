@@ -45,6 +45,9 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
         // keycode_enter || keycode_dpad_center
         if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER)) {
             try {
+                long trySeeDuration = getTrySeeDuration();
+                if (trySeeDuration <= 0L)
+                    throw new Exception("warning: trySeeDuration <= 0L");
                 boolean trySeeFinish = isTrySeeFinish();
                 if (trySeeFinish)
                     throw new Exception("waring: trySeeFinish true");

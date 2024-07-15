@@ -34,6 +34,22 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         initAudio();
         initAsset();
+
+        RadioGroup radioGroup = findViewById(R.id.main_kernel);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                int visable = (i == R.id.main_kernel_exo_v2 || i == R.id.main_kernel_mediax ? View.VISIBLE : View.GONE);
+                findViewById(R.id.main_exo_ffmpeg).setVisibility(visable);
+                findViewById(R.id.main_exo_ffmpeg_title).setVisibility(visable);
+                findViewById(R.id.main_cache).setVisibility(visable);
+                findViewById(R.id.main_cache_title).setVisibility(visable);
+                findViewById(R.id.main_exo_http).setVisibility(visable);
+                findViewById(R.id.main_exo_http_title).setVisibility(visable);
+            }
+        });
+
+
         findViewById(R.id.main_button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,10 +235,19 @@ public class MainActivity extends Activity {
                 scaleType = PlayerType.ScaleType.FULL;
                 break;
             case R.id.main_scale4:
-                scaleType = PlayerType.ScaleType._4_3;
+                scaleType = PlayerType.ScaleType._1_1;
                 break;
             case R.id.main_scale5:
+                scaleType = PlayerType.ScaleType._4_3;
+                break;
+            case R.id.main_scale6:
+                scaleType = PlayerType.ScaleType._5_4;
+                break;
+            case R.id.main_scale7:
                 scaleType = PlayerType.ScaleType._16_9;
+                break;
+            case R.id.main_scale8:
+                scaleType = PlayerType.ScaleType._16_10;
                 break;
             default:
                 scaleType = PlayerType.ScaleType.DEFAULT;

@@ -62,7 +62,7 @@
                 android:layout_height="20dp"
                 android:layout_marginLeft="6dp"
                 android:gravity="center_vertical|left"
-                android:text="填充类型"
+                android:text="画面比例"
                 android:textSize="14sp" />
 
             <RadioGroup
@@ -94,13 +94,31 @@
                     android:id="@+id/main_scale4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4:3" />
+                    android:text="1:1" />
 
                 <RadioButton
                     android:id="@+id/main_scale5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="4:3" />
+
+                <RadioButton
+                    android:id="@+id/main_scale6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5:4" />
+
+                <RadioButton
+                    android:id="@+id/main_scale7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="16:9" />
+
+                <RadioButton
+                    android:id="@+id/main_scale8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="16:10" />
 
             </RadioGroup>
 
@@ -133,86 +151,6 @@
                     android:checked="false"
                     android:enabled="true"
                     android:text="textureview" />
-
-            </RadioGroup>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginLeft="6dp"
-                android:gravity="center_vertical|left"
-                android:text="网络类型 => exoplayer"
-                android:textSize="14sp" />
-
-            <RadioGroup
-                android:id="@+id/main_exo_http"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/main_exo_http_okhttp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true"
-                    android:enabled="true"
-                    android:text="exo2_okhttp" />
-
-                <RadioButton
-                    android:id="@+id/main_exo_http_sample"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="false"
-                    android:enabled="true"
-                    android:text="exo2_http" />
-
-            </RadioGroup>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginLeft="6dp"
-                android:gravity="center_vertical|left"
-                android:text="解码类型 => exoplayer"
-                android:textSize="14sp" />
-
-            <RadioGroup
-                android:id="@+id/main_exo_ffmpeg"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/main_exo_vmc_amc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true"
-                    android:enabled="true"
-                    android:text="视频硬解_音频硬解" />
-
-                <RadioButton
-                    android:id="@+id/main_exo_vmc_aff"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="false"
-                    android:enabled="true"
-                    android:text="视频硬解_音频软解" />
-
-                <RadioButton
-                    android:id="@+id/main_exo_vff_amc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="false"
-                    android:enabled="true"
-                    android:text="视频软解_音频硬解" />
-
-                <RadioButton
-                    android:id="@+id/main_exo_vff_aff"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="false"
-                    android:enabled="true"
-                    android:text="视频软解_音频软解" />
 
             </RadioGroup>
 
@@ -289,6 +227,127 @@
             </RadioGroup>
 
             <TextView
+                android:id="@+id/main_exo_http_title"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginLeft="6dp"
+                android:gravity="center_vertical|left"
+                android:text="网络类型 => exo_v2 mediax"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <RadioGroup
+                android:id="@+id/main_exo_http"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <RadioButton
+                    android:id="@+id/main_exo_http_okhttp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="true"
+                    android:enabled="true"
+                    android:text="exo2_okhttp" />
+
+                <RadioButton
+                    android:id="@+id/main_exo_http_sample"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="false"
+                    android:enabled="true"
+                    android:text="exo2_http" />
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/main_exo_ffmpeg_title"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginLeft="6dp"
+                android:gravity="center_vertical|left"
+                android:text="解码类型 => exo_v2 mediax"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <RadioGroup
+                android:id="@+id/main_exo_ffmpeg"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <RadioButton
+                    android:id="@+id/main_exo_vmc_amc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="true"
+                    android:enabled="true"
+                    android:text="视频硬解_音频硬解" />
+
+                <RadioButton
+                    android:id="@+id/main_exo_vmc_aff"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="false"
+                    android:enabled="true"
+                    android:text="视频硬解_音频软解" />
+
+                <RadioButton
+                    android:id="@+id/main_exo_vff_amc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="false"
+                    android:enabled="true"
+                    android:text="视频软解_音频硬解" />
+
+                <RadioButton
+                    android:id="@+id/main_exo_vff_aff"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="false"
+                    android:enabled="true"
+                    android:text="视频软解_音频软解" />
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/main_cache_title"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginLeft="6dp"
+                android:gravity="center_vertical|left"
+                android:text="缓存类型 => exo_v2 mediax"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <RadioGroup
+                android:id="@+id/main_cache"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <RadioButton
+                    android:id="@+id/main_cache_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="false"
+                    android:enabled="true"
+                    android:text="开启" />
+
+                <RadioButton
+                    android:id="@+id/main_cache_null"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="true"
+                    android:enabled="true"
+                    android:text="关闭" />
+
+            </RadioGroup>
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:layout_marginLeft="6dp"
@@ -344,38 +403,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:checked="true"
-                    android:text="关闭" />
-
-            </RadioGroup>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginLeft="6dp"
-                android:gravity="center_vertical|left"
-                android:text="边看边缓存【仅支持exo】"
-                android:textSize="14sp" />
-
-            <RadioGroup
-                android:id="@+id/main_cache"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/main_cache_yes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="false"
-                    android:enabled="true"
-                    android:text="开启" />
-
-                <RadioButton
-                    android:id="@+id/main_cache_null"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true"
-                    android:enabled="true"
                     android:text="关闭" />
 
             </RadioGroup>
