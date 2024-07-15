@@ -189,7 +189,7 @@ public class MainActivity extends Activity {
             case R.id.main_kernel_ffplayer:
                 kernelType = PlayerType.KernelType.FFPLAYER;
                 break;
-            case R.id.main_kernel_mediax:
+            case R.id.main_kernel_media:
                 kernelType = PlayerType.KernelType.MEDIA;
                 break;
             default:
