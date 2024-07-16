@@ -44,7 +44,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             if (null != mMediaPlayer)
                 throw new Exception("warning: null == mMediaPlayer");
             mMediaPlayer = new MediaPlayer();
-            initListener();
+            registListener();
         } catch (Exception e) {
             LogUtil.log("VideoAndroidPlayer => createDecoder => Exception " + e.getMessage());
         }
@@ -89,10 +89,8 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         }
     }
 
-    /**
-     * MediaPlayer视频播放器监听listener
-     */
-    private void initListener() {
+    @Override
+    public void registListener() {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -103,12 +101,31 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             mMediaPlayer.setOnPreparedListener(mOnPreparedListener);
             mMediaPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
             mMediaPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
+            LogUtil.log("VideoAndroidPlayer => registListener =>");
         } catch (Exception e) {
-            LogUtil.log("VideoAndroidPlayer => initListener => " + e.getMessage());
+            LogUtil.log("VideoAndroidPlayer => registListener => " + e.getMessage());
         }
     }
 
-//    /**
+    @Override
+    public void unRegistListener() {
+        try {
+            if (null == mMediaPlayer)
+                throw new Exception("mMediaPlayer error: null");
+            mMediaPlayer.setOnErrorListener(null);
+            mMediaPlayer.setOnCompletionListener(null);
+            mMediaPlayer.setOnInfoListener(null);
+            mMediaPlayer.setOnBufferingUpdateListener(null);
+            mMediaPlayer.setOnPreparedListener(null);
+            mMediaPlayer.setOnSeekCompleteListener(null);
+            mMediaPlayer.setOnVideoSizeChangedListener(null);
+            LogUtil.log("VideoAndroidPlayer => unRegistListener =>");
+        } catch (Exception e) {
+            LogUtil.log("VideoAndroidPlayer => unRegistListener => " + e.getMessage());
+        }
+    }
+
+    //    /**
 //     * 用于播放raw和asset里面的视频文件
 //     */
 //    @Override
@@ -123,18 +140,11 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     @Override
     public void release() {
         clear();
+        unRegistListener();
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");
-            mMediaPlayer.setOnErrorListener(null);
-            mMediaPlayer.setOnCompletionListener(null);
-            mMediaPlayer.setOnInfoListener(null);
-            mMediaPlayer.setOnBufferingUpdateListener(null);
-            mMediaPlayer.setOnPreparedListener(null);
-            mMediaPlayer.setOnSeekCompleteListener(null);
-            mMediaPlayer.setOnVideoSizeChangedListener(null);
             mMediaPlayer.setSurface(null);
-            mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
         } catch (Exception e) {

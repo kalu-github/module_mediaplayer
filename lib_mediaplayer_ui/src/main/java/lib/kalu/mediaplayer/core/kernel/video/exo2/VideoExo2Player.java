@@ -6,6 +6,7 @@ import android.os.Build;
 import android.view.Surface;
 
 import androidx.annotation.Nullable;
+import androidx.media3.exoplayer.DecoderReuseEvaluation;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -21,7 +22,6 @@ import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.Tracks;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
-import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.LoadEventInfo;
@@ -60,6 +60,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import E2y.E2s;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
@@ -170,7 +171,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
 
             mExoPlayer = builder.build();
-            mExoPlayer.addAnalyticsListener(mAnalyticsListener);
+            registListener();
 
 //            if (mSpeedPlaybackParameters != null) {
 //                mExoPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
@@ -432,15 +433,35 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public void release() {
-        clear();
+    public void registListener() {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            mExoPlayer.addAnalyticsListener(mAnalyticsListener);
+        } catch (Exception e) {
+            LogUtil.log("VideoExo2Player => registListener => Exception " + e.getMessage());
+        }
+    }
 
+    @Override
+    public void unRegistListener() {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
             mExoPlayer.setPlaybackParameters(null);
-            mExoPlayer.setPlayWhenReady(false);
+        } catch (Exception e) {
+            LogUtil.log("VideoExo2Player => unRegistListener => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void release() {
+        clear();
+        unRegistListener();
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
             mExoPlayer.setVideoSurface(null);
             mExoPlayer.release();
             mExoPlayer = null;
@@ -638,8 +659,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //            refreshHeaders(httpFactory, headers);
 
 
-
-
             DataSource.Factory dataSourceFactory;
             try {
                 boolean useOkhttp = isExoUseOkhttp();
@@ -830,7 +849,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
 
         @Override
-        public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
+        public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable E2s e2s) {
             LogUtil.log("VideoExo2Player => onVideoInputFormatChanged[出画面] =>");
             try {
                 if (isPrepared())

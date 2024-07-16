@@ -24,6 +24,10 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
 
     void initOptions(Context context, StartArgs args);
 
+    void registListener();
+
+    void unRegistListener();
+
     default void clear() {
         mDoWindowing[0] = false;
         mSeek[0] = 0L;

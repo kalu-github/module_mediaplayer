@@ -49,7 +49,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             if (null != mFFmpegPlayer)
                 throw new Exception("warning: null != mFFmpegPlayer");
             mFFmpegPlayer = new FFmpegPlayer();
-            initListener();
+            registListener();
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => createDecoder => " + e.getMessage());
         }
@@ -61,7 +61,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("error: mFFmpegPlayer null");
-            if(null == args)
+            if (null == args)
                 throw new Exception("error: args null");
             String url = args.getUrl();
             if (url == null)
@@ -90,21 +90,43 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         }
     }
 
-    /**
-     * MediaPlayer视频播放器监听listener
-     */
-    private void initListener() {
-        mFFmpegPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mFFmpegPlayer.setOnErrorListener(onErrorListener);
-        mFFmpegPlayer.setOnCompletionListener(onCompletionListener);
-        mFFmpegPlayer.setOnInfoListener(onInfoListener);
-        mFFmpegPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
-        mFFmpegPlayer.setOnPreparedListener(onPreparedListener);
-        mFFmpegPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
-        mFFmpegPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
+    @Override
+    public void registListener() {
+        try {
+            if (null == mFFmpegPlayer)
+                throw new Exception("error: mFFmpegPlayer null");
+            mFFmpegPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mFFmpegPlayer.setOnErrorListener(onErrorListener);
+            mFFmpegPlayer.setOnCompletionListener(onCompletionListener);
+            mFFmpegPlayer.setOnInfoListener(onInfoListener);
+            mFFmpegPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
+            mFFmpegPlayer.setOnPreparedListener(onPreparedListener);
+            mFFmpegPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
+            mFFmpegPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
+        } catch (Exception e) {
+            LogUtil.log("VideoFFmpegPlayer => registListener => Exception " + e.getMessage());
+        }
     }
 
-//    /**
+    @Override
+    public void unRegistListener() {
+        try {
+            if (null == mFFmpegPlayer)
+                throw new Exception("mFFmpegPlayer error: null");
+            mFFmpegPlayer.setOnErrorListener(null);
+            mFFmpegPlayer.setOnCompletionListener(null);
+            mFFmpegPlayer.setOnInfoListener(null);
+            mFFmpegPlayer.setOnBufferingUpdateListener(null);
+            mFFmpegPlayer.setOnPreparedListener(null);
+            mFFmpegPlayer.setOnVideoSizeChangedListener(null);
+            mFFmpegPlayer.setOnSeekCompleteListener(null);
+            mFFmpegPlayer.setOnBufferingUpdateListener(null);
+        } catch (Exception e) {
+            LogUtil.log("VideoFFmpegPlayer => unRegistListener => Exception " + e.getMessage());
+        }
+    }
+
+    //    /**
 //     * 用于播放raw和asset里面的视频文件
 //     */
 //    @Override
@@ -119,19 +141,11 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void release() {
         clear();
+        unRegistListener();
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
-            mFFmpegPlayer.setOnErrorListener(null);
-            mFFmpegPlayer.setOnCompletionListener(null);
-            mFFmpegPlayer.setOnInfoListener(null);
-            mFFmpegPlayer.setOnBufferingUpdateListener(null);
-            mFFmpegPlayer.setOnPreparedListener(null);
-            mFFmpegPlayer.setOnVideoSizeChangedListener(null);
-            mFFmpegPlayer.setOnSeekCompleteListener(null);
-            mFFmpegPlayer.setOnBufferingUpdateListener(null);
             mFFmpegPlayer.setSurface(null);
-            mFFmpegPlayer.reset();
             mFFmpegPlayer.release();
             mFFmpegPlayer = null;
         } catch (Exception e) {

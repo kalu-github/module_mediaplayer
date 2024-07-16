@@ -8,6 +8,7 @@ import android.view.Surface;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import j.E;
 import lib.kalu.ijkplayer.IMediaPlayer;
 import lib.kalu.ijkplayer.IjkMediaPlayer;
 import lib.kalu.ijkplayer.IjkTimedText;
@@ -59,7 +60,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (null != mIjkPlayer)
                 throw new Exception("warning: null != mIjkPlayer");
             mIjkPlayer = new IjkMediaPlayer();
-            initListener();
+            registListener();
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => createDecoder => " + e.getMessage());
         }
@@ -70,7 +71,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("error: mIjkPlayer null");
-            if(null == args)
+            if (null == args)
                 throw new Exception("error: args null");
             String url = args.getUrl();
             if (url == null || url.length() == 0)
@@ -107,7 +108,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            if(null == args)
+            if (null == args)
                 throw new Exception("error: args null");
             Class<?> clazz = Class.forName("lib.kalu.ijkplayer.util.IjkLogUtil");
             if (null == clazz)
@@ -121,7 +122,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            if(null == args)
+            if (null == args)
                 throw new Exception("error: args null");
             boolean useMediaCodec = args.isIjkUseMediaCodec();
             int player = IjkMediaPlayer.OPT_CATEGORY_PLAYER;
@@ -242,7 +243,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            if(null == args)
+            if (null == args)
                 throw new Exception("error: args null");
             int format = IjkMediaPlayer.OPT_CATEGORY_FORMAT;
             // 设置播放前的探测时间 1,达到首屏秒开效果， bug有画面没声音
@@ -282,7 +283,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            if(null == args)
+            if (null == args)
                 throw new Exception("error: args null");
             boolean useMediaCodec = args.isIjkUseMediaCodec();
             int codec = IjkMediaPlayer.OPT_CATEGORY_CODEC;
@@ -322,20 +323,53 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         }
     }
 
-    /**
-     * ijk视频播放器监听listener
-     */
-    private void initListener() {
-        mIjkPlayer.setOnErrorListener(onErrorListener);
-        mIjkPlayer.setOnCompletionListener(onCompletionListener);
-        mIjkPlayer.setOnInfoListener(onInfoListener);
-        mIjkPlayer.setOnPreparedListener(onPreparedListener);
-        mIjkPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
-        mIjkPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
-        mIjkPlayer.setOnTimedTextListener(onTimedTextListener);
-        // 设置视频缓冲更新监听事件
-        mIjkPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
-        mIjkPlayer.setOnNativeInvokeListener(onNativeInvokeListener);
+    @Override
+    public void registListener() {
+        try {
+            if (null == mIjkPlayer)
+                throw new Exception("error: mIjkPlayer null");
+            mIjkPlayer.setOnErrorListener(onErrorListener);
+            mIjkPlayer.setOnCompletionListener(onCompletionListener);
+            mIjkPlayer.setOnInfoListener(onInfoListener);
+            mIjkPlayer.setOnPreparedListener(onPreparedListener);
+            mIjkPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
+            mIjkPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
+            mIjkPlayer.setOnTimedTextListener(onTimedTextListener);
+            // 设置视频缓冲更新监听事件
+            mIjkPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
+            mIjkPlayer.setOnNativeInvokeListener(onNativeInvokeListener);
+        } catch (Exception e) {
+            LogUtil.log("VideoIjkPlayer => registListener => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void unRegistListener() {
+        try {
+            if (null == mIjkPlayer)
+                throw new Exception("error: mIjkPlayer null");
+            // 设置视频错误监听器
+            mIjkPlayer.setOnErrorListener(null);
+            // 设置视频播放完成监听事件
+            mIjkPlayer.setOnCompletionListener(null);
+            // 设置视频信息监听器
+            mIjkPlayer.setOnInfoListener(null);
+            // 设置视频缓冲更新监听事件
+            mIjkPlayer.setOnBufferingUpdateListener(null);
+            // 设置准备视频播放监听事件
+            mIjkPlayer.setOnPreparedListener(null);
+            // 设置视频大小更改监听器
+            mIjkPlayer.setOnVideoSizeChangedListener(null);
+            // 设置视频seek完成监听事件
+            mIjkPlayer.setOnSeekCompleteListener(null);
+            // 设置时间文本监听器
+            mIjkPlayer.setOnTimedTextListener(null);
+            // 缓冲
+            mIjkPlayer.setOnBufferingUpdateListener(null);
+            mIjkPlayer.setOnNativeInvokeListener(null);
+        } catch (Exception e) {
+            LogUtil.log("VideoIjkPlayer => unRegistListener => Exception " + e.getMessage());
+        }
     }
 
     //    /**
@@ -368,30 +402,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void release() {
         clear();
+        unRegistListener();
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            // 设置视频错误监听器
-            mIjkPlayer.setOnErrorListener(null);
-            // 设置视频播放完成监听事件
-            mIjkPlayer.setOnCompletionListener(null);
-            // 设置视频信息监听器
-            mIjkPlayer.setOnInfoListener(null);
-            // 设置视频缓冲更新监听事件
-            mIjkPlayer.setOnBufferingUpdateListener(null);
-            // 设置准备视频播放监听事件
-            mIjkPlayer.setOnPreparedListener(null);
-            // 设置视频大小更改监听器
-            mIjkPlayer.setOnVideoSizeChangedListener(null);
-            // 设置视频seek完成监听事件
-            mIjkPlayer.setOnSeekCompleteListener(null);
-            // 设置时间文本监听器
-            mIjkPlayer.setOnTimedTextListener(null);
-            // 缓冲
-            mIjkPlayer.setOnBufferingUpdateListener(null);
-            mIjkPlayer.setOnNativeInvokeListener(null);
             mIjkPlayer.setSurface(null);
-            mIjkPlayer.reset();
             mIjkPlayer.release();
             mIjkPlayer = null;
         } catch (Exception e) {

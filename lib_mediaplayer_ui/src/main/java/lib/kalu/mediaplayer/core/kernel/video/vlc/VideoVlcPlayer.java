@@ -16,7 +16,6 @@ import lib.kalu.vlc.widget.VlcPlayer;
 public final class VideoVlcPlayer extends VideoBasePlayer {
 
     private lib.kalu.vlc.widget.VlcPlayer mVlcPlayer;
-    private lib.kalu.vlc.widget.OnVlcInfoChangeListener mVlcPlayerListener;
 
     @Override
     public VideoVlcPlayer getPlayer() {
@@ -43,7 +42,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             if (null != mVlcPlayer)
                 throw new Exception("warning: null != mVlcPlayer");
             mVlcPlayer = new VlcPlayer(context);
-            initListener();
+            registListener();
         } catch (Exception e) {
         }
     }
@@ -95,61 +94,35 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
         }
     }
 
-    /**
-     * MediaPlayer视频播放器监听listener
-     */
-    private void initListener() {
-        mVlcPlayerListener = new OnVlcInfoChangeListener() {
-            @Override
-            public void onStart() {
-                onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_START);
-            }
+    @Override
+    public void registListener() {
+        try {
+            if (null == mVlcPlayer)
+                throw new Exception("error: mVlcPlayer null");
+            mVlcPlayer.setOnVlcInfoChangeListener(mVlcPlayerListener);
+        } catch (Exception e) {
+            LogUtil.log("VideoVlcPlayer => registListener => Exception " + e.getMessage());
+        }
+    }
 
-            @Override
-            public void onPlay() {
-                onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_STOP);
-                onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.VIDEO_START);
-
-                long seek = getSeek();
-                if (seek > 0) {
-                    seekTo(seek);
-                }
-            }
-
-            @Override
-            public void onPause() {
-
-            }
-
-            @Override
-            public void onResume() {
-
-            }
-
-            @Override
-            public void onEnd() {
-                onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.VIDEO_END);
-            }
-
-            @Override
-            public void onError() {
-                onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_STOP);
-                onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.ERROR_PARSE);
-            }
-        };
-        mVlcPlayer.setOnVlcInfoChangeListener(mVlcPlayerListener);
+    @Override
+    public void unRegistListener() {
+        try {
+            if (null == mVlcPlayer)
+                throw new Exception("error: mVlcPlayer null");
+            mVlcPlayer.setOnVlcInfoChangeListener(null);
+        } catch (Exception e) {
+            LogUtil.log("VideoVlcPlayer => unRegistListener => Exception " + e.getMessage());
+        }
     }
 
     @Override
     public void release() {
         clear();
+        unRegistListener();
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
-            if (null != mVlcPlayerListener) {
-                mVlcPlayer.setOnVlcInfoChangeListener(null);
-            }
-            mVlcPlayerListener = null;
             mVlcPlayer.setSurface(null, 0, 0);
             mVlcPlayer.release();
             mVlcPlayer = null;
@@ -310,4 +283,43 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             }
         }
     }
+
+    private final OnVlcInfoChangeListener mVlcPlayerListener = new OnVlcInfoChangeListener() {
+        @Override
+        public void onStart() {
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_START);
+        }
+
+        @Override
+        public void onPlay() {
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_STOP);
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.VIDEO_START);
+
+            long seek = getSeek();
+            if (seek > 0) {
+                seekTo(seek);
+            }
+        }
+
+        @Override
+        public void onPause() {
+
+        }
+
+        @Override
+        public void onResume() {
+
+        }
+
+        @Override
+        public void onEnd() {
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.VIDEO_END);
+        }
+
+        @Override
+        public void onError() {
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_STOP);
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.ERROR_PARSE);
+        }
+    };
 }
