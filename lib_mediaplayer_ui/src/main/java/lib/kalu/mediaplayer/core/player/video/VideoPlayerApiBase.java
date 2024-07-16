@@ -110,7 +110,10 @@ interface VideoPlayerApiBase {
             VideoKernelApi videoKernel = getVideoKernel();
             if (null == videoKernel)
                 throw new Exception("error: videoKernel null");
-            return videoKernel.isIjkUseMediaCodec();
+            StartArgs args = videoKernel.getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            return args.isIjkUseMediaCodec();
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiBase => isIjkUseMediaCodec => " + e.getMessage());
             return false;

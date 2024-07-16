@@ -126,7 +126,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             mExoPlayerBuilder.setTrackSelector(new DefaultTrackSelector(context));
 
             int decoderType = args.getDecoderType();
-            LogUtil.log("VideoMedia3Player => startDecoder => decoderType = "+decoderType);
+            boolean useFFmpeg = args.isExoUseFFmpeg();
+            LogUtil.log("VideoMedia3Player => startDecoder => decoderType = " + decoderType);
             // only_mediacodec
             if (decoderType == PlayerType.DecoderType.ALL_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoCodecAudioCodecRenderersFactory");
@@ -155,8 +156,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // only_ffmpeg
-            else if (decoderType == PlayerType.DecoderType.ALL_FFMPEG) {
-                Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
+            else if (useFFmpeg && decoderType == PlayerType.DecoderType.ALL_FFMPEG) {
+                Class<?> clazz = Class.forName("");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
                 LogUtil.log("VideoMedia3Player => startDecoder => ALL_FFMPEG");
@@ -164,7 +165,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // only_ffmpeg_audio
-            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
+            else if (useFFmpeg && decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.OnlyAudioFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.OnlyAudioFFmpegRenderersFactory");
@@ -173,7 +174,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // only_ffmpeg_video
-            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
+            else if (useFFmpeg && decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.OnlyVideoFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.OnlyVideoFFmpegRenderersFactory");
@@ -182,7 +183,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // video_mediacodec_audio_ffmpeg
-            else if (decoderType == PlayerType.DecoderType.VIDEO_CODEC_AUDIO_FFMPEG) {
+            else if (useFFmpeg && decoderType == PlayerType.DecoderType.VIDEO_CODEC_AUDIO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoCodecAudioFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoCodecAudioFFmpegRenderersFactory");
@@ -191,7 +192,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // video_ffmpeg_audio_mediacodec
-            else if (decoderType == PlayerType.DecoderType.VIDEO_FFMPEG_AUDIO_CODEC) {
+            else if (useFFmpeg && decoderType == PlayerType.DecoderType.VIDEO_FFMPEG_AUDIO_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoFFmpegAudioCodecRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoFFmpegAudioCodecRenderersFactory");
@@ -519,7 +520,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
         if (PlayerType.SchemeType.RTMP.equals(scheme)) {
             // log
             try {
-                Class<?> clazz = Class.forName("com.google.android.exoplayer2.ext.rtmp.RtmpDataSource.Factory");
+                Class<?> clazz = Class.forName("androidx.media3.datasource.rtmp.RtmpDataSource.Factory");
                 if (null == clazz)
                     throw new Exception();
                 MediaItem mediaItem = MediaItem.fromUri(uri);

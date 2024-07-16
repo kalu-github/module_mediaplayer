@@ -67,6 +67,11 @@ public final class PlayerSDK {
         return this;
     }
 
+    public PlayerSDK setExoUseFFmpeg(boolean v) {
+        mPlayerBuilder.setExoUseFFmpeg(v);
+        return this;
+    }
+
     public PlayerSDK setLog(boolean v) {
         mPlayerBuilder.setLog(v);
         return this;

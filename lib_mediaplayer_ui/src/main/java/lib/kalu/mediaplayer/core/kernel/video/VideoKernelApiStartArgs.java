@@ -72,17 +72,6 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
         }
     }
 
-    default boolean isIjkUseMediaCodec() {
-        try {
-            StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
-            return args.isIjkUseMediaCodec();
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApiBase => isIjkUseMediaCodec => Exception " + e.getMessage());
-            return false;
-        }
-    }
 
     @PlayerType.KernelType.Value
     default int getKernelType() {

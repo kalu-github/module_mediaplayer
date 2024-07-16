@@ -39,6 +39,13 @@ public final class PlayerArgs {
     private int exoCacheMax = 0;
     private String exoCacheDir = null;
 
+    // exo ffmpeg
+    private boolean exoUseFFmpeg = false;
+
+    public boolean isExoUseFFmpeg() {
+        return exoUseFFmpeg;
+    }
+
     // ijk mediacodec
     private boolean ijkUseMediaCodec;
 
@@ -163,6 +170,7 @@ public final class PlayerArgs {
         exoCacheType = builder.exoCacheType;
         exoCacheDir = builder.exoCacheDir;
         exoCacheMax = builder.exoCacheMax;
+        exoUseFFmpeg = builder.exoUseFFmpeg;
         trySeeDuration = builder.trySeeDuration;
         rotation = builder.rotation;
         ijkUseMediaCodec = builder.ijkUseMediaCodec;
@@ -189,6 +197,7 @@ public final class PlayerArgs {
         builder.setExoCacheType(this.exoCacheType);
         builder.setExoCacheDir(this.exoCacheDir);
         builder.setExoCacheMax(this.exoCacheMax);
+        builder.setExoUseFFmpeg(this.exoUseFFmpeg);
         builder.setTrySeeDuration(this.trySeeDuration);
         builder.setRotation(this.rotation);
         builder.setIjkUseMediaCodec(this.ijkUseMediaCodec);
@@ -229,6 +238,15 @@ public final class PlayerArgs {
         private int exoCacheMax = 0;
         private String exoCacheDir = null;
         private boolean exoUseOkhttp = true;
+
+
+        // exo ffmpeg
+        private boolean exoUseFFmpeg = false;
+
+        public Builder setExoUseFFmpeg(boolean v) {
+            this.exoUseFFmpeg = v;
+            return this;
+        }
 
         // ijk mediacodec
         private boolean ijkUseMediaCodec = false;

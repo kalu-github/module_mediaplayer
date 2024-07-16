@@ -42,8 +42,8 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.video.VideoSize;
-import com.google.common.collect.ImmutableList;
 import com.google.android.exoplayer2.RenderersFactory;
+import com.google.common.collect.ImmutableList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -311,8 +311,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
             Class<?> clazz = Class.forName("com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary");
             if (null == clazz)
                 throw new Exception("warning: com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary not find");
-            boolean log = args.isLog();
-            com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
+//            boolean log = args.isLog();
+//            com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
         } catch (Exception e) {
         }
     }
@@ -537,11 +537,15 @@ public final class VideoExo2Player extends VideoBasePlayer {
             ImmutableList<Tracks.Group> groups = currentTracks.getGroups();
             if (null == groups)
                 throw new Exception("groups error: null");
+            int size = groups.size();
+            if (size <= 0)
+                throw new Exception("error: size<=0");
             JSONArray data = new JSONArray();
-            for (Tracks.Group g : groups) {
-                if (null == g)
+            for (int i = 0; i < size; i++) {
+                Tracks.Group group = groups.get(0);
+                if (null == group)
                     continue;
-                Format trackFormat = g.getTrackFormat(0);
+                Format trackFormat = group.getTrackFormat(0);
                 if (null == trackFormat)
                     continue;
                 JSONObject o = new JSONObject();
@@ -599,13 +603,13 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
         // rtmp
         if (PlayerType.SchemeType.RTMP.equals(scheme)) {
-            // log
             try {
                 Class<?> clazz = Class.forName("com.google.android.exoplayer2.ext.rtmp.RtmpDataSource");
                 if (null == clazz)
                     throw new Exception();
                 MediaItem mediaItem = MediaItem.fromUri(uri);
-                return new ProgressiveMediaSource.Factory(new com.google.android.exoplayer2.ext.rtmp.RtmpDataSource.Factory()).createMediaSource(mediaItem);
+                Object o = clazz.newInstance();
+                return new ProgressiveMediaSource.Factory((DataSource.Factory) o).createMediaSource(mediaItem);
             } catch (Exception e) {
                 return null;
             }

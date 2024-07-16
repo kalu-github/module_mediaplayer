@@ -95,8 +95,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void initOptions(Context context) {
 
-        boolean useMediaCodec = isIjkUseMediaCodec();
-
         // log
         try {
             if (null == mIjkPlayer)
@@ -119,6 +117,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             StartArgs args = getStartArgs();
             if(null == args)
                 throw new Exception("error: args null");
+            boolean useMediaCodec = args.isIjkUseMediaCodec();
             int player = IjkMediaPlayer.OPT_CATEGORY_PLAYER;
             // 禁用音频
             mIjkPlayer.setOption(player, "an", 0);
@@ -235,6 +234,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
         // format
         try {
+            if (null == mIjkPlayer)
+                throw new Exception("mIjkPlayer error: null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
             int format = IjkMediaPlayer.OPT_CATEGORY_FORMAT;
             // 设置播放前的探测时间 1,达到首屏秒开效果， bug有画面没声音
             mIjkPlayer.setOption(format, "analyzeduration", 100); // 100ms
@@ -271,6 +275,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
         // codec
         try {
+            if (null == mIjkPlayer)
+                throw new Exception("mIjkPlayer error: null");
+            StartArgs args = getStartArgs();
+            if(null == args)
+                throw new Exception("error: args null");
+            boolean useMediaCodec = args.isIjkUseMediaCodec();
             int codec = IjkMediaPlayer.OPT_CATEGORY_CODEC;
             // IJK_AVDISCARD_NONE    =-16, ///< discard nothing
             // IJK_AVDISCARD_DEFAULT =  0, ///< 如果包大小为0，则抛弃无效的包

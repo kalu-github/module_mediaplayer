@@ -1,7 +1,5 @@
 package lib.kalu.mediaplayer.core.kernel.video.exo2;
 
-import static com.google.android.exoplayer2.util.Assertions.checkNotNull;
-import static com.google.android.exoplayer2.util.Util.castNonNull;
 import static java.lang.Math.min;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
@@ -18,8 +16,10 @@ import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.PlaybackException;
-import com.google.android.exoplayer2.upstream.DataSink;
 import com.google.android.exoplayer2.upstream.DataSource;
+import static com.google.android.exoplayer2.util.Assertions.checkNotNull;
+import static com.google.android.exoplayer2.util.Util.castNonNull;
+import com.google.android.exoplayer2.upstream.DataSink;
 import com.google.android.exoplayer2.upstream.DataSourceException;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.FileDataSource;
@@ -179,7 +179,7 @@ public final class VideoExo2PlayerSimpleCacheDataSource implements DataSource {
          *
          * <p>If set, reads from the upstream {@link DataSource} will only be allowed to proceed if
          * there are no higher priority tasks registered to the {@link PriorityTaskManager}. If there
-         * exists a higher priority task then {@link PriorityTaskManager.PriorityTooLowException} will
+         * exists a higher priority task then {@link PriorityTaskManager} will
          * be thrown instead.
          *
          * <p>Note that requests to {@link VideoExo2PlayerSimpleCacheDataSource} instances are intended to be used as parts

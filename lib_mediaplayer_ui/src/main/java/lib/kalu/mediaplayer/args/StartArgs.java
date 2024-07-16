@@ -40,6 +40,12 @@ public class StartArgs {
         return exoSeekType;
     }
 
+    private boolean exoUseFFmpeg;
+
+    public boolean isExoUseFFmpeg() {
+        return exoUseFFmpeg;
+    }
+
     private boolean exoUseOkhttp;
 
     public boolean isExoUseOkhttp() {
@@ -227,6 +233,7 @@ public class StartArgs {
                 ", exoCacheDir='" + exoCacheDir + '\'' +
                 ", exoSeekType=" + exoSeekType +
                 ", exoUseOkhttp=" + exoUseOkhttp +
+                ", exoUseFFmpeg=" + exoUseFFmpeg +
                 ", renderType=" + renderType +
                 ", scaleType=" + scaleType +
                 ", decoderType=" + decoderType +
@@ -262,6 +269,7 @@ public class StartArgs {
         this.decoderType = builder.decoderType;
         this.exoSeekType = builder.exoSeekType;
         this.exoUseOkhttp = builder.exoUseOkhttp;
+        this.exoUseFFmpeg = builder.exoUseFFmpeg;
         this.renderType = builder.renderType;
         this.scaleType = builder.scaleType;
         this.kernelType = builder.kernelType;
@@ -295,6 +303,7 @@ public class StartArgs {
         builder.exoCacheDir = exoCacheDir;
         builder.exoSeekType = exoSeekType;
         builder.exoUseOkhttp = exoUseOkhttp;
+        builder.exoUseFFmpeg = exoUseFFmpeg;
         builder.decoderType = decoderType;
         builder.renderType = renderType;
         builder.scaleType = scaleType;
@@ -330,6 +339,7 @@ public class StartArgs {
         private int exoCacheMax = playerArgs.getExoCacheMax();
         private String exoCacheDir = playerArgs.getExoCacheDir();
         private boolean exoUseOkhttp = playerArgs.isExoUseOkhttp();
+        private boolean exoUseFFmpeg = playerArgs.isExoUseFFmpeg();
         @PlayerType.ExoSeekType
         private int exoSeekType = playerArgs.getExoSeekType();
         // 解码器类型
