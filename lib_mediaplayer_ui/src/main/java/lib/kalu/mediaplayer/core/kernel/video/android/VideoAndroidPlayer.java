@@ -59,10 +59,10 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 throw new Exception("error: args null");
             String url = args.getUrl();
             if (url == null)
-                throw new Exception("url error: " + url);
-            mMediaPlayer.setDataSource(context, Uri.parse(url), null);
+                throw new Exception("error: url null");
             // 拉流
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.LOADING_START);
+            mMediaPlayer.setDataSource(context, Uri.parse(url), null);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
                 mMediaPlayer.prepareAsync();
