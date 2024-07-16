@@ -135,7 +135,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
             mExoPlayerBuilder.setTrackSelector(new DefaultTrackSelector(context));
 
             int decoderType = args.getDecoderType();
-            LogUtil.log("VideoExo2Player => startDecoder => decoderType = " + decoderType);
+            boolean useFFmpeg = args.isExoUseFFmpeg();
+            LogUtil.log("VideoExo2Player => startDecoder => decoderType = " + decoderType + ", useFFmpeg = " + useFFmpeg);
             // only_mediacodec
             if (decoderType == PlayerType.DecoderType.ALL_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoCodecAudioCodecRenderersFactory");
@@ -164,7 +165,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // only_ffmpeg
-            else if (decoderType == PlayerType.DecoderType.ALL_FFMPEG) {
+            else if (useFFmpeg && decoderType == PlayerType.DecoderType.ALL_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.exoplayer2.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
@@ -173,7 +174,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // only_ffmpeg_audio
-            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
+            else if (useFFmpeg && decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyAudioFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.exoplayer2.renderers.OnlyAudioFFmpegRenderersFactory");
@@ -182,7 +183,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // only_ffmpeg_video
-            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
+            else if (useFFmpeg && decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyVideoFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.exoplayer2.renderers.OnlyVideoFFmpegRenderersFactory");
@@ -191,7 +192,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // video_mediacodec_audio_ffmpeg
-            else if (decoderType == PlayerType.DecoderType.VIDEO_CODEC_AUDIO_FFMPEG) {
+            else if (useFFmpeg && decoderType == PlayerType.DecoderType.VIDEO_CODEC_AUDIO_FFMPEG) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoCodecAudioFFmpegRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.exoplayer2.renderers.VideoCodecAudioFFmpegRenderersFactory");
@@ -200,7 +201,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // video_ffmpeg_audio_mediacodec
-            else if (decoderType == PlayerType.DecoderType.VIDEO_FFMPEG_AUDIO_CODEC) {
+            else if (useFFmpeg && decoderType == PlayerType.DecoderType.VIDEO_FFMPEG_AUDIO_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoFFmpegAudioCodecRenderersFactory");
                 if (null == clazz)
                     throw new Exception("warning: not lib.kalu.exoplayer2.renderers.VideoFFmpegAudioCodecRenderersFactory");
