@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.view.Surface;
 
+import androidx.annotation.Nullable;
+
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -57,6 +59,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import E2y.E2s;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
@@ -67,6 +70,8 @@ import okhttp3.OkHttpClient;
 
 public final class VideoExo2Player extends VideoBasePlayer {
 
+    private boolean mSeeking = false;
+    private boolean mBuffering = false;
     private ExoPlayer mExoPlayer;
     private ExoPlayer.Builder mExoPlayerBuilder;
 
@@ -364,6 +369,13 @@ public final class VideoExo2Player extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
+            long duration = getDuration();
+            if (seek > duration) {
+                seek = duration;
+            }
+            mSeeking = true;
+            LogUtil.log("VideoExo2Player => seekTo => succ");
+            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.SEEK_START);
             mExoPlayer.seekTo(seek);
         } catch (Exception e) {
             LogUtil.log("VideoExo2Player => seekTo => " + e.getMessage());
@@ -794,52 +806,93 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
         @Override
         public void onPlaybackStateChanged(AnalyticsListener.EventTime eventTime, int state) {
-            LogUtil.log("VideoExo2Player => onPlaybackStateChanged => state = " + state + ", mute = " + isMute());
-
             // 播放错误
             if (state == Player.STATE_IDLE) {
-                LogUtil.log("VideoExo2Player => onPlaybackStateChanged[播放错误] =>");
-                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.ERROR_PARSE);
+                LogUtil.log("VideoExo2Player => onPlaybackStateChanged => STATE_IDLE =>");
             }
-            // 播放结束
+            // 播放完成
             else if (state == Player.STATE_ENDED) {
-                LogUtil.log("VideoExo2Player => onPlaybackStateChanged[播放结束] =>");
+                LogUtil.log("VideoExo2Player => onPlaybackStateChanged => STATE_ENDED =>");
                 onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_END);
-            }
-            // 缓冲开始
-            else if (state == Player.STATE_BUFFERING) {
-                if (isPrepared()) {
-                    onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.BUFFERING_START);
-                } else {
-                    LogUtil.log("VideoExo2Player => onPlaybackStateChanged => mPrepared = false");
-                }
             }
             // 播放开始
             else if (state == Player.STATE_READY) {
-                if (isPrepared()) {
-                    onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.BUFFERING_STOP);
-                } else {
-                    setPrepared(true);
-                    onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START);
+                LogUtil.log("VideoExo2Player => onPlaybackStateChanged => STATE_READY =>");
+                try {
+                    if (!isPrepared())
+                        throw new Exception("warning: isPrepared false");
+
+                    if (mBuffering) {
+                        mBuffering = false;
+                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.BUFFERING_STOP);
+                    }
+
+                    if (mSeeking) {
+                        mSeeking = false;
+                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.SEEK_FINISH);
+
+                        try {
+                            long seek = getSeek();
+                            if (seek <= 0L)
+                                throw new Exception("warning: seek<=0");
+                            setSeek(0);
+                            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START);
+                        } catch (Exception e) {
+                            LogUtil.log("VideoExo2Player => onPlaybackStateChanged => STATE_READY => Exception1 " + e.getMessage());
+                        }
+
+                        try {
+                            boolean playing = isPlaying();
+                            if (playing)
+                                throw new Exception("warning: playing true");
+                            start();
+                        } catch (Exception e) {
+                            LogUtil.log("VideoExo2Player => onPlaybackStateChanged => STATE_READY => Exception2 " + e.getMessage());
+                        }
+                    }
+
+                } catch (Exception e) {
+                    LogUtil.log("VideoExo2Player => onPlaybackStateChanged => STATE_READY => Exception3 " + e.getMessage());
                 }
+            }
+            // 播放缓冲
+            else if (state == Player.STATE_BUFFERING) {
+                LogUtil.log("VideoExo2Player => onPlaybackStateChanged => STATE_BUFFERING =>");
+                try {
+                    if (!isPrepared())
+                        throw new Exception("mPrepared warning: false");
+                    mBuffering = true;
+                    onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.BUFFERING_START);
+                } catch (Exception e) {
+                    LogUtil.log("VideoExo2Player => onPlaybackStateChanged => STATE_BUFFERING => Exception " + e.getMessage());
+                }
+            }
+            // UNKNOW
+            else {
+                LogUtil.log("VideoExo2Player => onPlaybackStateChanged => UNKNOW => state = " + state);
             }
         }
 
-        // 首帧视频
         @Override
-        public void onRenderedFirstFrame(AnalyticsListener.EventTime eventTime, Object output, long renderTimeMs) {
-            LogUtil.log("VideoExo2Player => onRenderedFirstFrame =>");
-            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.LOADING_STOP);
-            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_RENDERING_START);
-//                    try {
-//                        long seek = getSeek();
-//                        if (seek <= 0)
-//                            throw new Exception("seek warning: " + seek);
-//                        // 起播快进
-//                        setSeek(0);
-//                        seekTo(seek);
-//                    } catch (Exception e) {
-//                    }
+        public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable E2s e2s) {
+            LogUtil.log("VideoExo2Player => onVideoInputFormatChanged[出画面] =>");
+            try {
+                if (isPrepared())
+                    throw new Exception("warning: isPrepared true");
+                setPrepared(true);
+                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.LOADING_STOP);
+                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_RENDERING_START);
+                long seek = getSeek();
+                if (seek <= 0L) {
+                    onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START);
+                } else {
+                    // 起播快进
+                    onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
+                    seekTo(seek);
+                }
+            } catch (Exception e) {
+                LogUtil.log("VideoExo2Player => onVideoInputFormatChanged => Exception " + e.getMessage());
+            }
         }
 
         @Override
