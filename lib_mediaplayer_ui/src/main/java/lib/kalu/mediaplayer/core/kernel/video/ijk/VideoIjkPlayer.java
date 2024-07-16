@@ -54,24 +54,21 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context) {
+    public void createDecoder(Context context, StartArgs args) {
         try {
             if (null != mIjkPlayer)
                 throw new Exception("warning: null != mIjkPlayer");
             mIjkPlayer = new IjkMediaPlayer();
-            mIjkPlayer.setLooping(false);
-            setVolume(1F, 1F);
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => createDecoder => " + e.getMessage());
         }
     }
 
     @Override
-    public void startDecoder(Context context) {
+    public void startDecoder(Context context, StartArgs args) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("error: mIjkPlayer null");
-            StartArgs args = getStartArgs();
             if(null == args)
                 throw new Exception("error: args null");
             String url = args.getUrl();
@@ -93,13 +90,23 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
     // player => ff_ffplay_options.h
     @Override
-    public void initOptions(Context context) {
+    public void initOptions(Context context, StartArgs args) {
+
+        try {
+            if (null == mIjkPlayer)
+                throw new Exception("error: mIjkPlayer null");
+            boolean mute = isMute();
+            setVolume(mute ? 0L : 1L, mute ? 0L : 1L);
+            boolean looping = isLooping();
+            setLooping(looping);
+        } catch (Exception e) {
+            LogUtil.log("VideoIjkPlayer => initOptions => Exception " + e.getMessage());
+        }
 
         // log
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            StartArgs args = getStartArgs();
             if(null == args)
                 throw new Exception("error: args null");
             Class<?> clazz = Class.forName("lib.kalu.ijkplayer.util.IjkLogUtil");
@@ -114,7 +121,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            StartArgs args = getStartArgs();
             if(null == args)
                 throw new Exception("error: args null");
             boolean useMediaCodec = args.isIjkUseMediaCodec();
@@ -236,7 +242,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            StartArgs args = getStartArgs();
             if(null == args)
                 throw new Exception("error: args null");
             int format = IjkMediaPlayer.OPT_CATEGORY_FORMAT;
@@ -277,7 +282,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            StartArgs args = getStartArgs();
             if(null == args)
                 throw new Exception("error: args null");
             boolean useMediaCodec = args.isIjkUseMediaCodec();

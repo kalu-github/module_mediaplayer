@@ -20,12 +20,9 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
 
     void releaseDecoder(boolean isFromUser);
 
-    void createDecoder(Context context);
+    void startDecoder(Context context, StartArgs args);
 
-    void startDecoder(Context context);
-
-    default void initOptions(Context context) {
-    }
+    void initOptions(Context context, StartArgs args);
 
     default void clear() {
         mDoWindowing[0] = false;
@@ -36,6 +33,9 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
         mStartArgs[0] = null;
         stopCheckConnectTimeout();
         stopCheckBufferingTimeout();
+    }
+
+    default void createDecoder(Context context, StartArgs args) {
     }
 
     default void initDecoder(Context context, StartArgs args) {
@@ -66,8 +66,8 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
         } catch (Exception e) {
         }
 
-        initOptions(context);
-        startDecoder(context);
+        initOptions(context, args);
+        startDecoder(context, args);
     }
 
     /***********/

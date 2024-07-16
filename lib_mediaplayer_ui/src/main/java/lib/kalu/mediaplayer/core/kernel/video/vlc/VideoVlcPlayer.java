@@ -38,30 +38,27 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context) {
+    public void createDecoder(Context context, StartArgs args) {
         try {
             if (null != mVlcPlayer)
                 throw new Exception("warning: null != mVlcPlayer");
             mVlcPlayer = new VlcPlayer(context);
-            setLooping(false);
-            setVolume(1F, 1F);
-            initListener();
         } catch (Exception e) {
         }
     }
 
     @Override
-    public void startDecoder(Context context) {
+    public void startDecoder(Context context, StartArgs args) {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("error: mVlcPlayer null");
-            StartArgs args = getStartArgs();
-            if(null == args)
+            if (null == args)
                 throw new Exception("error: args null");
             String url = args.getUrl();
             if (url == null)
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_START);
+            initListener();
             mVlcPlayer.setDataSource(Uri.parse(url), isPlayWhenReady());
             mVlcPlayer.play();
         } catch (Exception e) {
@@ -71,12 +68,23 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void initOptions(Context context) {
+    public void initOptions(Context context, StartArgs args) {
+
         try {
             if (null == mVlcPlayer)
                 throw new Exception("error: mVlcPlayer null");
-            StartArgs args = getStartArgs();
-            if(null == args)
+            boolean mute = isMute();
+            setVolume(mute ? 0L : 1L, mute ? 0L : 1L);
+            boolean looping = isLooping();
+            setLooping(looping);
+        } catch (Exception e) {
+            LogUtil.log("VideoVlcPlayer => initOptions => Exception " + e.getMessage());
+        }
+
+        try {
+            if (null == mVlcPlayer)
+                throw new Exception("error: mVlcPlayer null");
+            if (null == args)
                 throw new Exception("error: args null");
             Class<?> clazz = Class.forName("lib.kalu.vlc.util.VlcLogUtil");
             if (null == clazz)
@@ -91,7 +99,6 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
      * MediaPlayer视频播放器监听listener
      */
     private void initListener() {
-        LogUtil.log("VideoVlcPlayer => initListener =>");
         mVlcPlayerListener = new OnVlcInfoChangeListener() {
             @Override
             public void onStart() {

@@ -147,7 +147,6 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
 
     default void setMute(boolean v) {
         mMute[0] = v;
-        setVolume(v ? 0f : 1f, v ? 0f : 1f);
     }
 
     /*****/

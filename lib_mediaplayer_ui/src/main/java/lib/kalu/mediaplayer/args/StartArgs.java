@@ -345,9 +345,6 @@ public class StartArgs {
         // 解码器类型
         @PlayerType.DecoderType.Value
         private int decoderType = playerArgs.getDecoderType();
-        // 视频渲染类型
-        @PlayerType.RenderType.Value
-        private int renderType = playerArgs.getRenderType();
         // 视频解码类型
         @PlayerType.KernelType.Value
         private int kernelType = playerArgs.getKernelType();
@@ -372,6 +369,15 @@ public class StartArgs {
 
         public Builder setSupportAutoRelease(boolean v) {
             this.supportAutoRelease = v;
+            return this;
+        }
+
+        // 视频渲染类型
+        @PlayerType.RenderType.Value
+        private int renderType = playerArgs.getRenderType();
+
+        public Builder setRenderType(@PlayerType.RenderType.Value int v) {
+            this.renderType = v;
             return this;
         }
 

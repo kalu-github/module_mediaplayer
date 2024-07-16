@@ -44,37 +44,49 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context) {
+    public void createDecoder(Context context, StartArgs args) {
         try {
             if (null != mFFmpegPlayer)
                 throw new Exception("warning: null != mFFmpegPlayer");
             mFFmpegPlayer = new FFmpegPlayer();
-            mFFmpegPlayer.setLooping(false);
-            setVolume(1F, 1F);
-            initListener();
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => createDecoder => " + e.getMessage());
         }
     }
 
+
     @Override
-    public void startDecoder(Context context) {
+    public void startDecoder(Context context, StartArgs args) {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("error: mFFmpegPlayer null");
-            StartArgs args = getStartArgs();
             if(null == args)
                 throw new Exception("error: args null");
             String url = args.getUrl();
             if (url == null)
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.LOADING_START);
+            initListener();
             mFFmpegPlayer.setDataSource(context, Uri.parse(url), null);
             mFFmpegPlayer.prepare();
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => startDecoder => " + e.getMessage());
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.LOADING_STOP);
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.ERROR_PARSE);
+        }
+    }
+
+    @Override
+    public void initOptions(Context context, StartArgs args) {
+        try {
+            if (null == mFFmpegPlayer)
+                throw new Exception("error: mFFmpegPlayer null");
+            boolean mute = isMute();
+            setVolume(mute ? 0L : 1L, mute ? 0L : 1L);
+            boolean looping = isLooping();
+            setLooping(looping);
+        } catch (Exception e) {
+            LogUtil.log("VideoFFmpegPlayer => initOptions => Exception " + e.getMessage());
         }
     }
 

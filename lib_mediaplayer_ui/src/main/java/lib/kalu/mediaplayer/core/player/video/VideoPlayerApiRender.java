@@ -1,10 +1,12 @@
 package lib.kalu.mediaplayer.core.player.video;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderFactoryManager;
@@ -377,7 +379,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    default void checkRenderNull(int renderType, boolean release) {
+    default void checkRenderNull(StartArgs args, boolean release) {
         try {
             if (release) {
                 releaseRender();
@@ -388,7 +390,9 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             int childCount = renderGroup.getChildCount();
             if (childCount > 0)
                 throw new Exception("error: renderGroup childCount > 0");
-            VideoRenderApi videoRender = VideoRenderFactoryManager.createRender(getBaseContext(), renderType);
+            Context context = getBaseContext();
+            int renderType = args.getRenderType();
+            VideoRenderApi videoRender = VideoRenderFactoryManager.createRender(context, renderType);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             videoRender.setLayoutParams(layoutParams);
             renderGroup.addView((View) videoRender, 0);
@@ -417,7 +421,9 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             boolean ijkUseMediaCodec = isIjkUseMediaCodec();
             if (ijkUseMediaCodec && kernelType == PlayerType.KernelType.IJK && renderType == PlayerType.RenderType.SURFACE_VIEW) {
                 releaseRender();
-                checkRenderNull(PlayerType.RenderType.SURFACE_VIEW, true);
+                StartArgs args = getStartArgs();
+                StartArgs startArgs = args.newBuilder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
+                checkRenderNull(startArgs, true);
                 attachRenderKernel();
             } else if (ijkUseMediaCodec && kernelType == PlayerType.KernelType.IJK) {
                 VideoRenderApi videoRender = getVideoRender();
@@ -428,9 +434,18 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             } else {
                 throw new Exception("warning: kernel not ijk");
             }
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => resetRenderView => " + e.getMessage());
+        }
+    }
+
+    default StartArgs getStartArgs() {
+        try {
+            VideoKernelApi videoKernel = getVideoKernel();
+            return videoKernel.getStartArgs();
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiRender => getStartArgs => Exception " + e.getMessage());
+            return null;
         }
     }
 

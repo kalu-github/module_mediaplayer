@@ -1,5 +1,6 @@
 package lib.kalu.mediaplayer.core.player.video;
 
+import android.content.Context;
 import android.view.View;
 
 import androidx.annotation.FloatRange;
@@ -73,7 +74,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (null == args)
                 throw new Exception("error: args null");
             String url = args.getUrl();
-            if (null == url)
+            if (null == url || url.isEmpty())
                 throw new Exception("error: url null");
             // 1
             boolean log = args.isLog();
@@ -90,11 +91,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             setScreenKeep(true);
             callEvent(PlayerType.StateType.INIT);
             // 4
-            int kernelType = args.getKernelType();
-            checkKernelNull(kernelType, false);
+            checkKernelNull(args, false);
             // 5
-            int renderType = args.getRenderType();
-            checkRenderNull(renderType, false);
+            checkRenderNull(args, false);
             // 6
             attachRenderKernel();
             // 7
@@ -102,6 +101,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 8
             initDecoder(args);
         } catch (Exception e) {
+            callEvent(PlayerType.EventType.ERROR_URL);
             LogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());
         }
     }
@@ -345,7 +345,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            kernel.initDecoder(getBaseContext(), args);
+            Context context = getBaseContext();
+            kernel.initDecoder(context, args);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => initDecoder => " + e.getMessage());
         }
@@ -442,7 +443,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void checkKernelNull(int kernelType, boolean release) {
+    default void checkKernelNull(StartArgs args, boolean release) {
         try {
             if (release) {
                 releaseKernel(false, true);
@@ -450,8 +451,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             VideoKernelApi videoKernel = getVideoKernel();
             if (null != videoKernel)
                 throw new Exception("warning: null != videoKernel");
+            Context context = getBaseContext();
+            int kernelType = args.getKernelType();
             VideoKernelApi kernelApi = VideoKernelFactoryManager.getKernel(kernelType);
-            kernelApi.createDecoder(getBaseContext());
+            kernelApi.createDecoder(context, args);
             setVideoKernel(kernelApi);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => checkKernelNull => " + e.getMessage());

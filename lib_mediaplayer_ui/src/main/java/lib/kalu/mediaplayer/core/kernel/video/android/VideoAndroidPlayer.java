@@ -39,33 +39,30 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public void createDecoder(Context context) {
+    public void createDecoder(Context context, StartArgs args) {
         try {
             if (null != mMediaPlayer)
                 throw new Exception("warning: null == mMediaPlayer");
             mMediaPlayer = new MediaPlayer();
-            mMediaPlayer.setLooping(false);
-            setVolume(1F, 1F);
         } catch (Exception e) {
-            LogUtil.log("VideoAndroidPlayer => createDecoder => " + e.getMessage());
+            LogUtil.log("VideoAndroidPlayer => createDecoder => Exception " + e.getMessage());
         }
     }
 
     @Override
-    public void startDecoder(Context context) {
+    public void startDecoder(Context context, StartArgs args) {
         try {
             if (null == mMediaPlayer)
                 throw new Exception("error: mMediaPlayer null");
-            StartArgs args = getStartArgs();
-            if(null == args)
+            if (null == args)
                 throw new Exception("error: args null");
             String url = args.getUrl();
             if (url == null)
                 throw new Exception("url error: " + url);
-            // 拉流
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.LOADING_START);
             initListener();
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);
+            // 拉流
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.LOADING_START);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
                 mMediaPlayer.prepareAsync();
@@ -74,13 +71,22 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             }
         } catch (Exception e) {
             LogUtil.log("VideoAndroidPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.LOADING_STOP);
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.ERROR_PARSE);
         }
     }
 
     @Override
-    public void initOptions(Context context) {
+    public void initOptions(Context context, StartArgs args) {
+        try {
+            if (null == mMediaPlayer)
+                throw new Exception("error: mMediaPlayer null");
+            boolean mute = isMute();
+            setVolume(mute ? 0L : 1L, mute ? 0L : 1L);
+            boolean looping = isLooping();
+            setLooping(looping);
+        } catch (Exception e) {
+            LogUtil.log("VideoAndroidPlayer => initOptions => Exception " + e.getMessage());
+        }
     }
 
     /**

@@ -74,11 +74,12 @@ repositories {
     }
 }
 dependencies {
-//    implementation ('androidx.appcompat:appcompat:1.6.1')
-    implementation('androidx.appcompat:appcompat:1.6.1') {
-        exclude group: 'com.google.guava', module: 'listenablefuture'
-    }
+    implementation ('androidx.appcompat:appcompat:1.6.1')
+//    implementation('androidx.appcompat:appcompat:1.6.1') {
+//        exclude group: 'com.google.guava', module: 'listenablefuture'
+//    }
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.9'
 
     // ui
 //    implementation project(path: ':lib_mediaplayer_ui')
@@ -86,9 +87,9 @@ dependencies {
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_mini_release_20240509.aar')
     // media3
-    api files('libs/lib_mediaplayer_media3_r1.4.0_full_release_20240716.aar')
+    api files('libs/lib_mediaplayer_media3_r1.4.0_mini_release_20240716.aar')
     // exo2
-    api files('libs/lib_mediaplayer_exo_r2.19.1_full_release_20240716.aar')
+    api files('libs/lib_mediaplayer_exo_r2.19.1_mini_release_20240716.aar')
     // ffplayer
 //    api files('libs/lib_mediaplayer_ffplayer_ff3.4.13_mini_release_20240508.aar')
     // vlc
