@@ -421,8 +421,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             boolean ijkUseMediaCodec = isIjkUseMediaCodec();
             if (ijkUseMediaCodec && kernelType == PlayerType.KernelType.IJK && renderType == PlayerType.RenderType.SURFACE_VIEW) {
                 releaseRender();
-                StartArgs args = getStartArgs();
-                StartArgs startArgs = args.newBuilder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
+                StartArgs startArgs = new StartArgs.Builder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
                 checkRenderNull(startArgs, true);
                 attachRenderKernel();
             } else if (ijkUseMediaCodec && kernelType == PlayerType.KernelType.IJK) {
