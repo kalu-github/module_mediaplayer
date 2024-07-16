@@ -414,11 +414,12 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
 
     default void initRenderView(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
         try {
-            if (kernelType == PlayerType.KernelType.IJK_MEDIACODEC && renderType == PlayerType.RenderType.SURFACE_VIEW) {
+            boolean ijkUseMediaCodec = isIjkUseMediaCodec();
+            if (ijkUseMediaCodec && kernelType == PlayerType.KernelType.IJK && renderType == PlayerType.RenderType.SURFACE_VIEW) {
                 releaseRender();
                 checkRenderNull(PlayerType.RenderType.SURFACE_VIEW, true);
                 attachRenderKernel();
-            } else if (kernelType == PlayerType.KernelType.IJK_MEDIACODEC) {
+            } else if (ijkUseMediaCodec && kernelType == PlayerType.KernelType.IJK) {
                 VideoRenderApi videoRender = getVideoRender();
                 videoRender.reset();
             } else if (kernelType == PlayerType.KernelType.IJK) {

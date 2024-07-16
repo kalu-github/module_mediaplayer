@@ -225,22 +225,18 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface KernelType {
         int ANDROID = 6_001; // MediaPlayer，基于原生自带的播放器控件
-        int EXO_V1 = 6_002; // exo
-        int EXO_V2 = 6_003; // exo
-        int MEDIA_V3 = 6_004; // androidx media
-        int IJK = 6_005; // ijk
-        int IJK_MEDIACODEC = 6_006; // ijk_mediacodec
-        int VLC = 6_007; // vlc
-        int FFPLAYER = 6_008; // ffmpeg
+        int EXO_V2 = 6_002; // exoplayer2
+        int MEDIA_V3 = 6_003; // androidx media
+        int IJK = 6_004; // ijk
+        int VLC = 6_005; // vlc
+        int FFPLAYER = 6_006; // ffmpeg
         int DEFAULT = ANDROID;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({IJK,
-                IJK_MEDIACODEC,
                 ANDROID,
-                EXO_V1,
                 EXO_V2,
                 MEDIA_V3,
                 VLC,

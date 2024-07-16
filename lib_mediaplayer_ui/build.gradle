@@ -68,10 +68,8 @@ dependencies {
     compileOnly('com.squareup.okhttp3:okhttp:3.14.9')
     // ijk
     compileOnly files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.13_mini_release_20240430.aar')
-    // exo1
-    compileOnly files('libs/lib_mediaplayer_exo_r1.5.15_release_20230424.aar')
     // exo2
-    compileOnly files('libs/lib_mediaplayer_exo_r2.19.1_full_release_20230920.aar')
+    compileOnly files('libs/lib_mediaplayer_exo_r2.19.1_full_release_20240716.aar')
     // media3
     compileOnly files('libs/lib_mediaplayer_media3_r1.4.0_mini_release_20240716.aar')
     // ffplayer

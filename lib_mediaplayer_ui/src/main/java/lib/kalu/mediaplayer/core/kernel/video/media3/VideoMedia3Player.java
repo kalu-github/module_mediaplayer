@@ -204,8 +204,10 @@ public final class VideoMedia3Player extends VideoBasePlayer {
         }
 
         try {
+            if (null == mExoPlayerBuilder)
+                throw new Exception("warning: mExoPlayerBuilder null");
             if (null != mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
+                throw new Exception("warning: mExoPlayer not null");
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("error: args null");
@@ -213,7 +215,6 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             if (null == url)
                 throw new Exception("error: url null");
             mExoPlayer = mExoPlayerBuilder.build();
-            mExoPlayer.setRepeatMode(androidx.media3.exoplayer.ExoPlayer.REPEAT_MODE_OFF);
         } catch (Exception e) {
         }
 
@@ -226,6 +227,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
+            mExoPlayer.setRepeatMode(androidx.media3.exoplayer.ExoPlayer.REPEAT_MODE_OFF);
             mExoPlayer.addAnalyticsListener(mAnalyticsListener);
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_START);
 

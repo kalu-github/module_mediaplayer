@@ -9,11 +9,7 @@ public final class AudioKernelFactoryManager {
     public static AudioKernelFactory getFactory(@PlayerType.KernelType int type) {
         // ijk
         if (type == PlayerType.KernelType.IJK) {
-            return AudioIjkPlayerFactory.build(false);
-        }
-        // ijk_mediacodec
-        else if (type == PlayerType.KernelType.IJK_MEDIACODEC) {
-            return AudioIjkPlayerFactory.build(true);
+            return AudioIjkPlayerFactory.build();
         }
         // android
         else {

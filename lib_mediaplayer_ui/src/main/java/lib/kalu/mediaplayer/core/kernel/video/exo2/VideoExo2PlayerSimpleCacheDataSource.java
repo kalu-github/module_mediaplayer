@@ -36,9 +36,6 @@ import com.google.android.exoplayer2.upstream.cache.ContentMetadata;
 import com.google.android.exoplayer2.upstream.cache.ContentMetadataMutations;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.PriorityTaskManager;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
-
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -62,7 +59,7 @@ public final class VideoExo2PlayerSimpleCacheDataSource implements DataSource {
      */
     public static final class Factory implements DataSource.Factory {
 
-        private @MonotonicNonNull Cache cache;
+        private Cache cache;
         private DataSource.Factory cacheReadDataSourceFactory;
         @Nullable
         private DataSink.Factory cacheWriteDataSinkFactory;
@@ -90,7 +87,7 @@ public final class VideoExo2PlayerSimpleCacheDataSource implements DataSource {
          * @param cache The cache that will be used.
          * @return This factory.
          */
-        @CanIgnoreReturnValue
+
         public Factory setCache(Cache cache) {
             this.cache = cache;
             return this;
@@ -114,7 +111,7 @@ public final class VideoExo2PlayerSimpleCacheDataSource implements DataSource {
          * @param cacheReadDataSourceFactory The {@link DataSource.Factory} for reading from the cache.
          * @return This factory.
          */
-        @CanIgnoreReturnValue
+
         public Factory setCacheReadDataSourceFactory(DataSource.Factory cacheReadDataSourceFactory) {
             this.cacheReadDataSourceFactory = cacheReadDataSourceFactory;
             return this;
@@ -130,7 +127,7 @@ public final class VideoExo2PlayerSimpleCacheDataSource implements DataSource {
          *                                  DataSinks} for writing data to the cache, or {@code null} to disable writing.
          * @return This factory.
          */
-        @CanIgnoreReturnValue
+
         public Factory setCacheWriteDataSinkFactory(
                 @Nullable DataSink.Factory cacheWriteDataSinkFactory) {
             this.cacheWriteDataSinkFactory = cacheWriteDataSinkFactory;
@@ -146,7 +143,7 @@ public final class VideoExo2PlayerSimpleCacheDataSource implements DataSource {
          * @param cacheKeyFactory The {@link CacheKeyFactory}.
          * @return This factory.
          */
-        @CanIgnoreReturnValue
+
         public Factory setCacheKeyFactory(CacheKeyFactory cacheKeyFactory) {
             this.cacheKeyFactory = cacheKeyFactory;
             return this;
@@ -170,7 +167,7 @@ public final class VideoExo2PlayerSimpleCacheDataSource implements DataSource {
          *                                  cache, or {@code null} to cause failure in the case of a cache miss.
          * @return This factory.
          */
-        @CanIgnoreReturnValue
+
         public Factory setUpstreamDataSourceFactory(
                 @Nullable DataSource.Factory upstreamDataSourceFactory) {
             this.upstreamDataSourceFactory = upstreamDataSourceFactory;
@@ -195,7 +192,7 @@ public final class VideoExo2PlayerSimpleCacheDataSource implements DataSource {
          * @param upstreamPriorityTaskManager The upstream {@link PriorityTaskManager}.
          * @return This factory.
          */
-        @CanIgnoreReturnValue
+
         public Factory setUpstreamPriorityTaskManager(
                 @Nullable PriorityTaskManager upstreamPriorityTaskManager) {
             this.upstreamPriorityTaskManager = upstreamPriorityTaskManager;
@@ -220,7 +217,7 @@ public final class VideoExo2PlayerSimpleCacheDataSource implements DataSource {
          * @param upstreamPriority The priority to use when requesting data from upstream.
          * @return This factory.
          */
-        @CanIgnoreReturnValue
+
         public Factory setUpstreamPriority(int upstreamPriority) {
             this.upstreamPriority = upstreamPriority;
             return this;
@@ -234,7 +231,7 @@ public final class VideoExo2PlayerSimpleCacheDataSource implements DataSource {
          * @param flags The {@link Flags}.
          * @return This factory.
          */
-        @CanIgnoreReturnValue
+
         public Factory setFlags(@Flags int flags) {
             this.flags = flags;
             return this;
@@ -248,7 +245,7 @@ public final class VideoExo2PlayerSimpleCacheDataSource implements DataSource {
          * @param eventListener The {@link EventListener}.
          * @return This factory.
          */
-        @CanIgnoreReturnValue
+
         public Factory setEventListener(@Nullable EventListener eventListener) {
             this.eventListener = eventListener;
             return this;

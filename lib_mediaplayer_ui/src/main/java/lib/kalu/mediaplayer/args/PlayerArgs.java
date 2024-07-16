@@ -39,6 +39,13 @@ public final class PlayerArgs {
     private int exoCacheMax = 0;
     private String exoCacheDir = null;
 
+    // ijk mediacodec
+    private boolean ijkUseMediaCodec;
+
+    public boolean isIjkUseMediaCodec() {
+        return ijkUseMediaCodec;
+    }
+
     // 旋转角度
     @PlayerType.RotationType.Value
     private int rotation;
@@ -158,6 +165,7 @@ public final class PlayerArgs {
         exoCacheMax = builder.exoCacheMax;
         trySeeDuration = builder.trySeeDuration;
         rotation = builder.rotation;
+        ijkUseMediaCodec = builder.ijkUseMediaCodec;
     }
 
     public Builder newBuilder() {
@@ -183,6 +191,7 @@ public final class PlayerArgs {
         builder.setExoCacheMax(this.exoCacheMax);
         builder.setTrySeeDuration(this.trySeeDuration);
         builder.setRotation(this.rotation);
+        builder.setIjkUseMediaCodec(this.ijkUseMediaCodec);
         return builder;
     }
 
@@ -220,6 +229,14 @@ public final class PlayerArgs {
         private int exoCacheMax = 0;
         private String exoCacheDir = null;
         private boolean exoUseOkhttp = true;
+
+        // ijk mediacodec
+        private boolean ijkUseMediaCodec = false;
+
+        public Builder setIjkUseMediaCodec(boolean v) {
+            this.ijkUseMediaCodec = v;
+            return this;
+        }
 
         // 旋转角度
         @PlayerType.RotationType.Value

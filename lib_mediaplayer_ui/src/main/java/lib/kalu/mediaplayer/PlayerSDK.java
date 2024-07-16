@@ -42,6 +42,11 @@ public final class PlayerSDK {
         return this;
     }
 
+    public PlayerSDK setIjkUseMediaCodec(boolean v) {
+        mPlayerBuilder.setIjkUseMediaCodec(v);
+        return this;
+    }
+
     public PlayerSDK setExoSeekType(@PlayerType.ExoSeekType.Value int v) {
         mPlayerBuilder.setExoSeekType(v);
         return this;

@@ -174,12 +174,6 @@ public class MainActivity extends Activity {
             case R.id.main_kernel_ijk:
                 kernelType = PlayerType.KernelType.IJK;
                 break;
-            case R.id.main_kernel_ijk_mediacodec:
-                kernelType = PlayerType.KernelType.IJK_MEDIACODEC;
-                break;
-            case R.id.main_kernel_exo_v1:
-                kernelType = PlayerType.KernelType.EXO_V1;
-                break;
             case R.id.main_kernel_exo_v2:
                 kernelType = PlayerType.KernelType.EXO_V2;
                 break;

@@ -78,8 +78,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
             initListener();
-            int kernelType = getKernelType();
-            onEvent(kernelType, PlayerType.EventType.LOADING_START);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.LOADING_START);
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
@@ -96,7 +95,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void initOptions(Context context) {
 
-        boolean useMediaCodec = (getKernelType() == PlayerType.KernelType.IJK_MEDIACODEC);
+        boolean useMediaCodec = isIjkUseMediaCodec();
 
         // log
         try {
@@ -437,8 +436,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             }
             LogUtil.log("VideoIjkPlayer => seekTo => succ");
 //            setSeeking(true);
-            int kernelType = getKernelType();
-            onEvent(kernelType, PlayerType.EventType.SEEK_START);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.SEEK_START);
             mIjkPlayer.seekTo(seek);
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => seekTo => " + e.getMessage());
@@ -565,7 +563,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
             LogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", extra = " + extra);
-            int kernelType = getKernelType();
             switch (what) {
                 // 拉流开始
                 case IMediaPlayer.MEDIA_INFO_OPEN_INPUT:
@@ -577,7 +574,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 // 缓冲开始
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
                     if (isPrepared()) {
-                        onEvent(kernelType, PlayerType.EventType.BUFFERING_START);
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_START);
                     } else {
                         LogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", mPrepared = false");
                     }
@@ -585,7 +582,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 // 缓冲结束
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
                     if (isPrepared()) {
-                        onEvent(kernelType, PlayerType.EventType.BUFFERING_STOP);
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_STOP);
                     } else {
                         LogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", mPrepared = false");
                     }
@@ -596,14 +593,14 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                         if (isPrepared())
                             throw new Exception("warning: mPrepared true");
                         setPrepared(true);
-                        onEvent(kernelType, PlayerType.EventType.LOADING_STOP);
-                        onEvent(kernelType, PlayerType.EventType.VIDEO_RENDERING_START);
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.LOADING_STOP);
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_RENDERING_START);
                         long seek = getSeek();
                         if (seek <= 0) {
-                            onEvent(kernelType, PlayerType.EventType.VIDEO_START);
+                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_START);
                         } else {
                             // 起播快进
-                            onEvent(kernelType, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
+                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
                             seekTo(seek);
                         }
                     } catch (Exception e) {
@@ -635,14 +632,13 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             LogUtil.log("VideoIjkPlayer => onSeekComplete =>");
 
 //            setSeeking(false);
-            int kernelType = getKernelType();
-            onEvent(kernelType, PlayerType.EventType.SEEK_FINISH);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.SEEK_FINISH);
             try {
                 long seek = getSeek();
                 if (seek <= 0)
                     throw new Exception();
                 setSeek(0);
-                onEvent(kernelType, PlayerType.EventType.VIDEO_START);
+                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_START);
             } catch (Exception e) {
             }
 
@@ -686,8 +682,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 @PlayerType.ScaleType.Value
                 int scaleType = args.getscaleType();
                 int rotation = args.getRotation();
-                int kernelType = getKernelType();
-                onUpdateSizeChanged(kernelType, videoWidth, videoHeight, rotation, scaleType);
+                onUpdateSizeChanged(PlayerType.KernelType.IJK, videoWidth, videoHeight, rotation, scaleType);
             } catch (Exception e) {
                 LogUtil.log("VideoIjkPlayer => onVideoSizeChanged => " + e.getMessage());
             }
@@ -708,10 +703,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
             LogUtil.log("VideoIjkPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
-           int kernelType = getKernelType();
-            onEvent(kernelType, PlayerType.EventType.LOADING_STOP);
-            onEvent(kernelType, PlayerType.EventType.BUFFERING_STOP);
-            onEvent(kernelType, PlayerType.EventType.ERROR_PARSE);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.LOADING_STOP);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_STOP);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.ERROR_PARSE);
             return true;
         }
     };
@@ -720,8 +714,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
             LogUtil.log("VideoIjkPlayer => onCompletion =>");
-            int kernelType = getKernelType();
-            onEvent(kernelType, PlayerType.EventType.VIDEO_END);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_END);
         }
     };
 
