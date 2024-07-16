@@ -1,2 +1,2 @@
-include ':lib_mediaplayer_exoplayer_r2.19.1'
+include ':lib_mediaplayer_exoplayer_r2.19.1_mini'
 include ':lib_mediaplayer_exoplayer_r2.19.1_full'

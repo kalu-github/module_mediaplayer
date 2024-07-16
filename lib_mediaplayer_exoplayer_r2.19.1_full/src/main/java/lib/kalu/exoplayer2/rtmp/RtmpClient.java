@@ -8,7 +8,7 @@ import java.io.IOException;
 public class RtmpClient {
 
     static {
-        System.loadLibrary("exoplayer-rtmp");
+        System.loadLibrary("exoplayer2-rtmp");
     }
 
 
