@@ -44,6 +44,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             if (null != mMediaPlayer)
                 throw new Exception("warning: null == mMediaPlayer");
             mMediaPlayer = new MediaPlayer();
+            initListener();
         } catch (Exception e) {
             LogUtil.log("VideoAndroidPlayer => createDecoder => Exception " + e.getMessage());
         }
@@ -59,7 +60,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             String url = args.getUrl();
             if (url == null)
                 throw new Exception("url error: " + url);
-            initListener();
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);
             // 拉流
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.LOADING_START);

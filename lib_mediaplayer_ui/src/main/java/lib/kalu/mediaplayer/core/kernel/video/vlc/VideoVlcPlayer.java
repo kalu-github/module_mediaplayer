@@ -43,6 +43,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             if (null != mVlcPlayer)
                 throw new Exception("warning: null != mVlcPlayer");
             mVlcPlayer = new VlcPlayer(context);
+            initListener();
         } catch (Exception e) {
         }
     }
@@ -58,7 +59,6 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             if (url == null)
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_START);
-            initListener();
             mVlcPlayer.setDataSource(Uri.parse(url), isPlayWhenReady());
             mVlcPlayer.play();
         } catch (Exception e) {

@@ -59,6 +59,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (null != mIjkPlayer)
                 throw new Exception("warning: null != mIjkPlayer");
             mIjkPlayer = new IjkMediaPlayer();
+            initListener();
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => createDecoder => " + e.getMessage());
         }
@@ -74,7 +75,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             String url = args.getUrl();
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
-            initListener();
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.LOADING_START);
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
             boolean prepareAsync = args.isPrepareAsync();

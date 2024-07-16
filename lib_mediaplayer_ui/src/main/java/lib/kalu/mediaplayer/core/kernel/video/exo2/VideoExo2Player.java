@@ -21,6 +21,7 @@ import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.Tracks;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
+import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.LoadEventInfo;
@@ -59,7 +60,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import E2y.E2s;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
@@ -169,6 +169,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 throw new Exception("not find");
             }
 
+            mExoPlayer = builder.build();
+            mExoPlayer.addAnalyticsListener(mAnalyticsListener);
+
 //            if (mSpeedPlaybackParameters != null) {
 //                mExoPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
 //            }
@@ -194,7 +197,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (null == url)
                 throw new Exception("error: url null");
             mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
-            mExoPlayer.addAnalyticsListener(mAnalyticsListener);
             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.LOADING_START);
 
 //            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
@@ -828,7 +830,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
 
         @Override
-        public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable E2s e2s) {
+        public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
             LogUtil.log("VideoExo2Player => onVideoInputFormatChanged[出画面] =>");
             try {
                 if (isPrepared())

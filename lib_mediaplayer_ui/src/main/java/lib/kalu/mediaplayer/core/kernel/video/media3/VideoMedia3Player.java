@@ -179,6 +179,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             }
 
             mExoPlayer = builder.build();
+            mExoPlayer.addAnalyticsListener(mAnalyticsListener);
 //            if (mSpeedPlaybackParameters != null) {
 //                mExoPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
 //            }
@@ -205,7 +206,6 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             if (null == url)
                 throw new Exception("error: url null");
             mExoPlayer.setRepeatMode(androidx.media3.exoplayer.ExoPlayer.REPEAT_MODE_OFF);
-            mExoPlayer.addAnalyticsListener(mAnalyticsListener);
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_START);
 
             MediaSource mediaSource = buildMediaSource(context, args);

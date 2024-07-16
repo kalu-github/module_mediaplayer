@@ -49,6 +49,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             if (null != mFFmpegPlayer)
                 throw new Exception("warning: null != mFFmpegPlayer");
             mFFmpegPlayer = new FFmpegPlayer();
+            initListener();
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => createDecoder => " + e.getMessage());
         }
@@ -66,7 +67,6 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             if (url == null)
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.LOADING_START);
-            initListener();
             mFFmpegPlayer.setDataSource(context, Uri.parse(url), null);
             mFFmpegPlayer.prepare();
         } catch (Exception e) {
