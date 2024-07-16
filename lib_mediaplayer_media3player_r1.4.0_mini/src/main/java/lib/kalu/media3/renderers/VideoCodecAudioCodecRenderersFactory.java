@@ -9,11 +9,9 @@ import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.Renderer;
 import androidx.media3.exoplayer.video.VideoRendererEventListener;
 
-import java.util.ArrayList;
+import java.util.ArrayList;;
 
 import lib.kalu.media3.util.MediaLogUtil;
-
-;
 
 @UnstableApi
 public class VideoCodecAudioCodecRenderersFactory extends BaseRenderersFactory {

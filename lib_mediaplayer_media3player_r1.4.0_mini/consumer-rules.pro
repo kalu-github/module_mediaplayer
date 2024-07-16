@@ -33,6 +33,18 @@
 }
 
 # exoplayer
+-keep class androidx.media3.exoplayer.RenderersFactory {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.source.LoadEventInfo {
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.exoplayer.source.MediaLoadData {
+    public <fields>;
+    public <methods>;
+}
 -keep class androidx.media3.exoplayer.ExoPlayer {
     public <fields>;
     public <methods>;
