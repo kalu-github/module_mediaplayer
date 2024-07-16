@@ -434,13 +434,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
         clear();
 
         try {
-            if (null != mExoPlayerBuilder) {
-                mExoPlayerBuilder = null;
-            }
-        } catch (Exception e) {
-        }
-
-        try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             mExoPlayer.removeAnalyticsListener(mAnalyticsListener);

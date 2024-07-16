@@ -225,6 +225,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
     @Override
     public void initOptions(Context context, StartArgs args) {
+        LogUtil.log("VideoMedia3Player => initOptions =>");
+
         try {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
