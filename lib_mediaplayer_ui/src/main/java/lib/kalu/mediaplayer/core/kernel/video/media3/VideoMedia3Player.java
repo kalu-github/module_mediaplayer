@@ -26,6 +26,7 @@ import androidx.media3.exoplayer.DecoderReuseEvaluation;
 import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.ExoPlaybackException;
 import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.RenderersFactory;
 import androidx.media3.exoplayer.analytics.AnalyticsListener;
 import androidx.media3.exoplayer.analytics.DefaultAnalyticsCollector;
 import androidx.media3.exoplayer.dash.DashMediaSource;
@@ -51,9 +52,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import M3a.g;
-import a.M3d;
-import a.M3p;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
@@ -128,6 +126,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             mExoPlayerBuilder.setTrackSelector(new DefaultTrackSelector(context));
 
             int decoderType = args.getDecoderType();
+            LogUtil.log("VideoMedia3Player => startDecoder => decoderType = "+decoderType);
             // only_mediacodec
             if (decoderType == PlayerType.DecoderType.ALL_CODEC) {
                 Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoCodecAudioCodecRenderersFactory");
@@ -135,7 +134,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoCodecAudioCodecRenderersFactory");
                 LogUtil.log("VideoMedia3Player => startDecoder => ALL_CODEC");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                mExoPlayerBuilder.setRenderersFactory((g) newInstance);
+                mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // only_mediacodec_audio
             else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_CODEC) {
@@ -144,7 +143,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                     throw new Exception("warning: not lib.kalu.media3.renderers.OnlyAudioCodecRenderersFactory");
                 LogUtil.log("VideoMedia3Player => startDecoder => ONLY_AUDIO_CODEC");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                mExoPlayerBuilder.setRenderersFactory((g) newInstance);
+                mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // only_mediacodec_video
             else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC) {
@@ -153,7 +152,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                     throw new Exception("warning: not lib.kalu.media3.renderers.OnlyVideoCodecRenderersFactory");
                 LogUtil.log("VideoMedia3Player => startDecoder => ONLY_VIDEO_CODEC");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                mExoPlayerBuilder.setRenderersFactory((g) newInstance);
+                mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // only_ffmpeg
             else if (decoderType == PlayerType.DecoderType.ALL_FFMPEG) {
@@ -162,7 +161,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
                 LogUtil.log("VideoMedia3Player => startDecoder => ALL_FFMPEG");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                mExoPlayerBuilder.setRenderersFactory((g) newInstance);
+                mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // only_ffmpeg_audio
             else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
@@ -171,7 +170,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                     throw new Exception("warning: not lib.kalu.media3.renderers.OnlyAudioFFmpegRenderersFactory");
                 LogUtil.log("VideoMedia3Player => startDecoder => ONLY_AUDIO_FFMPEG");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                mExoPlayerBuilder.setRenderersFactory((g) newInstance);
+                mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // only_ffmpeg_video
             else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
@@ -180,7 +179,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                     throw new Exception("warning: not lib.kalu.media3.renderers.OnlyVideoFFmpegRenderersFactory");
                 LogUtil.log("VideoMedia3Player => startDecoder => ONLY_VIDEO_FFMPEG");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                mExoPlayerBuilder.setRenderersFactory((g) newInstance);
+                mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // video_mediacodec_audio_ffmpeg
             else if (decoderType == PlayerType.DecoderType.VIDEO_CODEC_AUDIO_FFMPEG) {
@@ -189,7 +188,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoCodecAudioFFmpegRenderersFactory");
                 LogUtil.log("VideoMedia3Player => startDecoder => VIDEO_CODEC_AUDIO_FFMPEG");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                mExoPlayerBuilder.setRenderersFactory((g) newInstance);
+                mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // video_ffmpeg_audio_mediacodec
             else if (decoderType == PlayerType.DecoderType.VIDEO_FFMPEG_AUDIO_CODEC) {
@@ -198,7 +197,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                     throw new Exception("warning: not lib.kalu.media3.renderers.VideoFFmpegAudioCodecRenderersFactory");
                 LogUtil.log("VideoMedia3Player => startDecoder => VIDEO_FFMPEG_AUDIO_CODEC");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                mExoPlayerBuilder.setRenderersFactory((g) newInstance);
+                mExoPlayerBuilder.setRenderersFactory((RenderersFactory) newInstance);
             }
         } catch (Exception e) {
             LogUtil.log("VideoMedia3Player => startDecoder => Exception " + e.getMessage());
