@@ -19,9 +19,18 @@ import androidx.annotation.Nullable;
 import androidx.media3.common.C;
 import androidx.media3.common.Format;
 import androidx.media3.common.util.UnstableApi;
+
 import java.nio.ByteBuffer;
 
-/** Video decoder output buffer containing video frame data. */
+/**
+ * Video decoder output buffer containing video frame data.
+ *
+ * @deprecated com.google.android.exoplayer2 is deprecated. Please migrate to androidx.media3 (which
+ *     contains the same ExoPlayer code). See <a
+ *     href="https://developer.android.com/guide/topics/media/media3/getting-started/migration-guide">the
+ *     migration guide</a> for more details, including a script to help with the migration.
+ */
+@Deprecated
 @UnstableApi
 public class VideoDecoderOutputBuffer extends DecoderOutputBuffer {
 
@@ -35,13 +44,11 @@ public class VideoDecoderOutputBuffer extends DecoderOutputBuffer {
 
   /** Output mode. */
   public @C.VideoOutputMode int mode;
-
   /** RGB buffer for RGB mode. */
   @Nullable public ByteBuffer data;
 
   public int width;
   public int height;
-
   /** The format of the input from which this output buffer was decoded. */
   @Nullable public Format format;
 

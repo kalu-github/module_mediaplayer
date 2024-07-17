@@ -50,7 +50,7 @@ public final class FfmpegLibrary {
   /**
    * Override the names of the FFmpeg native libraries. If an application wishes to call this
    * method, it must do so before calling any other method defined by this class, and before
-   * instantiating a {@link FfmpegAudioRenderer} or {@link ExperimentalFfmpegVideoRenderer}
+   * instantiating a {@link FfmpegAudioRenderer} or {@link}
    * instance.
    *
    * @param libraries The names of the FFmpeg native libraries.
@@ -153,6 +153,8 @@ public final class FfmpegLibrary {
         return "h264";
       case MimeTypes.VIDEO_H265:
         return "hevc";
+      case MimeTypes.VIDEO_MPEG2:
+        return "mpeg2video";
       default:
         return null;
     }

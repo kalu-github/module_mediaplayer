@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 
 import androidx.annotation.Nullable;
 import androidx.media3.common.util.UnstableApi;
-import androidx.media3.decoder.ffmpeg.ExperimentalFfmpegVideoRenderer;
 import androidx.media3.decoder.ffmpeg.FfmpegAudioRenderer;
+import androidx.media3.decoder.ffmpeg.FfmpegVideoRenderer;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.Renderer;
 import androidx.media3.exoplayer.audio.AudioRendererEventListener;
@@ -129,7 +129,7 @@ class BaseRenderersFactory extends DefaultRenderersFactory {
                                            int maxDroppedFramesToNotify,
                                            @NonNull ArrayList<Renderer> out) {
         try {
-            ExperimentalFfmpegVideoRenderer ffmpegVideoRenderer = new ExperimentalFfmpegVideoRenderer(allowedJoiningTimeMs, eventHandler, eventListener, maxDroppedFramesToNotify);
+            FfmpegVideoRenderer ffmpegVideoRenderer = new FfmpegVideoRenderer(allowedJoiningTimeMs, eventHandler, eventListener, maxDroppedFramesToNotify);
             out.add(ffmpegVideoRenderer);
         } catch (Exception e) {
             MediaLogUtil.log("BaseRenderersFactory => addVideoFFmpegRenderers => " + e.getMessage());

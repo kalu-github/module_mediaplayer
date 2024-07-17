@@ -383,6 +383,10 @@
     public <fields>;
     public <methods>;
 }
+-keep class androidx.media3.decoder.VideoDecoderOutputBuffer{
+    public <fields>;
+    public <methods>;
+}
 
 # datasource rtmp
 -keepclassmembers class androidx.media3.datasource.RawResourceDataSource {
@@ -420,8 +424,16 @@
 -keepclassmembers class androidx.media3.decoder.ffmpeg.FfmpegAudioRenderer {
   <init>(android.os.Handler, androidx.media3.exoplayer.audio.AudioRendererEventListener, androidx.media3.exoplayer.audio.AudioSink);
 }
--keep class androidx.media3.decoder.ffmpeg.FfmpegLibrary {
-    *;
+-keep class androidx.media3.decoder.ffmpeg.FfmpegLibrary{
+    native <methods>;
+    public <fields>;
+    public <methods>;
+}
+-keep class androidx.media3.decoder.ffmpeg.FfmpegVideoDecoder{
+    native <methods>;
+}
+-keep class androidx.media3.decoder.ffmpeg.FfmpegAudioDecoder{
+    native <methods>;
 }
 -keepclasseswithmembernames class * {
     native <methods>;

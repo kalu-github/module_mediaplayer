@@ -10,5 +10,7 @@
 /repo/media-1.4.0-rc01
 
 /lib_mediaplayer_media3player_r1.4.0_mini/build/
+/lib_mediaplayer_media3player_r1.4.0_lite/.cxx/
+/lib_mediaplayer_media3player_r1.4.0_lite/build/
 /lib_mediaplayer_media3player_r1.4.0_full/.cxx/
 /lib_mediaplayer_media3player_r1.4.0_full/build/
