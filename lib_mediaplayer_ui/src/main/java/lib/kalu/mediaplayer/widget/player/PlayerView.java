@@ -82,7 +82,22 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     public boolean dispatchKeyEvent(KeyEvent event) {
         LogUtil.log("PlayerView => dispatchKeyEvent => action = " + event.getAction() + ", code = " + event.getKeyCode());
         try {
-            // 1
+
+            // step1
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                // stopFull
+                if (isFull()) {
+                    stopFull();
+                    return true;
+                }
+                //  stopFloat();
+                else if (isFloat()) {
+                    stopFloat();
+                    return true;
+                }
+            }
+
+            // step2
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
             for (int i = 0; i < childCount; i++) {
@@ -100,35 +115,6 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 }
             }
 
-            // 2 onBackPressed
-            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                // stopFull
-                if (isFull()) {
-                    try {
-                        StartArgs args = getStartArgs();
-                        if (null == args)
-                            throw new Exception();
-                        int kernelType = args.getKernelType();
-                        int renderType = args.getRenderType();
-                        stopFull(kernelType, renderType);
-                    } catch (Exception e) {
-                    }
-                    return true;
-                }
-                //  stopFloat();
-                else if (isFloat()) {
-                    try {
-                        StartArgs args = getStartArgs();
-                        if (null == args)
-                            throw new Exception();
-                        int kernelType = args.getKernelType();
-                        int renderType = args.getRenderType();
-                        stopFloat(kernelType, renderType);
-                    } catch (Exception e) {
-                    }
-                    return true;
-                }
-            }
             // error
             throw new Exception("warning: not todo");
         } catch (Exception e) {

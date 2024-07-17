@@ -25,7 +25,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    default boolean startFull(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
+    default boolean startFull() {
         try {
             callEvent(PlayerType.StateType.FULL_START);
             boolean full = isFull();
@@ -53,7 +53,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             viewRoot.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
             viewRoot.requestFocus();
             // 4
-            initRenderView(kernelType, renderType);
+            initRenderView();
             // 5
             ((PlayerView) viewRoot).setDoWindowing(false);
             callEvent(PlayerType.StateType.FULL_SUCC);
@@ -66,7 +66,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    default boolean stopFull(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
+    default boolean stopFull() {
         try {
             callEvent(PlayerType.StateType.FULL_START);
             boolean isFull = isFull();
@@ -93,7 +93,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             viewRoot.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
             viewRoot.requestFocus();
             // 4
-            initRenderView(kernelType, renderType);
+            initRenderView();
             // 5
             ((PlayerView) viewRoot).setDoWindowing(false);
             callEvent(PlayerType.StateType.FULL_SUCC);
@@ -106,7 +106,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    default boolean startFloat(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
+    default boolean startFloat() {
         try {
             callEvent(PlayerType.StateType.FLOAT_START);
             boolean full = isFull();
@@ -141,7 +141,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             viewRoot.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
             viewRoot.requestFocus();
             // 4
-            initRenderView(kernelType, renderType);
+            initRenderView();
             // 5
             ((PlayerView) viewRoot).setDoWindowing(false);
             callEvent(PlayerType.StateType.FLOAT_SUCC);
@@ -154,7 +154,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    default boolean stopFloat(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
+    default boolean stopFloat() {
         try {
             callEvent(PlayerType.StateType.FLOAT_START);
             boolean isFloat = isFloat();
@@ -184,7 +184,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             viewRoot.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
             viewRoot.requestFocus();
             // 4
-            initRenderView(kernelType, renderType);
+            initRenderView();
             // 5
             ((PlayerView) viewRoot).setDoWindowing(false);
             callEvent(PlayerType.StateType.FULL_SUCC);
@@ -416,15 +416,25 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    default void initRenderView(@PlayerType.KernelType.Value int kernelType, @PlayerType.RenderType.Value int renderType) {
+    default void initRenderView() {
         try {
-            boolean ijkUseMediaCodec = isIjkUseMediaCodec();
-            if (ijkUseMediaCodec && kernelType == PlayerType.KernelType.IJK && renderType == PlayerType.RenderType.SURFACE_VIEW) {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+
+            @PlayerType.DecoderType.Value
+            int decoderType = args.getDecoderType();
+            @PlayerType.KernelType.Value
+            int kernelType = args.getKernelType();
+            @PlayerType.RenderType.Value
+            int renderType = args.getRenderType();
+
+            if (decoderType == PlayerType.DecoderType.IJK_ALL_CODEC && kernelType == PlayerType.KernelType.IJK && renderType == PlayerType.RenderType.SURFACE_VIEW) {
                 releaseRender();
                 StartArgs startArgs = new StartArgs.Builder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
                 checkRenderNull(startArgs, true);
                 attachRenderKernel();
-            } else if (ijkUseMediaCodec && kernelType == PlayerType.KernelType.IJK) {
+            } else if (decoderType == PlayerType.DecoderType.IJK_ALL_CODEC && kernelType == PlayerType.KernelType.IJK) {
                 VideoRenderApi videoRender = getVideoRender();
                 videoRender.reset();
             } else if (kernelType == PlayerType.KernelType.IJK) {
@@ -435,16 +445,6 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             }
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => resetRenderView => " + e.getMessage());
-        }
-    }
-
-    default StartArgs getStartArgs() {
-        try {
-            VideoKernelApi videoKernel = getVideoKernel();
-            return videoKernel.getStartArgs();
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => getStartArgs => Exception " + e.getMessage());
-            return null;
         }
     }
 

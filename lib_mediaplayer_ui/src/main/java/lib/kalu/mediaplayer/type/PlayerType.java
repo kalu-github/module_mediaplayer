@@ -271,29 +271,33 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface DecoderType {
-        int ALL_CODEC = 10_001;
-        int ALL_FFMPEG = 10_004;
-        int ONLY_AUDIO_CODEC = 10_002;
-        int ONLY_VIDEO_CODEC = 10_003;
-        int ONLY_AUDIO_FFMPEG = 10_005;
-        int ONLY_VIDEO_FFMPEG = 10_006;
-        int VIDEO_CODEC_AUDIO_FFMPEG = 10_007;
-        int VIDEO_FFMPEG_AUDIO_CODEC = 10_008;
-        int DEFAULT = ALL_CODEC;
+        int DEFAULT = 10_000;
+        int EXO_ALL_CODEC = 10_001;
+        int EXO_ALL_FFMPEG = 10_004;
+        int EXO_ONLY_AUDIO_CODEC = 10_002;
+        int EXO_ONLY_VIDEO_CODEC = 10_003;
+        int EXO_ONLY_AUDIO_FFMPEG = 10_005;
+        int EXO_ONLY_VIDEO_FFMPEG = 10_006;
+        int EXO_VIDEO_CODEC_AUDIO_FFMPEG = 10_007;
+        int EXO_VIDEO_FFMPEG_AUDIO_CODEC = 10_008;
+        int IJK_ALL_CODEC = 10_009;
+        int IJK_ALL_FFMPEG = 10_010;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {
-                DecoderType.ALL_CODEC,
-                DecoderType.ALL_FFMPEG,
                 DecoderType.DEFAULT,
-                DecoderType.ONLY_AUDIO_CODEC,
-                DecoderType.ONLY_VIDEO_CODEC,
-                DecoderType.ONLY_AUDIO_FFMPEG,
-                DecoderType.ONLY_VIDEO_FFMPEG,
-                DecoderType.VIDEO_CODEC_AUDIO_FFMPEG,
-                DecoderType.VIDEO_FFMPEG_AUDIO_CODEC})
+                DecoderType.EXO_ALL_CODEC,
+                DecoderType.EXO_ALL_FFMPEG,
+                DecoderType.EXO_ONLY_AUDIO_CODEC,
+                DecoderType.EXO_ONLY_VIDEO_CODEC,
+                DecoderType.EXO_ONLY_AUDIO_FFMPEG,
+                DecoderType.EXO_ONLY_VIDEO_FFMPEG,
+                DecoderType.EXO_VIDEO_CODEC_AUDIO_FFMPEG,
+                DecoderType.EXO_VIDEO_FFMPEG_AUDIO_CODEC,
+                DecoderType.IJK_ALL_CODEC,
+                DecoderType.IJK_ALL_FFMPEG,})
         @interface Value {
         }
     }

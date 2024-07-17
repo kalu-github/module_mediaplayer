@@ -246,7 +246,7 @@
             </RadioGroup>
 
             <TextView
-                android:id="@+id/main_exo_decoder_title"
+                android:id="@+id/main_decoder_title"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:layout_marginLeft="6dp"
@@ -256,60 +256,73 @@
                 android:visibility="gone" />
 
             <RadioGroup
-                android:id="@+id/main_exo_decoder"
+                android:id="@+id/main_decoder"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
                 <RadioButton
+                    android:id="@+id/main_ijk_decoder_all_codec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="true"
+                    android:text="ijk_all_codec" />
+
+                <RadioButton
+                    android:id="@+id/main_ijk_decoder_all_ffmpeg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="ijk_all_ffmpeg" />
+
+                <RadioButton
                     android:id="@+id/main_exo_decoder_all_codec"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:checked="true"
-                    android:text="all_codec" />
+                    android:text="exo_all_codec" />
 
                 <RadioButton
                     android:id="@+id/main_exo_decoder_all_ffmpeg"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="all_ffmpeg" />
+                    android:text="exo_all_ffmpeg" />
 
                 <RadioButton
                     android:id="@+id/main_exo_decoder_only_video_codec"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="video_codec" />
+                    android:text="exo_video_codec" />
 
                 <RadioButton
                     android:id="@+id/main_exo_decoder_only_video_ffmpeg"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="video_ffmpeg" />
+                    android:text="exo_video_ffmpeg" />
 
                 <RadioButton
                     android:id="@+id/main_exo_decoder_only_audio_codec"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="audio_codec" />
+                    android:text="exo_audio_codec" />
 
                 <RadioButton
                     android:id="@+id/main_exo_decoder_only_audio_ffmpeg"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="audio_ffmpeg" />
+                    android:text="exo_audio_ffmpeg" />
 
                 <RadioButton
                     android:id="@+id/main_exo_decoder_video_codec_audio_ffmpeg"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="video_codec_audio_ffmpeg" />
+                    android:text="exo_video_codec_audio_ffmpeg" />
 
                 <RadioButton
                     android:id="@+id/main_exo_decoder_video_ffmpeg_audio_codec"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="video_ffmpeg_audio_codec" />
+                    android:text="exo_video_ffmpeg_audio_codec" />
 
             </RadioGroup>
 

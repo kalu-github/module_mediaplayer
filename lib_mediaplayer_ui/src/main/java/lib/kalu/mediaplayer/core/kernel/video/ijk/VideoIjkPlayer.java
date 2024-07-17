@@ -48,6 +48,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
+            clear();
+            unRegistListener();
             release();
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => releaseDecoder => " + e.getMessage());
@@ -101,7 +103,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             boolean looping = isLooping();
             setLooping(looping);
         } catch (Exception e) {
-            LogUtil.log("VideoIjkPlayer => initOptions => Exception " + e.getMessage());
+            LogUtil.log("VideoIjkPlayer => initOptions => Exception1 " + e.getMessage());
         }
 
         // log
@@ -116,6 +118,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             boolean log = args.isLog();
             lib.kalu.ijkplayer.util.IjkLogUtil.setLogger(log);
         } catch (Exception e) {
+            LogUtil.log("VideoIjkPlayer => initOptions => Exception2 " + e.getMessage());
         }
 
         // ijk options
@@ -124,7 +127,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             if (null == args)
                 throw new Exception("error: args null");
-            boolean useMediaCodec = args.isIjkUseMediaCodec();
+
+            int decoderType = args.getDecoderType();
+            boolean useMediaCodec  = (decoderType == PlayerType.DecoderType.IJK_ALL_CODEC);
+            LogUtil.log("VideoMedia3Player => createDecoder => decoderType = " + decoderType);
+
             int player = IjkMediaPlayer.OPT_CATEGORY_PLAYER;
             // 禁用音频
             mIjkPlayer.setOption(player, "an", 0);
@@ -285,7 +292,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             if (null == args)
                 throw new Exception("error: args null");
-            boolean useMediaCodec = args.isIjkUseMediaCodec();
+            int decoderType = args.getDecoderType();
+            boolean useMediaCodec  = (decoderType == PlayerType.DecoderType.IJK_ALL_CODEC);
             int codec = IjkMediaPlayer.OPT_CATEGORY_CODEC;
             // IJK_AVDISCARD_NONE    =-16, ///< discard nothing
             // IJK_AVDISCARD_DEFAULT =  0, ///< 如果包大小为0，则抛弃无效的包
@@ -401,8 +409,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        clear();
-        unRegistListener();
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");

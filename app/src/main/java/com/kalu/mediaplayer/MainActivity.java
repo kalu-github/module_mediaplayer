@@ -40,8 +40,8 @@ public class MainActivity extends Activity {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 int visable = (i == R.id.main_kernel_exo_v2 || i == R.id.main_kernel_media3 ? View.VISIBLE : View.GONE);
-                findViewById(R.id.main_exo_decoder).setVisibility(visable);
-                findViewById(R.id.main_exo_decoder_title).setVisibility(visable);
+                findViewById(R.id.main_decoder).setVisibility(visable);
+                findViewById(R.id.main_decoder_title).setVisibility(visable);
                 findViewById(R.id.main_cache).setVisibility(visable);
                 findViewById(R.id.main_cache_title).setVisibility(visable);
                 findViewById(R.id.main_exo_http).setVisibility(visable);
@@ -191,32 +191,38 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        int exoFFmpeg = 0;
-        int exoFFmpegId = ((RadioGroup) findViewById(R.id.main_exo_decoder)).getCheckedRadioButtonId();
-        switch (exoFFmpegId) {
+        int decoderType;
+        int decoderId = ((RadioGroup) findViewById(R.id.main_decoder)).getCheckedRadioButtonId();
+        switch (decoderId) {
             case R.id.main_exo_decoder_all_ffmpeg:
-                exoFFmpeg = PlayerType.DecoderType.ALL_FFMPEG;
+                decoderType = PlayerType.DecoderType.EXO_ALL_FFMPEG;
                 break;
             case R.id.main_exo_decoder_video_codec_audio_ffmpeg:
-                exoFFmpeg = PlayerType.DecoderType.VIDEO_CODEC_AUDIO_FFMPEG;
+                decoderType = PlayerType.DecoderType.EXO_VIDEO_CODEC_AUDIO_FFMPEG;
                 break;
             case R.id.main_exo_decoder_video_ffmpeg_audio_codec:
-                exoFFmpeg = PlayerType.DecoderType.VIDEO_FFMPEG_AUDIO_CODEC;
+                decoderType = PlayerType.DecoderType.EXO_VIDEO_FFMPEG_AUDIO_CODEC;
                 break;
             case R.id.main_exo_decoder_only_video_codec:
-                exoFFmpeg = PlayerType.DecoderType.ONLY_VIDEO_CODEC;
+                decoderType = PlayerType.DecoderType.EXO_ONLY_VIDEO_CODEC;
                 break;
             case R.id.main_exo_decoder_only_video_ffmpeg:
-                exoFFmpeg = PlayerType.DecoderType.ONLY_VIDEO_FFMPEG;
+                decoderType = PlayerType.DecoderType.EXO_ONLY_VIDEO_FFMPEG;
                 break;
             case R.id.main_exo_decoder_only_audio_codec:
-                exoFFmpeg = PlayerType.DecoderType.ONLY_AUDIO_CODEC;
+                decoderType = PlayerType.DecoderType.EXO_ONLY_AUDIO_CODEC;
                 break;
             case R.id.main_exo_decoder_only_audio_ffmpeg:
-                exoFFmpeg = PlayerType.DecoderType.ONLY_AUDIO_FFMPEG;
+                decoderType = PlayerType.DecoderType.EXO_ONLY_AUDIO_FFMPEG;
+                break;
+            case R.id.main_ijk_decoder_all_codec:
+                decoderType = PlayerType.DecoderType.IJK_ALL_CODEC;
+                break;
+            case R.id.main_ijk_decoder_all_ffmpeg:
+                decoderType = PlayerType.DecoderType.IJK_ALL_FFMPEG;
                 break;
             default:
-                exoFFmpeg = PlayerType.DecoderType.ALL_CODEC;
+                decoderType = PlayerType.DecoderType.DEFAULT;
                 break;
         }
 
@@ -282,12 +288,12 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", exoFFmpeg = " + exoFFmpeg + ", scaleType = " + scaleType + ", exoUseOkhttp = " + exoUseOkhttp);
+        Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", decoderType = " + decoderType + ", scaleType = " + scaleType + ", exoUseOkhttp = " + exoUseOkhttp);
         PlayerSDK.init()
                 .setLog(true)
                 .setKernelType(kernelType)
                 .setRenderType(renderType)
-                .setDecoderType(exoFFmpeg)
+                .setDecoderType(decoderType)
                 .setScaleType(scaleType)
                 .setExoUseOkhttp(exoUseOkhttp).setExoCacheType(cacheFlag ? PlayerType.CacheType.DOWNLOAD : PlayerType.CacheType.NONE)
                 .setBuriedEvent(new LogBuriedEvent())

@@ -42,11 +42,6 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setIjkUseMediaCodec(boolean v) {
-        mPlayerBuilder.setIjkUseMediaCodec(v);
-        return this;
-    }
-
     public PlayerSDK setExoSeekType(@PlayerType.ExoSeekType.Value int v) {
         mPlayerBuilder.setExoSeekType(v);
         return this;
@@ -64,11 +59,6 @@ public final class PlayerSDK {
 
     public PlayerSDK setExoCacheDir(String v) {
         mPlayerBuilder.setExoCacheDir(v);
-        return this;
-    }
-
-    public PlayerSDK setExoUseFFmpeg(boolean v) {
-        mPlayerBuilder.setExoUseFFmpeg(v);
         return this;
     }
 

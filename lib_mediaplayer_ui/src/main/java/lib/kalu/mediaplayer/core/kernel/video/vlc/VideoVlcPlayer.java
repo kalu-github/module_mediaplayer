@@ -31,6 +31,8 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
+            clear();
+            unRegistListener();
             release();
         } catch (Exception e) {
         }
@@ -118,8 +120,6 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        clear();
-        unRegistListener();
         try {
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");

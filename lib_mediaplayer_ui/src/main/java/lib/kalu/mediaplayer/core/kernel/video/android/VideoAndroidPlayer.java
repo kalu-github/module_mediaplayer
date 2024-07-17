@@ -32,6 +32,8 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
+            clear();
+            unRegistListener();
             release();
         } catch (Exception e) {
             LogUtil.log("VideoAndroidPlayer => releaseDecoder => " + e.getMessage());
@@ -139,8 +141,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        clear();
-        unRegistListener();
         try {
             if (null == mMediaPlayer)
                 throw new Exception("mMediaPlayer error: null");

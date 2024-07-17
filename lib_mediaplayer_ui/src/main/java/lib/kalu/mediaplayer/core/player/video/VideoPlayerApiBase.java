@@ -12,6 +12,18 @@ import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
 interface VideoPlayerApiBase {
 
+    default StartArgs getStartArgs() {
+        try {
+            Object args = ((View) this).getTag(R.id.module_mediaplayer_id_startargs);
+            if (null == args)
+                throw new Exception("warning: args null");
+            return (StartArgs) args;
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiBase => getStartArgs => " + e.getMessage());
+            return null;
+        }
+    }
+
     default PlayerLayout getPlayerLayout() {
         try {
             return (PlayerLayout) ((View) this).getParent();
@@ -102,21 +114,6 @@ interface VideoPlayerApiBase {
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiBase => getBaseComponentViewGroup => " + e.getMessage());
             return null;
-        }
-    }
-
-    default boolean isIjkUseMediaCodec() {
-        try {
-            VideoKernelApi videoKernel = getVideoKernel();
-            if (null == videoKernel)
-                throw new Exception("error: videoKernel null");
-            StartArgs args = videoKernel.getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
-            return args.isIjkUseMediaCodec();
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBase => isIjkUseMediaCodec => " + e.getMessage());
-            return false;
         }
     }
 

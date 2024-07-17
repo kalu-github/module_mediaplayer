@@ -186,9 +186,7 @@ public class PlayerLayout extends RelativeLayout {
             String mediaUrl = args.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
-            int kernelType = args.getKernelType();
-            int renderType = args.getRenderType();
-            boolean startFull = playerView.startFull(kernelType, renderType);
+            boolean startFull = playerView.startFull();
             LogUtil.log("PlayerLayout => startFull => status = " + startFull);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => startFull => " + e.getMessage());
@@ -206,9 +204,7 @@ public class PlayerLayout extends RelativeLayout {
             String mediaUrl = args.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
-            int kernelType = args.getKernelType();
-            int renderType = args.getRenderType();
-            boolean stopFull = playerView.stopFull(kernelType, renderType);
+            boolean stopFull = playerView.stopFull();
             LogUtil.log("PlayerLayout => stopFull => status = " + stopFull);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => stopFull => " + e.getMessage());
@@ -226,9 +222,7 @@ public class PlayerLayout extends RelativeLayout {
             String mediaUrl = args.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
-            int kernelType = args.getKernelType();
-            int renderType = args.getRenderType();
-            boolean startFull = playerView.startFloat(kernelType, renderType);
+            boolean startFull = playerView.startFloat();
             LogUtil.log("PlayerLayout => startFloat => status = " + startFull);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => startFloat => " + e.getMessage());
@@ -247,9 +241,7 @@ public class PlayerLayout extends RelativeLayout {
             String mediaUrl = args.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
-            int kernelType = args.getKernelType();
-            int renderType = args.getRenderType();
-            boolean stopFull = playerView.stopFloat(kernelType, renderType);
+            boolean stopFull = playerView.stopFloat();
             LogUtil.log("PlayerLayout => stopFloat => status = " + stopFull);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => stopFloat => " + e.getMessage());

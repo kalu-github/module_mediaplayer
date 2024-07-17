@@ -51,18 +51,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default StartArgs getStartArgs() {
-        try {
-            Object args = ((View) this).getTag(R.id.module_mediaplayer_id_startargs);
-            if (null == args)
-                throw new Exception("warning: args null");
-            return (StartArgs) args;
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => getStartArgs => " + e.getMessage());
-            return null;
-        }
-    }
-
     default void start(String url) {
         StartArgs build = new StartArgs.Builder().setUrl(url).build();
         start(build);
@@ -101,7 +89,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 8
             initDecoder(args);
         } catch (Exception e) {
-            callEvent(PlayerType.EventType.ERROR_URL);
+            callEvent(PlayerType.StateType.ERROR);
             LogUtil.log("VideoPlayerApiKernel => start => " + e.getMessage());
         }
     }
@@ -547,9 +535,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             // 执行
                             callEvent(PlayerType.StateType.START);
                             // ijk需要刷新RenderView
-                            int kernelType = args.getKernelType();
-                            int renderType = args.getRenderType();
-                            initRenderView(kernelType, renderType);
+                            initRenderView();
 //                            // step3
                             checkVideoView();
                             // step4

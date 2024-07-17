@@ -37,6 +37,8 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             if (isFromUser) {
                 setEvent(null);
             }
+            clear();
+            unRegistListener();
             release();
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => releaseDecoder => " + e.getMessage());
@@ -140,8 +142,6 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
-        clear();
-        unRegistListener();
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
