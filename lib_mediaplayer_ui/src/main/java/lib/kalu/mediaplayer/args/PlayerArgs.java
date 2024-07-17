@@ -36,10 +36,6 @@ public final class PlayerArgs {
     private boolean checkOrientation;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
     private BuriedEvent buriedEvent;  // 埋点事件log
 
-    @PlayerType.ExoSeekType.Value
-    private int exoSeekType;
-    private boolean exoUseOkhttp;
-
     // 旋转角度
     @PlayerType.RotationType.Value
     private int rotation;
@@ -85,20 +81,12 @@ public final class PlayerArgs {
         return cacheDirName;
     }
 
-    public boolean isExoUseOkhttp() {
-        return exoUseOkhttp;
-    }
-
     public int getConnectTimeout() {
         return connectTimeout;
     }
 
     public boolean getBufferingTimeoutRetry() {
         return bufferingTimeoutRetry;
-    }
-
-    public int getExoSeekType() {
-        return exoSeekType;
     }
 
     public boolean isLog() {
@@ -153,6 +141,21 @@ public final class PlayerArgs {
         return buriedEvent;
     }
 
+    @PlayerType.SeekType.Value
+    private int seekType;
+
+    public int getSeekType() {
+        return seekType;
+    }
+
+    // 网络类型
+    @PlayerType.NetType.Value
+    private int netType;
+
+    public int getNetType() {
+        return netType;
+    }
+
     /****************/
 
     private PlayerArgs(Builder builder) {
@@ -174,8 +177,8 @@ public final class PlayerArgs {
         fitMobileCutout = builder.fitMobileCutout;
         checkOrientation = builder.checkOrientation;
         buriedEvent = builder.buriedEvent;
-        exoSeekType = builder.exoSeekType;
-        exoUseOkhttp = builder.exoUseOkhttp;
+        seekType = builder.seekType;
+        netType = builder.netType;
         trySeeDuration = builder.trySeeDuration;
         rotation = builder.rotation;
     }
@@ -200,8 +203,8 @@ public final class PlayerArgs {
         builder.setFitMobileCutout(this.fitMobileCutout);
         builder.setCheckOrientation(this.checkOrientation);
         builder.setBuriedEvent(this.buriedEvent);
-        builder.setExoSeekType(this.exoSeekType);
-        builder.setExoUseOkhttp(this.exoUseOkhttp);
+        builder.setSeekType(this.seekType);
+        builder.setNetType(this.netType);
         builder.setTrySeeDuration(this.trySeeDuration);
         builder.setRotation(this.rotation);
         return builder;
@@ -230,10 +233,6 @@ public final class PlayerArgs {
         private boolean checkOrientation = false;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
         private BuriedEvent buriedEvent = null;  // 埋点事件log
 
-
-        @PlayerType.ExoSeekType.Value
-        private int exoSeekType = PlayerType.ExoSeekType.DEFAULT;
-        private boolean exoUseOkhttp = true;
 
         // 旋转角度
         @PlayerType.RotationType.Value
@@ -289,6 +288,24 @@ public final class PlayerArgs {
             return this;
         }
 
+        // 快进参数
+        @PlayerType.SeekType.Value
+        private int seekType = PlayerType.SeekType.DEFAULT;
+
+        public Builder setSeekType(@PlayerType.SeekType.Value int v) {
+            seekType = v;
+            return this;
+        }
+
+        // 网络类型
+        @PlayerType.NetType.Value
+        private int netType = PlayerType.NetType.DEFAULT;
+
+        public Builder setNetType(@PlayerType.NetType.Value int v) {
+            netType = v;
+            return this;
+        }
+
         public Builder setConnectTimeout(int v) {
             connectTimeout = v;
             return this;
@@ -300,18 +317,8 @@ public final class PlayerArgs {
             return this;
         }
 
-        public Builder setExoUseOkhttp(boolean v) {
-            exoUseOkhttp = v;
-            return this;
-        }
-
         public Builder setDecoderType(@PlayerType.DecoderType int v) {
             decoderType = v;
-            return this;
-        }
-
-        public Builder setExoSeekType(@PlayerType.ExoSeekType int v) {
-            exoSeekType = v;
             return this;
         }
 

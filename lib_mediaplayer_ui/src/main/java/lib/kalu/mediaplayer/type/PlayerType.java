@@ -21,6 +21,22 @@ import java.lang.annotation.Target;
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
 public @interface PlayerType {
 
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface NetType {
+        int HTTP = 2_001;
+        int EXO_OKHTTP = 2_002;
+        int DEFAULT = HTTP;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef({HTTP, EXO_OKHTTP, DEFAULT})
+        @interface Value {
+        }
+    }
+
     /**
      * 播放模式
      * 普通模式，小窗口模式，正常模式三种其中一种
@@ -289,21 +305,32 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface ExoSeekType {
+    @interface SeekType {
 
         int DEFAULT = 9_001;
-        int CLOSEST_SYNC = 9_002;
-        int PREVIOUS_SYNC = 9_003;
-        int NEXT_SYNC = 9_004;
+        int EXO_CLOSEST_SYNC = 9_002;
+        int EXO_PREVIOUS_SYNC = 9_003;
+        int EXO_NEXT_SYNC = 9_004;
+        int EXO_EXACT = 9_005;
+        int ANDROID_SEEK_PREVIOUS_SYNC = 9_006;
+        int ANDROID_SEEK_NEXT_SYNC = 9_007;
+        int ANDROID_SEEK_CLOSEST_SYNC = 9_008;
+        int ANDROID_SEEK_CLOSEST = 9_009;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {
-                ExoSeekType.DEFAULT,
-                ExoSeekType.CLOSEST_SYNC,
-                ExoSeekType.PREVIOUS_SYNC,
-                ExoSeekType.NEXT_SYNC})
+                SeekType.DEFAULT,
+                SeekType.EXO_CLOSEST_SYNC,
+                SeekType.EXO_PREVIOUS_SYNC,
+                SeekType.EXO_NEXT_SYNC,
+                SeekType.EXO_EXACT,
+                SeekType.ANDROID_SEEK_PREVIOUS_SYNC,
+                SeekType.ANDROID_SEEK_NEXT_SYNC,
+                SeekType.ANDROID_SEEK_CLOSEST_SYNC,
+                SeekType.ANDROID_SEEK_CLOSEST,
+        })
         @interface Value {
         }
     }
@@ -479,7 +506,10 @@ public @interface PlayerType {
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef(value = {CacheLocalType.DEFAULT, CacheLocalType.EXTERNAL, CacheLocalType.DEFAULT})
+        @IntDef(value = {
+                CacheLocalType.EXTERNAL,
+                CacheLocalType.INNER,
+                CacheLocalType.DEFAULT})
         @interface Value {
         }
     }
@@ -494,14 +524,14 @@ public @interface PlayerType {
         int _200 = 11_003;
         int _400 = 11_004;
         int _800 = 11_005;
-        int DEFAULT = 11_001;
+        int DEFAULT = AUTO;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {
-                CacheSizeType.DEFAULT,
                 CacheSizeType.AUTO,
+                CacheSizeType.DEFAULT,
                 CacheSizeType._100,
                 CacheSizeType._200,
                 CacheSizeType._400,

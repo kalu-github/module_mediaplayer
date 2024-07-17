@@ -46,17 +46,19 @@ public class StartArgs {
         return decoderType;
     }
 
-    @PlayerType.ExoSeekType
-    private int exoSeekType;
+    @PlayerType.SeekType.Value
+    private int seekType;
 
-    public int getExoSeekType() {
-        return exoSeekType;
+    public int getSeekType() {
+        return seekType;
     }
 
-    private boolean exoUseOkhttp;
+    @PlayerType.NetType.Value
+    private int netType;
 
-    public boolean isExoUseOkhttp() {
-        return exoUseOkhttp;
+    @PlayerType.NetType.Value
+    public int getNetType() {
+        return netType;
     }
 
     // 视频渲染类型
@@ -228,8 +230,8 @@ public class StartArgs {
     @Override
     public String toString() {
         return "StartArgs{" +
-                ", exoSeekType=" + exoSeekType +
-                ", exoUseOkhttp=" + exoUseOkhttp +
+                ", seekType=" + seekType +
+                ", netType=" + netType +
                 ", cacheType=" + cacheType +
                 ", cacheLocalType=" + cacheLocalType +
                 ", cacheSizeType=" + cacheSizeType +
@@ -263,8 +265,8 @@ public class StartArgs {
 
     public StartArgs(Builder builder) {
         this.decoderType = builder.decoderType;
-        this.exoSeekType = builder.exoSeekType;
-        this.exoUseOkhttp = builder.exoUseOkhttp;
+        this.seekType = builder.seekType;
+        this.netType = builder.netType;
         this.cacheType = builder.cacheType;
         this.cacheLocalType = builder.cacheLocalType;
         this.cacheSizeType = builder.cacheSizeType;
@@ -296,8 +298,8 @@ public class StartArgs {
 
     public Builder newBuilder() {
         Builder builder = new Builder();
-        builder.exoSeekType = exoSeekType;
-        builder.exoUseOkhttp = exoUseOkhttp;
+        builder.seekType = seekType;
+        builder.netType = netType;
         builder.cacheType = cacheType;
         builder.cacheLocalType = cacheLocalType;
         builder.cacheSizeType = cacheSizeType;
@@ -332,11 +334,13 @@ public class StartArgs {
     public static class Builder {
 
         private final PlayerArgs playerArgs = PlayerSDK.init().getPlayerBuilder();
-        private boolean exoUseOkhttp = playerArgs.isExoUseOkhttp();
-        @PlayerType.ExoSeekType
-        private int exoSeekType = playerArgs.getExoSeekType();
+
+        // 网络类型
+        @PlayerType.NetType.Value
+        private int netType = playerArgs.getNetType();
+        // 解码器类型
         private int decoderType = playerArgs.getDecoderType();
-        // 视频解码类型
+        // 播放器类型
         @PlayerType.KernelType.Value
         private int kernelType = playerArgs.getKernelType();
         // 画面缩放类型
@@ -374,6 +378,14 @@ public class StartArgs {
         private int cacheSizeType = playerArgs.getCacheSizeType();
 
         private String cacheDirName = playerArgs.getCacheDirName();
+
+        @PlayerType.SeekType.Value
+        private int seekType = playerArgs.getSeekType();
+
+        @PlayerType.SeekType.Value
+        public int getSeekType() {
+            return seekType;
+        }
 
         // 视频渲染类型
         @PlayerType.RenderType.Value
@@ -487,6 +499,7 @@ public class StartArgs {
             this.episodeItemCount = v;
             return this;
         }
+
 
         public Builder() {
         }

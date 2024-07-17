@@ -244,13 +244,15 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 throw new Exception("mExoPlayer warning: null");
             if (null == args)
                 throw new Exception("error: args null");
-            int seekType = args.getExoSeekType();
-            if (seekType == PlayerType.ExoSeekType.CLOSEST_SYNC) {
+            int seekType = args.getSeekType();
+            if (seekType == PlayerType.SeekType.EXO_CLOSEST_SYNC) {
                 mExoPlayer.setSeekParameters(SeekParameters.CLOSEST_SYNC);
-            } else if (seekType == PlayerType.ExoSeekType.PREVIOUS_SYNC) {
+            } else if (seekType == PlayerType.SeekType.EXO_PREVIOUS_SYNC) {
                 mExoPlayer.setSeekParameters(SeekParameters.PREVIOUS_SYNC);
-            } else if (seekType == PlayerType.ExoSeekType.NEXT_SYNC) {
+            } else if (seekType == PlayerType.SeekType.EXO_NEXT_SYNC) {
                 mExoPlayer.setSeekParameters(SeekParameters.NEXT_SYNC);
+            } else if (seekType == PlayerType.SeekType.EXO_EXACT) {
+                mExoPlayer.setSeekParameters(SeekParameters.EXACT);
             } else {
                 mExoPlayer.setSeekParameters(SeekParameters.DEFAULT);
             }
@@ -659,10 +661,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
             DataSource.Factory dataSourceFactory;
             try {
-                boolean useOkhttp = isExoUseOkhttp();
-                LogUtil.log("VideoExo2Player => createMediaSource => useOkhttp = " + useOkhttp);
-                if (!useOkhttp)
-                    throw new Exception("warning: useOkhttp false");
+                int netType = getNetType();
+                LogUtil.log("VideoExo2Player => createMediaSource => netType = " + netType);
+                if (netType != PlayerType.NetType.EXO_OKHTTP)
+                    throw new Exception("warning: netType != PlayerType.NetType.EXO_OKHTTP");
                 Class<?> okhttpClass = Class.forName("okhttp3.OkHttpClient.Builder");
                 Class<?> factoryClass = Class.forName("com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource.Factory");
                 Object o = okhttpClass.newInstance();

@@ -226,14 +226,16 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 throw new Exception("error: mExoPlayer null");
             if (null == args)
                 throw new Exception("error: args null");
-            int seekParameters = args.getExoSeekType();
+            int seekParameters = args.getSeekType();
             // seek model
-            if (seekParameters == PlayerType.ExoSeekType.CLOSEST_SYNC) {
+            if (seekParameters == PlayerType.SeekType.EXO_CLOSEST_SYNC) {
                 mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.CLOSEST_SYNC);
-            } else if (seekParameters == PlayerType.ExoSeekType.PREVIOUS_SYNC) {
+            } else if (seekParameters == PlayerType.SeekType.EXO_PREVIOUS_SYNC) {
                 mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.PREVIOUS_SYNC);
-            } else if (seekParameters == PlayerType.ExoSeekType.NEXT_SYNC) {
+            } else if (seekParameters == PlayerType.SeekType.EXO_NEXT_SYNC) {
                 mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.NEXT_SYNC);
+            } else if (seekParameters == PlayerType.SeekType.EXO_EXACT) {
+                mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.EXACT);
             } else {
                 mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.DEFAULT);
             }
@@ -565,10 +567,10 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
             DataSource.Factory dataSourceFactory;
             try {
-                boolean useOkhttp = isExoUseOkhttp();
-                LogUtil.log("VideoMedia3Player => createMediaSource => useOkhttp = " + useOkhttp);
-                if (!useOkhttp)
-                    throw new Exception("warning: useOkhttp false");
+                int netType = getNetType();
+                LogUtil.log("VideoMedia3Player => createMediaSource => netType = " + netType);
+                if (netType != PlayerType.NetType.EXO_OKHTTP)
+                    throw new Exception("warning: netType != PlayerType.NetType.EXO_OKHTTP");
 
                 Class<?> okhttpClass = Class.forName("okhttp3.OkHttpClient.Builder");
                 Class<?> factoryClass = Class.forName("androidx.media3.datasource.okhttp.OkHttpDataSource.Factory");

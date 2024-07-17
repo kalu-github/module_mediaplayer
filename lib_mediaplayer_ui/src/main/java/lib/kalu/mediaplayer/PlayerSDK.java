@@ -27,8 +27,8 @@ public final class PlayerSDK {
         mPlayerBuilder = new PlayerArgs.Builder();
     }
 
-    public PlayerSDK setExoUseOkhttp(boolean v) {
-        mPlayerBuilder.setExoUseOkhttp(v);
+    public PlayerSDK setNetType(@PlayerType.NetType.Value int v) {
+        mPlayerBuilder.setNetType(v);
         return this;
     }
 
@@ -42,8 +42,8 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setExoSeekType(@PlayerType.ExoSeekType.Value int v) {
-        mPlayerBuilder.setExoSeekType(v);
+    public PlayerSDK setSeekType(@PlayerType.SeekType.Value int v) {
+        mPlayerBuilder.setSeekType(v);
         return this;
     }
 

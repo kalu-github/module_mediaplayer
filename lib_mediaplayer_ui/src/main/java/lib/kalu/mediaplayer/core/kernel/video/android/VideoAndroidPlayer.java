@@ -239,14 +239,36 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             LogUtil.log("VideoAndroidPlayer => seekTo => succ");
 //            setSeeking(true);
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.SEEK_START);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_CLOSEST);
-//                    mMediaPlayer.seekTo((int) seek);
-            } else {
+
+            try {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+                    throw new Exception("warning: Build.VERSION.SDK_INT < Build.VERSION_CODES.O");
+                StartArgs args = getStartArgs();
+                if (null == args)
+                    throw new Exception("error: args null");
+                int seekType = args.getSeekType();
+                if (seekType == PlayerType.SeekType.DEFAULT)
+                    throw new Exception("warning: seekType == PlayerType.SeekType.DEFAULT");
+                switch (seekType) {
+                    case PlayerType.SeekType.ANDROID_SEEK_CLOSEST:
+                        mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_CLOSEST);
+                        break;
+                    case PlayerType.SeekType.ANDROID_SEEK_CLOSEST_SYNC:
+                        mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_CLOSEST_SYNC);
+                        break;
+                    case PlayerType.SeekType.ANDROID_SEEK_PREVIOUS_SYNC:
+                        mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_PREVIOUS_SYNC);
+                        break;
+                    case PlayerType.SeekType.ANDROID_SEEK_NEXT_SYNC:
+                        mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_NEXT_SYNC);
+                        break;
+                }
+            } catch (Exception e) {
+                LogUtil.log("VideoAndroidPlayer => seekTo => Exception1 " + e.getMessage());
                 mMediaPlayer.seekTo((int) seek);
             }
         } catch (Exception e) {
-            LogUtil.log("VideoAndroidPlayer => seekTo => " + e.getMessage());
+            LogUtil.log("VideoAndroidPlayer => seekTo => Exception2 " + e.getMessage());
         }
     }
 

@@ -60,31 +60,19 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
         }
     }
 
-    default boolean isExoUseOkhttp() {
+    @PlayerType.NetType.Value
+    default int getNetType() {
         try {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("error: args null");
-            return args.isExoUseOkhttp();
+            return args.getNetType();
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiBase => isExoUseOkhttp => Exception " + e.getMessage());
-            return false;
+            LogUtil.log("VideoKernelApiBase => getNetType => Exception " + e.getMessage());
+            return PlayerType.NetType.DEFAULT;
         }
     }
 
-
-    @PlayerType.KernelType.Value
-    default int getKernelType() {
-        try {
-            StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
-            return args.getKernelType();
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApiBase => getKernelType => Exception " + e.getMessage());
-            return PlayerType.KernelType.ANDROID;
-        }
-    }
 
     /***************/
 

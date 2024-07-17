@@ -276,6 +276,84 @@
 2. 重构lib_mediaplayer_ui模块
 ```
 
+# 
+#### 初始化参数
+```
+PlayerSDK.init()
+                // 日志开关
+                .setLog(true)
+                // 数据埋点（监听播放器操作日志）
+                .setBuriedEvent(null)
+                // 播放器类型（MediaPlayer Media3Player ExoPlayer IjkPLayer）
+                .setKernelType(PlayerType.KernelType.IJK)
+                // 渲染类型（TextuteView SurafecView）
+                .setRenderType(PlayerType.RenderType.SURFACE_VIEW)
+                // 解码器类型（仅针对 Media3Player ExoPlayer IjkPLayer）
+                .setDecoderType(PlayerType.DecoderType.IJK_ALL_FFMPEG)
+                // 画面比例（自动 全屏 原始 1:1 4:3 5:4 16:9 16:10）
+                .setScaleType(PlayerType.ScaleType.AUTO)
+                // 超时时间（默认20s）
+                .setConnectTimeout(20000)
+                // 缓冲超时重播（默认false）
+                .setBufferingTimeoutRetry(false)
+                // 播放器每次播放器都销毁（默认false）
+                .setInitRelease(false)
+                // 播放器生命周期自动销毁（默认true）
+                .setSupportAutoRelease(false)
+                // 试看（默认关闭）
+                .setTrySeeDuration(0L)
+                // 缓存类型（默认关闭, 仅针对 ExoPlayer）
+                .setCacheType(PlayerType.CacheType.DEFAULT)
+                // 缓存类型（默认内部）
+                .setCacheLocalType(PlayerType.CacheLocalType.DEFAULT)
+                // 缓存大小
+                .setCacheSizeType(PlayerType.CacheSizeType.DEFAULT)
+                // 缓存文件夹
+                .setCacheDirName(null)
+                // 快进类型（仅针对 MediaPlayer ExoPlayer）
+                .setSeekType(PlayerType.SeekType.DEFAULT)
+                // 网络类型（仅针对 ExoPlayer）
+                .setNetType(PlayerType.NetType.EXO_OKHTTP)
+                .build();
+```
+
+#
+#### 起播参数
+```
+// step1 参数
+        StartArgs build = new StartArgs.Builder()
+                // 必传：视频url
+                .setUrl("")
+                // 视频title
+                .setTitle("")
+                // 渲染类型（TextuteView SurafecView）
+                .setRenderType(PlayerType.RenderType.SURFACE_VIEW)
+                // 起播快进
+                .setSeek(0L)
+                // 单片循环
+                .setLooping(false)
+                // 静音
+                .setMute(false)
+                // 媒资是直播，则获取不到时长duration
+                .setLive(false)
+                // 自动播放
+                .setPlayWhenReady(true)
+                // 外挂字幕
+                .setSubtitleUrl("")
+                // 播放器生命周期自动销毁（默认true）
+                .setSupportAutoRelease(true)
+                // 试看
+                .setTrySeeDuration(0L)
+                // 选集, 补充数据
+                .setExtra(null)
+                // 选集, 总数
+                .setEpisodeItemCount(0)
+                // 选集, 默认播放
+                .setEpisodePlayingIndex(0).build();
+        // step2 播放
+        PlayerLayout.start(build);
+```
+
 #
 
 #### 资料
