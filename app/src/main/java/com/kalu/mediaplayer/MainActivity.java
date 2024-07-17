@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                int visable = (i == R.id.main_kernel_exo_v2 || i == R.id.main_kernel_media3 ? View.VISIBLE : View.GONE);
+                int visable = (i == R.id.main_kernel_exo_v2 || i == R.id.main_kernel_media3 || i == R.id.main_kernel_ijk ? View.VISIBLE : View.GONE);
                 findViewById(R.id.main_decoder_scroll).setVisibility(visable);
                 findViewById(R.id.main_decoder_title).setVisibility(visable);
                 findViewById(R.id.main_cache).setVisibility(visable);
