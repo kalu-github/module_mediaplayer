@@ -277,27 +277,27 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        @PlayerType.ExoCacheType.Value
-        int cacheFlag;
+        @PlayerType.CacheType
+        int cacheType;
         int cacheFlagId = ((RadioGroup) findViewById(R.id.main_cache)).getCheckedRadioButtonId();
         switch (cacheFlagId) {
             case R.id.main_cache_yes:
-                cacheFlag = PlayerType.ExoCacheType.OPEN;
+                cacheType = PlayerType.CacheType.EXO_OPEN;
                 break;
             default:
-                cacheFlag = PlayerType.ExoCacheType.CLOSE;
+                cacheType = PlayerType.CacheType.DEFAULT;
                 break;
         }
 
         Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", decoderType = " + decoderType + ", scaleType = " + scaleType + ", exoUseOkhttp = " + exoUseOkhttp);
         PlayerSDK.init()
                 .setLog(true)
+                .setCacheType(cacheType)
                 .setKernelType(kernelType)
                 .setRenderType(renderType)
                 .setDecoderType(decoderType)
                 .setScaleType(scaleType)
                 .setExoUseOkhttp(exoUseOkhttp)
-                .setExoCacheType(cacheFlag)
                 .setBuriedEvent(new LogBuriedEvent())
                 .build();
     }
