@@ -333,6 +333,14 @@
     public <fields>;
     public <methods>;
 }
+-keep class com.google.android.exoplayer2.decoder.DecoderReuseEvaluation{
+    public <fields>;
+    public <methods>;
+}
+-keep class com.google.android.exoplayer2.decoder.VideoDecoderOutputBuffer{
+    public <fields>;
+    public <methods>;
+}
 
 # core
 -dontnote com.google.android.exoplayer2.source.dash.offline.DashDownloader
@@ -413,8 +421,15 @@
     native <methods>;
 }
 -keep class com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary{
+    native <methods>;
     public <fields>;
     public <methods>;
+}
+-keep class com.google.android.exoplayer2.ext.ffmpeg.FfmpegVideoDecoder{
+    native <methods>;
+}
+-keep class com.google.android.exoplayer2.ext.ffmpeg.FfmpegAudioDecoder{
+    native <methods>;
 }
 -dontnote com.google.android.exoplayer2.ext.ffmpeg.FfmpegAudioRenderer
 -keepclassmembers class com.google.android.exoplayer2.ext.ffmpeg.FfmpegAudioRenderer {

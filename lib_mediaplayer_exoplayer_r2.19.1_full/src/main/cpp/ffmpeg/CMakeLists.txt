@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.4.1)
 add_definitions(-DNDEBUG)
 
+
 # ffmpeg-avcodec-lib
 configure_file(${CMAKE_SOURCE_DIR}/ffmpeg/ffmpeg3/${ANDROID_ABI}/lib/libavcodec.a ${Project_BINARY_DIR}/libavcodec.a COPYONLY)
 add_library(ffmpeg-avcodec-lib
@@ -9,6 +10,15 @@ add_library(ffmpeg-avcodec-lib
 set_target_properties(ffmpeg-avcodec-lib
         PROPERTIES IMPORTED_LOCATION
         libavcodec.a)
+
+# ffmpeg-avformat-lib
+configure_file(${CMAKE_SOURCE_DIR}/ffmpeg/ffmpeg3/${ANDROID_ABI}/lib/libavformat.a ${Project_BINARY_DIR}/libavformat.a COPYONLY)
+add_library(ffmpeg-avformat-lib
+        STATIC
+        IMPORTED)
+set_target_properties(ffmpeg-avformat-lib
+        PROPERTIES IMPORTED_LOCATION
+        libavformat.a)
 
 # ffmpeg-avutil-lib
 configure_file(${CMAKE_SOURCE_DIR}/ffmpeg/ffmpeg3/${ANDROID_ABI}/lib/libavutil.a ${Project_BINARY_DIR}/libavutil.a COPYONLY)
@@ -28,6 +38,15 @@ set_target_properties(ffmpeg-swresample-lib
         PROPERTIES IMPORTED_LOCATION
         libswresample.a)
 
+# ffmpeg-swscale-lib
+configure_file(${CMAKE_SOURCE_DIR}/ffmpeg/ffmpeg3/${ANDROID_ABI}/lib/libswscale.a ${Project_BINARY_DIR}/libswscale.a COPYONLY)
+add_library(ffmpeg-swscale-lib
+        STATIC
+        IMPORTED)
+set_target_properties(ffmpeg-swscale-lib
+        PROPERTIES IMPORTED_LOCATION
+        libswscale.a)
+
 include_directories(
         ffmpeg3/${ANDROID_ABI}/include
         #ffmpeg_log.h
@@ -44,8 +63,17 @@ target_link_libraries(
 
         # ffmpeg
         ffmpeg-avcodec-lib
+        ffmpeg-avformat-lib
         ffmpeg-avutil-lib
         ffmpeg-swresample-lib
+        ffmpeg-swscale-lib
 
+        m
+        z
+        dl
+        OpenSLES
+        GLESv1_CM
+        GLESv2
+        jnigraphics
         log
         android)
