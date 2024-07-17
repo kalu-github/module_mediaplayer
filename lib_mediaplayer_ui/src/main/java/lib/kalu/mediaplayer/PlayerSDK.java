@@ -47,18 +47,23 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setExoCacheType(@PlayerType.ExoCacheType int v) {
-        mPlayerBuilder.setExoCacheType(v);
+    public PlayerSDK setCacheType(@PlayerType.CacheType.Value int v) {
+        mPlayerBuilder.setCacheType(v);
         return this;
     }
 
-    public PlayerSDK setExoCacheMax(int v) {
-        mPlayerBuilder.setExoCacheMax(v);
+    public PlayerSDK setCacheLocalType(@PlayerType.CacheLocalType.Value int v) {
+        mPlayerBuilder.setCacheLocalType(v);
         return this;
     }
 
-    public PlayerSDK setExoCacheDir(String v) {
-        mPlayerBuilder.setExoCacheDir(v);
+    public PlayerSDK setCacheSizeType(@PlayerType.CacheSizeType.Value int v) {
+        mPlayerBuilder.setCacheSizeType(v);
+        return this;
+    }
+
+    public PlayerSDK setCacheDirName(String v) {
+        mPlayerBuilder.setCacheDirName(v);
         return this;
     }
 

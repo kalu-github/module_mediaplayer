@@ -1,6 +1,11 @@
 package lib.kalu.mediaplayer.args;
 
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.io.File;
+
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.type.PlayerType;
 
@@ -34,10 +39,6 @@ public final class PlayerArgs {
     @PlayerType.ExoSeekType.Value
     private int exoSeekType;
     private boolean exoUseOkhttp;
-    @PlayerType.ExoCacheType
-    private int exoCacheType;
-    private int exoCacheMax;
-    private String exoCacheDir;
 
     // 旋转角度
     @PlayerType.RotationType.Value
@@ -54,6 +55,36 @@ public final class PlayerArgs {
         return trySeeDuration;
     }
 
+    @PlayerType.CacheType.Value
+    private int cacheType;
+
+    @PlayerType.CacheType.Value
+    public int getCacheType() {
+        return cacheType;
+    }
+
+    @PlayerType.CacheLocalType.Value
+    private int cacheLocalType;
+
+    @PlayerType.CacheLocalType.Value
+    public int getCacheLocalType() {
+        return cacheLocalType;
+    }
+
+    @PlayerType.CacheSizeType.Value
+    private int cacheSizeType;
+
+    @PlayerType.CacheSizeType.Value
+    public int getCacheSizeType() {
+        return cacheSizeType;
+    }
+
+    private String cacheDirName;
+
+    public String getCacheDirName() {
+        return cacheDirName;
+    }
+
     public boolean isExoUseOkhttp() {
         return exoUseOkhttp;
     }
@@ -68,18 +99,6 @@ public final class PlayerArgs {
 
     public int getExoSeekType() {
         return exoSeekType;
-    }
-
-    public int getExoCacheType() {
-        return exoCacheType;
-    }
-
-    public int getExoCacheMax() {
-        return exoCacheMax;
-    }
-
-    public String getExoCacheDir() {
-        return exoCacheDir;
     }
 
     public boolean isLog() {
@@ -147,15 +166,16 @@ public final class PlayerArgs {
         renderType = builder.renderType;
         decoderType = builder.decoderType;
         scaleType = builder.scaleType;
+        cacheType = builder.cacheType;
+        cacheLocalType = builder.cacheLocalType;
+        cacheSizeType = builder.cacheSizeType;
+        cacheDirName = builder.cacheDirName;
         checkMobileNetwork = builder.checkMobileNetwork;
         fitMobileCutout = builder.fitMobileCutout;
         checkOrientation = builder.checkOrientation;
         buriedEvent = builder.buriedEvent;
         exoSeekType = builder.exoSeekType;
         exoUseOkhttp = builder.exoUseOkhttp;
-        exoCacheType = builder.exoCacheType;
-        exoCacheDir = builder.exoCacheDir;
-        exoCacheMax = builder.exoCacheMax;
         trySeeDuration = builder.trySeeDuration;
         rotation = builder.rotation;
     }
@@ -172,15 +192,16 @@ public final class PlayerArgs {
         builder.setRenderType(this.renderType);
         builder.setDecoderType(this.decoderType);
         builder.setScaleType(this.scaleType);
+        builder.setCacheType(this.cacheType);
+        builder.setCacheLocalType(this.cacheLocalType);
+        builder.setCacheSizeType(this.cacheSizeType);
+        builder.setCacheDirName(this.cacheDirName);
         builder.setCheckMobileNetwork(this.checkMobileNetwork);
         builder.setFitMobileCutout(this.fitMobileCutout);
         builder.setCheckOrientation(this.checkOrientation);
         builder.setBuriedEvent(this.buriedEvent);
         builder.setExoSeekType(this.exoSeekType);
         builder.setExoUseOkhttp(this.exoUseOkhttp);
-        builder.setExoCacheType(this.exoCacheType);
-        builder.setExoCacheDir(this.exoCacheDir);
-        builder.setExoCacheMax(this.exoCacheMax);
         builder.setTrySeeDuration(this.trySeeDuration);
         builder.setRotation(this.rotation);
         return builder;
@@ -212,13 +233,6 @@ public final class PlayerArgs {
 
         @PlayerType.ExoSeekType.Value
         private int exoSeekType = PlayerType.ExoSeekType.DEFAULT;
-        /**
-         * 本地视频缓存
-         */
-        @PlayerType.ExoCacheType.Value
-        private int exoCacheType = PlayerType.ExoCacheType.DEFAULT;
-        private int exoCacheMax = 0;
-        private String exoCacheDir = null;
         private boolean exoUseOkhttp = true;
 
         // 旋转角度
@@ -238,10 +252,48 @@ public final class PlayerArgs {
             return this;
         }
 
+        // 视频缓存
+        @PlayerType.CacheType.Value
+        private int cacheType = PlayerType.CacheType.DEFAULT;
+
+        public Builder setCacheType(@PlayerType.CacheType int v) {
+            cacheType = v;
+            return this;
+        }
+
+        // 缓存位置
+        @PlayerType.CacheLocalType.Value
+        private int cacheLocalType = PlayerType.CacheLocalType.DEFAULT;
+
+        public Builder setCacheLocalType(@PlayerType.CacheLocalType.Value int v) {
+            cacheLocalType = v;
+            return this;
+        }
+
+        // 缓存大小
+        @PlayerType.CacheSizeType.Value
+        private int cacheSizeType = PlayerType.CacheSizeType.DEFAULT;
+
+        public Builder setCacheSizeType(@PlayerType.CacheSizeType.Value int v) {
+            cacheSizeType = v;
+            return this;
+        }
+
+        // 缓存文件夹名
+        private String cacheDirName = "mp";
+
+        public Builder setCacheDirName(@Nullable String v) {
+            if (null != v && !v.isEmpty()) {
+                cacheDirName = v;
+            }
+            return this;
+        }
+
         public Builder setConnectTimeout(int v) {
             connectTimeout = v;
             return this;
         }
+
 
         public Builder setBufferingTimeoutRetry(boolean v) {
             bufferingTimeoutRetry = v;
@@ -260,21 +312,6 @@ public final class PlayerArgs {
 
         public Builder setExoSeekType(@PlayerType.ExoSeekType int v) {
             exoSeekType = v;
-            return this;
-        }
-
-        public Builder setExoCacheType(@PlayerType.ExoCacheType int v) {
-            exoCacheType = v;
-            return this;
-        }
-
-        public Builder setExoCacheMax(int v) {
-            exoCacheMax = v;
-            return this;
-        }
-
-        public Builder setExoCacheDir(String v) {
-            exoCacheDir = v;
             return this;
         }
 

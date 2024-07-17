@@ -289,23 +289,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface ExoCacheType {
-
-        int OPEN = 1_001;
-        int CLOSE = 1_002;
-        int DEFAULT = CLOSE;
-
-        @Documented
-        @Retention(CLASS)
-        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef(value = {ExoCacheType.OPEN, ExoCacheType.CLOSE, ExoCacheType.DEFAULT})
-        @interface Value {
-        }
-    }
-
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface ExoSeekType {
 
         int DEFAULT = 9_001;
@@ -463,6 +446,67 @@ public @interface PlayerType {
                 _4_5,
                 _5_0,
                 DEFAULT})
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface CacheType {
+
+        int DEFAULT = 9_001;
+        int EXO_OPEN = 9_002;
+        int EXO_CLOSE = 9_003;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef(value = {CacheType.DEFAULT, CacheType.EXO_OPEN, CacheType.EXO_CLOSE})
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface CacheLocalType {
+
+        int INNER = 10_001;
+        int EXTERNAL = 10_002;
+        int DEFAULT = INNER;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef(value = {CacheLocalType.DEFAULT, CacheLocalType.EXTERNAL, CacheLocalType.DEFAULT})
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface CacheSizeType {
+
+        int AUTO = 11_001;
+        int _100 = 11_002;
+        int _200 = 11_003;
+        int _400 = 11_004;
+        int _800 = 11_005;
+        int DEFAULT = 11_001;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef(value = {
+                CacheSizeType.DEFAULT,
+                CacheSizeType.AUTO,
+                CacheSizeType._100,
+                CacheSizeType._200,
+                CacheSizeType._400,
+                CacheSizeType._800,
+        })
         @interface Value {
         }
     }

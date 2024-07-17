@@ -8,22 +8,35 @@ import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.type.PlayerType;
 
 public class StartArgs {
-    private int exoCacheType;
 
-    public int getExoCacheType() {
-        return exoCacheType;
+    @PlayerType.CacheType.Value
+    private int cacheType;
+
+    @PlayerType.CacheType.Value
+    public int getCacheType() {
+        return cacheType;
     }
 
-    private int exoCacheMax;
+    @PlayerType.CacheLocalType.Value
+    protected int cacheLocalType;
 
-    public int getExoCacheMax() {
-        return exoCacheMax;
+    @PlayerType.CacheLocalType.Value
+    public int getCacheLocalType() {
+        return cacheLocalType;
     }
 
-    private String exoCacheDir;
+    @PlayerType.CacheSizeType.Value
+    private int cacheSizeType;
 
-    public String getExoCacheDir() {
-        return exoCacheDir;
+    @PlayerType.CacheSizeType.Value
+    public int getCacheSizeType() {
+        return cacheSizeType;
+    }
+
+    private String cacheDirName;
+
+    public String getCacheDirName() {
+        return cacheDirName;
     }
 
     @PlayerType.DecoderType.Value
@@ -215,11 +228,12 @@ public class StartArgs {
     @Override
     public String toString() {
         return "StartArgs{" +
-                "exoCacheType=" + exoCacheType +
-                ", exoCacheMax=" + exoCacheMax +
-                ", exoCacheDir='" + exoCacheDir + '\'' +
                 ", exoSeekType=" + exoSeekType +
                 ", exoUseOkhttp=" + exoUseOkhttp +
+                ", cacheType=" + cacheType +
+                ", cacheLocalType=" + cacheLocalType +
+                ", cacheSizeType=" + cacheSizeType +
+                ", cacheDirName=" + cacheDirName +
                 ", renderType=" + renderType +
                 ", scaleType=" + scaleType +
                 ", decoderType=" + decoderType +
@@ -248,12 +262,13 @@ public class StartArgs {
     }
 
     public StartArgs(Builder builder) {
-        this.exoCacheType = builder.exoCacheType;
-        this.exoCacheMax = builder.exoCacheMax;
-        this.exoCacheDir = builder.exoCacheDir;
         this.decoderType = builder.decoderType;
         this.exoSeekType = builder.exoSeekType;
         this.exoUseOkhttp = builder.exoUseOkhttp;
+        this.cacheType = builder.cacheType;
+        this.cacheLocalType = builder.cacheLocalType;
+        this.cacheSizeType = builder.cacheSizeType;
+        this.cacheDirName = builder.cacheDirName;
         this.renderType = builder.renderType;
         this.scaleType = builder.scaleType;
         this.kernelType = builder.kernelType;
@@ -281,11 +296,12 @@ public class StartArgs {
 
     public Builder newBuilder() {
         Builder builder = new Builder();
-        builder.exoCacheType = exoCacheType;
-        builder.exoCacheMax = exoCacheMax;
-        builder.exoCacheDir = exoCacheDir;
         builder.exoSeekType = exoSeekType;
         builder.exoUseOkhttp = exoUseOkhttp;
+        builder.cacheType = cacheType;
+        builder.cacheLocalType = cacheLocalType;
+        builder.cacheSizeType = cacheSizeType;
+        builder.cacheDirName = cacheDirName;
         builder.decoderType = decoderType;
         builder.renderType = renderType;
         builder.scaleType = scaleType;
@@ -316,14 +332,9 @@ public class StartArgs {
     public static class Builder {
 
         private final PlayerArgs playerArgs = PlayerSDK.init().getPlayerBuilder();
-        private int exoCacheType = playerArgs.getExoCacheType();
-        private int exoCacheMax = playerArgs.getExoCacheMax();
-        private String exoCacheDir = playerArgs.getExoCacheDir();
         private boolean exoUseOkhttp = playerArgs.isExoUseOkhttp();
         @PlayerType.ExoSeekType
         private int exoSeekType = playerArgs.getExoSeekType();
-        // 解码器类型
-        @PlayerType.DecoderType.Value
         private int decoderType = playerArgs.getDecoderType();
         // 视频解码类型
         @PlayerType.KernelType.Value
@@ -351,6 +362,18 @@ public class StartArgs {
             this.supportAutoRelease = v;
             return this;
         }
+
+        // 缓存类型
+        @PlayerType.CacheType.Value
+        private int cacheType = playerArgs.getCacheType();
+
+        @PlayerType.CacheLocalType.Value
+        private int cacheLocalType = playerArgs.getCacheLocalType();
+
+        @PlayerType.CacheSizeType.Value
+        private int cacheSizeType = playerArgs.getCacheSizeType();
+
+        private String cacheDirName = playerArgs.getCacheDirName();
 
         // 视频渲染类型
         @PlayerType.RenderType.Value

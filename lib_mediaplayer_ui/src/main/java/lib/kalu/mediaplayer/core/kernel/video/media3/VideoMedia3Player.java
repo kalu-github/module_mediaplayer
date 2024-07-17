@@ -602,25 +602,29 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 dataSourceFactory = httpFactory;
             }
 
-            int cacheType = args.getExoCacheType();
+            int cacheType = args.getCacheType();
             boolean live = args.isLive();
             if (live) {
-                cacheType = PlayerType.ExoCacheType.DEFAULT;
+                cacheType = PlayerType.CacheType.EXO_CLOSE;
             }
 
             DataSource.Factory dataSource;
-            if (cacheType == PlayerType.ExoCacheType.DEFAULT) {
+            if (cacheType == PlayerType.CacheType.EXO_CLOSE) {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
             } else if (null == scheme || scheme.startsWith("file")) {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
             } else {
 //                dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
 
-//                // a
-                int cacheMax = args.getExoCacheMax();
-                String cacheDir = args.getExoCacheDir();
+                // 缓存
+                @PlayerType.CacheLocalType.Value
+                int cacheLocalType = args.getCacheLocalType();
+                @PlayerType.CacheSizeType.Value
+                int cacheSizeType = args.getCacheSizeType();
+                String cacheDirName = args.getCacheDirName();
+
                 CacheDataSource.Factory dataSource1 = new CacheDataSource.Factory();
-                SimpleCache simpleCache1 = VideoMedia3PlayerSimpleCache.getSimpleCache(context, cacheMax, cacheDir);
+                SimpleCache simpleCache1 = VideoMedia3PlayerSimpleCache.getSimpleCache(context, cacheLocalType, cacheSizeType, cacheDirName);
                 dataSource1.setCache(simpleCache1);
                 dataSource1.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
                 dataSource1.setUpstreamDataSourceFactory(dataSourceFactory);
