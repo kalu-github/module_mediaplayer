@@ -21,6 +21,7 @@ import static androidx.media3.extractor.mp4.Mp4Extractor.FLAG_READ_MOTION_PHOTO_
 import static androidx.media3.extractor.mp4.Mp4Extractor.FLAG_READ_SEF_DATA;
 
 import android.net.Uri;
+
 import androidx.annotation.GuardedBy;
 import androidx.annotation.Nullable;
 import androidx.media3.common.FileTypes;
@@ -55,8 +56,10 @@ import androidx.media3.extractor.ts.TsExtractor;
 import androidx.media3.extractor.ts.TsPayloadReader;
 import androidx.media3.extractor.wav.WavExtractor;
 import androidx.media3.extractor.webp.WebpExtractor;
+
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -134,10 +137,10 @@ public final class DefaultExtractorsFactory implements ExtractorsFactory {
         FileTypes.AVIF
       };
 
-  private static final ExtensionLoader FLAC_EXTENSION_LOADER =
-      new ExtensionLoader(DefaultExtractorsFactory::getFlacExtractorConstructor);
-  private static final ExtensionLoader MIDI_EXTENSION_LOADER =
-      new ExtensionLoader(DefaultExtractorsFactory::getMidiExtractorConstructor);
+//  private static final ExtensionLoader FLAC_EXTENSION_LOADER =
+//      new ExtensionLoader(DefaultExtractorsFactory::getFlacExtractorConstructor);
+//  private static final ExtensionLoader MIDI_EXTENSION_LOADER =
+//      new ExtensionLoader(DefaultExtractorsFactory::getMidiExtractorConstructor);
 
   private boolean constantBitrateSeekingEnabled;
   private boolean constantBitrateSeekingAlwaysEnabled;
@@ -477,12 +480,12 @@ public final class DefaultExtractorsFactory implements ExtractorsFactory {
                         : 0)));
         break;
       case FileTypes.FLAC:
-        @Nullable Extractor flacExtractor = FLAC_EXTENSION_LOADER.getExtractor(flacFlags);
-        if (flacExtractor != null) {
-          extractors.add(flacExtractor);
-        } else {
+//        @Nullable Extractor flacExtractor = FLAC_EXTENSION_LOADER.getExtractor(flacFlags);
+//        if (flacExtractor != null) {
+//          extractors.add(flacExtractor);
+//        } else {
           extractors.add(new FlacExtractor(flacFlags));
-        }
+//        }
         break;
       case FileTypes.FLV:
         extractors.add(new FlvExtractor());
@@ -549,10 +552,10 @@ public final class DefaultExtractorsFactory implements ExtractorsFactory {
         extractors.add(new JpegExtractor(jpegFlags));
         break;
       case FileTypes.MIDI:
-        @Nullable Extractor midiExtractor = MIDI_EXTENSION_LOADER.getExtractor();
-        if (midiExtractor != null) {
-          extractors.add(midiExtractor);
-        }
+//        @Nullable Extractor midiExtractor = MIDI_EXTENSION_LOADER.getExtractor();
+//        if (midiExtractor != null) {
+//          extractors.add(midiExtractor);
+//        }
         break;
       case FileTypes.AVI:
         extractors.add(

@@ -486,8 +486,8 @@
 
 # extractor
 -keep class androidx.media3.extractor.DefaultExtractorsFactory {
-    public <fields>;
-    public <methods>;
+   public <fields>;
+   public <methods>;
 }
 -keep class androidx.media3.extractor.FlacStreamMetadata {
     *;

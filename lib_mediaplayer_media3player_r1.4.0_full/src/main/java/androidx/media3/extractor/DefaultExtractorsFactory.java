@@ -134,10 +134,10 @@ public final class DefaultExtractorsFactory implements ExtractorsFactory {
         FileTypes.AVIF
       };
 
-  private static final ExtensionLoader FLAC_EXTENSION_LOADER =
-      new ExtensionLoader(DefaultExtractorsFactory::getFlacExtractorConstructor);
-  private static final ExtensionLoader MIDI_EXTENSION_LOADER =
-      new ExtensionLoader(DefaultExtractorsFactory::getMidiExtractorConstructor);
+//  private static final ExtensionLoader FLAC_EXTENSION_LOADER =
+//      new ExtensionLoader(DefaultExtractorsFactory::getFlacExtractorConstructor);
+//  private static final ExtensionLoader MIDI_EXTENSION_LOADER =
+//      new ExtensionLoader(DefaultExtractorsFactory::getMidiExtractorConstructor);
 
   private boolean constantBitrateSeekingEnabled;
   private boolean constantBitrateSeekingAlwaysEnabled;
@@ -477,12 +477,12 @@ public final class DefaultExtractorsFactory implements ExtractorsFactory {
                         : 0)));
         break;
       case FileTypes.FLAC:
-        @Nullable Extractor flacExtractor = FLAC_EXTENSION_LOADER.getExtractor(flacFlags);
-        if (flacExtractor != null) {
-          extractors.add(flacExtractor);
-        } else {
+//        @Nullable Extractor flacExtractor = FLAC_EXTENSION_LOADER.getExtractor(flacFlags);
+//        if (flacExtractor != null) {
+//          extractors.add(flacExtractor);
+//        } else {
           extractors.add(new FlacExtractor(flacFlags));
-        }
+//        }
         break;
       case FileTypes.FLV:
         extractors.add(new FlvExtractor());
@@ -549,10 +549,10 @@ public final class DefaultExtractorsFactory implements ExtractorsFactory {
         extractors.add(new JpegExtractor(jpegFlags));
         break;
       case FileTypes.MIDI:
-        @Nullable Extractor midiExtractor = MIDI_EXTENSION_LOADER.getExtractor();
-        if (midiExtractor != null) {
-          extractors.add(midiExtractor);
-        }
+//        @Nullable Extractor midiExtractor = MIDI_EXTENSION_LOADER.getExtractor();
+//        if (midiExtractor != null) {
+//          extractors.add(midiExtractor);
+//        }
         break;
       case FileTypes.AVI:
         extractors.add(
