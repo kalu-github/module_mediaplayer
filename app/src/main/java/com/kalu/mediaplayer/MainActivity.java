@@ -277,14 +277,15 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        boolean cacheFlag;
+        @PlayerType.ExoCacheType.Value
+        int cacheFlag;
         int cacheFlagId = ((RadioGroup) findViewById(R.id.main_cache)).getCheckedRadioButtonId();
         switch (cacheFlagId) {
             case R.id.main_cache_yes:
-                cacheFlag = true;
+                cacheFlag = PlayerType.ExoCacheType.OPEN;
                 break;
             default:
-                cacheFlag = false;
+                cacheFlag = PlayerType.ExoCacheType.CLOSE;
                 break;
         }
 
@@ -295,7 +296,8 @@ public class MainActivity extends Activity {
                 .setRenderType(renderType)
                 .setDecoderType(decoderType)
                 .setScaleType(scaleType)
-                .setExoUseOkhttp(exoUseOkhttp).setExoCacheType(cacheFlag ? PlayerType.CacheType.DOWNLOAD : PlayerType.CacheType.NONE)
+                .setExoUseOkhttp(exoUseOkhttp)
+                .setExoCacheType(cacheFlag)
                 .setBuriedEvent(new LogBuriedEvent())
                 .build();
     }

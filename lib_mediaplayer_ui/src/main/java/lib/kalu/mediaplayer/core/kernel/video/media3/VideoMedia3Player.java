@@ -605,11 +605,11 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             int cacheType = args.getExoCacheType();
             boolean live = args.isLive();
             if (live) {
-                cacheType = PlayerType.CacheType.NONE;
+                cacheType = PlayerType.ExoCacheType.DEFAULT;
             }
 
             DataSource.Factory dataSource;
-            if (cacheType == PlayerType.CacheType.NONE) {
+            if (cacheType == PlayerType.ExoCacheType.DEFAULT) {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
             } else if (null == scheme || scheme.startsWith("file")) {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);

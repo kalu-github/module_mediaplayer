@@ -34,10 +34,10 @@ public final class PlayerArgs {
     @PlayerType.ExoSeekType.Value
     private int exoSeekType;
     private boolean exoUseOkhttp;
-    @PlayerType.CacheType
-    private int exoCacheType = PlayerType.CacheType.NONE;
-    private int exoCacheMax = 0;
-    private String exoCacheDir = null;
+    @PlayerType.ExoCacheType
+    private int exoCacheType;
+    private int exoCacheMax;
+    private String exoCacheDir;
 
     // 旋转角度
     @PlayerType.RotationType.Value
@@ -215,8 +215,8 @@ public final class PlayerArgs {
         /**
          * 本地视频缓存
          */
-        @PlayerType.CacheType.Value
-        private int exoCacheType = PlayerType.CacheType.NONE;
+        @PlayerType.ExoCacheType.Value
+        private int exoCacheType = PlayerType.ExoCacheType.DEFAULT;
         private int exoCacheMax = 0;
         private String exoCacheDir = null;
         private boolean exoUseOkhttp = true;
@@ -263,7 +263,7 @@ public final class PlayerArgs {
             return this;
         }
 
-        public Builder setExoCacheType(@PlayerType.CacheType int v) {
+        public Builder setExoCacheType(@PlayerType.ExoCacheType int v) {
             exoCacheType = v;
             return this;
         }

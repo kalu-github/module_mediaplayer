@@ -47,7 +47,7 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setExoCacheType(@PlayerType.CacheType int v) {
+    public PlayerSDK setExoCacheType(@PlayerType.ExoCacheType int v) {
         mPlayerBuilder.setExoCacheType(v);
         return this;
     }

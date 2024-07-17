@@ -21,22 +21,6 @@ import java.lang.annotation.Target;
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
 public @interface PlayerType {
 
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface CacheType {
-
-        int DOWNLOAD = 1_001;
-        int NONE = 1_002;
-
-        @Documented
-        @Retention(CLASS)
-        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef(value = {CacheType.DOWNLOAD, CacheType.NONE})
-        @interface Value {
-        }
-    }
-
     /**
      * 播放模式
      * 普通模式，小窗口模式，正常模式三种其中一种
@@ -298,6 +282,23 @@ public @interface PlayerType {
                 DecoderType.EXO_VIDEO_FFMPEG_AUDIO_CODEC,
                 DecoderType.IJK_ALL_CODEC,
                 DecoderType.IJK_ALL_FFMPEG,})
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface ExoCacheType {
+
+        int OPEN = 1_001;
+        int CLOSE = 1_002;
+        int DEFAULT = CLOSE;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef(value = {ExoCacheType.OPEN, ExoCacheType.CLOSE, ExoCacheType.DEFAULT})
         @interface Value {
         }
     }
