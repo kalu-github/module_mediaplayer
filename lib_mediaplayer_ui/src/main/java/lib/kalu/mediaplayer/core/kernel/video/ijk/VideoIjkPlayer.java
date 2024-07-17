@@ -8,7 +8,6 @@ import android.view.Surface;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import j.E;
 import lib.kalu.ijkplayer.IMediaPlayer;
 import lib.kalu.ijkplayer.IjkMediaPlayer;
 import lib.kalu.ijkplayer.IjkTimedText;

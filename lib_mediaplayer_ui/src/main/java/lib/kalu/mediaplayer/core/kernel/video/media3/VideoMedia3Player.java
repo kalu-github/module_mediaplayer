@@ -110,7 +110,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             LogUtil.log("VideoMedia3Player => createDecoder => decoderType = " + decoderType);
             // all_ffmpeg
             if (decoderType == PlayerType.DecoderType.EXO_ALL_FFMPEG) {
-                Class<?> clazz = Class.forName("");
+                Class<?> clazz = Class.forName("lib.kalu.media3.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
                 LogUtil.log("VideoMedia3Player => createDecoder => EXO_ALL_FFMPEG");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((RenderersFactory) newInstance);
