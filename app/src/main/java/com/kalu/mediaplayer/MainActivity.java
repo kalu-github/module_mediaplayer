@@ -297,7 +297,7 @@ public class MainActivity extends Activity {
                 // 日志开关
                 .setLog(true)
                 // 数据埋点（监听播放器操作日志）
-                .setBuriedEvent(null)
+                .setBuriedEvent(new LogBuriedEvent())
                 // 播放器类型（MediaPlayer Media3Player ExoPlayer IjkPLayer）
                 .setKernelType(kernelType)
                 // 渲染类型（TextuteView SurafecView）

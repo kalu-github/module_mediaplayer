@@ -233,4 +233,10 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             LogUtil.log("VideoKernelApiHandler => stopCheckBufferingTimeout => " + e.getMessage());
         }
     }
+
+    default void stopHandler() {
+        stopCheckBufferingTimeout();
+        stopCheckPreparedPlaying();
+        stopCheckConnectTimeout();
+    }
 }

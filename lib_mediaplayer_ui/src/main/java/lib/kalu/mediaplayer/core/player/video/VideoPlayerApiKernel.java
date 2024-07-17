@@ -570,6 +570,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         case PlayerType.EventType.ERROR_PARSE:
                         case PlayerType.EventType.ERROR_NET:
                         case PlayerType.EventType.ERROR_BUFFERING_TIMEOUT:
+                            // 轮询消息
+                            stop(false, false);
                             // 埋点
                             onBuriedError(event);
                             // 执行

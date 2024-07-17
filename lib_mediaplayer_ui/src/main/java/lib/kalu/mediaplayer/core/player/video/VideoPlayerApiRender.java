@@ -352,7 +352,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
     default void stopRender() {
         try {
             VideoRenderApi videoRender = getVideoRender();
-            videoRender.stopUpdateProgress();
+            videoRender.stopHandler();
         } catch (Exception e) {
         }
     }

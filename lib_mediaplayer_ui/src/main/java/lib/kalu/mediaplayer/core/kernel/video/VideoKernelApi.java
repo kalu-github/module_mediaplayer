@@ -35,8 +35,7 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
         mPrepared[0] = false;
         mVideoSizeChanged[0] = false;
         mStartArgs[0] = null;
-        stopCheckConnectTimeout();
-        stopCheckBufferingTimeout();
+        stopHandler();
     }
 
     default void createDecoder(Context context, StartArgs args) {

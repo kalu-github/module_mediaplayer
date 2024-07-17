@@ -18,17 +18,17 @@ public interface VideoRenderApiHanlder extends VideoRenderApiBase {
                     @Override
                     public void handleMessage(Message msg) {
                         try {
-                            if(msg.what != 10100)
+                            if (msg.what != 10100)
                                 throw new Exception("warning: msg.what != 10100");
                             VideoKernelApi videoKernel = getVideoKernel();
                             if (null == videoKernel)
                                 throw new Exception("warning: videoKernel null");
                             videoKernel.onUpdateProgress();
-                            if(null == mHandlerUpdateProgress)
+                            if (null == mHandlerUpdateProgress)
                                 throw new Exception("warning: mHandlerUpdateProgress null");
                             LogUtil.log("VideoRenderApiHanlder => startUpdateProgress => loop next videoKernel = " + videoKernel);
                             mHandlerUpdateProgress[0].sendEmptyMessageDelayed(10100, 1000);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             LogUtil.log("VideoRenderApiHanlder => startUpdateProgress => handleMessage => Exception" + e.getMessage());
                         }
                     }
@@ -52,5 +52,9 @@ public interface VideoRenderApiHanlder extends VideoRenderApiBase {
         } catch (Exception e) {
             LogUtil.log("VideoRenderApiHanlder => stopUpdateProgress => Exception" + e.getMessage());
         }
+    }
+
+    default void stopHandler() {
+        stopUpdateProgress();
     }
 }
