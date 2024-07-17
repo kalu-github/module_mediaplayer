@@ -1,11 +1,11 @@
 package com.kalu.mediaplayer;
 
-import android.app.Application;
 import android.content.Context;
 
 import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     @Override
     protected void attachBaseContext(Context base) {

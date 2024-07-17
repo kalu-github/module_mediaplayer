@@ -10,6 +10,7 @@ android {
 
         minSdkVersion 19
         targetSdkVersion 34
+        multiDexEnabled true
 
         ndk {
             abiFilters 'armeabi-v7a'
@@ -44,17 +45,16 @@ android {
         buildTypes {
             release {
                 signingConfig signingConfigs.config
-                minifyEnabled false
-                zipAlignEnabled false
-                shrinkResources false
-                multiDexEnabled true
+                minifyEnabled true
+                zipAlignEnabled true
+                shrinkResources true
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
             }
             debug {
                 signingConfig signingConfigs.config
                 minifyEnabled false
                 zipAlignEnabled false
                 shrinkResources false
-                multiDexEnabled true
             }
         }
     }
@@ -87,7 +87,7 @@ dependencies {
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_mini_release_20240509.aar')
     // media3
-    api files('libs/lib_mediaplayer_media3_r1.4.0_lite_release_20240717.aar')
+    api files('libs/lib_mediaplayer_media3_r1.4.0_full_release_20240717.aar')
     // exo2
     api files('libs/lib_mediaplayer_exo_r2.19.1_full_release_20240717.aar')
     // ffplayer

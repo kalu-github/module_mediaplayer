@@ -1,4 +1,9 @@
 -dontwarn lib.kalu.mediaplayer.**
+-dontwarn lib.kalu.ffplayer.**
+-dontwarn lib.kalu.vlc.**
+-dontwarn lib.kalu.exoplayer2.**
+-dontwarn lib.kalu.ijkplayer.**
+-dontwarn lib.kalu.media3.**
 
 # 保护主动抛出异常
 #-keepattributes Exceptions
