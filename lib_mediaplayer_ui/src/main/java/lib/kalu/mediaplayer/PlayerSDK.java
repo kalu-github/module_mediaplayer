@@ -108,21 +108,6 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setCheckMobileNetwork(boolean v) {
-        mPlayerBuilder.setCheckMobileNetwork(v);
-        return this;
-    }
-
-    public PlayerSDK setFitMobileCutout(boolean v) {
-        mPlayerBuilder.setFitMobileCutout(v);
-        return this;
-    }
-
-    public PlayerSDK setCheckOrientation(boolean v) {
-        mPlayerBuilder.setCheckOrientation(v);
-        return this;
-    }
-
     public PlayerSDK setBuriedEvent(BuriedEvent v) {
         mPlayerBuilder.setBuriedEvent(v);
         return this;

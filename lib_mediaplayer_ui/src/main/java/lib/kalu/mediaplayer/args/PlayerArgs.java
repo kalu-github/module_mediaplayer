@@ -31,9 +31,6 @@ public final class PlayerArgs {
     private int decoderType; // 解码器类型
     @PlayerType.ScaleType
     private int scaleType; // 视频缩放比例
-    private boolean checkMobileNetwork; // 监测手机网络环境
-    private boolean fitMobileCutout; // 是否适配手机刘海屏，默认适配
-    private boolean checkOrientation;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
     private BuriedEvent buriedEvent;  // 埋点事件log
 
     // 旋转角度
@@ -125,18 +122,6 @@ public final class PlayerArgs {
         return scaleType;
     }
 
-    public boolean isCheckMobileNetwork() {
-        return checkMobileNetwork;
-    }
-
-    public boolean isFitMobileCutout() {
-        return fitMobileCutout;
-    }
-
-    public boolean isCheckOrientation() {
-        return checkOrientation;
-    }
-
     public BuriedEvent getBuriedEvent() {
         return buriedEvent;
     }
@@ -173,9 +158,6 @@ public final class PlayerArgs {
         cacheLocalType = builder.cacheLocalType;
         cacheSizeType = builder.cacheSizeType;
         cacheDirName = builder.cacheDirName;
-        checkMobileNetwork = builder.checkMobileNetwork;
-        fitMobileCutout = builder.fitMobileCutout;
-        checkOrientation = builder.checkOrientation;
         buriedEvent = builder.buriedEvent;
         seekType = builder.seekType;
         netType = builder.netType;
@@ -199,9 +181,6 @@ public final class PlayerArgs {
         builder.setCacheLocalType(this.cacheLocalType);
         builder.setCacheSizeType(this.cacheSizeType);
         builder.setCacheDirName(this.cacheDirName);
-        builder.setCheckMobileNetwork(this.checkMobileNetwork);
-        builder.setFitMobileCutout(this.fitMobileCutout);
-        builder.setCheckOrientation(this.checkOrientation);
         builder.setBuriedEvent(this.buriedEvent);
         builder.setSeekType(this.seekType);
         builder.setNetType(this.netType);
@@ -228,9 +207,6 @@ public final class PlayerArgs {
         private int decoderType = PlayerType.DecoderType.DEFAULT; // 解码器类型
         @PlayerType.ScaleType
         private int scaleType = PlayerType.ScaleType.DEFAULT; // 视频缩放比例
-        private boolean checkMobileNetwork = false; // 监测手机网络环境
-        private boolean fitMobileCutout = true; // 是否适配手机刘海屏，默认适配
-        private boolean checkOrientation = false;  // 是否监听设备方向来切换全屏/半屏， 默认不开启
         private BuriedEvent buriedEvent = null;  // 埋点事件log
 
 
@@ -279,7 +255,7 @@ public final class PlayerArgs {
         }
 
         // 缓存文件夹名
-        private String cacheDirName = "mp";
+        private String cacheDirName = "mp_cache";
 
         public Builder setCacheDirName(@Nullable String v) {
             if (null != v && !v.isEmpty()) {
@@ -354,21 +330,6 @@ public final class PlayerArgs {
 
         public Builder setScaleType(@PlayerType.ScaleType.Value int v) {
             scaleType = v;
-            return this;
-        }
-
-        public Builder setCheckMobileNetwork(boolean v) {
-            checkMobileNetwork = v;
-            return this;
-        }
-
-        public Builder setFitMobileCutout(boolean v) {
-            fitMobileCutout = v;
-            return this;
-        }
-
-        public Builder setCheckOrientation(boolean v) {
-            checkOrientation = v;
             return this;
         }
 
