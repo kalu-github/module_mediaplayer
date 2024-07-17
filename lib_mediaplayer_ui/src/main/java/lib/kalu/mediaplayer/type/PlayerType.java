@@ -316,6 +316,8 @@ public @interface PlayerType {
         int ANDROID_SEEK_NEXT_SYNC = 9_007;
         int ANDROID_SEEK_CLOSEST_SYNC = 9_008;
         int ANDROID_SEEK_CLOSEST = 9_009;
+        int IJK_SEEK_FASTSEEK = 9_010;
+        int IJK_SEEK_NOBUFFER = 9_011;
 
         @Documented
         @Retention(CLASS)
@@ -330,6 +332,8 @@ public @interface PlayerType {
                 SeekType.ANDROID_SEEK_NEXT_SYNC,
                 SeekType.ANDROID_SEEK_CLOSEST_SYNC,
                 SeekType.ANDROID_SEEK_CLOSEST,
+                SeekType.IJK_SEEK_FASTSEEK,
+                SeekType.IJK_SEEK_NOBUFFER,
         })
         @interface Value {
         }

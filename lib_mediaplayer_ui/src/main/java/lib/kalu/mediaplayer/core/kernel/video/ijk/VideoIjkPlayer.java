@@ -128,7 +128,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("error: args null");
 
             int decoderType = args.getDecoderType();
-            boolean useMediaCodec  = (decoderType == PlayerType.DecoderType.IJK_ALL_CODEC);
+            boolean useMediaCodec = (decoderType == PlayerType.DecoderType.IJK_ALL_CODEC);
             LogUtil.log("VideoMedia3Player => createDecoder => decoderType = " + decoderType);
 
             int player = IjkMediaPlayer.OPT_CATEGORY_PLAYER;
@@ -266,9 +266,18 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             // mIjkPlayer.setOption(format, "timeout", timout);
             // 重连次数
             mIjkPlayer.setOption(format, "reconnect", 0);
-            // 设置seekTo能够快速seek到指定位置并播放, 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
-            mIjkPlayer.setOption(format, "fflags", "fastseek");
-//            mIjkPlayer.setOption(format, "fflags", "nobuffer");  // 起播seek会失效
+
+            // 快进
+            @PlayerType.SeekType.Value
+            int seekType = args.getSeekType();
+            if (seekType == PlayerType.SeekType.IJK_SEEK_NOBUFFER) {
+                // 设置seekTo能够快速seek到指定位置并播放, 解决m3u8文件拖动问题 比如:一个3个多少小时的音频文件，开始播放几秒中，然后拖动到2小时左右的时间，要loading 10分钟
+                mIjkPlayer.setOption(format, "fflags", "fastseek");
+            } else {
+                // 起播seek会失效
+                mIjkPlayer.setOption(format, "fflags", "nobuffer");
+            }
+
             // 根据媒体类型来配置 => bug => resp aac音频无声音
             mIjkPlayer.setOption(format, "allowed_media_types", "video");
             // rtsp设置 https://ffmpeg.org/ffmpeg-protocols.html#rtsp
@@ -292,7 +301,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (null == args)
                 throw new Exception("error: args null");
             int decoderType = args.getDecoderType();
-            boolean useMediaCodec  = (decoderType == PlayerType.DecoderType.IJK_ALL_CODEC);
+            boolean useMediaCodec = (decoderType == PlayerType.DecoderType.IJK_ALL_CODEC);
             int codec = IjkMediaPlayer.OPT_CATEGORY_CODEC;
             // IJK_AVDISCARD_NONE    =-16, ///< discard nothing
             // IJK_AVDISCARD_DEFAULT =  0, ///< 如果包大小为0，则抛弃无效的包
