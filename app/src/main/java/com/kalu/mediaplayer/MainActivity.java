@@ -167,7 +167,7 @@ public class MainActivity extends Activity {
 
     private void initPlayer() {
 
-        // 1
+        @PlayerType.KernelType
         int kernelType;
         int kernelTypeId = ((RadioGroup) findViewById(R.id.main_kernel)).getCheckedRadioButtonId();
         switch (kernelTypeId) {
@@ -191,6 +191,7 @@ public class MainActivity extends Activity {
                 break;
         }
 
+        @PlayerType.DecoderType
         int decoderType;
         int decoderId = ((RadioGroup) findViewById(R.id.main_decoder)).getCheckedRadioButtonId();
         switch (decoderId) {
@@ -226,6 +227,7 @@ public class MainActivity extends Activity {
                 break;
         }
 
+        @PlayerType.RenderType
         int renderType;
         int renderTypeId = ((RadioGroup) findViewById(R.id.main_render)).getCheckedRadioButtonId();
         switch (renderTypeId) {
@@ -237,6 +239,7 @@ public class MainActivity extends Activity {
                 break;
         }
 
+        @PlayerType.ScaleType
         int scaleType;
         int scaleTypeId = ((RadioGroup) findViewById(R.id.main_scale)).getCheckedRadioButtonId();
         switch (scaleTypeId) {
@@ -266,14 +269,15 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        boolean exoUseOkhttp;
+        @PlayerType.NetType
+        int netType;
         int httpTypeId = ((RadioGroup) findViewById(R.id.main_exo_http)).getCheckedRadioButtonId();
         switch (httpTypeId) {
             case R.id.main_exo_http_okhttp:
-                exoUseOkhttp = true;
+                netType = PlayerType.NetType.EXO_OKHTTP;
                 break;
             default:
-                exoUseOkhttp = false;
+                netType = PlayerType.NetType.DEFAULT;
                 break;
         }
 
@@ -289,16 +293,41 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        Log.e("MainActivity", "initPlayer => kernelType = " + kernelType + ", renderType = " + renderType + ", decoderType = " + decoderType + ", scaleType = " + scaleType + ", exoUseOkhttp = " + exoUseOkhttp);
         PlayerSDK.init()
+                // 日志开关
                 .setLog(true)
-                .setCacheType(cacheType)
+                // 数据埋点（监听播放器操作日志）
+                .setBuriedEvent(null)
+                // 播放器类型（MediaPlayer Media3Player ExoPlayer IjkPLayer）
                 .setKernelType(kernelType)
+                // 渲染类型（TextuteView SurafecView）
                 .setRenderType(renderType)
+                // 解码器类型（仅针对 Media3Player ExoPlayer IjkPLayer）
                 .setDecoderType(decoderType)
+                // 画面比例（自动 全屏 原始 1:1 4:3 5:4 16:9 16:10）
                 .setScaleType(scaleType)
-                .setExoUseOkhttp(exoUseOkhttp)
-                .setBuriedEvent(new LogBuriedEvent())
+                // 超时时间（默认20s）
+                .setConnectTimeout(20000)
+                // 缓冲超时重播（默认false）
+                .setBufferingTimeoutRetry(false)
+                // 播放器每次播放器都销毁（默认false）
+                .setInitRelease(false)
+                // 播放器生命周期自动销毁（默认true）
+                .setSupportAutoRelease(false)
+                // 试看（默认关闭）
+                .setTrySeeDuration(0L)
+                // 缓存类型（默认关闭, 仅针对 ExoPlayer）
+                .setCacheType(cacheType)
+                // 缓存类型（默认内部）
+                .setCacheLocalType(PlayerType.CacheLocalType.DEFAULT)
+                // 缓存大小
+                .setCacheSizeType(PlayerType.CacheSizeType.DEFAULT)
+                // 缓存文件夹
+                .setCacheDirName(null)
+                // 快进类型（仅针对 MediaPlayer ExoPlayer）
+                .setSeekType(PlayerType.SeekType.DEFAULT)
+                // 网络类型（仅针对 ExoPlayer）
+                .setNetType(netType)
                 .build();
     }
 }
