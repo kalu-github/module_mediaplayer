@@ -12,60 +12,60 @@
         android:background="@android:color/black"
         android:focusable="true" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="left|center_vertical"
-        android:orientation="horizontal">
+<!--    <LinearLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="left|center_vertical"-->
+<!--        android:orientation="horizontal">-->
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button21"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="音轨信息" />
+<!--        <Button-->
+<!--            android:id="@+id/module_mediaplayer_test_button21"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="音轨信息" />-->
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="切换音轨2" />
-        <Button
-            android:id="@+id/module_mediaplayer_test_button23"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="切换音轨3" />
+<!--        <Button-->
+<!--            android:id="@+id/module_mediaplayer_test_button22"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="切换音轨2" />-->
+<!--        <Button-->
+<!--            android:id="@+id/module_mediaplayer_test_button23"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="切换音轨3" />-->
 
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="信息" />
+<!--        <Button-->
+<!--            android:id="@+id/module_mediaplayer_test_button8"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="信息" />-->
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="跳转" />
+<!--        <Button-->
+<!--            android:id="@+id/module_mediaplayer_test_button0"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="跳转" />-->
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="换台" />
+<!--        <Button-->
+<!--            android:id="@+id/module_mediaplayer_test_button1"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="换台" />-->
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="全屏" />
+<!--        <Button-->
+<!--            android:id="@+id/module_mediaplayer_test_button2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="全屏" />-->
 
-        <Button
-            android:id="@+id/module_mediaplayer_test_button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="浮动" />
+<!--        <Button-->
+<!--            android:id="@+id/module_mediaplayer_test_button3"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="浮动" />-->
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
 </RelativeLayout>

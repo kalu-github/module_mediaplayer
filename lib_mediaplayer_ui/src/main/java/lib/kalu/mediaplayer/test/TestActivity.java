@@ -83,72 +83,72 @@ public final class TestActivity extends Activity {
         initComponent();
         startPlayer();
 
-        // 音轨信息
-        findViewById(R.id.module_mediaplayer_test_button21).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                JSONArray trackInfo = playerLayout.getTrackInfo();
-                LogUtil.log("trackInfo = " + trackInfo);
-            }
-        });
-        // 音轨信息2
-        findViewById(R.id.module_mediaplayer_test_button22).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                playerLayout.switchTrack(1);
-            }
-        });
-        // 音轨信息3
-        findViewById(R.id.module_mediaplayer_test_button23).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                playerLayout.switchTrack(2);
-            }
-        });
-        // 信息
-        findViewById(R.id.module_mediaplayer_test_button8).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//        // 音轨信息
+//        findViewById(R.id.module_mediaplayer_test_button21).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
 //                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-//                VideoIjkPlayer videoIjkPlayer = playerLayout.getKernel();
-//                IjkTrackInfo[] trackInfo = videoIjkPlayer.getTrackInfo();
-//                String s = new Gson().toJson(trackInfo);
-//                MPLogUtil.log("TestActivity => onClick => "+s);
-            }
-        });
-        // 跳转
-        findViewById(R.id.module_mediaplayer_test_button0).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
-                intent.putExtra(TestActivity.INTENT_URL, getUrl());
-                startActivity(intent);
-            }
-        });
-        // 换台
-        findViewById(R.id.module_mediaplayer_test_button1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startPlayer();
-            }
-        });
-        // 全屏
-        findViewById(R.id.module_mediaplayer_test_button2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startFull();
-            }
-        });
-        // 浮动
-        findViewById(R.id.module_mediaplayer_test_button3).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startFloat();
-            }
-        });
+//                JSONArray trackInfo = playerLayout.getTrackInfo();
+//                LogUtil.log("trackInfo = " + trackInfo);
+//            }
+//        });
+//        // 音轨信息2
+//        findViewById(R.id.module_mediaplayer_test_button22).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+//                playerLayout.switchTrack(1);
+//            }
+//        });
+//        // 音轨信息3
+//        findViewById(R.id.module_mediaplayer_test_button23).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+//                playerLayout.switchTrack(2);
+//            }
+//        });
+//        // 信息
+//        findViewById(R.id.module_mediaplayer_test_button8).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+////                VideoIjkPlayer videoIjkPlayer = playerLayout.getKernel();
+////                IjkTrackInfo[] trackInfo = videoIjkPlayer.getTrackInfo();
+////                String s = new Gson().toJson(trackInfo);
+////                MPLogUtil.log("TestActivity => onClick => "+s);
+//            }
+//        });
+//        // 跳转
+//        findViewById(R.id.module_mediaplayer_test_button0).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+//                intent.putExtra(TestActivity.INTENT_URL, getUrl());
+//                startActivity(intent);
+//            }
+//        });
+//        // 换台
+//        findViewById(R.id.module_mediaplayer_test_button1).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startPlayer();
+//            }
+//        });
+//        // 全屏
+//        findViewById(R.id.module_mediaplayer_test_button2).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startFull();
+//            }
+//        });
+//        // 浮动
+//        findViewById(R.id.module_mediaplayer_test_button3).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startFloat();
+//            }
+//        });
     }
 
     private void initComponent() {

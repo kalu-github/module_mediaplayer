@@ -6,7 +6,6 @@ import android.os.Build;
 import android.view.Surface;
 
 import androidx.annotation.Nullable;
-import androidx.media3.exoplayer.DecoderReuseEvaluation;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -22,6 +21,7 @@ import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.Tracks;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
+import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.LoadEventInfo;
@@ -60,7 +60,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import E2y.E2s;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
@@ -848,7 +847,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
 
         @Override
-        public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable E2s e2s) {
+        public void onVideoInputFormatChanged(EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
             LogUtil.log("VideoExo2Player => onVideoInputFormatChanged[出画面] =>");
             try {
                 if (isPrepared())
