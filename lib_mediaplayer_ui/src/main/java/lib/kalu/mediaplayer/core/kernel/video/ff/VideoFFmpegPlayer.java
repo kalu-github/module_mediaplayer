@@ -235,7 +235,6 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             }
 
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.SEEK_START);
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_START);
             mFFmpegPlayer.seekTo((int) seek);
             LogUtil.log("VideoFFmpegPlayer => seekTo =>");
         } catch (Exception e) {
@@ -358,7 +357,6 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         public void onSeekComplete(FFmpegPlayer mediaPlayer) {
             LogUtil.log("VideoFFmpegPlayer => onSeekComplete =>");
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.SEEK_FINISH);
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_STOP);
 
             try {
                 long seek = getSeek();

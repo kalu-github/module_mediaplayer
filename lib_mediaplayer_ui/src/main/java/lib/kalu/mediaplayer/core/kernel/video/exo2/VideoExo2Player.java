@@ -347,9 +347,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 seek = duration;
             }
 
-            mSeeking = true;
             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.SEEK_START);
-            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.BUFFERING_START);
+            mSeeking = true;
             mExoPlayer.seekTo(seek);
             LogUtil.log("VideoExo2Player => seekTo =>");
         } catch (Exception e) {
@@ -817,7 +816,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     if (mSeeking) {
                         mSeeking = false;
                         onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.SEEK_FINISH);
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.BUFFERING_STOP);
 
                         try {
                             long seek = getSeek();

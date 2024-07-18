@@ -320,7 +320,6 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
             mSeeking = true;
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_START);
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_START);
             mExoPlayer.seekTo(seek);
             LogUtil.log("VideoMedia3Player => seekTo =>");
         } catch (Exception e) {
@@ -765,7 +764,6 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                     if (mSeeking) {
                         mSeeking = false;
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_FINISH);
-                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_STOP);
 
                         try {
                             long seek = getSeek();
