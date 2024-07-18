@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.render.glsurface;
+package lib.kalu.mediaplayer.core.render2.glsurface;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
@@ -13,17 +13,16 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi {
+public class VideoGLSurfaceView2 extends GLSurfaceView implements VideoRenderApi {
 
-    @Nullable
-    private GLDrawer mDrawer;
-    @Nullable
-    private GLRender mRender;
+    private VideoDrawer videoDrawer;
+    private VideoRender videoRender;
     @Nullable
     private VideoKernelApi mKernel;
+    @Nullable
+    private SurfaceHolder.Callback mSurfaceHolderCallback;
 
-
-    public VideoGLSurfaceView(Context context) {
+    public VideoGLSurfaceView2(Context context) {
         super(context);
         init();
     }
@@ -50,6 +49,14 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
         }
     }
 
+    public VideoDrawer getVideoDrawer() {
+        return videoDrawer;
+    }
+
+    public VideoRender getVideoRender() {
+        return videoRender;
+    }
+
     @Override
     public void init() {
         VideoRenderApi.super.init();
@@ -62,41 +69,70 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
 
         setEGLContextClientVersion(2);
         //初始化绘制器
-        mDrawer = new GLDrawer();
-        mDrawer.setVideoSize(1080, 1920);
+        videoDrawer = new VideoDrawer();
+        videoDrawer.setVideoSize(1080, 1920);
         //初始化渲染器
-        mRender = new GLRender();
-        mRender.addDrawer(mDrawer);
-        setRenderer(mRender);
+        videoRender = new VideoRender();
+        videoRender.addDrawer(videoDrawer);
+        setRenderer(videoRender);
 
         registListener();
     }
 
     @Override
     public void registListener() {
-        try {
-            SurfaceHolder surfaceHolder = getHolder();
-            if (null == surfaceHolder)
-                throw new Exception("surfaceHolder error: null");
-            surfaceHolder.addCallback(mCallback);
-            LogUtil.log("VideoGLSurfaceView => unRegistListener =>");
-        } catch (Exception e) {
-            LogUtil.log("VideoGLSurfaceView => unRegistListener => Exception " + e.getMessage());
-        }
+
     }
 
     @Override
     public void unRegistListener() {
-        try {
-            SurfaceHolder surfaceHolder = getHolder();
-            if (null == surfaceHolder)
-                throw new Exception("surfaceHolder error: null");
-            surfaceHolder.removeCallback(mCallback);
-            LogUtil.log("VideoGLSurfaceView => unRegistListener =>");
-        } catch (Exception e) {
-            LogUtil.log("VideoGLSurfaceView => unRegistListener => Exception " + e.getMessage());
-        }
+
     }
+
+    //    @Override
+//    public void addListener() {
+//        try {
+//            if (null != mSurfaceHolderCallback)
+//                throw new Exception("mSurfaceHolderCallback warning: " + mSurfaceHolderCallback);
+//            mSurfaceHolderCallback = new SurfaceHolder.Callback() {
+//
+//                /**
+//                 * 创建的时候调用该方法
+//                 * @param holder                        holder
+//                 */
+//                @Override
+//                public void surfaceCreated(SurfaceHolder holder) {
+////                    LogUtil.log("VideoGLSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
+//                    setSurface(false);
+//                }
+//
+//                /**
+//                 * 视图改变的时候调用方法
+//                 * @param holder
+//                 * @param format
+//                 * @param width
+//                 * @param height
+//                 */
+//                @Override
+//                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+//                    LogUtil.log("VideoGLSurfaceView => addListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
+//                }
+//
+//                /**
+//                 * 销毁的时候调用该方法
+//                 * @param holder
+//                 */
+//                @Override
+//                public void surfaceDestroyed(SurfaceHolder holder) {
+//                    LogUtil.log("VideoGLSurfaceView => addListener => surfaceDestroyed => " + this);
+//                    setSurface(true);
+//                }
+//            };
+//            getHolder().addCallback(mSurfaceHolderCallback);
+//        } catch (Exception e) {
+//            LogUtil.log("VideoGLSurfaceView => addListener => " + e.getMessage());
+//        }
+//    }
 
     @Override
     public void setSurface(boolean release) {
@@ -122,25 +158,7 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
 
     @Override
     public void release() {
-        unRegistListener();
-
-        try {
-            if (null == mRender)
-                throw new Exception("warning: mRender null");
-            mRender = null;
-        } catch (Exception e) {
-            LogUtil.log("VideoGLSurfaceView => release => Exception2 " + e.getMessage());
-        }
-
-        try {
-            if (null == mDrawer)
-                throw new Exception("warning: mDrawer null");
-            mDrawer.release();
-            mDrawer = null;
-        } catch (Exception e) {
-            LogUtil.log("VideoGLSurfaceView => release => Exception2 " + e.getMessage());
-        }
-
+        // step1
         try {
             SurfaceHolder surfaceHolder = getHolder();
             if (null == surfaceHolder)
@@ -150,9 +168,23 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
                 throw new Exception("surface error: null");
 //            clearSurface(surface);
             surface.release();
-            LogUtil.log("VideoGLSurfaceView => release =>");
+            LogUtil.log("VideoGLSurfaceView => release => removeSurface => succ");
         } catch (Exception e) {
-            LogUtil.log("VideoGLSurfaceView => release => Exception3 " + e.getMessage());
+            LogUtil.log("VideoGLSurfaceView => release => removeSurface => " + e.getMessage());
+        }
+
+        // step2
+        try {
+            if (null == mSurfaceHolderCallback)
+                throw new Exception("mSurfaceHolderCallback error: null");
+            SurfaceHolder surfaceHolder = getHolder();
+            if (null == surfaceHolder)
+                throw new Exception("surfaceHolder error: null");
+            surfaceHolder.removeCallback(mSurfaceHolderCallback);
+            mSurfaceHolderCallback = null;
+            LogUtil.log("VideoGLSurfaceView => release => removeCallback => succ");
+        } catch (Exception e) {
+            LogUtil.log("VideoGLSurfaceView => release => removeCallback => " + e.getMessage());
         }
     }
 
@@ -297,40 +329,4 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
-
-    @Nullable
-    private final SurfaceHolder.Callback mCallback = new SurfaceHolder.Callback() {
-
-        /**
-         * 创建的时候调用该方法
-         * @param holder                        holder
-         */
-        @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-            LogUtil.log("VideoGLSurfaceView => surfaceCreated =>");
-            setSurface(false);
-        }
-
-        /**
-         * 视图改变的时候调用方法
-         * @param holder
-         * @param format
-         * @param width
-         * @param height
-         */
-        @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            LogUtil.log("VideoGLSurfaceView => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
-        }
-
-        /**
-         * 销毁的时候调用该方法
-         * @param holder
-         */
-        @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
-            LogUtil.log("VideoGLSurfaceView => surfaceDestroyed => " + this);
-            setSurface(true);
-        }
-    };
 }

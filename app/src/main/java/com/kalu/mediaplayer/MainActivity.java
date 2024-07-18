@@ -231,11 +231,14 @@ public class MainActivity extends Activity {
         int renderType;
         int renderTypeId = ((RadioGroup) findViewById(R.id.main_render)).getCheckedRadioButtonId();
         switch (renderTypeId) {
-            case R.id.main_render_surfaceview:
-                renderType = PlayerType.RenderType.SURFACE_VIEW;
+            case R.id.main_render_textureview:
+                renderType = PlayerType.RenderType.TEXTURE_VIEW;
+                break;
+            case R.id.main_render_glsurfaceview:
+                renderType = PlayerType.RenderType.GL_SURFACE_VIEW;
                 break;
             default:
-                renderType = PlayerType.RenderType.TEXTURE_VIEW;
+                renderType = PlayerType.RenderType.SURFACE_VIEW;
                 break;
         }
 

@@ -29,8 +29,6 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Nullable
     private VideoKernelApi mKernel;
-    @Nullable
-    private SurfaceHolder.Callback mSurfaceHolderCallback;
 
     public VideoSurfaceView(Context context) {
         super(context);
@@ -68,51 +66,31 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
         setZOrderOnTop(true); //画布透明处理
         setZOrderMediaOverlay(true); //画面置顶
 //        getHolder().setFormat(PixelFormat.TRANSLUCENT);
-        addListener();
+        registListener();
     }
 
     @Override
-    public void addListener() {
+    public void registListener() {
         try {
-            if (null != mSurfaceHolderCallback)
-                throw new Exception("mSurfaceHolderCallback warning: " + mSurfaceHolderCallback);
-            mSurfaceHolderCallback = new SurfaceHolder.Callback() {
-
-                /**
-                 * 创建的时候调用该方法
-                 * @param holder                        holder
-                 */
-                @Override
-                public void surfaceCreated(SurfaceHolder holder) {
-//                    LogUtil.log("VideoSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
-                    setSurface(false);
-                }
-
-                /**
-                 * 视图改变的时候调用方法
-                 * @param holder
-                 * @param format
-                 * @param width
-                 * @param height
-                 */
-                @Override
-                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                    LogUtil.log("VideoSurfaceView => addListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
-                }
-
-                /**
-                 * 销毁的时候调用该方法
-                 * @param holder
-                 */
-                @Override
-                public void surfaceDestroyed(SurfaceHolder holder) {
-                    LogUtil.log("VideoSurfaceView => addListener => surfaceDestroyed => " + this);
-                    setSurface(true);
-                }
-            };
-            getHolder().addCallback(mSurfaceHolderCallback);
+            SurfaceHolder surfaceHolder = getHolder();
+            if (null == surfaceHolder)
+                throw new Exception("surfaceHolder error: null");
+            surfaceHolder.addCallback(mCallback);
         } catch (Exception e) {
-            LogUtil.log("VideoSurfaceView => addListener => " + e.getMessage());
+            LogUtil.log("VideoSurfaceView => registListener => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void unRegistListener() {
+        try {
+            SurfaceHolder surfaceHolder = getHolder();
+            if (null == surfaceHolder)
+                throw new Exception("surfaceHolder error: null");
+            surfaceHolder.removeCallback(mCallback);
+            LogUtil.log("VideoSurfaceView => release => unRegistListener => succ");
+        } catch (Exception e) {
+            LogUtil.log("VideoSurfaceView => release => unRegistListener => " + e.getMessage());
         }
     }
 
@@ -140,6 +118,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
 
     @Override
     public void release() {
+        unRegistListener();
         // step1
         try {
             SurfaceHolder surfaceHolder = getHolder();
@@ -153,20 +132,6 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
             LogUtil.log("VideoSurfaceView => release => removeSurface => succ");
         } catch (Exception e) {
             LogUtil.log("VideoSurfaceView => release => removeSurface => " + e.getMessage());
-        }
-
-        // step2
-        try {
-            if (null == mSurfaceHolderCallback)
-                throw new Exception("mSurfaceHolderCallback error: null");
-            SurfaceHolder surfaceHolder = getHolder();
-            if (null == surfaceHolder)
-                throw new Exception("surfaceHolder error: null");
-            surfaceHolder.removeCallback(mSurfaceHolderCallback);
-            mSurfaceHolderCallback = null;
-            LogUtil.log("VideoSurfaceView => release => removeCallback => succ");
-        } catch (Exception e) {
-            LogUtil.log("VideoSurfaceView => release => removeCallback => " + e.getMessage());
         }
     }
 
@@ -276,4 +241,39 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
+
+    private final SurfaceHolder.Callback mCallback = new SurfaceHolder.Callback() {
+
+        /**
+         * 创建的时候调用该方法
+         * @param holder                        holder
+         */
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+//                    LogUtil.log("VideoSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
+            setSurface(false);
+        }
+
+        /**
+         * 视图改变的时候调用方法
+         * @param holder
+         * @param format
+         * @param width
+         * @param height
+         */
+        @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+            LogUtil.log("VideoSurfaceView => registListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
+        }
+
+        /**
+         * 销毁的时候调用该方法
+         * @param holder
+         */
+        @Override
+        public void surfaceDestroyed(SurfaceHolder holder) {
+            LogUtil.log("VideoSurfaceView => registListener => surfaceDestroyed => " + this);
+            setSurface(true);
+        }
+    };
 }

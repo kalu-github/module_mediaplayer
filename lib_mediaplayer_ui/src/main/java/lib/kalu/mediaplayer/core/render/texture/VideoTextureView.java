@@ -30,7 +30,6 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
     private VideoKernelApi mKernel;
     private Surface mSurface;
     private SurfaceTexture mSurfaceTexture;
-    private SurfaceTextureListener mSurfaceTextureListener;
 
     public VideoTextureView(Context context) {
         super(context);
@@ -65,60 +64,25 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
         //        setDrawingCacheEnabled(true);
         setFocusable(false);
         setFocusableInTouchMode(false);
-        addListener();
+        registListener();
     }
 
     @Override
-    public void addListener() {
-        mSurfaceTextureListener = new SurfaceTextureListener() {
-            /**
-             * SurfaceTexture准备就绪
-             * @param surfaceTexture            surface
-             * @param width                     WIDTH
-             * @param height                    HEIGHT
-             */
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-                LogUtil.log("VideoTextureView => onSurfaceTextureAvailable => " + this);
-//                VideoRenderTextureView.this.mSurfaceTexture = surfaceTexture;
-//                setSurfaceTexture(VideoRenderTextureView.this.mSurfaceTexture);
-//                setSurface(true);
-                mSurfaceTexture = surfaceTexture;
-                setSurface(true);
-            }
+    public void registListener() {
+        try {
+            setSurfaceTextureListener(mListener);
+        } catch (Exception e) {
+            LogUtil.log("VideoTextureView => registListener => Exception " + e.getMessage());
+        }
+    }
 
-            /**
-             * SurfaceTexture即将被销毁
-             * @param surface                   surface
-             */
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                LogUtil.log("VideoTextureView => onSurfaceTextureDestroyed => " + this);
-                return false;
-            }
-
-            /**
-             * SurfaceTexture缓冲大小变化
-             * @param surface                   surface
-             * @param width                     WIDTH
-             * @param height                    HEIGHT
-             */
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-                LogUtil.log("VideoTextureView => onSurfaceTextureSizeChanged => " + this);
-            }
-
-            /**
-             * SurfaceTexture通过updateImage更新
-             * @param surface                   surface
-             */
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-                LogUtil.log("VideoTextureView => onSurfaceTextureUpdated => " + this);
-            }
-        };
-        setSurfaceTextureListener(mSurfaceTextureListener);
+    @Override
+    public void unRegistListener() {
+        try {
+            setSurfaceTextureListener(null);
+        } catch (Exception e) {
+            LogUtil.log("VideoTextureView => unRegistListener => Exception " + e.getMessage());
+        }
     }
 
     @Override
@@ -148,16 +112,18 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
      */
     @Override
     public void release() {
-        if (mSurfaceTexture != null) {
-            mSurfaceTexture.release();
-            mSurfaceTexture = null;
-        }
-        if (mSurface != null) {
-            mSurface.release();
-            mSurface = null;
-        }
-        if (null != mSurfaceTextureListener) {
-            mSurfaceTextureListener = null;
+        unRegistListener();
+        try {
+            if (mSurfaceTexture != null) {
+                mSurfaceTexture.release();
+                mSurfaceTexture = null;
+            }
+            if (mSurface != null) {
+                mSurface.release();
+                mSurface = null;
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoTextureView => release => Exception " + e.getMessage());
         }
     }
 
@@ -236,4 +202,53 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
+
+    private final SurfaceTextureListener mListener = new SurfaceTextureListener() {
+        /**
+         * SurfaceTexture准备就绪
+         * @param surfaceTexture            surface
+         * @param width                     WIDTH
+         * @param height                    HEIGHT
+         */
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+        @Override
+        public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
+            LogUtil.log("VideoTextureView => onSurfaceTextureAvailable => " + this);
+//                VideoRenderTextureView.this.mSurfaceTexture = surfaceTexture;
+//                setSurfaceTexture(VideoRenderTextureView.this.mSurfaceTexture);
+//                setSurface(true);
+            mSurfaceTexture = surfaceTexture;
+            setSurface(true);
+        }
+
+        /**
+         * SurfaceTexture即将被销毁
+         * @param surface                   surface
+         */
+        @Override
+        public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+            LogUtil.log("VideoTextureView => onSurfaceTextureDestroyed => " + this);
+            return false;
+        }
+
+        /**
+         * SurfaceTexture缓冲大小变化
+         * @param surface                   surface
+         * @param width                     WIDTH
+         * @param height                    HEIGHT
+         */
+        @Override
+        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+            LogUtil.log("VideoTextureView => onSurfaceTextureSizeChanged => " + this);
+        }
+
+        /**
+         * SurfaceTexture通过updateImage更新
+         * @param surface                   surface
+         */
+        @Override
+        public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+            LogUtil.log("VideoTextureView => onSurfaceTextureUpdated => " + this);
+        }
+    };
 }

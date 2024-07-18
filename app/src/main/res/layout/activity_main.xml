@@ -141,15 +141,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:checked="true"
-                    android:enabled="true"
                     android:text="surfaceview" />
+
+                <RadioButton
+                    android:id="@+id/main_render_glsurfaceview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="glsurfaceview" />
 
                 <RadioButton
                     android:id="@+id/main_render_textureview"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="false"
-                    android:enabled="true"
                     android:text="textureview" />
 
             </RadioGroup>

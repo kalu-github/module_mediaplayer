@@ -92,7 +92,7 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
     /********/
 
     default void setVideoFormat(int videoWidth, int videoHeight, @PlayerType.RotationType.Value int videoRotation, @PlayerType.ScaleType.Value int videoScaleType) {
-        LogUtil.log("VideoRenderApi => setVideoFormat => videoWidth = "+videoWidth+", videoHeight = "+videoHeight+", videoRotation = "+videoRotation+", videoScaleType = "+videoScaleType);
+        LogUtil.log("VideoRenderApi => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation + ", videoScaleType = " + videoScaleType);
         try {
             if (mVideoWidth[0] == videoWidth && mVideoHeight[0] == videoWidth && mVideoRotation[0] == videoRotation && mVideoScaleType[0] == videoScaleType)
                 throw new Exception("warning: mVideoWidth && mVideoHeight && mVideoRotation && mVideoScaleType not change");
@@ -115,7 +115,9 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
         mVideoScaleType[0] = PlayerType.ScaleType.DEFAULT;
     }
 
-    void addListener();
+    void registListener();
+
+    void unRegistListener();
 
     void setSurface(boolean release);
 

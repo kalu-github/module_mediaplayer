@@ -318,17 +318,6 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
 //        }
     }
 
-    default void addVideoRenderListener() {
-        try {
-            VideoRenderApi render = searchVideoRender();
-            if (null == render)
-                throw new Exception("render warning: null");
-            render.addListener();
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiRender => addVideoRenderListener => " + e.getMessage());
-        }
-    }
-
     VideoRenderApi getVideoRender();
 
     void setVideoRender(VideoRenderApi render);
