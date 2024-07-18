@@ -230,61 +230,13 @@ public final class TestActivity extends Activity {
             }
 
             @Override
-            public void onRestart() {
-
-            }
-
-            @Override
             public void onStart() {
 
             }
 
             @Override
-            public void onPause() {
+            public void onError(String info) {
 
-            }
-
-            @Override
-            public void onResume() {
-
-            }
-
-            @Override
-            public void onEvent(int state) {
-                LogUtil.log("onPlayStateChanged => state = " + state);
-
-                switch (state) {
-                    case PlayerType.StateType.INIT:
-                        //播放未开始，初始化
-                        break;
-                    case PlayerType.StateType.START_ABORT:
-                        //开始播放中止
-                        break;
-                    case PlayerType.StateType.LOADING_START:
-                        //播放准备中
-                        break;
-                    case PlayerType.StateType.LOADING_STOP:
-                        //播放准备就绪
-                        break;
-                    case PlayerType.StateType.ERROR:
-                        //播放错误
-                        break;
-                    case PlayerType.StateType.BUFFERING_START:
-                        //正在缓冲
-                        break;
-                    case PlayerType.StateType.START:
-                        //正在播放
-                        break;
-                    case PlayerType.StateType.PAUSE:
-                        //暂停播放
-                        break;
-                    case PlayerType.StateType.BUFFERING_STOP:
-                        //暂停缓冲
-                        break;
-                    case PlayerType.StateType.END:
-                        //播放完成
-                        break;
-                }
             }
         });
     }
