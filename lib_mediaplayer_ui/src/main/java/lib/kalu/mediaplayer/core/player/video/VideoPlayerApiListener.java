@@ -93,6 +93,8 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
                 eventListener.onPause();
             } else if (state == PlayerType.StateType.RESUME) {
                 eventListener.onResume();
+            } else if (state == PlayerType.StateType.ERROR) {
+                eventListener.onError(null);
             } else if (state == PlayerType.StateType.BUFFERING_START) {
                 eventListener.onBufferingStart();
             } else if (state == PlayerType.StateType.BUFFERING_STOP) {
