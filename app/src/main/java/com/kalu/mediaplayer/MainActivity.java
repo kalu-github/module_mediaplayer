@@ -324,7 +324,7 @@ public class MainActivity extends Activity {
                 .setCacheSizeType(PlayerType.CacheSizeType.DEFAULT)
                 // 缓存文件夹
                 .setCacheDirName(null)
-                // 快进类型（仅针对 MediaPlayer ExoPlayer）
+                // 快进类型（仅针对 MediaPlayer ExoPlayer IjkPlayer）
                 .setSeekType(PlayerType.SeekType.DEFAULT)
                 // 网络类型（仅针对 ExoPlayer）
                 .setNetType(netType)
