@@ -3,7 +3,7 @@ package lib.kalu.mediaplayer.core.kernel.video;
 
 import lib.kalu.mediaplayer.core.kernel.video.android.VideoAndroidPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.exo2.VideoExo2PlayerFactory;
-import lib.kalu.mediaplayer.core.kernel.video.ff.VideoFFmpegPlayerFactory;
+import lib.kalu.mediaplayer.core.kernel.video.ffmpeg.VideoFFmpegPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.ijk.VideoIjkPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.media3.VideoMedia3PlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.vlc.VideoVlcPlayerFactory;

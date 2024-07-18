@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.video.ff;
+package lib.kalu.mediaplayer.core.kernel.video.ffmpeg;
 
 
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactory;

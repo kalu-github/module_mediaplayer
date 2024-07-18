@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.video.ff;
+package lib.kalu.mediaplayer.core.kernel.video.ffmpeg;
 
 import android.content.Context;
 import android.media.AudioManager;
