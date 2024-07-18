@@ -221,17 +221,23 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void seekTo(long seek) {
         try {
+            if (seek < 0L)
+                throw new Exception("error: seek<0");
             if (null == mFFmpegPlayer)
-                throw new Exception("mFFmpegPlayer error: null");
-            if (seek < 0)
-                throw new Exception("seek error: " + seek);
+                throw new Exception("error: mFFmpegPlayer null");
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+
             long duration = getDuration();
-            if (seek > duration) {
+            if (duration > 0 && seek > duration) {
                 seek = duration;
             }
-            LogUtil.log("VideoFFmpegPlayer => seekTo => succ");
+
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.SEEK_START);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_START);
             mFFmpegPlayer.seekTo((int) seek);
+            LogUtil.log("VideoFFmpegPlayer => seekTo =>");
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => seekTo => " + e.getMessage());
         }
@@ -352,13 +358,25 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         public void onSeekComplete(FFmpegPlayer mediaPlayer) {
             LogUtil.log("VideoFFmpegPlayer => onSeekComplete =>");
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.SEEK_FINISH);
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_STOP);
+
             try {
                 long seek = getSeek();
-                if (seek <= 0)
-                    throw new Exception();
-                setSeek(0);
+                if (seek <= 0L)
+                    throw new Exception("warning: seek<=0");
+                setSeek(0L);
                 onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_START);
             } catch (Exception e) {
+                LogUtil.log("VideoFFmpegPlayer => onSeekComplete => Exception1 " + e.getMessage());
+            }
+
+            try {
+                boolean playing = isPlaying();
+                if (playing)
+                    throw new Exception("warning: playing true");
+                start();
+            } catch (Exception e) {
+                LogUtil.log("VideoFFmpegPlayer => onSeekComplete => Exception2 " + e.getMessage());
             }
         }
     };

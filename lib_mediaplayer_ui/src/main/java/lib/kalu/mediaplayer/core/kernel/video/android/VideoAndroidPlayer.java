@@ -221,34 +221,26 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     @Override
     public void seekTo(long seek) {
         try {
+            if (seek < 0L)
+                throw new Exception("error: seek<0");
             if (null == mMediaPlayer)
-                throw new Exception("mMediaPlayer error: null");
-            if (seek < 0)
-                throw new Exception("seek error: " + seek);
-            if (!isPrepared()) {
-                long position = getPosition();
-                if (position > 0) {
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.BUFFERING_START);
-                }
-            }
+                throw new Exception("error: mMediaPlayer null");
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
 
             long duration = getDuration();
-            if (seek > duration) {
+            if (duration > 0L && seek > duration) {
                 seek = duration;
             }
-            LogUtil.log("VideoAndroidPlayer => seekTo => succ");
-//            setSeeking(true);
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.SEEK_START);
 
-            try {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
-                    throw new Exception("warning: Build.VERSION.SDK_INT < Build.VERSION_CODES.O");
-                StartArgs args = getStartArgs();
-                if (null == args)
-                    throw new Exception("error: args null");
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.SEEK_START);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.BUFFERING_START);
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                mMediaPlayer.seekTo((int) seek);
+            } else {
                 int seekType = args.getSeekType();
-                if (seekType == PlayerType.SeekType.DEFAULT)
-                    throw new Exception("warning: seekType == PlayerType.SeekType.DEFAULT");
                 switch (seekType) {
                     case PlayerType.SeekType.ANDROID_SEEK_CLOSEST:
                         mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_CLOSEST);
@@ -262,13 +254,14 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     case PlayerType.SeekType.ANDROID_SEEK_NEXT_SYNC:
                         mMediaPlayer.seekTo(seek, MediaPlayer.SEEK_NEXT_SYNC);
                         break;
+                    default:
+                        mMediaPlayer.seekTo((int) seek);
+                        break;
                 }
-            } catch (Exception e) {
-                LogUtil.log("VideoAndroidPlayer => seekTo => Exception1 " + e.getMessage());
-                mMediaPlayer.seekTo((int) seek);
             }
+            LogUtil.log("VideoAndroidPlayer => seekTo =>");
         } catch (Exception e) {
-            LogUtil.log("VideoAndroidPlayer => seekTo => Exception2 " + e.getMessage());
+            LogUtil.log("VideoAndroidPlayer => seekTo => Exception " + e.getMessage());
         }
     }
 
@@ -419,13 +412,14 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         public void onSeekComplete(MediaPlayer mediaPlayer) {
             LogUtil.log("VideoAndroidPlayer => onSeekComplete =>");
 
-//            setSeeking(false);
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.SEEK_FINISH);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.BUFFERING_STOP);
+
             try {
                 long seek = getSeek();
-                if (seek <= 0)
+                if (seek <= 0L)
                     throw new Exception("warning: seek<=0");
-                setSeek(0);
+                setSeek(0L);
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START);
             } catch (Exception e) {
                 LogUtil.log("VideoAndroidPlayer => onSeekComplete => Exception1 " + e.getMessage());

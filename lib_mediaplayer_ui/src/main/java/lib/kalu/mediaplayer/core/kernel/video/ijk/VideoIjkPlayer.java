@@ -469,18 +469,24 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public void seekTo(long seek) {
         try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
             if (seek < 0)
-                throw new Exception("seek error: " + seek);
+                throw new Exception("error: seek<0");
+            if (null == mIjkPlayer)
+                throw new Exception("error: mIjkPlayer null");
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+
             long duration = getDuration();
-            if (seek > duration) {
+            if (duration > 0 && seek > duration) {
                 seek = duration;
             }
-            LogUtil.log("VideoIjkPlayer => seekTo => succ");
-//            setSeeking(true);
+
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.SEEK_START);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_START);
+
             mIjkPlayer.seekTo(seek);
+            LogUtil.log("VideoIjkPlayer => seekTo =>");
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => seekTo => " + e.getMessage());
         }
@@ -674,15 +680,17 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         public void onSeekComplete(IMediaPlayer iMediaPlayer) {
             LogUtil.log("VideoIjkPlayer => onSeekComplete =>");
 
-//            setSeeking(false);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.SEEK_FINISH);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_STOP);
+
             try {
                 long seek = getSeek();
-                if (seek <= 0)
-                    throw new Exception();
-                setSeek(0);
+                if (seek <= 0L)
+                    throw new Exception("warning: seek<=0");
+                setSeek(0L);
                 onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_START);
             } catch (Exception e) {
+                LogUtil.log("VideoIjkPlayer => onSeekComplete => Exception1 " + e.getMessage());
             }
 
             try {
@@ -691,6 +699,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                     throw new Exception("warning: playing true");
                 start();
             } catch (Exception e) {
+                LogUtil.log("VideoIjkPlayer => onSeekComplete => Exception2 " + e.getMessage());
             }
         }
     };

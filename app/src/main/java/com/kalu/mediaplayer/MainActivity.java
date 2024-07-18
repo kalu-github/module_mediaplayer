@@ -314,13 +314,13 @@ public class MainActivity extends Activity {
                 .setInitRelease(false)
                 // 播放器生命周期自动销毁（默认true）
                 .setSupportAutoRelease(false)
-                // 缓存类型（默认关闭, 仅针对 ExoPlayer）
+                // 缓存类型（仅针对 ExoPlayer）
                 .setCacheType(cacheType)
-                // 缓存类型（默认内部）
+                // 缓存类型（仅针对 ExoPlayer）
                 .setCacheLocalType(PlayerType.CacheLocalType.DEFAULT)
-                // 缓存大小
+                // 缓存大小（仅针对 ExoPlayer）
                 .setCacheSizeType(PlayerType.CacheSizeType.DEFAULT)
-                // 缓存文件夹
+                // 缓存文件夹（仅针对 ExoPlayer）
                 .setCacheDirName(null)
                 // 快进类型（仅针对 MediaPlayer ExoPlayer IjkPlayer）
                 .setSeekType(PlayerType.SeekType.DEFAULT)
