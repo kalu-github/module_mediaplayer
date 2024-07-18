@@ -421,7 +421,7 @@ public class StartArgs {
         }
 
         // 试看时长
-        private long trySeeDuration = playerArgs.getTrySeeDuration();
+        private long trySeeDuration = 0L;
 
         public Builder setTrySeeDuration(long v) {
             this.trySeeDuration = v;

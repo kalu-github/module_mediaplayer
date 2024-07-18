@@ -314,8 +314,6 @@ public class MainActivity extends Activity {
                 .setInitRelease(false)
                 // 播放器生命周期自动销毁（默认true）
                 .setSupportAutoRelease(false)
-                // 试看（默认关闭）
-                .setTrySeeDuration(0L)
                 // 缓存类型（默认关闭, 仅针对 ExoPlayer）
                 .setCacheType(cacheType)
                 // 缓存类型（默认内部）

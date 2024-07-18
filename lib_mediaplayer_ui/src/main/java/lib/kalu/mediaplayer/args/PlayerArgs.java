@@ -41,13 +41,6 @@ public final class PlayerArgs {
         return rotation;
     }
 
-    // 试看时长
-    private long trySeeDuration;
-
-    public long getTrySeeDuration() {
-        return trySeeDuration;
-    }
-
     @PlayerType.CacheType.Value
     private int cacheType;
 
@@ -161,7 +154,6 @@ public final class PlayerArgs {
         buriedEvent = builder.buriedEvent;
         seekType = builder.seekType;
         netType = builder.netType;
-        trySeeDuration = builder.trySeeDuration;
         rotation = builder.rotation;
     }
 
@@ -184,7 +176,6 @@ public final class PlayerArgs {
         builder.setBuriedEvent(this.buriedEvent);
         builder.setSeekType(this.seekType);
         builder.setNetType(this.netType);
-        builder.setTrySeeDuration(this.trySeeDuration);
         builder.setRotation(this.rotation);
         return builder;
     }
@@ -216,14 +207,6 @@ public final class PlayerArgs {
 
         public Builder setRotation(int v) {
             this.rotation = v;
-            return this;
-        }
-
-        // 试看时长
-        private long trySeeDuration = 0L;
-
-        public Builder setTrySeeDuration(long v) {
-            this.trySeeDuration = v;
             return this;
         }
 
