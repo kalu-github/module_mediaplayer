@@ -140,43 +140,73 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
         }
     }
 
-    default OnPlayerEventListener getOnPlayerEventListener() {
-        return null;
-    }
+    /**************/
 
-    default void removeOnPlayerEventListener() {
+    OnPlayerEventListener[] mOnPlayerEventListener = new OnPlayerEventListener[]{null};
+
+    default OnPlayerEventListener getOnPlayerEventListener() {
+        return this.mOnPlayerEventListener[0];
     }
 
     default void setOnPlayerEventListener(OnPlayerEventListener l) {
+        this.mOnPlayerEventListener[0] = l;
     }
+
+    default void clearOnPlayerEventListener() {
+        this.mOnPlayerEventListener[0] = null;
+    }
+
+    /**************/
+
+    OnPlayerProgressListener[] mOnPlayerProgressListener = new OnPlayerProgressListener[]{null};
 
     default OnPlayerProgressListener getOnPlayerProgressListener() {
-        return null;
-    }
-
-    default void removeOnPlayerProgressListener() {
+        return this.mOnPlayerProgressListener[0];
     }
 
     default void setOnPlayerProgressListener(OnPlayerProgressListener l) {
+        this.mOnPlayerProgressListener[0] = l;
     }
+
+    default void clearOnPlayerProgressListener() {
+        this.mOnPlayerProgressListener[0] = null;
+    }
+
+    /**************/
+    OnPlayerWindowListener[] mOnPlayerWindowListener = new OnPlayerWindowListener[]{null};
 
     default OnPlayerWindowListener getOnPlayerWindowListener() {
-        return null;
-    }
-
-    default void removeOnPlayerWindowListener() {
+        return this.mOnPlayerWindowListener[0];
     }
 
     default void setOnPlayerWindowListener(OnPlayerWindowListener l) {
+        this.mOnPlayerWindowListener[0] = l;
     }
+
+    default void clearOnPlayerWindowListener() {
+        this.mOnPlayerWindowListener[0] = null;
+    }
+
+    /***********/
+
+    OnPlayerEpisodeListener[] mOnPlayerItemsLiatener = new OnPlayerEpisodeListener[]{null};
 
     default OnPlayerEpisodeListener getOnPlayerEpisodeListener() {
-        return null;
-    }
-
-    default void removeOnPlayerEpisodeListener() {
+        return this.mOnPlayerItemsLiatener[0];
     }
 
     default void setOnPlayerEpisodeListener(OnPlayerEpisodeListener l) {
+        this.mOnPlayerItemsLiatener[0] = l;
+    }
+
+    default void clearOnPlayerEpisodeListener() {
+        this.mOnPlayerItemsLiatener[0] = null;
+    }
+
+    default void clearOnPlayerListener() {
+        clearOnPlayerEventListener();
+        clearOnPlayerWindowListener();
+        clearOnPlayerProgressListener();
+        clearOnPlayerEpisodeListener();
     }
 }

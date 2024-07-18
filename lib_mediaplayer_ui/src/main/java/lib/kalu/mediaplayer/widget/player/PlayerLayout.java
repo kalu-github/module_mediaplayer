@@ -50,9 +50,7 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     private void init() {
-        removeOnPlayerEventListener();
-        removeOnPlayerWindowListener();
-        removeOnPlayerProgressListener();
+        clearOnPlayerListener();
         try {
             int childCount = getChildCount();
             if (childCount > 0)
@@ -432,17 +430,6 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void pauseKernel(boolean callEvent) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.pauseKernel(callEvent);
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => pauseKernel => " + e.getMessage());
-        }
-    }
-
     public final void stop() {
         stop(true);
     }
@@ -709,14 +696,14 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void removeOnPlayerEventListener() {
+    public final void clearOnPlayerEventListener() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.removeOnPlayerEventListener();
+            playerView.clearOnPlayerEventListener();
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => removeOnPlayerEventListener => " + e.getMessage());
+            LogUtil.log("PlayerLayout => clearOnPlayerEventListener => " + e.getMessage());
         }
     }
 
@@ -745,14 +732,14 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void removeOnPlayerProgressListener() {
+    public final void clearOnPlayerProgressListener() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.removeOnPlayerProgressListener();
+            playerView.clearOnPlayerProgressListener();
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => removeOnPlayerProgressListener => " + e.getMessage());
+            LogUtil.log("PlayerLayout => clearOnPlayerProgressListener => " + e.getMessage());
         }
     }
 
@@ -781,14 +768,14 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void removeOnPlayerWindowListener() {
+    public final void clearOnPlayerWindowListener() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.removeOnPlayerWindowListener();
+            playerView.clearOnPlayerWindowListener();
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => removeOnPlayerWindowListener => " + e.getMessage());
+            LogUtil.log("PlayerLayout => clearOnPlayerWindowListener => " + e.getMessage());
         }
     }
 
@@ -805,14 +792,14 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void removeOnPlayerEpisodeListener() {
+    public final void clearOnPlayerEpisodeListener() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.removeOnPlayerEpisodeListener();
+            playerView.clearOnPlayerEpisodeListener();
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => removeOnPlayerEpisodeListener => " + e.getMessage());
+            LogUtil.log("PlayerLayout => clearOnPlayerEpisodeListener => " + e.getMessage());
         }
     }
 
@@ -827,5 +814,12 @@ public class PlayerLayout extends RelativeLayout {
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => setOnPlayerEpisodeListener => " + e.getMessage());
         }
+    }
+
+    public final void clearOnPlayerListener() {
+        clearOnPlayerEventListener();
+        clearOnPlayerProgressListener();
+        clearOnPlayerWindowListener();
+        clearOnPlayerEpisodeListener();
     }
 }

@@ -191,6 +191,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void release(boolean callEvent, boolean clearTag, boolean isFromUser) {
         try {
+            clearOnPlayerListener();
             releaseRender();
             releaseKernel(clearTag, isFromUser);
             if (!callEvent)
