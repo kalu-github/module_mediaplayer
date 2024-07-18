@@ -60,14 +60,18 @@ public class VideoGLSurfaceView extends GLSurfaceView implements VideoRenderApi 
         setZOrderMediaOverlay(true); //画面置顶
 //        getHolder().setFormat(PixelFormat.TRANSLUCENT);
 
+        // 设置OpenGl ES的版本为2.0
         setEGLContextClientVersion(2);
         //初始化绘制器
         mDrawer = new GLDrawer();
-        mDrawer.setVideoSize(1080, 1920);
+//        mDrawer.setVideoSize(1080, 1920);
         //初始化渲染器
         mRender = new GLRender();
         mRender.addDrawer(mDrawer);
         setRenderer(mRender);
+        // 设置渲染的模式
+        setRenderMode(RENDERMODE_WHEN_DIRTY);
+
 
         registListener();
     }
