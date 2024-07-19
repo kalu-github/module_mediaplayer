@@ -74,13 +74,32 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     }
 
     @Override
-    public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
+    public void onUpdateProgress(boolean isFromUser, long trySeeDuration, long position, long duration) {
 
         // 自动隐藏
         try {
-            if (position < 2000)
-                throw new Exception("warning: position<2000");
-            hide();
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            long seek = getSeek();
+            TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_record);
+            Object tag = textView.getTag();
+            if (seek <= 0L && null == tag) {
+                if (position < 2000L)
+                    throw new Exception("warning: position < 2000");
+                hide();
+            } else {
+                if (null == tag) {
+                    tag = seek;
+                    textView.setTag(seek);
+                }
+                long start = (long) tag;
+                long cast = (position - start);
+                LogUtil.log("ComponentWarningPlayInfo => onUpdateProgress => cast =  " + cast + ", start = " + start + ", position = " + position + ", text = " + textView.getText());
+                if (cast < 2000L)
+                    throw new Exception("warning: cast < 2000");
+                hide();
+            }
         } catch (Exception e) {
         }
 
@@ -96,7 +115,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             }
             SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_warning_play_info_seekbar);
             seekBar.setProgress((int) position);
-            seekBar.setMax((int) (max > 0 ? max : duration));
+            seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
         } catch (Exception e) {
         }
     }
@@ -112,6 +131,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             if (!showWarningPlayInfoRecord)
                 throw new Exception("warning: showWarningPlayInfoRecord false");
             long seek = getSeek();
+            LogUtil.log("ComponentWarningPlayInfo => show => seek =  " + seek);
             if (seek <= 0L)
                 throw new Exception("warning: seek <=0");
             String millis = TimeUtil.formatTimeMillis(seek);

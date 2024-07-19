@@ -9,7 +9,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoRenderApiHanlder extends VideoRenderApiBase {
 
-    Handler[] mHandlerUpdateProgress = new Handler[1];
+    Handler[] mHandlerUpdateProgress = new Handler[]{null};
 
     default void startUpdateProgress() {
         try {

@@ -377,119 +377,42 @@
                 android:layout_height="20dp"
                 android:layout_marginLeft="6dp"
                 android:gravity="center_vertical|left"
-                android:text="续播"
+                android:text="起播参数"
                 android:textSize="14sp" />
 
-            <RadioGroup
+            <LinearLayout
                 android:id="@+id/main_seek"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal">
 
-                <RadioButton
+                <CheckBox
                     android:id="@+id/main_seek_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="false"
-                    android:text="开启" />
+                    android:text="续播" />
 
-                <RadioButton
-                    android:id="@+id/main_seek_no"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true"
-                    android:text="关闭" />
-
-            </RadioGroup>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginLeft="6dp"
-                android:gravity="center_vertical|left"
-                android:text="试看10s"
-                android:textSize="14sp" />
-
-            <RadioGroup
-                android:id="@+id/main_trysee"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
-
-                <RadioButton
+                <CheckBox
                     android:id="@+id/main_trysee_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="false"
-                    android:text="开启" />
+                    android:text="试看" />
 
-                <RadioButton
-                    android:id="@+id/main_trysee_no"
+                <CheckBox
+                    android:id="@+id/main_episode_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:checked="true"
-                    android:text="关闭" />
+                    android:text="选集切换" />
 
-            </RadioGroup>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginLeft="6dp"
-                android:gravity="center_vertical|left"
-                android:text="立即播放"
-                android:textSize="14sp" />
-
-            <RadioGroup
-                android:id="@+id/main_play_when_ready"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
-
-                <RadioButton
+                <CheckBox
                     android:id="@+id/main_play_when_ready_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:checked="true"
-                    android:text="开启" />
+                    android:text="立即播放" />
 
-                <RadioButton
-                    android:id="@+id/main_play_when_ready_no"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="关闭" />
+            </LinearLayout>
 
-            </RadioGroup>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginLeft="6dp"
-                android:gravity="center_vertical|left"
-                android:text="选集"
-                android:textSize="14sp" />
-
-            <RadioGroup
-                android:id="@+id/main_episode"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/main_episode_yes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="false"
-                    android:text="开启" />
-
-                <RadioButton
-                    android:id="@+id/main_episode_null"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true"
-                    android:text="关闭" />
-
-            </RadioGroup>
 
             <TextView
                 android:layout_width="match_parent"

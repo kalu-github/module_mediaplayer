@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -86,23 +87,23 @@ public class MainActivity extends Activity {
     }
 
     private boolean isSeek() {
-        RadioGroup radioGroup = findViewById(R.id.main_seek);
-        return R.id.main_seek_yes == radioGroup.getCheckedRadioButtonId();
+        CheckBox checkBox = findViewById(R.id.main_seek_yes);
+        return checkBox.isChecked();
     }
 
     private boolean isEpisode() {
-        RadioGroup radioGroup = findViewById(R.id.main_episode);
-        return R.id.main_episode_yes == radioGroup.getCheckedRadioButtonId();
+        CheckBox checkBox = findViewById(R.id.main_episode_yes);
+        return checkBox.isChecked();
     }
 
     private boolean isTrySee() {
-        RadioGroup radioGroup = findViewById(R.id.main_trysee);
-        return R.id.main_trysee_yes == radioGroup.getCheckedRadioButtonId();
+        CheckBox checkBox = findViewById(R.id.main_trysee_yes);
+        return checkBox.isChecked();
     }
 
     private boolean isPlayWhenReady() {
-        RadioGroup radioGroup = findViewById(R.id.main_play_when_ready);
-        return R.id.main_play_when_ready_yes == radioGroup.getCheckedRadioButtonId();
+        CheckBox checkBox = findViewById(R.id.main_play_when_ready_yes);
+        return checkBox.isChecked();
     }
 
     private String getUrl() {
