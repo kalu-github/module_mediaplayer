@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.core.component;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.args.StartArgs;
@@ -168,6 +170,20 @@ public interface ComponentApi {
             imageView.setImageBitmap(bitmap);
         } catch (Exception e) {
             LogUtil.log("ComponentApi => setComponentImageBitmap => " + e.getMessage());
+        }
+    }
+
+    default void setComponentImageUrl(@NonNull String imgUrl) {
+        try {
+            if (null == imgUrl || imgUrl.length() <= 0)
+                throw new Exception("error: imgUrl null");
+            int layoutId = initViewIdImage();
+            if (layoutId == -1)
+                throw new Exception("error: layoutId = -1");
+            ImageView imageView = ((View) this).findViewById(layoutId);
+            imageView.setImageURI(Uri.parse(imgUrl));
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => setComponentImageUrl => " + e.getMessage());
         }
     }
 
