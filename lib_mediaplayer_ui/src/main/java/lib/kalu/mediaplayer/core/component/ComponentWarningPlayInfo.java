@@ -95,7 +95,6 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
                 }
                 long start = (long) tag;
                 long cast = (position - start);
-                LogUtil.log("ComponentWarningPlayInfo => onUpdateProgress => cast =  " + cast + ", start = " + start + ", position = " + position + ", text = " + textView.getText());
                 if (cast < 2000L)
                     throw new Exception("warning: cast < 2000");
                 hide();
@@ -131,7 +130,6 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             if (!showWarningPlayInfoRecord)
                 throw new Exception("warning: showWarningPlayInfoRecord false");
             long seek = getSeek();
-            LogUtil.log("ComponentWarningPlayInfo => show => seek =  " + seek);
             if (seek <= 0L)
                 throw new Exception("warning: seek <=0");
             String millis = TimeUtil.formatTimeMillis(seek);
