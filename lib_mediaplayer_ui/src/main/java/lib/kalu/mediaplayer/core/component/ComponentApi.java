@@ -323,13 +323,8 @@ public interface ComponentApi {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
-                new Exception("playerView error: null");
-            ViewParent parent = playerView.getParent();
-            if (null == parent)
-                throw new Exception("parent error: null");
-            if (!(parent instanceof PlayerLayout))
-                throw new Exception("parent error: not instanceof PlayerLayout");
-            ComponentApi component = ((PlayerLayout) parent).findComponent(cls);
+                throw new Exception("playerView error: null");
+            ComponentApi component = playerView.findComponent(cls);
             if (null == component)
                 throw new Exception("warning: component null");
             return (T) component;
@@ -373,6 +368,18 @@ public interface ComponentApi {
             return playerView.isFull();
         } catch (Exception e) {
             LogUtil.log("ComponentApi => isFull => " + e.getMessage());
+            return false;
+        }
+    }
+
+    default boolean isFloat() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.isFloat();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => isFloat => " + e.getMessage());
             return false;
         }
     }

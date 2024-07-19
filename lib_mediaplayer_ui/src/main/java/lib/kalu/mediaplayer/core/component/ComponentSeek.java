@@ -28,85 +28,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-
-        // 试看
-        try {
-            long trySeeDuration = getTrySeeDuration();
-            if (trySeeDuration > 0L)
-                throw new Exception("warning: trySee true");
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception1 " + e.getMessage());
-            return false;
-        }
-
-        // seekForward => start
-        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            try {
-                boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
-                if (bufferingShowing)
-                    throw new Exception("warning: ComponentApiBuffering true");
-                boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
-                if (warningPlayInfoShowing)
-                    throw new Exception("warning: ComponentApiWarningPlayInfo true");
-                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
-                if (menuShowing)
-                    throw new Exception("warning: ComponentApiMenu true");
-                int repeatCount = event.getRepeatCount();
-                startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_RIGHT);
-                return true;
-            } catch (Exception e) {
-                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception2 " + e.getMessage());
-            }
-        }
-        // seekForward => stop
-        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            try {
-                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
-                if (menuShowing)
-                    throw new Exception("warning: ComponentApiMenu true");
-                startDelayedMsg(KeyEvent.KEYCODE_DPAD_RIGHT);
-                return true;
-            } catch (Exception e) {
-                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception3 " + e.getMessage());
-            }
-        }
-        // seekRewind => start
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            try {
-                boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
-                if (bufferingShowing)
-                    throw new Exception("warning: ComponentApiBuffering true");
-                boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
-                if (warningPlayInfoShowing)
-                    throw new Exception("warning: ComponentApiWarningPlayInfo true");
-                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
-                if (menuShowing)
-                    throw new Exception("warning: ComponentApiMenu true");
-                int repeatCount = event.getRepeatCount();
-                startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_LEFT);
-                return true;
-            } catch (Exception e) {
-                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception4 " + e.getMessage());
-            }
-        }
-        // seekRewind => stop
-        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            try {
-                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
-                if (menuShowing)
-                    throw new Exception("warning: ComponentApiMenu true");
-                startDelayedMsg(KeyEvent.KEYCODE_DPAD_LEFT);
-                return true;
-            } catch (Exception e) {
-                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception5 " + e.getMessage());
-            }
-        }
-        return false;
-    }
-
-
-    @Override
     public void seekToPosition(int keyCode, int position) {
         try {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
@@ -118,40 +39,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             }
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => seekToPosition => " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void callEvent(int playState) {
-        switch (playState) {
-            case PlayerType.StateType.FAST_FORWARD_START:
-            case PlayerType.StateType.FAST_REWIND_START:
-                LogUtil.log("ComponentSeek => callEventListener => show => playState = " + playState);
-                show();
-                break;
-            case PlayerType.StateType.FAST_FORWARD_STOP:
-            case PlayerType.StateType.FAST_REWIND_STOP:
-                LogUtil.log("ComponentSeek => callEventListener => gone => playState = " + playState);
-                hide();
-                break;
-            case PlayerType.StateType.INIT:
-            case PlayerType.StateType.ERROR:
-            case PlayerType.StateType.END:
-                onUpdateProgress(false, 0, 0, 0);
-                break;
-            case PlayerType.StateType.SEEK_FINISH:
-                try {
-                    long position = getPosition();
-                    long duration = getDuration();
-//            LogUtil.log("ComponentSeek => show => position = " + TimeUtil.formatTimeMillis(position) + ", duration = " + TimeUtil.formatTimeMillis(duration));
-
-                    lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findSeekBar();
-                    seekBar.setMax((int) duration);
-                    seekBar.setProgress((int) position);
-                    seekBar.setPlayPosition((int) position);
-                } catch (Exception e) {
-                }
-                break;
         }
     }
 
@@ -319,6 +206,114 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     }
 
     @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+
+        // 试看
+        try {
+            long trySeeDuration = getTrySeeDuration();
+            if (trySeeDuration > 0L)
+                throw new Exception("warning: trySee true");
+        } catch (Exception e) {
+            LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception1 " + e.getMessage());
+            return false;
+        }
+
+        // seekForward => start
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            try {
+                boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
+                if (bufferingShowing)
+                    throw new Exception("warning: ComponentApiBuffering true");
+                boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
+                if (warningPlayInfoShowing)
+                    throw new Exception("warning: ComponentApiWarningPlayInfo true");
+                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
+                if (menuShowing)
+                    throw new Exception("warning: ComponentApiMenu true");
+                int repeatCount = event.getRepeatCount();
+                startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_RIGHT);
+                return true;
+            } catch (Exception e) {
+                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception2 " + e.getMessage());
+            }
+        }
+        // seekForward => stop
+        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            try {
+                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
+                if (menuShowing)
+                    throw new Exception("warning: ComponentApiMenu true");
+                startDelayedMsg(KeyEvent.KEYCODE_DPAD_RIGHT);
+                return true;
+            } catch (Exception e) {
+                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception3 " + e.getMessage());
+            }
+        }
+        // seekRewind => start
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            try {
+                boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
+                LogUtil.log("ComponentSeek => dispatchKeyEvent => KEYCODE_DPAD_LEFT => bufferingShowing = " + bufferingShowing);
+                if (bufferingShowing)
+                    throw new Exception("warning: ComponentApiBuffering true");
+                boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
+                LogUtil.log("ComponentSeek => dispatchKeyEvent => KEYCODE_DPAD_LEFT => warningPlayInfoShowing = " + warningPlayInfoShowing);
+                if (warningPlayInfoShowing)
+                    throw new Exception("warning: ComponentApiWarningPlayInfo true");
+                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
+                LogUtil.log("ComponentSeek => dispatchKeyEvent => KEYCODE_DPAD_LEFT => menuShowing = " + menuShowing);
+                if (menuShowing)
+                    throw new Exception("warning: ComponentApiMenu true");
+                int repeatCount = event.getRepeatCount();
+                startInitMsg(repeatCount, KeyEvent.KEYCODE_DPAD_LEFT);
+                return true;
+            } catch (Exception e) {
+                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception4 " + e.getMessage());
+            }
+        }
+        // seekRewind => stop
+        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            try {
+                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
+                if (menuShowing)
+                    throw new Exception("warning: ComponentApiMenu true");
+                startDelayedMsg(KeyEvent.KEYCODE_DPAD_LEFT);
+                return true;
+            } catch (Exception e) {
+                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception5 " + e.getMessage());
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void callEvent(int playState) {
+        switch (playState) {
+            case PlayerType.StateType.FAST_FORWARD_START:
+                LogUtil.log("ComponentSeek => callEvent => FAST_FORWARD_START");
+                show();
+                break;
+            case PlayerType.StateType.FAST_FORWARD_STOP:
+                LogUtil.log("ComponentSeek => callEvent => FAST_FORWARD_STOP");
+                hide();
+                break;
+            case PlayerType.StateType.FAST_REWIND_START:
+                LogUtil.log("ComponentSeek => callEvent => FAST_REWIND_START");
+                show();
+                break;
+            case PlayerType.StateType.FAST_REWIND_STOP:
+                LogUtil.log("ComponentSeek => callEvent => FAST_REWIND_STOP");
+                hide();
+                break;
+            case PlayerType.StateType.INIT:
+            case PlayerType.StateType.ERROR:
+            case PlayerType.StateType.END:
+                onUpdateProgress(false, 0, 0, 0);
+                break;
+        }
+    }
+
+    @Override
     public void hide() {
         try {
             boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
@@ -336,7 +331,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             // 2
             setTag(R.id.module_mediaplayer_component_seek_sb, false);
         } catch (Exception e) {
-            LogUtil.log("ComponentSeek => show => Exception " + e.getMessage());
+            LogUtil.log("ComponentSeek => hide => Exception " + e.getMessage());
         }
     }
 }

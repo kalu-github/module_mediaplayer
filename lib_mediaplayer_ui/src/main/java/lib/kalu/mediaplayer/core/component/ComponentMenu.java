@@ -65,6 +65,11 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
+    public int initViewIdRoot() {
+        return R.id.module_mediaplayer_component_menu_root;
+    }
+
+    @Override
     public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.StateType.END:
@@ -334,11 +339,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     public void show() {
         superCallEvent(false, true, PlayerType.StateType.COMPONENT_MENU_SHOW);
         ComponentApiMenu.super.show();
-    }
-
-    @Override
-    public int initViewIdRoot() {
-        return R.id.module_mediaplayer_component_menu_root;
     }
 
     @Override
