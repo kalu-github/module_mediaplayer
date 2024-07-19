@@ -12,6 +12,7 @@ public interface VideoRenderApiHanlder extends VideoRenderApiBase {
     Handler[] mHandlerUpdateProgress = new Handler[]{null};
 
     default void startUpdateProgress() {
+
         try {
             if (null == mHandlerUpdateProgress[0]) {
                 mHandlerUpdateProgress[0] = new Handler(Looper.getMainLooper()) {
@@ -26,7 +27,6 @@ public interface VideoRenderApiHanlder extends VideoRenderApiBase {
                             videoKernel.onUpdateProgress();
                             if (null == mHandlerUpdateProgress)
                                 throw new Exception("warning: mHandlerUpdateProgress null");
-                            LogUtil.log("VideoRenderApiHanlder => startUpdateProgress => loop next videoKernel = " + videoKernel);
                             mHandlerUpdateProgress[0].sendEmptyMessageDelayed(10100, 1000);
                         } catch (Exception e) {
                             LogUtil.log("VideoRenderApiHanlder => startUpdateProgress => handleMessage => Exception" + e.getMessage());
@@ -36,6 +36,7 @@ public interface VideoRenderApiHanlder extends VideoRenderApiBase {
             }
             mHandlerUpdateProgress[0].removeCallbacksAndMessages(null);
             mHandlerUpdateProgress[0].sendEmptyMessageDelayed(10100, 1000);
+            LogUtil.log("VideoRenderApiHanlder => startUpdateProgress =>");
         } catch (Exception e) {
             LogUtil.log("VideoRenderApiHanlder => startUpdateProgress => Exception " + e.getMessage());
             stopUpdateProgress();
@@ -44,11 +45,11 @@ public interface VideoRenderApiHanlder extends VideoRenderApiBase {
 
     default void stopUpdateProgress() {
         try {
-            if (null != mHandlerUpdateProgress[0]) {
-                mHandlerUpdateProgress[0].removeCallbacksAndMessages(null);
-                mHandlerUpdateProgress[0] = null;
-                LogUtil.log("VideoRenderApiHanlder => stopUpdateProgress => stop mHandlerUpdateProgress");
-            }
+            if (null == mHandlerUpdateProgress[0])
+                throw new Exception("error: mHandlerUpdateProgress[0] null");
+            mHandlerUpdateProgress[0].removeCallbacksAndMessages(null);
+            mHandlerUpdateProgress[0] = null;
+            LogUtil.log("VideoRenderApiHanlder => stopUpdateProgress =>");
         } catch (Exception e) {
             LogUtil.log("VideoRenderApiHanlder => stopUpdateProgress => Exception" + e.getMessage());
         }

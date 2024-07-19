@@ -85,8 +85,6 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("error: mFFmpegPlayer null");
             boolean mute = isMute();
             setVolume(mute ? 0L : 1L, mute ? 0L : 1L);
-            boolean looping = isLooping();
-            setLooping(looping);
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => initOptions => Exception " + e.getMessage());
         }

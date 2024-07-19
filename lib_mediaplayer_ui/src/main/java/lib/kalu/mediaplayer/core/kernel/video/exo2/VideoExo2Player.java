@@ -233,8 +233,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 throw new Exception("error: mMediaPlayer null");
             boolean mute = isMute();
             setVolume(mute ? 0L : 1L, mute ? 0L : 1L);
-            boolean looping = isLooping();
-            setLooping(looping);
         } catch (Exception e) {
             LogUtil.log("VideoExo2Player => initOptions => Exception " + e.getMessage());
         }

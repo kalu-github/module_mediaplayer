@@ -37,28 +37,6 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        startUpdateProgress();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        stopUpdateProgress();
-    }
-
-    @Override
-    protected void onVisibilityChanged(View changedView, int visibility) {
-        super.onVisibilityChanged(changedView, visibility);
-        if (visibility == View.VISIBLE) {
-            startUpdateProgress();
-        } else {
-            stopUpdateProgress();
-        }
-    }
-
-    @Override
     public void init() {
         VideoRenderApi.super.init();
         //        setDrawingCacheEnabled(true);

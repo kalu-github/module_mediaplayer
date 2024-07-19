@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 
@@ -39,28 +40,8 @@ import lib.kalu.mediaplayer.widget.player.PlayerLayout;
  */
 public final class TestActivity extends Activity {
 
-
     public static final int RESULT_CODE = 31001;
-
-    public static final String INTENT_PLAY_WHEN_READY = "intent_play_when_ready";
-    public static final String INTENT_LIVE = "intent_live"; // live
-
-    public static final String INTENT_TRY_SEE = "intent_try_see"; // 试看
-
-    public static final String INTENT_SEEK = "intent_seek"; // 快进
-
-    public static final String INTENT_DATA = "intent_data"; // 外部传入DATA
-
-    public static final String INTENT_EPISODE = "intent_episode"; // 选集
-    public static final String INTENT_EPISODE_PLAY_INDEX = "intent_episode_play_index"; // 选集
-    public static final String INTENT_EPISODE_ITEM_COUNT = "intent_episode_item_count"; // 选集
-    public static final String INTENT_URL = "intent_url"; // 视频Url
-
-    public static final String INTENT_SRT = "intent_srt"; // 字幕Url
-
-    public static final String INTENT_TIME_BROWSING = "intent_time_browsing"; // 视频浏览时长
-
-    public static final String INTENT_TIME_LENGTH = "intent_time_length"; // 视频总时长
+    public static final String INTENT_ARGS = "intent_args";
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -153,44 +134,44 @@ public final class TestActivity extends Activity {
     }
 
     private void initComponent() {
-        LinkedList<ComponentApi> componentApis = new LinkedList<>();
-        // menu
-        ComponentMenu menu = new ComponentMenu(getApplicationContext());
-        componentApis.add(menu);
-        // loading
-        ComponentLoadingGradient loading = new ComponentLoadingGradient(getApplicationContext());
-        loading.setComponentShowNetSpeed(true);
-        loading.setComponentBackgroundColorInt(Color.BLACK);
-        componentApis.add(loading);
-        // seek
-        ComponentSeek seek = new ComponentSeek(getApplicationContext());
-        seek.initSeekBarChangeListener();
-        componentApis.add(seek);
-        // complete
-        ComponentComplete end = new ComponentComplete(getApplicationContext());
-        componentApis.add(end);
-        // error
-        ComponentError error = new ComponentError(getApplicationContext());
-        error.setComponentBackgroundColorInt(Color.BLACK);
-        componentApis.add(error);
-        // net
-        ComponentBuffering speed = new ComponentBuffering(getApplicationContext());
-        componentApis.add(speed);
-        // init
-        ComponentInit init = new ComponentInit(getApplicationContext());
-        componentApis.add(init);
-        // pause
-        ComponentPause pause = new ComponentPause(getApplicationContext());
-        componentApis.add(pause);
-        // try
-        ComponentWarningTrySee trys = new ComponentWarningTrySee(getApplicationContext());
-        componentApis.add(trys);
-        // 起播详情
-        ComponentWarningPlayInfo info = new ComponentWarningPlayInfo(getApplicationContext());
-        componentApis.add(info);
-        // insert-component
-        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.addAllComponent(componentApis);
+        try {
+            PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+            // menu
+            ComponentMenu menu = new ComponentMenu(getApplicationContext());
+            playerLayout.addComponent(menu);
+            // loading
+            ComponentLoadingGradient loading = new ComponentLoadingGradient(getApplicationContext());
+            loading.setComponentShowNetSpeed(true);
+            loading.setComponentBackgroundColorInt(Color.BLACK);
+            playerLayout.addComponent(loading);
+            // seek
+            ComponentSeek seek = new ComponentSeek(getApplicationContext());
+            seek.initSeekBarChangeListener();
+            playerLayout.addComponent(seek);
+            // complete
+            ComponentComplete end = new ComponentComplete(getApplicationContext());
+            playerLayout.addComponent(end);
+            // error
+            ComponentError error = new ComponentError(getApplicationContext());
+            error.setComponentBackgroundColorInt(Color.BLACK);
+            playerLayout.addComponent(error);
+            // net
+            ComponentBuffering speed = new ComponentBuffering(getApplicationContext());
+            playerLayout.addComponent(speed);
+            // init
+            ComponentInit init = new ComponentInit(getApplicationContext());
+            playerLayout.addComponent(init);
+            // pause
+            ComponentPause pause = new ComponentPause(getApplicationContext());
+            playerLayout.addComponent(pause);
+            // try
+            ComponentWarningTrySee trys = new ComponentWarningTrySee(getApplicationContext());
+            playerLayout.addComponent(trys);
+            // 起播详情
+            ComponentWarningPlayInfo info = new ComponentWarningPlayInfo(getApplicationContext());
+            playerLayout.addComponent(info);
+        } catch (Exception e) {
+        }
     }
 
     private void initListener() {
@@ -199,8 +180,7 @@ public final class TestActivity extends Activity {
         playerLayout.setOnPlayerEpisodeListener(new OnPlayerEpisodeListener() {
             @Override
             public void onEpisode(int pos) {
-                getIntent().putExtra(INTENT_EPISODE_PLAY_INDEX, pos);
-                startPlayer();
+                startPlayer(pos);
             }
         });
         playerLayout.setOnPlayerWindowListener(new OnPlayerWindowListener() {
@@ -242,60 +222,31 @@ public final class TestActivity extends Activity {
         });
     }
 
-    private String getUrl() {
-        return getIntent().getStringExtra(INTENT_URL);
-    }
-
     private void startPlayer() {
 
-        String url = getUrl();
-        if (null == url) {
-            onBackPressed();
-            return;
+        try {
+            StartArgs args = (StartArgs) getIntent().getSerializableExtra(INTENT_ARGS);
+            if (null == args)
+                throw new Exception("error: args null");
+            PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+            videoLayout.start(args);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
 
-        StartArgs.Builder builder = new StartArgs.Builder();
-        builder.setUrl(url);
+    private void startPlayer(int position) {
 
-        // 试看 10s
-        boolean trySee = getIntent().getBooleanExtra(INTENT_TRY_SEE, false);
-        builder.setTrySeeDuration(trySee ? 10 * 1000L : 0L);
-
-        // 续播 10s
-        boolean isSeek = getIntent().getBooleanExtra(INTENT_SEEK, false);
-        if (isSeek) {
-            builder.setSeek(33000L);
-        } else {
-            builder.setSeek(0L);
+        try {
+            StartArgs args = (StartArgs) getIntent().getSerializableExtra(INTENT_ARGS);
+            if (null == args)
+                throw new Exception("error: args null");
+            StartArgs newArgs = args.newBuilder().setEpisodePlayingIndex(position).build();
+            PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+            videoLayout.start(newArgs);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
-        boolean episode = getIntent().getBooleanExtra(INTENT_EPISODE, false);
-        if (episode) {
-            int playIndex = getIntent().getIntExtra(INTENT_EPISODE_PLAY_INDEX, -1);
-            int itemCount = getIntent().getIntExtra(INTENT_EPISODE_ITEM_COUNT, -1);
-            builder.setEpisodePlayingIndex(playIndex);
-            builder.setEpisodeItemCount(itemCount);
-        } else {
-            builder.setEpisodePlayingIndex(-1);
-            builder.setEpisodeItemCount(-1);
-        }
-
-        if (episode) {
-            int playIndex = getIntent().getIntExtra(INTENT_EPISODE_PLAY_INDEX, -1);
-            builder.setTitle("测试视频 第" + (playIndex + 1) + "集");
-        } else {
-            builder.setTitle("测试视频");
-        }
-
-        boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
-        builder.setLive(live);
-
-        boolean playWhenReady = getIntent().getBooleanExtra(INTENT_PLAY_WHEN_READY, false);
-        builder.setPlayWhenReady(playWhenReady);
-
-        StartArgs build = builder.build();
-        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-        videoLayout.start(build);
     }
 
     private void startFull() {
@@ -316,27 +267,6 @@ public final class TestActivity extends Activity {
     private void stopFloat() {
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
         playerLayout.stopFloat();
-    }
-
-    @Override
-    public void finish() {
-
-        PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-        long browsing = videoLayout.getPosition() / 1000;
-        if (browsing < 0) {
-            browsing = 0;
-        }
-        long duration = videoLayout.getDuration() / 1000;
-        if (duration < 0) {
-            duration = 0;
-        }
-        String extra = getIntent().getStringExtra(INTENT_DATA);
-        Intent intent = new Intent();
-        intent.putExtra(INTENT_DATA, extra);
-        intent.putExtra(INTENT_TIME_LENGTH, duration);
-        intent.putExtra(INTENT_TIME_BROWSING, browsing);
-        setResult(RESULT_CODE, intent);
-        super.finish();
     }
 
     @Override

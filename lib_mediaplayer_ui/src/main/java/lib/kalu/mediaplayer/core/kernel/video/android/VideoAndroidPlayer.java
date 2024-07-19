@@ -84,8 +84,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 throw new Exception("error: mMediaPlayer null");
             boolean mute = isMute();
             setVolume(mute ? 0L : 1L, mute ? 0L : 1L);
-            boolean looping = isLooping();
-            setLooping(looping);
         } catch (Exception e) {
             LogUtil.log("VideoAndroidPlayer => initOptions => Exception " + e.getMessage());
         }
@@ -163,6 +161,26 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             mMediaPlayer.start();
         } catch (Exception e) {
             LogUtil.log("VideoAndroidPlayer => start => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void setVolume(float v1, float v2) {
+        try {
+            if (null == mMediaPlayer)
+                throw new Exception("mMediaPlayer error: null");
+            float value;
+            if (isMute()) {
+                value = 0F;
+            } else {
+                value = Math.max(v1, v2);
+            }
+            if (value > 1f) {
+                value = 1f;
+            }
+            mMediaPlayer.setVolume(value, value);
+        } catch (Exception e) {
+            LogUtil.log("VideoAndroidPlayer => setVolume => " + e.getMessage());
         }
     }
 
@@ -506,24 +524,4 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     };
 
     /****************/
-
-    @Override
-    public void setVolume(float v1, float v2) {
-        try {
-            if (null == mMediaPlayer)
-                throw new Exception("mMediaPlayer error: null");
-            float value;
-            if (isMute()) {
-                value = 0F;
-            } else {
-                value = Math.max(v1, v2);
-            }
-            if (value > 1f) {
-                value = 1f;
-            }
-            mMediaPlayer.setVolume(value, value);
-        } catch (Exception e) {
-            LogUtil.log("VideoAndroidPlayer => setVolume => " + e.getMessage());
-        }
-    }
 }

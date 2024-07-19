@@ -76,8 +76,6 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
                 throw new Exception("error: mVlcPlayer null");
             boolean mute = isMute();
             setVolume(mute ? 0L : 1L, mute ? 0L : 1L);
-            boolean looping = isLooping();
-            setLooping(looping);
         } catch (Exception e) {
             LogUtil.log("VideoVlcPlayer => initOptions => Exception " + e.getMessage());
         }

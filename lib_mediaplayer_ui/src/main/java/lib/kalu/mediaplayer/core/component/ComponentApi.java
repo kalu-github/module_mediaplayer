@@ -20,6 +20,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
+import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.type.PlayerType;
@@ -580,7 +581,18 @@ public interface ComponentApi {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("error: args null");
-            return args.getTitle();
+            String title = args.getTitle();
+            int episodeItemCount = args.getEpisodeItemCount();
+            if (episodeItemCount <= 0) {
+                return title;
+            } else {
+                StringBuilder builder = new StringBuilder();
+                builder.append(title);
+                int index = args.getEpisodePlayingIndex();
+                String s = ((View) this).getResources().getString(R.string.module_mediaplayer_string_title, index);
+                builder.append(s);
+                return builder.toString();
+            }
         } catch (Exception e) {
             LogUtil.log("ComponentApi => getTitle => " + e.getMessage());
             return null;

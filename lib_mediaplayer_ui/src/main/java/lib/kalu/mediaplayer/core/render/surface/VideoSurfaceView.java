@@ -36,28 +36,6 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        startUpdateProgress();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        stopUpdateProgress();
-    }
-
-    @Override
-    protected void onVisibilityChanged(View changedView, int visibility) {
-        super.onVisibilityChanged(changedView, visibility);
-        if (visibility == View.VISIBLE) {
-            startUpdateProgress();
-        } else {
-            stopUpdateProgress();
-        }
-    }
-
-    @Override
     public void init() {
         VideoRenderApi.super.init();
         setFocusable(false);
@@ -250,7 +228,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
          */
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
-//                    LogUtil.log("VideoSurfaceView => addListener => surfaceCreated => width = " + getWidth() + ", height = " + getHeight() + ", mKernel = " + mKernel + ", mHandler = " + mHandler + ", holder = " + holder + ", suface = " + holder.getSurface());
+            LogUtil.log("VideoSurfaceView => surfaceCreated => holder = " + holder);
             setSurface(false);
         }
 
@@ -263,7 +241,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
          */
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            LogUtil.log("VideoSurfaceView => registListener => surfaceChanged => width = " + width + ", height = " + height + ",surfaceChanged => " + this);
+            LogUtil.log("VideoSurfaceView => surfaceChanged => holder = " + holder+", format = "+format+", width = "+width+", height = "+height);
         }
 
         /**
@@ -272,7 +250,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
          */
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) {
-            LogUtil.log("VideoSurfaceView => registListener => surfaceDestroyed => " + this);
+            LogUtil.log("VideoSurfaceView => surfaceDestroyed => holder = " + holder);
             setSurface(true);
         }
     };

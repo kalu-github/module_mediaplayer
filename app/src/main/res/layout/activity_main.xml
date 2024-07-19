@@ -411,6 +411,13 @@
                     android:checked="true"
                     android:text="立即播放" />
 
+                <CheckBox
+                    android:id="@+id/main_play_when_looping_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="true"
+                    android:text="循环播放" />
+
             </LinearLayout>
 
 

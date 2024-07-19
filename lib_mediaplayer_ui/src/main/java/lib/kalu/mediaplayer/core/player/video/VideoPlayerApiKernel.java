@@ -70,9 +70,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 2
             boolean initRelease = args.isInitRelease();
             if (initRelease) {
-                release(true, false, false);
+                release(false, true, false);
             } else {
-                stop(true, false);
+                stop(false, true);
             }
             // 3
             setTags(args);
@@ -172,7 +172,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void resume(boolean callEvent) {
         setScreenKeep(true);
-        startRenderUpdateProgress();
         resumeKernel(callEvent);
     }
 
@@ -182,7 +181,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void pause(boolean callEvent) {
         setScreenKeep(false);
-        stopRenderUpdateProgress();
         pauseKernel(callEvent);
     }
 
@@ -215,10 +213,14 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
     }
 
     default void restart() {
-        restart(0L, true);
+        restart(0L, true, true);
     }
 
-    default void restart(long position, boolean callEvent) {
+    default void restart(long position) {
+        restart(position, true, true);
+    }
+
+    default void restart(long position, boolean cleatTag, boolean callEvent) {
         try {
             StartArgs args = getStartArgs();
             if (null == args)
@@ -229,8 +231,11 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (callEvent) {
                 callEvent(PlayerType.StateType.RESTAER);
             }
-            StartArgs build = args.newBuilder().setSeek(position).build();
-            start(build);
+            if (cleatTag) {
+                setTags(null);
+            }
+            StartArgs newArgs = args.newBuilder().setSeek(position).build();
+            start(newArgs);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => restart => " + e.getMessage());
         }
@@ -330,6 +335,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
+            // 心跳
+            startRenderUpdateProgress();
+            // 播放
             Context context = getBaseContext();
             kernel.initDecoder(context, args);
         } catch (Exception e) {
@@ -375,6 +383,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: playing false");
             // 埋点
             onBuriedPause();
+            // 心跳
+            stopRenderUpdateProgress();
             // 执行
             kernel.pause();
             if (!callEvent)
@@ -398,6 +408,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: playing true");
             // 埋点
             onBuriedResume();
+            // 心跳
+            startRenderUpdateProgress();
             // 执行
             kernel.start();
             setScreenKeep(true);
@@ -478,7 +490,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                 @Override
                 public void onEvent(int kernel, int event) {
-                    LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
+//                    LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
                     switch (event) {
                         // 网络拉流开始
 //                        case PlayerType.EventType.OPEN_INPUT:

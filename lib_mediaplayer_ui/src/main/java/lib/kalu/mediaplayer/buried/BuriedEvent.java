@@ -3,10 +3,12 @@ package lib.kalu.mediaplayer.buried;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 
-public interface BuriedEvent {
+public interface BuriedEvent extends Serializable {
 
     void onRendering(@NotNull StartArgs args, long position, long duration);
 

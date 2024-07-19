@@ -3,11 +3,13 @@ package lib.kalu.mediaplayer.args;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.type.PlayerType;
 
-public class StartArgs {
+public class StartArgs implements Serializable {
 
     @PlayerType.CacheType.Value
     private int cacheType;
@@ -331,7 +333,7 @@ public class StartArgs {
         return builder;
     }
 
-    public static class Builder {
+    public static class Builder implements Serializable {
 
         private final PlayerArgs playerArgs = PlayerSDK.init().getPlayerBuilder();
 

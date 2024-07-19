@@ -190,10 +190,8 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                                 if (live) {
                                     getPlayerApi().restart();
                                 } else {
-                                    long seek = getSeek();
                                     long position = getPosition();
-                                    long max = Math.max(position, seek);
-                                    getPlayerApi().restart(max, true);
+                                    getPlayerApi().restart(position);
                                 }
                             }
                             // 轮询

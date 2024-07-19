@@ -55,7 +55,7 @@ public interface VideoPlayerLifecycle extends VideoPlayerApiBase, VideoPlayerApi
             String mediaUrl = tags.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
-//            resume(false);
+            resume(false);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerLifecycle => attachedToWindow => " + e.getMessage());
         }

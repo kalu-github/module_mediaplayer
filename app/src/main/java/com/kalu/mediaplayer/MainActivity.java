@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
+import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.test.TestActivity;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.UdpUtil;
@@ -57,15 +58,19 @@ public class MainActivity extends Activity {
                 // 1
                 initPlayer();
                 // 2
+                StartArgs args = new StartArgs.Builder()
+                        .setUrl(getUrl())
+                        .setTitle("测试视频")
+                        .setLive(isLive())
+                        .setSeek(getSeek())
+                        .setLooping(isLooping())
+                        .setPlayWhenReady(isPlayWhenReady())
+                        .setTrySeeDuration(getTrySeeDuration())
+                        .setEpisodeItemCount(getEpisodeItemCount())
+                        .setEpisodePlayingIndex(getEpisodePlayingIndex())
+                        .build();
                 Intent intent = new Intent(getApplicationContext(), TestActivity.class);
-                intent.putExtra(TestActivity.INTENT_URL, getUrl());
-                intent.putExtra(TestActivity.INTENT_LIVE, isLive());
-                intent.putExtra(TestActivity.INTENT_SEEK, isSeek());
-                intent.putExtra(TestActivity.INTENT_TRY_SEE, isTrySee());
-                intent.putExtra(TestActivity.INTENT_EPISODE, isEpisode());
-                intent.putExtra(TestActivity.INTENT_PLAY_WHEN_READY, isPlayWhenReady());
-                intent.putExtra(TestActivity.INTENT_EPISODE_PLAY_INDEX, 1);
-                intent.putExtra(TestActivity.INTENT_EPISODE_ITEM_COUNT, 4);
+                intent.putExtra(TestActivity.INTENT_ARGS, args);
                 startActivity(intent);
             }
         });
@@ -86,23 +91,33 @@ public class MainActivity extends Activity {
         return "http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com".equals(url);
     }
 
-    private boolean isSeek() {
+    private long getSeek() {
         CheckBox checkBox = findViewById(R.id.main_seek_yes);
-        return checkBox.isChecked();
+        return checkBox.isChecked() ? 10 * 1000L : 0L;
     }
 
-    private boolean isEpisode() {
+    private int getEpisodeItemCount() {
         CheckBox checkBox = findViewById(R.id.main_episode_yes);
-        return checkBox.isChecked();
+        return checkBox.isChecked() ? 40 : 0;
     }
 
-    private boolean isTrySee() {
+    private int getEpisodePlayingIndex() {
+        CheckBox checkBox = findViewById(R.id.main_episode_yes);
+        return checkBox.isChecked() ? 33 : 0;
+    }
+
+    private long getTrySeeDuration() {
         CheckBox checkBox = findViewById(R.id.main_trysee_yes);
-        return checkBox.isChecked();
+        return checkBox.isChecked() ? 20 * 1000L : 0L;
     }
 
     private boolean isPlayWhenReady() {
         CheckBox checkBox = findViewById(R.id.main_play_when_ready_yes);
+        return checkBox.isChecked();
+    }
+
+    private boolean isLooping() {
+        CheckBox checkBox = findViewById(R.id.main_play_when_looping_yes);
         return checkBox.isChecked();
     }
 
