@@ -30,7 +30,7 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
 
     default void clear() {
         mDoWindowing[0] = false;
-        mSeek[0] = 0L;
+        mDoSeeking[0] = false;
         mMute[0] = false;
         mPrepared[0] = false;
         mVideoSizeChanged[0] = false;
@@ -52,8 +52,6 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
         }
 
         try {
-            long seek = args.getSeek();
-            setSeek(seek);
             boolean mute = args.isMute();
             setMute(mute);
             boolean looping = args.isLooping();

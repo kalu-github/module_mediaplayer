@@ -82,23 +82,10 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             if (!componentShowing)
                 throw new Exception("warning: componentShowing false");
             long seek = getSeek();
-            TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_record);
-            Object tag = textView.getTag();
-            if (seek <= 0L && null == tag) {
-                if (position < 2000L)
-                    throw new Exception("warning: position < 2000");
-                hide();
-            } else {
-                if (null == tag) {
-                    tag = seek;
-                    textView.setTag(seek);
-                }
-                long start = (long) tag;
-                long cast = (position - start);
-                if (cast < 2000L)
-                    throw new Exception("warning: cast < 2000");
-                hide();
-            }
+            long cast = position - seek;
+            if (cast < 2000L)
+                throw new Exception("warning: cast < 2000");
+            hide();
         } catch (Exception e) {
         }
 

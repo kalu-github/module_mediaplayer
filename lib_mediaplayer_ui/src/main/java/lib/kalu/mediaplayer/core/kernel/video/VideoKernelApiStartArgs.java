@@ -73,6 +73,17 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
         }
     }
 
+    default long getSeek() {
+        try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            return args.getSeek();
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiBase => getSeek => Exception " + e.getMessage());
+            return 0L;
+        }
+    }
 
     /***************/
 
@@ -89,28 +100,15 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
 
     /*****/
 
-    // 快进
-    long[] mSeek = new long[]{0L};
+    // 起播快进
+    boolean[] mDoSeeking = new boolean[]{false};
 
-    default long getSeek() {
-        try {
-            if (mSeek[0] <= 0L)
-                throw new Exception("warning: mSeek <= 0");
-            long duration = getDuration();
-            if (duration <= 0)
-                throw new Exception("warning: duration <= 0");
-            if (mSeek[0] >= duration)
-                throw new Exception("warning: mSeek >= duration");
-            return mSeek[0];
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApiBase => getSeek => " + e.getMessage());
-            mSeek[0] = 0L;
-            return mSeek[0];
-        }
+    default boolean isDoSeeking() {
+        return mDoSeeking[0];
     }
 
-    default void setSeek(long seek) {
-        mSeek[0] = seek;
+    default void setDoSeeking(boolean flag) {
+        mDoSeeking[0] = flag;
     }
 
     /*****/

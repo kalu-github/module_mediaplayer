@@ -769,7 +769,9 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                             long seek = getSeek();
                             if (seek <= 0L)
                                 throw new Exception("warning: seek<=0");
-                            setSeek(0);
+                            boolean doSeeking = isDoSeeking();
+                            if (!doSeeking)
+                                throw new Exception("warning: doSeeking false");
                             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_START);
                             // 立即播放
                             boolean playWhenReady = isPlayWhenReady();
@@ -828,6 +830,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 } else {
                     // 起播快进
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
+                    setDoSeeking(true);
                     seekTo(seek);
                 }
             } catch (Exception e) {

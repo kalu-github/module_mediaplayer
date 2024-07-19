@@ -390,7 +390,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                         onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.LOADING_STOP);
                         onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_RENDERING_START);
                         long seek = getSeek();
-                        if (seek <= 0) {
+                        if (seek <= 0L) {
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START);
                             // 立即播放
                             boolean playWhenReady = isPlayWhenReady();
@@ -398,6 +398,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                         } else {
                             // 起播快进
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
+                            setDoSeeking(true);
                             seekTo(seek);
                         }
                     } catch (Exception e) {
@@ -420,11 +421,13 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 long seek = getSeek();
                 if (seek <= 0L)
                     throw new Exception("warning: seek<=0");
-                setSeek(0L);
+                boolean doSeeking = isDoSeeking();
+                if (!doSeeking)
+                    throw new Exception("warning: doSeeking false");
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START);
                 // 立即播放
                 boolean playWhenReady = isPlayWhenReady();
-                    onEvent(PlayerType.KernelType.ANDROID, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                onEvent(PlayerType.KernelType.ANDROID, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
             } catch (Exception e) {
                 LogUtil.log("VideoAndroidPlayer => onSeekComplete => Exception1 " + e.getMessage());
             }

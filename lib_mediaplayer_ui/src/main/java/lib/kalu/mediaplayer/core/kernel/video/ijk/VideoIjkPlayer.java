@@ -647,10 +647,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_START);
                             // 立即播放
                             boolean playWhenReady = isPlayWhenReady();
-                                onEvent(PlayerType.KernelType.IJK, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                            onEvent(PlayerType.KernelType.IJK, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
                         } else {
                             // 起播快进
                             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
+                            setDoSeeking(true);
                             seekTo(seek);
                         }
                     } catch (Exception e) {
@@ -687,11 +688,13 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 long seek = getSeek();
                 if (seek <= 0L)
                     throw new Exception("warning: seek<=0");
-                setSeek(0L);
+                boolean doSeeking = isDoSeeking();
+                if (!doSeeking)
+                    throw new Exception("warning: doSeeking false");
                 onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_START);
                 // 立即播放
                 boolean playWhenReady = isPlayWhenReady();
-                    onEvent(PlayerType.KernelType.IJK, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                onEvent(PlayerType.KernelType.IJK, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
             } catch (Exception e) {
                 LogUtil.log("VideoIjkPlayer => onSeekComplete => Exception1 " + e.getMessage());
             }

@@ -341,10 +341,11 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                         onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_START);
                         // 立即播放
                         boolean playWhenReady = isPlayWhenReady();
-                            onEvent(PlayerType.KernelType.FFPLAYER, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                        onEvent(PlayerType.KernelType.FFPLAYER, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
                     } else {
                         onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_RENDERING_START);
                         // 起播快进
+                        setDoSeeking(true);
                         seekTo(seek);
                     }
                 } catch (Exception e) {
@@ -365,11 +366,13 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 long seek = getSeek();
                 if (seek <= 0L)
                     throw new Exception("warning: seek<=0");
-                setSeek(0L);
+                boolean doSeeking = isDoSeeking();
+                if (!doSeeking)
+                    throw new Exception("warning: doSeeking false");
                 onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_START);
                 // 立即播放
                 boolean playWhenReady = isPlayWhenReady();
-                    onEvent(PlayerType.KernelType.FFPLAYER, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                onEvent(PlayerType.KernelType.FFPLAYER, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
             } catch (Exception e) {
                 LogUtil.log("VideoFFmpegPlayer => onSeekComplete => Exception1 " + e.getMessage());
             }
