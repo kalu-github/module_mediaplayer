@@ -33,7 +33,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
         // 试看
         try {
             long trySeeDuration = getTrySeeDuration();
-            if (trySeeDuration>0L)
+            if (trySeeDuration > 0L)
                 throw new Exception("warning: trySee true");
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception1 " + e.getMessage());
@@ -127,13 +127,11 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             case PlayerType.StateType.FAST_FORWARD_START:
             case PlayerType.StateType.FAST_REWIND_START:
                 LogUtil.log("ComponentSeek => callEventListener => show => playState = " + playState);
-                setUserTouch(true);
                 show();
                 break;
             case PlayerType.StateType.FAST_FORWARD_STOP:
             case PlayerType.StateType.FAST_REWIND_STOP:
                 LogUtil.log("ComponentSeek => callEventListener => gone => playState = " + playState);
-                setUserTouch(false);
                 hide();
                 break;
             case PlayerType.StateType.INIT:
@@ -293,33 +291,52 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
     @Override
     public void show() {
-        ComponentApiSeek.super.show();
-
         try {
+            boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
+            if (bufferingShowing)
+                throw new Exception("warning: ComponentApiBuffering true");
+            boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
+            if (warningPlayInfoShowing)
+                throw new Exception("warning: ComponentApiWarningPlayInfo true");
+            boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
+            if (menuShowing)
+                throw new Exception("warning: ComponentApiMenu true");
+            // 1
+            setUserTouch(true);
+            ComponentApiSeek.super.show();
+            // 2
+            setTag(R.id.module_mediaplayer_component_seek_sb, true);
+            // 3
             long position = getPosition();
             long duration = getDuration();
-//            LogUtil.log("ComponentSeek => show => position = " + TimeUtil.formatTimeMillis(position) + ", duration = " + TimeUtil.formatTimeMillis(duration));
-
             lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findSeekBar();
             seekBar.setMax((int) duration);
             seekBar.setProgress((int) position);
             seekBar.setPlayPosition((int) position);
         } catch (Exception e) {
-        }
-
-        try {
-            setTag(R.id.module_mediaplayer_component_seek_sb, true);
-        } catch (Exception e) {
+            LogUtil.log("ComponentSeek => show => Exception " + e.getMessage());
         }
     }
 
     @Override
     public void hide() {
-        ComponentApiSeek.super.hide();
-
         try {
+            boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
+            if (bufferingShowing)
+                throw new Exception("warning: ComponentApiBuffering true");
+            boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
+            if (warningPlayInfoShowing)
+                throw new Exception("warning: ComponentApiWarningPlayInfo true");
+            boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
+            if (menuShowing)
+                throw new Exception("warning: ComponentApiMenu true");
+            // 1
+            setUserTouch(false);
+            ComponentApiSeek.super.hide();
+            // 2
             setTag(R.id.module_mediaplayer_component_seek_sb, false);
         } catch (Exception e) {
+            LogUtil.log("ComponentSeek => show => Exception " + e.getMessage());
         }
     }
 }

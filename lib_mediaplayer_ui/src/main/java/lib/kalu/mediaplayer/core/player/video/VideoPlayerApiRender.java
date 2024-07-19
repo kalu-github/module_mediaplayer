@@ -62,7 +62,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             decorView.addView(rootView, childCount);
             // 切换焦点
             rootView.setFocusable(true);
-            rootView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+//            rootView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
             rootView.requestFocus();
             LogUtil.log("VideoPlayerApiRender => startFull => requestFocus");
             // ...
@@ -105,7 +105,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             parentView.addView(rootView, 0);
             // 切换焦点
             rootView.setFocusable(false);
-            rootView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+//            rootView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
             View focusView = decorView.findViewById((int) tagFocus);
             focusView.requestFocus();
             // 4
