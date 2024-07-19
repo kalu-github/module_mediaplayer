@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.core.player.video;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
@@ -59,15 +60,21 @@ interface VideoPlayerApiBase {
             ViewGroup decorView = findDecorView((View) this);
             if (null == decorView)
                 throw new Exception("decorView error: null");
-            ViewGroup viewRoot = decorView.findViewById(R.id.module_mediaplayer_root);
-            if (null == viewRoot)
-                throw new Exception("viewRoot error: null");
-            Object tag = viewRoot.getTag(R.id.module_mediaplayer_root_parent_id);
-            if (null == tag)
-                throw new Exception("warning: tagId null");
-            int id = ((View) viewRoot.getParent()).getId();
-            if (id == (int) tag)
-                throw new Exception("warning: current not full");
+            View focus = decorView.findFocus();
+            if (null == focus)
+                throw new Exception("error: focus null");
+            int focusId = focus.getId();
+            if (focusId != R.id.module_mediaplayer_id_player)
+                throw new Exception("error: focusId != R.id.module_mediaplayer_id_player");
+//            ViewGroup viewRoot = decorView.findViewById(R.id.module_mediaplayer_root);
+//            if (null == viewRoot)
+//                throw new Exception("viewRoot error: null");
+//            Object tag = viewRoot.getTag(R.id.module_mediaplayer_root_parent_id);
+//            if (null == tag)
+//                throw new Exception("warning: tagId null");
+//            int id = ((View) viewRoot.getParent()).getId();
+//            if (id == (int) tag)
+//                throw new Exception("warning: current not full");
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiBase => isFull => " + e.getMessage());
@@ -80,16 +87,18 @@ interface VideoPlayerApiBase {
             ViewGroup decorView = findDecorView((View) this);
             if (null == decorView)
                 throw new Exception("decorView error: null");
-            ViewGroup viewRoot = decorView.findViewById(R.id.module_mediaplayer_root);
-            if (null == viewRoot)
-                throw new Exception("viewRoot error: null");
-            Object tag = viewRoot.getTag(R.id.module_mediaplayer_root_parent_id);
-            if (null == tag)
-                throw new Exception("warning: tagId null");
-            int id = ((View) viewRoot.getParent()).getId();
-            if (id == (int) tag)
-                throw new Exception("warning: current not float");
-            return true;
+            View rootView = decorView.findViewById(R.id.module_mediaplayer_id_player);
+            if (null == rootView)
+                throw new Exception("error: rootView null");
+            ViewParent parentView = rootView.getParent();
+            if (null == parentView)
+                throw new Exception("error: parentView null");
+            if (parentView instanceof PlayerLayout)
+                throw new Exception("warning: parentView is PlayerLayout");
+            ViewGroup.LayoutParams layoutParams = rootView.getLayoutParams();
+            int width = layoutParams.width;
+            int height = layoutParams.height;
+            return width != ViewGroup.LayoutParams.MATCH_PARENT && height != ViewGroup.LayoutParams.MATCH_PARENT;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiBase => isFloat => " + e.getMessage());
             return false;

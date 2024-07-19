@@ -56,7 +56,6 @@ public class PlayerLayout extends RelativeLayout {
             if (childCount > 0)
                 throw new Exception("childCount warning: " + childCount);
             PlayerView playerView = new PlayerView(getContext());
-            playerView.setTag(R.id.module_mediaplayer_root_parent_id, getId());
             playerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
             addView(playerView);
         } catch (Exception e) {
@@ -117,7 +116,7 @@ public class PlayerLayout extends RelativeLayout {
                     LogUtil.log("PlayerLayout => getPlayerView => childAt = " + childAt);
                     if (null == childAt)
                         continue;
-                    if (childAt.getId() == R.id.module_mediaplayer_root) {
+                    if (childAt.getId() == R.id.module_mediaplayer_id_player) {
                         return (PlayerView) childAt;
                     }
                 }

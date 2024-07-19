@@ -30,7 +30,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     public PlayerView(Context context) {
         super(context);
-        setId(R.id.module_mediaplayer_root);
+        setId(R.id.module_mediaplayer_id_player);
         // player
         RelativeLayout layoutPlayer = new RelativeLayout(getContext());
         layoutPlayer.setId(R.id.module_mediaplayer_video);
@@ -80,7 +80,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-//        LogUtil.log("PlayerView => dispatchKeyEvent => action = " + event.getAction() + ", code = " + event.getKeyCode());
+        LogUtil.log("PlayerView => dispatchKeyEvent => action = " + event.getAction() + ", code = " + event.getKeyCode() + ", isFull = " + isFull());
         try {
             // step1
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {

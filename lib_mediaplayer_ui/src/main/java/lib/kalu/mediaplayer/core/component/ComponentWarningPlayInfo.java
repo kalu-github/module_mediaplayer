@@ -47,28 +47,11 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
         switch (playState) {
             case PlayerType.StateType.START_PLAY_WHEN_READY_NO:
                 LogUtil.log("ComponentWarningPlayInfo => callEvent => START_PLAY_WHEN_READY_NO");
-                try {
-                    boolean componentShowing = isComponentShowing();
-                    if (!componentShowing)
-                        throw new Exception("warning: componentShowing false");
-                    hide();
-                } catch (Exception e) {
-                    LogUtil.log("ComponentWarningPlayInfo => callEvent => Exception1 " + e.getMessage());
-                }
+                hide();
                 break;
             case PlayerType.StateType.VIDEO_RENDERING_START:
                 LogUtil.log("ComponentWarningPlayInfo => callEvent => VIDEO_RENDERING_START");
-                try {
-                    boolean componentShowing = isComponentShowing();
-                    if (componentShowing)
-                        throw new Exception("warning: componentShowing true");
-                    long trySeeDuration = getTrySeeDuration();
-                    if (trySeeDuration > 0L)
-                        throw new Exception("warning: trySee true");
-                    show();
-                } catch (Exception e) {
-                    LogUtil.log("ComponentWarningPlayInfo => callEvent => Exception2 " + e.getMessage());
-                }
+                show();
                 break;
         }
     }
@@ -109,27 +92,30 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     @Override
     public void show() {
 //        LogUtil.log("ComponentWarningPlayInfo => show");
-        ComponentApiWarningPlayInfo.super.show();
 
-        // 播放记录提示
         try {
+            boolean componentShowing = isComponentShowing();
+            if (componentShowing)
+                throw new Exception("warning: componentShowing true");
+            long trySeeDuration = getTrySeeDuration();
+            if (trySeeDuration > 0L)
+                throw new Exception("warning: trySee true");
+            // 1
+            ComponentApiWarningPlayInfo.super.show();
+            // 2. 标题
+            TextView titleView = findViewById(R.id.module_mediaplayer_component_warning_play_info_title);
+            titleView.setText(getTitle());
+            // 3. 播放记录提示
             boolean showWarningPlayInfoRecord = isShowWarningPlayInfoRecord();
-            if (!showWarningPlayInfoRecord)
-                throw new Exception("warning: showWarningPlayInfoRecord false");
-            long seek = getSeek();
-            if (seek <= 0L)
-                throw new Exception("warning: seek <=0");
-            String millis = TimeUtil.formatTimeMillis(seek);
-            String string = getResources().getString(R.string.module_mediaplayer_string_play_record, millis);
-            TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_record);
-            textView.setText(string);
-        } catch (Exception e) {
-        }
-
-        try {
-            String mediaTitle = getTitle();
-            TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_title);
-            textView.setText(mediaTitle);
+            if (showWarningPlayInfoRecord) {
+                long seek = getSeek();
+                if (seek > 0L) {
+                    String millis = TimeUtil.formatTimeMillis(seek);
+                    String string = getResources().getString(R.string.module_mediaplayer_string_play_record, millis);
+                    TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_record);
+                    textView.setText(string);
+                }
+            }
         } catch (Exception e) {
         }
 
@@ -149,13 +135,21 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     @Override
     public void hide() {
 //        LogUtil.log("ComponentWarningPlayInfo => hide");
-        ComponentApiWarningPlayInfo.super.hide();
 
-        // 播放记录提示
         try {
-            TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_record);
-            textView.setText("");
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            // 1
+            ComponentApiWarningPlayInfo.super.hide();
+            // 2. 标题
+            TextView titleView = findViewById(R.id.module_mediaplayer_component_warning_play_info_title);
+            titleView.setText("");
+            // 3. 播放记录提示
+            TextView recordView = findViewById(R.id.module_mediaplayer_component_warning_play_info_record);
+            recordView.setText("");
         } catch (Exception e) {
+            LogUtil.log("ComponentWarningPlayInfo => hide => Exception " + e.getMessage());
         }
     }
 
