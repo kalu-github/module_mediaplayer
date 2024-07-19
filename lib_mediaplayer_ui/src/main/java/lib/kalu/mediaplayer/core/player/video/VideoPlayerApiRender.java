@@ -125,10 +125,10 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
     default boolean startFloat() {
         try {
             callEvent(PlayerType.StateType.FLOAT_START);
-            boolean full = isFull();
-            LogUtil.log("VideoPlayerApiRender => startFloat => full = " + full);
-            if (full)
-                throw new Exception("warning: full true");
+            boolean aFloat = isFloat();
+            LogUtil.log("VideoPlayerApiRender => startFloat => aFloat = " + aFloat);
+            if (aFloat)
+                throw new Exception("warning: aFloat true");
             ViewGroup decorView = findDecorView((View) this);
             LogUtil.log("VideoPlayerApiRender => startFloat => decorView = " + decorView);
             if (null == decorView)
@@ -172,9 +172,9 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
     default boolean stopFloat() {
         try {
             callEvent(PlayerType.StateType.FLOAT_START);
-            boolean full = isFull();
-            if (!full)
-                throw new Exception("warning: full false");
+            boolean aFloat = isFloat();
+            if (!aFloat)
+                throw new Exception("warning: aFloat false");
             ViewGroup decorView = findDecorView((View) this);
             if (null == decorView)
                 throw new Exception("error: decorView null");
