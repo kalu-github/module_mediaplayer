@@ -81,6 +81,17 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                 LogUtil.log("ComponentPause[gone] => playState = " + playState);
                 hide();
                 break;
+            case PlayerType.StateType.START_PLAY_WHEN_READY_NO:
+                LogUtil.log("ComponentPause => callEvent => START_PLAY_WHEN_READY_NO");
+                try {
+                    boolean componentShowing = isComponentShowing();
+                    if (componentShowing)
+                        throw new Exception("warning: componentShowing true");
+                    show();
+                } catch (Exception e) {
+                    LogUtil.log("ComponentPause => callEvent => Exception[START_PLAY_WHEN_READY_NO] " + e.getMessage());
+                }
+                break;
             case PlayerType.StateType.COMPONENT_MENU_SHOW:
                 LogUtil.log("ComponentPause[show] => playState = " + playState);
                 try {
@@ -117,7 +128,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
 
         try {
             long trySeeDuration = getTrySeeDuration();
-            if (trySeeDuration>0L)
+            if (trySeeDuration > 0L)
                 throw new Exception("warning: trySee true");
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
@@ -138,7 +149,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
 
         try {
             long trySeeDuration = getTrySeeDuration();
-            if (trySeeDuration>0L)
+            if (trySeeDuration > 0L)
                 throw new Exception("warning: trySee true");
             boolean componentShowing = isComponentShowing();
             if (componentShowing)

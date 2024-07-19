@@ -45,17 +45,29 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     @Override
     public void callEvent(int playState) {
         switch (playState) {
+            case PlayerType.StateType.PAUSE:
+                LogUtil.log("ComponentWarningPlayInfo => callEvent => PAUSE");
+                try {
+                    boolean componentShowing = isComponentShowing();
+                    if (!componentShowing)
+                        throw new Exception("warning: componentShowing false");
+                    hide();
+                } catch (Exception e) {
+                    LogUtil.log("ComponentWarningPlayInfo => callEvent => Exception1 " + e.getMessage());
+                }
+                break;
             case PlayerType.StateType.VIDEO_RENDERING_START:
-                LogUtil.log("ComponentWarningPlayInfo => playState = " + playState);
+                LogUtil.log("ComponentWarningPlayInfo => callEvent => VIDEO_RENDERING_START");
                 try {
                     boolean componentShowing = isComponentShowing();
                     if (componentShowing)
-                        throw new Exception("warning: componentShowing false");
+                        throw new Exception("warning: componentShowing true");
                     long trySeeDuration = getTrySeeDuration();
-                    if (trySeeDuration>0L)
+                    if (trySeeDuration > 0L)
                         throw new Exception("warning: trySee true");
                     show();
-                } catch (Exception d) {
+                } catch (Exception e) {
+                    LogUtil.log("ComponentWarningPlayInfo => callEvent => Exception2 " + e.getMessage());
                 }
                 break;
         }
@@ -63,6 +75,15 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
+
+        // 自动隐藏
+        try {
+            if (position < 2000)
+                throw new Exception("warning: position<2000");
+            hide();
+        } catch (Exception e) {
+        }
+
         try {
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
@@ -82,6 +103,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
     @Override
     public void show() {
+//        LogUtil.log("ComponentWarningPlayInfo => show");
         ComponentApiWarningPlayInfo.super.show();
 
         // 播放记录提示
@@ -117,18 +139,11 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             seekBar.setMax((int) (trySeeDuration > 0L ? trySeeDuration : duration));
         } catch (Exception e) {
         }
-
-        // 4s后隐藏
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hide();
-            }
-        }, 2000);
     }
 
     @Override
     public void hide() {
+//        LogUtil.log("ComponentWarningPlayInfo => hide");
         ComponentApiWarningPlayInfo.super.hide();
 
         // 播放记录提示

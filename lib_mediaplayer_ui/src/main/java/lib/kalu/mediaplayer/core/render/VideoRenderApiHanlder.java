@@ -53,8 +53,4 @@ public interface VideoRenderApiHanlder extends VideoRenderApiBase {
             LogUtil.log("VideoRenderApiHanlder => stopUpdateProgress => Exception" + e.getMessage());
         }
     }
-
-    default void stopHandler() {
-        stopUpdateProgress();
-    }
 }

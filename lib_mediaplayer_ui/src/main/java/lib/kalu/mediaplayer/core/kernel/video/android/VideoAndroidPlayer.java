@@ -394,12 +394,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START);
                             // 立即播放
                             boolean playWhenReady = isPlayWhenReady();
-                            if (playWhenReady) {
-                                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES);
-                            } else {
-                                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
-                                pause();
-                            }
+                            onEvent(PlayerType.KernelType.ANDROID, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
                         } else {
                             // 起播快进
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
@@ -429,12 +424,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START);
                 // 立即播放
                 boolean playWhenReady = isPlayWhenReady();
-                if (playWhenReady) {
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES);
-                } else {
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
-                    pause();
-                }
+                    onEvent(PlayerType.KernelType.ANDROID, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
             } catch (Exception e) {
                 LogUtil.log("VideoAndroidPlayer => onSeekComplete => Exception1 " + e.getMessage());
             }

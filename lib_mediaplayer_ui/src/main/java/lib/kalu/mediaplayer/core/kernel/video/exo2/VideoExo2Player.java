@@ -825,12 +825,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START);
                             // 立即播放
                             boolean playWhenReady = isPlayWhenReady();
-                            if (playWhenReady) {
-                                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES);
-                            } else {
-                                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
-                                pause();
-                            }
+                                onEvent(PlayerType.KernelType.EXO_V2, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
                         } catch (Exception e) {
                             LogUtil.log("VideoExo2Player => onPlaybackStateChanged => STATE_READY => Exception1 " + e.getMessage());
                         }
@@ -881,12 +876,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START);
                     // 立即播放
                     boolean playWhenReady = isPlayWhenReady();
-                    if (playWhenReady) {
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES);
-                    } else {
-                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
-                        pause();
-                    }
+                    onEvent(PlayerType.KernelType.EXO_V2, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
                 } else {
                     // 起播快进
                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);

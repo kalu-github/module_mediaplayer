@@ -166,12 +166,23 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
+    default void resume() {
+        resume(true);
+    }
+
+    default void resume(boolean callEvent) {
+        setScreenKeep(true);
+        startRenderUpdateProgress();
+        resumeKernel(callEvent);
+    }
+
     default void pause() {
         pause(true);
     }
 
     default void pause(boolean callEvent) {
         setScreenKeep(false);
+        stopRenderUpdateProgress();
         pauseKernel(callEvent);
     }
 
@@ -181,7 +192,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void stop(boolean callEvent, boolean clearTag) {
         setScreenKeep(false);
-        stopRender();
+        stopRenderUpdateProgress();
         stopKernel(callEvent, clearTag);
     }
 
@@ -222,21 +233,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             start(build);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => restart => " + e.getMessage());
-        }
-    }
-
-    default void resume() {
-        resume(true);
-    }
-
-    default void resume(boolean callEvent) {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
-            resumeKernel(callEvent);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => resume => " + e.getMessage());
         }
     }
 
@@ -494,6 +490,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             break;
                         // playWhenReady2
                         case PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO:
+                            pause();
                             callEvent(PlayerType.StateType.START_PLAY_WHEN_READY_NO);
                             break;
                         // 初始化开始 => loading start

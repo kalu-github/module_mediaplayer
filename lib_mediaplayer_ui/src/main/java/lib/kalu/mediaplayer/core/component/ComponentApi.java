@@ -599,6 +599,18 @@ public interface ComponentApi {
         }
     }
 
+    default boolean isPlayWhenReady() {
+        try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            return args.isPlayWhenReady();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => isPlayWhenReady => " + e.getMessage());
+            return true;
+        }
+    }
+
     default long getSeek() {
         try {
             StartArgs args = getStartArgs();

@@ -409,6 +409,7 @@ public @interface PlayerType {
         int BUFFERING_STOP = 7_017;
         int SEEK_START = 7_018;
         int SEEK_FINISH = 7_019;
+
         // 视频旋转信息
 //        int VIDEO_ROTATION_CHANGED = IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
 //        int AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;
