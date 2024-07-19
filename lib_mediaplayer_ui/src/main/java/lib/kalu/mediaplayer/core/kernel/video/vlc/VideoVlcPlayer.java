@@ -292,13 +292,13 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
 
         @Override
         public void onPlay() {
-            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_STOP);
-            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.VIDEO_START);
-
-            long seek = getSeek();
-            if (seek > 0) {
-                seekTo(seek);
-            }
+//            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_STOP);
+//            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.VIDEO_START);
+//
+//            long seek = getSeek();
+//            if (seek > 0) {
+//                seekTo(seek);
+//            }
         }
 
         @Override

@@ -76,25 +76,22 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
     }
 
     @Override
-    public int initLayoutIdComponentRoot() {
+    public int initViewIdRoot() {
         return R.id.module_mediaplayer_component_loading_gradient_root;
     }
 
-    /*************/
-
-
     @Override
-    public int initLayoutIdComponentBackground() {
+    public int initViewIdBackground() {
         return R.id.module_mediaplayer_component_loading_gradient_bg;
     }
 
     @Override
-    public int initLayoutIdText() {
+    public int initViewIdText() {
         return R.id.module_mediaplayer_component_loading_gradient_name;
     }
 
     @Override
-    public int initLayoutIdNetSpeed() {
+    public int initViewIdNetSpeed() {
         return R.id.module_mediaplayer_component_loading_gradient_net;
     }
 }

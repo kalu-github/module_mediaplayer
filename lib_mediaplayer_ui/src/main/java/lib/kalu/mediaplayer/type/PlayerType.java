@@ -78,40 +78,41 @@ public @interface PlayerType {
         int VIDEO_RENDERING_START = 3_009; // 出画面 视频首帧
         int VIDEO_RENDERING_START_SEEK = 3_010; // 续播
         int START = 3_011; // 开始播放
-        int START_RETRY = 3_012; // 开始播放
-        int START_SEEK = 3_013; // 开始播放
-        int START_PLAY_WHEN_READY_PAUSE = 3_014; // 开始播放
-        int END = 3_015; // 播放完成
-        int TRY_SEE_FINISH = 3_016; // 试看完成
-        int PAUSE = 3_017; // 暂停播放
+        int START_PLAY_WHEN_READY_YES = 3_012; // 开始播放
+        int START_PLAY_WHEN_READY_NO = 3_013; // 开始播放
+        int START_RETRY = 3_014; // 开始播放
+        int START_SEEK = 3_015; // 开始播放
+        int END = 3_016; // 播放完成
+        int TRY_SEE_FINISH = 3_017; // 试看完成
+        int PAUSE = 3_018; // 暂停播放
         int RESUME = 3_019; // 恢复播放
-        int RESTAER = 3_021; // 重播一次
-        int CLOSE = 3_022; // 暂停播放
-        int BUFFERING_TIMEOUT = 3_023; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-        int BUFFERING_START = 3_024; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-        int BUFFERING_STOP = 3_025; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int START_ABORT = 3_026; // 开始播放中止
-        int ONCE_LIVE = 3_027; // 即将开播
-        int FAST_FORWARD_START = 3_028; // 快进
-        int FAST_FORWARD_STOP = 3_029; // 快进
-        int FAST_REWIND_START = 3_030; // 快进
-        int FAST_REWIND_STOP = 3_031; // 快进
+        int RESTAER = 3_020; // 重播一次
+        int CLOSE = 3_021; // 暂停播放
+        int BUFFERING_TIMEOUT = 3_022; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
+        int BUFFERING_START = 3_023; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
+        int BUFFERING_STOP = 3_024; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
+        int START_ABORT = 3_025; // 开始播放中止
+        int ONCE_LIVE = 3_026; // 即将开播
+        int FAST_FORWARD_START = 3_027; // 快进
+        int FAST_FORWARD_STOP = 3_028; // 快进
+        int FAST_REWIND_START = 3_029; // 快进
+        int FAST_REWIND_STOP = 3_030; // 快进
 
-        int ERROR = 3_032; // 错误
-        int COMPONENT_SEEK_SHOW = 3_034; // 显示进度条
-        int RELEASE = 3_035;
-        int RELEASE_EXCEPTION = 3_036;
+        int ERROR = 3_031; // 错误
+        int COMPONENT_SEEK_SHOW = 3_032; // 显示进度条
+        int RELEASE = 3_033;
+        int RELEASE_EXCEPTION = 3_034;
 
-        int FULL_START = 3_037;
-        int FULL_SUCC = 3_038;
-        int FULL_FAIL = 3_039;
-        int FLOAT_START = 3_040;
-        int FLOAT_SUCC = 3_041;
-        int FLOAT_FAIL = 3_042;
+        int FULL_START = 3_035;
+        int FULL_SUCC = 3_036;
+        int FULL_FAIL = 3_037;
+        int FLOAT_START = 3_038;
+        int FLOAT_SUCC = 3_039;
+        int FLOAT_FAIL = 3_040;
 
 
-        int COMPONENT_MENU_SHOW = 3_043;
-        int COMPONENT_MENU_HIDE = 3_044;
+        int COMPONENT_MENU_SHOW = 3_041;
+        int COMPONENT_MENU_HIDE = 3_042;
 
         @Documented
         @Retention(CLASS)
@@ -136,9 +137,10 @@ public @interface PlayerType {
                 VIDEO_RENDERING_START,
                 VIDEO_RENDERING_START_SEEK,
                 START,
+                START_PLAY_WHEN_READY_YES,
+                START_PLAY_WHEN_READY_NO,
                 START_RETRY,
                 START_SEEK,
-                START_PLAY_WHEN_READY_PAUSE,
                 PAUSE,
                 RESUME,
                 RESTAER,
@@ -390,7 +392,9 @@ public @interface PlayerType {
         int VIDEO_RENDERING_START_SEEK = 7_011;
         // 视频开播
         int VIDEO_START = 7_012;
-        int VIDEO_END = 7_013;
+        int VIDEO_START_PLAY_WHEN_READY_YES = 7_013;
+        int VIDEO_START_PLAY_WHEN_READY_NO = 7_014;
+        int VIDEO_END = 7_015;
 //        int VIDEO_START_RETRY = 7_011;
 //        int VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE;
         //        int VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
@@ -400,11 +404,11 @@ public @interface PlayerType {
         // 缓冲开始
 //        int OPEN_INPUT = IMediaPlayer.MEDIA_INFO_OPEN_INPUT;
         // 缓冲开始
-        int BUFFERING_START = 7_014;
+        int BUFFERING_START = 7_016;
         // 缓冲结束
-        int BUFFERING_STOP = 7_015;
-        int SEEK_START = 7_016;
-        int SEEK_FINISH = 7_017;
+        int BUFFERING_STOP = 7_017;
+        int SEEK_START = 7_018;
+        int SEEK_FINISH = 7_019;
         // 视频旋转信息
 //        int VIDEO_ROTATION_CHANGED = IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
 //        int AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;
@@ -430,6 +434,8 @@ public @interface PlayerType {
                 VIDEO_RENDERING_START,
                 VIDEO_RENDERING_START_SEEK,
                 VIDEO_START,
+                VIDEO_START_PLAY_WHEN_READY_YES,
+                VIDEO_START_PLAY_WHEN_READY_NO,
 //                VIDEO_START_RETRY,
 //                VIDEO_START_SEEK,
                 VIDEO_END,

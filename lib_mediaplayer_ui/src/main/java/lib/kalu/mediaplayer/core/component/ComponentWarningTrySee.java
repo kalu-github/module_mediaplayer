@@ -21,12 +21,12 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
     }
 
     @Override
-    public int initLayoutIdComponentRoot() {
+    public int initViewIdRoot() {
         return R.id.module_mediaplayer_component_warning_try_see_root;
     }
 
     @Override
-    public int initLayoutIdText() {
+    public int initViewIdText() {
         return R.id.module_mediaplayer_component_warning_try_see_title;
     }
 

@@ -15,6 +15,7 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.args.StartArgs;
@@ -25,6 +26,28 @@ import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public interface ComponentApi {
+
+    @LayoutRes
+    int initLayoutId();
+
+    @IdRes
+    int initViewIdRoot();
+
+    @IdRes
+    default int initViewIdBackground() {
+        return -1;
+    }
+
+    @IdRes
+    default int initViewIdImage() {
+        return -1;
+    }
+
+    @IdRes
+    default int initViewIdText() {
+        return -1;
+    }
+
 
     default boolean enableDispatchKeyEvent() {
         return false;
@@ -39,10 +62,6 @@ public interface ComponentApi {
         }
     }
 
-    int initLayoutId();
-
-    int initLayoutIdComponentRoot();
-
     default void setComponentVisibility(@IdRes int id, int visibility) {
         try {
             View viewById = ((View) this).findViewById(id);
@@ -56,7 +75,7 @@ public interface ComponentApi {
 
     default boolean isComponentShowing() {
         try {
-            int rootId = initLayoutIdComponentRoot();
+            int rootId = initViewIdRoot();
             View viewById = ((View) this).findViewById(rootId);
             if (null == viewById)
                 throw new Exception("error: viewById null");
@@ -77,14 +96,9 @@ public interface ComponentApi {
 
     /******************/
 
-    @IdRes
-    default int initLayoutIdComponentBackground() {
-        return -1;
-    }
-
     default void setComponentBackgroundColorInt(@ColorInt int v) {
         try {
-            int layoutId = initLayoutIdComponentBackground();
+            int layoutId = initViewIdBackground();
             if (layoutId == -1)
                 throw new Exception("error: layoutId = -1");
             View view = ((View) this).findViewById(layoutId);
@@ -96,7 +110,7 @@ public interface ComponentApi {
 
     default void setComponentBackgroundColorRes(@ColorRes int v) {
         try {
-            int layoutId = initLayoutIdComponentBackground();
+            int layoutId = initViewIdBackground();
             if (layoutId == -1)
                 throw new Exception("error: layoutId = -1");
             View view = ((View) this).findViewById(layoutId);
@@ -109,7 +123,7 @@ public interface ComponentApi {
 
     default void setComponentBackgroundDrawableRes(@DrawableRes int v) {
         try {
-            int layoutId = initLayoutIdComponentBackground();
+            int layoutId = initViewIdBackground();
             if (layoutId == -1)
                 throw new Exception("error: layoutId = -1");
             View view = ((View) this).findViewById(layoutId);
@@ -121,14 +135,9 @@ public interface ComponentApi {
 
     /******************/
 
-    @IdRes
-    default int initLayoutIdImage() {
-        return -1;
-    }
-
     default void setComponentImageDrawableRes(@DrawableRes int v) {
         try {
-            int layoutId = initLayoutIdImage();
+            int layoutId = initViewIdImage();
             if (layoutId == -1)
                 throw new Exception("error: layoutId = -1");
             ImageView imageView = ((View) this).findViewById(layoutId);
@@ -140,7 +149,7 @@ public interface ComponentApi {
 
     default void setComponentImageDrawable(Drawable drawable) {
         try {
-            int layoutId = initLayoutIdImage();
+            int layoutId = initViewIdImage();
             if (layoutId == -1)
                 throw new Exception("error: layoutId = -1");
             ImageView imageView = ((View) this).findViewById(layoutId);
@@ -152,7 +161,7 @@ public interface ComponentApi {
 
     default void setComponentImageBitmap(Bitmap bitmap) {
         try {
-            int layoutId = initLayoutIdImage();
+            int layoutId = initViewIdImage();
             if (layoutId == -1)
                 throw new Exception("error: layoutId = -1");
             ImageView imageView = ((View) this).findViewById(layoutId);
@@ -164,14 +173,9 @@ public interface ComponentApi {
 
     /******************/
 
-    @IdRes
-    default int initLayoutIdText() {
-        return -1;
-    }
-
     default void setComponentText(String v) {
         try {
-            int layoutId = initLayoutIdText();
+            int layoutId = initViewIdText();
             if (layoutId == -1)
                 throw new Exception("error: layoutId = -1");
             TextView textView = ((View) this).findViewById(layoutId);
@@ -183,7 +187,7 @@ public interface ComponentApi {
 
     default void setComponentText(@StringRes int v) {
         try {
-            int layoutId = initLayoutIdText();
+            int layoutId = initViewIdText();
             if (layoutId == -1)
                 throw new Exception("error: layoutId = -1");
             TextView textView = ((View) this).findViewById(layoutId);
@@ -195,7 +199,7 @@ public interface ComponentApi {
 
     default void setComponentTextSize(@DimenRes int v) {
         try {
-            int layoutId = initLayoutIdText();
+            int layoutId = initViewIdText();
             if (layoutId == -1)
                 throw new Exception("error: layoutId = -1");
             TextView textView = ((View) this).findViewById(layoutId);
@@ -208,7 +212,7 @@ public interface ComponentApi {
 
     default void setComponentTextSize(float v) {
         try {
-            int layoutId = initLayoutIdText();
+            int layoutId = initViewIdText();
             if (layoutId == -1)
                 throw new Exception("error: layoutId = -1");
             TextView textView = ((View) this).findViewById(layoutId);
@@ -220,7 +224,7 @@ public interface ComponentApi {
 
     default void setComponentTextColorInt(@ColorInt int v) {
         try {
-            int layoutId = initLayoutIdText();
+            int layoutId = initViewIdText();
             if (layoutId == -1)
                 throw new Exception("error: layoutId = -1");
             TextView textView = ((View) this).findViewById(layoutId);
@@ -232,7 +236,7 @@ public interface ComponentApi {
 
     default void setComponentTextColorRes(@ColorRes int v) {
         try {
-            int layoutId = initLayoutIdText();
+            int layoutId = initViewIdText();
             if (layoutId == -1)
                 throw new Exception("error: layoutId = -1");
             TextView textView = ((View) this).findViewById(layoutId);
@@ -243,15 +247,12 @@ public interface ComponentApi {
         }
     }
 
-
-//    /******************/
-
     default void show() {
         try {
             boolean componentShowing = isComponentShowing();
             if (componentShowing)
                 throw new Exception("warning: componentShowing true");
-            int rootId = initLayoutIdComponentRoot();
+            int rootId = initViewIdRoot();
             setComponentVisibility(rootId, View.VISIBLE);
         } catch (Exception e) {
             LogUtil.log("ComponentApi => show => Exception " + e.getMessage());
@@ -263,7 +264,7 @@ public interface ComponentApi {
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
                 throw new Exception("warning: componentShowing false");
-            int rootId = initLayoutIdComponentRoot();
+            int rootId = initViewIdRoot();
             setComponentVisibility(rootId, View.GONE);
         } catch (Exception e) {
             LogUtil.log("ComponentApi => hide => Exception " + e.getMessage());

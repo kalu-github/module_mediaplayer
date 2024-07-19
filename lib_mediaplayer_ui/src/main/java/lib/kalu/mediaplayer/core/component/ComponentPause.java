@@ -169,20 +169,18 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
         }
     }
 
-    /*************/
-
     @Override
-    public int initLayoutIdComponentBackground() {
+    public int initViewIdBackground() {
         return R.id.module_mediaplayer_component_pause_bg;
     }
 
     @Override
-    public int initLayoutIdText() {
+    public int initViewIdText() {
         return R.id.module_mediaplayer_component_pause_title;
     }
 
     @Override
-    public int initLayoutIdComponentRoot() {
+    public int initViewIdRoot() {
         return R.id.module_mediaplayer_component_pause_root;
     }
 }

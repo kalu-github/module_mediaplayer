@@ -337,7 +337,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public int initLayoutIdComponentRoot() {
+    public int initViewIdRoot() {
         return R.id.module_mediaplayer_component_menu_root;
     }
 

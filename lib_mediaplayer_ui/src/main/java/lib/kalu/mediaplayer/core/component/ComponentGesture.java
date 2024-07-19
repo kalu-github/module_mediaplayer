@@ -18,7 +18,7 @@ public class ComponentGesture extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public int initLayoutIdComponentRoot() {
+    public int initViewIdRoot() {
         return 0;
     }
 

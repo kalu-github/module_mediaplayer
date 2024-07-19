@@ -73,25 +73,24 @@ public class ComponentLoading extends RelativeLayout implements ComponentApiLoad
     }
 
     @Override
-    public int initLayoutIdComponentRoot() {
+    public int initViewIdRoot() {
         return R.id.module_mediaplayer_component_loading_root;
     }
 
-    /*************/
-
 
     @Override
-    public int initLayoutIdComponentBackground() {
+    public int initViewIdBackground() {
         return R.id.module_mediaplayer_component_loading_bg;
     }
 
     @Override
-    public int initLayoutIdText() {
+    public int initViewIdText() {
         return R.id.module_mediaplayer_component_loading_name;
     }
 
+
     @Override
-    public int initLayoutIdNetSpeed() {
+    public int initViewIdNetSpeed() {
         return R.id.module_mediaplayer_component_loading_net;
     }
 }

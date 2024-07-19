@@ -142,10 +142,15 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     }
 
     @Override
-    public void checkVideoView() {
-        if (getVisibility() == View.VISIBLE)
-            return;
-        pause();
+    public void checkVideoVisibility() {
+        try {
+            int visibility = getVisibility();
+            if (visibility == View.VISIBLE)
+                throw new Exception("warning: visibility == View.VISIBLE");
+            pause();
+        } catch (Exception e) {
+            LogUtil.log("PlayerView => checkVideoVisibility => Exception " + e.getMessage());
+        }
     }
 
     @Override

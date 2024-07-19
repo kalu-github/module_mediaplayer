@@ -488,6 +488,14 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //                        case PlayerType.EventType.OPEN_INPUT:
 //                            hideVideoView();
 //                            break;
+                        // playWhenReady1
+                        case PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES:
+                            callEvent(PlayerType.StateType.START_PLAY_WHEN_READY_YES);
+                            break;
+                        // playWhenReady2
+                        case PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO:
+                            callEvent(PlayerType.StateType.START_PLAY_WHEN_READY_NO);
+                            break;
                         // 初始化开始 => loading start
                         case PlayerType.EventType.LOADING_START:
                             callEvent(PlayerType.StateType.LOADING_START);
@@ -537,14 +545,8 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             callEvent(PlayerType.StateType.START);
                             // ijk需要刷新RenderView
                             initRenderView();
-//                            // step3
-                            checkVideoView();
-                            // step4
-                            boolean playWhenReady = args.isPlayWhenReady();
-                            if (!playWhenReady) {
-                                pause();
-                                callEvent(PlayerType.StateType.START_PLAY_WHEN_READY_PAUSE);
-                            }
+//                          // 检查View是否可见
+                            checkVideoVisibility();
                             break;
                         // 快进
                         case PlayerType.EventType.SEEK_START:

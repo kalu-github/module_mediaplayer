@@ -437,5 +437,5 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
         }
     }
 
-    void checkVideoView();
+    void checkVideoVisibility();
 }

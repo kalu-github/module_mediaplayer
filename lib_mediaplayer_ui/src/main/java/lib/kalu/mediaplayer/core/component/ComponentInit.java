@@ -21,7 +21,7 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public int initLayoutIdComponentRoot() {
+    public int initViewIdRoot() {
         return R.id.module_mediaplayer_component_init_root;
     }
 
@@ -40,7 +40,7 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public int initLayoutIdComponentBackground() {
+    public int initViewIdBackground() {
         return R.id.module_mediaplayer_component_init_bg;
     }
 }

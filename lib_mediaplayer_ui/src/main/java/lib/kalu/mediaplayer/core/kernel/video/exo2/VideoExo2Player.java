@@ -823,6 +823,14 @@ public final class VideoExo2Player extends VideoBasePlayer {
                                 throw new Exception("warning: seek<=0");
                             setSeek(0);
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START);
+                            // 立即播放
+                            boolean playWhenReady = isPlayWhenReady();
+                            if (playWhenReady) {
+                                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES);
+                            } else {
+                                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                                pause();
+                            }
                         } catch (Exception e) {
                             LogUtil.log("VideoExo2Player => onPlaybackStateChanged => STATE_READY => Exception1 " + e.getMessage());
                         }
@@ -871,6 +879,14 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 long seek = getSeek();
                 if (seek <= 0L) {
                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START);
+                    // 立即播放
+                    boolean playWhenReady = isPlayWhenReady();
+                    if (playWhenReady) {
+                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES);
+                    } else {
+                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                        pause();
+                    }
                 } else {
                     // 起播快进
                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);

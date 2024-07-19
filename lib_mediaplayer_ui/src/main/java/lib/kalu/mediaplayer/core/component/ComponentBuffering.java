@@ -20,7 +20,7 @@ public class ComponentBuffering extends RelativeLayout implements ComponentApiBu
     }
 
     @Override
-    public int initLayoutIdComponentRoot() {
+    public int initViewIdRoot() {
         return R.id.module_mediaplayer_component_buffering_root;
     }
 

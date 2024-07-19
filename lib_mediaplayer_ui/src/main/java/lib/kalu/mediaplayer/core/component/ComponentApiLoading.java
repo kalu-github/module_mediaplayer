@@ -15,7 +15,7 @@ public interface ComponentApiLoading extends ComponentApi {
         return mShowNetSpeed[0];
     }
 
-    int initLayoutIdNetSpeed();
+    int initViewIdNetSpeed();
 
     default void updateNetSpeed() {
         // 网速
@@ -26,7 +26,7 @@ public interface ComponentApiLoading extends ComponentApi {
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
                 throw new Exception("warning: componentShowing false");
-            int netSpeedId = initLayoutIdNetSpeed();
+            int netSpeedId = initViewIdNetSpeed();
             TextView textView = ((View) this).findViewById(netSpeedId);
             if (null == textView)
                 throw new Exception("textView error: null");

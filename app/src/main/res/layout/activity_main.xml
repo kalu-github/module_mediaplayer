@@ -437,6 +437,35 @@
                 android:layout_height="20dp"
                 android:layout_marginLeft="6dp"
                 android:gravity="center_vertical|left"
+                android:text="立即播放"
+                android:textSize="14sp" />
+
+            <RadioGroup
+                android:id="@+id/main_play_when_ready"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/main_play_when_ready_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:checked="true"
+                    android:text="开启" />
+
+                <RadioButton
+                    android:id="@+id/main_play_when_ready_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="关闭" />
+
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginLeft="6dp"
+                android:gravity="center_vertical|left"
                 android:text="选集"
                 android:textSize="14sp" />
 

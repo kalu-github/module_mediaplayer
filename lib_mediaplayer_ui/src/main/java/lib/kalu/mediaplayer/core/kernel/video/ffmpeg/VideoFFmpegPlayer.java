@@ -339,6 +339,14 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                     long seek = getSeek();
                     if (seek <= 0) {
                         onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_START);
+                        // 立即播放
+                        boolean playWhenReady = isPlayWhenReady();
+                        if (playWhenReady) {
+                            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES);
+                        } else {
+                            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                            pause();
+                        }
                     } else {
                         onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_RENDERING_START);
                         // 起播快进
@@ -364,6 +372,14 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                     throw new Exception("warning: seek<=0");
                 setSeek(0L);
                 onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_START);
+                // 立即播放
+                boolean playWhenReady = isPlayWhenReady();
+                if (playWhenReady) {
+                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES);
+                } else {
+                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                    pause();
+                }
             } catch (Exception e) {
                 LogUtil.log("VideoFFmpegPlayer => onSeekComplete => Exception1 " + e.getMessage());
             }

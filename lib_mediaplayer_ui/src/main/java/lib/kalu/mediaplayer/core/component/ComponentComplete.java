@@ -20,7 +20,7 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public int initLayoutIdComponentRoot() {
+    public int initViewIdRoot() {
         return R.id.module_mediaplayer_component_complete_root;
     }
 
@@ -41,12 +41,12 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     /*************/
 
     @Override
-    public int initLayoutIdComponentBackground() {
+    public int initViewIdBackground() {
         return R.id.module_mediaplayer_component_complete_bg;
     }
 
     @Override
-    public int initLayoutIdImage() {
+    public int initViewIdImage() {
         return R.id.module_mediaplayer_component_complete_icon;
     }
 }

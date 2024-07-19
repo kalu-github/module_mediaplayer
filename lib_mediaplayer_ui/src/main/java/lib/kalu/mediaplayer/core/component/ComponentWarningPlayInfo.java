@@ -140,7 +140,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     }
 
     @Override
-    public int initLayoutIdComponentRoot() {
+    public int initViewIdRoot() {
         return R.id.module_mediaplayer_component_warning_play_info_root;
     }
 }

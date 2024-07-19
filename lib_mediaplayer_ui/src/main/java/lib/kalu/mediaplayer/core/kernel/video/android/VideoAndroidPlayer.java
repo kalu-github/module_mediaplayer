@@ -392,6 +392,14 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                         long seek = getSeek();
                         if (seek <= 0) {
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START);
+                            // 立即播放
+                            boolean playWhenReady = isPlayWhenReady();
+                            if (playWhenReady) {
+                                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES);
+                            } else {
+                                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                                pause();
+                            }
                         } else {
                             // 起播快进
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
@@ -419,6 +427,14 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     throw new Exception("warning: seek<=0");
                 setSeek(0L);
                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START);
+                // 立即播放
+                boolean playWhenReady = isPlayWhenReady();
+                if (playWhenReady) {
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES);
+                } else {
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                    pause();
+                }
             } catch (Exception e) {
                 LogUtil.log("VideoAndroidPlayer => onSeekComplete => Exception1 " + e.getMessage());
             }

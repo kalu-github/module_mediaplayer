@@ -42,6 +42,7 @@ public final class TestActivity extends Activity {
 
     public static final int RESULT_CODE = 31001;
 
+    public static final String INTENT_PLAY_WHEN_READY = "intent_play_when_ready";
     public static final String INTENT_LIVE = "intent_live"; // live
 
     public static final String INTENT_TRY_SEE = "intent_try_see"; // 试看
@@ -288,6 +289,9 @@ public final class TestActivity extends Activity {
 
         boolean live = getIntent().getBooleanExtra(INTENT_LIVE, false);
         builder.setLive(live);
+
+        boolean playWhenReady = getIntent().getBooleanExtra(INTENT_PLAY_WHEN_READY, false);
+        builder.setPlayWhenReady(playWhenReady);
 
         StartArgs build = builder.build();
         PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
