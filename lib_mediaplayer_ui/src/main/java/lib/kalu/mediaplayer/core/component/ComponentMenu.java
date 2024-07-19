@@ -7,6 +7,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -391,9 +395,10 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             int itemCount = itemGroup.getChildCount();
 
             // 倍速
-            int[] speeds = getResources().getIntArray(R.array.module_mediaplayer_array_speeds);
+            int[] speeds = getSpeedTypes();
             // 画面
-            int[] scales = getResources().getIntArray(R.array.module_mediaplayer_array_scales);
+            int[] scales = getScaleTypes();
+
             // 选集
             int episodePlayingIndex = getEpisodePlayingIndex();
             int episodeItemCount = getEpisodeItemCount();

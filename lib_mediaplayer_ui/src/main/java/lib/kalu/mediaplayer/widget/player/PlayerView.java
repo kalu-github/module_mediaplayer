@@ -32,17 +32,19 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
         super(context);
         setId(R.id.module_mediaplayer_id_player);
         // player
-        RelativeLayout layoutPlayer = new RelativeLayout(getContext());
-        layoutPlayer.setId(R.id.module_mediaplayer_video);
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        layoutPlayer.setLayoutParams(layoutParams);
-        addView(layoutPlayer, 0);
+        RelativeLayout playerLayout = new RelativeLayout(getContext());
+        playerLayout.setId(R.id.module_mediaplayer_video);
+        LayoutParams playerLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        playerLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        playerLayout.setLayoutParams(playerLayoutParams);
+        addView(playerLayout, 0);
         // control
-        RelativeLayout controlPlayer = new RelativeLayout(getContext());
-        controlPlayer.setId(R.id.module_mediaplayer_component);
-        controlPlayer.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-        addView(controlPlayer, 1);
+        RelativeLayout controlLayout = new RelativeLayout(getContext());
+        controlLayout.setId(R.id.module_mediaplayer_component);
+        LayoutParams controlLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        controlLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        controlLayout.setLayoutParams(controlLayoutParams);
+        addView(controlLayout, 1);
     }
 
     @Override
