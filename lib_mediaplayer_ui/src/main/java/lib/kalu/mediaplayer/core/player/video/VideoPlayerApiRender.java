@@ -141,14 +141,7 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             LogUtil.log("VideoPlayerApiRender => startFloat => rootViewParent = " + rootViewParent);
             if (null == rootViewParent)
                 throw new Exception("error: rootViewParent null");
-            // 保存全屏之前的focusId, 退出全屏时需要恢复focusId
-            View focusView = decorView.findFocus();
-            LogUtil.log("VideoPlayerApiRender => startFloat => focusView = " + focusView);
-            if (null == focusView)
-                throw new Exception("error: focusView null");
             int parentId = ((View) rootViewParent).getId();
-            int focusId = focusView.getId();
-            rootView.setTag(R.id.module_mediaplayer_id_player_focus, focusId);
             rootView.setTag(R.id.module_mediaplayer_id_player_parent, parentId);
             // 移除View
             ((PlayerView) rootView).setDoWindowing(true);
@@ -163,11 +156,6 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             // 添加View
             int childCount = decorView.getChildCount();
             decorView.addView(rootView, childCount);
-            // 切换焦点
-            rootView.setFocusable(true);
-            rootView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-            rootView.requestFocus();
-            LogUtil.log("VideoPlayerApiRender => startFloat => requestFocus");
             // ...
             initRenderView();
             ((PlayerView) rootView).setDoWindowing(false);
@@ -194,9 +182,6 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             ViewGroup rootView = decorView.findViewById(R.id.module_mediaplayer_id_player);
             if (null == rootView)
                 throw new Exception("error: rootView null");
-            Object tagFocus = rootView.getTag(R.id.module_mediaplayer_id_player_focus);
-            if (null == tagFocus)
-                throw new Exception("error: tagFocus null");
             Object tagParent = rootView.getTag(R.id.module_mediaplayer_id_player_parent);
             if (null == tagParent)
                 throw new Exception("error: tagParent null");
@@ -209,11 +194,6 @@ interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListene
             // 添加View
             ViewGroup parentView = decorView.findViewById((int) tagParent);
             parentView.addView(rootView, 0);
-            // 切换焦点
-            rootView.setFocusable(false);
-            rootView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
-            View focusView = decorView.findViewById((int) tagFocus);
-            focusView.requestFocus();
             // 4
             initRenderView();
             // 5
