@@ -23,15 +23,14 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.LOADING_START:
+            case PlayerType.EventType.LOADING_START:
                 LogUtil.log("ComponentLoadingGradient => callEventListener => show => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.INIT:
-            case PlayerType.StateType.LOADING_STOP:
-            case PlayerType.StateType.ERROR:
-            case PlayerType.StateType.RELEASE:
-            case PlayerType.StateType.RELEASE_EXCEPTION:
+            case PlayerType.EventType.INIT:
+            case PlayerType.EventType.LOADING_STOP:
+            case PlayerType.EventType.ERROR:
+            case PlayerType.EventType.RELEASE:
                 LogUtil.log("ComponentLoadingGradient => callEventListener => gone => playState = " + playState);
                 hide();
                 break;

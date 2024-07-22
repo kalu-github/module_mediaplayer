@@ -27,13 +27,12 @@ public class ComponentError extends RelativeLayout implements ComponentApi {
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.ERROR:
+            case PlayerType.EventType.ERROR:
                 LogUtil.log("ComponentError[show] => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.INIT:
-            case PlayerType.StateType.RESUME:
-            case PlayerType.StateType.RESTAER:
+            case PlayerType.EventType.INIT:
+            case PlayerType.EventType.RESUME:
                 LogUtil.log("ComponentError[gone] => playState = " + playState);
                 hide();
                 break;

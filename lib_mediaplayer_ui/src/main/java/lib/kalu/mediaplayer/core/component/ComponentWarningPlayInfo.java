@@ -45,12 +45,12 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.START_PLAY_WHEN_READY_NO:
-                LogUtil.log("ComponentWarningPlayInfo => callEvent => START_PLAY_WHEN_READY_NO");
+            case PlayerType.EventType.PLAY_WHEN_READY_FALSE:
+                LogUtil.log("ComponentWarningPlayInfo => callEvent => PLAY_WHEN_READY_FALSE");
                 hide();
                 break;
-            case PlayerType.StateType.VIDEO_RENDERING_START:
-                LogUtil.log("ComponentWarningPlayInfo => callEvent => VIDEO_RENDERING_START");
+            case PlayerType.EventType.RENDER_FIRST_FRAME:
+                LogUtil.log("ComponentWarningPlayInfo => callEvent => RENDER_FIRST_FRAME");
                 show();
                 break;
         }

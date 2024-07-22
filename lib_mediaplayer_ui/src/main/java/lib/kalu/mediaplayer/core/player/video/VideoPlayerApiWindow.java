@@ -65,7 +65,7 @@ interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApiRender,
 
     default boolean startFull() {
         try {
-            callEvent(PlayerType.StateType.FULL_START);
+            callEvent(PlayerType.EventType.WINDOW_FULL_START);
             boolean full = isFull();
             LogUtil.log("VideoPlayerApiRender => startFull => full = " + full);
             if (full)
@@ -98,26 +98,36 @@ interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApiRender,
             int childCount = decorView.getChildCount();
             decorView.addView(rootView, childCount);
             // 切换焦点
+            for (int i = 0; i < childCount; i++) {
+                View childAt = decorView.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ViewGroup))
+                    continue;
+                childAt.setFocusable(false);
+                ((ViewGroup) childAt).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+            }
+            // 强制获焦
             rootView.setFocusable(true);
-//            rootView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+            rootView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
             rootView.requestFocus();
             LogUtil.log("VideoPlayerApiRender => startFull => requestFocus");
             // ...
             initRenderView();
             ((PlayerView) rootView).setDoWindowing(false);
-            callEvent(PlayerType.StateType.FULL_SUCC);
+            callEvent(PlayerType.EventType.WINDOW_FULL_SUCC);
             callWindow(PlayerType.WindowType.FULL);
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => startFull => " + e.getMessage());
-            callEvent(PlayerType.StateType.FULL_FAIL);
+            callEvent(PlayerType.EventType.WINDOW_FULL_FAIL);
             return false;
         }
     }
 
     default boolean stopFull() {
         try {
-            callEvent(PlayerType.StateType.FULL_START);
+            callEvent(PlayerType.EventType.WINDOW_FULL_START);
             boolean full = isFull();
             if (!full)
                 throw new Exception("warning: full false");
@@ -141,27 +151,38 @@ interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApiRender,
             ViewGroup parentView = decorView.findViewById((int) tagParent);
             parentView.addView(rootView, 0);
             // 切换焦点
+            int childCount = decorView.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View childAt = decorView.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ViewGroup))
+                    continue;
+                childAt.setFocusable(true);
+                ((ViewGroup) childAt).setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+            }
             rootView.setFocusable(false);
-//            rootView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+            rootView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+            // 强制获焦
             View focusView = decorView.findViewById((int) tagFocus);
             focusView.requestFocus();
             // 4
             initRenderView();
             // 5
             ((PlayerView) rootView).setDoWindowing(false);
-            callEvent(PlayerType.StateType.FULL_SUCC);
+            callEvent(PlayerType.EventType.WINDOW_FULL_SUCC);
             callWindow(PlayerType.WindowType.NORMAL);
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => stopFull => " + e.getMessage());
-            callEvent(PlayerType.StateType.FULL_FAIL);
+            callEvent(PlayerType.EventType.WINDOW_FULL_FAIL);
             return false;
         }
     }
 
     default boolean startFloat() {
         try {
-            callEvent(PlayerType.StateType.FLOAT_START);
+            callEvent(PlayerType.EventType.WINDOW_FLOAT_START);
             boolean aFloat = isFloat();
             LogUtil.log("VideoPlayerApiRender => startFloat => aFloat = " + aFloat);
             if (aFloat)
@@ -196,19 +217,19 @@ interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApiRender,
             // ...
             initRenderView();
             ((PlayerView) rootView).setDoWindowing(false);
-            callEvent(PlayerType.StateType.FLOAT_SUCC);
+            callEvent(PlayerType.EventType.WINDOW_FLOAT_SUCC);
             callWindow(PlayerType.WindowType.FLOAT);
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => startFloat => " + e.getMessage());
-            callEvent(PlayerType.StateType.FLOAT_FAIL);
+            callEvent(PlayerType.EventType.WINDOW_FLOAT_FAIL);
             return false;
         }
     }
 
     default boolean stopFloat() {
         try {
-            callEvent(PlayerType.StateType.FLOAT_START);
+            callEvent(PlayerType.EventType.WINDOW_FLOAT_START);
             boolean aFloat = isFloat();
             if (!aFloat)
                 throw new Exception("warning: aFloat false");
@@ -235,12 +256,12 @@ interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApiRender,
             initRenderView();
             // 5
             ((PlayerView) rootView).setDoWindowing(false);
-            callEvent(PlayerType.StateType.FLOAT_SUCC);
+            callEvent(PlayerType.EventType.WINDOW_FLOAT_SUCC);
             callWindow(PlayerType.WindowType.NORMAL);
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => stopFloat => " + e.getMessage());
-            callEvent(PlayerType.StateType.FLOAT_FAIL);
+            callEvent(PlayerType.EventType.WINDOW_FLOAT_FAIL);
             return false;
         }
     }

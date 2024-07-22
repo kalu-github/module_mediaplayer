@@ -27,11 +27,11 @@ public class ComponentComplete extends RelativeLayout implements ComponentApi {
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.END:
+            case PlayerType.EventType.COMPLETE:
                 LogUtil.log("ComponentComplete[show] => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.INIT:
+            case PlayerType.EventType.INIT:
                 LogUtil.log("ComponentComplete[gone] => playState = " + playState);
                 hide();
                 break;

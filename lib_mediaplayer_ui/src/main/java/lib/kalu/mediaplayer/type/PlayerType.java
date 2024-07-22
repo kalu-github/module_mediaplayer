@@ -66,100 +66,75 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface StateType {
-        int INIT = 3_001; // 播放未开始，即将进行
-        int SEEK_START = 3_002; // 开始快进
-        int SEEK_FINISH = 3_003; // 结束快进
-        int CLEAN = 3_004; //
-        int LOADING_START = 3_005; // 开始转圈
-        int LOADING_STOP = 3_006; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int KERNEL_STOP = 3_007;
-        int KERNEL_RESUME = 3_008; // 开始播放
-        int VIDEO_RENDERING_START = 3_009; // 出画面 视频首帧
-        int VIDEO_RENDERING_START_SEEK = 3_010; // 续播
-        int START = 3_011; // 开始播放
-        int START_PLAY_WHEN_READY_YES = 3_012; // 开始播放
-        int START_PLAY_WHEN_READY_NO = 3_013; // 开始播放
-        int START_RETRY = 3_014; // 开始播放
-        int START_SEEK = 3_015; // 开始播放
-        int END = 3_016; // 播放完成
-        int TRY_SEE_FINISH = 3_017; // 试看完成
-        int PAUSE = 3_018; // 暂停播放
-        int RESUME = 3_019; // 恢复播放
-        int RESTAER = 3_020; // 重播一次
-        int CLOSE = 3_021; // 暂停播放
-        int BUFFERING_TIMEOUT = 3_022; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-        int BUFFERING_START = 3_023; // 开始缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，缓冲区数据足够后恢复播放)
-        int BUFFERING_STOP = 3_024; // 停止缓冲(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放器，继续缓冲，缓冲区数据足够后恢复暂停
-        int START_ABORT = 3_025; // 开始播放中止
-        int ONCE_LIVE = 3_026; // 即将开播
-        int FAST_FORWARD_START = 3_027; // 快进
-        int FAST_FORWARD_STOP = 3_028; // 快进
-        int FAST_REWIND_START = 3_029; // 快进
-        int FAST_REWIND_STOP = 3_030; // 快进
+    @interface EventType {
+        int INIT = 3_000;            // 准备
+        int RENDER_FIRST_FRAME = 3_001;    // 出画面
+        int START = 3_002;           // 播放开始
+        int PLAY_WHEN_READY_TRUE = 3_003; // 立即播放
+        int PLAY_WHEN_READY_FALSE = 3_004;  // 不立即播放
+        int PAUSE = 3_005; // 播放暂停
+        int RESUME = 3_006; // 播放恢复
+        int COMPLETE = 3_007; // 播放完成
+        int STOP = 3_008; // 播放停止
+        int RELEASE = 3_009; // 播放销毁
 
-        int ERROR = 3_031; // 错误
-        int COMPONENT_SEEK_SHOW = 3_032; // 显示进度条
-        int RELEASE = 3_033;
-        int RELEASE_EXCEPTION = 3_034;
-
-        int FULL_START = 3_035;
-        int FULL_SUCC = 3_036;
-        int FULL_FAIL = 3_037;
-        int FLOAT_START = 3_038;
-        int FLOAT_SUCC = 3_039;
-        int FLOAT_FAIL = 3_040;
+        int SEEK_START_FORWARD = 3_010; // 快进
+        int SEEK_START_REWIND = 3_011; // 快退
+        int SEEK_FINISH = 3_012; // 快退
 
 
-        int COMPONENT_MENU_SHOW = 3_041;
-        int COMPONENT_MENU_HIDE = 3_042;
+        int LOADING_START = 3_013; // 起播加载
+        int LOADING_STOP = 3_014; // 起播加载
+        int BUFFERING_START = 3_015; // 缓冲
+        int BUFFERING_STOP = 3_016; // 缓冲
+
+        int WINDOW_FULL_START = 3_017;
+        int WINDOW_FULL_SUCC = 3_018;
+        int WINDOW_FULL_FAIL = 3_019;
+        int WINDOW_FLOAT_START = 3_020;
+        int WINDOW_FLOAT_SUCC = 3_021;
+        int WINDOW_FLOAT_FAIL = 3_022;
+        int TRY_SEE_START = 3_023;
+        int TRY_SEE_FINISH = 3_024;
+        int COMPONENT_MENU_SHOW = 3_025;
+        int COMPONENT_MENU_HIDE = 3_026;
+
+        int ERROR = 3_027; // 播放错误
+        int ERROR_BUFFERING_TIMEOUT = 3_028;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
                 INIT,
-                SEEK_START,
-                SEEK_FINISH,
-                FULL_START,
-                FULL_SUCC,
-                FULL_FAIL,
-                FLOAT_START,
-                FLOAT_SUCC,
-                FLOAT_FAIL,
-                FAST_FORWARD_START,
-                FAST_FORWARD_STOP,
-                FAST_REWIND_START,
-                FAST_REWIND_STOP,
-                CLEAN,
-                KERNEL_STOP,
-                KERNEL_RESUME,
-                VIDEO_RENDERING_START,
-                VIDEO_RENDERING_START_SEEK,
+                RENDER_FIRST_FRAME,
                 START,
-                START_PLAY_WHEN_READY_YES,
-                START_PLAY_WHEN_READY_NO,
-                START_RETRY,
-                START_SEEK,
+                PLAY_WHEN_READY_TRUE,
+                PLAY_WHEN_READY_FALSE,
                 PAUSE,
                 RESUME,
-                RESTAER,
-                CLOSE,
-                BUFFERING_TIMEOUT,
+                COMPLETE,
+                STOP,
+                RELEASE,
+                SEEK_START_FORWARD,
+                SEEK_START_REWIND,
+                SEEK_FINISH,
+                LOADING_START,
+                LOADING_STOP,
                 BUFFERING_START,
                 BUFFERING_STOP,
-                LOADING_STOP,
+                WINDOW_FULL_START,
+                WINDOW_FULL_SUCC,
+                WINDOW_FULL_FAIL,
+                WINDOW_FLOAT_START,
+                WINDOW_FLOAT_SUCC,
+                WINDOW_FLOAT_FAIL,
+                TRY_SEE_START,
                 TRY_SEE_FINISH,
-                END,
-                START_ABORT,
-                LOADING_START,
-                ONCE_LIVE,
-                ERROR,
-                RELEASE,
-                RELEASE_EXCEPTION,
-                COMPONENT_SEEK_SHOW,
                 COMPONENT_MENU_SHOW,
-                COMPONENT_MENU_HIDE})
+                COMPONENT_MENU_HIDE,
+                ERROR,
+                ERROR_BUFFERING_TIMEOUT})
         @interface Value {
         }
     }
@@ -273,7 +248,7 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface DecoderType {
-        int DEFAULT = 10_000;
+        int ANDROID_ALL_CODEC = 10_000;
         int EXO_ALL_CODEC = 10_001;
         int EXO_ALL_FFMPEG = 10_004;
         int EXO_ONLY_AUDIO_CODEC = 10_002;
@@ -284,12 +259,13 @@ public @interface PlayerType {
         int EXO_VIDEO_FFMPEG_AUDIO_CODEC = 10_008;
         int IJK_ALL_CODEC = 10_009;
         int IJK_ALL_FFMPEG = 10_010;
+        int DEFAULT = ANDROID_ALL_CODEC;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {
-                DecoderType.DEFAULT,
+                DecoderType.ANDROID_ALL_CODEC,
                 DecoderType.EXO_ALL_CODEC,
                 DecoderType.EXO_ALL_FFMPEG,
                 DecoderType.EXO_ONLY_AUDIO_CODEC,
@@ -299,7 +275,8 @@ public @interface PlayerType {
                 DecoderType.EXO_VIDEO_CODEC_AUDIO_FFMPEG,
                 DecoderType.EXO_VIDEO_FFMPEG_AUDIO_CODEC,
                 DecoderType.IJK_ALL_CODEC,
-                DecoderType.IJK_ALL_FFMPEG,})
+                DecoderType.IJK_ALL_FFMPEG,
+                DecoderType.DEFAULT})
         @interface Value {
         }
     }
@@ -363,93 +340,6 @@ public @interface PlayerType {
                 SchemeType._M3U,
                 SchemeType._M3U8,
                 SchemeType._MATCHES})
-        @interface Value {
-        }
-    }
-
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface EventType {
-        int ERROR_URL = 7_001;
-        int ERROR_RETRY = 7_002;
-        int ERROR_SOURCE = 7_003;
-        int ERROR_PARSE = 7_004;
-        int ERROR_NET = 7_005;
-        int ERROR_BUFFERING_TIMEOUT = 7_006;
-        int LOADING_START = 7_007; // 开始转圈
-        int LOADING_START_IGNORE = 7_008; // 开始转圈
-        int LOADING_STOP = 7_009; // 停止转圈(播放器正在播放时，缓冲区数据不足，进行缓冲，此时暂停播放
-        // 播放结束
-        //        // 开始渲染视频画面
-//        int VIDEO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
-//        // 开始渲染视频画面
-//        int AUDIO_SEEK_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_SEEK_RENDERING_START;
-//        // 开始渲染视频画面
-//        int AUDIO_RENDERING_START = IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START;
-        // 首帧画面
-        int VIDEO_RENDERING_START = 7_010;
-        int VIDEO_RENDERING_START_SEEK = 7_011;
-        // 视频开播
-        int VIDEO_START = 7_012;
-        int VIDEO_START_PLAY_WHEN_READY_YES = 7_013;
-        int VIDEO_START_PLAY_WHEN_READY_NO = 7_014;
-        int VIDEO_END = 7_015;
-//        int VIDEO_START_RETRY = 7_011;
-//        int VIDEO_START_SEEK = IMediaPlayer.MEDIA_INFO_MEDIA_ACCURATE_SEEK_COMPLETE;
-        //        int VIDEO_SEEK_COMPLETE_B = IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START;
-        //        int VIDEO_STOP = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
-//        int VIDEO_END = IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START;
-
-        // 缓冲开始
-//        int OPEN_INPUT = IMediaPlayer.MEDIA_INFO_OPEN_INPUT;
-        // 缓冲开始
-        int BUFFERING_START = 7_016;
-        // 缓冲结束
-        int BUFFERING_STOP = 7_017;
-        int SEEK_START = 7_018;
-        int SEEK_FINISH = 7_019;
-
-        // 视频旋转信息
-//        int VIDEO_ROTATION_CHANGED = IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED;
-//        int AUDIO_DECODED_START = IMediaPlayer.MEDIA_INFO_AUDIO_DECODED_START;
-//        int VIDEO_DECODED_START = IMediaPlayer.MEDIA_INFO_VIDEO_DECODED_START;
-
-        @Documented
-        @Retention(CLASS)
-        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({
-                ERROR_URL,
-                ERROR_RETRY,
-                ERROR_SOURCE,
-                ERROR_PARSE,
-                ERROR_NET,
-                ERROR_BUFFERING_TIMEOUT,
-//                OPEN_INPUT,
-                LOADING_START,
-                LOADING_START_IGNORE,
-                LOADING_STOP,
-//                VIDEO_SEEK_RENDERING_START,
-//                AUDIO_SEEK_RENDERING_START,
-//                AUDIO_RENDERING_START,
-                VIDEO_RENDERING_START,
-                VIDEO_RENDERING_START_SEEK,
-                VIDEO_START,
-                VIDEO_START_PLAY_WHEN_READY_YES,
-                VIDEO_START_PLAY_WHEN_READY_NO,
-//                VIDEO_START_RETRY,
-//                VIDEO_START_SEEK,
-                VIDEO_END,
-//                VIDEO_STOP,
-//                VIDEO_END,
-                BUFFERING_START,
-                BUFFERING_STOP,
-                SEEK_START,
-                SEEK_FINISH,
-//                VIDEO_ROTATION_CHANGED,
-//                AUDIO_DECODED_START,
-//                VIDEO_DECODED_START
-        })
         @interface Value {
         }
     }

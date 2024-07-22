@@ -58,7 +58,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.PAUSE:
+            case PlayerType.EventType.PAUSE:
                 try {
                     ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
                     imageView.setImageResource(R.drawable.module_mediaplayer_ic_pause);
@@ -66,7 +66,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                     LogUtil.log("ComponentWarningTrySee => callEvent => PAUSE => Exception " + e.getMessage());
                 }
                 break;
-            case PlayerType.StateType.RESUME:
+            case PlayerType.EventType.RESUME:
                 try {
                     ImageView imageView = findViewById(R.id.module_mediaplayer_component_warning_try_see_state);
                     imageView.setImageResource(R.drawable.module_mediaplayer_ic_resume);
@@ -74,7 +74,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                     LogUtil.log("ComponentWarningTrySee => callEvent => RESUME => Exception " + e.getMessage());
                 }
                 break;
-            case PlayerType.StateType.VIDEO_RENDERING_START:
+            case PlayerType.EventType.RENDER_FIRST_FRAME:
                 LogUtil.log("ComponentWarningTrySee => VIDEO_RENDERING_START => playState = " + playState);
                 try {
                     long trySeeDuration = getTrySeeDuration();
@@ -89,7 +89,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                 } catch (Exception e) {
                 }
                 break;
-            case PlayerType.StateType.TRY_SEE_FINISH:
+            case PlayerType.EventType.TRY_SEE_FINISH:
                 LogUtil.log("ComponentWarningTrySee => TRY_SEE_FINISH => playState = " + playState);
                 try {
                     long trySeeDuration = getTrySeeDuration();

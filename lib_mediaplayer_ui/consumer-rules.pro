@@ -69,7 +69,7 @@
 -keep @interface lib.kalu.mediaplayer.type.PlayerType$DecoderType {
     *;
 }
--keep @interface lib.kalu.mediaplayer.type.PlayerType$StateType {
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$EventType {
     *;
 }
 -keep @interface lib.kalu.mediaplayer.type.PlayerType$SpeedType {

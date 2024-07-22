@@ -31,10 +31,10 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     public void seekToPosition(int keyCode, int position) {
         try {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                superCallEvent(false, true, PlayerType.StateType.FAST_FORWARD_STOP);
+                superCallEvent(false, true, PlayerType.EventType.SEEK_FINISH);
                 seekTo(position);
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-                superCallEvent(false, true, PlayerType.StateType.FAST_REWIND_STOP);
+                superCallEvent(false, true, PlayerType.EventType.SEEK_FINISH);
                 seekTo(position);
             }
         } catch (Exception e) {
@@ -289,25 +289,21 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.FAST_FORWARD_START:
-                LogUtil.log("ComponentSeek => callEvent => FAST_FORWARD_START");
+            case PlayerType.EventType.SEEK_START_FORWARD:
+                LogUtil.log("ComponentSeek => callEvent => SEEK_START_FORWARD");
                 show();
                 break;
-            case PlayerType.StateType.FAST_FORWARD_STOP:
-                LogUtil.log("ComponentSeek => callEvent => FAST_FORWARD_STOP");
-                hide();
-                break;
-            case PlayerType.StateType.FAST_REWIND_START:
-                LogUtil.log("ComponentSeek => callEvent => FAST_REWIND_START");
+            case PlayerType.EventType.SEEK_START_REWIND:
+                LogUtil.log("ComponentSeek => callEvent => SEEK_START_REWIND");
                 show();
                 break;
-            case PlayerType.StateType.FAST_REWIND_STOP:
-                LogUtil.log("ComponentSeek => callEvent => FAST_REWIND_STOP");
+            case PlayerType.EventType.SEEK_FINISH:
+                LogUtil.log("ComponentSeek => callEvent => SEEK_FINISH");
                 hide();
                 break;
-            case PlayerType.StateType.INIT:
-            case PlayerType.StateType.ERROR:
-            case PlayerType.StateType.END:
+            case PlayerType.EventType.INIT:
+            case PlayerType.EventType.ERROR:
+            case PlayerType.EventType.COMPLETE:
                 onUpdateProgress(false, 0, 0, 0);
                 break;
         }

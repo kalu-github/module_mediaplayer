@@ -47,7 +47,7 @@ public interface ComponentApiSeek extends ComponentApi {
             boolean componentShowing = isComponentShowing();
             // gone
             if (!componentShowing) {
-                superCallEvent(false, true, keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? PlayerType.StateType.FAST_FORWARD_START : PlayerType.StateType.FAST_REWIND_START);
+                superCallEvent(false, true, keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? PlayerType.EventType.SEEK_START_FORWARD : PlayerType.EventType.SEEK_START_REWIND);
             }
             // click
             else if (repeatCount == 0) {

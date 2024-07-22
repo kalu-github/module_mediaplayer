@@ -480,7 +480,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 seek = duration;
             }
 
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.SEEK_START);
+            long position = getPosition();
+            onEvent(PlayerType.KernelType.IJK, seek < position ? PlayerType.EventType.SEEK_START_REWIND : PlayerType.EventType.SEEK_START_FORWARD);
             mIjkPlayer.seekTo(seek);
             LogUtil.log("VideoIjkPlayer => seekTo =>");
         } catch (Exception e) {
@@ -639,16 +640,16 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                             throw new Exception("warning: mPrepared true");
                         setPrepared(true);
                         onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.LOADING_STOP);
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_RENDERING_START);
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.RENDER_FIRST_FRAME);
                         long seek = getSeek();
                         if (seek <= 0) {
-                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_START);
+                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.START);
                             // 立即播放
                             boolean playWhenReady = isPlayWhenReady();
-                            onEvent(PlayerType.KernelType.IJK, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                            onEvent(PlayerType.KernelType.IJK, playWhenReady ? PlayerType.EventType.PLAY_WHEN_READY_TRUE : PlayerType.EventType.PLAY_WHEN_READY_FALSE);
                         } else {
                             // 起播快进
-                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
+                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.SEEK_START_FORWARD);
                             setDoSeeking(true);
                             seekTo(seek);
                         }
@@ -689,10 +690,10 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 boolean doSeeking = isDoSeeking();
                 if (!doSeeking)
                     throw new Exception("warning: doSeeking false");
-                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_START);
+                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.START);
                 // 立即播放
                 boolean playWhenReady = isPlayWhenReady();
-                onEvent(PlayerType.KernelType.IJK, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                onEvent(PlayerType.KernelType.IJK, playWhenReady ? PlayerType.EventType.PLAY_WHEN_READY_TRUE : PlayerType.EventType.PLAY_WHEN_READY_FALSE);
             } catch (Exception e) {
                 LogUtil.log("VideoIjkPlayer => onSeekComplete => Exception1 " + e.getMessage());
             }
@@ -761,7 +762,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             LogUtil.log("VideoIjkPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.LOADING_STOP);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_STOP);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.ERROR_PARSE);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.ERROR);
             return true;
         }
     };
@@ -770,7 +771,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
             LogUtil.log("VideoIjkPlayer => onCompletion =>");
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_END);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.COMPLETE);
         }
     };
 

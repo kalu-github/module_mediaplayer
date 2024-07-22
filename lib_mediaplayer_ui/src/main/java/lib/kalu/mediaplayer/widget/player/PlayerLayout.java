@@ -418,27 +418,35 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void release(boolean claerTag) {
+    /**
+     * @param callEvent 透传event
+     * @param claerTag  清除tag
+     */
+    public final void release(boolean callEvent, boolean claerTag) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.release(true, claerTag, false);
+            playerView.release(callEvent, claerTag, false);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => release => " + e.getMessage());
         }
     }
 
     public final void stop() {
-        stop(true);
+        stop(true, true);
     }
 
-    public final void stop(boolean callEvent) {
+    /**
+     * @param callEvent 透传event
+     * @param claerTag  清除tag
+     */
+    public final void stop(boolean callEvent, boolean claerTag) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.stop(true, callEvent);
+            playerView.stop(callEvent, claerTag);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => stop => " + e.getMessage());
         }

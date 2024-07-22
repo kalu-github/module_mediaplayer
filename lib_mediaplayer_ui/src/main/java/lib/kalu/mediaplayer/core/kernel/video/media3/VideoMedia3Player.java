@@ -319,7 +319,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             }
 
             mSeeking = true;
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_START);
+            long position = getPosition();
+            onEvent(PlayerType.KernelType.MEDIA_V3, seek < position ? PlayerType.EventType.SEEK_START_REWIND : PlayerType.EventType.SEEK_START_FORWARD);
             mExoPlayer.seekTo(seek);
             LogUtil.log("VideoMedia3Player => seekTo =>");
         } catch (Exception e) {
@@ -682,7 +683,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 if (!(error instanceof ExoPlaybackException))
                     throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_STOP);
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_SOURCE);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
             } catch (Exception e) {
                 LogUtil.log("VideoMedia3Player => onPlayerError => error = " + error.getMessage());
             }
@@ -733,8 +734,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
         @Override
         public void onLoadError(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData, IOException e, boolean b) {
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_SOURCE);
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_STOP);
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
         }
 
         @Override
@@ -747,7 +748,7 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             // 播放完成
             else if (state == Player.STATE_ENDED) {
                 LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_ENDED =>");
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_END);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.COMPLETE);
             }
             // 播放开始
             else if (state == Player.STATE_READY) {
@@ -772,10 +773,10 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                             boolean doSeeking = isDoSeeking();
                             if (!doSeeking)
                                 throw new Exception("warning: doSeeking false");
-                            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_START);
+                            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
                             // 立即播放
                             boolean playWhenReady = isPlayWhenReady();
-                            onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                            onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.PLAY_WHEN_READY_TRUE : PlayerType.EventType.PLAY_WHEN_READY_FALSE);
                         } catch (Exception e) {
                             LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_READY => Exception1 " + e.getMessage());
                         }
@@ -820,16 +821,16 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                     throw new Exception("warning: isPrepared true");
                 setPrepared(true);
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_STOP);
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.RENDER_FIRST_FRAME);
                 long seek = getSeek();
                 if (seek <= 0L) {
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_START);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
                     // 立即播放
                     boolean playWhenReady = isPlayWhenReady();
-                    onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_YES : PlayerType.EventType.VIDEO_START_PLAY_WHEN_READY_NO);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.PLAY_WHEN_READY_TRUE : PlayerType.EventType.PLAY_WHEN_READY_FALSE);
                 } else {
                     // 起播快进
-                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START_SEEK);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_START_FORWARD);
                     setDoSeeking(true);
                     seekTo(seek);
                 }

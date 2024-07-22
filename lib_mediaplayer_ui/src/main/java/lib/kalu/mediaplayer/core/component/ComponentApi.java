@@ -349,7 +349,7 @@ public interface ComponentApi {
         }
     }
 
-    default void superCallEvent(boolean callPlayer, boolean callComponent, @PlayerType.StateType.Value int state) {
+    default void superCallEvent(boolean callPlayer, boolean callComponent, @PlayerType.EventType.Value int state) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)

@@ -70,18 +70,18 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.PAUSE:
+            case PlayerType.EventType.PAUSE:
                 LogUtil.log("ComponentPause[show] => playState = " + playState);
                 show();
                 break;
-            case PlayerType.StateType.INIT:
-            case PlayerType.StateType.RESUME:
-            case PlayerType.StateType.FAST_FORWARD_START:
-            case PlayerType.StateType.FAST_REWIND_START:
+            case PlayerType.EventType.INIT:
+            case PlayerType.EventType.RESUME:
+            case PlayerType.EventType.SEEK_START_FORWARD:
+            case PlayerType.EventType.SEEK_START_REWIND:
                 LogUtil.log("ComponentPause[gone] => playState = " + playState);
                 hide();
                 break;
-            case PlayerType.StateType.START_PLAY_WHEN_READY_NO:
+            case PlayerType.EventType.PLAY_WHEN_READY_FALSE:
                 LogUtil.log("ComponentPause => callEvent => START_PLAY_WHEN_READY_NO");
                 try {
                     boolean componentShowing = isComponentShowing();
@@ -92,7 +92,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                     LogUtil.log("ComponentPause => callEvent => Exception[START_PLAY_WHEN_READY_NO] " + e.getMessage());
                 }
                 break;
-            case PlayerType.StateType.COMPONENT_MENU_SHOW:
+            case PlayerType.EventType.COMPONENT_MENU_SHOW:
                 LogUtil.log("ComponentPause[show] => playState = " + playState);
                 try {
                     boolean componentShowing = isComponentShowing();
@@ -104,7 +104,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                     LogUtil.log("ComponentPause => callEventListener => hide => Exception2 " + playState);
                 }
                 break;
-            case PlayerType.StateType.COMPONENT_MENU_HIDE:
+            case PlayerType.EventType.COMPONENT_MENU_HIDE:
                 LogUtil.log("ComponentPause[gone] => playState = " + playState);
                 try {
                     boolean componentShowing = isComponentShowing();

@@ -76,7 +76,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.StateType.END:
+            case PlayerType.EventType.COMPLETE:
                 hide();
                 break;
         }
@@ -334,14 +334,14 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public void hide() {
-        superCallEvent(false, true, PlayerType.StateType.COMPONENT_MENU_HIDE);
+        superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_HIDE);
         ComponentApiMenu.super.hide();
         stopDelayedMsg();
     }
 
     @Override
     public void show() {
-        superCallEvent(false, true, PlayerType.StateType.COMPONENT_MENU_SHOW);
+        superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_SHOW);
         ComponentApiMenu.super.show();
     }
 

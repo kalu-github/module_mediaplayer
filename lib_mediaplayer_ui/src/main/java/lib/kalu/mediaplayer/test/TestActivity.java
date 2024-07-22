@@ -287,7 +287,7 @@ public final class TestActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-        videoLayout.stop(false);
-        videoLayout.release(true);
+        videoLayout.stop();
+        videoLayout.release();
     }
 }

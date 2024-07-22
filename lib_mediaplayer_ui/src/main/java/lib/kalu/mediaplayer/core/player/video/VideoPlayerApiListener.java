@@ -49,11 +49,11 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
     }
 
 
-    default void callEvent(@PlayerType.StateType.Value int state) {
+    default void callEvent(@PlayerType.EventType.Value int state) {
         callEvent(true, true, state);
     }
 
-    default void callEvent(boolean callPlayer, boolean callComponent, @PlayerType.StateType.Value int state) {
+    default void callEvent(boolean callPlayer, boolean callComponent, @PlayerType.EventType.Value int state) {
 
         // component
         try {
@@ -83,25 +83,23 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
             if (null == eventListener)
                 throw new Exception("warning: eventListener null");
             eventListener.onEvent(state);
-            if (state == PlayerType.StateType.RESTAER) {
-                eventListener.onRestart();
-            } else if (state == PlayerType.StateType.START) {
+             if (state == PlayerType.EventType.START) {
                 eventListener.onStart();
-            } else if (state == PlayerType.StateType.END) {
+            } else if (state == PlayerType.EventType.COMPLETE) {
                 eventListener.onComplete();
-            } else if (state == PlayerType.StateType.PAUSE) {
+            } else if (state == PlayerType.EventType.PAUSE) {
                 eventListener.onPause();
-            } else if (state == PlayerType.StateType.RESUME) {
+            } else if (state == PlayerType.EventType.RESUME) {
                 eventListener.onResume();
-            } else if (state == PlayerType.StateType.ERROR) {
+            } else if (state == PlayerType.EventType.ERROR) {
                 eventListener.onError(null);
-            } else if (state == PlayerType.StateType.BUFFERING_START) {
+            } else if (state == PlayerType.EventType.BUFFERING_START) {
                 eventListener.onBufferingStart();
-            } else if (state == PlayerType.StateType.BUFFERING_STOP) {
+            } else if (state == PlayerType.EventType.BUFFERING_STOP) {
                 eventListener.onBufferingStop();
-            } else if (state == PlayerType.StateType.LOADING_START) {
+            } else if (state == PlayerType.EventType.LOADING_START) {
                 eventListener.onLoadingStart();
-            } else if (state == PlayerType.StateType.LOADING_STOP) {
+            } else if (state == PlayerType.EventType.LOADING_STOP) {
                 eventListener.onLoadingStop();
             }
         } catch (Exception e) {

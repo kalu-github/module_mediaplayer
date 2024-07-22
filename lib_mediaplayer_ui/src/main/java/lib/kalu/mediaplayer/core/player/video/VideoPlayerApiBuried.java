@@ -7,14 +7,14 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoPlayerApiBuried {
 
-    default void onBuriedRendering() {
+    default void onBuriedRenderFirstFrame() {
         try {
             Object[] objects = checkValue();
             if (null == objects)
                 throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onRendering((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
+            ((BuriedEvent) objects[0]).onRenderFirstFrame((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedRendering => Exception " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedRenderFirstFrame => Exception " + e.getMessage());
         }
     }
 
@@ -106,14 +106,25 @@ interface VideoPlayerApiBuried {
         }
     }
 
-    default void onBuriedSeekStart() {
+    default void onBuriedSeekStartForward() {
         try {
             Object[] objects = checkValue();
             if (null == objects)
                 throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onSeekStart((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
+            ((BuriedEvent) objects[0]).onSeekStartForward((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedSeekStart => Exception " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedSeekStartForward => Exception " + e.getMessage());
+        }
+    }
+
+    default void onBuriedSeekStartRewind() {
+        try {
+            Object[] objects = checkValue();
+            if (null == objects)
+                throw new Exception("warning: objects null");
+            ((BuriedEvent) objects[0]).onSeekStartRewind((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedSeekStartRewind => Exception " + e.getMessage());
         }
     }
 
