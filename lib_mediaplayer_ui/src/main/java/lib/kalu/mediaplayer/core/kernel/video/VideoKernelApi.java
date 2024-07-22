@@ -62,8 +62,5 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
 
     /***********/
 
-//    default void setDisplay(SurfaceHolder surfaceHolder){
-//    }
-
     void setSurface(Surface surface, int w, int h);
 }
