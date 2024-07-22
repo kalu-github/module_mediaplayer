@@ -73,7 +73,8 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             mFFmpegPlayer.prepare();
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => startDecoder => " + e.getMessage());
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.LOADING_STOP);
+            stop();
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.STOP);
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.ERROR);
         }
     }
@@ -413,7 +414,8 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             }
             // error
             else {
-                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.LOADING_STOP);
+                stop();
+                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.STOP);
                 onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.ERROR);
             }
             return true;

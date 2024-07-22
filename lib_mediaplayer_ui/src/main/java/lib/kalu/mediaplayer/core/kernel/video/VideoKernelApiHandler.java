@@ -18,6 +18,49 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
     /***********/
 
+    android.os.Handler[] mHandlerPlayWhenReadyDelayedTime = new android.os.Handler[]{null};
+
+    default void startPlayWhenReadyDelayedTime(@PlayerType.KernelType.Value int kernelType, long delayedTime) {
+        try {
+            if (!isPrepared())
+                throw new Exception("warning: isPrepared false");
+            if (null == mHandlerPlayWhenReadyDelayedTime[0]) {
+                mHandlerPlayWhenReadyDelayedTime[0] = new android.os.Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(@NonNull Message msg) {
+                        try {
+                            // 起播快进
+                            onEvent(kernelType, PlayerType.EventType.RESUME);
+                            start();
+                        } catch (Exception e) {
+                            LogUtil.log("VideoKernelApiHandler => startPlayWhenReadyDelayedTime => Exception2 " + e.getMessage());
+                        } finally {
+                            stopCheckPreparedPlaying();
+                        }
+                    }
+                };
+            }
+            mHandlerPlayWhenReadyDelayedTime[0].removeCallbacksAndMessages(null);
+            mHandlerPlayWhenReadyDelayedTime[0].sendEmptyMessageDelayed(10008, delayedTime);
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiHandler => startPlayWhenReadyDelayedTime => Exception1 " + e.getMessage());
+        }
+    }
+
+    default void stopPlayWhenReadyDelayedTime() {
+        try {
+            if (null != mHandlerPlayWhenReadyDelayedTime[0]) {
+                mHandlerPlayWhenReadyDelayedTime[0].removeCallbacksAndMessages(null);
+                mHandlerPlayWhenReadyDelayedTime[0] = null;
+                LogUtil.log("VideoKernelApiHandler => playWhenReadyDelayedTime => stop mHandlerPlayWhenReadyDelayedTime");
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiHandler => playWhenReadyDelayedTime => " + e.getMessage());
+        }
+    }
+
+    /***********/
+
     android.os.Handler[] mHandlerPreparedPlaying = new android.os.Handler[]{null};
 
     default void startCheckPreparedPlaying(@PlayerType.KernelType.Value int kernelType) {
@@ -234,6 +277,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
     }
 
     default void stopHandler() {
+        stopPlayWhenReadyDelayedTime();
         stopCheckBufferingTimeout();
         stopCheckPreparedPlaying();
         stopCheckConnectTimeout();

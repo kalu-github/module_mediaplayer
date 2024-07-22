@@ -897,6 +897,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     throw new Exception("warning: null == error");
                 if (!(error instanceof ExoPlaybackException))
                     throw new Exception("warning: error not instanceof ExoPlaybackException");
+                stop();
+                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.STOP);
                 onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.ERROR);
             } catch (Exception e) {
                 LogUtil.log("VideoExo2Player => onPlayerError => " + e.getMessage());

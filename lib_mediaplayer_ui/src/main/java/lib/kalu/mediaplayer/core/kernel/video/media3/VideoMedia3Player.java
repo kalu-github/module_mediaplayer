@@ -682,7 +682,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                     throw new Exception("PlaybackException error: null");
                 if (!(error instanceof ExoPlaybackException))
                     throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_STOP);
+                stop();
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
             } catch (Exception e) {
                 LogUtil.log("VideoMedia3Player => onPlayerError => error = " + error.getMessage());
@@ -734,7 +735,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
 
         @Override
         public void onLoadError(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData, IOException e, boolean b) {
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_STOP);
+            stop();
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
         }
 

@@ -1,6 +1,8 @@
 package lib.kalu.mediaplayer.args;
 
 
+import android.os.Handler;
+
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -186,6 +188,13 @@ public class StartArgs implements Serializable {
         return playWhenReady;
     }
 
+    // 延迟播放
+    private long playWhenReadyDelayedTime;
+
+    public long getPlayWhenReadyDelayedTime() {
+        return playWhenReadyDelayedTime;
+    }
+
     // 默认异步初始化
     private boolean prepareAsync;
 
@@ -256,6 +265,7 @@ public class StartArgs implements Serializable {
                 ", looping=" + looping +
                 ", mute=" + mute +
                 ", playWhenReady=" + playWhenReady +
+                ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime +
                 ", prepareAsync=" + prepareAsync +
                 ", extra=" + extra +
                 ", episodePlayingIndex=" + episodePlayingIndex +
@@ -290,6 +300,7 @@ public class StartArgs implements Serializable {
         this.looping = builder.looping;
         this.mute = builder.mute;
         this.playWhenReady = builder.playWhenReady;
+        this.playWhenReadyDelayedTime = builder.playWhenReadyDelayedTime;
         this.prepareAsync = builder.prepareAsync;
         this.extra = builder.extra;
         this.episodePlayingIndex = builder.episodePlayingIndex;
@@ -324,6 +335,7 @@ public class StartArgs implements Serializable {
         builder.looping = looping;
         builder.mute = mute;
         builder.playWhenReady = playWhenReady;
+        builder.playWhenReadyDelayedTime = playWhenReadyDelayedTime;
         builder.prepareAsync = prepareAsync;
         builder.extra = extra;
         builder.episodePlayingIndex = episodePlayingIndex;
@@ -467,6 +479,14 @@ public class StartArgs implements Serializable {
 
         public Builder setPlayWhenReady(boolean playWhenReady) {
             this.playWhenReady = playWhenReady;
+            return this;
+        }
+
+        // 延迟播放
+        private long playWhenReadyDelayedTime = 0L;
+
+        public Builder setPlayWhenReadyDelayedTime(long v) {
+            this.playWhenReadyDelayedTime = v;
             return this;
         }
 

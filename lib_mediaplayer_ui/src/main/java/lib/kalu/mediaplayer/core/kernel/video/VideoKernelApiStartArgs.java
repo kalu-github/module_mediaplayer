@@ -60,6 +60,18 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
         }
     }
 
+    default long getPlayWhenReadyDelayedTime() {
+        try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            return args.getPlayWhenReadyDelayedTime();
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiBase => getPlayWhenReadyDelayedTime => Exception " + e.getMessage());
+            return 0L;
+        }
+    }
+
     @PlayerType.NetType.Value
     default int getNetType() {
         try {

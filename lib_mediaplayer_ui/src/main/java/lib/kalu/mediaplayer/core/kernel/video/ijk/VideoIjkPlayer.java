@@ -760,8 +760,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public boolean onError(IMediaPlayer iMediaPlayer, int framework_err, int impl_err) {
             LogUtil.log("VideoIjkPlayer => onError => framework_err = " + framework_err + ", impl_err = " + impl_err);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.LOADING_STOP);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_STOP);
+            stop();
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.STOP);
             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.ERROR);
             return true;
         }

@@ -63,7 +63,8 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             mVlcPlayer.setDataSource(Uri.parse(url), isPlayWhenReady());
             mVlcPlayer.play();
         } catch (Exception e) {
-            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_STOP);
+            stop();
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.STOP);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.ERROR);
         }
     }
@@ -316,7 +317,8 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
 
         @Override
         public void onError() {
-            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_STOP);
+            stop();
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.STOP);
             onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.ERROR);
         }
     };

@@ -494,10 +494,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     callEvent(event);
 
                     switch (event) {
-                        // 立即播放
-                        case PlayerType.EventType.PLAY_WHEN_READY_FALSE:
-                            pause();
-                            break;
                         // 缓冲开始
                         case PlayerType.EventType.BUFFERING_START:
                             // 埋点
@@ -539,8 +535,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             break;
                         // 播放错误
                         case PlayerType.EventType.ERROR:
-                            // 轮询消息
-                            stop(false, false);
                             // 埋点
                             onBuriedError(event);
                             // 执行
