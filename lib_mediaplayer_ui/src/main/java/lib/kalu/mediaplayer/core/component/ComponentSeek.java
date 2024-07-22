@@ -14,7 +14,6 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-
 public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
     public ComponentSeek(Context context) {
@@ -31,59 +30,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     public int initLayoutId() {
         return R.layout.module_mediaplayer_component_seek;
     }
-
-    @Override
-    public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
-//        LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", max = " + max + ", position = " + position + ", duration = " + duration);
-
-        // 进度条
-        try {
-            boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
-            if (position < 0) {
-                position = 0;
-            }
-            if (duration < 0) {
-                duration = 0;
-            }
-
-            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-            // 拖动进度条
-            if (isFromUser) {
-                long playPosition = getPosition();
-                seekBar.setPlayPosition(playPosition);
-                seekBar.setProgress((int) position);
-            } else {
-                long playPosition = seekBar.getPlayPosition();
-                if (playPosition <= 0) {
-                    seekBar.setProgress((int) position);
-                }
-            }
-            seekBar.setMax((int) (max > 0 ? max : duration));
-        } catch (Exception e) {
-        }
-    }
-
-//    @Override
-//    public int getSeekBarMax() {
-//        try {
-//            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findSeekBar();
-//            return seekBar.getMax();
-//        } catch (Exception e) {
-//            return 0;
-//        }
-//    }
-//
-//    @Override
-//    public int getSeekBarProgress() {
-//        try {
-//            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findSeekBar();
-//            return seekBar.getProgress();
-//        } catch (Exception e) {
-//            return 0;
-//        }
-//    }
 
     @Override
     public void initSeekBarChangeListener() {
@@ -127,32 +73,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             seekTo(playPosition);
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => seekToStopTrackingTouch => " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void show() {
-        try {
-            boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
-            if (bufferingShowing)
-                throw new Exception("warning: ComponentApiBuffering true");
-            boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
-            if (warningPlayInfoShowing)
-                throw new Exception("warning: ComponentApiWarningPlayInfo true");
-            boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
-            if (menuShowing)
-                throw new Exception("warning: ComponentApiMenu true");
-            // 1
-            ComponentApiSeek.super.show();
-            // 2
-            long position = getPosition();
-            long duration = getDuration();
-            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-            seekBar.setMax((int) duration);
-            seekBar.setProgress((int) position);
-            seekBar.setPlayPosition((int) position);
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => show => Exception " + e.getMessage());
         }
     }
 
@@ -257,6 +177,66 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             case PlayerType.EventType.COMPLETE:
                 onUpdateProgress(false, 0, 0, 0);
                 break;
+        }
+    }
+
+    @Override
+    public void onUpdateProgress(boolean isFromUser, long trySeeDuration, long position, long duration) {
+//        LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", max = " + max + ", position = " + position + ", duration = " + duration);
+
+        // 进度条
+        try {
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            if (position < 0) {
+                position = 0;
+            }
+            if (duration < 0) {
+                duration = 0;
+            }
+
+            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+            // 拖动进度条
+            if (isFromUser) {
+                long playPosition = getPosition();
+                seekBar.setPlayPosition(playPosition);
+                seekBar.setProgress((int) position);
+            } else {
+                long playPosition = seekBar.getPlayPosition();
+                if (playPosition <= 0) {
+                    seekBar.setProgress((int) position);
+                }
+            }
+            seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void show() {
+
+        try {
+            long trySeeDuration = getTrySeeDuration();
+            long position = getPosition();
+            long duration = getDuration();
+            onUpdateProgress(false, trySeeDuration, position, duration);
+        } catch (Exception e) {
+        }
+
+        try {
+            boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
+            if (bufferingShowing)
+                throw new Exception("warning: ComponentApiBuffering true");
+            boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
+            if (warningPlayInfoShowing)
+                throw new Exception("warning: ComponentApiWarningPlayInfo true");
+            boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
+            if (menuShowing)
+                throw new Exception("warning: ComponentApiMenu true");
+            ComponentApiSeek.super.show();
+        } catch (Exception e) {
+            LogUtil.log("ComponentSeek => show => Exception " + e.getMessage());
         }
     }
 
