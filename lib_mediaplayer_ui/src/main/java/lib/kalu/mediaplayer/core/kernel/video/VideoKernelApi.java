@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.Surface;
 
 import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.type.PlayerType;
 
 
 /**
@@ -52,7 +53,9 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
         // 网络超时
         try {
             long connectTimeout = args.getConnectTimout();
-            startCheckConnectTimeout(connectTimeout);
+            @PlayerType.KernelType.Value
+            int kernelType = args.getKernelType();
+            startCheckConnectTimeout(kernelType, connectTimeout);
         } catch (Exception e) {
         }
 
