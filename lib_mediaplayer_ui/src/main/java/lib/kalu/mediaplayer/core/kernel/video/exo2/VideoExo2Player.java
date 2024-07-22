@@ -3,13 +3,9 @@ package lib.kalu.mediaplayer.core.kernel.video.exo2;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Looper;
-import android.os.Message;
 import android.view.Surface;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.media3.exoplayer.DecoderReuseEvaluation;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -21,10 +17,12 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.Tracks;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
+import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.LoadEventInfo;
@@ -48,7 +46,6 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.video.VideoSize;
-import com.google.android.exoplayer2.RenderersFactory;
 import com.google.common.collect.ImmutableList;
 
 import org.json.JSONArray;
