@@ -70,7 +70,8 @@ public @interface PlayerType {
         int INIT = 3_000;            // 准备
         int RENDER_FIRST_FRAME = 3_001;    // 出画面
         int START = 3_002;           // 播放开始
-        int PLAY_WHEN_READY_DELAYED_TIME = 3_003; // 延迟播放
+        int PLAY_WHEN_READY_DELAYED_TIME_START = 3_003; // 延迟播放
+        int PLAY_WHEN_READY_DELAYED_TIME_COMPLETE = 3_004; // 延迟播放
         int PLAY_WHEN_READY_TRUE = 3_005; // 立即播放
         int PLAY_WHEN_READY_FALSE = 3_006;  // 不立即播放
         int PAUSE = 3_007; // 播放暂停
@@ -110,7 +111,8 @@ public @interface PlayerType {
                 INIT,
                 RENDER_FIRST_FRAME,
                 START,
-                PLAY_WHEN_READY_DELAYED_TIME,
+                PLAY_WHEN_READY_DELAYED_TIME_START,
+                PLAY_WHEN_READY_DELAYED_TIME_COMPLETE,
                 PLAY_WHEN_READY_TRUE,
                 PLAY_WHEN_READY_FALSE,
                 PAUSE,

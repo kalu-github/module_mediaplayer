@@ -51,9 +51,8 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
 
         // 网络超时
         try {
-            int type = args.getKernelType();
             long connectTimeout = args.getConnectTimout();
-            startCheckConnectTimeout(type, connectTimeout);
+            startCheckConnectTimeout(connectTimeout);
         } catch (Exception e) {
         }
 

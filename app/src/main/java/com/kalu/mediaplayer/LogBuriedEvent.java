@@ -10,8 +10,8 @@ import lib.kalu.mediaplayer.buried.BuriedEvent;
 public class LogBuriedEvent implements BuriedEvent {
 
     @Override
-    public void onRendering(@NonNull StartArgs args, long position, long duration) {
-        Log.e("LogBuriedEvent", "onRendering => position = " + position + ", duration = " + duration + ", url = " + args.getUrl());
+    public void onRenderFirstFrame(@NonNull StartArgs args, long position, long duration) {
+        Log.e("LogBuriedEvent", "onRenderFirstFrame => position = " + position + ", duration = " + duration + ", url = " + args.getUrl());
     }
 
     @Override
@@ -55,8 +55,13 @@ public class LogBuriedEvent implements BuriedEvent {
     }
 
     @Override
-    public void onSeekStart(@NonNull StartArgs args, long position, long duration) {
-        Log.e("LogBuriedEvent", "onSeekStart => position = " + position + ", duration = " + duration + ", url = " + args.getUrl());
+    public void onSeekStartForward(@NonNull StartArgs args, long position, long duration) {
+        Log.e("LogBuriedEvent", "onSeekStartForward => position = " + position + ", duration = " + duration + ", url = " + args.getUrl());
+    }
+
+    @Override
+    public void onSeekStartRewind(@NonNull StartArgs args, long position, long duration) {
+        Log.e("LogBuriedEvent", "onSeekStartRewind => position = " + position + ", duration = " + duration + ", url = " + args.getUrl());
     }
 
     @Override

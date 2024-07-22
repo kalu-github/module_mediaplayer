@@ -64,6 +64,7 @@ public class MainActivity extends Activity {
                         .setLive(isLive())
                         .setSeek(getSeek())
                         .setLooping(isLooping())
+                        .setPlayWhenReadyDelayedTime(getPlayWhenReadyDelayedTime())
                         .setPlayWhenReady(isPlayWhenReady())
                         .setTrySeeDuration(getTrySeeDuration())
                         .setEpisodeItemCount(getEpisodeItemCount())
@@ -94,6 +95,11 @@ public class MainActivity extends Activity {
     private long getSeek() {
         CheckBox checkBox = findViewById(R.id.main_seek_yes);
         return checkBox.isChecked() ? 10 * 1000L : 0L;
+    }
+
+    private int getPlayWhenReadyDelayedTime() {
+        CheckBox checkBox = findViewById(R.id.main_play_when_delayed_yes);
+        return checkBox.isChecked() ? 3000 : 0;
     }
 
     private int getEpisodeItemCount() {

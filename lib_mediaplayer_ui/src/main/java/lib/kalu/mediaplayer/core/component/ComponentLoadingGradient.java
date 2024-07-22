@@ -24,15 +24,29 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
     public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.EventType.LOADING_START:
-                LogUtil.log("ComponentLoadingGradient => callEventListener => show => playState = " + playState);
+                LogUtil.log("ComponentLoadingGradient => callEvent => LOADING_START");
                 show();
                 break;
-            case PlayerType.EventType.INIT:
-            case PlayerType.EventType.LOADING_STOP:
             case PlayerType.EventType.ERROR:
-            case PlayerType.EventType.RELEASE:
-                LogUtil.log("ComponentLoadingGradient => callEventListener => gone => playState = " + playState);
+                LogUtil.log("ComponentLoadingGradient => callEvent => ERROR");
                 hide();
+                break;
+            case PlayerType.EventType.PLAY_WHEN_READY_DELAYED_TIME_START:
+                LogUtil.log("ComponentLoadingGradient => callEvent => PLAY_WHEN_READY_DELAYED_TIME_START");
+                break;
+            case PlayerType.EventType.PLAY_WHEN_READY_DELAYED_TIME_COMPLETE:
+                LogUtil.log("ComponentLoadingGradient => callEvent => PLAY_WHEN_READY_DELAYED_TIME_COMPLETE");
+                hide();
+                break;
+            case PlayerType.EventType.LOADING_STOP:
+                LogUtil.log("ComponentLoadingGradient => callEvent => LOADING_STOP");
+                try {
+                    long playWhenReadyDelayedTime = getPlayWhenReadyDelayedTime();
+                    if (playWhenReadyDelayedTime > 0L)
+                        throw new Exception();
+                    hide();
+                } catch (Exception e) {
+                }
                 break;
         }
     }
@@ -45,32 +59,33 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
 
     @Override
     public void show() {
-        ComponentApiLoading.super.show();
-
         try {
             boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
-            String mediaTitle = getTitle();
-            setComponentText(mediaTitle);
+            if (componentShowing)
+                throw new Exception("warning: componentShowing true");
+            // 1
+            ComponentApiLoading.super.show();
+            // 2
+            setComponentText(getTitle());
+            // 3
+            updateNetSpeed();
         } catch (Exception e) {
+            LogUtil.log("ComponentLoadingGradient => show => Exception "+e.getMessage());
         }
-
-        // 网速
-        updateNetSpeed();
     }
 
     @Override
     public void hide() {
-        ComponentApiLoading.super.hide();
-
         try {
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
                 throw new Exception("warning: componentShowing false");
+            // 1
+            ComponentApiLoading.super.hide();
+            // 2
             setComponentText("");
         } catch (Exception e) {
-            LogUtil.log("ComponentLoadingGradient => gone => " + e.getMessage());
+            LogUtil.log("ComponentLoadingGradient => hide => Exception "+e.getMessage());
         }
     }
 

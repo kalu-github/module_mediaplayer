@@ -630,6 +630,18 @@ public interface ComponentApi {
         }
     }
 
+    default long getPlayWhenReadyDelayedTime() {
+        try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            return args.getPlayWhenReadyDelayedTime();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getPlayWhenReadyDelayedTime => " + e.getMessage());
+            return 0L;
+        }
+    }
+
     default long getSeek() {
         try {
             StartArgs args = getStartArgs();

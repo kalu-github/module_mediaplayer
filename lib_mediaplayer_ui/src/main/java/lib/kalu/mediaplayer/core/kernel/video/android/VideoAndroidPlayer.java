@@ -420,7 +420,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START);
                             long playWhenReadyDelayedTime = getPlayWhenReadyDelayedTime();
                             if (playWhenReadyDelayedTime > 0L) {
-                                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PLAY_WHEN_READY_DELAYED_TIME);
+                                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PLAY_WHEN_READY_DELAYED_TIME_START);
                                 pause();
                                 onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PAUSE);
                                 startPlayWhenReadyDelayedTime(playWhenReadyDelayedTime);
@@ -465,7 +465,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 // 立即播放
                 long playWhenReadyDelayedTime = getPlayWhenReadyDelayedTime();
                 if (playWhenReadyDelayedTime > 0L) {
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PLAY_WHEN_READY_DELAYED_TIME);
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PLAY_WHEN_READY_DELAYED_TIME_START);
                     pause();
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PAUSE);
                     startPlayWhenReadyDelayedTime(playWhenReadyDelayedTime);
@@ -661,7 +661,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     @Override
                     public void handleMessage(@NonNull Message msg) {
                         try {
-                            // 起播快进
+                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PLAY_WHEN_READY_DELAYED_TIME_COMPLETE);
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.RESUME);
                             start();
                         } catch (Exception e) {
