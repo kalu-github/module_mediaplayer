@@ -349,7 +349,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
 
             long position = getPosition();
-            onEvent(PlayerType.KernelType.EXO_V2, seek<position?PlayerType.EventType.SEEK_START_REWIND:PlayerType.EventType.SEEK_START_FORWARD);
+            onEvent(PlayerType.KernelType.EXO_V2, seek < position ? PlayerType.EventType.SEEK_START_REWIND : PlayerType.EventType.SEEK_START_FORWARD);
             mSeeking = true;
             mExoPlayer.seekTo(seek);
             LogUtil.log("VideoExo2Player => seekTo =>");
@@ -820,12 +820,12 @@ public final class VideoExo2Player extends VideoBasePlayer {
                         onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.SEEK_FINISH);
 
                         try {
-                            long seek = getSeek();
+                            long seek = getPlayWhenReadySeekToPosition();
                             if (seek <= 0L)
                                 throw new Exception("warning: seek<=0");
-                            boolean doSeeking = isDoSeeking();
-                            if (!doSeeking)
-                                throw new Exception("warning: doSeeking false");
+                            boolean playWhenReadySeekFinish = isPlayWhenReadySeekFinish();
+                            if (playWhenReadySeekFinish)
+                                throw new Exception("warning: playWhenReadySeekFinish true");
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.START);
                             // 立即播放
                             boolean playWhenReady = isPlayWhenReady();
@@ -875,7 +875,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 setPrepared(true);
                 onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.LOADING_STOP);
                 onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.RENDER_FIRST_FRAME);
-                long seek = getSeek();
+                long seek = getPlayWhenReadySeekToPosition();
                 if (seek <= 0L) {
                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.START);
                     // 立即播放
@@ -884,7 +884,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 } else {
                     // 起播快进
                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.SEEK_START_FORWARD);
-                    setDoSeeking(true);
+                    setPlayWhenReadySeekFinish(true);
                     seekTo(seek);
                 }
             } catch (Exception e) {
@@ -986,16 +986,16 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     // 起播快进
-    private boolean mDoSeeking = false;
+    private boolean mPlayWhenReadySeekFinish = false;
 
     @Override
-    public boolean isDoSeeking() {
-        return this.mDoSeeking;
+    public boolean isPlayWhenReadySeekFinish() {
+        return this.mPlayWhenReadySeekFinish;
     }
 
     @Override
-    public void setDoSeeking(boolean flag) {
-        this.mDoSeeking = flag;
+    public void setPlayWhenReadySeekFinish(boolean v) {
+        this.mPlayWhenReadySeekFinish = v;
     }
 
     // 单片循环
@@ -1117,14 +1117,14 @@ public final class VideoExo2Player extends VideoBasePlayer {
                             if (isPlaying()) {
                                 setPrepared(true);
                                 onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.LOADING_STOP);
-                                long seek = getSeek();
+                                long seek = getPlayWhenReadySeekToPosition();
                                 if (seek <= 0) {
                                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.START);
                                 } else {
                                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.START);
                                     // 起播快进
                                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.SEEK_START_FORWARD);
-                                    setDoSeeking(true);
+                                    setPlayWhenReadySeekFinish(true);
                                     seekTo(seek);
                                 }
                             }

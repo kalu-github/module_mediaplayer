@@ -64,7 +64,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
                 throw new Exception("warning: componentShowing false");
-            long seek = getSeek();
+            long seek = getPlayWhenReadySeekToPosition();
             long cast = position - seek;
             if (cast < 2000L)
                 throw new Exception("warning: cast < 2000");
@@ -108,7 +108,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             // 3. 播放记录提示
             boolean showWarningPlayInfoRecord = isShowWarningPlayInfoRecord();
             if (showWarningPlayInfoRecord) {
-                long seek = getSeek();
+                long seek = getPlayWhenReadySeekToPosition();
                 if (seek > 0L) {
                     String millis = TimeUtil.formatTimeMillis(seek);
                     String string = getResources().getString(R.string.module_mediaplayer_string_play_record, millis);

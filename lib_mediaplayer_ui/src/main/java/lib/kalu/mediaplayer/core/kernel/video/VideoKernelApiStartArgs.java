@@ -14,9 +14,9 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
 
     /***************/
 
-    default void clearArgs(){
+    default void clearArgs() {
         setDoWindowing(false);
-        setDoSeeking(false);
+        setPlayWhenReadySeekFinish(false);
         setMute(false);
         setPrepared(false);
         setVideoSizeChanged(false);
@@ -84,43 +84,45 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
         }
     }
 
-    default long getSeek() {
+    default long getPlayWhenReadySeekToPosition() {
         try {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("error: args null");
-            return args.getSeek();
+            return args.getPlayWhenReadySeekToPosition();
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiBase => getSeek => Exception " + e.getMessage());
+            LogUtil.log("VideoKernelApiBase => getPlayWhenReadySeekToPosition => Exception " + e.getMessage());
             return 0L;
         }
     }
 
     /***************/
 
-     void setStartArgs(StartArgs args);
-     StartArgs getStartArgs();
+    void setStartArgs(StartArgs args);
 
-     void setDoWindowing(boolean v);
+    StartArgs getStartArgs();
 
-     boolean isDoWindowing();
+    void setDoWindowing(boolean v);
 
-     boolean isDoSeeking();
+    boolean isDoWindowing();
 
-     void setDoSeeking(boolean flag);
-     void setLooping(boolean v);
+    boolean isPlayWhenReadySeekFinish();
 
-     boolean isLooping();
+    void setPlayWhenReadySeekFinish(boolean v);
 
-     boolean isMute();
+    void setLooping(boolean v);
 
-     void setMute(boolean v) ;
+    boolean isLooping();
 
-     boolean isPrepared();
+    boolean isMute();
 
-     void setPrepared(boolean v);
+    void setMute(boolean v);
 
-     boolean isVideoSizeChanged();
+    boolean isPrepared();
 
-     void setVideoSizeChanged(boolean v);
+    void setPrepared(boolean v);
+
+    boolean isVideoSizeChanged();
+
+    void setVideoSizeChanged(boolean v);
 }

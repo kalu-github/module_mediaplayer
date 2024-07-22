@@ -233,7 +233,7 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (cleatTag) {
                 setTags(null);
             }
-            StartArgs newArgs = args.newBuilder().setSeek(position).build();
+            StartArgs newArgs = args.newBuilder().setPlayWhenReadySeekToPosition(position).build();
             start(newArgs);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => restart => " + e.getMessage());
@@ -249,10 +249,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default long getSeek() {
+    default long getPlayWhenReadySeekToPosition() {
         try {
             VideoKernelApi kernel = getVideoKernel();
-            return kernel.getSeek();
+            return kernel.getPlayWhenReadySeekToPosition();
         } catch (Exception e) {
             return 0L;
         }

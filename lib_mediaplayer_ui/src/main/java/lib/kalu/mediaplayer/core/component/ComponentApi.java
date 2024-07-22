@@ -642,14 +642,14 @@ public interface ComponentApi {
         }
     }
 
-    default long getSeek() {
+    default long getPlayWhenReadySeekToPosition() {
         try {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("error: args null");
-            return args.getSeek();
+            return args.getPlayWhenReadySeekToPosition();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getSeek => " + e.getMessage());
+            LogUtil.log("ComponentApi => getPlayWhenReadySeekToPosition => " + e.getMessage());
             return 0L;
         }
     }

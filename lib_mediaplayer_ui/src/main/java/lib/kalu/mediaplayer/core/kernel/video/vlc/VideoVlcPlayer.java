@@ -356,16 +356,16 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     }
 
     // 起播快进
-    private boolean mDoSeeking = false;
+    private boolean mPlayWhenReadySeekFinish = false;
 
     @Override
-    public boolean isDoSeeking() {
-        return this.mDoSeeking;
+    public boolean isPlayWhenReadySeekFinish() {
+        return this.mPlayWhenReadySeekFinish;
     }
 
     @Override
-    public void setDoSeeking(boolean flag) {
-        this.mDoSeeking = flag;
+    public void setPlayWhenReadySeekFinish(boolean v) {
+        this.mPlayWhenReadySeekFinish = v;
     }
 
     // 单片循环
@@ -487,14 +487,14 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
                             if (isPlaying()) {
                                 setPrepared(true);
                                 onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_STOP);
-                                long seek = getSeek();
+                                long seek = getPlayWhenReadySeekToPosition();
                                 if (seek <= 0) {
                                     onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.START);
                                 } else {
                                     onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.START);
                                     // 起播快进
                                     onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.SEEK_START_FORWARD);
-                                    setDoSeeking(true);
+                                    setPlayWhenReadySeekFinish(true);
                                     seekTo(seek);
                                 }
                             }

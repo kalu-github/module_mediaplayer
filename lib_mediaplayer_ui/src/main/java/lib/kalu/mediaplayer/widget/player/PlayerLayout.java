@@ -550,7 +550,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final long getSeek() {
+    public final long getPlayWhenReadySeekToPosition() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -558,9 +558,9 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs args = playerView.getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
-            return args.getSeek();
+            return args.getPlayWhenReadySeekToPosition();
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getSeek => " + e.getMessage());
+            LogUtil.log("PlayerLayout => getPlayWhenReadySeekToPosition => " + e.getMessage());
             return 0L;
         }
     }

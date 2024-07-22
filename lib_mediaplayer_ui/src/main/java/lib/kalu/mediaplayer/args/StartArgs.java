@@ -152,10 +152,10 @@ public class StartArgs implements Serializable {
 
 
     // 起播快进指定位置
-    private long seek;
+    private long playWhenReadySeekToPosition;
 
-    public long getSeek() {
-        return seek;
+    public long getPlayWhenReadySeekToPosition() {
+        return playWhenReadySeekToPosition;
     }
 
     // 是否直播源
@@ -258,12 +258,12 @@ public class StartArgs implements Serializable {
                 ", title='" + title + '\'' +
                 ", subtitleUrl='" + subtitleUrl + '\'' +
                 ", trySeeDuration=" + trySeeDuration +
-                ", seek=" + seek +
                 ", live=" + live +
                 ", looping=" + looping +
                 ", mute=" + mute +
                 ", playWhenReady=" + playWhenReady +
                 ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime +
+                ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition +
                 ", prepareAsync=" + prepareAsync +
                 ", extra=" + extra +
                 ", episodePlayingIndex=" + episodePlayingIndex +
@@ -293,12 +293,12 @@ public class StartArgs implements Serializable {
         this.title = builder.title;
         this.subtitleUrl = builder.subtitleUrl;
         this.trySeeDuration = builder.trySeeDuration;
-        this.seek = builder.seek;
         this.live = builder.live;
         this.looping = builder.looping;
         this.mute = builder.mute;
         this.playWhenReady = builder.playWhenReady;
         this.playWhenReadyDelayedTime = builder.playWhenReadyDelayedTime;
+        this.playWhenReadySeekToPosition = builder.playWhenReadySeekToPosition;
         this.prepareAsync = builder.prepareAsync;
         this.extra = builder.extra;
         this.episodePlayingIndex = builder.episodePlayingIndex;
@@ -328,12 +328,12 @@ public class StartArgs implements Serializable {
         builder.title = title;
         builder.subtitleUrl = subtitleUrl;
         builder.trySeeDuration = trySeeDuration;
-        builder.seek = seek;
         builder.live = live;
         builder.looping = looping;
         builder.mute = mute;
         builder.playWhenReady = playWhenReady;
         builder.playWhenReadyDelayedTime = playWhenReadyDelayedTime;
+        builder.playWhenReadySeekToPosition = playWhenReadySeekToPosition;
         builder.prepareAsync = prepareAsync;
         builder.extra = extra;
         builder.episodePlayingIndex = episodePlayingIndex;
@@ -440,11 +440,11 @@ public class StartArgs implements Serializable {
             return this;
         }
 
-        // 起播快进指定位置
-        private long seek = 0;
+        // 起播快进
+        private long playWhenReadySeekToPosition = 0;
 
-        public Builder setSeek(long seek) {
-            this.seek = seek;
+        public Builder setPlayWhenReadySeekToPosition(long v) {
+            this.playWhenReadySeekToPosition = v;
             return this;
         }
 
