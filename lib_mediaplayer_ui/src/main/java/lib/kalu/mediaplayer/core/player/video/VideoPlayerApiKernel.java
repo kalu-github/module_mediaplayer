@@ -51,11 +51,6 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default void start(String url) {
-        StartArgs build = new StartArgs.Builder().setUrl(url).build();
-        start(build);
-    }
-
     @Override
     default void start(StartArgs args) {
         try {
@@ -217,6 +212,10 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void restart() {
         restart(0L, true);
+    }
+
+    default void restart(boolean clearTag) {
+        restart(0L, clearTag);
     }
 
     default void restart(long position) {

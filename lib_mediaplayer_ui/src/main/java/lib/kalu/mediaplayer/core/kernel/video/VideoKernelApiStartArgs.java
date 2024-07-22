@@ -14,14 +14,13 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
 
     /***************/
 
-    StartArgs[] mStartArgs = new StartArgs[]{null};
-
-    default void setStartArgs(StartArgs args) {
-        mStartArgs[0] = args;
-    }
-
-    default StartArgs getStartArgs() {
-        return mStartArgs[0];
+    default void clearArgs(){
+        setDoWindowing(false);
+        setDoSeeking(false);
+        setMute(false);
+        setPrepared(false);
+        setVideoSizeChanged(false);
+        setStartArgs(null);
     }
 
     default long getTrySeeDuration() {
@@ -99,75 +98,29 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
 
     /***************/
 
-    // 正在切换window
-    boolean[] mDoWindowing = new boolean[]{false};
+     void setStartArgs(StartArgs args);
+     StartArgs getStartArgs();
 
-    default void setDoWindowing(boolean v) {
-        mDoWindowing[0] = v;
-    }
+     void setDoWindowing(boolean v);
 
-    default boolean isDoWindowing() {
-        return mDoWindowing[0];
-    }
+     boolean isDoWindowing();
 
-    /*****/
+     boolean isDoSeeking();
 
-    // 起播快进
-    boolean[] mDoSeeking = new boolean[]{false};
+     void setDoSeeking(boolean flag);
+     void setLooping(boolean v);
 
-    default boolean isDoSeeking() {
-        return mDoSeeking[0];
-    }
+     boolean isLooping();
 
-    default void setDoSeeking(boolean flag) {
-        mDoSeeking[0] = flag;
-    }
+     boolean isMute();
 
-    /*****/
+     void setMute(boolean v) ;
 
-    boolean[] mLooping = new boolean[]{false};
+     boolean isPrepared();
 
-    default void setLooping(boolean v) {
-        mLooping[0] = v;
-    }
+     void setPrepared(boolean v);
 
-    default boolean isLooping() {
-        return mLooping[0];
-    }
+     boolean isVideoSizeChanged();
 
-    /*****/
-
-    boolean[] mMute = new boolean[]{false}; // 是否静音
-
-    default boolean isMute() {
-        return mMute[0];
-    }
-
-    default void setMute(boolean v) {
-        mMute[0] = v;
-    }
-
-    /*****/
-
-    boolean[] mPrepared = new boolean[]{false};
-
-    default boolean isPrepared() {
-        return mPrepared[0];
-    }
-
-    default void setPrepared(boolean v) {
-        mPrepared[0] = v;
-    }
-
-    /*****/
-
-    boolean[] mVideoSizeChanged = new boolean[]{false};
-
-    default boolean isVideoSizeChanged() {
-        return mVideoSizeChanged[0];
-    }
-
-    default void setVideoSizeChanged(boolean v) {
-        mVideoSizeChanged[0] = v;
-    }
+     void setVideoSizeChanged(boolean v);
 }

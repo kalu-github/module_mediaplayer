@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.Surface;
 
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.util.LogUtil;
 
 
 /**
@@ -29,28 +28,19 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
     void unRegistListener();
 
     default void clear() {
-        mDoWindowing[0] = false;
-        mDoSeeking[0] = false;
-        mMute[0] = false;
-        mPrepared[0] = false;
-        mVideoSizeChanged[0] = false;
-        mStartArgs[0] = null;
-        stopHandler();
+        clearArgs();
+        clearHandler();
     }
 
     default void createDecoder(Context context, StartArgs args) {
     }
 
     default void initDecoder(Context context, StartArgs args) {
-
         clear();
-        LogUtil.log("VideoKernelApi => initDecoder => " + args.toString());
-
         try {
             setStartArgs(args);
         } catch (Exception e) {
         }
-
         try {
             boolean mute = args.isMute();
             setMute(mute);

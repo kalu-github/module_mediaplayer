@@ -83,7 +83,7 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
             if (null == eventListener)
                 throw new Exception("warning: eventListener null");
             eventListener.onEvent(state);
-             if (state == PlayerType.EventType.START) {
+            if (state == PlayerType.EventType.START) {
                 eventListener.onStart();
             } else if (state == PlayerType.EventType.COMPLETE) {
                 eventListener.onComplete();
@@ -140,71 +140,35 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
 
     /**************/
 
-    OnPlayerEventListener[] mOnPlayerEventListener = new OnPlayerEventListener[]{null};
-
-    default OnPlayerEventListener getOnPlayerEventListener() {
-        return this.mOnPlayerEventListener[0];
-    }
-
-    default void setOnPlayerEventListener(OnPlayerEventListener l) {
-        this.mOnPlayerEventListener[0] = l;
-    }
-
-    default void clearOnPlayerEventListener() {
-        this.mOnPlayerEventListener[0] = null;
+    default void clearOnPlayerListener() {
+        setOnPlayerEventListener(null);
+        setOnPlayerWindowListener(null);
+        setOnPlayerProgressListener(null);
+        setOnPlayerEpisodeListener(null);
     }
 
     /**************/
 
-    OnPlayerProgressListener[] mOnPlayerProgressListener = new OnPlayerProgressListener[]{null};
+    OnPlayerEventListener getOnPlayerEventListener();
 
-    default OnPlayerProgressListener getOnPlayerProgressListener() {
-        return this.mOnPlayerProgressListener[0];
-    }
+    void setOnPlayerEventListener(OnPlayerEventListener l);
 
-    default void setOnPlayerProgressListener(OnPlayerProgressListener l) {
-        this.mOnPlayerProgressListener[0] = l;
-    }
-
-    default void clearOnPlayerProgressListener() {
-        this.mOnPlayerProgressListener[0] = null;
-    }
 
     /**************/
-    OnPlayerWindowListener[] mOnPlayerWindowListener = new OnPlayerWindowListener[]{null};
 
-    default OnPlayerWindowListener getOnPlayerWindowListener() {
-        return this.mOnPlayerWindowListener[0];
-    }
+    OnPlayerProgressListener getOnPlayerProgressListener();
 
-    default void setOnPlayerWindowListener(OnPlayerWindowListener l) {
-        this.mOnPlayerWindowListener[0] = l;
-    }
+    void setOnPlayerProgressListener(OnPlayerProgressListener l);
 
-    default void clearOnPlayerWindowListener() {
-        this.mOnPlayerWindowListener[0] = null;
-    }
+    /**************/
+    OnPlayerWindowListener getOnPlayerWindowListener();
+
+    void setOnPlayerWindowListener(OnPlayerWindowListener l);
+
 
     /***********/
 
-    OnPlayerEpisodeListener[] mOnPlayerItemsLiatener = new OnPlayerEpisodeListener[]{null};
+    OnPlayerEpisodeListener getOnPlayerEpisodeListener();
 
-    default OnPlayerEpisodeListener getOnPlayerEpisodeListener() {
-        return this.mOnPlayerItemsLiatener[0];
-    }
-
-    default void setOnPlayerEpisodeListener(OnPlayerEpisodeListener l) {
-        this.mOnPlayerItemsLiatener[0] = l;
-    }
-
-    default void clearOnPlayerEpisodeListener() {
-        this.mOnPlayerItemsLiatener[0] = null;
-    }
-
-    default void clearOnPlayerListener() {
-        clearOnPlayerEventListener();
-        clearOnPlayerWindowListener();
-        clearOnPlayerProgressListener();
-        clearOnPlayerEpisodeListener();
-    }
+    void setOnPlayerEpisodeListener(OnPlayerEpisodeListener l);
 }

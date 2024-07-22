@@ -130,7 +130,5 @@ interface VideoPlayerApiBase {
 
     void setVideoKernel(VideoKernelApi kernel);
 
-    void start(String url);
-
     void start(StartArgs builder);
 }

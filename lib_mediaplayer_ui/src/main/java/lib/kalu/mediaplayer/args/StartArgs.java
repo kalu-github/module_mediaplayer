@@ -1,8 +1,6 @@
 package lib.kalu.mediaplayer.args;
 
 
-import android.os.Handler;
-
 import org.json.JSONObject;
 
 import java.io.Serializable;

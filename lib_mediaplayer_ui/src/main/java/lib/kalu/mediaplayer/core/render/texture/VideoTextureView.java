@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
@@ -169,12 +172,12 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
             int[] measureSpec = doMeasureSpec(screenWidth, screenHeight);
             if (null == measureSpec)
                 throw new Exception("warning: measureSpec null");
-            int width = measureSpec[0];
+            int width = measureSpec;
             int height = measureSpec[1];
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             int specH = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             super.onMeasure(specW, specH);
-//            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
+//            getHolder().setFixedSize(measureSpec, measureSpec[1]);
         } catch (Exception e) {
             LogUtil.log("VideoTextureView => onMeasure => Exception " + e.getMessage());
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -229,4 +232,53 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
             LogUtil.log("VideoTextureView => onSurfaceTextureUpdated => " + this);
         }
     };
+    
+    /**********/
+
+   private Handler mHandlerUpdateProgress = null;
+
+    @Override
+    public void startUpdateProgress() {
+        try {
+            if (null == mHandlerUpdateProgress) {
+                mHandlerUpdateProgress = new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        try {
+                            if (msg.what != 10100)
+                                throw new Exception("warning: msg.what != 10100");
+                            VideoKernelApi videoKernel = getVideoKernel();
+                            if (null == videoKernel)
+                                throw new Exception("warning: videoKernel null");
+                            videoKernel.onUpdateProgress();
+                            if (null == mHandlerUpdateProgress)
+                                throw new Exception("warning: mHandlerUpdateProgress null");
+                            mHandlerUpdateProgress.sendEmptyMessageDelayed(10100, 1000);
+                        } catch (Exception e) {
+                            LogUtil.log("VideoTextureView => startUpdateProgress => handleMessage => Exception" + e.getMessage());
+                        }
+                    }
+                };
+            }
+            mHandlerUpdateProgress.removeCallbacksAndMessages(null);
+            mHandlerUpdateProgress.sendEmptyMessageDelayed(10100, 1000);
+            LogUtil.log("VideoTextureView => startUpdateProgress =>");
+        } catch (Exception e) {
+            LogUtil.log("VideoTextureView => startUpdateProgress => Exception " + e.getMessage());
+            stopUpdateProgress();
+        }
+    }
+
+    @Override
+    public void stopUpdateProgress() {
+        try {
+            if (null == mHandlerUpdateProgress)
+                throw new Exception("error: mHandlerUpdateProgress null");
+            mHandlerUpdateProgress.removeCallbacksAndMessages(null);
+            mHandlerUpdateProgress = null;
+            LogUtil.log("VideoTextureView => stopUpdateProgress =>");
+        } catch (Exception e) {
+            LogUtil.log("VideoTextureView => stopUpdateProgress => Exception" + e.getMessage());
+        }
+    }
 }

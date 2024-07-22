@@ -420,14 +420,14 @@ public class PlayerLayout extends RelativeLayout {
 
     /**
      * @param callEvent 透传event
-     * @param claerTag  清除tag
+     * @param clearTag  清除tag
      */
-    public final void release(boolean callEvent, boolean claerTag) {
+    public final void release(boolean callEvent, boolean clearTag) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.release(callEvent, claerTag, false);
+            playerView.release(callEvent, clearTag, false);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => release => " + e.getMessage());
         }
@@ -439,14 +439,14 @@ public class PlayerLayout extends RelativeLayout {
 
     /**
      * @param callEvent 透传event
-     * @param claerTag  清除tag
+     * @param clearTag  清除tag
      */
-    public final void stop(boolean callEvent, boolean claerTag) {
+    public final void stop(boolean callEvent, boolean clearTag) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.stop(callEvent, claerTag);
+            playerView.stop(callEvent, clearTag);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => stop => " + e.getMessage());
         }
@@ -514,17 +514,6 @@ public class PlayerLayout extends RelativeLayout {
             playerView.restart();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => restart => " + e.getMessage());
-        }
-    }
-
-    public void start(String playerUrl) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.start(playerUrl);
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => start => " + e.getMessage());
         }
     }
 
@@ -703,17 +692,6 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void clearOnPlayerEventListener() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.clearOnPlayerEventListener();
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => clearOnPlayerEventListener => " + e.getMessage());
-        }
-    }
-
     public final void setOnPlayerEventListener(OnPlayerEventListener listener) {
         try {
             if (null == listener)
@@ -736,17 +714,6 @@ public class PlayerLayout extends RelativeLayout {
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => getOnPlayerProgressListener => " + e.getMessage());
             return null;
-        }
-    }
-
-    public final void clearOnPlayerProgressListener() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.clearOnPlayerProgressListener();
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => clearOnPlayerProgressListener => " + e.getMessage());
         }
     }
 
@@ -775,17 +742,6 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void clearOnPlayerWindowListener() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.clearOnPlayerWindowListener();
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => clearOnPlayerWindowListener => " + e.getMessage());
-        }
-    }
-
     public final void setOnPlayerWindowListener(OnPlayerWindowListener listener) {
         try {
             if (null == listener)
@@ -796,17 +752,6 @@ public class PlayerLayout extends RelativeLayout {
             playerView.setOnPlayerWindowListener(listener);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => setOnPlayerWindowListener => " + e.getMessage());
-        }
-    }
-
-    public final void clearOnPlayerEpisodeListener() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.clearOnPlayerEpisodeListener();
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => clearOnPlayerEpisodeListener => " + e.getMessage());
         }
     }
 
@@ -824,9 +769,13 @@ public class PlayerLayout extends RelativeLayout {
     }
 
     public final void clearOnPlayerListener() {
-        clearOnPlayerEventListener();
-        clearOnPlayerProgressListener();
-        clearOnPlayerWindowListener();
-        clearOnPlayerEpisodeListener();
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.clearOnPlayerListener();
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => clearOnPlayerListener => " + e.getMessage());
+        }
     }
 }
