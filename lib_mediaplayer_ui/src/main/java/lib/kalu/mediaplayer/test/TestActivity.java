@@ -182,6 +182,11 @@ public final class TestActivity extends Activity {
             public void onEpisode(int pos) {
                 startPlayer(pos);
             }
+
+            @Override
+            public void onEnd() {
+                startPlayer(0);
+            }
         });
         playerLayout.setOnPlayerWindowListener(new OnPlayerWindowListener() {
             @Override
