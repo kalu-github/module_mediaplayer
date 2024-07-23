@@ -157,13 +157,13 @@ public final class SeekBar extends android.widget.SeekBar {
             mPaint.setColor(mTextColor);
 
             long progress;
-            if (mMode == 2 || playPosition <= 0) {
+            if (mMode == 2 || this.progressReal <= 0) {
                 progress = getProgress();
             } else {
-                progress = playPosition;
+                progress = this.progressReal;
             }
-            if (progress < 0) {
-                progress = 0;
+            if (progress < 0L) {
+                progress = 0L;
             }
 
             String text = TimeUtil.formatTimeMillis(progress, duration);
@@ -201,12 +201,12 @@ public final class SeekBar extends android.widget.SeekBar {
                 throw new Exception("warning: mMode = 2");
 
             long duration = getMax();
-            if (duration <= 0)
+            if (duration <= 0L)
                 throw new Exception("warning: duration <= 0");
 
             long progress = getProgress();
-            if (progress < 0) {
-                progress = 0;
+            if (progress < 0L) {
+                progress = 0L;
             }
 
             if (null == mPaint) {
@@ -260,22 +260,22 @@ public final class SeekBar extends android.widget.SeekBar {
 
         setMax(0);
         setProgress(0);
-        setPlayPosition(0);
+        setProgressReal(0);
         setThumbOffset(0);
     }
 
 
-    private long playPosition;
+    private long progressReal;
 
-    public long getPlayPosition() {
-        return playPosition;
+    public long getProgressReal() {
+        return this.progressReal;
     }
 
-    public void setPlayPosition(long playPosition) {
-        this.playPosition = playPosition;
+    public void setProgressReal(long v) {
+        this.progressReal = v;
     }
 
-    public void clearPlayPosition() {
-        this.playPosition = 0;
+    public void clearProgressReal() {
+        this.progressReal = 0;
     }
 }
