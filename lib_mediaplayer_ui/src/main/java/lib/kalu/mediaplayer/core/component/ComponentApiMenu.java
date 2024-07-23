@@ -197,17 +197,43 @@ public interface ComponentApiMenu extends ComponentApi {
     default void updateTabSelected(int viewId) {
     }
 
-    default void updateTabData(int index, boolean requestFocus) {
+    default void updateTabCheckedChange(boolean requestFocus) {
     }
 
-    default void toggleScale() {
+    default void toggleScale(int focusId) {
     }
 
-    default void toggleSpeed() {
+    default void toggleSpeed(int focusId) {
 
     }
 
     default void toggleEpisode(int focusId) {
 
+    }
+
+    default void updateTimeMillis() {
+        try {
+            long millis = System.currentTimeMillis();
+            ((View) this).setTag(millis);
+        } catch (Exception e) {
+        }
+    }
+
+    default void clearTimeMillis() {
+        try {
+            ((View) this).setTag(null);
+        } catch (Exception e) {
+        }
+    }
+
+    default long getTimeMillis() {
+        try {
+            Object tag = ((View) this).getTag();
+            if (null == tag)
+                throw new Exception("warning: tag null");
+            return (long) tag;
+        } catch (Exception e) {
+            return 0L;
+        }
     }
 }
