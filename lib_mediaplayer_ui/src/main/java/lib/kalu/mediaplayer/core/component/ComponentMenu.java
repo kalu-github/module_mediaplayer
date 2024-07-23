@@ -3,17 +3,13 @@ package lib.kalu.mediaplayer.core.component;
 import android.content.Context;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.widget.radio.RadioButton;
 
 public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     public ComponentMenu(Context context) {
@@ -316,12 +312,27 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             if (start == -1)
                 throw new Exception("error: start = -1");
 
+            // 选集角标
+            int loaction = getEpisodeFlagLoaction();
+            int vipResourceId = getEpisodeFlagVipResourceId();
+            int freeResourceId = getEpisodeFlagFreeResourceId();
+            int freeItemCount = getEpisodeFreeItemCount();
+
             int episodePlayingIndex = getEpisodePlayingIndex();
             for (int i = 0; i < itemCount; i++) {
                 RadioButton radioButton = (RadioButton) itemGroup.getChildAt(i);
                 if (null == radioButton)
                     continue;
                 int position = i + start;
+
+                if (freeItemCount < 0) {
+                    radioButton.setFlag(loaction, 0, freeResourceId);
+                } else if (position < freeItemCount) {
+                    radioButton.setFlag(loaction, 0, freeResourceId);
+                } else {
+                    radioButton.setFlag(loaction, vipResourceId, 0);
+                }
+
                 radioButton.setTag(position);
                 radioButton.setText(String.valueOf(position + 1));
                 radioButton.setChecked(position == episodePlayingIndex);
@@ -411,10 +422,17 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 }
             }
 
+            // 选集角标
+            int loaction = getEpisodeFlagLoaction();
+            int vipResourceId = getEpisodeFlagVipResourceId();
+            int freeResourceId = getEpisodeFlagFreeResourceId();
+            int freeItemCount = getEpisodeFreeItemCount();
+
             for (int i = 0; i < itemCount; i++) {
                 RadioButton radioButton = (RadioButton) itemGroup.getChildAt(i);
                 // 倍速
                 if (checkedRadioButtonId == R.id.module_mediaplayer_component_menu_tab_speed) {
+                    radioButton.clearFlag();
                     radioButton.setSelected(false);
                     radioButton.setEnabled(i < speeds.length);
                     radioButton.setVisibility(i < speeds.length ? View.VISIBLE : View.INVISIBLE);
@@ -454,6 +472,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 }
                 // 画面比例
                 else if (checkedRadioButtonId == R.id.module_mediaplayer_component_menu_tab_scale) {
+                    radioButton.clearFlag();
                     radioButton.setSelected(false);
                     radioButton.setEnabled(i < scales.length);
                     radioButton.setVisibility(i < scales.length ? View.VISIBLE : View.INVISIBLE);
@@ -496,6 +515,14 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         radioButton.setVisibility(View.VISIBLE);
 
                         int position = i + start;
+                        if (freeItemCount < 0) {
+                            radioButton.setFlag(loaction, 0, freeResourceId);
+                        } else if (position < freeItemCount) {
+                            radioButton.setFlag(loaction, 0, freeResourceId);
+                        } else {
+                            radioButton.setFlag(loaction, vipResourceId, 0);
+                        }
+
                         radioButton.setTag(position);
                         radioButton.setText(String.valueOf(position + 1));
                         radioButton.setChecked(position == episodePlayingIndex);
@@ -503,6 +530,9 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     } else {
                         radioButton.setEnabled(false);
                         radioButton.setVisibility(View.GONE);
+
+                        radioButton.clearFlag();
+
                         radioButton.setTag(num);
                         radioButton.setText("");
                         radioButton.setChecked(false);

@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -118,6 +119,66 @@ public interface ComponentApiMenu extends ComponentApi {
         } catch (Exception e) {
             LogUtil.log("ComponentApiMenu => getEpisodePlayingIndex => " + e.getMessage());
             return -1;
+        }
+    }
+
+    default int getEpisodeFreeItemCount() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            int freeItemCount = tags.getEpisodeFreeItemCount();
+            if (freeItemCount < 0)
+                throw new Exception("warning: freeItemCount " + freeItemCount);
+            return freeItemCount;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFreeItemCount => " + e.getMessage());
+            return -1;
+        }
+    }
+
+    @DrawableRes
+    default int getEpisodeFlagFreeResourceId() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            int resourceId = tags.getEpisodeFlagFreeResourceId();
+            if (resourceId == 0)
+                throw new Exception("warning: resourceId = 0");
+            return resourceId;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagFreeResourceId => " + e.getMessage());
+            return 0;
+        }
+    }
+
+    @DrawableRes
+    default int getEpisodeFlagVipResourceId() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            int resourceId = tags.getEpisodeFlagVipResourceId();
+            if (resourceId == 0)
+                throw new Exception("warning: resourceId = 0");
+            return resourceId;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagVipResourceId => " + e.getMessage());
+            return 0;
+        }
+    }
+
+    @PlayerType.EpisodeFlagLoactionType.Value
+    default int getEpisodeFlagLoaction() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            return tags.getEpisodeFlagLoaction();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagLoaction => " + e.getMessage());
+            return PlayerType.EpisodeFlagLoactionType.DEFAULT;
         }
     }
 

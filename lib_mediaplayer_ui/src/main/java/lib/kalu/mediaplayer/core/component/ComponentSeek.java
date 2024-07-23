@@ -48,31 +48,16 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-                    seekToStopTrackingTouch();
+                    try {
+                        hide();
+                        int progress = seekBar.getProgress();
+                        seekTo(progress);
+                    } catch (Exception e) {
+                    }
                 }
             });
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => initSeekBarChangeListener => " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void seekToStopTrackingTouch() {
-        try {
-            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-            if (null == seekBar)
-                throw new Exception("warning: null == seekBar");
-            long max = seekBar.getMax();
-            long progressReal = seekBar.getProgressReal();
-            seekBar.clearProgressReal();
-            if (progressReal > max) {
-                progressReal = max;
-            } else if (progressReal <= 0) {
-                progressReal = 0;
-            }
-            seekTo(progressReal);
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => seekToStopTrackingTouch => " + e.getMessage());
         }
     }
 
@@ -186,6 +171,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
         // 进度条
         try {
+            if (!isFromUser)
+                throw new Exception("warning: isFromUser false");
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
                 throw new Exception("warning: componentShowing false");
@@ -198,16 +185,9 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
             lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
             // 拖动进度条
-            if (isFromUser) {
-                long progressReal = getPosition();
-                seekBar.setProgressReal(progressReal);
-                seekBar.setProgress((int) progress);
-            } else {
-                long progressReal = seekBar.getProgressReal();
-                if (progressReal <= 0) {
-                    seekBar.setProgress((int) progress);
-                }
-            }
+            long progressReal = getPosition();
+            seekBar.setProgressReal(progressReal);
+            seekBar.setProgress((int) progress);
             seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
         } catch (Exception e) {
         }

@@ -1,6 +1,9 @@
 package lib.kalu.mediaplayer.args;
 
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
+
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -221,6 +224,38 @@ public class StartArgs implements Serializable {
         return episodeItemCount;
     }
 
+    // 多剧集 收费角标
+    @DrawableRes
+    private int episodeFlagVipResourceId;
+
+    public int getEpisodeFlagVipResourceId() {
+        return episodeFlagVipResourceId;
+    }
+
+    // 多剧集 免费角标
+    @DrawableRes
+    private int episodeFlagFreeResourceId;
+
+    public int getEpisodeFlagFreeResourceId() {
+        return episodeFlagFreeResourceId;
+    }
+
+    // 多剧集 角标位置
+    @PlayerType.EpisodeFlagLoactionType.Value
+    private int episodeFlagLoaction;
+
+    @PlayerType.EpisodeFlagLoactionType.Value
+    public int getEpisodeFlagLoaction() {
+        return episodeFlagLoaction;
+    }
+
+    // 多剧集 免费剧集
+    private int episodeFreeItemCount = -1;
+
+    public int getEpisodeFreeItemCount() {
+        return episodeFreeItemCount;
+    }
+
     // 数据埋点
     private BuriedEvent buriedEvent;
 
@@ -268,6 +303,10 @@ public class StartArgs implements Serializable {
                 ", extra=" + extra +
                 ", episodePlayingIndex=" + episodePlayingIndex +
                 ", episodeItemCount=" + episodeItemCount +
+                ", episodeFreeItemCount=" + episodeFreeItemCount +
+                ", episodeFlagFreeResourceId=" + episodeFlagFreeResourceId +
+                ", episodeFlagVipResourceId=" + episodeFlagVipResourceId +
+                ", episodeFlagLoaction=" + episodeFlagLoaction +
                 ", buriedEvent=" + buriedEvent +
                 ", rotation=" + rotation +
                 '}';
@@ -303,6 +342,10 @@ public class StartArgs implements Serializable {
         this.extra = builder.extra;
         this.episodePlayingIndex = builder.episodePlayingIndex;
         this.episodeItemCount = builder.episodeItemCount;
+        this.episodeFreeItemCount = builder.episodeFreeItemCount;
+        this.episodeFlagFreeResourceId = builder.episodeFlagFreeResourceId;
+        this.episodeFlagVipResourceId = builder.episodeFlagVipResourceId;
+        this.episodeFlagLoaction = builder.episodeFlagLoaction;
         this.buriedEvent = builder.buriedEvent;
         this.rotation = builder.rotation;
     }
@@ -338,6 +381,10 @@ public class StartArgs implements Serializable {
         builder.extra = extra;
         builder.episodePlayingIndex = episodePlayingIndex;
         builder.episodeItemCount = episodeItemCount;
+        builder.episodeFreeItemCount = episodeFreeItemCount;
+        builder.episodeFlagFreeResourceId = episodeFlagFreeResourceId;
+        builder.episodeFlagVipResourceId = episodeFlagVipResourceId;
+        builder.episodeFlagLoaction = episodeFlagLoaction;
         builder.buriedEvent = buriedEvent;
         builder.rotation = rotation;
         return builder;
@@ -504,11 +551,38 @@ public class StartArgs implements Serializable {
             return this;
         }
 
-        // 多剧集 选中
-        private int episodePlayingIndex = -1;
+        // 多剧集 收费角标
+        @DrawableRes
+        private int episodeFlagVipResourceId = 0;
 
-        public Builder setEpisodePlayingIndex(int v) {
-            this.episodePlayingIndex = v;
+        public Builder setEpisodeFlagVipResourceId(@DrawableRes int v) {
+            this.episodeFlagVipResourceId = v;
+            return this;
+        }
+
+        // 多剧集 免费角标
+        @DrawableRes
+        private int episodeFlagFreeResourceId = 0;
+
+        public Builder setEpisodeFlagFreeResourceId(@DrawableRes int v) {
+            this.episodeFlagFreeResourceId = v;
+            return this;
+        }
+
+        // 多剧集 角标位置
+        @PlayerType.EpisodeFlagLoactionType.Value
+        private int episodeFlagLoaction = PlayerType.EpisodeFlagLoactionType.DEFAULT;
+
+        public Builder setEpisodeFlagLoaction(@PlayerType.EpisodeFlagLoactionType.Value int v) {
+            this.episodeFlagLoaction = v;
+            return this;
+        }
+
+        // 多剧集 免费剧集
+        private int episodeFreeItemCount = -1;
+
+        public Builder setEpisodeFreeItemCount(int v) {
+            this.episodeFreeItemCount = v;
             return this;
         }
 
@@ -520,6 +594,13 @@ public class StartArgs implements Serializable {
             return this;
         }
 
+        // 多剧集 选中
+        private int episodePlayingIndex = -1;
+
+        public Builder setEpisodePlayingIndex(int v) {
+            this.episodePlayingIndex = v;
+            return this;
+        }
 
         public Builder() {
         }

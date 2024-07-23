@@ -75,6 +75,9 @@
 -keep @interface lib.kalu.mediaplayer.type.PlayerType$SpeedType {
     *;
 }
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$EpisodeFlagLoactionType {
+    *;
+}
 
 # buried
 -keep class lib.kalu.mediaplayer.buried.BuriedEvent {

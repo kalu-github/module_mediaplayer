@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.widget.player;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +31,12 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     public PlayerView(Context context) {
         super(context);
+        setBackgroundColor(Color.BLACK);
         setId(R.id.module_mediaplayer_id_player);
         // player
         RelativeLayout playerLayout = new RelativeLayout(getContext());
         playerLayout.setId(R.id.module_mediaplayer_video);
-        LayoutParams playerLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        LayoutParams playerLayoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         playerLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         playerLayout.setLayoutParams(playerLayoutParams);
         addView(playerLayout, 0);

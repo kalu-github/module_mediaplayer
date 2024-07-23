@@ -3,8 +3,6 @@ package com.kalu.mediaplayer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -68,7 +66,10 @@ public class MainActivity extends Activity {
                         .setPlayWhenReady(isPlayWhenReady())
                         .setTrySeeDuration(getTrySeeDuration())
                         .setEpisodeItemCount(getEpisodeItemCount())
-                        .setEpisodePlayingIndex(getEpisodePlayingIndex())
+                        .setEpisodePlayingIndex(4)
+                        .setEpisodeFreeItemCount(2)
+                        .setEpisodeFlagVipResourceId(R.drawable.ic_vip)
+                        .setEpisodeFlagFreeResourceId(R.drawable.ic_free)
                         .build();
                 Intent intent = new Intent(getApplicationContext(), TestActivity.class);
                 intent.putExtra(TestActivity.INTENT_ARGS, args);

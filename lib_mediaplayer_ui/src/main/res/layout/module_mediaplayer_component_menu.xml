@@ -28,7 +28,7 @@
             android:orientation="horizontal"
             android:weightSum="10">
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_item_n0"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -42,7 +42,7 @@
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_item_n1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -56,7 +56,7 @@
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_item_n2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -70,7 +70,7 @@
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_item_n3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -84,7 +84,7 @@
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_item_n4"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -98,7 +98,7 @@
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_item_n5"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -112,7 +112,7 @@
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_item_n6"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -126,7 +126,7 @@
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_item_n7"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -140,7 +140,7 @@
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_item_n8"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -154,7 +154,7 @@
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor_item"
                 android:textSize="20sp" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_item_n9"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -180,7 +180,7 @@
             android:orientation="horizontal"
             android:weightSum="10">
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_tab_episode"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -196,7 +196,7 @@
                 android:textSize="20sp"
                 android:visibility="gone" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_tab_speed"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -211,7 +211,7 @@
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
                 android:textSize="20sp" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:id="@+id/module_mediaplayer_component_menu_tab_scale"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -226,7 +226,7 @@
                 android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
                 android:textSize="20sp" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
@@ -239,7 +239,7 @@
                 android:textSize="20sp"
                 android:visibility="gone" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
@@ -252,7 +252,7 @@
                 android:textSize="20sp"
                 android:visibility="gone" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
@@ -265,7 +265,7 @@
                 android:textSize="20sp"
                 android:visibility="gone" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
@@ -278,7 +278,7 @@
                 android:textSize="20sp"
                 android:visibility="gone" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
@@ -291,7 +291,7 @@
                 android:textSize="20sp"
                 android:visibility="gone" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
@@ -304,7 +304,7 @@
                 android:textSize="20sp"
                 android:visibility="gone" />
 
-            <RadioButton
+            <lib.kalu.mediaplayer.widget.radio.RadioButton
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"

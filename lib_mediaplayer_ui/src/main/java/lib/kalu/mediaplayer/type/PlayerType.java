@@ -443,4 +443,25 @@ public @interface PlayerType {
         @interface Value {
         }
     }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface EpisodeFlagLoactionType {
+
+        int LEFT_TOP = 12_001;
+        int RIGHT_TOP = 12_002;
+        int DEFAULT = RIGHT_TOP;
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @IntDef(value = {
+                EpisodeFlagLoactionType.LEFT_TOP,
+                EpisodeFlagLoactionType.RIGHT_TOP,
+                EpisodeFlagLoactionType.DEFAULT
+        })
+        @interface Value {
+        }
+    }
 }

@@ -20,8 +20,6 @@ public interface ComponentApiSeek extends ComponentApi {
 
     void initSeekBarChangeListener();
 
-    void seekToStopTrackingTouch();
-
     void actionUp();
 
     void actionDown(int repeatCount, int keyCode);
