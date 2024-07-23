@@ -7,9 +7,9 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-public class ComponentLoading extends RelativeLayout implements ComponentApiLoading {
+public class ComponentPrepare extends RelativeLayout implements ComponentApiPrepare {
 
-    public ComponentLoading(Context context) {
+    public ComponentPrepare(Context context) {
         super(context);
         inflate();
         setComponentShowNetSpeed(false);
@@ -17,21 +17,22 @@ public class ComponentLoading extends RelativeLayout implements ComponentApiLoad
 
     @Override
     public int initLayoutId() {
-        return R.layout.module_mediaplayer_component_loading;
+        return R.layout.module_mediaplayer_component_prepare;
     }
 
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.EventType.LOADING_START:
-                LogUtil.log("ComponentLoading => callEventListener => show => playState = " + playState);
+            case PlayerType.EventType.PREPARE_START:
+                LogUtil.log("ComponentLoading => callEvent => show => PREPARE_START");
                 show();
                 break;
-            case PlayerType.EventType.INIT:
-            case PlayerType.EventType.LOADING_STOP:
+            case PlayerType.EventType.PREPARE_COMPLETE:
+                LogUtil.log("ComponentLoading => callEvent => show => PREPARE_COMPLETE");
+                hide();
+                break;
             case PlayerType.EventType.ERROR:
-            case PlayerType.EventType.RELEASE:
-                LogUtil.log("ComponentLoading => callEventListener => gone => playState = " + playState);
+                LogUtil.log("ComponentLoading => callEvent => show => ERROR");
                 hide();
                 break;
         }
@@ -45,7 +46,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApiLoad
 
     @Override
     public void show() {
-        ComponentApiLoading.super.show();
+        ComponentApiPrepare.super.show();
 
         try {
             String mediaTitle = getTitle();
@@ -59,7 +60,7 @@ public class ComponentLoading extends RelativeLayout implements ComponentApiLoad
 
     @Override
     public void hide() {
-        ComponentApiLoading.super.hide();
+        ComponentApiPrepare.super.hide();
 
         try {
             boolean componentShowing = isComponentShowing();
@@ -73,23 +74,23 @@ public class ComponentLoading extends RelativeLayout implements ComponentApiLoad
 
     @Override
     public int initViewIdRoot() {
-        return R.id.module_mediaplayer_component_loading_root;
+        return R.id.module_mediaplayer_component_prepare_root;
     }
 
 
     @Override
     public int initViewIdBackground() {
-        return R.id.module_mediaplayer_component_loading_bg;
+        return R.id.module_mediaplayer_component_prepare_bg;
     }
 
     @Override
     public int initViewIdText() {
-        return R.id.module_mediaplayer_component_loading_name;
+        return R.id.module_mediaplayer_component_prepare_name;
     }
 
 
     @Override
     public int initViewIdNetSpeed() {
-        return R.id.module_mediaplayer_component_loading_net;
+        return R.id.module_mediaplayer_component_prepare_net;
     }
 }

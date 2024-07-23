@@ -93,7 +93,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                             // 开播
                             if (isPlaying()) {
                                 setPrepared(true);
-                                onEvent(kernelType, PlayerType.EventType.LOADING_STOP);
+                                onEvent(kernelType, PlayerType.EventType.PREPARE_COMPLETE);
                                 long seek = getPlayWhenReadySeekToPosition();
                                 if (seek <= 0) {
                                     onEvent(kernelType, PlayerType.EventType.START);
@@ -162,7 +162,6 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                             long cast = current - start;
                             // 超时
                             if (cast >= timeout) {
-                                onEvent(kernelType, PlayerType.EventType.LOADING_STOP);
                                 onEvent(kernelType, PlayerType.EventType.ERROR);
                                 getPlayerApi().stop(true, false);
                                 throw new Exception("warning: connect timeout");

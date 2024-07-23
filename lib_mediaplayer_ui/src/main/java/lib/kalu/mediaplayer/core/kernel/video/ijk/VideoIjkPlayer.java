@@ -81,8 +81,9 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             String url = args.getUrl();
             if (url == null || url.length() == 0)
                 throw new Exception("url error: " + url);
-            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.LOADING_START);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.INIT_READY);
             mIjkPlayer.setDataSource(context, Uri.parse(url), null);
+            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.PREPARE_START);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
                 mIjkPlayer.prepareAsync();
@@ -643,8 +644,8 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                         if (isPrepared())
                             throw new Exception("warning: mPrepared true");
                         setPrepared(true);
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.LOADING_STOP);
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.RENDER_FIRST_FRAME);
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.PREPARE_COMPLETE);
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_RENDERING_START);
                         long seek = getPlayWhenReadySeekToPosition();
                         if (seek <= 0) {
                             onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.START);

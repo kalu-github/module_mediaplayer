@@ -198,8 +198,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (null == url)
                 throw new Exception("error: url null");
             mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
-            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.LOADING_START);
-
+            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.INIT_READY);
 //            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
 //                @Override
 //                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
@@ -213,8 +212,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //            });
             MediaSource mediaSource = buildMediaSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
-            boolean playWhenReady = args.isPlayWhenReady();
-            mExoPlayer.setPlayWhenReady(playWhenReady);
+            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.PREPARE_START);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
                 mExoPlayer.prepare();
@@ -874,8 +872,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 if (isPrepared())
                     throw new Exception("warning: isPrepared true");
                 setPrepared(true);
-                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.LOADING_STOP);
-                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.RENDER_FIRST_FRAME);
+                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.PREPARE_COMPLETE);
+                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.VIDEO_RENDERING_START);
                 long seek = getPlayWhenReadySeekToPosition();
                 if (seek <= 0L) {
                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.START);

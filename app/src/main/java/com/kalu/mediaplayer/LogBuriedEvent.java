@@ -10,8 +10,8 @@ import lib.kalu.mediaplayer.buried.BuriedEvent;
 public class LogBuriedEvent implements BuriedEvent {
 
     @Override
-    public void onRenderFirstFrame(@NonNull StartArgs args, long position, long duration) {
-        Log.e("LogBuriedEvent", "onRenderFirstFrame => position = " + position + ", duration = " + duration + ", url = " + args.getUrl());
+    public void onVideoRenderingStart(@NonNull StartArgs args, long position, long duration) {
+        Log.e("LogBuriedEvent", "onVideoRenderingStart => position = " + position + ", duration = " + duration + ", url = " + args.getUrl());
     }
 
     @Override

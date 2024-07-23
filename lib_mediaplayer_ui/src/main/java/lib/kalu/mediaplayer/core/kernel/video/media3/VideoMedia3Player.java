@@ -191,13 +191,11 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
             mExoPlayer.setRepeatMode(androidx.media3.exoplayer.ExoPlayer.REPEAT_MODE_OFF);
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_START);
-
             MediaSource mediaSource = buildMediaSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
-            boolean playWhenReady = args.isPlayWhenReady();
-            mExoPlayer.setPlayWhenReady(playWhenReady);
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE_START);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
                 mExoPlayer.prepare();
@@ -829,8 +827,8 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                 if (isPrepared())
                     throw new Exception("warning: isPrepared true");
                 setPrepared(true);
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.LOADING_STOP);
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.RENDER_FIRST_FRAME);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE_COMPLETE);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
                 long seek = getPlayWhenReadySeekToPosition();
                 if (seek <= 0L) {
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);

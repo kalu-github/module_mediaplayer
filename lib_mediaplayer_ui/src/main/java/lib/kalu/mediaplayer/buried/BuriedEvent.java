@@ -10,7 +10,7 @@ import lib.kalu.mediaplayer.type.PlayerType;
 
 public interface BuriedEvent extends Serializable {
 
-    void onRenderFirstFrame(@NotNull StartArgs args, long position, long duration);
+    void onVideoRenderingStart(@NotNull StartArgs args, long position, long duration);
 
     void onStart(@NotNull StartArgs args, long position, long duration);
 

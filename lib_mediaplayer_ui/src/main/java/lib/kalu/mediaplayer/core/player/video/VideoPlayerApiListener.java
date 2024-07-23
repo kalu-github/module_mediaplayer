@@ -99,10 +99,10 @@ interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBurie
                 eventListener.onBufferingStart();
             } else if (state == PlayerType.EventType.BUFFERING_STOP) {
                 eventListener.onBufferingStop();
-            } else if (state == PlayerType.EventType.LOADING_START) {
-                eventListener.onLoadingStart();
-            } else if (state == PlayerType.EventType.LOADING_STOP) {
-                eventListener.onLoadingStop();
+            } else if (state == PlayerType.EventType.PREPARE_START) {
+                eventListener.onPrepareStart();
+            } else if (state == PlayerType.EventType.PREPARE_COMPLETE) {
+                eventListener.onPrepareComplete();
             }
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiBase => callEvent => " + e.getMessage());

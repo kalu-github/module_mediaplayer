@@ -65,15 +65,15 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             String url = args.getUrl();
             if (url == null)
                 throw new Exception("error: url null");
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.READY);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.INIT_READY);
             mMediaPlayer.setDataSource(context, Uri.parse(url), null);
+            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PREPARE_START);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
                 mMediaPlayer.prepareAsync();
             } else {
                 mMediaPlayer.prepare();
             }
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.LOADING_START);
         } catch (Exception e) {
             LogUtil.log("VideoAndroidPlayer => startDecoder => " + e.getMessage());
             stop();
@@ -417,8 +417,8 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                         if (isPrepared())
                             throw new Exception("warning: mPrepared true");
                         setPrepared(true);
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.LOADING_STOP);
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.RENDER_FIRST_FRAME);
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PREPARE_COMPLETE);
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_RENDERING_START);
                         long seek = getPlayWhenReadySeekToPosition();
                         if (seek <= 0L) {
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START);

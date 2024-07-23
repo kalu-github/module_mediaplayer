@@ -32,12 +32,12 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
                 LogUtil.log("ComponentInit => callEvent => INIT");
                 show();
                 break;
-            case PlayerType.EventType.READY:
-                LogUtil.log("ComponentInit => callEvent => READY");
+            case PlayerType.EventType.INIT_READY:
+                LogUtil.log("ComponentInit => callEvent => INIT_READY");
                 hide();
                 break;
-            case PlayerType.EventType.RENDER_FIRST_FRAME:
-                LogUtil.log("ComponentInit => callEvent => RENDER_FIRST_FRAME");
+            case PlayerType.EventType.VIDEO_RENDERING_START:
+                LogUtil.log("ComponentInit => callEvent => VIDEO_RENDERING_START");
                 hide();
                 break;
             case PlayerType.EventType.ERROR:

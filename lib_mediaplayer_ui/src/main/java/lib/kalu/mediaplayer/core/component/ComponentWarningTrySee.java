@@ -74,8 +74,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                     LogUtil.log("ComponentWarningTrySee => callEvent => RESUME => Exception " + e.getMessage());
                 }
                 break;
-            case PlayerType.EventType.RENDER_FIRST_FRAME:
-                LogUtil.log("ComponentWarningTrySee => VIDEO_RENDERING_START => playState = " + playState);
+            case PlayerType.EventType.VIDEO_RENDERING_START:
                 try {
                     long trySeeDuration = getTrySeeDuration();
                     if (trySeeDuration <= 0L)
@@ -90,7 +89,6 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                 }
                 break;
             case PlayerType.EventType.TRY_SEE_FINISH:
-                LogUtil.log("ComponentWarningTrySee => TRY_SEE_FINISH => playState = " + playState);
                 try {
                     long trySeeDuration = getTrySeeDuration();
                     if (trySeeDuration <= 0L)

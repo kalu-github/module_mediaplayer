@@ -70,21 +70,21 @@ public @interface PlayerType {
         int INIT = 3_000;            // 准备初始换
         int INIT_PLAY_WHEN_READY_DELAYED_TIME_START = 3_001; // 延迟播放
         int INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE = 3_002; // 延迟播放
-        int READY = 3_003;            // 准备就绪
-        int RENDER_FIRST_FRAME = 3_004;    // 出画面
-        int START = 3_005;           // 播放开始
-        int START_PLAY_WHEN_READY_TRUE = 3_006; // 立即播放
-        int START_PLAY_WHEN_READY_FALSE = 3_007;  // 不立即播放
-        int PAUSE = 3_008; // 播放暂停
-        int RESUME = 3_009; // 播放恢复
-        int COMPLETE = 3_0010; // 播放完成
-        int STOP = 3_011; // 播放停止
-        int RELEASE = 3_012; // 播放销毁
-        int SEEK_START_FORWARD = 3_013; // 快进
-        int SEEK_START_REWIND = 3_014; // 快退
-        int SEEK_FINISH = 3_015; // 快退
-        int LOADING_START = 3_016; // 起播加载
-        int LOADING_STOP = 3_017; // 起播加载
+        int INIT_READY = 3_003;            // 准备就绪
+        int PREPARE_START = 3_004; // 起播加载
+        int PREPARE_COMPLETE = 3_005; // 起播加载
+        int VIDEO_RENDERING_START = 3_006;    // 出画面
+        int START = 3_007;          // 播放开始
+        int START_PLAY_WHEN_READY_TRUE = 3_008; // 立即播放
+        int START_PLAY_WHEN_READY_FALSE = 3_009;  // 不立即播放
+        int PAUSE = 3_0010; // 播放暂停
+        int RESUME = 3_011; // 播放恢复
+        int COMPLETE = 3_0012; // 播放完成
+        int STOP = 3_013; // 播放停止
+        int RELEASE = 3_014; // 播放销毁
+        int SEEK_START_FORWARD = 3_015; // 快进
+        int SEEK_START_REWIND = 3_016; // 快退
+        int SEEK_FINISH = 3_017; // 快退
         int BUFFERING_START = 3_018; // 缓冲
         int BUFFERING_STOP = 3_019; // 缓冲
         int WINDOW_FULL_START = 3_020;
@@ -108,8 +108,10 @@ public @interface PlayerType {
                 INIT,
                 INIT_PLAY_WHEN_READY_DELAYED_TIME_START,
                 INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE,
-                READY,
-                RENDER_FIRST_FRAME,
+                INIT_READY,
+                PREPARE_START,
+                PREPARE_COMPLETE,
+                VIDEO_RENDERING_START,
                 START,
                 START_PLAY_WHEN_READY_TRUE,
                 START_PLAY_WHEN_READY_FALSE,
@@ -121,8 +123,6 @@ public @interface PlayerType {
                 SEEK_START_FORWARD,
                 SEEK_START_REWIND,
                 SEEK_FINISH,
-                LOADING_START,
-                LOADING_STOP,
                 BUFFERING_START,
                 BUFFERING_STOP,
                 WINDOW_FULL_START,

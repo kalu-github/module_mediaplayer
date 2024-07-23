@@ -7,14 +7,14 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 interface VideoPlayerApiBuried {
 
-    default void onBuriedRenderFirstFrame() {
+    default void onBuriedVideoRenderingStart() {
         try {
             Object[] objects = checkValue();
             if (null == objects)
                 throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onRenderFirstFrame((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
+            ((BuriedEvent) objects[0]).onVideoRenderingStart((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedRenderFirstFrame => Exception " + e.getMessage());
+            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedVideoRenderingStart => Exception " + e.getMessage());
         }
     }
 

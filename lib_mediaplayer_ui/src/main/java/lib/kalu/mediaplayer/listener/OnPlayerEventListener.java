@@ -23,10 +23,10 @@ public interface OnPlayerEventListener {
     default void onBufferingStop() {
     }
 
-    default void onLoadingStart() {
+    default void onPrepareStart() {
     }
 
-    default void onLoadingStop() {
+    default void onPrepareComplete() {
     }
 
     /**

@@ -7,9 +7,9 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-public class ComponentLoadingGradient extends RelativeLayout implements ComponentApiLoading {
+public class ComponentPrepareGradient extends RelativeLayout implements ComponentApiPrepare {
 
-    public ComponentLoadingGradient(Context context) {
+    public ComponentPrepareGradient(Context context) {
         super(context);
         inflate();
         setComponentShowNetSpeed(false);
@@ -17,22 +17,22 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
 
     @Override
     public int initLayoutId() {
-        return R.layout.module_mediaplayer_component_loading_gradient;
+        return R.layout.module_mediaplayer_component_prepare_gradient;
     }
 
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.EventType.LOADING_START:
-                LogUtil.log("ComponentLoadingGradient => callEvent => LOADING_START");
+            case PlayerType.EventType.PREPARE_START:
+                LogUtil.log("ComponentLoadingGradient => callEvent => PREPARE_START");
                 show();
+                break;
+            case PlayerType.EventType.PREPARE_COMPLETE:
+                LogUtil.log("ComponentLoadingGradient => callEvent => PREPARE_COMPLETE");
+                hide();
                 break;
             case PlayerType.EventType.ERROR:
                 LogUtil.log("ComponentLoadingGradient => callEvent => ERROR");
-                hide();
-                break;
-            case PlayerType.EventType.LOADING_STOP:
-                LogUtil.log("ComponentLoadingGradient => callEvent => LOADING_STOP");
                 hide();
                 break;
         }
@@ -51,7 +51,7 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
             if (componentShowing)
                 throw new Exception("warning: componentShowing true");
             // 1
-            ComponentApiLoading.super.show();
+            ComponentApiPrepare.super.show();
             // 2
             setComponentText(getTitle());
             // 3
@@ -68,7 +68,7 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
             if (!componentShowing)
                 throw new Exception("warning: componentShowing false");
             // 1
-            ComponentApiLoading.super.hide();
+            ComponentApiPrepare.super.hide();
             // 2
             setComponentText("");
         } catch (Exception e) {
@@ -78,21 +78,21 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
 
     @Override
     public int initViewIdRoot() {
-        return R.id.module_mediaplayer_component_loading_gradient_root;
+        return R.id.module_mediaplayer_component_prepare_gradient_root;
     }
 
     @Override
     public int initViewIdBackground() {
-        return R.id.module_mediaplayer_component_loading_gradient_bg;
+        return R.id.module_mediaplayer_component_prepare_gradient_bg;
     }
 
     @Override
     public int initViewIdText() {
-        return R.id.module_mediaplayer_component_loading_gradient_name;
+        return R.id.module_mediaplayer_component_prepare_gradient_name;
     }
 
     @Override
     public int initViewIdNetSpeed() {
-        return R.id.module_mediaplayer_component_loading_gradient_net;
+        return R.id.module_mediaplayer_component_prepare_gradient_net;
     }
 }

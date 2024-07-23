@@ -1,26 +1,19 @@
 package lib.kalu.mediaplayer.test;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-
-import java.util.LinkedList;
-
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.component.ComponentBuffering;
 import lib.kalu.mediaplayer.core.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.component.ComponentError;
 import lib.kalu.mediaplayer.core.component.ComponentInit;
-import lib.kalu.mediaplayer.core.component.ComponentLoadingGradient;
+import lib.kalu.mediaplayer.core.component.ComponentPrepareGradient;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
 import lib.kalu.mediaplayer.core.component.ComponentPause;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
@@ -31,7 +24,6 @@ import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
 import lib.kalu.mediaplayer.type.PlayerType;
-import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
 /**
@@ -140,7 +132,7 @@ public final class TestActivity extends Activity {
             ComponentMenu menu = new ComponentMenu(getApplicationContext());
             playerLayout.addComponent(menu);
             // loading
-            ComponentLoadingGradient loading = new ComponentLoadingGradient(getApplicationContext());
+            ComponentPrepareGradient loading = new ComponentPrepareGradient(getApplicationContext());
             loading.setComponentShowNetSpeed(true);
             loading.setComponentBackgroundColorInt(Color.BLACK);
             playerLayout.addComponent(loading);

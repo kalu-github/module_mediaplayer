@@ -49,8 +49,8 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
                 LogUtil.log("ComponentWarningPlayInfo => callEvent => START_PLAY_WHEN_READY_FALSE");
                 hide();
                 break;
-            case PlayerType.EventType.RENDER_FIRST_FRAME:
-                LogUtil.log("ComponentWarningPlayInfo => callEvent => RENDER_FIRST_FRAME");
+            case PlayerType.EventType.VIDEO_RENDERING_START:
+                LogUtil.log("ComponentWarningPlayInfo => callEvent => VIDEO_RENDERING_START");
                 show();
                 break;
         }

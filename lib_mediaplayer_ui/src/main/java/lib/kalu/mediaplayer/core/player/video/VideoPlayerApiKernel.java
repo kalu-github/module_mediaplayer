@@ -505,9 +505,9 @@ interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             onBuriedBufferingStop();
                             break;
                         // 视频首帧
-                        case PlayerType.EventType.RENDER_FIRST_FRAME:
+                        case PlayerType.EventType.VIDEO_RENDERING_START:
                             // 埋点
-                            onBuriedRenderFirstFrame();
+                            onBuriedVideoRenderingStart();
                             break;
                         // 播放开始-默认
                         case PlayerType.EventType.START:

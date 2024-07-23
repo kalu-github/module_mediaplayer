@@ -3,7 +3,7 @@ package lib.kalu.mediaplayer.core.component;
 import android.view.View;
 import android.widget.TextView;
 
-public interface ComponentApiLoading extends ComponentApi {
+public interface ComponentApiPrepare extends ComponentApi {
 
     boolean[] mShowNetSpeed = new boolean[]{false};
 

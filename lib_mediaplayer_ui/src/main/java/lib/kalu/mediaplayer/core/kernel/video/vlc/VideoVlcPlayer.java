@@ -63,8 +63,9 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
             String url = args.getUrl();
             if (url == null)
                 throw new Exception("url error: " + url);
-            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_START);
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.INIT_READY);
             mVlcPlayer.setDataSource(Uri.parse(url), isPlayWhenReady());
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.PREPARE_START);
             mVlcPlayer.play();
         } catch (Exception e) {
             stop();
@@ -290,7 +291,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     private final OnVlcInfoChangeListener mVlcPlayerListener = new OnVlcInfoChangeListener() {
         @Override
         public void onStart() {
-            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.LOADING_START);
+            onEvent(PlayerType.KernelType.VLC, PlayerType.EventType.PREPARE_COMPLETE);
         }
 
         @Override
