@@ -226,10 +226,42 @@ public class StartArgs implements Serializable {
 
     // 多剧集 收费角标
     @DrawableRes
+    private int episodeFlagVipImgUrl;
+
+    public int getEpisodeFlagVipImgUrl() {
+        return episodeFlagVipImgUrl;
+    }
+
+    // 多剧集 收费角标
+    @DrawableRes
+    private int episodeFlagVipFilePath;
+
+    public int getEpisodeFlagVipFilePath() {
+        return episodeFlagVipFilePath;
+    }
+
+    // 多剧集 收费角标
+    @DrawableRes
     private int episodeFlagVipResourceId;
 
     public int getEpisodeFlagVipResourceId() {
         return episodeFlagVipResourceId;
+    }
+
+    // 多剧集 免费角标
+    @DrawableRes
+    private int episodeFlagFreeImgUrl;
+
+    public int getEpisodeFlagFreeImgUrl() {
+        return episodeFlagFreeImgUrl;
+    }
+
+    // 多剧集 免费角标
+    @DrawableRes
+    private int episodeFlagFreeFilePath;
+
+    public int getEpisodeFlagFreeFilePath() {
+        return episodeFlagFreeFilePath;
     }
 
     // 多剧集 免费角标
@@ -305,7 +337,11 @@ public class StartArgs implements Serializable {
                 ", episodeItemCount=" + episodeItemCount +
                 ", episodeFreeItemCount=" + episodeFreeItemCount +
                 ", episodeFlagFreeResourceId=" + episodeFlagFreeResourceId +
+                ", episodeFlagFreeFilePath=" + episodeFlagFreeFilePath +
+                ", episodeFlagFreeImgUrl=" + episodeFlagFreeImgUrl +
                 ", episodeFlagVipResourceId=" + episodeFlagVipResourceId +
+                ", episodeFlagVipFilePath=" + episodeFlagVipFilePath +
+                ", episodeFlagVipImgUrl=" + episodeFlagVipImgUrl +
                 ", episodeFlagLoaction=" + episodeFlagLoaction +
                 ", buriedEvent=" + buriedEvent +
                 ", rotation=" + rotation +
@@ -344,7 +380,11 @@ public class StartArgs implements Serializable {
         this.episodeItemCount = builder.episodeItemCount;
         this.episodeFreeItemCount = builder.episodeFreeItemCount;
         this.episodeFlagFreeResourceId = builder.episodeFlagFreeResourceId;
+        this.episodeFlagFreeFilePath = builder.episodeFlagFreeFilePath;
+        this.episodeFlagFreeImgUrl = builder.episodeFlagFreeImgUrl;
         this.episodeFlagVipResourceId = builder.episodeFlagVipResourceId;
+        this.episodeFlagVipFilePath = builder.episodeFlagVipFilePath;
+        this.episodeFlagVipImgUrl = builder.episodeFlagVipImgUrl;
         this.episodeFlagLoaction = builder.episodeFlagLoaction;
         this.buriedEvent = builder.buriedEvent;
         this.rotation = builder.rotation;
@@ -383,7 +423,11 @@ public class StartArgs implements Serializable {
         builder.episodeItemCount = episodeItemCount;
         builder.episodeFreeItemCount = episodeFreeItemCount;
         builder.episodeFlagFreeResourceId = episodeFlagFreeResourceId;
+        builder.episodeFlagFreeFilePath = episodeFlagFreeFilePath;
+        builder.episodeFlagFreeImgUrl = episodeFlagFreeImgUrl;
         builder.episodeFlagVipResourceId = episodeFlagVipResourceId;
+        builder.episodeFlagVipFilePath = episodeFlagVipFilePath;
+        builder.episodeFlagVipImgUrl = episodeFlagVipImgUrl;
         builder.episodeFlagLoaction = episodeFlagLoaction;
         builder.buriedEvent = buriedEvent;
         builder.rotation = rotation;
@@ -553,6 +597,24 @@ public class StartArgs implements Serializable {
 
         // 多剧集 收费角标
         @DrawableRes
+        private int episodeFlagVipImgUrl = 0;
+
+        public Builder setEpisodeFlagVipImgUrl(@DrawableRes int v) {
+            this.episodeFlagVipImgUrl = v;
+            return this;
+        }
+
+        // 多剧集 收费角标
+        @DrawableRes
+        private int episodeFlagVipFilePath = 0;
+
+        public Builder setEpisodeFlagVipFilePath(@DrawableRes int v) {
+            this.episodeFlagVipFilePath = v;
+            return this;
+        }
+
+        // 多剧集 收费角标
+        @DrawableRes
         private int episodeFlagVipResourceId = 0;
 
         public Builder setEpisodeFlagVipResourceId(@DrawableRes int v) {
@@ -562,10 +624,28 @@ public class StartArgs implements Serializable {
 
         // 多剧集 免费角标
         @DrawableRes
+        private int episodeFlagFreeImgUrl = 0;
+
+        public Builder setEpisodeFlagFreeImgUrl(@DrawableRes int v) {
+            this.episodeFlagFreeImgUrl = v;
+            return this;
+        }
+
+        // 多剧集 免费角标
+        @DrawableRes
         private int episodeFlagFreeResourceId = 0;
 
         public Builder setEpisodeFlagFreeResourceId(@DrawableRes int v) {
             this.episodeFlagFreeResourceId = v;
+            return this;
+        }
+
+        // 多剧集 免费角标
+        @DrawableRes
+        private int episodeFlagFreeFilePath = 0;
+
+        public Builder setEpisodeFlagFreeFilePath(@DrawableRes int v) {
+            this.episodeFlagFreeFilePath = v;
             return this;
         }
 

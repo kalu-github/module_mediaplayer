@@ -12,6 +12,9 @@ import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
+
+import java.io.File;
 
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -22,9 +25,13 @@ public final class RadioButton extends android.widget.RadioButton {
     private int mLocation = PlayerType.EpisodeFlagLoactionType.DEFAULT;
     @DrawableRes
     private int mDrawableVip = 0;
+    private String mPathVip = null;
+    private String mUrlVip = null;
     private Bitmap mBitmapVip = null;
     @DrawableRes
     private int mDrawableFree = 0;
+    private String mPathFree = null;
+    private String mUrlFree = null;
     private Bitmap mBitmapFree = null;
 
     public RadioButton(Context context) {
@@ -44,12 +51,7 @@ public final class RadioButton extends android.widget.RadioButton {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void setFlag(@DrawableRes int vip, @DrawableRes int free) {
-        this.mDrawableVip = vip;
-        this.mDrawableFree = free;
-    }
-
-    public void setFlag(@PlayerType.EpisodeFlagLoactionType.Value int location, @DrawableRes int vip, @DrawableRes int free) {
+    public void setFlagDrawable(@PlayerType.EpisodeFlagLoactionType.Value int location, @DrawableRes int vip, @DrawableRes int free) {
         this.mLocation = location;
         this.mDrawableVip = vip;
         this.mDrawableFree = free;
@@ -63,10 +65,42 @@ public final class RadioButton extends android.widget.RadioButton {
         }
     }
 
+    public void setFlagFile(@PlayerType.EpisodeFlagLoactionType.Value int location, String vip, String free) {
+        this.mLocation = location;
+        this.mPathVip = vip;
+        this.mPathFree = free;
+        if (null != mBitmapFree) {
+            mBitmapFree.recycle();
+            mBitmapFree = null;
+        }
+        if (null != mBitmapVip) {
+            mBitmapVip.recycle();
+            mBitmapVip = null;
+        }
+    }
+
+    public void setFlagUrl(@PlayerType.EpisodeFlagLoactionType.Value int location, String vip, String free) {
+        this.mLocation = location;
+        this.mUrlVip = vip;
+        this.mUrlFree = free;
+        if (null != mBitmapFree) {
+            mBitmapFree.recycle();
+            mBitmapFree = null;
+        }
+        if (null != mBitmapVip) {
+            mBitmapVip.recycle();
+            mBitmapVip = null;
+        }
+    }
+
     public void clearFlag() {
         this.mLocation = PlayerType.EpisodeFlagLoactionType.DEFAULT;
         this.mDrawableVip = 0;
+        this.mPathVip = null;
+        this.mUrlVip = null;
         this.mDrawableFree = 0;
+        this.mPathFree = null;
+        this.mUrlFree = null;
         if (null != mBitmapFree) {
             mBitmapFree.recycle();
             mBitmapFree = null;
@@ -92,16 +126,24 @@ public final class RadioButton extends android.widget.RadioButton {
         }
     }
 
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         // 免费图标
         try {
-            if (mDrawableFree == 0)
-                throw new Exception("error: mDrawableFree == 0");
-            if (null == mBitmapFree) {
+            if (null == mBitmapFree && mDrawableFree != 0) {
                 mBitmapFree = BitmapFactory.decodeResource(getResources(), mDrawableFree);
+            }
+            if (null == mBitmapFree && null != mPathFree) {
+                File file = new File(mPathFree);
+                if (file.exists()) {
+                    mBitmapFree = BitmapFactory.decodeFile(mPathVip);
+                }
+            }
+            if (null == mBitmapFree && null != mUrlFree) {
+                mBitmapFree = BitmapFactory.decodeFile(mPathVip);
             }
             if (null == mBitmapFree)
                 throw new Exception("error: mBitmapFree null");

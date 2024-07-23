@@ -1,15 +1,10 @@
 package lib.kalu.mediaplayer.core.component;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.view.View;
 
 import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
@@ -202,41 +197,17 @@ public interface ComponentApiMenu extends ComponentApi {
     default void updateTabSelected(int viewId) {
     }
 
-    default void updateTabCheckedChange(boolean requestFocus) {
+    default void updateTabData(int index, boolean requestFocus) {
     }
 
-    default void toggleScale(int focusId) {
+    default void toggleScale() {
     }
 
-    default void toggleSpeed(int focusId) {
+    default void toggleSpeed() {
 
     }
 
     default void toggleEpisode(int focusId) {
 
-    }
-
-    Handler[] mHandlerDelayedMsg = new Handler[]{null};
-
-    default void stopDelayedMsg() {
-        if (null != mHandlerDelayedMsg[0]) {
-            mHandlerDelayedMsg[0].removeMessages(1000);
-            mHandlerDelayedMsg[0] = null;
-        }
-    }
-
-    default void startDelayedMsg() {
-        if (null == mHandlerDelayedMsg[0]) {
-            mHandlerDelayedMsg[0] = new Handler(Looper.getMainLooper()) {
-                @Override
-                public void handleMessage(@NonNull Message msg) {
-                    if (msg.what == 1000) {
-                        hide();
-                    }
-                }
-            };
-        }
-        mHandlerDelayedMsg[0].removeMessages(1000);
-        mHandlerDelayedMsg[0].sendEmptyMessageDelayed(1000, 4000);
     }
 }
