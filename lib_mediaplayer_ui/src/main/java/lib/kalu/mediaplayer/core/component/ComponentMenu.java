@@ -9,6 +9,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -442,18 +444,10 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 }
             }
 
-            // 选集角标
-            int loaction = getEpisodeFlagLoaction();
-            int vipResourceId = getEpisodeFlagVipResourceId();
-            int freeResourceId = getEpisodeFlagFreeResourceId();
-            int freeItemCount = getEpisodeFreeItemCount();
-
             for (int i = 0; i < itemCount; i++) {
 
 
-                ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_group);
-                ImageView flagImage = (ImageView) flagGroup.getChildAt(i);
-                flagImage.setImageDrawable(null);
+                clearFlag(i);
 
                 RadioButton radioButton = (RadioButton) itemGroup.getChildAt(i);
                 // 倍速
@@ -543,13 +537,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
                         int position = i + start;
 
-                        if (freeItemCount < 0) {
-                            flagImage.setImageResource(freeResourceId);
-                        } else if (position < freeItemCount) {
-                            flagImage.setImageResource(freeResourceId);
-                        } else {
-                            flagImage.setImageResource(vipResourceId);
-                        }
+                        updateFlag(i);
 
                         radioButton.setTag(position);
                         radioButton.setText(String.valueOf(position + 1));
@@ -674,5 +662,48 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             }
         } catch (Exception e) {
         }
+    }
+
+    @Override
+    public void clearFlag(int index) {
+        ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_group);
+        ImageView flagImage = (ImageView) flagGroup.getChildAt(index);
+        flagImage.setImageDrawable(null);
+    }
+
+    @Override
+    public void updateFlag(int index) {
+        ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_group);
+        ImageView flagImage = (ImageView) flagGroup.getChildAt(index);
+
+        int flagLoaction = getEpisodeFlagLoaction();
+        if (flagLoaction == PlayerType.EpisodeFlagLoactionType.LEFT_TOP) {
+            flagImage.setScaleType(ImageView.ScaleType.FIT_START);
+        } else {
+            flagImage.setScaleType(ImageView.ScaleType.FIT_END);
+        }
+
+        int freeItemCount = getEpisodeFreeItemCount();
+        String vipImgUrl = getEpisodeFlagVipImgUrl();
+        String freeImgUrl = getEpisodeFlagFreeImgUrl();
+
+        if (freeItemCount < 0) {
+            Glide.with(flagImage).load(freeImgUrl).into(flagImage);
+        } else if (index < freeItemCount) {
+            Glide.with(flagImage).load(freeImgUrl).into(flagImage);
+        } else {
+            Glide.with(flagImage).load(vipImgUrl).into(flagImage);
+        }
+//        int freeResourceId = getEpisodeFlagFreeResourceId();
+//        int vipResourceId = getEpisodeFlagVipResourceId();
+//        int freeItemCount = getEpisodeFreeItemCount();
+//
+//        if (freeItemCount < 0) {
+//            flagImage.setImageResource(freeResourceId);
+//        } else if (index < freeItemCount) {
+//            flagImage.setImageResource(freeResourceId);
+//        } else {
+//            flagImage.setImageResource(vipResourceId);
+//        }
     }
 }

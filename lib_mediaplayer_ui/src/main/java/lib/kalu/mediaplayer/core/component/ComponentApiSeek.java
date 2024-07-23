@@ -20,7 +20,31 @@ public interface ComponentApiSeek extends ComponentApi {
 
     void initSeekBarChangeListener();
 
-    void actionUp();
-
     void actionDown(int repeatCount, int keyCode);
+
+    default void updateTimeMillis() {
+        try {
+            long millis = System.currentTimeMillis();
+            ((View) this).setTag(millis);
+        } catch (Exception e) {
+        }
+    }
+
+    default void clearTimeMillis() {
+        try {
+            ((View) this).setTag(null);
+        } catch (Exception e) {
+        }
+    }
+
+    default long getTimeMillis() {
+        try {
+            Object tag = ((View) this).getTag();
+            if (null == tag)
+                throw new Exception("warning: tag null");
+            return (long) tag;
+        } catch (Exception e) {
+            return 0L;
+        }
+    }
 }

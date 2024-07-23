@@ -69,7 +69,9 @@ public class MainActivity extends Activity {
                         .setEpisodePlayingIndex(4)
                         .setEpisodeFreeItemCount(2)
                         .setEpisodeFlagVipResourceId(R.drawable.ic_vip)
+                        .setEpisodeFlagVipImgUrl("https://bpic.588ku.com/element_pic/21/12/11/7f55da9a4d5e26579f9fba53668b9003.jpg%21/fw/329/quality/90/unsharp/true/compress/true")
                         .setEpisodeFlagFreeResourceId(R.drawable.ic_free)
+                        .setEpisodeFlagFreeImgUrl("https://img1.baidu.com/it/u=202809253,3453801017&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500")
                         .build();
                 Intent intent = new Intent(getApplicationContext(), TestActivity.class);
                 intent.putExtra(TestActivity.INTENT_ARGS, args);

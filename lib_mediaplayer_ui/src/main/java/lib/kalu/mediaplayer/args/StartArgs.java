@@ -225,18 +225,16 @@ public class StartArgs implements Serializable {
     }
 
     // 多剧集 收费角标
-    @DrawableRes
-    private int episodeFlagVipImgUrl;
+    private String episodeFlagVipImgUrl;
 
-    public int getEpisodeFlagVipImgUrl() {
+    public String getEpisodeFlagVipImgUrl() {
         return episodeFlagVipImgUrl;
     }
 
     // 多剧集 收费角标
-    @DrawableRes
-    private int episodeFlagVipFilePath;
+    private String episodeFlagVipFilePath;
 
-    public int getEpisodeFlagVipFilePath() {
+    public String getEpisodeFlagVipFilePath() {
         return episodeFlagVipFilePath;
     }
 
@@ -249,18 +247,16 @@ public class StartArgs implements Serializable {
     }
 
     // 多剧集 免费角标
-    @DrawableRes
-    private int episodeFlagFreeImgUrl;
+    private String episodeFlagFreeImgUrl;
 
-    public int getEpisodeFlagFreeImgUrl() {
+    public String getEpisodeFlagFreeImgUrl() {
         return episodeFlagFreeImgUrl;
     }
 
     // 多剧集 免费角标
-    @DrawableRes
-    private int episodeFlagFreeFilePath;
+    private String episodeFlagFreeFilePath;
 
-    public int getEpisodeFlagFreeFilePath() {
+    public String getEpisodeFlagFreeFilePath() {
         return episodeFlagFreeFilePath;
     }
 
@@ -596,19 +592,17 @@ public class StartArgs implements Serializable {
         }
 
         // 多剧集 收费角标
-        @DrawableRes
-        private int episodeFlagVipImgUrl = 0;
+        private String episodeFlagVipImgUrl = null;
 
-        public Builder setEpisodeFlagVipImgUrl(@DrawableRes int v) {
+        public Builder setEpisodeFlagVipImgUrl(String v) {
             this.episodeFlagVipImgUrl = v;
             return this;
         }
 
         // 多剧集 收费角标
-        @DrawableRes
-        private int episodeFlagVipFilePath = 0;
+        private String episodeFlagVipFilePath = null;
 
-        public Builder setEpisodeFlagVipFilePath(@DrawableRes int v) {
+        public Builder setEpisodeFlagVipFilePath(String v) {
             this.episodeFlagVipFilePath = v;
             return this;
         }
@@ -623,10 +617,9 @@ public class StartArgs implements Serializable {
         }
 
         // 多剧集 免费角标
-        @DrawableRes
-        private int episodeFlagFreeImgUrl = 0;
+        private String episodeFlagFreeImgUrl = null;
 
-        public Builder setEpisodeFlagFreeImgUrl(@DrawableRes int v) {
+        public Builder setEpisodeFlagFreeImgUrl(String v) {
             this.episodeFlagFreeImgUrl = v;
             return this;
         }
@@ -641,10 +634,9 @@ public class StartArgs implements Serializable {
         }
 
         // 多剧集 免费角标
-        @DrawableRes
-        private int episodeFlagFreeFilePath = 0;
+        private String episodeFlagFreeFilePath = null;
 
-        public Builder setEpisodeFlagFreeFilePath(@DrawableRes int v) {
+        public Builder setEpisodeFlagFreeFilePath(String v) {
             this.episodeFlagFreeFilePath = v;
             return this;
         }

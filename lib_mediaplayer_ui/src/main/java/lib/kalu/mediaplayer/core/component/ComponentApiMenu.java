@@ -148,6 +148,36 @@ public interface ComponentApiMenu extends ComponentApi {
         }
     }
 
+    default String getEpisodeFlagFreeImgUrl() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            String url = tags.getEpisodeFlagFreeImgUrl();
+            if (null == url || url.length() ==0)
+                throw new Exception("warning: url null");
+            return url;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagFreeImgUrl => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default String getEpisodeFlagVipImgUrl() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            String url = tags.getEpisodeFlagVipImgUrl();
+            if (null == url || url.length() ==0)
+                throw new Exception("warning: url null");
+            return url;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagVipImgUrl => " + e.getMessage());
+            return null;
+        }
+    }
+
     @DrawableRes
     default int getEpisodeFlagVipResourceId() {
         try {
@@ -235,5 +265,12 @@ public interface ComponentApiMenu extends ComponentApi {
         } catch (Exception e) {
             return 0L;
         }
+    }
+
+    default void clearFlag(int index){
+    }
+
+    default void updateFlag(int index){
+
     }
 }
