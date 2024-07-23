@@ -469,7 +469,7 @@ public interface ComponentApi {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.stop(true, true);
+            playerView.stop(true, false);
         } catch (Exception e) {
             LogUtil.log("ComponentApi => toggle => " + e.getMessage());
         }
@@ -596,7 +596,8 @@ public interface ComponentApi {
                 StringBuilder builder = new StringBuilder();
                 builder.append(title);
                 int index = args.getEpisodePlayingIndex();
-                String s = ((View) this).getResources().getString(R.string.module_mediaplayer_string_title, index);
+                int num = index+1;
+                String s = ((View) this).getResources().getString(R.string.module_mediaplayer_string_title, num);
                 builder.append(s);
                 return builder.toString();
             }

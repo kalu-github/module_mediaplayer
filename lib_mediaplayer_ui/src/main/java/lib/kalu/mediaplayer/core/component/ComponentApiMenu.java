@@ -125,7 +125,7 @@ public interface ComponentApiMenu extends ComponentApi {
         try {
             OnPlayerEpisodeListener listener = getOnPlayerEpisodeListener();
             if (null == listener)
-                throw new Exception("error: null == listener");
+                throw new Exception("error: listener null");
             listener.onEpisode(pos);
         } catch (Exception e) {
             LogUtil.log("ComponentApiMenu => clickEpisode => " + e.getMessage());

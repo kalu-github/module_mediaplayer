@@ -778,4 +778,19 @@ public class PlayerLayout extends RelativeLayout {
             LogUtil.log("PlayerLayout => clearOnPlayerListener => " + e.getMessage());
         }
     }
+
+    public final StartArgs.Builder newBuilderStartArgs() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("error: playerView null");
+            StartArgs args = playerView.getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            return args.newBuilder();
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => newBuilderStartArgs => " + e.getMessage());
+            return null;
+        }
+    }
 }
