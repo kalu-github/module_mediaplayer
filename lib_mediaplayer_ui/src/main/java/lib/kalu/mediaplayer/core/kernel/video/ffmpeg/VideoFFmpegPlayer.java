@@ -346,7 +346,11 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                         onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.START);
                         // 立即播放
                         boolean playWhenReady = isPlayWhenReady();
-                        onEvent(PlayerType.KernelType.FFPLAYER, playWhenReady ? PlayerType.EventType.PLAY_WHEN_READY_TRUE : PlayerType.EventType.PLAY_WHEN_READY_FALSE);
+                        onEvent(PlayerType.KernelType.FFPLAYER, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                        if (!playWhenReady) {
+                            pause();
+                            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.PAUSE);
+                        }
                     } else {
                         onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.SEEK_START_FORWARD);
                         // 起播快进
@@ -377,7 +381,11 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.START);
                 // 立即播放
                 boolean playWhenReady = isPlayWhenReady();
-                onEvent(PlayerType.KernelType.FFPLAYER, playWhenReady ? PlayerType.EventType.PLAY_WHEN_READY_TRUE : PlayerType.EventType.PLAY_WHEN_READY_FALSE);
+                onEvent(PlayerType.KernelType.FFPLAYER, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                if (!playWhenReady) {
+                    pause();
+                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.PAUSE);
+                }
             } catch (Exception e) {
                 LogUtil.log("VideoFFmpegPlayer => onSeekComplete => Exception1 " + e.getMessage());
             }

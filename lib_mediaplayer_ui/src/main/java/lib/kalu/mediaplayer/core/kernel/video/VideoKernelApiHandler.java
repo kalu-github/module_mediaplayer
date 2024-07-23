@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -29,19 +30,17 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
 
     HashMap<VideoKernelApiBase, android.os.Handler> mHandlerPlayWhenReadyDelayedTime = new HashMap<>();
 
-    default void startPlayWhenReadyDelayedTime(@PlayerType.KernelType.Value int kernelType, long delayedTime) {
+    default void startPlayWhenReadyDelayedTime(Context context, @PlayerType.KernelType.Value int kernelType, long delayedTime) {
         try {
-            if (!isPrepared())
-                throw new Exception("warning: isPrepared false");
+            onEvent(kernelType, PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_START);
             Handler handler = mHandlerPlayWhenReadyDelayedTime.get(this);
             if (null == handler) {
                 handler = new android.os.Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(@NonNull Message msg) {
                         try {
-                            onEvent(kernelType, PlayerType.EventType.PLAY_WHEN_READY_DELAYED_TIME_COMPLETE);
-                            onEvent(kernelType, PlayerType.EventType.RESUME);
-                            start();
+                            onEvent(kernelType, PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE);
+                            callPlayWhenReadyDelayedTimeComplete(context);
                         } catch (Exception e) {
                             LogUtil.log("VideoKernelApiHandler => startPlayWhenReadyDelayedTime => Exception2 " + e.getMessage());
                         } finally {

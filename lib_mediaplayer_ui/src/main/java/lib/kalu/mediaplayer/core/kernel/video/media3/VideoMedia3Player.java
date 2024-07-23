@@ -781,7 +781,11 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
                             // 立即播放
                             boolean playWhenReady = isPlayWhenReady();
-                            onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.PLAY_WHEN_READY_TRUE : PlayerType.EventType.PLAY_WHEN_READY_FALSE);
+                            onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                            if (!playWhenReady) {
+                                pause();
+                                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PAUSE);
+                            }
                         } catch (Exception e) {
                             LogUtil.log("VideoMedia3Player => onPlaybackStateChanged => STATE_READY => Exception1 " + e.getMessage());
                         }
@@ -832,7 +836,11 @@ public final class VideoMedia3Player extends VideoBasePlayer {
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
                     // 立即播放
                     boolean playWhenReady = isPlayWhenReady();
-                    onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.PLAY_WHEN_READY_TRUE : PlayerType.EventType.PLAY_WHEN_READY_FALSE);
+                    onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                    if (!playWhenReady) {
+                        pause();
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PAUSE);
+                    }
                 } else {
                     // 起播快进
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_START_FORWARD);

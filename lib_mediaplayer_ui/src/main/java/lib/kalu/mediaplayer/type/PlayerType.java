@@ -67,54 +67,52 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface EventType {
-        int INIT = 3_000;            // 准备
-        int RENDER_FIRST_FRAME = 3_001;    // 出画面
-        int START = 3_002;           // 播放开始
-        int PLAY_WHEN_READY_DELAYED_TIME_START = 3_003; // 延迟播放
-        int PLAY_WHEN_READY_DELAYED_TIME_COMPLETE = 3_004; // 延迟播放
-        int PLAY_WHEN_READY_TRUE = 3_005; // 立即播放
-        int PLAY_WHEN_READY_FALSE = 3_006;  // 不立即播放
-        int PAUSE = 3_007; // 播放暂停
-        int RESUME = 3_008; // 播放恢复
-        int COMPLETE = 3_009; // 播放完成
-        int STOP = 3_010; // 播放停止
-        int RELEASE = 3_011; // 播放销毁
+        int INIT = 3_000;            // 准备初始换
+        int INIT_PLAY_WHEN_READY_DELAYED_TIME_START = 3_001; // 延迟播放
+        int INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE = 3_002; // 延迟播放
+        int READY = 3_003;            // 准备就绪
+        int RENDER_FIRST_FRAME = 3_004;    // 出画面
+        int START = 3_005;           // 播放开始
+        int START_PLAY_WHEN_READY_TRUE = 3_006; // 立即播放
+        int START_PLAY_WHEN_READY_FALSE = 3_007;  // 不立即播放
+        int PAUSE = 3_008; // 播放暂停
+        int RESUME = 3_009; // 播放恢复
+        int COMPLETE = 3_0010; // 播放完成
+        int STOP = 3_011; // 播放停止
+        int RELEASE = 3_012; // 播放销毁
+        int SEEK_START_FORWARD = 3_013; // 快进
+        int SEEK_START_REWIND = 3_014; // 快退
+        int SEEK_FINISH = 3_015; // 快退
+        int LOADING_START = 3_016; // 起播加载
+        int LOADING_STOP = 3_017; // 起播加载
+        int BUFFERING_START = 3_018; // 缓冲
+        int BUFFERING_STOP = 3_019; // 缓冲
+        int WINDOW_FULL_START = 3_020;
+        int WINDOW_FULL_SUCC = 3_021;
+        int WINDOW_FULL_FAIL = 3_022;
+        int WINDOW_FLOAT_START = 3_023;
+        int WINDOW_FLOAT_SUCC = 3_024;
+        int WINDOW_FLOAT_FAIL = 3_025;
+        int TRY_SEE_START = 3_026;
+        int TRY_SEE_FINISH = 3_027;
+        int COMPONENT_MENU_SHOW = 3_028;
+        int COMPONENT_MENU_HIDE = 3_029;
 
-        int SEEK_START_FORWARD = 3_012; // 快进
-        int SEEK_START_REWIND = 3_013; // 快退
-        int SEEK_FINISH = 3_014; // 快退
-
-
-        int LOADING_START = 3_015; // 起播加载
-        int LOADING_STOP = 3_016; // 起播加载
-        int BUFFERING_START = 3_017; // 缓冲
-        int BUFFERING_STOP = 3_018; // 缓冲
-
-        int WINDOW_FULL_START = 3_019;
-        int WINDOW_FULL_SUCC = 3_020;
-        int WINDOW_FULL_FAIL = 3_021;
-        int WINDOW_FLOAT_START = 3_022;
-        int WINDOW_FLOAT_SUCC = 3_023;
-        int WINDOW_FLOAT_FAIL = 3_024;
-        int TRY_SEE_START = 3_025;
-        int TRY_SEE_FINISH = 3_026;
-        int COMPONENT_MENU_SHOW = 3_027;
-        int COMPONENT_MENU_HIDE = 3_028;
-
-        int ERROR = 3_029; // 播放错误
-        int ERROR_BUFFERING_TIMEOUT = 3_030;
+        int ERROR = 3_030; // 播放错误
+        int ERROR_BUFFERING_TIMEOUT = 3_031;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef({
                 INIT,
+                INIT_PLAY_WHEN_READY_DELAYED_TIME_START,
+                INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE,
+                READY,
                 RENDER_FIRST_FRAME,
                 START,
-                PLAY_WHEN_READY_DELAYED_TIME_START,
-                PLAY_WHEN_READY_DELAYED_TIME_COMPLETE,
-                PLAY_WHEN_READY_TRUE,
-                PLAY_WHEN_READY_FALSE,
+                START_PLAY_WHEN_READY_TRUE,
+                START_PLAY_WHEN_READY_FALSE,
                 PAUSE,
                 RESUME,
                 COMPLETE,

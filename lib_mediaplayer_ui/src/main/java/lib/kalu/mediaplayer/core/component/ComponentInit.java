@@ -29,12 +29,38 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
     public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.EventType.INIT:
-                LogUtil.log("ComponentInit[show] => playState = " + playState);
+                LogUtil.log("ComponentInit => callEvent => INIT");
                 show();
                 break;
-            default:
-                LogUtil.log("ComponentInit[gone] => playState = " + playState);
+            case PlayerType.EventType.READY:
+                LogUtil.log("ComponentInit => callEvent => READY");
                 hide();
+                break;
+            case PlayerType.EventType.RENDER_FIRST_FRAME:
+                LogUtil.log("ComponentInit => callEvent => RENDER_FIRST_FRAME");
+                hide();
+                break;
+            case PlayerType.EventType.ERROR:
+                LogUtil.log("ComponentInit => callEvent => ERROR");
+                hide();
+                break;
+            case PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_START:
+                LogUtil.log("ComponentInit => callEvent => INIT_PLAY_WHEN_READY_DELAYED_TIME_START");
+                break;
+            case PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE:
+                LogUtil.log("ComponentInit => callEvent => INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE");
+                break;
+            case PlayerType.EventType.START:
+                LogUtil.log("ComponentInit => callEvent => START");
+                break;
+            case PlayerType.EventType.PAUSE:
+                LogUtil.log("ComponentInit => callEvent => PAUSE");
+                break;
+            case PlayerType.EventType.START_PLAY_WHEN_READY_TRUE:
+                LogUtil.log("ComponentInit => callEvent => START_PLAY_WHEN_READY_TRUE");
+                break;
+            case PlayerType.EventType.START_PLAY_WHEN_READY_FALSE:
+                LogUtil.log("ComponentInit => callEvent => START_PLAY_WHEN_READY_FALSE");
                 break;
         }
     }

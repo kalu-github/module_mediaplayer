@@ -5,6 +5,7 @@ import android.view.Surface;
 
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 
 /**
@@ -50,17 +51,40 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
         } catch (Exception e) {
         }
 
-        // 网络超时
+        long playWhenReadyDelayedTime = args.getPlayWhenReadyDelayedTime();
+        // 延迟播放
+        if (playWhenReadyDelayedTime > 0L) {
+            @PlayerType.KernelType.Value
+            int kernelType = args.getKernelType();
+            startPlayWhenReadyDelayedTime(context, kernelType, playWhenReadyDelayedTime);
+        }
+        // 立即播放
+        else {
+            initDecoder2(context);
+        }
+    }
+
+    default void initDecoder2(Context context) {
         try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            // 1
             long connectTimeout = args.getConnectTimout();
             @PlayerType.KernelType.Value
             int kernelType = args.getKernelType();
             startCheckConnectTimeout(kernelType, connectTimeout);
+            // 2
+            initOptions(context, args);
+            startDecoder(context, args);
         } catch (Exception e) {
+            LogUtil.log("VideoKernelApi => initDecoder2 => Exception " + e.getMessage());
         }
+    }
 
-        initOptions(context, args);
-        startDecoder(context, args);
+    @Override
+    default void callPlayWhenReadyDelayedTimeComplete(Context context) {
+        initDecoder2(context);
     }
 
     /***********/

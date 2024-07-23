@@ -826,7 +826,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
                             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.START);
                             // 立即播放
                             boolean playWhenReady = isPlayWhenReady();
-                            onEvent(PlayerType.KernelType.EXO_V2, playWhenReady ? PlayerType.EventType.PLAY_WHEN_READY_TRUE : PlayerType.EventType.PLAY_WHEN_READY_FALSE);
+                            onEvent(PlayerType.KernelType.EXO_V2, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                            if (!playWhenReady) {
+                                pause();
+                                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.PAUSE);
+                            }
                         } catch (Exception e) {
                             LogUtil.log("VideoExo2Player => onPlaybackStateChanged => STATE_READY => Exception1 " + e.getMessage());
                         }
@@ -877,7 +881,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.START);
                     // 立即播放
                     boolean playWhenReady = isPlayWhenReady();
-                    onEvent(PlayerType.KernelType.EXO_V2, playWhenReady ? PlayerType.EventType.PLAY_WHEN_READY_TRUE : PlayerType.EventType.PLAY_WHEN_READY_FALSE);
+                    onEvent(PlayerType.KernelType.EXO_V2, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                    if (!playWhenReady) {
+                        pause();
+                        onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.PAUSE);
+                    }
                 } else {
                     // 起播快进
                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.SEEK_START_FORWARD);

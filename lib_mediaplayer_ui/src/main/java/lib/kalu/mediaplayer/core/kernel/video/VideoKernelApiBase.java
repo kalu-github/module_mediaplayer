@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
@@ -54,5 +56,8 @@ interface VideoKernelApiBase {
 
     default boolean switchTrack(int trackId) {
         return false;
+    }
+
+    default void callPlayWhenReadyDelayedTimeComplete(Context context){
     }
 }

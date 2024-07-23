@@ -81,8 +81,8 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                 LogUtil.log("ComponentPause[gone] => playState = " + playState);
                 hide();
                 break;
-            case PlayerType.EventType.PLAY_WHEN_READY_FALSE:
-                LogUtil.log("ComponentPause => callEvent => START_PLAY_WHEN_READY_NO");
+            case PlayerType.EventType.START_PLAY_WHEN_READY_FALSE:
+                LogUtil.log("ComponentPause => callEvent => START_PLAY_WHEN_READY_FALSE");
                 try {
                     boolean componentShowing = isComponentShowing();
                     if (componentShowing)

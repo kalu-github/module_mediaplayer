@@ -59,6 +59,20 @@ public final class GradientView extends View {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        try {
+            int width = MeasureSpec.getSize(widthMeasureSpec);
+            int w = (int) (width * 0.7F);
+            int h = MeasureSpec.getSize(heightMeasureSpec);
+            int specW = MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY);
+            int specH = MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY);
+            super.onMeasure(specW, specH);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
         if (visibility == View.VISIBLE) {

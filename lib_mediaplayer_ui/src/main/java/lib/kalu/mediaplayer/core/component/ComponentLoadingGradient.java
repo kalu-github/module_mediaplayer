@@ -31,22 +31,9 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
                 LogUtil.log("ComponentLoadingGradient => callEvent => ERROR");
                 hide();
                 break;
-            case PlayerType.EventType.PLAY_WHEN_READY_DELAYED_TIME_START:
-                LogUtil.log("ComponentLoadingGradient => callEvent => PLAY_WHEN_READY_DELAYED_TIME_START");
-                break;
-            case PlayerType.EventType.PLAY_WHEN_READY_DELAYED_TIME_COMPLETE:
-                LogUtil.log("ComponentLoadingGradient => callEvent => PLAY_WHEN_READY_DELAYED_TIME_COMPLETE");
-                hide();
-                break;
             case PlayerType.EventType.LOADING_STOP:
                 LogUtil.log("ComponentLoadingGradient => callEvent => LOADING_STOP");
-                try {
-                    long playWhenReadyDelayedTime = getPlayWhenReadyDelayedTime();
-                    if (playWhenReadyDelayedTime > 0L)
-                        throw new Exception();
-                    hide();
-                } catch (Exception e) {
-                }
+                hide();
                 break;
         }
     }
@@ -70,7 +57,7 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
             // 3
             updateNetSpeed();
         } catch (Exception e) {
-            LogUtil.log("ComponentLoadingGradient => show => Exception "+e.getMessage());
+            LogUtil.log("ComponentLoadingGradient => show => Exception " + e.getMessage());
         }
     }
 
@@ -85,7 +72,7 @@ public class ComponentLoadingGradient extends RelativeLayout implements Componen
             // 2
             setComponentText("");
         } catch (Exception e) {
-            LogUtil.log("ComponentLoadingGradient => hide => Exception "+e.getMessage());
+            LogUtil.log("ComponentLoadingGradient => hide => Exception " + e.getMessage());
         }
     }
 

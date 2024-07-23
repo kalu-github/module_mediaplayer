@@ -16,8 +16,7 @@
             android:id="@+id/module_mediaplayer_component_init_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:visibility="gone" />
+            android:layout_centerInParent="true" />
 
         <TextView
             android:id="@+id/module_mediaplayer_component_init_txt"
@@ -28,8 +27,7 @@
             android:gravity="center"
             android:scaleType="center"
             android:text="@string/module_mediaplayer_string_init"
-            android:textColor="#ffffff"
-            android:visibility="gone" />
+            android:textColor="#ffffff" />
 
     </RelativeLayout>
 

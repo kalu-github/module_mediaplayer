@@ -23,10 +23,8 @@
         <lib.kalu.mediaplayer.widget.gradient.GradientView
             android:id="@+id/module_mediaplayer_component_loading_gradient_pb"
             android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="200dp"
-            android:layout_marginRight="200dp" />
+            android:layout_height="2dp"
+            android:layout_centerInParent="true" />
 
         <!-- 名称 -->
         <TextView
