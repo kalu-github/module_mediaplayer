@@ -9,6 +9,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
 
 import lib.kalu.mediaplayer.R;
@@ -684,26 +686,44 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
 
         int freeItemCount = getEpisodeFreeItemCount();
+
         String vipImgUrl = getEpisodeFlagVipImgUrl();
         String freeImgUrl = getEpisodeFlagFreeImgUrl();
+        int freeResourceId = getEpisodeFlagFreeResourceId();
+        int vipResourceId = getEpisodeFlagVipResourceId();
 
-        if (freeItemCount < 0) {
-            Glide.with(flagImage).load(freeImgUrl).into(flagImage);
-        } else if (index < freeItemCount) {
-            Glide.with(flagImage).load(freeImgUrl).into(flagImage);
-        } else {
-            Glide.with(flagImage).load(vipImgUrl).into(flagImage);
+        if (null != vipImgUrl && null != freeImgUrl) {
+            if (freeItemCount < 0) {
+                loadFlagUrl(flagImage, freeImgUrl);
+            } else if (index < freeItemCount) {
+                loadFlagUrl(flagImage, freeImgUrl);
+            } else {
+                loadFlagUrl(flagImage, vipImgUrl);
+            }
+        } else if (0 != vipResourceId && 0 != freeResourceId) {
+            if (freeItemCount < 0) {
+                loadFlagResource(flagImage, freeResourceId);
+            } else if (index < freeItemCount) {
+                loadFlagResource(flagImage, freeResourceId);
+            } else {
+                loadFlagResource(flagImage, vipResourceId);
+            }
         }
-//        int freeResourceId = getEpisodeFlagFreeResourceId();
-//        int vipResourceId = getEpisodeFlagVipResourceId();
-//        int freeItemCount = getEpisodeFreeItemCount();
-//
-//        if (freeItemCount < 0) {
-//            flagImage.setImageResource(freeResourceId);
-//        } else if (index < freeItemCount) {
-//            flagImage.setImageResource(freeResourceId);
-//        } else {
-//            flagImage.setImageResource(vipResourceId);
-//        }
+    }
+
+    @Override
+    public void loadFlagUrl(ImageView imageView, String url) {
+        try {
+            Glide.with(imageView).load(url).into(imageView);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void loadFlagResource(@Nullable ImageView imageView, int resId) {
+        try {
+            imageView.setImageResource(resId);
+        } catch (Exception e) {
+        }
     }
 }

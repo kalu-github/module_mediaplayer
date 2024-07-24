@@ -23,7 +23,7 @@
         <RadioGroup
             android:id="@+id/module_mediaplayer_component_menu_item_group"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="80dp"
             android:focusable="false"
             android:orientation="horizontal"
             android:weightSum="10">
@@ -324,7 +324,7 @@
         <LinearLayout
             android:id="@+id/module_mediaplayer_component_menu_flag_group"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="80dp"
             android:focusable="false"
             android:orientation="horizontal"
             android:weightSum="10">
@@ -332,7 +332,9 @@
             <ImageView
                 android:id="@+id/module_mediaplayer_component_menu_flag_img_n0"
                 android:layout_width="0dp"
-                android:layout_height="10dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:focusable="false" />
 
@@ -340,6 +342,8 @@
                 android:id="@+id/module_mediaplayer_component_menu_flag_img_n1"
                 android:layout_width="0dp"
                 android:layout_height="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:focusable="false" />
 
@@ -347,6 +351,8 @@
                 android:id="@+id/module_mediaplayer_component_menu_flag_img_n2"
                 android:layout_width="0dp"
                 android:layout_height="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:focusable="false" />
 
@@ -354,6 +360,8 @@
                 android:id="@+id/module_mediaplayer_component_menu_flag_img_n3"
                 android:layout_width="0dp"
                 android:layout_height="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:focusable="false" />
 
@@ -361,6 +369,8 @@
                 android:id="@+id/module_mediaplayer_component_menu_flag_img_n4"
                 android:layout_width="0dp"
                 android:layout_height="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:focusable="false" />
 
@@ -368,6 +378,8 @@
                 android:id="@+id/module_mediaplayer_component_menu_flag_img_n5"
                 android:layout_width="0dp"
                 android:layout_height="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:focusable="false" />
 
@@ -375,6 +387,8 @@
                 android:id="@+id/module_mediaplayer_component_menu_flag_img_n6"
                 android:layout_width="0dp"
                 android:layout_height="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:focusable="false" />
 
@@ -382,6 +396,8 @@
                 android:id="@+id/module_mediaplayer_component_menu_flag_img_n7"
                 android:layout_width="0dp"
                 android:layout_height="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:focusable="false" />
 
@@ -389,6 +405,8 @@
                 android:id="@+id/module_mediaplayer_component_menu_flag_img_n8"
                 android:layout_width="0dp"
                 android:layout_height="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:focusable="false" />
 
@@ -396,6 +414,8 @@
                 android:id="@+id/module_mediaplayer_component_menu_flag_img_n9"
                 android:layout_width="0dp"
                 android:layout_height="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:focusable="false" />
 

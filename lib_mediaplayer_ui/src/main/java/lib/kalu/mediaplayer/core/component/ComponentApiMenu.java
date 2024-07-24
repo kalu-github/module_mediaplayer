@@ -1,8 +1,10 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -154,7 +156,7 @@ public interface ComponentApiMenu extends ComponentApi {
             if (null == tags)
                 throw new Exception("error: tags null");
             String url = tags.getEpisodeFlagFreeImgUrl();
-            if (null == url || url.length() ==0)
+            if (null == url || url.length() == 0)
                 throw new Exception("warning: url null");
             return url;
         } catch (Exception e) {
@@ -169,7 +171,7 @@ public interface ComponentApiMenu extends ComponentApi {
             if (null == tags)
                 throw new Exception("error: tags null");
             String url = tags.getEpisodeFlagVipImgUrl();
-            if (null == url || url.length() ==0)
+            if (null == url || url.length() == 0)
                 throw new Exception("warning: url null");
             return url;
         } catch (Exception e) {
@@ -267,10 +269,18 @@ public interface ComponentApiMenu extends ComponentApi {
         }
     }
 
-    default void clearFlag(int index){
+    default void clearFlag(int index) {
     }
 
-    default void updateFlag(int index){
+    default void updateFlag(int index) {
+
+    }
+
+    default void loadFlagUrl(@Nullable ImageView imageView, @Nullable String url) {
+
+    }
+
+    default void loadFlagResource(@Nullable ImageView imageView, @DrawableRes int resId) {
 
     }
 }
