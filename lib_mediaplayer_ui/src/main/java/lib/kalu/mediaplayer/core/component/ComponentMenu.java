@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,6 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
-
-import com.bumptech.glide.Glide;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
@@ -687,26 +686,45 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
         int freeItemCount = getEpisodeFreeItemCount();
 
+        // 收费
         String vipImgUrl = getEpisodeFlagVipImgUrl();
-        String freeImgUrl = getEpisodeFlagFreeImgUrl();
-        int freeResourceId = getEpisodeFlagFreeResourceId();
+        String vipFilePath = getEpisodeFlagVipFilePath();
         int vipResourceId = getEpisodeFlagVipResourceId();
-
-        if (null != vipImgUrl && null != freeImgUrl) {
-            if (freeItemCount < 0) {
-                loadFlagUrl(flagImage, freeImgUrl);
-            } else if (index < freeItemCount) {
-                loadFlagUrl(flagImage, freeImgUrl);
-            } else {
+        if (null != vipImgUrl) {
+            if (freeItemCount > 0 && index >= freeItemCount) {
                 loadFlagUrl(flagImage, vipImgUrl);
             }
-        } else if (0 != vipResourceId && 0 != freeResourceId) {
+        } else if (null != vipFilePath) {
+            if (freeItemCount > 0 && index >= freeItemCount) {
+                loadFlagFile(flagImage, vipFilePath);
+            }
+        } else if (0 != vipResourceId) {
+            if (freeItemCount > 0 && index >= freeItemCount) {
+                loadFlagResource(flagImage, vipResourceId);
+            }
+        }
+
+        // 免费
+        String freeImgUrl = getEpisodeFlagFreeImgUrl();
+        String freeFilePath = getEpisodeFlagFreeFilePath();
+        int freeResourceId = getEpisodeFlagFreeResourceId();
+        if (null != freeImgUrl) {
+            if (freeItemCount < 0) {
+                loadFlagUrl(flagImage, freeImgUrl);
+            } else if (index < freeItemCount) {
+                loadFlagUrl(flagImage, freeImgUrl);
+            }
+        } else if (null != freeFilePath) {
+            if (freeItemCount < 0) {
+                loadFlagFile(flagImage, freeFilePath);
+            } else if (index < freeItemCount) {
+                loadFlagFile(flagImage, freeFilePath);
+            }
+        } else if (0 != freeResourceId) {
             if (freeItemCount < 0) {
                 loadFlagResource(flagImage, freeResourceId);
             } else if (index < freeItemCount) {
                 loadFlagResource(flagImage, freeResourceId);
-            } else {
-                loadFlagResource(flagImage, vipResourceId);
             }
         }
     }
@@ -714,7 +732,17 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     @Override
     public void loadFlagUrl(ImageView imageView, String url) {
         try {
-            Glide.with(imageView).load(url).into(imageView);
+            imageView.setImageDrawable(null);
+            imageView.setImageURI(Uri.parse(url));
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void loadFlagFile(@Nullable ImageView imageView, @Nullable String path) {
+        try {
+            imageView.setImageDrawable(null);
+            imageView.setImageURI(Uri.parse(path));
         } catch (Exception e) {
         }
     }
@@ -722,6 +750,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     @Override
     public void loadFlagResource(@Nullable ImageView imageView, int resId) {
         try {
+            imageView.setImageDrawable(null);
             imageView.setImageResource(resId);
         } catch (Exception e) {
         }

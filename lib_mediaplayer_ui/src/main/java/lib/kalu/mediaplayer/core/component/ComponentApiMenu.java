@@ -134,6 +134,36 @@ public interface ComponentApiMenu extends ComponentApi {
         }
     }
 
+    default String getEpisodeFlagFreeImgUrl() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            String url = tags.getEpisodeFlagFreeImgUrl();
+            if (null == url || url.length() == 0)
+                throw new Exception("warning: url null");
+            return url;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagFreeImgUrl => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default String getEpisodeFlagFreeFilePath() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            String path = tags.getEpisodeFlagFreeFilePath();
+            if (null == path || path.length() == 0)
+                throw new Exception("warning: path null");
+            return path;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagFreeFilePath => " + e.getMessage());
+            return null;
+        }
+    }
+
     @DrawableRes
     default int getEpisodeFlagFreeResourceId() {
         try {
@@ -150,21 +180,6 @@ public interface ComponentApiMenu extends ComponentApi {
         }
     }
 
-    default String getEpisodeFlagFreeImgUrl() {
-        try {
-            StartArgs tags = getStartArgs();
-            if (null == tags)
-                throw new Exception("error: tags null");
-            String url = tags.getEpisodeFlagFreeImgUrl();
-            if (null == url || url.length() == 0)
-                throw new Exception("warning: url null");
-            return url;
-        } catch (Exception e) {
-            LogUtil.log("ComponentApiMenu => getEpisodeFlagFreeImgUrl => " + e.getMessage());
-            return null;
-        }
-    }
-
     default String getEpisodeFlagVipImgUrl() {
         try {
             StartArgs tags = getStartArgs();
@@ -176,6 +191,21 @@ public interface ComponentApiMenu extends ComponentApi {
             return url;
         } catch (Exception e) {
             LogUtil.log("ComponentApiMenu => getEpisodeFlagVipImgUrl => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default String getEpisodeFlagVipFilePath() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            String path = tags.getEpisodeFlagVipFilePath();
+            if (null == path || path.length() == 0)
+                throw new Exception("warning: url null");
+            return path;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagVipFilePath => " + e.getMessage());
             return null;
         }
     }
@@ -277,6 +307,10 @@ public interface ComponentApiMenu extends ComponentApi {
     }
 
     default void loadFlagUrl(@Nullable ImageView imageView, @Nullable String url) {
+
+    }
+
+    default void loadFlagFile(@Nullable ImageView imageView, @Nullable String path) {
 
     }
 

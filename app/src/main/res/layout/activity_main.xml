@@ -402,7 +402,7 @@
                     android:id="@+id/main_episode_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="选集切换" />
+                    android:text="选集" />
 
                 <CheckBox
                     android:id="@+id/main_play_when_ready_yes"
