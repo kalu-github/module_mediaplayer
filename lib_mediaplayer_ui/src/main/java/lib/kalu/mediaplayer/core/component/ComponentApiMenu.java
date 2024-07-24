@@ -256,10 +256,12 @@ public interface ComponentApiMenu extends ComponentApi {
     default void updateItemSelected(int viewId) {
     }
 
-    default void updateTabSelected(int viewId) {
+    default void setTabSelectedIndex(int index){
+    }
+    default void setTabCheckedIndex(int index){
     }
 
-    default void updateTabCheckedChange(boolean requestFocus) {
+    default void updateData() {
     }
 
     default void toggleScale(int focusId) {

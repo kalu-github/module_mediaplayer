@@ -37,4 +37,10 @@
     </declare-styleable>
 
 
+    <declare-styleable name="PopuView">
+        <attr name="pv_corners" format="reference|dimension" />
+        <attr name="pv_margin_bottom" format="reference|dimension" />
+        <attr name="pv_background_color" format="reference|color" />
+    </declare-styleable>
+
 </resources>

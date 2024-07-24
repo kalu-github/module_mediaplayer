@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/module_mediaplayer_component_menu_item_flag"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_weight="1"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:focusable="false"
+    android:padding="4dp">
+
+    <lib.kalu.mediaplayer.widget.popu.PopuView
+        android:id="@+id/module_mediaplayer_component_menu_item_flag_popu"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="-50dp"
+        android:layout_weight="1"
+        android:ellipsize="marquee"
+        android:focusable="false"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:singleLine="true"
+        android:textColor="@color/module_mediaplayer_color_000000"
+        android:textSize="16sp"
+        app:pv_background_color="@color/module_mediaplayer_color_ffffff"
+        app:pv_corners="4dp"
+        app:pv_margin_bottom="4dp" />
+
+
+    <ImageView
+        android:id="@+id/module_mediaplayer_component_menu_item_flag_img0"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:focusable="false" />
+
+    <ImageView
+        android:id="@+id/module_mediaplayer_component_menu_item_flag_img1"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:focusable="false" />
+
+</RelativeLayout>
