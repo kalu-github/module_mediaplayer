@@ -710,6 +710,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         radioButton.setEnabled(true);
                     } else {
                         LogUtil.log("ComponentMenu => updateData => i =  " + i + ", checked = false");
+                        radioButton.setTag(null);
                         radioButton.setChecked(false);
                         radioButton.setSelected(false);
                         radioButton.setEnabled(false);
