@@ -304,7 +304,7 @@ public interface ComponentApiMenu extends ComponentApi {
     default void clearFlag(int index) {
     }
 
-    default void updateFlag(int index) {
+    default void updateFlag(int index, int position) {
 
     }
 

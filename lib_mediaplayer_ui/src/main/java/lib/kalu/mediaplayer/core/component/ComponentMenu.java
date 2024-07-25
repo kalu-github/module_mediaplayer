@@ -103,15 +103,42 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         throw new Exception("warning: focus null");
                     int focusId = focus.getId();
                     if (focusId == R.id.module_mediaplayer_component_menu_item_data) {
+//                        RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
+//                        int childCount = tabGroup.getChildCount();
+//                        for (int i = 0; i < childCount; i++) {
+//                            RadioButton radioButton = (RadioButton) tabGroup.getChildAt(i);
+//                            boolean checked = radioButton.isChecked();
+//                            if (!checked)
+//                                continue;
+//                            radioButton.requestFocus();
+//                            break;
+//                        }
+
+                        int checkedTag = -1;
                         RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                        int childCount = tabGroup.getChildCount();
-                        for (int i = 0; i < childCount; i++) {
+                        int tabCount = tabGroup.getChildCount();
+                        for (int i = 0; i < tabCount; i++) {
                             RadioButton radioButton = (RadioButton) tabGroup.getChildAt(i);
                             boolean checked = radioButton.isChecked();
                             if (!checked)
                                 continue;
-                            radioButton.requestFocus();
+                            checkedTag = (int) radioButton.getTag();
                             break;
+                        }
+                        if (checkedTag == -1)
+                            throw new Exception("warning: checkedTag =-1");
+
+                        // 选集
+                        if (checkedTag == 0) {
+                            tabGroup.getChildAt(0).requestFocus();
+                        }
+                        // 倍速
+                        else if (checkedTag == 1) {
+                            tabGroup.getChildAt(tabCount >= 3 ? 1 : 0).requestFocus();
+                        }
+                        // 画面
+                        else if (checkedTag == 2) {
+                            tabGroup.getChildAt(tabCount >= 3 ? 2 : 1).requestFocus();
                         }
                         return true;
                     }
@@ -154,11 +181,13 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
                         int dataCount = dataGroup.getChildCount();
                         for (int i = 0; i < dataCount; i++) {
-                            RadioButton radioButton = (RadioButton) dataGroup.getChildAt(i);
-                            boolean selected = radioButton.isSelected();
+                            View childAt = dataGroup.getChildAt(i);
+                            if (null == childAt)
+                                continue;
+                            boolean selected = childAt.isSelected();
                             if (!selected)
                                 continue;
-                            radioButton.requestFocus();
+                            childAt.requestFocus();
                             break;
                         }
                     }
@@ -230,7 +259,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
                         int indexOfChild = dataGroup.indexOfChild(focus);
                         if (indexOfChild <= 0) {
-                            scrollEpisode(KeyEvent.KEYCODE_DPAD_RIGHT);
+                            scrollEpisode(KeyEvent.KEYCODE_DPAD_LEFT);
                             return true;
                         }
                     }
@@ -388,6 +417,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             if (null == text || text.length() <= 0)
                 throw new Exception("error: text null");
             int index = Integer.parseInt(text) - 1;
+            LogUtil.log("ComponentMenu => scrollEpisode => index = " + index);
             if (action == KeyEvent.KEYCODE_DPAD_LEFT && index <= 0)
                 throw new Exception("error: index <= 0");
 
@@ -412,13 +442,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             int episodePlayingIndex = getEpisodePlayingIndex();
             for (int i = 0; i < childCount; i++) {
 
-                clearFlag(i);
-                updateFlag(i);
-
                 RadioButton radioButton = (RadioButton) dataGroup.getChildAt(i);
                 if (null == radioButton)
                     continue;
+                clearFlag(i);
                 int position = i + start;
+                updateFlag(i, position);
 
                 radioButton.setText(String.valueOf(position + 1));
                 radioButton.setChecked(position == episodePlayingIndex);
@@ -501,7 +530,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                             int indexOfChild = viewGroup.indexOfChild(v);
 //                            setTabSelectedIndex(indexOfChild);
                             setTabCheckedIndex(indexOfChild);
-                            updateData();
                         } catch (Exception e) {
                             LogUtil.log("ComponentMenu => updateData => onFocusChange => Exception5 " + e.getMessage());
                         }
@@ -533,6 +561,17 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 throw new Exception("warning: childCount >0");
             for (int i = 0; i < 10; i++) {
                 LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_data, dataGroup, true);
+                int count = dataGroup.getChildCount();
+                int index = --count;
+                View childAt = dataGroup.getChildAt(index);
+                if (null == childAt)
+                    continue;
+                childAt.setOnFocusChangeListener(new OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        v.setSelected(hasFocus);
+                    }
+                });
             }
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => updateData => Exception3 " + e.getMessage());
@@ -588,8 +627,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 // 选集
                 if (checkedTag == 0) {
 
-                    updateFlag(i);
-
                     int episodePlayingIndex = getEpisodePlayingIndex();
                     int episodeItemCount = getEpisodeItemCount();
                     int num = episodePlayingIndex / dataCount;
@@ -605,6 +642,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         radioButton.setVisibility(View.VISIBLE);
 
                         int position = i + start;
+                        updateFlag(i, position);
 
                         radioButton.setText(String.valueOf(position + 1));
                         radioButton.setChecked(position == episodePlayingIndex);
@@ -851,7 +889,8 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public void updateFlag(int index) {
+    public void updateFlag(int index, int position) {
+        LogUtil.log("ComponentMenu => updateFlag => index = " + index + ", position = " + position);
 
         try {
             ImageView imageView;
@@ -874,15 +913,15 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             String vipFilePath = getEpisodeFlagVipFilePath();
             int vipResourceId = getEpisodeFlagVipResourceId();
             if (null != vipImgUrl) {
-                if (freeItemCount > 0 && index >= freeItemCount) {
+                if (freeItemCount > 0 && position >= freeItemCount) {
                     loadFlagUrl(imageView, vipImgUrl);
                 }
             } else if (null != vipFilePath) {
-                if (freeItemCount > 0 && index >= freeItemCount) {
+                if (freeItemCount > 0 && position >= freeItemCount) {
                     loadFlagFile(imageView, vipFilePath);
                 }
             } else if (0 != vipResourceId) {
-                if (freeItemCount > 0 && index >= freeItemCount) {
+                if (freeItemCount > 0 && position >= freeItemCount) {
                     loadFlagResource(imageView, vipResourceId);
                 }
             }
@@ -894,19 +933,19 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             if (null != freeImgUrl) {
                 if (freeItemCount < 0) {
                     loadFlagUrl(imageView, freeImgUrl);
-                } else if (index < freeItemCount) {
+                } else if (position < freeItemCount) {
                     loadFlagUrl(imageView, freeImgUrl);
                 }
             } else if (null != freeFilePath) {
                 if (freeItemCount < 0) {
                     loadFlagFile(imageView, freeFilePath);
-                } else if (index < freeItemCount) {
+                } else if (position < freeItemCount) {
                     loadFlagFile(imageView, freeFilePath);
                 }
             } else if (0 != freeResourceId) {
                 if (freeItemCount < 0) {
                     loadFlagResource(imageView, freeResourceId);
-                } else if (index < freeItemCount) {
+                } else if (position < freeItemCount) {
                     loadFlagResource(imageView, freeResourceId);
                 }
             }
