@@ -2,6 +2,8 @@ package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -22,39 +25,20 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         super(context);
         inflate();
 
-//        findViewById(R.id.module_mediaplayer_component_menu_tab_root).setOnFocusChangeListener(new OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-////                updateTabSelected(R.id.module_mediaplayer_component_menu_tab_episode);
-//            }
-//        });
-//        findViewById(R.id.module_mediaplayer_component_menu_tab_speed).setOnFocusChangeListener(new OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-////                updateTabSelected(R.id.module_mediaplayer_component_menu_tab_speed);
-//            }
-//        });
-//        findViewById(R.id.module_mediaplayer_component_menu_tab_scale).setOnFocusChangeListener(new OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-////                updateTabSelected(R.id.module_mediaplayer_component_menu_tab_scale);
-//            }
-//        });
-
-        RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-        int dataCount = dataGroup.getChildCount();
-        for (int i = 0; i < dataCount; i++) {
-            View childAt = dataGroup.getChildAt(i);
-            if (null == childAt)
-                continue;
-            childAt.setOnFocusChangeListener(new OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    int focusId = v.getId();
-                    updateItemSelected(focusId);
-                }
-            });
-        }
+//        RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
+//        int dataCount = dataGroup.getChildCount();
+//        for (int i = 0; i < dataCount; i++) {
+//            View childAt = dataGroup.getChildAt(i);
+//            if (null == childAt)
+//                continue;
+//            childAt.setOnFocusChangeListener(new OnFocusChangeListener() {
+//                @Override
+//                public void onFocusChange(View v, boolean hasFocus) {
+//                    int focusId = v.getId();
+//                    updateItemSelected(focusId);
+//                }
+//            });
+//        }
     }
 
     @Override
@@ -65,15 +49,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     @Override
     public int initViewIdRoot() {
         return R.id.module_mediaplayer_component_menu_root;
-    }
-
-    @Override
-    public void callEvent(int playState) {
-        switch (playState) {
-            case PlayerType.EventType.COMPLETE:
-                hide();
-                break;
-        }
     }
 
     @Override
@@ -103,49 +78,18 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         throw new Exception("warning: focus null");
                     int focusId = focus.getId();
                     if (focusId == R.id.module_mediaplayer_component_menu_item_data) {
-//                        RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-//                        int childCount = tabGroup.getChildCount();
-//                        for (int i = 0; i < childCount; i++) {
-//                            RadioButton radioButton = (RadioButton) tabGroup.getChildAt(i);
-//                            boolean checked = radioButton.isChecked();
-//                            if (!checked)
-//                                continue;
-//                            radioButton.requestFocus();
-//                            break;
-//                        }
-
-                        int checkedTag = -1;
-                        RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                        int tabCount = tabGroup.getChildCount();
-                        for (int i = 0; i < tabCount; i++) {
-                            RadioButton radioButton = (RadioButton) tabGroup.getChildAt(i);
-                            boolean checked = radioButton.isChecked();
-                            if (!checked)
-                                continue;
-                            checkedTag = (int) radioButton.getTag();
-                            break;
-                        }
-                        if (checkedTag == -1)
-                            throw new Exception("warning: checkedTag =-1");
-
-                        // 选集
-                        if (checkedTag == 0) {
-                            tabGroup.getChildAt(0).requestFocus();
-                        }
-                        // 倍速
-                        else if (checkedTag == 1) {
-                            tabGroup.getChildAt(tabCount >= 3 ? 1 : 0).requestFocus();
-                        }
-                        // 画面
-                        else if (checkedTag == 2) {
-                            tabGroup.getChildAt(tabCount >= 3 ? 2 : 1).requestFocus();
-                        }
+                        tabCheckedRequestFocus();
                         return true;
                     }
                 } else {
                     show();
-                    RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                    tabGroup.getChildAt(0).requestFocus();
+                    updateData();
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            tabCheckedRequestFocus();
+                        }
+                    });
                 }
             } catch (Exception e) {
             }
@@ -467,10 +411,45 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public void show() {
+        LogUtil.log("ComponentMenu => show =>");
         updateTimeMillis();
         superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_SHOW);
         ComponentApiMenu.super.show();
-        updateData();
+    }
+
+    @Override
+    public void tabCheckedRequestFocus() {
+        LogUtil.log("ComponentMenu => tabCheckedRequestFocus =>");
+        try {
+            int checkedTag = -1;
+            RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
+            int tabCount = tabGroup.getChildCount();
+            for (int i = 0; i < tabCount; i++) {
+                RadioButton radioButton = (RadioButton) tabGroup.getChildAt(i);
+                boolean checked = radioButton.isChecked();
+                if (!checked)
+                    continue;
+                checkedTag = (int) radioButton.getTag();
+                break;
+            }
+            if (checkedTag == -1)
+                throw new Exception("warning: checkedTag =-1");
+
+            // 选集
+            if (checkedTag == 0) {
+                tabGroup.getChildAt(0).requestFocus();
+            }
+            // 倍速
+            else if (checkedTag == 1) {
+                tabGroup.getChildAt(tabCount >= 3 ? 1 : 0).requestFocus();
+            }
+            // 画面
+            else if (checkedTag == 2) {
+                tabGroup.getChildAt(tabCount >= 3 ? 2 : 1).requestFocus();
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => tabCheckedRequestFocus => Exception " + e.getMessage());
+        }
     }
 
     @Override
@@ -528,8 +507,9 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                                 throw new Exception("warning: hasFocus false");
                             ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
                             int indexOfChild = viewGroup.indexOfChild(v);
-//                            setTabSelectedIndex(indexOfChild);
-                            setTabCheckedIndex(indexOfChild);
+                            Toast.makeText(getContext(), "indexOfChild = " + indexOfChild + ", checkedTag = " + v.getTag(), Toast.LENGTH_SHORT).show();
+                            setTabSelectedIndex(indexOfChild);
+                            updateData();
                         } catch (Exception e) {
                             LogUtil.log("ComponentMenu => updateData => onFocusChange => Exception5 " + e.getMessage());
                         }
@@ -566,66 +546,52 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 View childAt = dataGroup.getChildAt(index);
                 if (null == childAt)
                     continue;
-                childAt.setOnFocusChangeListener(new OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        v.setSelected(hasFocus);
-                    }
-                });
+//                childAt.setOnFocusChangeListener(new OnFocusChangeListener() {
+//                    @Override
+//                    public void onFocusChange(View v, boolean hasFocus) {
+//                        if(hasFocus){
+//
+//                        }
+//                        else
+//                        v.setSelected(hasFocus);
+//                    }
+//                });
             }
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => updateData => Exception3 " + e.getMessage());
         }
 
-//        // 选项栏 默认焦点
-//        try {
-//            if (!requestFocus)
-//                throw new Exception("warning: requestFocus false");
-//            int checkedIndex = -1;
-//            RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-//            int childCount = tabGroup.getChildCount();
-//            for (int i = 0; i < childCount; i++) {
-//                RadioButton childAt = (RadioButton) tabGroup.getChildAt(i);
-//                boolean checked = childAt.isChecked();
-//                if (!checked)
-//                    continue;
-//                checkedIndex = i;
-//                break;
-//            }
-//            if (checkedIndex == -1)
-//                throw new Exception("error: checkedIndex =-1");
-//            tabGroup.getChildAt(checkedIndex).requestFocus();
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentMenu => updateData => Exception4 " + e.getMessage());
-//        }
-
         // 数据
         try {
+
             int checkedTag = -1;
             RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
             int tabCount = tabGroup.getChildCount();
             for (int i = 0; i < tabCount; i++) {
-                RadioButton childAt = (RadioButton) tabGroup.getChildAt(i);
-                boolean checked = childAt.isChecked();
-                LogUtil.log("ComponentMenu => updateData => i = " + i + ", checked = " + checked);
+                View childAt = tabGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                boolean checked = ((RadioButton) childAt).isChecked();
                 if (!checked)
                     continue;
                 checkedTag = (int) childAt.getTag();
                 break;
             }
 
-            if (checkedTag == -1)
-                throw new Exception("warning: checkedTag =-1");
+            if (checkedTag == -1) {
+                checkedTag = 0;
+            }
 
             RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
             int dataCount = dataGroup.getChildCount();
-            for (int i = 0; i < dataCount; i++) {
 
-                clearFlag(i);
+            // 选集
+            if (checkedTag == 0) {
 
-                RadioButton radioButton = (RadioButton) dataGroup.getChildAt(i);
-                // 选集
-                if (checkedTag == 0) {
+                for (int i = 0; i < dataCount; i++) {
+
+                    clearFlag(i);
+                    RadioButton radioButton = (RadioButton) dataGroup.getChildAt(i);
 
                     int episodePlayingIndex = getEpisodePlayingIndex();
                     int episodeItemCount = getEpisodeItemCount();
@@ -656,9 +622,16 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         radioButton.setSelected(false);
                     }
                 }
-                // 倍速
-                else if (checkedTag == 1) {
-                    int[] speeds = getSpeedTypes();
+            }
+            // 倍速
+            else if (checkedTag == 1) {
+                int[] speeds = getSpeedTypes();
+
+                for (int i = 0; i < dataCount; i++) {
+
+                    clearFlag(i);
+                    RadioButton radioButton = (RadioButton) dataGroup.getChildAt(i);
+
                     radioButton.setSelected(false);
                     radioButton.setEnabled(i < speeds.length);
                     radioButton.setVisibility(i < speeds.length ? View.VISIBLE : View.INVISIBLE);
@@ -696,20 +669,19 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         radioButton.setText("");
                     }
                 }
-                // 画面
-                else if (checkedTag == 2) {
-                    int[] scales = getScaleTypes();
-                    // radioButton.clearFlag();
-                    radioButton.setSelected(false);
-                    radioButton.setEnabled(i < scales.length);
-                    radioButton.setVisibility(i < scales.length ? View.VISIBLE : View.INVISIBLE);
+            }
+            // 画面
+            else if (checkedTag == 2) {
+                int[] scales = getScaleTypes();
+                // radioButton.clearFlag();
 
-                    if (i < scales.length) {
-                        int videoScaleType = getVideoScaleType();
-                        radioButton.setChecked(videoScaleType == scales[i]);
-                    } else {
-                        radioButton.setChecked(false);
-                    }
+                for (int i = 0; i < dataCount; i++) {
+
+                    clearFlag(i);
+
+                    RadioButton radioButton = (RadioButton) dataGroup.getChildAt(i);
+
+                    radioButton.setVisibility(i < scales.length ? View.VISIBLE : View.INVISIBLE);
 
                     if (i < scales.length) {
                         radioButton.setTag(scales[i]);
@@ -730,14 +702,23 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         } else {
                             radioButton.setText("自动");
                         }
+                        int videoScaleType = getVideoScaleType();
+                        boolean flag = videoScaleType == scales[i];
+                        LogUtil.log("ComponentMenu => updateData => i =  " + i + ", checked = " + flag);
+                        radioButton.setChecked(flag);
+                        radioButton.setSelected(flag);
+                        radioButton.setEnabled(true);
                     } else {
+                        LogUtil.log("ComponentMenu => updateData => i =  " + i + ", checked = false");
+                        radioButton.setChecked(false);
+                        radioButton.setSelected(false);
+                        radioButton.setEnabled(false);
                         radioButton.setText("");
                     }
                 }
             }
 
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             LogUtil.log("ComponentMenu => updateData => Exception5 " + e.getMessage());
         }
     }
@@ -825,11 +806,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         updateTimeMillis();
         try {
             ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-            int childCount = tabGroup.getChildCount();
-            for (int i = 0; i < childCount; i++) {
+            int tabCount = tabGroup.getChildCount();
+            for (int i = 0; i < tabCount; i++) {
                 View childAt = tabGroup.getChildAt(i);
                 if (null == childAt)
                     continue;
+                ((RadioButton) childAt).setChecked(i == index);
                 ((RadioButton) childAt).setSelected(i == index);
             }
         } catch (Exception e) {

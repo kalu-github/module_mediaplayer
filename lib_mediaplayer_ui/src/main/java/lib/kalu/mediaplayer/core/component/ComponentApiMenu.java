@@ -256,9 +256,10 @@ public interface ComponentApiMenu extends ComponentApi {
     default void updateItemSelected(int viewId) {
     }
 
-    default void setTabSelectedIndex(int index){
+    default void setTabSelectedIndex(int index) {
     }
-    default void setTabCheckedIndex(int index){
+
+    default void setTabCheckedIndex(int index) {
     }
 
     default void updateData() {
@@ -299,6 +300,9 @@ public interface ComponentApiMenu extends ComponentApi {
         } catch (Exception e) {
             return 0L;
         }
+    }
+
+    default void tabCheckedRequestFocus() {
     }
 
     default void clearFlag(int index) {
