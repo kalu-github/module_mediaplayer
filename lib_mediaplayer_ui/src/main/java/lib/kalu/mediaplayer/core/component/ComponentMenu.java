@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -19,6 +21,7 @@ import androidx.annotation.Nullable;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.widget.popu.PopuView;
 
 public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     public ComponentMenu(Context context) {
@@ -532,9 +535,9 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         // 信息 inflate view
         try {
             ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_root);
-            int childCount = flagGroup.getChildCount();
-            if (childCount > 0)
-                throw new Exception("warning: childCount >0");
+            int flagCount = flagGroup.getChildCount();
+            if (flagCount > 0)
+                throw new Exception("warning: flagCount >0");
             for (int i = 0; i < 10; i++) {
                 LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_flag, flagGroup, true);
             }
@@ -561,6 +564,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         if (hasFocus) {
                             v.setActivated(false);
                         }
+                        int indexOfChild = dataGroup.indexOfChild(v);
+                        ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_root);
+                        RelativeLayout itemGroup = (RelativeLayout) flagGroup.getChildAt(indexOfChild);
+                        View viewById = itemGroup.findViewById(R.id.module_mediaplayer_component_menu_item_flag_popu);
+                        ((PopuView) viewById).setEllipsize(hasFocus ? TextUtils.TruncateAt.MARQUEE : TextUtils.TruncateAt.END);
+                        ((PopuView) viewById).setVisibility(hasFocus ? View.VISIBLE : View.INVISIBLE);
                     }
                 });
             }
@@ -853,6 +862,14 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     @Override
     public void updateFlag(int index, int position) {
         LogUtil.log("ComponentMenu => updateFlag => index = " + index + ", position = " + position);
+
+        try {
+            ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_root);
+            RelativeLayout itemGroup = (RelativeLayout) flagGroup.getChildAt(index);
+            View viewById = itemGroup.findViewById(R.id.module_mediaplayer_component_menu_item_flag_popu);
+            ((PopuView) viewById).setText(position + "=>sjsxljsjsljljslcjl");
+        } catch (Exception e) {
+        }
 
         try {
             ImageView imageView;

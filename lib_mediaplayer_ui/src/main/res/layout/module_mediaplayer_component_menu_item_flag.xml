@@ -14,17 +14,19 @@
 
     <lib.kalu.mediaplayer.widget.popu.PopuView
         android:id="@+id/module_mediaplayer_component_menu_item_flag_popu"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="-50dp"
-        android:layout_weight="1"
-        android:ellipsize="marquee"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="-20dp"
+        android:layout_marginRight="-20dp"
+        android:layout_marginBottom="10dp"
+        android:ellipsize="end"
         android:focusable="false"
         android:gravity="center"
-        android:paddingBottom="8dp"
         android:singleLine="true"
         android:textColor="@color/module_mediaplayer_color_000000"
         android:textSize="16sp"
+        android:visibility="invisible"
         app:pv_background_color="@color/module_mediaplayer_color_ffffff"
         app:pv_corners="4dp"
         app:pv_margin_bottom="4dp" />
@@ -36,6 +38,7 @@
         android:layout_height="16dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
         android:focusable="false" />
 
     <ImageView
@@ -44,6 +47,7 @@
         android:layout_height="16dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="50dp"
         android:focusable="false" />
 
 </RelativeLayout>

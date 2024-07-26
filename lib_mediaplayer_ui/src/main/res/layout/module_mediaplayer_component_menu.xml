@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/module_mediaplayer_color_00000000"
@@ -49,8 +48,8 @@
         <LinearLayout
             android:id="@+id/module_mediaplayer_component_menu_flag_root"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_above="@id/module_mediaplayer_component_menu_tab_root"
+            android:layout_height="50dp"
+            android:layout_above="@id/module_mediaplayer_component_menu_data_root"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:focusable="false"
