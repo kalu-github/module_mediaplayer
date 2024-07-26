@@ -184,7 +184,7 @@ public final class TestActivity extends Activity {
             @Override
             public void onWindow(int state) {
                 switch (state) {
-                    case PlayerType.WindowType.NORMAL:
+                    case PlayerType.WindowType.DEFAULT:
                         //普通模式
                         break;
                     case PlayerType.WindowType.FULL:
