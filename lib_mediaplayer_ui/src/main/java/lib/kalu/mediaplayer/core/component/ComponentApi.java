@@ -505,26 +505,26 @@ public interface ComponentApi {
         }
     }
 
-    default void setSpeed(@PlayerType.SpeedType.Value int speed) {
+    default void setVideoSpeed(@PlayerType.SpeedType.Value int speed) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
             playerView.setSpeed(speed);
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => setSpeed => " + e.getMessage());
+            LogUtil.log("ComponentApi => setVideoSpeed => " + e.getMessage());
         }
     }
 
     @PlayerType.SpeedType.Value
-    default int getSpeed() {
+    default int getVideoSpeed() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
             return playerView.getSpeed();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getSpeed => " + e.getMessage());
+            LogUtil.log("ComponentApi => getVideoSpeed => " + e.getMessage());
             return PlayerType.SpeedType.DEFAULT;
         }
     }
