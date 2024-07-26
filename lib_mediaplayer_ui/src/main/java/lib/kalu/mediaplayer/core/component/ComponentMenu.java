@@ -572,12 +572,30 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                         if (hasFocus) {
                             v.setActivated(false);
                         }
-                        int indexOfChild = dataGroup.indexOfChild(v);
-                        ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_root);
-                        RelativeLayout itemGroup = (RelativeLayout) flagGroup.getChildAt(indexOfChild);
-                        View viewById = itemGroup.findViewById(R.id.module_mediaplayer_component_menu_item_flag_popu);
-                        ((PopuView) viewById).setEllipsize(hasFocus ? TextUtils.TruncateAt.MARQUEE : TextUtils.TruncateAt.END);
-                        ((PopuView) viewById).setVisibility(hasFocus ? View.VISIBLE : View.INVISIBLE);
+                        try {
+                            int checkedTag = -1;
+                            RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
+                            int tabCount = tabGroup.getChildCount();
+                            for (int i = 0; i < tabCount; i++) {
+                                View childAt = tabGroup.getChildAt(i);
+                                if (null == childAt)
+                                    continue;
+                                boolean selected = childAt.isSelected();
+                                if (!selected)
+                                    continue;
+                                checkedTag = (int) childAt.getTag();
+                                break;
+                            }
+                            if (checkedTag != 0)
+                                throw new Exception("warning: checkedTag != 0");
+                            int indexOfChild = dataGroup.indexOfChild(v);
+                            ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_root);
+                            RelativeLayout itemGroup = (RelativeLayout) flagGroup.getChildAt(indexOfChild);
+                            View viewById = itemGroup.findViewById(R.id.module_mediaplayer_component_menu_item_flag_popu);
+                            ((PopuView) viewById).setEllipsize(hasFocus ? TextUtils.TruncateAt.MARQUEE : TextUtils.TruncateAt.END);
+                            ((PopuView) viewById).setVisibility(hasFocus ? View.VISIBLE : View.INVISIBLE);
+                        } catch (Exception e) {
+                        }
                     }
                 });
             }
