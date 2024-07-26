@@ -87,6 +87,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 if (menuShowing)
                     throw new Exception("warning: ComponentApiMenu true");
                 updateTimeMillis();
+                show();
                 int repeatCount = event.getRepeatCount();
                 actionDown(repeatCount, KeyEvent.KEYCODE_DPAD_RIGHT);
                 return true;
@@ -122,6 +123,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 if (menuShowing)
                     throw new Exception("warning: ComponentApiMenu true");
                 updateTimeMillis();
+                show();
                 int repeatCount = event.getRepeatCount();
                 actionDown(repeatCount, KeyEvent.KEYCODE_DPAD_LEFT);
                 return true;
@@ -218,6 +220,9 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     public void show() {
 
         try {
+            boolean componentShowing = isComponentShowing();
+            if (componentShowing)
+                throw new Exception("warning: componentShowing true");
             long position = getPosition();
             long duration = getDuration();
             long trySeeDuration = getTrySeeDuration();
@@ -239,6 +244,9 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
             if (menuShowing)
                 throw new Exception("warning: ComponentApiMenu true");
+            boolean componentShowing = isComponentShowing();
+            if (componentShowing)
+                throw new Exception("warning: componentShowing true");
             ComponentApiSeek.super.show();
         } catch (Exception e) {
             LogUtil.log("ComponentSeek => show => Exception1 " + e.getMessage());
@@ -271,6 +279,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             if (repeatCount == 0) {
                 lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
                 int progress = seekBar.getProgress();
+                LogUtil.log("ComponentSeek => actionDown => progress = " + progress);
                 if (progress >= duration)
                     throw new Exception("warning: range >= duration");
                 // >=2H 2 * 60 * 60 * 1000
@@ -297,7 +306,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                     progress = (int) duration;
                 }
 
-                show();
 //                long trySeeDuration = getTrySeeDuration();
 //                onUpdateProgress(true, trySeeDuration, progress, duration);
             }
