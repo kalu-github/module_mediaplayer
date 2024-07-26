@@ -46,7 +46,7 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface WindowType {
         //普通模式
-        int NORMAL = 2_001;
+        int DEFAULT = 2_001;
         //全屏模式
         int FULL = 2_002;
         //窗口模式
@@ -55,7 +55,7 @@ public @interface PlayerType {
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({NORMAL, FULL, FLOAT})
+        @IntDef({DEFAULT, FULL, FLOAT})
         @interface Value {
         }
     }

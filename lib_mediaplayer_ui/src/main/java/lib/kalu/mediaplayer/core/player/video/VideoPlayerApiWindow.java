@@ -171,7 +171,7 @@ interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApiRender,
             // 5
             ((PlayerView) rootView).setDoWindowing(false);
             callEvent(PlayerType.EventType.WINDOW_FULL_SUCC);
-            callWindow(PlayerType.WindowType.NORMAL);
+            callWindow(PlayerType.WindowType.FULL);
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => stopFull => " + e.getMessage());
@@ -257,7 +257,7 @@ interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApiRender,
             // 5
             ((PlayerView) rootView).setDoWindowing(false);
             callEvent(PlayerType.EventType.WINDOW_FLOAT_SUCC);
-            callWindow(PlayerType.WindowType.NORMAL);
+            callWindow(PlayerType.WindowType.DEFAULT);
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => stopFloat => " + e.getMessage());
