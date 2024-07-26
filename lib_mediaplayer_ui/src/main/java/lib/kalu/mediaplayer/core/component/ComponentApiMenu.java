@@ -2,6 +2,7 @@ package lib.kalu.mediaplayer.core.component;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
@@ -262,14 +263,7 @@ public interface ComponentApiMenu extends ComponentApi {
 //    default void setTabCheckedIndex(int index) {
 //    }
 
-    default void updateData(int checkedIndex, boolean forceUpdate) {
-    }
-
-    default void toggleScale(int focusId) {
-    }
-
-    default void toggleSpeed(int focusId) {
-
+    default void updateData(int checkedIndex) {
     }
 
     default void toggleEpisode(int focusId) {
