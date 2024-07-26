@@ -13,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -82,16 +80,21 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 } else {
                     show();
                     updateData(0);
-                    RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                    int childCount = tabGroup.getChildCount();
-                    for (int i = 0; i < childCount; i++) {
-                        View childAt = tabGroup.getChildAt(i);
-                        boolean selected = childAt.isSelected();
-                        if (!selected)
-                            continue;
-                        childAt.requestFocus();
-                        break;
-                    }
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
+                            int childCount = tabGroup.getChildCount();
+                            for (int i = 0; i < childCount; i++) {
+                                View childAt = tabGroup.getChildAt(i);
+                                boolean selected = childAt.isSelected();
+                                if (!selected)
+                                    continue;
+                                childAt.requestFocus();
+                                break;
+                            }
+                        }
+                    });
                 }
             } catch (Exception e) {
             }
@@ -282,7 +285,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
         // keycode_dpad_center
         else if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER || event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-            LogUtil.log("ComponentMenu => dispatchKeyEvent => keycode_dpad_center =>");
+//            LogUtil.log("ComponentMenu => dispatchKeyEvent => keycode_dpad_center =>");
             updateTimeMillis();
             try {
                 boolean componentShowing = isComponentShowing();
@@ -309,13 +312,19 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     checkedTag = (int) childAt.getTag();
                     break;
                 }
-                LogUtil.log("ComponentMenu => dispatchKeyEvent => keycode_dpad_center => checkedTag = " + checkedTag);
+//                LogUtil.log("ComponentMenu => dispatchKeyEvent => keycode_dpad_center => checkedTag = " + checkedTag);
                 if (checkedTag == -1)
                     throw new Exception("warning: checkedTag =-1");
 
                 // 选集
                 if (checkedTag == 0) {
-                    toggleEpisode(focusId);
+                    try {
+                        int position = (int) focus.getTag();
+                        hide();
+                        stop();
+                        clickEpisode(position);
+                    } catch (Exception e) {
+                    }
                 }
                 // 倍速
                 else if (checkedTag == 1) {
@@ -465,8 +474,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public void updateData(int checkedIndex) {
-        Toast.makeText(getContext(), "updateData => checkedIndex = " + checkedIndex, Toast.LENGTH_SHORT).show();
-        LogUtil.log("ComponentMenu => updateData => checkedIndex = " + checkedIndex);
+//        LogUtil.log("ComponentMenu => updateData => checkedIndex = " + checkedIndex);
 
         // 选项栏 inflate view
         try {
@@ -752,97 +760,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => updateData => Exception5 " + e.getMessage());
         }
-    }
-
-    @Override
-    public void toggleEpisode(int focusId) {
-
-//        try {
-//            RadioGroup itemGroup = findViewById(R.id.module_mediaplayer_component_menu_item_group);
-//            RadioButton radioButton = itemGroup.findViewById(focusId);
-//            Object tag = radioButton.getTag();
-//            if (null == tag)
-//                throw new Exception("error: tag null");
-//            int index = (int) tag;
-//            int episodePlayingIndex = getEpisodePlayingIndex();
-//            if (index == episodePlayingIndex)
-//                throw new Exception("warning: index == episodePlayingIndex");
-//
-//            int itemCount = itemGroup.getChildCount();
-//            for (int i = 0; i < itemCount; i++) {
-//                RadioButton childAt = (RadioButton) itemGroup.getChildAt(i);
-//                if (null == childAt)
-//                    continue;
-//
-//                Object tag1 = childAt.getTag();
-//                if (null == tag1)
-//                    continue;
-//                int position = (int) tag1;
-//                childAt.setSelected(position == index);
-//                childAt.setChecked(position == index);
-//            }
-//
-//            // 2
-//            hide();
-//            stop();
-//            clickEpisode(index);
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentMenu => clickEpisode => Exception " + e.getMessage());
-//        }
-    }
-
-//    @Override
-//    public void setTabSelectedIndex(int index) {
-//        updateTimeMillis();
-//        try {
-//            ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-//            int childCount = tabGroup.getChildCount();
-//            for (int i = 0; i < childCount; i++) {
-//                View childAt = tabGroup.getChildAt(i);
-//                if (null == childAt)
-//                    continue;
-//                childAt.setSelected(i == index);
-//            }
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentMenu => setTabSelectedIndex => Exception " + e.getMessage());
-//        }
-//    }
-
-//    @Override
-//    public void setTabCheckedIndex(int index) {
-//        updateTimeMillis();
-//        try {
-//            ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-//            int childCount = tabGroup.getChildCount();
-//            for (int i = 0; i < childCount; i++) {
-//                View childAt = tabGroup.getChildAt(i);
-//                if (null == childAt)
-//                    continue;
-//                ((RadioButton) childAt).setChecked(i == index);
-//            }
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentMenu => setTabCheckedIndex => Exception " + e.getMessage());
-//        }
-//    }
-
-    @Override
-    public void updateItemSelected(int viewId) {
-//        try {
-//            RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_group);
-//            int checkedRadioButtonId = tabGroup.getCheckedRadioButtonId();
-//            if (checkedRadioButtonId != R.id.module_mediaplayer_component_menu_tab_episode)
-//                throw new Exception();
-//            RadioGroup itemGroup = findViewById(R.id.module_mediaplayer_component_menu_item_group);
-//            int itemCount = itemGroup.getChildCount();
-//            for (int i = 0; i < itemCount; i++) {
-//                View childAt = itemGroup.getChildAt(i);
-//                if (null == childAt)
-//                    continue;
-//                int focusId = childAt.getId();
-//                childAt.setSelected(focusId == viewId);
-//            }
-//        } catch (Exception e) {
-//        }
     }
 
     @Override

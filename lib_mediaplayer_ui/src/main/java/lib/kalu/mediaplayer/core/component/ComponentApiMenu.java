@@ -254,20 +254,7 @@ public interface ComponentApiMenu extends ComponentApi {
     default void scrollEpisode(int action) {
     }
 
-    default void updateItemSelected(int viewId) {
-    }
-
-//    default void setTabSelectedIndex(int index) {
-//    }
-
-//    default void setTabCheckedIndex(int index) {
-//    }
-
     default void updateData(int checkedIndex) {
-    }
-
-    default void toggleEpisode(int focusId) {
-
     }
 
     default void updateTimeMillis() {
@@ -295,9 +282,6 @@ public interface ComponentApiMenu extends ComponentApi {
             return 0L;
         }
     }
-
-//    default void tabCheckedRequestFocus() {
-//    }
 
     default void clearFlag(int index) {
     }
