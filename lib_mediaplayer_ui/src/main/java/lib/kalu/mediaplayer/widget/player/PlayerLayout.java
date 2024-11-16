@@ -30,26 +30,26 @@ public class PlayerLayout extends RelativeLayout {
 
     public PlayerLayout(Context context) {
         super(context);
-        init();
+        initPlayerView();
     }
 
     public PlayerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        initPlayerView();
     }
 
     public PlayerLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        initPlayerView();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public PlayerLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+        initPlayerView();
     }
 
-    private void init() {
+    private void initPlayerView() {
         clearOnPlayerListener();
         try {
             int childCount = getChildCount();
@@ -59,7 +59,7 @@ public class PlayerLayout extends RelativeLayout {
             playerView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
             addView(playerView);
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => init => " + e.getMessage());
+            LogUtil.log("PlayerLayout => initPlayerView => " + e.getMessage());
         }
     }
 
