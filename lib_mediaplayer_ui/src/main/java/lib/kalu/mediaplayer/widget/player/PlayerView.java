@@ -7,18 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import java.util.List;
-
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
-import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
-import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
-import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
-import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
@@ -65,16 +58,6 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     protected void onWindowVisibilityChanged(int visibility) {
         windowVisibilityChanged(visibility);
         super.onWindowVisibilityChanged(visibility);
-    }
-
-    @Override
-    public void addComponent(ComponentApi componentApi) {
-        VideoPlayerApi.super.addComponent(componentApi);
-    }
-
-    @Override
-    public void addAllComponent(List<ComponentApi> componentApis) {
-        VideoPlayerApi.super.addAllComponent(componentApis);
     }
 
     @Override
