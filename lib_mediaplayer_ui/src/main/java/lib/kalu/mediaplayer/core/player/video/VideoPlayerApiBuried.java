@@ -5,7 +5,7 @@ import lib.kalu.mediaplayer.buried.BuriedEvent;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-interface VideoPlayerApiBuried {
+public interface VideoPlayerApiBuried {
 
     default void onBuriedVideoRenderingStart() {
         try {

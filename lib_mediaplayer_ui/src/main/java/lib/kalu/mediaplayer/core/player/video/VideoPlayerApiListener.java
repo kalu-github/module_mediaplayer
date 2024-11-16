@@ -14,7 +14,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBuried {
+public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerApiBuried {
 
     default void callWindow(@PlayerType.WindowType.Value int state) {
 

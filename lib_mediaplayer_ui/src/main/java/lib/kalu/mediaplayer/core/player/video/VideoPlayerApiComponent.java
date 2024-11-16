@@ -11,7 +11,7 @@ import java.util.List;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-interface VideoPlayerApiComponent extends VideoPlayerApiBase {
+public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
 
     default void clearAllComponent() {
         try {

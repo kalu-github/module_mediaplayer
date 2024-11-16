@@ -11,7 +11,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 
-interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApiRender, VideoPlayerApiListener {
+public interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApiRender, VideoPlayerApiListener {
 
     default boolean isFull() {
         try {

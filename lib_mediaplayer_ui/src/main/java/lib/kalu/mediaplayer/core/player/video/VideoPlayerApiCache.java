@@ -10,7 +10,7 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-interface VideoPlayerApiCache {
+public interface VideoPlayerApiCache {
 
     default boolean setCache(Context context, String key, String value) {
         FileOutputStream out = null;

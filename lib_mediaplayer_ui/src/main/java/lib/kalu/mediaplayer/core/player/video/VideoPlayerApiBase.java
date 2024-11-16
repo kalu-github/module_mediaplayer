@@ -11,7 +11,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
-interface VideoPlayerApiBase {
+public interface VideoPlayerApiBase {
 
     default StartArgs getStartArgs() {
         try {

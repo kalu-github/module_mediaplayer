@@ -15,7 +15,7 @@ import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 
-interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListener {
+public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListener {
 
     default String screenshot() {
         try {

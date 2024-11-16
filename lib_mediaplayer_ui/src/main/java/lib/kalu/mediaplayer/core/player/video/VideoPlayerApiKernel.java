@@ -17,7 +17,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-interface VideoPlayerApiKernel extends VideoPlayerApiListener,
+public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         VideoPlayerApiBuried,
         VideoPlayerApiComponent,
         VideoPlayerApiRender,
