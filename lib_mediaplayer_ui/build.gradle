@@ -34,13 +34,13 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-//            consumerProguardFiles 'consumer-rules.pro'
-//            proguardFiles 'proguard-rules.pro', 'consumer-rules.pro'
+            minifyEnabled true
+            consumerProguardFiles 'consumer-rules.pro'
+            proguardFiles 'proguard-rules.pro', 'consumer-rules.pro'
         }
         debug {
             minifyEnabled false
-//            consumerProguardFiles 'consumer-rules.pro'
+            consumerProguardFiles 'consumer-rules.pro'
         }
     }
 
