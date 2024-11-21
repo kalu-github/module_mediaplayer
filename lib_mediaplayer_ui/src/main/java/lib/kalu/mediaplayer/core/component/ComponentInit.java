@@ -10,7 +10,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentInit extends RelativeLayout implements ComponentApi {
 
-    public ComponentInit( Context context) {
+    public ComponentInit(Context context) {
         super(context);
         inflate();
     }
@@ -68,5 +68,10 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
     @Override
     public int initViewIdBackground() {
         return R.id.module_mediaplayer_component_init_bg;
+    }
+
+    @Override
+    public int initViewIdText() {
+        return R.id.module_mediaplayer_component_init_txt;
     }
 }

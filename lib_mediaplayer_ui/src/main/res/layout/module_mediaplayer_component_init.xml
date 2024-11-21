@@ -9,14 +9,15 @@
         android:id="@+id/module_mediaplayer_component_init_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:focusable="false">
+        android:focusable="false"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/module_mediaplayer_component_init_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:focusable="false" />
 
         <TextView
             android:id="@+id/module_mediaplayer_component_init_txt"
@@ -24,6 +25,7 @@
             android:layout_height="100dp"
             android:layout_centerInParent="true"
             android:background="#000000"
+            android:focusable="false"
             android:gravity="center"
             android:scaleType="center"
             android:text="@string/module_mediaplayer_string_init"
