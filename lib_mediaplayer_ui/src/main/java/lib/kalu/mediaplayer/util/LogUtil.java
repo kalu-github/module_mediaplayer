@@ -23,8 +23,8 @@ public final class LogUtil {
 
     public static void log(String message, @Nullable Throwable throwable) {
 
-//        if (!mLog)
-//            return;
+        if (!mLog)
+            return;
 
         if (null == message || message.length() == 0)
             return;
