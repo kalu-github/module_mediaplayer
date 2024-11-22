@@ -56,7 +56,7 @@
             android:orientation="horizontal"
             android:weightSum="10" />
 
-        <!-- 数据:画面 -->
+        <!-- 数据:画面比例 -->
         <RadioGroup
             android:id="@+id/module_mediaplayer_component_menu_scale_root"
             android:layout_width="match_parent"
