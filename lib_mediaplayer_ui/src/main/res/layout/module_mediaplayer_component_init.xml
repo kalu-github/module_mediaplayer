@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            android:background="@color/module_mediaplayer_color_000000"
             android:focusable="false" />
 
         <TextView
@@ -24,11 +25,9 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerInParent="true"
-            android:background="#000000"
             android:focusable="false"
             android:gravity="center"
             android:scaleType="center"
-            android:text="@string/module_mediaplayer_string_init"
             android:textColor="#ffffff" />
 
     </RelativeLayout>

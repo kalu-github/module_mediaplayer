@@ -23,7 +23,7 @@
         android:paddingBottom="20dp"
         android:visibility="gone">
 
-        <!-- 选项 -->
+        <!-- 数据:菜单 -->
         <RadioGroup
             android:id="@+id/module_mediaplayer_component_menu_tab_root"
             android:layout_width="match_parent"
@@ -34,9 +34,21 @@
             android:paddingTop="10dp"
             android:weightSum="10" />
 
-        <!-- 数据 -->
+        <!-- 数据:选集 -->
+        <LinearLayout
+            android:id="@+id/module_mediaplayer_component_menu_episode_root"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_above="@id/module_mediaplayer_component_menu_tab_root"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:focusable="false"
+            android:orientation="horizontal"
+            android:weightSum="10" />
+
+        <!-- 数据:倍速 -->
         <RadioGroup
-            android:id="@+id/module_mediaplayer_component_menu_data_root"
+            android:id="@+id/module_mediaplayer_component_menu_speed_root"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_above="@id/module_mediaplayer_component_menu_tab_root"
@@ -44,14 +56,12 @@
             android:orientation="horizontal"
             android:weightSum="10" />
 
-        <!-- 信息 -->
-        <LinearLayout
-            android:id="@+id/module_mediaplayer_component_menu_flag_root"
+        <!-- 数据:画面 -->
+        <RadioGroup
+            android:id="@+id/module_mediaplayer_component_menu_scale_root"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_above="@id/module_mediaplayer_component_menu_data_root"
-            android:clipChildren="false"
-            android:clipToPadding="false"
+            android:layout_height="60dp"
+            android:layout_above="@id/module_mediaplayer_component_menu_tab_root"
             android:focusable="false"
             android:orientation="horizontal"
             android:weightSum="10" />

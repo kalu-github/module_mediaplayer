@@ -66,6 +66,22 @@ public class ComponentInit extends RelativeLayout implements ComponentApi {
     }
 
     @Override
+    public void show() {
+        ComponentApi.super.show();
+        // 1
+        String string = getResources().getString(R.string.module_mediaplayer_string_init);
+        String title = getTitle();
+        setComponentText(string + title);
+    }
+
+    @Override
+    public void hide() {
+        ComponentApi.super.hide();
+        // 1
+        setComponentText("");
+    }
+
+    @Override
     public int initViewIdBackground() {
         return R.id.module_mediaplayer_component_init_bg;
     }

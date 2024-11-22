@@ -2,8 +2,6 @@ package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,8 +11,12 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+
+import java.lang.reflect.MalformedParameterizedTypeException;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
@@ -54,226 +56,29 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        // keycode_dpad_down
+        // action_down -> keycode_dpad_down
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
-            try {
-                boolean componentShowing = isComponentShowing();
-                if (componentShowing) {
-                    View focus = findFocus();
-                    if (null == focus)
-                        throw new Exception("warning: focus null");
-                    int focusId = focus.getId();
-                    if (focusId == R.id.module_mediaplayer_component_menu_item_data) {
-                        RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                        int childCount = tabGroup.getChildCount();
-                        for (int i = 0; i < childCount; i++) {
-                            View childAt = tabGroup.getChildAt(i);
-                            boolean selected = childAt.isSelected();
-                            if (!selected)
-                                continue;
-                            focus.setActivated(true);
-                            childAt.requestFocus();
-                            break;
-                        }
-                        return true;
-                    }
-                } else {
-                    show();
-                    updateData(0);
-                    post(new Runnable() {
-                        @Override
-                        public void run() {
-                            RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                            int childCount = tabGroup.getChildCount();
-                            for (int i = 0; i < childCount; i++) {
-                                View childAt = tabGroup.getChildAt(i);
-                                boolean selected = childAt.isSelected();
-                                if (!selected)
-                                    continue;
-                                childAt.requestFocus();
-                                break;
-                            }
-                        }
-                    });
-                }
-            } catch (Exception e) {
-            }
+            return keycodeDown(KeyEvent.ACTION_DOWN);
         }
-        // keycode_dpad_up
+        // action_down -> keycode_dpad_up
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
-            try {
-                boolean componentShowing = isComponentShowing();
-                if (!componentShowing)
-                    throw new Exception("warning: componentShowing false");
-                updateTimeMillis();
-                View focus = findFocus();
-                int focusId = focus.getId();
-
-                if (focusId == R.id.module_mediaplayer_component_menu_item_tab) {
-                    RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-                    int dataCount = dataGroup.getChildCount();
-                    for (int i = 0; i < dataCount; i++) {
-                        View childAt = dataGroup.getChildAt(i);
-                        if (null == childAt)
-                            continue;
-                        boolean activated = childAt.isActivated();
-                        if (!activated)
-                            continue;
-                        childAt.requestFocus();
-                        break;
-                    }
-                    return true;
-                }
-            } catch (Exception e) {
-            }
+            return keycodeUp(KeyEvent.ACTION_DOWN);
         }
-        // keycode_dpad_left
+        // action_up -> keycode_dpad_left
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            View focus = findFocus();
-            int focusId = focus.getId();
-            if (focusId == R.id.module_mediaplayer_component_menu_item_tab) {
-                ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                int indexOfChild = tabGroup.indexOfChild(focus);
-                updateData(indexOfChild);
-            }
+            return keycodeLeft(KeyEvent.ACTION_UP);
         }
-        // keycode_dpad_left
+        // action_down -> keycode_dpad_left
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            try {
-                boolean componentShowing = isComponentShowing();
-                if (!componentShowing)
-                    throw new Exception("warning: showing false");
-                updateTimeMillis();
-                View focus = findFocus();
-                int focusId = focus.getId();
-
-                if (focusId == R.id.module_mediaplayer_component_menu_item_tab) {
-                    ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                    int indexOfChild = tabGroup.indexOfChild(focus);
-                    if (indexOfChild <= 0) {
-                        return true;
-                    }
-                } else if (focusId == R.id.module_mediaplayer_component_menu_item_data) {
-
-                    int checkedTag = -1;
-                    RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                    int childCount = tabGroup.getChildCount();
-                    for (int i = 0; i < childCount; i++) {
-                        RadioButton radioButton = (RadioButton) tabGroup.getChildAt(i);
-                        boolean selected = radioButton.isSelected();
-                        if (!selected)
-                            continue;
-                        checkedTag = (int) radioButton.getTag();
-                        break;
-                    }
-                    if (checkedTag == -1)
-                        throw new Exception("warning: checkedTag =-1");
-
-                    // 选集
-                    if (checkedTag == 0) {
-                        ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-                        int indexOfChild = dataGroup.indexOfChild(focus);
-                        if (indexOfChild <= 0) {
-                            scrollEpisode(KeyEvent.KEYCODE_DPAD_LEFT);
-                            return true;
-                        }
-                    }
-                    // 倍速
-                    else if (checkedTag == 1) {
-                        ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-                        int indexOfChild = dataGroup.indexOfChild(focus);
-                        if (indexOfChild <= 0) {
-                            return true;
-                        }
-                    }
-                    // 画面
-                    else if (checkedTag == 2) {
-                        ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-                        int indexOfChild = dataGroup.indexOfChild(focus);
-                        if (indexOfChild <= 0) {
-                            return true;
-                        }
-                    }
-                }
-            } catch (Exception e) {
-            }
+            return keycodeLeft(KeyEvent.ACTION_DOWN);
         }
-        // keycode_dpad_right
+        // action_up -> keycode_dpad_right
         else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            View focus = findFocus();
-            int focusId = focus.getId();
-            if (focusId == R.id.module_mediaplayer_component_menu_item_tab) {
-                ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                int indexOfChild = tabGroup.indexOfChild(focus);
-                updateData(indexOfChild);
-            }
+            return keycodeRight(KeyEvent.ACTION_UP);
         }
-        // keycode_dpad_right
+        // action_down -> keycode_dpad_right
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            try {
-                boolean showing = isComponentShowing();
-                if (!showing)
-                    throw new Exception("warning: showing false");
-                updateTimeMillis();
-                View focus = findFocus();
-                int focusId = focus.getId();
-
-                if (focusId == R.id.module_mediaplayer_component_menu_item_tab) {
-                    ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                    int tabCount = tabGroup.getChildCount();
-                    int indexOfChild = tabGroup.indexOfChild(focus);
-                    if (indexOfChild + 1 >= tabCount) {
-                        return true;
-                    }
-                } else if (focusId == R.id.module_mediaplayer_component_menu_item_data) {
-
-                    int checkedTag = -1;
-                    RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                    int tabCount = tabGroup.getChildCount();
-                    for (int i = 0; i < tabCount; i++) {
-                        View childAt = tabGroup.getChildAt(i);
-                        if (null == childAt)
-                            continue;
-                        boolean selected = childAt.isSelected();
-                        if (!selected)
-                            continue;
-                        checkedTag = (int) childAt.getTag();
-                        break;
-                    }
-                    if (checkedTag == -1)
-                        throw new Exception("warning: checkedTag =-1");
-
-                    // 选集
-                    if (checkedTag == 0) {
-                        ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-                        int dataCount = dataGroup.getChildCount();
-                        int indexOfChild = dataGroup.indexOfChild(focus);
-                        if (indexOfChild + 1 >= dataCount) {
-                            scrollEpisode(KeyEvent.KEYCODE_DPAD_RIGHT);
-                            return true;
-                        }
-                    }
-                    // 倍速
-                    else if (checkedTag == 1) {
-                        ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-                        int dataCount = dataGroup.getChildCount();
-                        int indexOfChild = dataGroup.indexOfChild(focus);
-                        if (indexOfChild + 1 >= dataCount) {
-                            return true;
-                        }
-                    }
-                    // 画面
-                    else if (checkedTag == 2) {
-                        ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-                        int dataCount = dataGroup.getChildCount();
-                        int indexOfChild = dataGroup.indexOfChild(focus);
-                        if (indexOfChild + 1 >= dataCount) {
-                            return true;
-                        }
-                    }
-                }
-            } catch (Exception e) {
-            }
+            return keycodeRight(KeyEvent.ACTION_DOWN);
         }
         // keycode_back
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
@@ -285,111 +90,34 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
         // keycode_dpad_center
         else if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER || event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-//            LogUtil.log("ComponentMenu => dispatchKeyEvent => keycode_dpad_center =>");
-            updateTimeMillis();
-            try {
-                boolean componentShowing = isComponentShowing();
-                if (!componentShowing)
-                    throw new Exception("warning: componentShowing false");
-                View focus = findFocus();
-                if (null == focus)
-                    throw new Exception("warning: focus null");
-
-                int focusId = focus.getId();
-                if (focusId != R.id.module_mediaplayer_component_menu_item_data)
-                    throw new Exception("warning: focusId != R.id.module_mediaplayer_component_menu_item_data");
-
-                int checkedTag = -1;
-                RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                int tabCount = tabGroup.getChildCount();
-                for (int i = 0; i < tabCount; i++) {
-                    View childAt = tabGroup.getChildAt(i);
-                    if (null == childAt)
-                        continue;
-                    boolean selected = childAt.isSelected();
-                    if (!selected)
-                        continue;
-                    checkedTag = (int) childAt.getTag();
-                    break;
-                }
-//                LogUtil.log("ComponentMenu => dispatchKeyEvent => keycode_dpad_center => checkedTag = " + checkedTag);
-                if (checkedTag == -1)
-                    throw new Exception("warning: checkedTag =-1");
-
-                // 选集
-                if (checkedTag == 0) {
-                    try {
-                        int position = (int) focus.getTag();
-                        hide();
-                        stop();
-                        clickEpisode(position);
-                    } catch (Exception e) {
-                    }
-                }
-                // 倍速
-                else if (checkedTag == 1) {
-                    // 1
-                    RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-                    int dataCount = dataGroup.getChildCount();
-                    for (int i = 0; i < dataCount; i++) {
-                        View childAt = dataGroup.getChildAt(i);
-                        if (null == childAt)
-                            continue;
-                        childAt.setSelected(childAt == focus);
-                    }
-                    // 2
-                    @PlayerType.SpeedType.Value
-                    int id = Integer.parseInt(String.valueOf(((RadioButton) focus).getHint()));
-                    setVideoSpeed(id);
-                }
-                // 画面
-                else if (checkedTag == 2) {
-                    // 1
-                    RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-                    int dataCount = dataGroup.getChildCount();
-                    for (int i = 0; i < dataCount; i++) {
-                        View childAt = dataGroup.getChildAt(i);
-                        if (null == childAt)
-                            continue;
-                        childAt.setSelected(childAt == focus);
-                    }
-                    // 2
-                    @PlayerType.ScaleType.Value
-                    int id = Integer.parseInt(String.valueOf(((RadioButton) focus).getHint()));
-                    setVideoScaleType(id);
-                }
-
-                return true;
-            } catch (Exception e) {
-                LogUtil.log("ComponentMenu => dispatchKeyEvent => keycode_dpad_center => " + e.getMessage());
-            }
+            return keycodeCenter(KeyEvent.ACTION_DOWN);
         }
         return false;
     }
 
     @Override
     public void scrollEpisode(int action) {
-
         try {
             View focus = findFocus();
             if (null == focus)
                 throw new Exception("error: focus null");
             int focusId = focus.getId();
-            if (focusId != R.id.module_mediaplayer_component_menu_item_data)
+            if (focusId != R.id.module_mediaplayer_component_menu_item_episode)
                 throw new Exception("error: focusId != R.id.module_mediaplayer_component_menu_item_data");
-            String text = (String) ((RadioButton) focus).getText();
-            if (null == text || text.length() <= 0)
-                throw new Exception("error: text null");
-            int index = Integer.parseInt(text) - 1;
-            LogUtil.log("ComponentMenu => scrollEpisode => index = " + index);
+            Object tag = focus.getTag();
+            if (null == tag)
+                throw new Exception("error: tag null");
+            int index = (int) tag;
+            LogUtil.log("ComponentMenu => keycodeRight => index = " + index);
             if (action == KeyEvent.KEYCODE_DPAD_LEFT && index <= 0)
                 throw new Exception("error: index <= 0");
 
             int episodeItemCount = getEpisodeItemCount();
+            LogUtil.log("ComponentMenu => keycodeRight => episodeItemCount = " + episodeItemCount);
             if (action == KeyEvent.KEYCODE_DPAD_RIGHT && index + 1 >= episodeItemCount)
                 throw new Exception("error: index+1 >= " + episodeItemCount + ", index = " + index);
 
-            RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
+            ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
             int childCount = dataGroup.getChildCount();
 
             int start;
@@ -400,21 +128,19 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             } else {
                 start = -1;
             }
+            LogUtil.log("ComponentMenu => keycodeRight => start = " + start);
             if (start == -1)
                 throw new Exception("error: start = -1");
 
-            int episodePlayingIndex = getEpisodePlayingIndex();
+//            int episodePlayingIndex = getEpisodePlayingIndex();
             for (int i = 0; i < childCount; i++) {
 
-                RadioButton radioButton = (RadioButton) dataGroup.getChildAt(i);
-                if (null == radioButton)
+                View childAt = dataGroup.getChildAt(i);
+                if (null == childAt)
                     continue;
-                clearFlag(i);
                 int position = i + start;
-                updateFlag(i, position);
-
-                radioButton.setText(String.valueOf(position + 1));
-                radioButton.setSelected(position == episodePlayingIndex);
+                loadEpisodeText(i, position, false);
+                //  childAt.setSelected(position == episodePlayingIndex);
             }
 
         } catch (Exception e) {
@@ -431,392 +157,144 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public void show() {
-        LogUtil.log("ComponentMenu => show =>");
         updateTimeMillis();
         superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_SHOW);
         ComponentApiMenu.super.show();
     }
 
-//    @Override
-//    public void tabCheckedRequestFocus() {
-//        LogUtil.log("ComponentMenu => tabCheckedRequestFocus =>");
-//        try {
-//            int checkedTag = -1;
-//            RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-//            int tabCount = tabGroup.getChildCount();
-//            for (int i = 0; i < tabCount; i++) {
-//                RadioButton radioButton = (RadioButton) tabGroup.getChildAt(i);
-//                boolean checked = radioButton.isChecked();
-//                if (!checked)
-//                    continue;
-//                checkedTag = (int) radioButton.getTag();
-//                break;
-//            }
-//            if (checkedTag == -1)
-//                throw new Exception("warning: checkedTag =-1");
-//
-//            // 选集
-//            if (checkedTag == 0) {
-//                tabGroup.getChildAt(0).requestFocus();
-//            }
-//            // 倍速
-//            else if (checkedTag == 1) {
-//                tabGroup.getChildAt(tabCount >= 3 ? 1 : 0).requestFocus();
-//            }
-//            // 画面
-//            else if (checkedTag == 2) {
-//                tabGroup.getChildAt(tabCount >= 3 ? 2 : 1).requestFocus();
-//            }
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentMenu => tabCheckedRequestFocus => Exception " + e.getMessage());
-//        }
-//    }
-
     @Override
-    public void updateData(int checkedIndex) {
-//        LogUtil.log("ComponentMenu => updateData => checkedIndex = " + checkedIndex);
-
-        // 选项栏 inflate view
+    public void clearEpisodeText(int index, boolean changeVisibility) {
         try {
-
-            ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-            int tabCount = tabGroup.getChildCount();
-            if (tabCount > 0)
-                throw new Exception("warning: tabCount >0");
-
-            String[] data;
-            try {
-                int episodeItemCount = getEpisodeItemCount();
-                if (episodeItemCount <= 0)
-                    throw new Exception("warning: episodeItemCount " + episodeItemCount);
-                int episodePlayingIndex = getEpisodePlayingIndex();
-                if (episodePlayingIndex < 0)
-                    throw new Exception("warning: episodePlayingIndex " + episodePlayingIndex);
-                data = new String[]{"选集", "倍速", "画面"};
-            } catch (Exception e) {
-                data = new String[]{"倍速", "画面"};
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            if (null == episodeGroup)
+                throw new Exception("error: episodeGroup null");
+            View childAt = episodeGroup.getChildAt(index);
+            if (null == childAt)
+                throw new Exception("error: childAt null");
+            if (changeVisibility) {
+                childAt.setVisibility(View.INVISIBLE);
             }
-
-            for (String s : data) {
-                LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_tab, tabGroup, true);
-                int count = tabGroup.getChildCount();
-                int index = --count;
-                View childAt = tabGroup.getChildAt(index);
-                if (null == childAt)
-                    continue;
-                ((RadioButton) childAt).setText(s);
-                ((RadioButton) childAt).setChecked(index == 0);
-                if ("选集".equals(s)) {
-                    LogUtil.log("ComponentMenu => updateData => setTag 0");
-                    ((RadioButton) childAt).setTag(0);
-                } else if ("倍速".equals(s)) {
-                    LogUtil.log("ComponentMenu => updateData => setTag 1");
-                    ((RadioButton) childAt).setTag(1);
-                } else if ("画面".equals(s)) {
-                    LogUtil.log("ComponentMenu => updateData => setTag 2");
-                    ((RadioButton) childAt).setTag(2);
-                } else {
-                    LogUtil.log("ComponentMenu => updateData => setTag null");
-                    ((RadioButton) childAt).setTag(null);
-                }
-            }
+            childAt.setTag(null);
+            childAt.setSelected(false);
+            childAt.setActivated(false);
         } catch (Exception e) {
-            LogUtil.log("ComponentMenu => updateData => Exception1 " + e.getMessage());
+            LogUtil.log("ComponentMenu => clearEpisodeText => Exception " + e.getMessage());
         }
 
-        // 选项栏 选中
         try {
-            ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-            int tabCount = tabGroup.getChildCount();
-            if (tabCount <= 0)
-                throw new Exception("warning: tabCount >=0");
-            for (int i = 0; i < tabCount; i++) {
-                View childAt = tabGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                childAt.setSelected(i == checkedIndex);
-            }
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            if (null == episodeGroup)
+                throw new Exception("error: episodeGroup null");
+            View childAt = episodeGroup.getChildAt(index);
+            if (null == childAt)
+                throw new Exception("error: childAt null");
+            TextView textView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_popu);
+            textView.setText("");
         } catch (Exception e) {
-            LogUtil.log("ComponentMenu => updateData => Exception2 " + e.getMessage());
+            LogUtil.log("ComponentMenu => clearEpisodeText => Exception " + e.getMessage());
         }
 
-        // 信息 inflate view
         try {
-            ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_root);
-            int flagCount = flagGroup.getChildCount();
-            if (flagCount > 0)
-                throw new Exception("warning: flagCount >0");
-            for (int i = 0; i < 10; i++) {
-                LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_flag, flagGroup, true);
-            }
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            if (null == episodeGroup)
+                throw new Exception("error: episodeGroup null");
+            View childAt = episodeGroup.getChildAt(index);
+            if (null == childAt)
+                throw new Exception("error: childAt null");
+            TextView textView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_text);
+            textView.setText("");
         } catch (Exception e) {
-            LogUtil.log("ComponentMenu => updateData => Exception3 " + e.getMessage());
+            LogUtil.log("ComponentMenu => clearEpisodeText => Exception " + e.getMessage());
         }
 
-        // 数据 inflate view
         try {
-            ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-            int dataCount = dataGroup.getChildCount();
-            if (dataCount > 0)
-                throw new Exception("warning: dataCount >0");
-            for (int i = 0; i < 10; i++) {
-                LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_data, dataGroup, true);
-                int count = dataGroup.getChildCount();
-                int index = --count;
-                View childAt = dataGroup.getChildAt(index);
-                if (null == childAt)
-                    continue;
-                childAt.setOnFocusChangeListener(new OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        if (hasFocus) {
-                            v.setActivated(false);
-                        }
-                        try {
-                            int checkedTag = -1;
-                            RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-                            int tabCount = tabGroup.getChildCount();
-                            for (int i = 0; i < tabCount; i++) {
-                                View childAt = tabGroup.getChildAt(i);
-                                if (null == childAt)
-                                    continue;
-                                boolean selected = childAt.isSelected();
-                                if (!selected)
-                                    continue;
-                                checkedTag = (int) childAt.getTag();
-                                break;
-                            }
-                            if (checkedTag != 0)
-                                throw new Exception("warning: checkedTag != 0");
-                            int indexOfChild = dataGroup.indexOfChild(v);
-                            ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_root);
-                            RelativeLayout itemGroup = (RelativeLayout) flagGroup.getChildAt(indexOfChild);
-                            View viewById = itemGroup.findViewById(R.id.module_mediaplayer_component_menu_item_flag_popu);
-                            ((PopuView) viewById).setEllipsize(hasFocus ? TextUtils.TruncateAt.MARQUEE : TextUtils.TruncateAt.END);
-                            ((PopuView) viewById).setVisibility(hasFocus ? View.VISIBLE : View.INVISIBLE);
-                        } catch (Exception e) {
-                        }
-                    }
-                });
-            }
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            if (null == episodeGroup)
+                throw new Exception("error: episodeGroup null");
+            View childAt = episodeGroup.getChildAt(index);
+            if (null == childAt)
+                throw new Exception("error: childAt null");
+            ImageView imageView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_img_top_left);
+            imageView.setImageDrawable(null);
         } catch (Exception e) {
-            LogUtil.log("ComponentMenu => updateData => Exception4 " + e.getMessage());
+            LogUtil.log("ComponentMenu => clearEpisodeText => Exception " + e.getMessage());
         }
 
-        // 数据
         try {
-
-            RadioGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-            View child = tabGroup.getChildAt(checkedIndex);
-            int tag = (int) child.getTag();
-
-            // 选集
-            if (tag == 0) {
-
-                RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-                int dataCount = dataGroup.getChildCount();
-                for (int i = 0; i < dataCount; i++) {
-
-                    clearFlag(i);
-                    View childAt = dataGroup.getChildAt(i);
-                    if (null == childAt)
-                        continue;
-
-                    childAt.setTag(null);
-                    childAt.setEnabled(false);
-                    childAt.setSelected(false);
-                    childAt.setActivated(false);
-                    childAt.setVisibility(View.INVISIBLE);
-
-                    ((RadioButton) childAt).setText("");
-                    ((RadioButton) childAt).setHint(null);
-
-                    int episodeItemCount = getEpisodeItemCount();
-                    if (i >= episodeItemCount)
-                        continue;
-
-                    int episodePlayingIndex = getEpisodePlayingIndex();
-                    int num = episodePlayingIndex / dataCount;
-                    int start = num * dataCount;
-                    if (episodeItemCount > dataCount) {
-                        int length = start + dataCount;
-                        if (length > episodeItemCount) {
-                            start -= Math.abs(length - episodeItemCount);
-                        }
-                    }
-
-                    int position = i + start;
-                    childAt.setEnabled(true);
-                    childAt.setTag(position);
-                    if (position == episodePlayingIndex) {
-                        childAt.setSelected(true);
-                        childAt.setActivated(true);
-                    }
-                    ((RadioButton) childAt).setText(String.valueOf(position + 1));
-
-                    childAt.setVisibility(View.VISIBLE);
-                    updateFlag(i, position);
-                }
-            }
-            // 倍速
-            else if (tag == 1) {
-                int[] speeds = getSpeedTypes();
-
-                RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-                int dataCount = dataGroup.getChildCount();
-                for (int i = 0; i < dataCount; i++) {
-
-                    clearFlag(i);
-                    View childAt = dataGroup.getChildAt(i);
-                    if (null == childAt)
-                        continue;
-
-                    childAt.setTag(null);
-                    childAt.setEnabled(false);
-                    childAt.setSelected(false);
-                    childAt.setActivated(false);
-                    childAt.setVisibility(View.INVISIBLE);
-
-                    ((RadioButton) childAt).setText("");
-                    ((RadioButton) childAt).setHint(null);
-
-                    if (i >= speeds.length)
-                        continue;
-
-                    childAt.setTag(1);
-                    childAt.setEnabled(true);
-                    ((RadioButton) childAt).setHint(String.valueOf(speeds[i]));
-
-                    if (speeds[i] == PlayerType.SpeedType._0_5) {
-                        ((RadioButton) childAt).setText("0.5");
-                    } else if (speeds[i] == PlayerType.SpeedType._1_5) {
-                        ((RadioButton) childAt).setText("1.5");
-                    } else if (speeds[i] == PlayerType.SpeedType._2_0) {
-                        ((RadioButton) childAt).setText("2.0");
-                    } else if (speeds[i] == PlayerType.SpeedType._2_5) {
-                        ((RadioButton) childAt).setText("2.5");
-                    } else if (speeds[i] == PlayerType.SpeedType._3_0) {
-                        ((RadioButton) childAt).setText("3.0");
-                    } else if (speeds[i] == PlayerType.SpeedType._3_5) {
-                        ((RadioButton) childAt).setText("3.5");
-                    } else if (speeds[i] == PlayerType.SpeedType._4_0) {
-                        ((RadioButton) childAt).setText("4.0");
-                    } else if (speeds[i] == PlayerType.SpeedType._4_5) {
-                        ((RadioButton) childAt).setText("4.5");
-                    } else if (speeds[i] == PlayerType.SpeedType._5_0) {
-                        ((RadioButton) childAt).setText("5.0");
-                    } else {
-                        ((RadioButton) childAt).setText("1.0");
-                    }
-
-                    int videoSpeed = getVideoSpeed();
-                    if (videoSpeed == speeds[i]) {
-                        childAt.setSelected(true);
-                        childAt.setActivated(true);
-                    }
-                    childAt.setVisibility(View.VISIBLE);
-                }
-            }
-            // 画面
-            else if (tag == 2) {
-                int[] scales = getScaleTypes();
-                // radioButton.clearFlag();
-
-                RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_data_root);
-                int dataCount = dataGroup.getChildCount();
-                for (int i = 0; i < dataCount; i++) {
-
-                    clearFlag(i);
-                    View childAt = dataGroup.getChildAt(i);
-                    if (null == childAt)
-                        continue;
-
-                    childAt.setTag(null);
-                    childAt.setEnabled(false);
-                    childAt.setSelected(false);
-                    childAt.setActivated(false);
-                    childAt.setVisibility(View.INVISIBLE);
-
-                    ((RadioButton) childAt).setText("");
-
-                    if (i >= scales.length)
-                        continue;
-
-                    childAt.setTag(2);
-                    childAt.setEnabled(true);
-                    ((RadioButton) childAt).setHint(String.valueOf(scales[i]));
-
-                    int videoScaleType = getVideoScaleType();
-                    LogUtil.log("ComponentMenu => updateData3 => i =  " + i + ", scales[i] = " + scales[i] + ", videoScaleType = " + videoScaleType);
-
-                    if (scales[i] == PlayerType.ScaleType.REAL) {
-                        ((RadioButton) childAt).setText("原始");
-                    } else if (scales[i] == PlayerType.ScaleType.FULL) {
-                        ((RadioButton) childAt).setText("全屏");
-                    } else if (scales[i] == PlayerType.ScaleType._1_1) {
-                        ((RadioButton) childAt).setText("1:1");
-                    } else if (scales[i] == PlayerType.ScaleType._4_3) {
-                        ((RadioButton) childAt).setText("4:3");
-                    } else if (scales[i] == PlayerType.ScaleType._5_4) {
-                        ((RadioButton) childAt).setText("5:4");
-                    } else if (scales[i] == PlayerType.ScaleType._16_9) {
-                        ((RadioButton) childAt).setText("16:9");
-                    } else if (scales[i] == PlayerType.ScaleType._16_10) {
-                        ((RadioButton) childAt).setText("16:10");
-                    } else {
-                        ((RadioButton) childAt).setText("自动");
-                    }
-
-                    if (videoScaleType == scales[i]) {
-                        childAt.setSelected(true);
-                        childAt.setActivated(true);
-                    }
-                    childAt.setVisibility(View.VISIBLE);
-                }
-            }
-
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            if (null == episodeGroup)
+                throw new Exception("error: episodeGroup null");
+            View childAt = episodeGroup.getChildAt(index);
+            if (null == childAt)
+                throw new Exception("error: childAt null");
+            ImageView imageView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_img_top_right);
+            imageView.setImageDrawable(null);
         } catch (Exception e) {
-            LogUtil.log("ComponentMenu => updateData => Exception5 " + e.getMessage());
+            LogUtil.log("ComponentMenu => clearEpisodeText => Exception " + e.getMessage());
         }
     }
 
     @Override
-    public void clearFlag(int index) {
-        try {
-            ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_root);
-            RelativeLayout itemGroup = (RelativeLayout) flagGroup.getChildAt(index);
-            ImageView imageView0 = itemGroup.findViewById(R.id.module_mediaplayer_component_menu_item_flag_img0);
-            imageView0.setImageDrawable(null);
-            ImageView imageView1 = itemGroup.findViewById(R.id.module_mediaplayer_component_menu_item_flag_img1);
-            imageView1.setImageDrawable(null);
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => clearFlag => Exception " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void updateFlag(int index, int position) {
-        LogUtil.log("ComponentMenu => updateFlag => index = " + index + ", position = " + position);
+    public void loadEpisodeText(int index, int num, boolean changeVisibility) {
+        LogUtil.log("ComponentMenu => loadEpisodeText => index = " + index + ", num = " + num);
 
         try {
-            ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_root);
-            RelativeLayout itemGroup = (RelativeLayout) flagGroup.getChildAt(index);
-            View viewById = itemGroup.findViewById(R.id.module_mediaplayer_component_menu_item_flag_popu);
-            ((PopuView) viewById).setText(position + "=>sjsxljsjsljljslcjl");
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            if (null == episodeGroup)
+                throw new Exception("error: episodeGroup null");
+            View childAt = episodeGroup.getChildAt(index);
+            if (null == childAt)
+                throw new Exception("error: childAt null");
+            int playingIndex = getEpisodePlayingIndex();
+            if (changeVisibility) {
+                childAt.setVisibility(View.VISIBLE);
+            }
+            childAt.setTag(num);
+            childAt.setSelected(index + 1 == num);
+            childAt.setSelected(playingIndex + 1 == num);
         } catch (Exception e) {
+            LogUtil.log("ComponentMenu => showEpisodeAt => Exception " + e.getMessage());
         }
 
         try {
-            ImageView imageView;
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            if (null == episodeGroup)
+                throw new Exception("error: episodeGroup null");
+            View childAt = episodeGroup.getChildAt(index);
+            if (null == childAt)
+                throw new Exception("error: childAt null");
+            TextView textView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_popu);
+            textView.setText(num + "=>sjsxljsjsljljslcjl");
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => showEpisodeAt => Exception " + e.getMessage());
+        }
+
+        try {
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            if (null == episodeGroup)
+                throw new Exception("error: episodeGroup null");
+            View childAt = episodeGroup.getChildAt(index);
+            if (null == childAt)
+                throw new Exception("error: childAt null");
+            TextView textView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_text);
+            textView.setText(String.valueOf(num));
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => loadEpisodeText => Exception " + e.getMessage());
+        }
+
+        try {
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            if (null == episodeGroup)
+                throw new Exception("error: episodeGroup null");
+            View childAt = episodeGroup.getChildAt(index);
+            if (null == childAt)
+                throw new Exception("error: childAt null");
             int flagLoaction = getEpisodeFlagLoaction();
+            ImageView imageView;
             if (flagLoaction == PlayerType.EpisodeFlagLoactionType.LEFT_TOP) {
-                ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_root);
-                RelativeLayout itemGroup = (RelativeLayout) flagGroup.getChildAt(index);
-                imageView = itemGroup.findViewById(R.id.module_mediaplayer_component_menu_item_flag_img0);
+                imageView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_img_top_left);
             } else {
-                ViewGroup flagGroup = findViewById(R.id.module_mediaplayer_component_menu_flag_root);
-                RelativeLayout itemGroup = (RelativeLayout) flagGroup.getChildAt(index);
-                imageView = itemGroup.findViewById(R.id.module_mediaplayer_component_menu_item_flag_img1);
+                imageView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_img_top_right);
             }
             if (null == imageView)
                 throw new Exception("error: imageView null");
@@ -827,16 +305,16 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             String vipFilePath = getEpisodeFlagVipFilePath();
             int vipResourceId = getEpisodeFlagVipResourceId();
             if (null != vipImgUrl) {
-                if (freeItemCount > 0 && position >= freeItemCount) {
-                    loadFlagUrl(imageView, vipImgUrl);
+                if (freeItemCount > 0 && num >= freeItemCount) {
+                    loadEpisodeUrl(imageView, vipImgUrl);
                 }
             } else if (null != vipFilePath) {
-                if (freeItemCount > 0 && position >= freeItemCount) {
-                    loadFlagFile(imageView, vipFilePath);
+                if (freeItemCount > 0 && num >= freeItemCount) {
+                    loadEpisodeFile(imageView, vipFilePath);
                 }
             } else if (0 != vipResourceId) {
-                if (freeItemCount > 0 && position >= freeItemCount) {
-                    loadFlagResource(imageView, vipResourceId);
+                if (freeItemCount > 0 && num >= freeItemCount) {
+                    loadEpisodeResource(imageView, vipResourceId);
                 }
             }
 
@@ -846,52 +324,643 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             int freeResourceId = getEpisodeFlagFreeResourceId();
             if (null != freeImgUrl) {
                 if (freeItemCount < 0) {
-                    loadFlagUrl(imageView, freeImgUrl);
-                } else if (position < freeItemCount) {
-                    loadFlagUrl(imageView, freeImgUrl);
+                    loadEpisodeUrl(imageView, freeImgUrl);
+                } else if (num < freeItemCount) {
+                    loadEpisodeUrl(imageView, freeImgUrl);
                 }
             } else if (null != freeFilePath) {
                 if (freeItemCount < 0) {
-                    loadFlagFile(imageView, freeFilePath);
-                } else if (position < freeItemCount) {
-                    loadFlagFile(imageView, freeFilePath);
+                    loadEpisodeFile(imageView, freeFilePath);
+                } else if (num < freeItemCount) {
+                    loadEpisodeFile(imageView, freeFilePath);
                 }
             } else if (0 != freeResourceId) {
                 if (freeItemCount < 0) {
-                    loadFlagResource(imageView, freeResourceId);
-                } else if (position < freeItemCount) {
-                    loadFlagResource(imageView, freeResourceId);
+                    loadEpisodeResource(imageView, freeResourceId);
+                } else if (num < freeItemCount) {
+                    loadEpisodeResource(imageView, freeResourceId);
                 }
             }
         } catch (Exception e) {
-            LogUtil.log("ComponentMenu => updateFlag => Exception " + e.getMessage());
+            LogUtil.log("ComponentMenu => showEpisodeAt => Exception " + e.getMessage());
+        }
+    }
+
+    /**************/
+
+    @Override
+    public void showTabAt(int index) {
+        LogUtil.log("ComponentMenu => showTabAt => index = " + index);
+        initContentView();
+        // 选集
+        if (index == 0) {
+            initEpisodeView();
+            initEpisodeData();
+        }
+        // 倍速
+        else if (index == 1) {
+            initSpeedView();
+            initSpeedData();
+        }
+        // 画面比例
+        else if (index == 2) {
+            initScaleView();
+            initScaleData();
         }
     }
 
     @Override
-    public void loadFlagUrl(ImageView imageView, String url) {
+    public void requestTabAt(int index) {
         try {
-            imageView.setImageDrawable(null);
-            imageView.setImageURI(Uri.parse(url));
+            ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
+            int tabCount = tabGroup.getChildCount();
+            if (tabCount <= 0)
+                throw new Exception("warning: tabCount <=0");
+            View childAt = tabGroup.getChildAt(index);
+            if (null == childAt)
+                throw new Exception("warning: childAt null");
+            childAt.requestFocus();
         } catch (Exception e) {
+            LogUtil.log("ComponentMenu => requestTabAt => Exception " + e.getMessage());
         }
     }
 
     @Override
-    public void loadFlagFile(@Nullable ImageView imageView, @Nullable String path) {
+    public void initContentView() {
         try {
-            imageView.setImageDrawable(null);
-            imageView.setImageURI(Uri.parse(path));
+            findViewById(R.id.module_mediaplayer_component_menu_episode_root).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_menu_speed_root).setVisibility(View.GONE);
+            findViewById(R.id.module_mediaplayer_component_menu_scale_root).setVisibility(View.GONE);
         } catch (Exception e) {
+            LogUtil.log("ComponentMenu => initContentView => Exception " + e.getMessage());
         }
     }
 
     @Override
-    public void loadFlagResource(@Nullable ImageView imageView, int resId) {
+    public void initTabData(int index) {
         try {
-            imageView.setImageDrawable(null);
-            imageView.setImageResource(resId);
+            ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
+            int tabCount = tabGroup.getChildCount();
+            if (tabCount <= 0)
+                throw new Exception("warning: tabCount <=0");
+            for (int i = 0; i < tabCount; i++) {
+                View childAt = tabGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                ((RadioButton) childAt).setChecked(i == index);
+                ((RadioButton) childAt).setSelected(i == index);
+            }
         } catch (Exception e) {
+            LogUtil.log("ComponentMenu => setTabChecked => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void initTabView() {
+        try {
+            ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
+            int tabCount = tabGroup.getChildCount();
+            if (tabCount > 0)
+                throw new Exception("warning: tabCount >0");
+            boolean hasEpisode;
+            try {
+                int episodeItemCount = getEpisodeItemCount();
+                if (episodeItemCount <= 0)
+                    throw new Exception("warning: episodeItemCount " + episodeItemCount);
+                int episodePlayingIndex = getEpisodePlayingIndex();
+                if (episodePlayingIndex < 0)
+                    throw new Exception("warning: episodePlayingIndex " + episodePlayingIndex);
+                hasEpisode = true;
+            } catch (Exception e) {
+                hasEpisode = false;
+            }
+            String[] stringArray = getResources().getStringArray(R.array.module_mediaplayer_array_tabs);
+            for (int i = 0; i < stringArray.length; i++) {
+                if (i == 0 && !hasEpisode)
+                    continue;
+                LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_tab, tabGroup, true);
+                int count = tabGroup.getChildCount();
+                View childAt = tabGroup.getChildAt(--count);
+                if (null == childAt)
+                    continue;
+                ((TextView) childAt).setText(stringArray[i]);
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => initTabView => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void initEpisodeView() {
+        try {
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            episodeGroup.setVisibility(View.VISIBLE);
+            int episodeCount = episodeGroup.getChildCount();
+            if (episodeCount > 0)
+                throw new Exception("warning: childCount >0");
+            for (int i = 0; i < 10; i++) {
+                LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_episode, episodeGroup, true);
+                int count = episodeGroup.getChildCount();
+                View childAt = episodeGroup.getChildAt(--count);
+                childAt.setOnFocusChangeListener(new OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        v.setSelected(hasFocus);
+                        View viewById = v.findViewById(R.id.module_mediaplayer_component_menu_item_episode_popu);
+                        if (null != viewById) {
+                            ((PopuView) viewById).setVisibility(hasFocus ? View.VISIBLE : View.INVISIBLE);
+                            ((PopuView) viewById).setEllipsize(hasFocus ? TextUtils.TruncateAt.MARQUEE : TextUtils.TruncateAt.END);
+                        }
+                    }
+                });
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => initEpisodeView => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void initEpisodeData() {
+        try {
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            int episodeCount = episodeGroup.getChildCount();
+            LogUtil.log("ComponentMenu => initEpisodeData => episodeCount = " + episodeCount);
+            if (episodeCount <= 0)
+                throw new Exception("warning: episodeCount <=0");
+            for (int i = 0; i < episodeCount; i++) {
+                View childAt = episodeGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                // 1
+                clearEpisodeText(i, true);
+                // 2
+                int episodeItemCount = getEpisodeItemCount();
+                if (i >= episodeItemCount)
+                    continue;
+                int episodePlayingIndex = getEpisodePlayingIndex();
+                int num = episodePlayingIndex / 10;
+                int start = num * 10;
+                if (episodeItemCount > 10) {
+                    int length = start + 10;
+                    if (length > episodeItemCount) {
+                        start -= Math.abs(length - episodeItemCount);
+                    }
+                }
+                int position = i + start;
+                childAt.setEnabled(true);
+                childAt.setTag(position);
+                if (position == episodePlayingIndex) {
+                    childAt.setSelected(true);
+                    childAt.setActivated(true);
+                }
+
+                childAt.setVisibility(View.VISIBLE);
+                loadEpisodeText(i, position, true);
+            }
+
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => initEpisodeData => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void initSpeedView() {
+        try {
+            ViewGroup speedGroup = findViewById(R.id.module_mediaplayer_component_menu_speed_root);
+            speedGroup.setVisibility(View.VISIBLE);
+            int speedCount = speedGroup.getChildCount();
+            if (speedCount > 0)
+                throw new Exception("warning: speedCount >0");
+            int[] speeds = getSpeedTypes();
+            if (null == speeds || speeds.length == 0)
+                throw new Exception("error: speeds null");
+            for (int i = 0; i < speeds.length; i++) {
+                LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_speed, speedGroup, true);
+                // 1
+                int count = speedGroup.getChildCount();
+                View childAt = speedGroup.getChildAt(--count);
+                // 2
+                childAt.setTag(speeds[i]);
+                if (speeds[i] == PlayerType.SpeedType._0_5) {
+                    ((RadioButton) childAt).setText("0.5");
+                } else if (speeds[i] == PlayerType.SpeedType._1_5) {
+                    ((RadioButton) childAt).setText("1.5");
+                } else if (speeds[i] == PlayerType.SpeedType._2_0) {
+                    ((RadioButton) childAt).setText("2.0");
+                } else if (speeds[i] == PlayerType.SpeedType._2_5) {
+                    ((RadioButton) childAt).setText("2.5");
+                } else if (speeds[i] == PlayerType.SpeedType._3_0) {
+                    ((RadioButton) childAt).setText("3.0");
+                } else if (speeds[i] == PlayerType.SpeedType._3_5) {
+                    ((RadioButton) childAt).setText("3.5");
+                } else if (speeds[i] == PlayerType.SpeedType._4_0) {
+                    ((RadioButton) childAt).setText("4.0");
+                } else if (speeds[i] == PlayerType.SpeedType._4_5) {
+                    ((RadioButton) childAt).setText("4.5");
+                } else if (speeds[i] == PlayerType.SpeedType._5_0) {
+                    ((RadioButton) childAt).setText("5.0");
+                } else {
+                    ((RadioButton) childAt).setText("1.0");
+                }
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => initSpeedView => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void initSpeedData() {
+        try {
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_speed_root);
+            int episodeCount = episodeGroup.getChildCount();
+            if (episodeCount <= 0)
+                throw new Exception("warning: episodeCount <=0");
+            int videoSpeed = getVideoSpeed();
+            for (int i = 0; i < episodeCount; i++) {
+                View childAt = episodeGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                Object tag = childAt.getTag();
+                if (null == tag)
+                    continue;
+                int speed = (int) tag;
+                childAt.setSelected(videoSpeed == speed);
+                childAt.setActivated(videoSpeed == speed);
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => initSpeedData => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void initScaleView() {
+        try {
+            ViewGroup scaleGroup = findViewById(R.id.module_mediaplayer_component_menu_scale_root);
+            scaleGroup.setVisibility(View.VISIBLE);
+            int scaleCount = scaleGroup.getChildCount();
+            if (scaleCount > 0)
+                throw new Exception("warning: scaleCount >0");
+            int[] scaleTypes = getScaleTypes();
+            if (null == scaleTypes || scaleTypes.length == 0)
+                throw new Exception("error: scaleTypes null");
+            for (int i = 0; i < scaleTypes.length; i++) {
+                LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_scale, scaleGroup, true);
+                // 1
+                int count = scaleGroup.getChildCount();
+                View childAt = scaleGroup.getChildAt(--count);
+                // 2
+                childAt.setTag(scaleTypes[i]);
+                if (scaleTypes[i] == PlayerType.ScaleType.REAL) {
+                    ((RadioButton) childAt).setText("原始");
+                } else if (scaleTypes[i] == PlayerType.ScaleType.FULL) {
+                    ((RadioButton) childAt).setText("全屏");
+                } else if (scaleTypes[i] == PlayerType.ScaleType._1_1) {
+                    ((RadioButton) childAt).setText("1:1");
+                } else if (scaleTypes[i] == PlayerType.ScaleType._4_3) {
+                    ((RadioButton) childAt).setText("4:3");
+                } else if (scaleTypes[i] == PlayerType.ScaleType._5_4) {
+                    ((RadioButton) childAt).setText("5:4");
+                } else if (scaleTypes[i] == PlayerType.ScaleType._16_9) {
+                    ((RadioButton) childAt).setText("16:9");
+                } else if (scaleTypes[i] == PlayerType.ScaleType._16_10) {
+                    ((RadioButton) childAt).setText("16:10");
+                } else {
+                    ((RadioButton) childAt).setText("自动");
+                }
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => initScaleView => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void initScaleData() {
+        try {
+            ViewGroup scaleGroup = findViewById(R.id.module_mediaplayer_component_menu_scale_root);
+            int scaleCount = scaleGroup.getChildCount();
+            if (scaleCount <= 0)
+                throw new Exception("warning: scaleCount <=0");
+            int videoScaleType = getVideoScaleType();
+            for (int i = 0; i < scaleCount; i++) {
+                View childAt = scaleGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                Object tag = childAt.getTag();
+                if (null == tag)
+                    continue;
+                int speed = (int) tag;
+                childAt.setSelected(videoScaleType == speed);
+                childAt.setActivated(videoScaleType == speed);
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => initScaleData => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean keycodeLeft(int action) {
+        try {
+
+            if (action == KeyEvent.ACTION_UP) {
+                View focus = findFocus();
+                if (null == focus)
+                    throw new Exception("error: focus null");
+                int focusId = focus.getId();
+                if (focusId == R.id.module_mediaplayer_component_menu_item_tab) {
+                    updateTimeMillis();
+                    ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
+                    int indexOfChild = tabGroup.indexOfChild(focus);
+                    initTabData(indexOfChild);
+                    showTabAt(indexOfChild);
+                    return true;
+                }
+            } else if (action == KeyEvent.ACTION_DOWN) {
+                boolean componentShowing = isComponentShowing();
+                if (!componentShowing)
+                    throw new Exception("warning: showing false");
+                updateTimeMillis();
+                View focus = findFocus();
+                int focusId = focus.getId();
+
+                if (focusId == R.id.module_mediaplayer_component_menu_item_tab) {
+                    ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
+                    int indexOfChild = tabGroup.indexOfChild(focus);
+                    if (indexOfChild <= 0) {
+                        return true;
+                    }
+                }
+                // 选集
+                else if (focusId == R.id.module_mediaplayer_component_menu_item_episode) {
+                    ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+                    int indexOfChild = dataGroup.indexOfChild(focus);
+                    if (indexOfChild <= 0) {
+                        scrollEpisode(KeyEvent.KEYCODE_DPAD_LEFT);
+                        return true;
+                    }
+                }
+                // 倍速
+                else if (focusId == R.id.module_mediaplayer_component_menu_item_speed) {
+                    ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_speed_root);
+                    int indexOfChild = dataGroup.indexOfChild(focus);
+                    if (indexOfChild <= 0) {
+                        return true;
+                    }
+                }
+                // 画面比例
+                else if (focusId == R.id.module_mediaplayer_component_menu_item_scale) {
+                    ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_scale_root);
+                    int indexOfChild = dataGroup.indexOfChild(focus);
+                    if (indexOfChild <= 0) {
+                        return true;
+                    }
+                }
+            }
+            throw new Exception("error: not find");
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => keycodeLeft => Exception " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean keycodeRight(int action) {
+        try {
+            if (action == KeyEvent.ACTION_UP) {
+                View focus = findFocus();
+                if (null == focus)
+                    throw new Exception("error: focus null");
+                int focusId = focus.getId();
+                if (focusId == R.id.module_mediaplayer_component_menu_item_tab) {
+                    updateTimeMillis();
+                    ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
+                    int indexOfChild = tabGroup.indexOfChild(focus);
+                    initTabData(indexOfChild);
+                    showTabAt(indexOfChild);
+                    return true;
+                }
+            } else if (action == KeyEvent.ACTION_DOWN) {
+                boolean showing = isComponentShowing();
+                if (!showing)
+                    throw new Exception("warning: showing false");
+                updateTimeMillis();
+                View focus = findFocus();
+                int focusId = focus.getId();
+
+                if (focusId == R.id.module_mediaplayer_component_menu_item_tab) {
+                    ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
+                    int tabCount = tabGroup.getChildCount();
+                    int indexOfChild = tabGroup.indexOfChild(focus);
+                    if (indexOfChild + 1 >= tabCount) {
+                        return true;
+                    }
+                }
+                // 选集
+                else if (focusId == R.id.module_mediaplayer_component_menu_item_episode) {
+                    ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+                    int dataCount = dataGroup.getChildCount();
+                    int indexOfChild = dataGroup.indexOfChild(focus);
+                    if (indexOfChild + 1 >= dataCount) {
+                        scrollEpisode(KeyEvent.KEYCODE_DPAD_RIGHT);
+                        return true;
+                    }
+                }
+                // 倍速
+                else if (focusId == R.id.module_mediaplayer_component_menu_item_speed) {
+                    ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_speed_root);
+                    int dataCount = dataGroup.getChildCount();
+                    int indexOfChild = dataGroup.indexOfChild(focus);
+                    if (indexOfChild + 1 >= dataCount) {
+                        return true;
+                    }
+                }
+                // 画面比例
+                else if (focusId == R.id.module_mediaplayer_component_menu_item_scale) {
+                    ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_scale_root);
+                    int dataCount = dataGroup.getChildCount();
+                    int indexOfChild = dataGroup.indexOfChild(focus);
+                    if (indexOfChild + 1 >= dataCount) {
+                        return true;
+                    }
+                }
+            }
+            throw new Exception("error: not find");
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => keycodeRight => Exception " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean keycodeDown(int action) {
+        try {
+            if (action == KeyEvent.ACTION_DOWN) {
+                boolean playing = isPlaying();
+                if (!playing)
+                    throw new Exception("error: playing false");
+                boolean componentShowing = isComponentShowing();
+                if (componentShowing) {
+                    View focus = findFocus();
+                    if (null == focus)
+                        throw new Exception("warning: focus null");
+                    int focusId = focus.getId();
+                    // 选集
+                    if (focusId == R.id.module_mediaplayer_component_menu_item_episode) {
+                        requestTabAt(0);
+                        return true;
+                    }
+                    // 倍速
+                    else if (focusId == R.id.module_mediaplayer_component_menu_item_speed) {
+                        requestTabAt(1);
+                        return true;
+                    }
+                    // 画面比例
+                    else if (focusId == R.id.module_mediaplayer_component_menu_item_scale) {
+                        requestTabAt(2);
+                        return true;
+                    }
+                } else {
+                    show();
+                    initTabView();
+                    initTabData(0);
+                    showTabAt(0);
+                    requestTabAt(0);
+                    return true;
+                }
+            }
+            throw new Exception("warning: not find");
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => keycodeDown => Exception " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean keycodeUp(int action) {
+        try {
+
+            if (action == KeyEvent.ACTION_DOWN) {
+                boolean componentShowing = isComponentShowing();
+                if (!componentShowing)
+                    throw new Exception("warning: componentShowing false");
+                View focus = findFocus();
+                if (null == focus)
+                    throw new Exception("warning: focus null");
+                updateTimeMillis();
+                int focusId = focus.getId();
+                // 选集
+                if (focusId == R.id.module_mediaplayer_component_menu_item_episode) {
+                    ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+                    int episodeCount = episodeGroup.getChildCount();
+                    for (int i = 0; i < episodeCount; i++) {
+                        View childAt = episodeGroup.getChildAt(i);
+                        if (null == childAt)
+                            continue;
+                        boolean selected = childAt.isSelected();
+                        if (!selected)
+                            continue;
+                        childAt.requestFocus();
+                        break;
+                    }
+                    return true;
+                }
+                // 倍速
+                else if (focusId == R.id.module_mediaplayer_component_menu_item_speed) {
+                    RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_speed_root);
+                    int dataCount = dataGroup.getChildCount();
+                    for (int i = 0; i < dataCount; i++) {
+                        View childAt = dataGroup.getChildAt(i);
+                        if (null == childAt)
+                            continue;
+                        boolean selected = childAt.isSelected();
+                        if (!selected)
+                            continue;
+                        childAt.requestFocus();
+                        break;
+                    }
+                    return true;
+                }
+                // 画面比例
+                else if (focusId == R.id.module_mediaplayer_component_menu_item_scale) {
+                    RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_scale_root);
+                    int dataCount = dataGroup.getChildCount();
+                    for (int i = 0; i < dataCount; i++) {
+                        View childAt = dataGroup.getChildAt(i);
+                        if (null == childAt)
+                            continue;
+                        boolean selected = childAt.isSelected();
+                        if (!selected)
+                            continue;
+                        childAt.requestFocus();
+                        break;
+                    }
+                    return true;
+                }
+            }
+            throw new Exception("warning: not find");
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => keycodeUp => Exception " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean keycodeCenter(int action) {
+        try {
+            if (action == KeyEvent.ACTION_DOWN) {
+                boolean componentShowing = isComponentShowing();
+                if (!componentShowing)
+                    throw new Exception("warning: componentShowing false");
+                View focus = findFocus();
+                if (null == focus)
+                    throw new Exception("warning: focus null");
+
+                int focusId = focus.getId();
+
+                // 选集
+                if (focusId == R.id.module_mediaplayer_component_menu_item_episode) {
+                    int position = (int) focus.getTag();
+                    hide();
+                    stop();
+                    clickEpisode(position);
+                    return true;
+                }
+                // 倍速
+                else if (focusId == R.id.module_mediaplayer_component_menu_item_speed) {
+                    RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_speed_root);
+                    int dataCount = dataGroup.getChildCount();
+                    for (int i = 0; i < dataCount; i++) {
+                        View childAt = dataGroup.getChildAt(i);
+                        if (null == childAt)
+                            continue;
+                        childAt.setSelected(childAt == focus);
+                    }
+                    // 2
+                    @PlayerType.SpeedType.Value
+                    int id = Integer.parseInt(String.valueOf(((RadioButton) focus).getHint()));
+                    setVideoSpeed(id);
+                    return true;
+                }
+                // 画面比例
+                else if (focusId == R.id.module_mediaplayer_component_menu_item_scale) {
+                    RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_scale_root);
+                    int dataCount = dataGroup.getChildCount();
+                    for (int i = 0; i < dataCount; i++) {
+                        View childAt = dataGroup.getChildAt(i);
+                        if (null == childAt)
+                            continue;
+                        childAt.setSelected(childAt == focus);
+                    }
+                    // 2
+                    @PlayerType.ScaleType.Value
+                    int id = Integer.parseInt(String.valueOf(((RadioButton) focus).getHint()));
+                    setVideoScaleType(id);
+                    return true;
+                }
+            }
+            throw new Exception("warning: not find");
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => keycodeCenter => keycode_dpad_center => " + e.getMessage());
+            return false;
         }
     }
 }

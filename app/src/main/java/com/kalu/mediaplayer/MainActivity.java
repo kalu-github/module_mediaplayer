@@ -66,7 +66,7 @@ public class MainActivity extends Activity {
                         .setPlayWhenReady(isPlayWhenReady())
                         .setTrySeeDuration(getTrySeeDuration())
                         .setEpisodeItemCount(getEpisodeItemCount())
-                        .setEpisodePlayingIndex(4)
+                        .setEpisodePlayingIndex(0)
                         .setEpisodeFreeItemCount(2)
                         .setEpisodeFlagVipResourceId(R.drawable.ic_vip)
 //                        .setEpisodeFlagVipImgUrl("https://bpic.588ku.com/element_pic/21/12/11/7f55da9a4d5e26579f9fba53668b9003.jpg%21/fw/329/quality/90/unsharp/true/compress/true")

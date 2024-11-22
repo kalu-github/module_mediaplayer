@@ -1,8 +1,8 @@
 package lib.kalu.mediaplayer.core.component;
 
+import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
@@ -251,12 +251,6 @@ public interface ComponentApiMenu extends ComponentApi {
         }
     }
 
-    default void scrollEpisode(int action) {
-    }
-
-    default void updateData(int checkedIndex) {
-    }
-
     default void updateTimeMillis() {
         try {
             long millis = System.currentTimeMillis();
@@ -283,22 +277,93 @@ public interface ComponentApiMenu extends ComponentApi {
         }
     }
 
-    default void clearFlag(int index) {
+    /****** 选集   ******/
+
+    default void scrollEpisode(int action) {
     }
 
-    default void updateFlag(int index, int position) {
-
+    default void clearEpisodeText(int index, boolean changeVisibility) {
     }
 
-    default void loadFlagUrl(@Nullable ImageView imageView, @Nullable String url) {
-
+    default void loadEpisodeText(int index, int position, boolean changeVisibility) {
     }
 
-    default void loadFlagFile(@Nullable ImageView imageView, @Nullable String path) {
-
+    default void loadEpisodeUrl(@Nullable ImageView imageView, @Nullable String url) {
+        try {
+            imageView.setImageDrawable(null);
+            imageView.setImageURI(Uri.parse(url));
+        } catch (Exception e) {
+        }
     }
 
-    default void loadFlagResource(@Nullable ImageView imageView, @DrawableRes int resId) {
+    default void loadEpisodeFile(@Nullable ImageView imageView, @Nullable String path) {
+        try {
+            imageView.setImageDrawable(null);
+            imageView.setImageURI(Uri.parse(path));
+        } catch (Exception e) {
+        }
+    }
 
+    default void loadEpisodeResource(@Nullable ImageView imageView, @DrawableRes int resId) {
+        try {
+            imageView.setImageDrawable(null);
+            imageView.setImageResource(resId);
+        } catch (Exception e) {
+        }
+    }
+
+    /******************/
+
+    default void showTabAt(int index) {
+    }
+
+    default void requestTabAt(int index) {
+    }
+
+    default void initTabView() {
+    }
+
+    default void initTabData(int index) {
+    }
+
+    default void initContentView() {
+    }
+
+    default void initEpisodeView() {
+    }
+
+    default void initEpisodeData() {
+    }
+
+    default void initSpeedView() {
+    }
+
+    default void initSpeedData() {
+    }
+
+    default void initScaleView() {
+    }
+
+    default void initScaleData() {
+    }
+
+    default boolean keycodeUp(int action) {
+        return false;
+    }
+
+    default boolean keycodeDown(int action) {
+        return false;
+    }
+
+    default boolean keycodeLeft(int action) {
+        return false;
+    }
+
+    default boolean keycodeRight(int action) {
+        return false;
+    }
+
+    default boolean keycodeCenter(int action) {
+        return false;
     }
 }
