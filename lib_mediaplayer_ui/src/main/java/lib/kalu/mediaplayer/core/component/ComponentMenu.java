@@ -465,7 +465,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 childAt.setOnFocusChangeListener(new OnFocusChangeListener() {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
-                        v.setSelected(hasFocus);
+                        v.setActivated(hasFocus);
                         View viewById = v.findViewById(R.id.module_mediaplayer_component_menu_item_episode_popu);
                         if (null != viewById) {
                             ((PopuView) viewById).setVisibility(hasFocus ? View.VISIBLE : View.INVISIBLE);
@@ -539,6 +539,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 // 1
                 int count = speedGroup.getChildCount();
                 View childAt = speedGroup.getChildAt(--count);
+                childAt.setOnFocusChangeListener(new OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        v.setActivated(hasFocus);
+                    }
+                });
                 // 2
                 childAt.setTag(speeds[i]);
                 if (speeds[i] == PlayerType.SpeedType._0_5) {
@@ -608,6 +614,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 // 1
                 int count = scaleGroup.getChildCount();
                 View childAt = scaleGroup.getChildAt(--count);
+                childAt.setOnFocusChangeListener(new OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        v.setActivated(hasFocus);
+                    }
+                });
                 // 2
                 childAt.setTag(scaleTypes[i]);
                 if (scaleTypes[i] == PlayerType.ScaleType.REAL) {
@@ -934,10 +946,8 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                             continue;
                         childAt.setSelected(childAt == focus);
                     }
-                    // 2
-                    @PlayerType.SpeedType.Value
-                    int id = Integer.parseInt(String.valueOf(((RadioButton) focus).getHint()));
-                    setVideoSpeed(id);
+                    Object tag = focus.getTag();
+                    setVideoSpeed((Integer) tag);
                     return true;
                 }
                 // 画面比例
@@ -950,10 +960,8 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                             continue;
                         childAt.setSelected(childAt == focus);
                     }
-                    // 2
-                    @PlayerType.ScaleType.Value
-                    int id = Integer.parseInt(String.valueOf(((RadioButton) focus).getHint()));
-                    setVideoScaleType(id);
+                    Object tag = focus.getTag();
+                    setVideoScaleType((Integer) tag);
                     return true;
                 }
             }
