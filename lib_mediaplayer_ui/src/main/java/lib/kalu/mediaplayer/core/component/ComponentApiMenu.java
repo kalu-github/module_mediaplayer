@@ -282,10 +282,10 @@ public interface ComponentApiMenu extends ComponentApi {
     default void scrollEpisode(int action) {
     }
 
-    default void clearEpisodeText(int index, boolean changeVisibility) {
+    default void clearEpisodeText(int childIndex, boolean changeVisibility) {
     }
 
-    default void loadEpisodeText(int index, int position, boolean changeVisibility) {
+    default void loadEpisodeText(int childIndex, int episodeIndex, boolean changeVisibility) {
     }
 
     default void loadEpisodeUrl(@Nullable ImageView imageView, @Nullable String url) {
@@ -332,19 +332,13 @@ public interface ComponentApiMenu extends ComponentApi {
     default void initEpisodeView() {
     }
 
-    default void initEpisodeData() {
-    }
+//    default void initEpisodeData() {
+//    }
 
     default void initSpeedView() {
     }
 
-    default void initSpeedData() {
-    }
-
     default void initScaleView() {
-    }
-
-    default void initScaleData() {
     }
 
     default boolean keycodeUp(int action) {

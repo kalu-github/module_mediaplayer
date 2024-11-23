@@ -26,13 +26,12 @@
         <!-- 数据:菜单 -->
         <RadioGroup
             android:id="@+id/module_mediaplayer_component_menu_tab_root"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:focusable="false"
             android:orientation="horizontal"
-            android:paddingTop="10dp"
-            android:weightSum="10" />
+            android:paddingTop="10dp" />
 
         <!-- 数据:选集 -->
         <LinearLayout
