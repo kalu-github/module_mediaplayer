@@ -352,7 +352,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     @Override
     public void showTabAt(int index) {
         LogUtil.log("ComponentMenu => showTabAt => index = " + index);
-        initContentView();
+        initHideContentView();
         // 选集
         if (index == 0) {
             initEpisodeView();
@@ -384,19 +384,38 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public void initContentView() {
+    public int[] initHideContentData() {
+        return new int[]{R.id.module_mediaplayer_component_menu_episode_root, R.id.module_mediaplayer_component_menu_speed_root, R.id.module_mediaplayer_component_menu_scale_root};
+    }
+
+    @Override
+    public void initHideContentView() {
         try {
-            findViewById(R.id.module_mediaplayer_component_menu_episode_root).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_menu_speed_root).setVisibility(View.GONE);
-            findViewById(R.id.module_mediaplayer_component_menu_scale_root).setVisibility(View.GONE);
+            int[] ints = initHideContentData();
+            if (null == ints || ints.length == 0)
+                throw new Exception("error: ints null");
+            for (int id : ints) {
+                View viewById = findViewById(id);
+                if (null == viewById)
+                    continue;
+                viewById.setVisibility(View.GONE);
+            }
         } catch (Exception e) {
-            LogUtil.log("ComponentMenu => initContentView => Exception " + e.getMessage());
+            LogUtil.log("ComponentMenu => initHideContentView => Exception " + e.getMessage());
         }
+    }
+
+    @Override
+    public String[] initTabData() {
+        return getResources().getStringArray(R.array.module_mediaplayer_array_tabs);
     }
 
     @Override
     public void initTabView() {
         try {
+            String[] tabData = initTabData();
+            if (null == tabData || tabData.length == 0)
+                throw new Exception("error: tabData null");
             ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
             int tabCount = tabGroup.getChildCount();
             if (tabCount > 0)
@@ -413,8 +432,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             } catch (Exception e) {
                 hasEpisode = false;
             }
-            String[] stringArray = getResources().getStringArray(R.array.module_mediaplayer_array_tabs);
-            for (int i = 0; i < stringArray.length; i++) {
+            for (int i = 0; i < tabData.length; i++) {
                 if (i == 0 && !hasEpisode)
                     continue;
                 LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_tab, tabGroup, true);
@@ -422,7 +440,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 View childAt = tabGroup.getChildAt(--count);
                 if (null == childAt)
                     continue;
-                ((TextView) childAt).setText(stringArray[i]);
+                ((TextView) childAt).setText(tabData[i]);
             }
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => initTabView => Exception " + e.getMessage());
@@ -485,21 +503,26 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
+    public int[] initSpeedData() {
+        return getResources().getIntArray(R.array.module_mediaplayer_array_speeds);
+    }
+
+    @Override
     public void initSpeedView() {
         try {
+            int[] speedData = initSpeedData();
+            if (null == speedData || speedData.length == 0)
+                throw new Exception("error: speedData null");
             ViewGroup speedGroup = findViewById(R.id.module_mediaplayer_component_menu_speed_root);
             speedGroup.setVisibility(View.VISIBLE);
             int speedCount = speedGroup.getChildCount();
             if (speedCount > 0)
                 throw new Exception("warning: speedCount >0");
-            int[] speedTypes = getSpeedTypes();
-            if (null == speedTypes || speedTypes.length == 0)
-                throw new Exception("error: speeds null");
-            for (int i = 0; i < speedTypes.length; i++) {
+            for (int i = 0; i < speedData.length; i++) {
                 // 1
                 LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_speed, speedGroup, true);
                 // 2
-                int speedType = speedTypes[i];
+                int speedType = speedData[i];
                 int videoSpeed = getVideoSpeed();
                 int count = speedGroup.getChildCount();
                 View childAt = speedGroup.getChildAt(--count);
@@ -534,26 +557,31 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
+    public int[] initScaleData() {
+        return getResources().getIntArray(R.array.module_mediaplayer_array_scales);
+    }
+
+    @Override
     public void initScaleView() {
         try {
+            int[] scaleData = initScaleData();
+            if (null == scaleData || scaleData.length == 0)
+                throw new Exception("error: scaleData null");
             ViewGroup scaleGroup = findViewById(R.id.module_mediaplayer_component_menu_scale_root);
             scaleGroup.setVisibility(View.VISIBLE);
             int scaleCount = scaleGroup.getChildCount();
             if (scaleCount > 0)
                 throw new Exception("warning: scaleCount >0");
-            int[] scaleTypes = getScaleTypes();
-            if (null == scaleTypes || scaleTypes.length == 0)
-                throw new Exception("error: scaleTypes null");
-            for (int i = 0; i < scaleTypes.length; i++) {
+            for (int i = 0; i < scaleData.length; i++) {
                 // 1
                 LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_scale, scaleGroup, true);
                 // 2
-                int scaleType = scaleTypes[i];
+                int scaleType = scaleData[i];
                 int videoScaleType = getVideoScaleType();
                 int count = scaleGroup.getChildCount();
                 View childAt = scaleGroup.getChildAt(--count);
                 // 3
-                childAt.setTag(scaleTypes[i]);
+                childAt.setTag(scaleType);
                 childAt.setSelected(videoScaleType == scaleType);
                 if (scaleType == PlayerType.ScaleType.REAL) {
                     ((RadioButton) childAt).setText("原始");
