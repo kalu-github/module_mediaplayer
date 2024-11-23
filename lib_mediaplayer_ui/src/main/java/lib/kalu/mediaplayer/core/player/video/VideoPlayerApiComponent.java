@@ -82,7 +82,7 @@ public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
         }
     }
 
-    default <T extends ComponentApi> T findComponent(java.lang.Class<?> cls) {
+    default <T extends ComponentApi> T findComponent(java.lang.Class<?> interClass) {
         try {
             ViewGroup viewGroup = getBaseComponentViewGroup();
             int childCount = viewGroup.getChildCount();
@@ -92,18 +92,16 @@ public interface VideoPlayerApiComponent extends VideoPlayerApiBase {
                 View childAt = viewGroup.getChildAt(i);
                 if (null == childAt)
                     continue;
-                if (!(childAt instanceof ComponentApi))
+                Class<? extends View> childClass = childAt.getClass();
+                boolean assignableFromComponentApi = ComponentApi.class.isAssignableFrom(childClass);
+                if (!assignableFromComponentApi)
                     continue;
-                if (childAt.getClass() == cls) {
+                if (childClass == interClass) {
                     return (T) childAt;
                 } else {
-                    Class<?>[] interfaces = childAt.getClass().getInterfaces();
-                    if (null != interfaces && interfaces.length > 0) {
-                        for (Class<?> c : interfaces) {
-                            if (c == cls) {
-                                return (T) childAt;
-                            }
-                        }
+                    boolean assignableFromInterApi = interClass.isAssignableFrom(childClass);
+                    if (assignableFromInterApi) {
+                        return (T) childAt;
                     }
                 }
             }
