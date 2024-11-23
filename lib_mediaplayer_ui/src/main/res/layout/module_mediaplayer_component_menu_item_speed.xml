@@ -3,6 +3,7 @@
     android:id="@+id/module_mediaplayer_component_menu_item_speed"
     android:layout_width="0dp"
     android:layout_height="match_parent"
+    android:layout_margin="4dp"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_weight="1"
