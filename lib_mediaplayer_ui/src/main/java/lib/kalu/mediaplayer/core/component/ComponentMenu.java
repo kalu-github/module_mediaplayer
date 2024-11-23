@@ -394,24 +394,24 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
-    public void initTabData(int index) {
-        try {
-            ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-            int tabCount = tabGroup.getChildCount();
-            if (tabCount <= 0)
-                throw new Exception("warning: tabCount <=0");
-            for (int i = 0; i < tabCount; i++) {
-                View childAt = tabGroup.getChildAt(i);
-                if (null == childAt)
-                    continue;
-                ((RadioButton) childAt).setChecked(i == index);
-                ((RadioButton) childAt).setSelected(i == index);
-            }
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => setTabChecked => Exception " + e.getMessage());
-        }
-    }
+//    @Override
+//    public void initTabData(int index) {
+//        try {
+//            ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
+//            int tabCount = tabGroup.getChildCount();
+//            if (tabCount <= 0)
+//                throw new Exception("warning: tabCount <=0");
+//            for (int i = 0; i < tabCount; i++) {
+//                View childAt = tabGroup.getChildAt(i);
+//                if (null == childAt)
+//                    continue;
+//                ((RadioButton) childAt).setChecked(i == index);
+//                ((RadioButton) childAt).setSelected(i == index);
+//            }
+//        } catch (Exception e) {
+//            LogUtil.log("ComponentMenu => setTabChecked => Exception " + e.getMessage());
+//        }
+//    }
 
     @Override
     public void initTabView() {
@@ -610,7 +610,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     updateTimeMillis();
                     ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
                     int indexOfChild = tabGroup.indexOfChild(focus);
-                    initTabData(indexOfChild);
                     showTabAt(indexOfChild);
                     return true;
                 }
@@ -676,7 +675,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     updateTimeMillis();
                     ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
                     int indexOfChild = tabGroup.indexOfChild(focus);
-                    initTabData(indexOfChild);
                     showTabAt(indexOfChild);
                     return true;
                 }
@@ -765,7 +763,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 } else {
                     show();
                     initTabView();
-                    initTabData(0);
                     showTabAt(0);
                     requestTabAt(0);
                     return true;

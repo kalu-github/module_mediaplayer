@@ -323,17 +323,11 @@ public interface ComponentApiMenu extends ComponentApi {
     default void initTabView() {
     }
 
-    default void initTabData(int index) {
-    }
-
     default void initContentView() {
     }
 
     default void initEpisodeView() {
     }
-
-//    default void initEpisodeData() {
-//    }
 
     default void initSpeedView() {
     }
