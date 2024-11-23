@@ -394,25 +394,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-//    @Override
-//    public void initTabData(int index) {
-//        try {
-//            ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
-//            int tabCount = tabGroup.getChildCount();
-//            if (tabCount <= 0)
-//                throw new Exception("warning: tabCount <=0");
-//            for (int i = 0; i < tabCount; i++) {
-//                View childAt = tabGroup.getChildAt(i);
-//                if (null == childAt)
-//                    continue;
-//                ((RadioButton) childAt).setChecked(i == index);
-//                ((RadioButton) childAt).setSelected(i == index);
-//            }
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentMenu => setTabChecked => Exception " + e.getMessage());
-//        }
-//    }
-
     @Override
     public void initTabView() {
         try {
