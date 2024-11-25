@@ -218,7 +218,7 @@ public interface ComponentApiMenu extends ComponentApi {
     default void clearEpisodeText(int childIndex, boolean changeVisibility) {
     }
 
-    default void loadEpisodeText(int childIndex, int episodeIndex, boolean changeVisibility) {
+    default void loadEpisodeText(int childIndex, int episodeIndex,int playIndex, boolean changeVisibility) {
     }
 
     default void loadEpisodeUrl(@Nullable ImageView imageView, @Nullable String url) {

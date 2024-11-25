@@ -66,7 +66,7 @@ public class MainActivity extends Activity {
                         .setPlayWhenReady(isPlayWhenReady())
                         .setTrySeeDuration(getTrySeeDuration())
                         .setEpisodeItemCount(getEpisodeItemCount())
-                        .setEpisodePlayingIndex(0)
+                        .setEpisodePlayingIndex(getEpisodePlayingIndex())
                         .setEpisodeFreeItemCount(2)
                         .setEpisodeFlagVipResourceId(R.drawable.ic_vip)
 //                        .setEpisodeFlagVipImgUrl("https://bpic.588ku.com/element_pic/21/12/11/7f55da9a4d5e26579f9fba53668b9003.jpg%21/fw/329/quality/90/unsharp/true/compress/true")
@@ -107,12 +107,12 @@ public class MainActivity extends Activity {
 
     private int getEpisodeItemCount() {
         CheckBox checkBox = findViewById(R.id.main_episode_yes);
-        return checkBox.isChecked() ? 40 : 0;
+        return checkBox.isChecked() ? 12 : 0;
     }
 
     private int getEpisodePlayingIndex() {
         CheckBox checkBox = findViewById(R.id.main_episode_yes);
-        return checkBox.isChecked() ? 33 : 0;
+        return checkBox.isChecked() ? 1 : 0;
     }
 
     private long getTrySeeDuration() {

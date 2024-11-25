@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.core.component;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -132,14 +133,14 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             if (start == -1)
                 throw new Exception("error: start = -1");
 
-//            int episodePlayingIndex = getEpisodePlayingIndex();
+            int playIndex = getEpisodePlayingIndex();
             for (int i = 0; i < childCount; i++) {
 
                 View childAt = dataGroup.getChildAt(i);
                 if (null == childAt)
                     continue;
-                int playIndex = i + start;
-                loadEpisodeText(i, playIndex, false);
+                int episodeIndex = i + start;
+                loadEpisodeText(i, episodeIndex, playIndex, false);
             }
 
         } catch (Exception e) {
@@ -234,8 +235,8 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public void loadEpisodeText(int childIndex, int episodeIndex, boolean changeVisibility) {
-        LogUtil.log("ComponentMenu => loadEpisodeText => childIndex = " + childIndex + ", episodeIndex = " + episodeIndex);
+    public void loadEpisodeText(int childIndex, int episodeIndex, int playIndex, boolean changeVisibility) {
+        LogUtil.log("ComponentMenu => loadEpisodeText => childIndex = " + childIndex + ", episodeIndex = " + episodeIndex + ", playIndex = " + playIndex);
 
         try {
             ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
@@ -244,14 +245,13 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             View childAt = episodeGroup.getChildAt(childIndex);
             if (null == childAt)
                 throw new Exception("error: childAt null");
-            int playingIndex = getEpisodePlayingIndex();
             if (changeVisibility) {
                 childAt.setVisibility(View.VISIBLE);
             }
             childAt.setTag(episodeIndex);
-            childAt.setSelected(playingIndex == episodeIndex);
+            childAt.setSelected(playIndex == episodeIndex);
             if (changeVisibility) {
-                childAt.setActivated(playingIndex == episodeIndex);
+                childAt.setActivated(playIndex == episodeIndex);
             }
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => showEpisodeAt => Exception " + e.getMessage());
@@ -436,8 +436,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 if (i == 0 && !hasEpisode)
                     continue;
                 LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_tab, tabGroup, true);
-                int count = tabGroup.getChildCount();
-                View childAt = tabGroup.getChildAt(--count);
+                View childAt = tabGroup.getChildAt(i);
                 if (null == childAt)
                     continue;
                 ((TextView) childAt).setText(tabData[i]);
@@ -457,8 +456,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 throw new Exception("warning: childCount >0");
             for (int i = 0; i < 10; i++) {
                 LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_episode, episodeGroup, true);
-                int count = episodeGroup.getChildCount();
-                View childAt = episodeGroup.getChildAt(--count);
+                View childAt = episodeGroup.getChildAt(i);
                 if (null == childAt)
                     continue;
                 // 1
@@ -469,33 +467,28 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                             v.setActivated(true);
                         }
                         View viewById = v.findViewById(R.id.module_mediaplayer_component_menu_item_episode_popu);
-                        if (null != viewById) {
-                            ((PopuView) viewById).setVisibility(hasFocus ? View.VISIBLE : View.INVISIBLE);
-                            ((PopuView) viewById).setEllipsize(hasFocus ? TextUtils.TruncateAt.MARQUEE : TextUtils.TruncateAt.END);
-                        }
+                        ((PopuView) viewById).setVisibility(hasFocus ? View.VISIBLE : View.INVISIBLE);
+                        ((PopuView) viewById).setEllipsize(hasFocus ? TextUtils.TruncateAt.MARQUEE : TextUtils.TruncateAt.END);
                     }
                 });
                 // 2
                 clearEpisodeText(i, true);
-                // 3
                 int episodeItemCount = getEpisodeItemCount();
                 if (i >= episodeItemCount)
                     continue;
-                int episodePlayingIndex = getEpisodePlayingIndex();
-                int num = episodePlayingIndex / 10;
-                int start = num * 10;
-                if (episodeItemCount > 10) {
-                    int length = start + 10;
-                    if (length > episodeItemCount) {
-                        start -= Math.abs(length - episodeItemCount);
+                // 3
+                int playIndex = getEpisodePlayingIndex();
+                int mult = playIndex / 10;
+                int start = mult * 10;
+                if(episodeItemCount>10){
+                    int end = start + 10;
+                    if (end > episodeItemCount) {
+                        int value = end - episodeItemCount; // 6
+                        start -= value;
                     }
                 }
-                int playIndex = i + start - 1;
-//                if (playIndex == episodePlayingIndex) {
-//                    childAt.setSelected(true);
-//                    childAt.setActivated(true);
-//                }
-                loadEpisodeText(i, playIndex, true);
+                int episodeIndex = start + i;
+                loadEpisodeText(i, episodeIndex, playIndex, true);
             }
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => initEpisodeView => Exception " + e.getMessage());
@@ -524,8 +517,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 // 2
                 int speedType = speedData[i];
                 int videoSpeed = getVideoSpeed();
-                int count = speedGroup.getChildCount();
-                View childAt = speedGroup.getChildAt(--count);
+                View childAt = speedGroup.getChildAt(i);
                 // 3
                 childAt.setTag(speedType);
                 childAt.setSelected(videoSpeed == speedType);
@@ -578,8 +570,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 // 2
                 int scaleType = scaleData[i];
                 int videoScaleType = getVideoScaleType();
-                int count = scaleGroup.getChildCount();
-                View childAt = scaleGroup.getChildAt(--count);
+                View childAt = scaleGroup.getChildAt(i);
                 // 3
                 childAt.setTag(scaleType);
                 childAt.setSelected(videoScaleType == scaleType);
@@ -706,9 +697,11 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 // 选集
                 else if (focusId == R.id.module_mediaplayer_component_menu_item_episode) {
                     ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
-                    int dataCount = dataGroup.getChildCount();
+                    int childCount = dataGroup.getChildCount();
+                    int episodeItemCount = getEpisodeItemCount();
+                    int realCount = Math.min(episodeItemCount, childCount);
                     int indexOfChild = dataGroup.indexOfChild(focus);
-                    if (indexOfChild + 1 >= dataCount) {
+                    if (indexOfChild + 1 >= realCount) {
                         scrollEpisode(KeyEvent.KEYCODE_DPAD_RIGHT);
                         return true;
                     } else {
