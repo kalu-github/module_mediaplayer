@@ -212,6 +212,9 @@ public interface ComponentApiMenu extends ComponentApi {
 
     /****** 选集   ******/
 
+    default void clearEpisodeText() {
+    }
+
     default void scrollEpisodeText(int childIndex, int action) {
     }
 

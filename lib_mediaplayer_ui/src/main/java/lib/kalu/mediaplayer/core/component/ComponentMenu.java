@@ -99,6 +99,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public void hide() {
+        clearEpisodeText();
         clearTimeMillis();
         superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_HIDE);
         ComponentApiMenu.super.hide();
@@ -160,6 +161,18 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => scrollEpisodeText => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void clearEpisodeText() {
+        try {
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            if (null == episodeGroup)
+                throw new Exception("error: episodeGroup null");
+            episodeGroup.removeAllViews();
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => clearEpisodeText => Exception " + e.getMessage());
         }
     }
 
