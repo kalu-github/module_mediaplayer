@@ -98,7 +98,21 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     }
 
     @Override
-    public void scrollEpisode(int action) {
+    public void hide() {
+        clearTimeMillis();
+        superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_HIDE);
+        ComponentApiMenu.super.hide();
+    }
+
+    @Override
+    public void show() {
+        updateTimeMillis();
+        superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_SHOW);
+        ComponentApiMenu.super.show();
+    }
+
+    @Override
+    public void scrollEpisodeText(int childIndex, int action) {
         try {
             View focus = findFocus();
             if (null == focus)
@@ -145,37 +159,57 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             }
 
         } catch (Exception e) {
-            LogUtil.log("ComponentMenu => scrollEpisode => " + e.getMessage());
+            LogUtil.log("ComponentMenu => scrollEpisodeText => " + e.getMessage());
         }
     }
 
     @Override
-    public void hide() {
-        clearTimeMillis();
-        superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_HIDE);
-        ComponentApiMenu.super.hide();
-    }
-
-    @Override
-    public void show() {
-        updateTimeMillis();
-        superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_SHOW);
-        ComponentApiMenu.super.show();
-    }
-
-    @Override
-    public void clearEpisodeText(int index, boolean changeVisibility) {
+    public void updateEpisodeText(int childIndex) {
         try {
             ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
             if (null == episodeGroup)
                 throw new Exception("error: episodeGroup null");
-            View childAt = episodeGroup.getChildAt(index);
+            int childCount = episodeGroup.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View childAt = episodeGroup.getChildAt(i);
+                childAt.setActivated(i == childIndex);
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => updateEpisodeText => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void clickEpisodeText(int childIndex, int episodeIndex) {
+        try {
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            if (null == episodeGroup)
+                throw new Exception("error: episodeGroup null");
+            int childCount = episodeGroup.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View childAt = episodeGroup.getChildAt(i);
+                childAt.setSelected(i == childIndex);
+                childAt.setActivated(i == childIndex);
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => clickEpisodeText => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void clearEpisodeText(int childIndex, boolean changeVisibility) {
+        try {
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            if (null == episodeGroup)
+                throw new Exception("error: episodeGroup null");
+            View childAt = episodeGroup.getChildAt(childIndex);
             if (null == childAt)
                 throw new Exception("error: childAt null");
             if (changeVisibility) {
                 childAt.setVisibility(View.INVISIBLE);
             }
             childAt.setTag(null);
+            childAt.setHovered(false);
             childAt.setSelected(false);
             childAt.setActivated(false);
         } catch (Exception e) {
@@ -186,7 +220,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
             if (null == episodeGroup)
                 throw new Exception("error: episodeGroup null");
-            View childAt = episodeGroup.getChildAt(index);
+            View childAt = episodeGroup.getChildAt(childIndex);
             if (null == childAt)
                 throw new Exception("error: childAt null");
             TextView textView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_popu);
@@ -199,7 +233,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
             if (null == episodeGroup)
                 throw new Exception("error: episodeGroup null");
-            View childAt = episodeGroup.getChildAt(index);
+            View childAt = episodeGroup.getChildAt(childIndex);
             if (null == childAt)
                 throw new Exception("error: childAt null");
             TextView textView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_text);
@@ -212,7 +246,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
             if (null == episodeGroup)
                 throw new Exception("error: episodeGroup null");
-            View childAt = episodeGroup.getChildAt(index);
+            View childAt = episodeGroup.getChildAt(childIndex);
             if (null == childAt)
                 throw new Exception("error: childAt null");
             ImageView imageView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_img_top_left);
@@ -225,7 +259,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
             if (null == episodeGroup)
                 throw new Exception("error: episodeGroup null");
-            View childAt = episodeGroup.getChildAt(index);
+            View childAt = episodeGroup.getChildAt(childIndex);
             if (null == childAt)
                 throw new Exception("error: childAt null");
             ImageView imageView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_img_top_right);
@@ -480,12 +514,13 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 childAt.setOnFocusChangeListener(new OnFocusChangeListener() {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
-                        if (hasFocus) {
-                            v.setActivated(true);
-                        }
-                        View viewById = v.findViewById(R.id.module_mediaplayer_component_menu_item_episode_popu);
-                        ((PopuView) viewById).setVisibility(hasFocus ? View.VISIBLE : View.INVISIBLE);
-                        ((PopuView) viewById).setEllipsize(hasFocus ? TextUtils.TruncateAt.MARQUEE : TextUtils.TruncateAt.END);
+                        // 1
+                        TextView episodeView = v.findViewById(R.id.module_mediaplayer_component_menu_item_episode_text);
+                        episodeView.setHovered(hasFocus);
+                        // 2
+                        View popuView = v.findViewById(R.id.module_mediaplayer_component_menu_item_episode_popu);
+                        popuView.setVisibility(hasFocus ? View.VISIBLE : View.INVISIBLE);
+                        ((PopuView) popuView).setEllipsize(hasFocus ? TextUtils.TruncateAt.MARQUEE : TextUtils.TruncateAt.END);
                     }
                 });
                 // 2
@@ -652,10 +687,11 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     ViewGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
                     int indexOfChild = dataGroup.indexOfChild(focus);
                     if (indexOfChild <= 0) {
-                        scrollEpisode(KeyEvent.KEYCODE_DPAD_LEFT);
+                        scrollEpisodeText(0, KeyEvent.KEYCODE_DPAD_LEFT);
                         return true;
                     } else {
-                        focus.setActivated(false);
+                        int nextIndexOfChild = indexOfChild - 1;
+                        updateEpisodeText(nextIndexOfChild);
                     }
                 }
                 // 倍速
@@ -722,11 +758,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     int episodeItemCount = getEpisodeItemCount();
                     int realCount = Math.min(episodeItemCount, childCount);
                     int indexOfChild = dataGroup.indexOfChild(focus);
-                    if (indexOfChild + 1 >= realCount) {
-                        scrollEpisode(KeyEvent.KEYCODE_DPAD_RIGHT);
+                    int nextIndexOfChild = indexOfChild + 1;
+                    if (nextIndexOfChild >= realCount) {
+                        scrollEpisodeText(indexOfChild, KeyEvent.KEYCODE_DPAD_RIGHT);
                         return true;
                     } else {
-                        focus.setActivated(false);
+                        updateEpisodeText(nextIndexOfChild);
                     }
                 }
                 // 倍速
@@ -905,18 +942,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     int playingIndex = getEpisodePlayingIndex();
                     int episodeIndex = (int) focus.getTag();
                     if (playingIndex != episodeIndex) {
-                        ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
-                        int episodeCount = episodeGroup.getChildCount();
-                        for (int i = 0; i < episodeCount; i++) {
-                            View childAt = episodeGroup.getChildAt(i);
-                            if (null == childAt)
-                                continue;
-                            childAt.setSelected(childAt == focus);
-                            childAt.setActivated(childAt == focus);
-                        }
                         hide();
                         stop();
-                        clickEpisode(episodeIndex);
+                        ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+                        int index = episodeGroup.indexOfChild(focus);
+                        clickEpisodeText(index, episodeIndex);
+                        callListener(episodeIndex);
                         return true;
                     }
                 }
