@@ -218,7 +218,7 @@ public interface ComponentApiMenu extends ComponentApi {
     default void clearEpisodeText(int childIndex, boolean changeVisibility) {
     }
 
-    default void loadEpisodeText(int childIndex, int episodeIndex,int playIndex, boolean changeVisibility) {
+    default void loadEpisodeText(int childIndex, int episodeIndex, int playIndex, boolean changeVisibility) {
     }
 
     default void loadEpisodeUrl(@Nullable ImageView imageView, @Nullable String url) {
@@ -255,10 +255,14 @@ public interface ComponentApiMenu extends ComponentApi {
         return null;
     }
 
+
     default void showTabAt(int index) {
     }
 
     default void requestTabAt(int index) {
+    }
+
+    default void initTabUnderLine(int index) {
     }
 
     default void initTabView() {

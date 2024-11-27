@@ -1,6 +1,7 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -353,6 +354,8 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     public void showTabAt(int index) {
         LogUtil.log("ComponentMenu => showTabAt => index = " + index);
         initHideContentView();
+        initTabUnderLine(index);
+
         // 选集
         if (index == 0) {
             initEpisodeView();
@@ -402,6 +405,20 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             }
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => initHideContentView => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void initTabUnderLine(int index) {
+        try {
+            ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
+            int childCount = viewGroup.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                childAt.setSelected(i == index);
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => initTabUnderLine => Exception " + e.getMessage());
         }
     }
 
@@ -480,7 +497,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 int playIndex = getEpisodePlayingIndex();
                 int mult = playIndex / 10;
                 int start = mult * 10;
-                if(episodeItemCount>10){
+                if (episodeItemCount > 10) {
                     int end = start + 10;
                     if (end > episodeItemCount) {
                         int value = end - episodeItemCount; // 6
@@ -626,6 +643,8 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     int indexOfChild = tabGroup.indexOfChild(focus);
                     if (indexOfChild <= 0) {
                         return true;
+                    } else {
+                        initTabUnderLine(-1);
                     }
                 }
                 // 选集
@@ -692,6 +711,8 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     int indexOfChild = tabGroup.indexOfChild(focus);
                     if (indexOfChild + 1 >= tabCount) {
                         return true;
+                    } else {
+                        initTabUnderLine(-1);
                     }
                 }
                 // 选集
