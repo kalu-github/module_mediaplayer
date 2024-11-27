@@ -43,15 +43,18 @@ public class UnderLineRadioButton extends RadioButton {
         if (!selected)
             return;
 
+        int offset = getResources().getDimensionPixelOffset(R.dimen.module_mediaplayer_dimen_under_line);
         TextPaint paint = getPaint();
+        paint.setStrokeWidth(offset);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setStrokeJoin(Paint.Join.ROUND);
         Paint.FontMetrics fontMetrics = paint.getFontMetrics();
         int textHeight = (int) (fontMetrics.descent - fontMetrics.ascent);
         float textWidth = paint.measureText(String.valueOf(getText()));
-        int offset = getResources().getDimensionPixelOffset(R.dimen.module_mediaplayer_dimen_under_line);
         int width = getWidth();
         int height = getHeight();
-        int startX = (int) (width / 2 - textWidth / 2);
-        int endX = (int) (width / 2 + textWidth / 2);
+        int startX = (int) (width / 2 - textWidth / 5);
+        int endX = (int) (width / 2 + textWidth / 5);
         int startY = height / 2 + textHeight / 2 + offset;
         canvas.drawLine(startX, startY, endX, startY, paint);
     }

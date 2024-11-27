@@ -7,7 +7,7 @@
     android:layout_marginRight="5dp"
     android:layout_margin="4dp"
     android:layout_weight="1"
-    android:background="@drawable/module_mediaplayer_selector_background_item"
+    android:background="@drawable/module_mediaplayer_selector_bg_menu_item"
     android:button="@null"
     android:focusable="true"
     android:gravity="center"

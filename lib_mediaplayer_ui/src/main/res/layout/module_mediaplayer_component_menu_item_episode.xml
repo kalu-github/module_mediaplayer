@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_margin="4dp"
     android:layout_weight="1"
-    android:background="@drawable/module_mediaplayer_selector_background_item"
+    android:background="@drawable/module_mediaplayer_selector_bg_menu_item"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:focusable="true">

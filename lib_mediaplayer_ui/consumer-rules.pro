@@ -117,22 +117,6 @@
     public <fields>;
     public <methods>;
 }
-#-keep class lib.kalu.mediaplayer.widget.loading.MPLoadingView{
-#    public <fields>;
-#    public <methods>;
-#}
-#-keep class lib.kalu.mediaplayer.widget.loading.MPLoadingViewSpeed{
-#    public <fields>;
-#    public <methods>;
-#}
-#-keep class lib.kalu.mediaplayer.widget.speed.SpeedLinearLayout{
-#    public <fields>;
-#    public <methods>;
-#}
-#-keep class lib.kalu.mediaplayer.widget.subtitle.SimpleSubtitleView{
-#    public <fields>;
-#    public <methods>;
-#}
 
 #-keep class xx.xx.xx.*        本包下的类名保持
 #-keep class xx.xx.xx.**       把本包和所含子包下的类名都保持

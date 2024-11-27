@@ -3,13 +3,13 @@
     <item android:state_focused="true">
         <shape>
             <corners android:radius="4dp" />
-            <solid android:color="@color/module_mediaplayer_color_ffffff" />
+            <solid android:color="@color/module_mediaplayer_color_ff5a07" />
         </shape>
     </item>
     <item>
         <shape>
             <corners android:radius="4dp" />
-            <solid android:color="@color/module_mediaplayer_color_40000000" />
+            <solid android:color="@color/module_mediaplayer_color_11000000" />
         </shape>
     </item>
 </selector>

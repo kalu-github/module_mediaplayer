@@ -257,11 +257,11 @@ public final class GradientView extends View {
         TypedArray typedArray = null;
         try {
             typedArray = getContext().getApplicationContext().obtainStyledAttributes(attrs, R.styleable.GradientView);
-            mBackgroundColorStart = typedArray.getColor(R.styleable.GradientView_ev_background_color_start, 0xaaf85a55);
-            mBackgroundColorEnd = typedArray.getColor(R.styleable.GradientView_ev_background_color_end, 0xaaf85a55);
-            mBackgroundColorCenter = typedArray.getColor(R.styleable.GradientView_ev_background_color_center, 0xfff85a55);
-            mLightColor = typedArray.getColor(R.styleable.GradientView_ev_light_color, 0xaaffffff);
-            mAnimDuration = typedArray.getColor(R.styleable.GradientView_ev_anim_duration, 2000);
+            mBackgroundColorStart = typedArray.getColor(R.styleable.GradientView_gv_background_color_start, 0xaaf85a55);
+            mBackgroundColorEnd = typedArray.getColor(R.styleable.GradientView_gv_background_color_end, 0xaaf85a55);
+            mBackgroundColorCenter = typedArray.getColor(R.styleable.GradientView_gv_background_color_center, 0xfff85a55);
+            mLightColor = typedArray.getColor(R.styleable.GradientView_gv_light_color, 0xaaffffff);
+            mAnimDuration = typedArray.getColor(R.styleable.GradientView_gv_anim_duration, 2000);
         } catch (Exception e) {
         }
         if (null != typedArray) {
