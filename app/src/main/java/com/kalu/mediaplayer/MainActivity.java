@@ -107,12 +107,12 @@ public class MainActivity extends Activity {
 
     private int getEpisodeItemCount() {
         CheckBox checkBox = findViewById(R.id.main_episode_yes);
-        return checkBox.isChecked() ? 12 : 0;
+        return checkBox.isChecked() ? 1 : 0;
     }
 
     private int getEpisodePlayingIndex() {
         CheckBox checkBox = findViewById(R.id.main_episode_yes);
-        return checkBox.isChecked() ? 1 : 0;
+        return checkBox.isChecked() ? 0 : 0;
     }
 
     private long getTrySeeDuration() {

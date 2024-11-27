@@ -160,6 +160,10 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             case PlayerType.EventType.SEEK_FINISH:
                 LogUtil.log("ComponentSeek => callEvent => SEEK_FINISH");
                 hide();
+                long duration = getDuration();
+                long position = getPosition();
+                long trySeeDuration = getTrySeeDuration();
+                onUpdateProgress(false, trySeeDuration, position, duration);
                 break;
             case PlayerType.EventType.INIT:
             case PlayerType.EventType.ERROR:
@@ -171,7 +175,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long trySeeDuration, long progress, long duration) {
-//        LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", max = " + max + ", position = " + position + ", duration = " + duration);
+        LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", trySeeDuration = " + trySeeDuration + ", progress = " + progress + ", duration = " + duration);
 
         try {
             boolean componentShowing = isComponentShowing();
@@ -189,16 +193,10 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             int seek = seekBar.getProgress();
             seekTo(seek);
         } catch (Exception e) {
-
         }
 
-        // 进度条
+        // 数据变化
         try {
-            if (!isFromUser)
-                throw new Exception("warning: isFromUser false");
-            boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
             if (progress < 0L) {
                 progress = 0L;
             }
@@ -206,33 +204,25 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 duration = 0L;
             }
 
+            boolean componentShowing = isComponentShowing();
             lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-            // 拖动进度条
-            long progressReal = getPosition();
-            seekBar.setProgressReal(progressReal);
-            seekBar.setProgress((int) progress);
-            seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
+            if (componentShowing && isFromUser) {
+                long progressReal = getPosition();
+                seekBar.setProgressReal(progressReal);
+                seekBar.setProgress((int) progress);
+                seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
+            } else if (!componentShowing && !isFromUser) {
+                long progressReal = getPosition();
+                seekBar.setProgressReal(progressReal);
+                seekBar.setProgress((int) progress);
+                seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
+            }
         } catch (Exception e) {
         }
     }
 
     @Override
     public void show() {
-
-        try {
-            boolean componentShowing = isComponentShowing();
-            if (componentShowing)
-                throw new Exception("warning: componentShowing true");
-            long position = getPosition();
-            long duration = getDuration();
-            long trySeeDuration = getTrySeeDuration();
-            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-            seekBar.setProgressReal(position);
-            seekBar.setProgress((int) position);
-            seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => show => Exception2 " + e.getMessage());
-        }
 
         try {
             boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
@@ -306,8 +296,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                     progress = (int) duration;
                 }
 
-//                long trySeeDuration = getTrySeeDuration();
-//                onUpdateProgress(true, trySeeDuration, progress, duration);
+                long trySeeDuration = getTrySeeDuration();
+                onUpdateProgress(true, trySeeDuration, progress, duration);
             }
             // long click
             else {
