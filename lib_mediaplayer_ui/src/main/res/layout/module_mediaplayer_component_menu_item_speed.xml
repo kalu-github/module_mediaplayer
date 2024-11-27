@@ -11,5 +11,5 @@
     android:button="@null"
     android:focusable="true"
     android:gravity="center"
-    android:textColor="@drawable/module_mediaplayer_selector_textcolor_speed"
+    android:textColor="@color/module_mediaplayer_selector_textcolor_speed"
     android:textSize="20sp" />

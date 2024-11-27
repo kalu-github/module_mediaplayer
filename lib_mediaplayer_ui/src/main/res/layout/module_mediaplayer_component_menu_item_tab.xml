@@ -10,5 +10,5 @@
     android:gravity="center"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
+    android:textColor="@color/module_mediaplayer_selector_textcolor_tab"
     android:textSize="20sp" />
