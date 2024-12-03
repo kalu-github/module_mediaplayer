@@ -286,7 +286,11 @@ public interface ComponentApiMenu extends ComponentApi {
     }
 
     default String initEpisodePopuText(int index) {
-        return null;
+        try {
+            return ((View) this).getResources().getString(R.string.module_mediaplayer_string_episode_popu, index + 1);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     default void initSpeedView() {

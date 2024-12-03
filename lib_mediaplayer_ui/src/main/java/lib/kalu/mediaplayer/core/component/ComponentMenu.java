@@ -296,11 +296,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                 throw new Exception("error: childAt null");
             TextView textView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_popu);
             String popuText = initEpisodePopuText(episodeIndex);
-            if (null != popuText) {
-                textView.setText(popuText);
-            } else {
-                textView.setText(String.valueOf(episodeIndex + 1));
-            }
+            textView.setText(popuText);
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => showEpisodeAt => Exception " + e.getMessage());
         }
