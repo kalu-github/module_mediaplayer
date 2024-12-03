@@ -284,7 +284,26 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public void loadEpisodeText(int childIndex, int episodeIndex, int playIndex, boolean changeVisibility) {
-        LogUtil.log("ComponentMenu => loadEpisodeText => childIndex = " + childIndex + ", episodeIndex = " + episodeIndex + ", playIndex = " + playIndex);
+//        LogUtil.log("ComponentMenu => loadEpisodeText => childIndex = " + childIndex + ", episodeIndex = " + episodeIndex + ", playIndex = " + playIndex);
+
+        // popu
+        try {
+            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+            if (null == episodeGroup)
+                throw new Exception("error: episodeGroup null");
+            View childAt = episodeGroup.getChildAt(childIndex);
+            if (null == childAt)
+                throw new Exception("error: childAt null");
+            TextView textView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_popu);
+            String popuText = initEpisodePopuText(episodeIndex);
+            if (null != popuText) {
+                textView.setText(popuText);
+            } else {
+                textView.setText(String.valueOf(episodeIndex + 1));
+            }
+        } catch (Exception e) {
+            LogUtil.log("ComponentMenu => showEpisodeAt => Exception " + e.getMessage());
+        }
 
         try {
             ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
@@ -301,19 +320,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             if (changeVisibility) {
                 childAt.setActivated(playIndex == episodeIndex);
             }
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => showEpisodeAt => Exception " + e.getMessage());
-        }
-
-        try {
-            ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
-            if (null == episodeGroup)
-                throw new Exception("error: episodeGroup null");
-            View childAt = episodeGroup.getChildAt(childIndex);
-            if (null == childAt)
-                throw new Exception("error: childAt null");
-            TextView textView = childAt.findViewById(R.id.module_mediaplayer_component_menu_item_episode_popu);
-            textView.setText(String.valueOf(episodeIndex + 1) + "=>sjsxljsjsljljslcjl");
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => showEpisodeAt => Exception " + e.getMessage());
         }

@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.core.component;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
@@ -282,6 +283,10 @@ public interface ComponentApiMenu extends ComponentApi {
     }
 
     default void initEpisodeView() {
+    }
+
+    default String initEpisodePopuText(int index) {
+        return null;
     }
 
     default void initSpeedView() {
