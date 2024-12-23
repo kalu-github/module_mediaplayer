@@ -1,14 +1,9 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.view.KeyEvent;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-
-import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
@@ -86,7 +81,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
                 if (menuShowing)
                     throw new Exception("warning: ComponentApiMenu true");
-                superCallEvent(false, true, PlayerType.EventType.SEEK_COMPONENT_SHOW);
+                superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
                 setHovered(true);
                 show();
                 int repeatCount = event.getRepeatCount();
@@ -130,7 +125,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 LogUtil.log("ComponentSeek => dispatchKeyEvent => KEYCODE_DPAD_LEFT => menuShowing = " + menuShowing);
                 if (menuShowing)
                     throw new Exception("warning: ComponentApiMenu true");
-                superCallEvent(false, true, PlayerType.EventType.SEEK_COMPONENT_SHOW);
+                superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
                 setHovered(true);
                 show();
                 int repeatCount = event.getRepeatCount();
@@ -232,7 +227,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             long range = Math.abs(position - seek);
             if (range < 1000L)
                 throw new Exception("error: range < 1000L");
-            superCallEvent(false, true, PlayerType.EventType.SEEK_COMPONENT_HIDE);
+            superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_HIDE);
             hide();
             seekTo(seek);
         } catch (Exception e) {

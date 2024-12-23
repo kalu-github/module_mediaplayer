@@ -82,26 +82,27 @@ public @interface PlayerType {
         int COMPLETE = 3_0012; // 播放完成
         int STOP = 3_013; // 播放停止
         int RELEASE = 3_014; // 播放销毁
-        int SEEK_COMPONENT_SHOW = 3_015;
-        int SEEK_COMPONENT_HIDE = 3_016;
-        int SEEK_START_FORWARD = 3_017; // 快进
-        int SEEK_START_REWIND = 3_018; // 快退
-        int SEEK_FINISH = 3_019; // 快退
-        int BUFFERING_START = 3_020; // 缓冲
-        int BUFFERING_STOP = 3_021; // 缓冲
-        int WINDOW_FULL_START = 3_022;
-        int WINDOW_FULL_SUCC = 3_023;
-        int WINDOW_FULL_FAIL = 3_024;
-        int WINDOW_FLOAT_START = 3_025;
-        int WINDOW_FLOAT_SUCC = 3_026;
-        int WINDOW_FLOAT_FAIL = 3_027;
-        int TRY_SEE_START = 3_028;
-        int TRY_SEE_FINISH = 3_029;
+        int SEEK_START_FORWARD = 3_015; // 快进
+        int SEEK_START_REWIND = 3_016; // 快退
+        int SEEK_FINISH = 3_017; // 快退
+        int BUFFERING_START = 3_018; // 缓冲
+        int BUFFERING_STOP = 3_019; // 缓冲
+        int WINDOW_FULL_START = 3_020;
+        int WINDOW_FULL_SUCC = 3_021;
+        int WINDOW_FULL_FAIL = 3_022;
+        int WINDOW_FLOAT_START = 3_023;
+        int WINDOW_FLOAT_SUCC = 3_024;
+        int WINDOW_FLOAT_FAIL = 3_025;
+        int TRY_SEE_START = 3_026;
+        int TRY_SEE_FINISH = 3_027;
+
+        int ERROR = 3_028; // 播放错误
+        int ERROR_BUFFERING_TIMEOUT = 3_029;
+
         int COMPONENT_MENU_SHOW = 3_030;
         int COMPONENT_MENU_HIDE = 3_031;
-
-        int ERROR = 3_032; // 播放错误
-        int ERROR_BUFFERING_TIMEOUT = 3_033;
+        int COMPONENT_SEEK_SHOW = 3_032;
+        int COMPONENT_SEEK_HIDE = 3_033;
 
         @Documented
         @Retention(CLASS)
@@ -122,8 +123,6 @@ public @interface PlayerType {
                 COMPLETE,
                 STOP,
                 RELEASE,
-                SEEK_COMPONENT_SHOW,
-                SEEK_COMPONENT_HIDE,
                 SEEK_START_FORWARD,
                 SEEK_START_REWIND,
                 SEEK_FINISH,
@@ -139,6 +138,8 @@ public @interface PlayerType {
                 TRY_SEE_FINISH,
                 COMPONENT_MENU_SHOW,
                 COMPONENT_MENU_HIDE,
+                COMPONENT_SEEK_SHOW,
+                COMPONENT_SEEK_HIDE,
                 ERROR,
                 ERROR_BUFFERING_TIMEOUT})
         @interface Value {
