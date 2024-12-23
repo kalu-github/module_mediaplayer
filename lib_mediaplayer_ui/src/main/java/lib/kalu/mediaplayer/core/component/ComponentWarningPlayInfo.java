@@ -45,6 +45,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     @Override
     public void callEvent(int playState) {
         switch (playState) {
+            case PlayerType.EventType.SEEK_COMPONENT_SHOW:
             case PlayerType.EventType.START_PLAY_WHEN_READY_FALSE:
                 LogUtil.log("ComponentWarningPlayInfo => callEvent => START_PLAY_WHEN_READY_FALSE");
                 hide();

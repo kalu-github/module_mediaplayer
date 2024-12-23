@@ -86,7 +86,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
                 if (menuShowing)
                     throw new Exception("warning: ComponentApiMenu true");
-                updateTimeMillis();
+                superCallEvent(false, true, PlayerType.EventType.SEEK_COMPONENT_SHOW);
+                setHovered(true);
                 show();
                 int repeatCount = event.getRepeatCount();
                 actionDown(repeatCount, KeyEvent.KEYCODE_DPAD_RIGHT);
@@ -101,7 +102,14 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
                 if (menuShowing)
                     throw new Exception("warning: ComponentApiMenu true");
-                updateTimeMillis();
+                setHovered(false);
+                boolean playing = isPlaying();
+                if (!playing) {
+                    long trySeeDuration = getTrySeeDuration();
+                    long position = getPosition();
+                    long duration = getDuration();
+                    onUpdateProgress(false, trySeeDuration, position, duration);
+                }
                 return true;
             } catch (Exception e) {
                 LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception3 " + e.getMessage());
@@ -122,7 +130,8 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 LogUtil.log("ComponentSeek => dispatchKeyEvent => KEYCODE_DPAD_LEFT => menuShowing = " + menuShowing);
                 if (menuShowing)
                     throw new Exception("warning: ComponentApiMenu true");
-                updateTimeMillis();
+                superCallEvent(false, true, PlayerType.EventType.SEEK_COMPONENT_SHOW);
+                setHovered(true);
                 show();
                 int repeatCount = event.getRepeatCount();
                 actionDown(repeatCount, KeyEvent.KEYCODE_DPAD_LEFT);
@@ -137,7 +146,14 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
                 if (menuShowing)
                     throw new Exception("warning: ComponentApiMenu true");
-                updateTimeMillis();
+                setHovered(false);
+                boolean playing = isPlaying();
+                if (!playing) {
+                    long trySeeDuration = getTrySeeDuration();
+                    long position = getPosition();
+                    long duration = getDuration();
+                    onUpdateProgress(false, trySeeDuration, position, duration);
+                }
                 return true;
             } catch (Exception e) {
                 LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception5 " + e.getMessage());
@@ -175,27 +191,9 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
     @Override
     public void onUpdateProgress(boolean isFromUser, long trySeeDuration, long progress, long duration) {
-        LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", trySeeDuration = " + trySeeDuration + ", progress = " + progress + ", duration = " + duration);
+        //  LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", trySeeDuration = " + trySeeDuration + ", progress = " + progress + ", duration = " + duration);
 
-        try {
-            boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception();
-            long timeMillis = getTimeMillis();
-            if (timeMillis < 0L)
-                throw new Exception();
-            long currentTimeMillis = System.currentTimeMillis();
-            long cast = currentTimeMillis - timeMillis;
-            if (cast < 1000L)
-                throw new Exception();
-            hide();
-            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-            int seek = seekBar.getProgress();
-            seekTo(seek);
-        } catch (Exception e) {
-        }
-
-        // 数据变化
+        // UI
         try {
             if (progress < 0L) {
                 progress = 0L;
@@ -218,6 +216,27 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
             }
         } catch (Exception e) {
+        }
+
+        // 快进
+        try {
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            boolean hovered = isHovered();
+            if (hovered)
+                throw new Exception("warning: hovered true");
+            long position = getPosition();
+            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+            int seek = seekBar.getProgress();
+            long range = Math.abs(position - seek);
+            if (range < 1000L)
+                throw new Exception("error: range < 1000L");
+            superCallEvent(false, true, PlayerType.EventType.SEEK_COMPONENT_HIDE);
+            hide();
+            seekTo(seek);
+        } catch (Exception e) {
+//            LogUtil.log("ComponentSeekDD => onUpdateProgress => seekTo fail " + e.getMessage());
         }
     }
 
@@ -245,7 +264,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
 
     @Override
     public void hide() {
-        clearTimeMillis();
         try {
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)

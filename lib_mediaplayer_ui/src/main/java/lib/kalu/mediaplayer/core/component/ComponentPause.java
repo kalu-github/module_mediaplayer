@@ -71,15 +71,27 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.EventType.PAUSE:
-                LogUtil.log("ComponentPause[show] => playState = " + playState);
+                LogUtil.log("ComponentPause[show] => PAUSE");
                 show();
                 break;
-            case PlayerType.EventType.INIT:
             case PlayerType.EventType.RESUME:
-            case PlayerType.EventType.SEEK_START_FORWARD:
-            case PlayerType.EventType.SEEK_START_REWIND:
-                LogUtil.log("ComponentPause[gone] => playState = " + playState);
+                LogUtil.log("ComponentPause[hide] => RESUME");
                 hide();
+                break;
+            case PlayerType.EventType.SEEK_COMPONENT_SHOW:
+                LogUtil.log("ComponentPause[hide] => SEEK_COMPONENT_SHOW");
+                hide();
+                break;
+            case PlayerType.EventType.SEEK_COMPONENT_HIDE:
+                LogUtil.log("ComponentPause[show] => SEEK_COMPONENT_HIDE");
+                boolean playing = isPlaying();
+                if (!playing) {
+                    long trySeeDuration = getTrySeeDuration();
+                    long position = getPosition();
+                    long duration = getDuration();
+                    onUpdateProgress(false, trySeeDuration, position, duration);
+                    show();
+                }
                 break;
             case PlayerType.EventType.START_PLAY_WHEN_READY_FALSE:
                 LogUtil.log("ComponentPause => callEvent => START_PLAY_WHEN_READY_FALSE");
@@ -159,23 +171,26 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
             LogUtil.log("ComponentPause => show => Exception " + e.getMessage());
         }
 
-        try {
-            for (int i = 0; i < 2; i++) {
-                long duration = getDuration();
-                if (duration <= 0)
-                    throw new Exception("warning: duration<=0");
-                long position = getPosition();
-                long trySeeDuration = getTrySeeDuration();
-                SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_pause_sb);
-                seekBar.setProgress((int) position);
-                seekBar.setMax((int) (trySeeDuration > 0L ? trySeeDuration : duration));
-            }
-        } catch (Exception e) {
-        }
 
         try {
             String mediaTitle = getTitle();
             setComponentText(mediaTitle);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void onUpdateProgress(boolean isFromUser, long trySeeDuration, long position, long duration) {
+        try {
+            if (duration <= 0) {
+                duration = 0L;
+            }
+            if (position < 0) {
+                position = 0L;
+            }
+            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_pause_sb);
+            seekBar.setProgress((int) position);
+            seekBar.setMax((int) (trySeeDuration > 0L ? trySeeDuration : duration));
         } catch (Exception e) {
         }
     }
