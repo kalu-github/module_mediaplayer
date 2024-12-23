@@ -99,7 +99,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                     if (!activated)
                         throw new Exception("warning: activated false");
                     setActivated(false);
-                    show();
+//                    show();
                 } catch (Exception e) {
                 }
                 break;
