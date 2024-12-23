@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -80,11 +81,42 @@ public final class SeekBar extends android.widget.SeekBar {
         super.onMeasure(widthMeasureSpec, -2);
     }
 
+    private int mProgress = 0;
+
+    @Override
+    public synchronized void setProgress(int progress) {
+        super.setProgress(progress);
+        this.mProgress = progress;
+    }
+
+    @Override
+    public synchronized int getProgress() {
+        return mProgress;
+    }
+
+    private int mMax = 0;
+
+    @Override
+    public synchronized void setMax(int max) {
+        super.setMax(max);
+        this.mMax = max;
+    }
+
+    @Override
+    public synchronized int getMax() {
+        return mMax;
+    }
+
     @Override
     protected synchronized void onDraw(Canvas canvas) {
 
         // 进度条
         try {
+
+            int visibility = getVisibility();
+            if (visibility != View.VISIBLE)
+                throw new Exception("error: visibility != View.VISIBLE");
+
             long duration = getMax();
             if (duration <= 0)
                 throw new Exception("warning: duration <= 0");
@@ -95,6 +127,10 @@ public final class SeekBar extends android.widget.SeekBar {
 
         // 时长
         try {
+            int visibility = getVisibility();
+            if (visibility != View.VISIBLE)
+                throw new Exception("error: visibility != View.VISIBLE");
+
             long duration = getMax();
             if (duration <= 0)
                 throw new Exception("warning: duration <= 0");
@@ -144,8 +180,12 @@ public final class SeekBar extends android.widget.SeekBar {
 
         // 进度
         try {
+            int visibility = getVisibility();
+            if (visibility != View.VISIBLE)
+                throw new Exception("error: visibility != View.VISIBLE");
 
             long duration = getMax();
+            LogUtil.log("SeekBar => onDraw => duration = " + duration);
             if (duration <= 0)
                 throw new Exception("warning: duration <= 0");
 
@@ -162,6 +202,7 @@ public final class SeekBar extends android.widget.SeekBar {
             } else {
                 progress = this.progressReal;
             }
+            LogUtil.log("SeekBar => onDraw => progress = " + progress + ", mMode = " + mMode + ", progressReal = " + progressReal);
             if (progress < 0L) {
                 progress = 0L;
             }
@@ -197,6 +238,10 @@ public final class SeekBar extends android.widget.SeekBar {
 
         // 快进快退 提示
         try {
+            int visibility = getVisibility();
+            if (visibility != View.VISIBLE)
+                throw new Exception("error: visibility != View.VISIBLE");
+
             if (mMode == 2)
                 throw new Exception("warning: mMode = 2");
 

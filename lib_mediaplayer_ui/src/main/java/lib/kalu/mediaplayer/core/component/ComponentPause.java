@@ -171,27 +171,18 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public void show() {
 
         try {
-            long trySeeDuration = getTrySeeDuration();
-            if (trySeeDuration > 0L)
-                throw new Exception("warning: trySee true");
-            boolean componentShowing = isComponentShowing();
-            if (componentShowing)
-                throw new Exception("warning: componentShowing true");
-            ComponentApiPause.super.show();
-        } catch (Exception e) {
-            LogUtil.log("ComponentPause => show => Exception " + e.getMessage());
-        }
-
-        try {
             long duration = getDuration();
+//            LogUtil.log("ComponentPause => show => duration = " + duration);
             if (duration <= 0L) {
                 duration = 0L;
             }
             long position = getPosition();
+//            LogUtil.log("ComponentPause => show => position = " + position);
             if (position < 0L) {
                 position = 0L;
             }
             long trySeeDuration = getTrySeeDuration();
+//            LogUtil.log("ComponentPause => show => trySeeDuration = " + trySeeDuration);
             if (trySeeDuration < 0L) {
                 trySeeDuration = 0L;
             }
@@ -205,6 +196,18 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
             String mediaTitle = getTitle();
             setComponentText(mediaTitle);
         } catch (Exception e) {
+        }
+
+        try {
+            long trySeeDuration = getTrySeeDuration();
+            if (trySeeDuration > 0L)
+                throw new Exception("warning: trySee true");
+            boolean componentShowing = isComponentShowing();
+            if (componentShowing)
+                throw new Exception("warning: componentShowing true");
+            ComponentApiPause.super.show();
+        } catch (Exception e) {
+            LogUtil.log("ComponentPause => show => Exception " + e.getMessage());
         }
     }
 
