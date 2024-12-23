@@ -87,6 +87,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             boolean componentShowing = isComponentShowing();
             if (componentShowing) {
                 hide();
+                superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_HIDE);
                 return true;
             }
         }
@@ -101,14 +102,12 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     public void hide() {
         clearEpisodeText();
         clearTimeMillis();
-        superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_HIDE);
         ComponentApiMenu.super.hide();
     }
 
     @Override
     public void show() {
         updateTimeMillis();
-        superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_SHOW);
         ComponentApiMenu.super.show();
     }
 
@@ -811,9 +810,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     public boolean keycodeDown(int action) {
         try {
             if (action == KeyEvent.ACTION_DOWN) {
-                boolean playing = isPlaying();
-                if (!playing)
-                    throw new Exception("error: playing false");
                 boolean componentShowing = isComponentShowing();
                 if (componentShowing) {
                     View focus = findFocus();
@@ -837,6 +833,7 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
                     }
                 } else {
                     show();
+                    superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_SHOW);
                     initTabView();
                     showTabAt(0);
                     requestTabAt(0);
