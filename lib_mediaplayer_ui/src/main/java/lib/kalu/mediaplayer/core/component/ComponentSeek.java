@@ -210,12 +210,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
                 int visibility = seekBar.getVisibility();
                 if (visibility == View.VISIBLE) {
-                    long position = getPosition();
-                    int seek = seekBar.getProgress();
-                    long range = Math.abs(position - seek);
-                    if (range > 1000L) {
-                        hide();
-                    }
+                    hide();
                 }
             }
         } catch (Exception e) {
