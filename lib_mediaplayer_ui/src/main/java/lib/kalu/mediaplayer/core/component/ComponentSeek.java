@@ -185,7 +185,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
             if (isFromUser && trySeeDuration == -1 && progress == -1 && duration == -1) {
                 long position = getPosition();
                 int seek = seekBar.getProgress();
-                LogUtil.log("ComponentSeek11 => onUpdateProgress11 => seek = " + seek + ", position = " + position);
+//                LogUtil.log("ComponentSeek11 => onUpdateProgress11 => seek = " + seek + ", position = " + position);
                 long range = Math.abs(position - seek);
                 if (range < 1000L)
                     throw new Exception("error: range < 1000L");
@@ -195,7 +195,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 hide();
             } else if (isFromUser) {
                 long position = getPosition();
-                LogUtil.log("ComponentSeek11 => onUpdateProgress22 => progress = " + progress + ", position = " + position);
+//                LogUtil.log("ComponentSeek11 => onUpdateProgress22 => progress = " + progress + ", position = " + position);
                 seekBar.setProgressHovered((int) position);
                 seekBar.setProgress((int) progress);
                 seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
@@ -204,7 +204,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 boolean hovered = isHovered();
                 if (hovered)
                     throw new Exception("error: hovered true");
-                LogUtil.log("ComponentSeek11 => onUpdateProgress33 => progress = " + progress);
+//                LogUtil.log("ComponentSeek11 => onUpdateProgress33 => progress = " + progress);
                 seekBar.setProgressHovered((int) progress);
                 seekBar.setProgress((int) progress);
                 seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
