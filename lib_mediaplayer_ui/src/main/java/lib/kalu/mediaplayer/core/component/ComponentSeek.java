@@ -83,7 +83,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 if (menuShowing)
                     throw new Exception("warning: ComponentApiMenu true");
                 superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
-                show();
                 int repeatCount = event.getRepeatCount();
                 actionDown(repeatCount, KeyEvent.KEYCODE_DPAD_RIGHT);
                 return true;
@@ -187,12 +186,15 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 int seek = seekBar.getProgress();
 //                LogUtil.log("ComponentSeek11 => onUpdateProgress11 => seek = " + seek + ", position = " + position);
                 long range = Math.abs(position - seek);
-                if (range < 1000L)
-                    throw new Exception("error: range < 1000L");
-                superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_HIDE);
-                seekTo(seek);
-                setHovered(false);
-                hide();
+                if (range > 1000L) {
+                    clearTimeMillis();
+                    superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_HIDE);
+                    seekTo(seek);
+                    setHovered(false);
+                    hide();
+                } else {
+                    updateTimeMillis();
+                }
             } else if (isFromUser) {
                 long position = getPosition();
 //                LogUtil.log("ComponentSeek11 => onUpdateProgress22 => progress = " + progress + ", position = " + position);
@@ -200,21 +202,17 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
                 seekBar.setProgress((int) progress);
                 seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
                 setHovered(true);
-            } else {
-                boolean hovered = isHovered();
-                if (hovered)
-                    throw new Exception("error: hovered true");
-//                LogUtil.log("ComponentSeek11 => onUpdateProgress33 => progress = " + progress);
-                seekBar.setProgressHovered((int) progress);
-                seekBar.setProgress((int) progress);
-                seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
                 int visibility = seekBar.getVisibility();
                 if (visibility == View.VISIBLE) {
+                    show();
+                }
+            } else {
+                long castTimeMillis = getCastTimeMillis();
+                if (castTimeMillis > 1000L) {
                     hide();
                 }
             }
         } catch (Exception e) {
-            setHovered(false);
         }
     }
 
