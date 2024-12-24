@@ -81,32 +81,6 @@ public final class SeekBar extends android.widget.SeekBar {
         super.onMeasure(widthMeasureSpec, -2);
     }
 
-    private int mProgress = 0;
-
-    @Override
-    public synchronized void setProgress(int progress) {
-        super.setProgress(progress);
-        this.mProgress = progress;
-    }
-
-    @Override
-    public synchronized int getProgress() {
-        return mProgress;
-    }
-
-    private int mMax = 0;
-
-    @Override
-    public synchronized void setMax(int max) {
-        super.setMax(max);
-        this.mMax = max;
-    }
-
-    @Override
-    public synchronized int getMax() {
-        return mMax;
-    }
-
     @Override
     protected synchronized void onDraw(Canvas canvas) {
 
@@ -197,12 +171,12 @@ public final class SeekBar extends android.widget.SeekBar {
             mPaint.setColor(mTextColor);
 
             long progress;
-            if (mMode == 2 || this.progressReal <= 0) {
+            if (mMode == 2 || this.progressHovered <= 0) {
                 progress = getProgress();
             } else {
-                progress = this.progressReal;
+                progress = this.progressHovered;
             }
-            LogUtil.log("SeekBar => onDraw => progress = " + progress + ", mMode = " + mMode + ", progressReal = " + progressReal);
+            LogUtil.log("SeekBar => onDraw => progress = " + progress + ", mMode = " + mMode + ", progressHovered = " + progressHovered);
             if (progress < 0L) {
                 progress = 0L;
             }
@@ -305,22 +279,46 @@ public final class SeekBar extends android.widget.SeekBar {
 
         setMax(0);
         setProgress(0);
-        setProgressReal(0);
+        setProgressHovered(0);
         setThumbOffset(0);
     }
 
+    /*********/
 
-    private long progressReal;
 
-    public long getProgressReal() {
-        return this.progressReal;
+    private int progressHovered;
+
+    public synchronized void setProgressHovered(int progress) {
+        this.progressHovered = progress;
     }
 
-    public void setProgressReal(long v) {
-        this.progressReal = v;
+    public synchronized int getProgressHovered() {
+        return progressHovered;
     }
 
-    public void clearProgressReal() {
-        this.progressReal = 0;
+    private int mProgress = 0;
+
+    @Override
+    public synchronized void setProgress(int progress) {
+        super.setProgress(progress);
+        this.mProgress = progress;
+    }
+
+    @Override
+    public synchronized int getProgress() {
+        return mProgress;
+    }
+
+    private int mMax = 0;
+
+    @Override
+    public synchronized void setMax(int max) {
+        super.setMax(max);
+        this.mMax = max;
+    }
+
+    @Override
+    public synchronized int getMax() {
+        return mMax;
     }
 }
