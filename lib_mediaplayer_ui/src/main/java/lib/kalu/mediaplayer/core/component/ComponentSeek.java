@@ -60,6 +60,10 @@ public class ComponentSeek extends RelativeLayout implements ComponentApiSeek {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
+        boolean adShowing = isComponentShowing(ComponentApiAD.class);
+        if (adShowing)
+            return false;
+
         // 试看
         try {
             long trySeeDuration = getTrySeeDuration();

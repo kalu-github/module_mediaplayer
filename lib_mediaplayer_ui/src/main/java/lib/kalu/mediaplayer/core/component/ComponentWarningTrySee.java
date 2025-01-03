@@ -37,6 +37,11 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+
+        boolean adShowing = isComponentShowing(ComponentApiAD.class);
+        if (adShowing)
+            return false;
+
         // keycode_enter || keycode_dpad_center
         if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER)) {
             try {

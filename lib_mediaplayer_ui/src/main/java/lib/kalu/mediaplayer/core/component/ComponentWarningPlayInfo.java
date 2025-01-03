@@ -31,11 +31,14 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            boolean componentShowing = isComponentShowing();
-            if (componentShowing) {
-                hide();
-            }
+
+        boolean adShowing = isComponentShowing(ComponentApiAD.class);
+        if (adShowing)
+            return false;
+
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+            hide();
+            return true;
         }
         return false;
     }
@@ -136,9 +139,6 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 //        LogUtil.log("ComponentWarningPlayInfo => hide");
 
         try {
-            boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
             // 1
             ComponentApiWarningPlayInfo.super.hide();
             // 2. 标题
