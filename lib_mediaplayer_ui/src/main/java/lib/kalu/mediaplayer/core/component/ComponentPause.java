@@ -25,6 +25,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             try {
+                boolean adShowing = isComponentShowing(ComponentApiAD.class);
+                if (adShowing)
+                    throw new Exception("warning: ComponentApiAD true");
                 boolean componentShowing = isComponentShowing();
                 if (!componentShowing)
                     throw new Exception("warning: componentShowing false");
@@ -43,6 +46,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
         // keycode_enter || keycode_dpad_center
         else if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER)) {
             try {
+                boolean adShowing = isComponentShowing(ComponentApiAD.class);
+                if (adShowing)
+                    throw new Exception("warning: ComponentApiAD true");
                 boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
                 if (menuShowing)
                     throw new Exception("warning: ComponentApiMenu true");

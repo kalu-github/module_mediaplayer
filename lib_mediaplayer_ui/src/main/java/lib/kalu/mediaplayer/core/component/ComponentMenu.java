@@ -58,6 +58,9 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        boolean adShowing = isComponentShowing(ComponentApiAD.class);
+        if (adShowing)
+            return false;
         // action_down -> keycode_dpad_down
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
             return keycodeDown(KeyEvent.ACTION_DOWN);
