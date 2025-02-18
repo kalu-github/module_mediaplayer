@@ -172,7 +172,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final void startFull() {
+    public final StartArgs getStartArgs() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -180,9 +180,24 @@ public class PlayerLayout extends RelativeLayout {
             StartArgs args = playerView.getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
+            return args;
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => getStartArgs => " + e.getMessage());
+            return null;
+        }
+    }
+
+    public final void startFull() {
+        try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("warning: args null");
             String mediaUrl = args.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
             boolean startFull = playerView.startFull();
             LogUtil.log("PlayerLayout => startFull => status = " + startFull);
         } catch (Exception e) {
@@ -192,15 +207,15 @@ public class PlayerLayout extends RelativeLayout {
 
     public final void stopFull() {
         try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            StartArgs args = playerView.getStartArgs();
+            StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
             String mediaUrl = args.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
             boolean stopFull = playerView.stopFull();
             LogUtil.log("PlayerLayout => stopFull => status = " + stopFull);
         } catch (Exception e) {
@@ -210,15 +225,15 @@ public class PlayerLayout extends RelativeLayout {
 
     public final void startFloat() {
         try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            StartArgs args = playerView.getStartArgs();
+            StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
             String mediaUrl = args.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
             boolean startFull = playerView.startFloat();
             LogUtil.log("PlayerLayout => startFloat => status = " + startFull);
         } catch (Exception e) {
@@ -229,15 +244,15 @@ public class PlayerLayout extends RelativeLayout {
     //
     public final void stopFloat() {
         try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            StartArgs args = playerView.getStartArgs();
+            StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
             String mediaUrl = args.getUrl();
             if (null == mediaUrl)
                 throw new Exception("warning: mediaUrl null");
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
             boolean stopFull = playerView.stopFloat();
             LogUtil.log("PlayerLayout => stopFloat => status = " + stopFull);
         } catch (Exception e) {
@@ -478,10 +493,7 @@ public class PlayerLayout extends RelativeLayout {
 
     public final String getSubtitleUrl() {
         try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            StartArgs args = playerView.getStartArgs();
+            StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
             return args.getSubtitleUrl();
@@ -493,10 +505,7 @@ public class PlayerLayout extends RelativeLayout {
 
     public final String getUrl() {
         try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            StartArgs args = playerView.getStartArgs();
+            StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
             return args.getUrl();
@@ -552,10 +561,7 @@ public class PlayerLayout extends RelativeLayout {
 
     public final long getPlayWhenReadySeekToPosition() {
         try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            StartArgs args = playerView.getStartArgs();
+            StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("warning: args null");
             return args.getPlayWhenReadySeekToPosition();
@@ -567,10 +573,7 @@ public class PlayerLayout extends RelativeLayout {
 
     public final long getTrySeeDuration() {
         try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            StartArgs args = playerView.getStartArgs();
+            StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("error: args null");
             return args.getTrySeeDuration();
