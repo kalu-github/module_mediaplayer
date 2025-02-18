@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_margin="4dp"
     android:layout_weight="1"
-    android:background="@drawable/module_mediaplayer_selector_background_item"
+    android:background="@drawable/module_mediaplayer_selector_bg_menu_item"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:focusable="true">
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:focusable="false"
-        android:textColor="@drawable/module_mediaplayer_selector_textcolor_episode"
+        android:textColor="@color/module_mediaplayer_selector_textcolor_episode"
         android:textSize="20sp" />
 
     <ImageView

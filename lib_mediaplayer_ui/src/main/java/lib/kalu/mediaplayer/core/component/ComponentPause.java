@@ -25,6 +25,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             try {
+                boolean adShowing = isComponentShowing(ComponentApiAD.class);
+                if (adShowing)
+                    throw new Exception("warning: ComponentApiAD true");
                 boolean componentShowing = isComponentShowing();
                 if (!componentShowing)
                     throw new Exception("warning: componentShowing false");
@@ -43,6 +46,9 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
         // keycode_enter || keycode_dpad_center
         else if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER)) {
             try {
+                boolean adShowing = isComponentShowing(ComponentApiAD.class);
+                if (adShowing)
+                    throw new Exception("warning: ComponentApiAD true");
                 boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
                 if (menuShowing)
                     throw new Exception("warning: ComponentApiMenu true");
@@ -71,25 +77,36 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public void callEvent(int playState) {
         switch (playState) {
             case PlayerType.EventType.PAUSE:
-                LogUtil.log("ComponentPause[show] => playState = " + playState);
+                LogUtil.log("ComponentPause[show] => PAUSE");
                 show();
                 break;
-            case PlayerType.EventType.INIT:
             case PlayerType.EventType.RESUME:
-            case PlayerType.EventType.SEEK_START_FORWARD:
-            case PlayerType.EventType.SEEK_START_REWIND:
-                LogUtil.log("ComponentPause[gone] => playState = " + playState);
+                LogUtil.log("ComponentPause[hide] => RESUME");
                 hide();
                 break;
-            case PlayerType.EventType.START_PLAY_WHEN_READY_FALSE:
-                LogUtil.log("ComponentPause => callEvent => START_PLAY_WHEN_READY_FALSE");
+            case PlayerType.EventType.COMPONENT_SEEK_SHOW:
+                LogUtil.log("ComponentPause[hide] => COMPONENT_SEEK_SHOW");
                 try {
                     boolean componentShowing = isComponentShowing();
-                    if (componentShowing)
-                        throw new Exception("warning: componentShowing true");
-                    show();
+                    if (!componentShowing)
+                        throw new Exception("warning: componentShowing false");
+                    setActivated(true);
+                    hide();
                 } catch (Exception e) {
-                    LogUtil.log("ComponentPause => callEvent => Exception[START_PLAY_WHEN_READY_NO] " + e.getMessage());
+                }
+                break;
+            case PlayerType.EventType.COMPONENT_SEEK_HIDE:
+                LogUtil.log("ComponentPause[show] => COMPONENT_SEEK_HIDE");
+                break;
+            case PlayerType.EventType.SEEK_FINISH:
+                LogUtil.log("ComponentPause[show] => SEEK_FINISH");
+                try {
+                    boolean activated = isActivated();
+                    if (!activated)
+                        throw new Exception("warning: activated false");
+                    setActivated(false);
+//                    show();
+                } catch (Exception e) {
                 }
                 break;
             case PlayerType.EventType.COMPONENT_MENU_SHOW:
@@ -98,7 +115,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
                     boolean componentShowing = isComponentShowing();
                     if (!componentShowing)
                         throw new Exception("warning: componentShowing false");
-                    setTag(true);
+                    setActivated(true);
                     hide();
                 } catch (Exception e) {
                     LogUtil.log("ComponentPause => callEventListener => hide => Exception2 " + playState);
@@ -107,18 +124,30 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
             case PlayerType.EventType.COMPONENT_MENU_HIDE:
                 LogUtil.log("ComponentPause[gone] => playState = " + playState);
                 try {
-                    boolean componentShowing = isComponentShowing();
-                    if (componentShowing)
-                        throw new Exception("warning: componentShowing true");
-                    Object tag = getTag();
-                    if (null == tag)
-                        throw new Exception("warning: tag null");
-                    setTag(null);
+                    boolean activated = isActivated();
+                    if (!activated)
+                        throw new Exception("warning: activated false");
+                    long trySeeDuration = getTrySeeDuration();
+                    long position = getPosition();
+                    long duration = getDuration();
+                    onUpdateProgress(false, trySeeDuration, position, duration);
+                    setActivated(false);
                     show();
                 } catch (Exception e) {
-                    LogUtil.log("ComponentPause => callEventListener => show => Exception2 " + playState);
                 }
                 break;
+//            case PlayerType.EventType.START_PLAY_WHEN_READY_FALSE:
+//                LogUtil.log("ComponentPause => callEvent => START_PLAY_WHEN_READY_FALSE");
+//                try {
+//                    boolean componentShowing = isComponentShowing();
+//                    if (componentShowing)
+//                        throw new Exception("warning: componentShowing true");
+//                    setActivated(true);
+//                    show();
+//                } catch (Exception e) {
+//                    LogUtil.log("ComponentPause => callEvent => Exception[START_PLAY_WHEN_READY_NO] " + e.getMessage());
+//                }
+//                break;
         }
     }
 
@@ -148,6 +177,34 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public void show() {
 
         try {
+            long duration = getDuration();
+//            LogUtil.log("ComponentPause => show => duration = " + duration);
+            if (duration <= 0L) {
+                duration = 0L;
+            }
+            long position = getPosition();
+//            LogUtil.log("ComponentPause => show => position = " + position);
+            if (position < 0L) {
+                position = 0L;
+            }
+            long trySeeDuration = getTrySeeDuration();
+//            LogUtil.log("ComponentPause => show => trySeeDuration = " + trySeeDuration);
+            if (trySeeDuration < 0L) {
+                trySeeDuration = 0L;
+            }
+            SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_pause_sb);
+            seekBar.setProgress((int) position);
+            seekBar.setMax((int) (trySeeDuration > 0L ? trySeeDuration : duration));
+        } catch (Exception e) {
+        }
+
+        try {
+            String mediaTitle = getTitle();
+            setComponentText(mediaTitle);
+        } catch (Exception e) {
+        }
+
+        try {
             long trySeeDuration = getTrySeeDuration();
             if (trySeeDuration > 0L)
                 throw new Exception("warning: trySee true");
@@ -157,26 +214,6 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
             ComponentApiPause.super.show();
         } catch (Exception e) {
             LogUtil.log("ComponentPause => show => Exception " + e.getMessage());
-        }
-
-        try {
-            for (int i = 0; i < 2; i++) {
-                long duration = getDuration();
-                if (duration <= 0)
-                    throw new Exception("warning: duration<=0");
-                long position = getPosition();
-                long trySeeDuration = getTrySeeDuration();
-                SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_pause_sb);
-                seekBar.setProgress((int) position);
-                seekBar.setMax((int) (trySeeDuration > 0L ? trySeeDuration : duration));
-            }
-        } catch (Exception e) {
-        }
-
-        try {
-            String mediaTitle = getTitle();
-            setComponentText(mediaTitle);
-        } catch (Exception e) {
         }
     }
 

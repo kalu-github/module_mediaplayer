@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- 选中 -->
-    <item android:color="@android:color/holo_blue_light" android:state_activated="true" android:state_selected="false" />
+    <item android:color="@android:color/white" android:state_focused="true" />
     <!-- 在播 -->
-    <item android:color="@android:color/holo_red_light" android:state_selected="true" />
+    <item android:color="@color/module_mediaplayer_color_ff5a07" android:state_selected="true" />
     <!-- 默认 -->
     <item android:color="@android:color/white" />
 </selector>

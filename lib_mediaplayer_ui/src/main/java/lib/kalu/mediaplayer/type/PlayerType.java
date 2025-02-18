@@ -95,11 +95,14 @@ public @interface PlayerType {
         int WINDOW_FLOAT_FAIL = 3_025;
         int TRY_SEE_START = 3_026;
         int TRY_SEE_FINISH = 3_027;
-        int COMPONENT_MENU_SHOW = 3_028;
-        int COMPONENT_MENU_HIDE = 3_029;
 
-        int ERROR = 3_030; // 播放错误
-        int ERROR_BUFFERING_TIMEOUT = 3_031;
+        int ERROR = 3_028; // 播放错误
+        int ERROR_BUFFERING_TIMEOUT = 3_029;
+
+        int COMPONENT_MENU_SHOW = 3_030;
+        int COMPONENT_MENU_HIDE = 3_031;
+        int COMPONENT_SEEK_SHOW = 3_032;
+        int COMPONENT_SEEK_HIDE = 3_033;
 
         @Documented
         @Retention(CLASS)
@@ -135,6 +138,8 @@ public @interface PlayerType {
                 TRY_SEE_FINISH,
                 COMPONENT_MENU_SHOW,
                 COMPONENT_MENU_HIDE,
+                COMPONENT_SEEK_SHOW,
+                COMPONENT_SEEK_HIDE,
                 ERROR,
                 ERROR_BUFFERING_TIMEOUT})
         @interface Value {

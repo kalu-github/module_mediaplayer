@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+<lib.kalu.mediaplayer.widget.line.UnderLineRadioButton xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/module_mediaplayer_component_menu_item_tab"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_weight="1"
-    android:background="@drawable/module_mediaplayer_selector_background_tab"
+    android:background="@drawable/module_mediaplayer_selector_bg_menu_tab"
     android:button="@null"
     android:focusable="true"
     android:gravity="center"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    android:textColor="@drawable/module_mediaplayer_selector_textcolor_tab"
+    android:textColor="@color/module_mediaplayer_selector_textcolor_tab"
     android:textSize="20sp" />

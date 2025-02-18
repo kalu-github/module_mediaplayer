@@ -10,11 +10,11 @@
     </declare-styleable>
 
     <declare-styleable name="GradientView">
-        <attr name="ev_background_color_start" format="color|reference" />
-        <attr name="ev_background_color_end" format="color|reference" />
-        <attr name="ev_background_color_center" format="color|reference" />
-        <attr name="ev_light_color" format="color|reference" />
-        <attr name="ev_anim_duration" format="integer" />
+        <attr name="gv_background_color_start" format="color|reference" />
+        <attr name="gv_background_color_end" format="color|reference" />
+        <attr name="gv_background_color_center" format="color|reference" />
+        <attr name="gv_light_color" format="color|reference" />
+        <attr name="gv_anim_duration" format="integer" />
     </declare-styleable>
 
 

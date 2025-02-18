@@ -1,15 +1,6 @@
 package lib.kalu.mediaplayer.core.component;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.view.KeyEvent;
 import android.view.View;
-
-import androidx.annotation.NonNull;
-
-import lib.kalu.mediaplayer.type.PlayerType;
-import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface ComponentApiSeek extends ComponentApi {
 
@@ -37,12 +28,14 @@ public interface ComponentApiSeek extends ComponentApi {
         }
     }
 
-    default long getTimeMillis() {
+    default long getCastTimeMillis() {
         try {
             Object tag = ((View) this).getTag();
             if (null == tag)
                 throw new Exception("warning: tag null");
-            return (long) tag;
+            long start = (long) tag;
+            long millis = System.currentTimeMillis();
+            return Math.abs(millis - start);
         } catch (Exception e) {
             return 0L;
         }

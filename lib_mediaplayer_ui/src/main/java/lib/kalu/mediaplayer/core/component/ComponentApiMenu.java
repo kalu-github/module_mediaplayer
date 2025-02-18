@@ -3,6 +3,7 @@ package lib.kalu.mediaplayer.core.component;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
@@ -173,14 +174,14 @@ public interface ComponentApiMenu extends ComponentApi {
         }
     }
 
-    default void clickEpisode(int pos) {
+    default void callListener(int episodeIndex) {
         try {
             OnPlayerEpisodeListener listener = getOnPlayerEpisodeListener();
             if (null == listener)
                 throw new Exception("error: listener null");
-            listener.onEpisode(pos);
+            listener.onEpisode(episodeIndex);
         } catch (Exception e) {
-            LogUtil.log("ComponentApiMenu => clickEpisode => " + e.getMessage());
+            LogUtil.log("ComponentApiMenu => callListener => " + e.getMessage());
         }
     }
 
@@ -212,13 +213,22 @@ public interface ComponentApiMenu extends ComponentApi {
 
     /****** 选集   ******/
 
-    default void scrollEpisode(int action) {
+    default void clearEpisodeText() {
+    }
+
+    default void scrollEpisodeText(int childIndex, int action) {
+    }
+
+    default void updateEpisodeText(int childIndex) {
+    }
+
+    default void clickEpisodeText(int childIndex, int episodeIndex) {
     }
 
     default void clearEpisodeText(int childIndex, boolean changeVisibility) {
     }
 
-    default void loadEpisodeText(int childIndex, int episodeIndex, boolean changeVisibility) {
+    default void loadEpisodeText(int childIndex, int episodeIndex, int playIndex, boolean changeVisibility) {
     }
 
     default void loadEpisodeUrl(@Nullable ImageView imageView, @Nullable String url) {
@@ -255,10 +265,14 @@ public interface ComponentApiMenu extends ComponentApi {
         return null;
     }
 
+
     default void showTabAt(int index) {
     }
 
     default void requestTabAt(int index) {
+    }
+
+    default void initTabUnderLine(int index) {
     }
 
     default void initTabView() {
@@ -269,6 +283,14 @@ public interface ComponentApiMenu extends ComponentApi {
     }
 
     default void initEpisodeView() {
+    }
+
+    default String initEpisodePopuText(int index) {
+        try {
+            return ((View) this).getResources().getString(R.string.module_mediaplayer_string_episode_popu, index + 1);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     default void initSpeedView() {

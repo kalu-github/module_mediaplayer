@@ -1,8 +1,6 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.KeyEvent;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,11 +31,14 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            boolean componentShowing = isComponentShowing();
-            if (componentShowing) {
-                hide();
-            }
+
+        boolean adShowing = isComponentShowing(ComponentApiAD.class);
+        if (adShowing)
+            return false;
+
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+            hide();
+            return true;
         }
         return false;
     }
@@ -45,6 +46,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     @Override
     public void callEvent(int playState) {
         switch (playState) {
+            case PlayerType.EventType.COMPONENT_SEEK_SHOW:
             case PlayerType.EventType.START_PLAY_WHEN_READY_FALSE:
                 LogUtil.log("ComponentWarningPlayInfo => callEvent => START_PLAY_WHEN_READY_FALSE");
                 hide();
@@ -137,9 +139,6 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 //        LogUtil.log("ComponentWarningPlayInfo => hide");
 
         try {
-            boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
             // 1
             ComponentApiWarningPlayInfo.super.hide();
             // 2. 标题

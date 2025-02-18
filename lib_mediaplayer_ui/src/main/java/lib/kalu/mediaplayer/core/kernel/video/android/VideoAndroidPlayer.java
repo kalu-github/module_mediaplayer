@@ -469,6 +469,9 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             }
 
             try {
+//                boolean prepared = isPrepared();
+//                if (prepared)
+//                    throw new Exception("warning: prepared true");
                 boolean playing = isPlaying();
                 if (playing)
                     throw new Exception("warning: playing true");

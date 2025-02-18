@@ -3,4 +3,5 @@
     <dimen name="module_mediaplayer_dimen_speed_min_width">60dp</dimen>
     <dimen name="module_mediaplayer_dimen_speed_min_height">30dp</dimen>
     <dimen name="module_mediaplayer_dimen_speed_max_margin">30dp</dimen>
+    <dimen name="module_mediaplayer_dimen_under_line">2dp</dimen>
 </resources>
