@@ -420,17 +420,6 @@ public interface ComponentApi {
         }
     }
 
-    default void resume() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            playerView.resume();
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => resume => " + e.getMessage());
-        }
-    }
-
     default void seekTo(long position) {
         try {
             PlayerView playerView = getPlayerView();
@@ -442,34 +431,61 @@ public interface ComponentApi {
         }
     }
 
-    default void pause() {
+    default void resume() {
+        resume(true);
+    }
+
+    default void resume(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.pause();
+            playerView.resume(callEvent);
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => resume => " + e.getMessage());
+        }
+    }
+
+    default void pause() {
+        pause(true);
+    }
+
+    default void pause(boolean callEvent) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            playerView.pause(callEvent);
         } catch (Exception e) {
             LogUtil.log("ComponentApi => pause => " + e.getMessage());
         }
     }
 
     default void toggle() {
+        toggle(true);
+    }
+
+    default void toggle(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.toggle();
+            playerView.toggle(callEvent);
         } catch (Exception e) {
             LogUtil.log("ComponentApi => toggle => " + e.getMessage());
         }
     }
 
     default void stop() {
+        stop(true);
+    }
+
+    default void stop(boolean callEvent) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            playerView.stop(true, false);
+            playerView.stop(callEvent, false);
         } catch (Exception e) {
             LogUtil.log("ComponentApi => toggle => " + e.getMessage());
         }
@@ -596,7 +612,7 @@ public interface ComponentApi {
                 StringBuilder builder = new StringBuilder();
                 builder.append(title);
                 int index = args.getEpisodePlayingIndex();
-                int num = index+1;
+                int num = index + 1;
                 String s = ((View) this).getResources().getString(R.string.module_mediaplayer_string_title, num);
                 builder.append(s);
                 return builder.toString();
