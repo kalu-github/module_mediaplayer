@@ -233,7 +233,6 @@ public interface ComponentApiMenu extends ComponentApi {
 
     default void loadEpisodeUrl(@Nullable ImageView imageView, @Nullable String url) {
         try {
-            imageView.setImageDrawable(null);
             imageView.setImageURI(Uri.parse(url));
         } catch (Exception e) {
         }
@@ -241,7 +240,6 @@ public interface ComponentApiMenu extends ComponentApi {
 
     default void loadEpisodeFile(@Nullable ImageView imageView, @Nullable String path) {
         try {
-            imageView.setImageDrawable(null);
             imageView.setImageURI(Uri.parse(path));
         } catch (Exception e) {
         }
@@ -249,7 +247,6 @@ public interface ComponentApiMenu extends ComponentApi {
 
     default void loadEpisodeResource(@Nullable ImageView imageView, @DrawableRes int resId) {
         try {
-            imageView.setImageDrawable(null);
             imageView.setImageResource(resId);
         } catch (Exception e) {
         }

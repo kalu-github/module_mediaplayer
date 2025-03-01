@@ -351,6 +351,8 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
             }
             if (null == imageView)
                 throw new Exception("error: imageView null");
+            imageView.setImageDrawable(null);
+
             int freeItemCount = getEpisodeFreeItemCount();
 
             // 收费
