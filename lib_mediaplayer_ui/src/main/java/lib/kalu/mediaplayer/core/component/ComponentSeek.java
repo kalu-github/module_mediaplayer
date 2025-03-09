@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
+import java.util.Arrays;
+
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -28,62 +30,44 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
         return R.layout.module_mediaplayer_component_seek;
     }
 
-
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-
-        // 试看
         try {
+            // 试看
             long trySeeDuration = getTrySeeDuration();
             if (trySeeDuration > 0L)
                 throw new Exception("warning: trySee true");
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception1 " + e.getMessage());
-            return false;
-        }
-
-        // seekForward => start
-        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            try {
+            // seekForward => start
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
                 int repeatCount = event.getRepeatCount();
                 actionDown(repeatCount, KeyEvent.KEYCODE_DPAD_RIGHT);
                 return true;
-            } catch (Exception e) {
-                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception2 " + e.getMessage());
             }
-        }
-        // seekForward => stop
-        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            try {
+            // seekForward => stop
+            else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 onUpdateProgress(true, -1, -1, -1);
                 return true;
-            } catch (Exception e) {
-                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception3 " + e.getMessage());
             }
-        }
-        // seekRewind => start
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            try {
+            // seekRewind => start
+            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
                 superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
                 show();
                 int repeatCount = event.getRepeatCount();
                 actionDown(repeatCount, KeyEvent.KEYCODE_DPAD_LEFT);
                 return true;
-            } catch (Exception e) {
-                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception4 " + e.getMessage());
             }
-        }
-        // seekRewind => stop
-        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            try {
+            // seekRewind => stop
+            else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
                 onUpdateProgress(true, -1, -1, -1);
                 return true;
-            } catch (Exception e) {
-                LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception5 " + e.getMessage());
             }
+
+            throw new Exception("warning: not find");
+        } catch (Exception e) {
+            LogUtil.log("ComponentSeek => dispatchKeyEvent => Exception " + e.getMessage());
+            return false;
         }
-        return false;
     }
 
     @Override

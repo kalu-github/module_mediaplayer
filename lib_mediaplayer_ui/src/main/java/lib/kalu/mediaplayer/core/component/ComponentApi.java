@@ -92,6 +92,10 @@ public interface ComponentApi {
         }
     }
 
+    default boolean checkComponentShowingDispatchKeyEvent() {
+        return true;
+    }
+
     /******************/
 
     default void callEvent(int state) {

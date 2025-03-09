@@ -82,13 +82,13 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 boolean assignableFrom = ComponentApi.class.isAssignableFrom(childAt.getClass());
                 if (!assignableFrom)
                     continue;
+                boolean checkComponentShowingDispatchKeyEvent = ((ComponentApi) childAt).checkComponentShowingDispatchKeyEvent();
+                if (!checkComponentShowingDispatchKeyEvent)
+                    continue;
                 boolean componentShowing = ((ComponentApi) childAt).isComponentShowing();
-                if (componentShowing) {
-                    boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
-                    if (dispatchKeyEvent) {
-                        return true;
-                    }
-                }
+                if (!componentShowing)
+                    continue;
+                return childAt.dispatchKeyEvent(event);
             }
             // Component step2
             for (int i = 0; i < childCount; i++) {
@@ -99,7 +99,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 if (!assignableFrom)
                     continue;
                 boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
-               // LogUtil.log("PlayerView => dispatchKeyEvent => i = " + i + ", dispatchKeyEvent = " + dispatchKeyEvent + ", childAt = " + childAt);
+                // LogUtil.log("PlayerView => dispatchKeyEvent => i = " + i + ", dispatchKeyEvent = " + dispatchKeyEvent + ", childAt = " + childAt);
                 if (dispatchKeyEvent) {
                     return true;
                 }
