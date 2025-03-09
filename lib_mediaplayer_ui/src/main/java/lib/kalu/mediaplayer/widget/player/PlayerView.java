@@ -99,7 +99,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 if (!assignableFrom)
                     continue;
                 boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
-                LogUtil.log("PlayerView => dispatchKeyEvent => i = " + i + ", dispatchKeyEvent = " + dispatchKeyEvent + ", childAt = " + childAt);
+               // LogUtil.log("PlayerView => dispatchKeyEvent => i = " + i + ", dispatchKeyEvent = " + dispatchKeyEvent + ", childAt = " + childAt);
                 if (dispatchKeyEvent) {
                     return true;
                 }
