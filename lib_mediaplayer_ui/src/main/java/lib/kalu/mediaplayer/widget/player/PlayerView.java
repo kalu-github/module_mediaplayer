@@ -5,10 +5,12 @@ import android.graphics.Color;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.RelativeLayout;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
+import lib.kalu.mediaplayer.core.component.ComponentBackPressed;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
@@ -69,35 +71,37 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
     public boolean dispatchKeyEvent(KeyEvent event) {
 //        LogUtil.log("PlayerView => dispatchKeyEvent => action = " + event.getAction() + ", code = " + event.getKeyCode() + ", isFull = " + isFull());
         try {
-            // step1
-            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                // stopFull
-                if (isFull()) {
-                    stopFull();
-                    return true;
-                }
-                //  stopFloat();
-                else if (isFloat()) {
-                    stopFloat();
-                    return true;
-                }
-            }
 
-            // step2
-            ViewGroup viewGroup = getBaseComponentViewGroup();
-            int childCount = viewGroup.getChildCount();
+            // Component step1
+            ViewGroup componentGroup = getBaseComponentViewGroup();
+            int childCount = componentGroup.getChildCount();
             for (int i = 0; i < childCount; i++) {
-                View childAt = viewGroup.getChildAt(i);
+                View childAt = componentGroup.getChildAt(i);
                 if (null == childAt)
                     continue;
-                if (!(childAt instanceof ComponentApi))
+                boolean assignableFrom = ComponentApi.class.isAssignableFrom(childAt.getClass());
+                if (!assignableFrom)
                     continue;
-                boolean enableDispatchKeyEvent = ((ComponentApi) childAt).enableDispatchKeyEvent();
-                if (enableDispatchKeyEvent) {
+                boolean componentShowing = ((ComponentApi) childAt).isComponentShowing();
+                if (componentShowing) {
                     boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
                     if (dispatchKeyEvent) {
                         return true;
                     }
+                }
+            }
+            // Component step2
+            for (int i = 0; i < childCount; i++) {
+                View childAt = componentGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                boolean assignableFrom = ComponentApi.class.isAssignableFrom(childAt.getClass());
+                if (!assignableFrom)
+                    continue;
+                boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
+                LogUtil.log("PlayerView => dispatchKeyEvent => i = " + i + ", dispatchKeyEvent = " + dispatchKeyEvent + ", childAt = " + childAt);
+                if (dispatchKeyEvent) {
+                    return true;
                 }
             }
 

@@ -7,7 +7,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-public class ComponentBuffering extends RelativeLayout implements ComponentApiBuffering {
+public class ComponentBuffering extends RelativeLayout implements ComponentApi {
 
     public ComponentBuffering(Context context) {
         super(context);

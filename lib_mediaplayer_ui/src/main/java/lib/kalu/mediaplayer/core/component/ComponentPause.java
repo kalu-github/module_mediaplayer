@@ -9,7 +9,7 @@ import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.seek.SeekBar;
 
-public class ComponentPause extends RelativeLayout implements ComponentApiPause {
+public class ComponentPause extends RelativeLayout implements ComponentApi {
 
     public ComponentPause(Context context) {
         super(context);
@@ -25,9 +25,6 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             try {
-                boolean adShowing = isComponentShowing(ComponentApiAD.class);
-                if (adShowing)
-                    throw new Exception("warning: ComponentApiAD true");
                 boolean componentShowing = isComponentShowing();
                 if (!componentShowing)
                     throw new Exception("warning: componentShowing false");
@@ -46,24 +43,21 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
         // keycode_enter || keycode_dpad_center
         else if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER)) {
             try {
-                boolean adShowing = isComponentShowing(ComponentApiAD.class);
-                if (adShowing)
-                    throw new Exception("warning: ComponentApiAD true");
-                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
-                if (menuShowing)
-                    throw new Exception("warning: ComponentApiMenu true");
-                boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
-                if (bufferingShowing)
-                    throw new Exception("warning: ComponentApiBuffering true");
-                boolean seekShowing = isComponentShowing(ComponentApiSeek.class);
-                if (seekShowing)
-                    throw new Exception("warning: ComponentApiSeek true");
-                boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
-                if (warningPlayInfoShowing)
-                    throw new Exception("warning: ComponentApiWarningPlayInfo true");
-                boolean warningTrySeeShowing = isComponentShowing(ComponentApiWarningTrySee.class);
-                if (warningTrySeeShowing)
-                    throw new Exception("warning: ComponentApiWarningTrySee true");
+//                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
+//                if (menuShowing)
+//                    throw new Exception("warning: ComponentApiMenu true");
+//                boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
+//                if (bufferingShowing)
+//                    throw new Exception("warning: ComponentApiBuffering true");
+//                boolean seekShowing = isComponentShowing(ComponentApiSeek.class);
+//                if (seekShowing)
+//                    throw new Exception("warning: ComponentApiSeek true");
+//                boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
+//                if (warningPlayInfoShowing)
+//                    throw new Exception("warning: ComponentApiWarningPlayInfo true");
+//                boolean warningTrySeeShowing = isComponentShowing(ComponentApiWarningTrySee.class);
+//                if (warningTrySeeShowing)
+//                    throw new Exception("warning: ComponentApiWarningTrySee true");
                 toggle();
                 return true;
             } catch (Exception e) {
@@ -162,7 +156,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
             boolean componentShowing = isComponentShowing();
             if (!componentShowing)
                 throw new Exception("warning: componentShowing false");
-            ComponentApiPause.super.hide();
+            ComponentApi.super.hide();
         } catch (Exception e) {
             LogUtil.log("ComponentPause => hide => Exception " + e.getMessage());
         }
@@ -211,7 +205,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApiPause 
             boolean componentShowing = isComponentShowing();
             if (componentShowing)
                 throw new Exception("warning: componentShowing true");
-            ComponentApiPause.super.show();
+            ComponentApi.super.show();
         } catch (Exception e) {
             LogUtil.log("ComponentPause => show => Exception " + e.getMessage());
         }

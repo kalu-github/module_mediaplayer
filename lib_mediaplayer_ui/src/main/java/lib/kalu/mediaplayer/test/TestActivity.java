@@ -133,12 +133,10 @@ public final class TestActivity extends Activity {
             playerLayout.addComponent(menu);
             // loading
             ComponentPrepareGradient loading = new ComponentPrepareGradient(getApplicationContext());
-            loading.setComponentShowNetSpeed(true);
             loading.setComponentBackgroundColorInt(Color.BLACK);
             playerLayout.addComponent(loading);
             // seek
             ComponentSeek seek = new ComponentSeek(getApplicationContext());
-            seek.initSeekBarChangeListener();
             playerLayout.addComponent(seek);
             // complete
             ComponentComplete end = new ComponentComplete(getApplicationContext());

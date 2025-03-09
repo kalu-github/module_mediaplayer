@@ -69,10 +69,7 @@ public class PlayerLayout extends RelativeLayout {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("warning: null == playerView");
-            boolean dispatchKeyEvent2 = playerView.dispatchKeyEvent(event);
-            if (!dispatchKeyEvent2)
-                throw new Exception("warning: dispatchKeyEvent2 false");
-            return true;
+            return playerView.dispatchKeyEvent(event);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => dispatchKeyEvent => " + e.getMessage());
 //            return super.dispatchKeyEvent(event);

@@ -51,10 +51,13 @@ public interface ComponentApi {
         return -1;
     }
 
-
-    default boolean enableDispatchKeyEvent() {
-        return false;
-    }
+//    default boolean hideDispatchKeyEvent() {
+//        return false;
+//    }
+//
+//    default boolean showDispatchKeyEvent() {
+//        return false;
+//    }
 
     default void inflate() {
         try {
@@ -334,20 +337,20 @@ public interface ComponentApi {
         }
     }
 
-    default boolean isComponentShowing(Class<?> cls) {
-        try {
-            ComponentApi component = findComponent(cls);
-            if (null == component)
-                throw new Exception("warning: component null");
-            boolean componentShowing = component.isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
-            return true;
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => isComponentApiShowing => " + e.getMessage());
-            return false;
-        }
-    }
+//    default boolean isComponentShowing(Class<?> cls) {
+//        try {
+//            ComponentApi component = findComponent(cls);
+//            if (null == component)
+//                throw new Exception("warning: component null");
+//            boolean componentShowing = component.isComponentShowing();
+//            if (!componentShowing)
+//                throw new Exception("warning: componentShowing false");
+//            return true;
+//        } catch (Exception e) {
+//            LogUtil.log("ComponentApi => isComponentApiShowing => " + e.getMessage());
+//            return false;
+//        }
+//    }
 
     default void superCallEvent(boolean callPlayer, boolean callComponent, @PlayerType.EventType.Value int state) {
         try {

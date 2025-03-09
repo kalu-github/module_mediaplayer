@@ -13,7 +13,7 @@ import lib.kalu.mediaplayer.widget.seek.SeekBar;
 /**
  * 试看
  */
-public class ComponentWarningTrySee extends RelativeLayout implements ComponentApiWarningTrySee {
+public class ComponentWarningTrySee extends RelativeLayout implements ComponentApi {
 
     public ComponentWarningTrySee(Context context) {
         super(context);
@@ -37,20 +37,12 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-
-        boolean adShowing = isComponentShowing(ComponentApiAD.class);
-        if (adShowing)
-            return false;
-
         // keycode_enter || keycode_dpad_center
         if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER)) {
             try {
                 long trySeeDuration = getTrySeeDuration();
                 if (trySeeDuration <= 0L)
                     throw new Exception("warning: trySeeDuration <= 0L");
-                boolean trySeeFinish = isTrySeeFinish();
-                if (trySeeFinish)
-                    throw new Exception("waring: trySeeFinish true");
                 toggle();
                 return true;
             } catch (Exception e) {
@@ -101,7 +93,6 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
                     boolean componentShowing = isComponentShowing();
                     if (!componentShowing)
                         throw new Exception("warning: componentShowing false");
-                    setTrySeeFinish(true);
                     String mediaTitle = getTitle();
                     setComponentText(mediaTitle + " 试看结束...");
                 } catch (Exception e) {
@@ -134,7 +125,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
 
     @Override
     public void show() {
-        ComponentApiWarningTrySee.super.show();
+        ComponentApi.super.show();
 
         try {
             long duration = getDuration();
@@ -151,11 +142,11 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
 
     @Override
     public void pause() {
-        ComponentApiWarningTrySee.super.pause();
+        ComponentApi.super.pause();
     }
 
     @Override
     public void resume() {
-        ComponentApiWarningTrySee.super.resume();
+        ComponentApi.super.resume();
     }
 }

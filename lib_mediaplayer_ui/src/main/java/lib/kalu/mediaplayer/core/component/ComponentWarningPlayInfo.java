@@ -11,12 +11,11 @@ import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.TimeUtil;
 import lib.kalu.mediaplayer.widget.seek.SeekBar;
 
-public class ComponentWarningPlayInfo extends RelativeLayout implements ComponentApiWarningPlayInfo {
+public class ComponentWarningPlayInfo extends RelativeLayout implements ComponentApi {
 
     public ComponentWarningPlayInfo(Context context) {
         super(context);
         inflate();
-        setComponentShowPlayInfoRecord(false);
     }
 
     @Override
@@ -25,17 +24,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
     }
 
     @Override
-    public boolean enableDispatchKeyEvent() {
-        return true;
-    }
-
-    @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-
-        boolean adShowing = isComponentShowing(ComponentApiAD.class);
-        if (adShowing)
-            return false;
-
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
             hide();
             return true;
@@ -103,20 +92,17 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
             if (trySeeDuration > 0L)
                 throw new Exception("warning: trySee true");
             // 1
-            ComponentApiWarningPlayInfo.super.show();
+            ComponentApi.super.show();
             // 2. 标题
             TextView titleView = findViewById(R.id.module_mediaplayer_component_warning_play_info_title);
             titleView.setText(getTitle());
             // 3. 播放记录提示
-            boolean showWarningPlayInfoRecord = isShowWarningPlayInfoRecord();
-            if (showWarningPlayInfoRecord) {
-                long seek = getPlayWhenReadySeekToPosition();
-                if (seek > 0L) {
-                    String millis = TimeUtil.formatTimeMillis(seek);
-                    String string = getResources().getString(R.string.module_mediaplayer_string_play_record, millis);
-                    TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_record);
-                    textView.setText(string);
-                }
+            long seek = getPlayWhenReadySeekToPosition();
+            if (seek > 0L) {
+                String millis = TimeUtil.formatTimeMillis(seek);
+                String string = getResources().getString(R.string.module_mediaplayer_string_play_record, millis);
+                TextView textView = findViewById(R.id.module_mediaplayer_component_warning_play_info_record);
+                textView.setText(string);
             }
         } catch (Exception e) {
         }
@@ -140,7 +126,7 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
 
         try {
             // 1
-            ComponentApiWarningPlayInfo.super.hide();
+            ComponentApi.super.hide();
             // 2. 标题
             TextView titleView = findViewById(R.id.module_mediaplayer_component_warning_play_info_title);
             titleView.setText("");

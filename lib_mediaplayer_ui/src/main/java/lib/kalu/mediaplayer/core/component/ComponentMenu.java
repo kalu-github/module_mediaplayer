@@ -1,10 +1,8 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +12,19 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 
-import java.lang.reflect.MalformedParameterizedTypeException;
-
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.popu.PopuView;
 
-public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
+public class ComponentMenu extends RelativeLayout implements ComponentApi {
     public ComponentMenu(Context context) {
         super(context);
         inflate();
@@ -58,9 +57,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        boolean adShowing = isComponentShowing(ComponentApiAD.class);
-        if (adShowing)
-            return false;
         // action_down -> keycode_dpad_down
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
             return keycodeDown(KeyEvent.ACTION_DOWN);
@@ -105,16 +101,15 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
     public void hide() {
         clearEpisodeText();
         clearTimeMillis();
-        ComponentApiMenu.super.hide();
+        ComponentApi.super.hide();
     }
 
     @Override
     public void show() {
         updateTimeMillis();
-        ComponentApiMenu.super.show();
+        ComponentApi.super.show();
     }
 
-    @Override
     public void scrollEpisodeText(int childIndex, int action) {
         try {
             View focus = findFocus();
@@ -166,7 +161,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public void clearEpisodeText() {
         try {
             ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
@@ -178,7 +172,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public void updateEpisodeText(int childIndex) {
         try {
             ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
@@ -194,7 +187,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public void clickEpisodeText(int childIndex, int episodeIndex) {
         try {
             ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
@@ -211,7 +203,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public void clearEpisodeText(int childIndex, boolean changeVisibility) {
         try {
             ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
@@ -284,7 +275,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public void loadEpisodeText(int childIndex, int episodeIndex, int playIndex, boolean changeVisibility) {
 //        LogUtil.log("ComponentMenu => loadEpisodeText => childIndex = " + childIndex + ", episodeIndex = " + episodeIndex + ", playIndex = " + playIndex);
 
@@ -403,7 +393,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
 
     /**************/
 
-    @Override
     public void showTabAt(int index) {
         LogUtil.log("ComponentMenu => showTabAt => index = " + index);
         initHideContentView();
@@ -423,7 +412,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public void requestTabAt(int index) {
         try {
             ViewGroup tabGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
@@ -439,12 +427,10 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public int[] initHideContentData() {
         return new int[]{R.id.module_mediaplayer_component_menu_episode_root, R.id.module_mediaplayer_component_menu_speed_root, R.id.module_mediaplayer_component_menu_scale_root};
     }
 
-    @Override
     public void initHideContentView() {
         try {
             int[] ints = initHideContentData();
@@ -461,7 +447,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public void initTabUnderLine(int index) {
         try {
             ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_root);
@@ -475,12 +460,10 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public String[] initTabData() {
         return getResources().getStringArray(R.array.module_mediaplayer_array_tabs);
     }
 
-    @Override
     public void initTabView() {
         try {
             String[] tabData = initTabData();
@@ -516,7 +499,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public void initEpisodeView() {
         try {
             ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
@@ -566,12 +548,10 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public int[] initSpeedData() {
         return getResources().getIntArray(R.array.module_mediaplayer_array_speeds);
     }
 
-    @Override
     public void initSpeedView() {
         try {
             int[] speedData = initSpeedData();
@@ -619,12 +599,10 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public int[] initScaleData() {
         return getResources().getIntArray(R.array.module_mediaplayer_array_scales);
     }
 
-    @Override
     public void initScaleView() {
         try {
             int[] scaleData = initScaleData();
@@ -668,7 +646,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public boolean keycodeLeft(int action) {
         try {
 
@@ -737,7 +714,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public boolean keycodeRight(int action) {
         try {
             if (action == KeyEvent.ACTION_UP) {
@@ -811,7 +787,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public boolean keycodeDown(int action) {
         try {
             if (action == KeyEvent.ACTION_DOWN) {
@@ -852,7 +827,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public boolean keycodeUp(int action) {
         try {
 
@@ -940,7 +914,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         }
     }
 
-    @Override
     public boolean keycodeCenter(int action) {
         try {
             if (action == KeyEvent.ACTION_DOWN) {
@@ -1001,6 +974,227 @@ public class ComponentMenu extends RelativeLayout implements ComponentApiMenu {
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => keycodeCenter => keycode_dpad_center => " + e.getMessage());
             return false;
+        }
+    }
+
+    /****************/
+
+    private int getEpisodeItemCount() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            int itemCount = tags.getEpisodeItemCount();
+            if (itemCount <= 0)
+                throw new Exception("warning: itemCount " + itemCount);
+            return itemCount;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeItemCount => " + e.getMessage());
+            return -1;
+        }
+    }
+
+    private int getEpisodePlayingIndex() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            int playingIndex = tags.getEpisodePlayingIndex();
+            if (playingIndex < 0)
+                throw new Exception("warning: playingIndex " + playingIndex);
+            return playingIndex;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodePlayingIndex => " + e.getMessage());
+            return -1;
+        }
+    }
+
+    private int getEpisodeFreeItemCount() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            int freeItemCount = tags.getEpisodeFreeItemCount();
+            if (freeItemCount < 0)
+                throw new Exception("warning: freeItemCount " + freeItemCount);
+            return freeItemCount;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFreeItemCount => " + e.getMessage());
+            return -1;
+        }
+    }
+
+    private String getEpisodeFlagFreeImgUrl() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            String url = tags.getEpisodeFlagFreeImgUrl();
+            if (null == url || url.length() == 0)
+                throw new Exception("warning: url null");
+            return url;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagFreeImgUrl => " + e.getMessage());
+            return null;
+        }
+    }
+
+    private String getEpisodeFlagFreeFilePath() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            String path = tags.getEpisodeFlagFreeFilePath();
+            if (null == path || path.length() == 0)
+                throw new Exception("warning: path null");
+            return path;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagFreeFilePath => " + e.getMessage());
+            return null;
+        }
+    }
+
+    @DrawableRes
+    private int getEpisodeFlagFreeResourceId() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            int resourceId = tags.getEpisodeFlagFreeResourceId();
+            if (resourceId == 0)
+                throw new Exception("warning: resourceId = 0");
+            return resourceId;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagFreeResourceId => " + e.getMessage());
+            return 0;
+        }
+    }
+
+    private String getEpisodeFlagVipImgUrl() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            String url = tags.getEpisodeFlagVipImgUrl();
+            if (null == url || url.length() == 0)
+                throw new Exception("warning: url null");
+            return url;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagVipImgUrl => " + e.getMessage());
+            return null;
+        }
+    }
+
+    private String getEpisodeFlagVipFilePath() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            String path = tags.getEpisodeFlagVipFilePath();
+            if (null == path || path.length() == 0)
+                throw new Exception("warning: url null");
+            return path;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagVipFilePath => " + e.getMessage());
+            return null;
+        }
+    }
+
+    @DrawableRes
+    private int getEpisodeFlagVipResourceId() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            int resourceId = tags.getEpisodeFlagVipResourceId();
+            if (resourceId == 0)
+                throw new Exception("warning: resourceId = 0");
+            return resourceId;
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagVipResourceId => " + e.getMessage());
+            return 0;
+        }
+    }
+
+    @PlayerType.EpisodeFlagLoactionType.Value
+    private int getEpisodeFlagLoaction() {
+        try {
+            StartArgs tags = getStartArgs();
+            if (null == tags)
+                throw new Exception("error: tags null");
+            return tags.getEpisodeFlagLoaction();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => getEpisodeFlagLoaction => " + e.getMessage());
+            return PlayerType.EpisodeFlagLoactionType.DEFAULT;
+        }
+    }
+
+    private void callListener(int episodeIndex) {
+        try {
+            OnPlayerEpisodeListener listener = getOnPlayerEpisodeListener();
+            if (null == listener)
+                throw new Exception("error: listener null");
+            listener.onEpisode(episodeIndex);
+        } catch (Exception e) {
+            LogUtil.log("ComponentApiMenu => callListener => " + e.getMessage());
+        }
+    }
+
+    private void updateTimeMillis() {
+        try {
+            long millis = System.currentTimeMillis();
+            ((View) this).setTag(millis);
+        } catch (Exception e) {
+        }
+    }
+
+    private void clearTimeMillis() {
+        try {
+            ((View) this).setTag(null);
+        } catch (Exception e) {
+        }
+    }
+
+    private long getTimeMillis() {
+        try {
+            Object tag = ((View) this).getTag();
+            if (null == tag)
+                throw new Exception("warning: tag null");
+            return (long) tag;
+        } catch (Exception e) {
+            return 0L;
+        }
+    }
+
+    /****** 选集   ******/
+
+
+    private void loadEpisodeUrl(@Nullable ImageView imageView, @Nullable String url) {
+        try {
+            imageView.setImageURI(Uri.parse(url));
+        } catch (Exception e) {
+        }
+    }
+
+    private void loadEpisodeFile(@Nullable ImageView imageView, @Nullable String path) {
+        try {
+            imageView.setImageURI(Uri.parse(path));
+        } catch (Exception e) {
+        }
+    }
+
+    private void loadEpisodeResource(@Nullable ImageView imageView, @DrawableRes int resId) {
+        try {
+            imageView.setImageResource(resId);
+        } catch (Exception e) {
+        }
+    }
+
+    public String initEpisodePopuText(int index) {
+        try {
+            return getResources().getString(R.string.module_mediaplayer_string_episode_popu, index + 1);
+        } catch (Exception e) {
+            return null;
         }
     }
 }

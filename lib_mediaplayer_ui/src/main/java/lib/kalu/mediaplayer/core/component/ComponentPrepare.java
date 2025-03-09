@@ -1,18 +1,19 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
-public class ComponentPrepare extends RelativeLayout implements ComponentApiPrepare {
+public class ComponentPrepare extends RelativeLayout implements ComponentApi {
 
     public ComponentPrepare(Context context) {
         super(context);
         inflate();
-        setComponentShowNetSpeed(false);
     }
 
     @Override
@@ -46,7 +47,7 @@ public class ComponentPrepare extends RelativeLayout implements ComponentApiPrep
 
     @Override
     public void show() {
-        ComponentApiPrepare.super.show();
+        ComponentApi.super.show();
 
         try {
             String mediaTitle = getTitle();
@@ -60,7 +61,7 @@ public class ComponentPrepare extends RelativeLayout implements ComponentApiPrep
 
     @Override
     public void hide() {
-        ComponentApiPrepare.super.hide();
+        ComponentApi.super.hide();
 
         try {
             boolean componentShowing = isComponentShowing();
@@ -89,8 +90,26 @@ public class ComponentPrepare extends RelativeLayout implements ComponentApiPrep
     }
 
 
-    @Override
-    public int initViewIdNetSpeed() {
+    public int initViewIdTextNetSpeed() {
         return R.id.module_mediaplayer_component_prepare_net;
+    }
+
+    private void updateNetSpeed() {
+        // 网速
+        try {
+            boolean componentShowing = isComponentShowing();
+            if (!componentShowing)
+                throw new Exception("warning: componentShowing false");
+            int id = initViewIdTextNetSpeed();
+            TextView textView = findViewById(id);
+            if (null == textView)
+                throw new Exception("textView error: null");
+            int viewVisibility = textView.getVisibility();
+            if (viewVisibility != View.VISIBLE)
+                throw new Exception("viewVisibility warning: " + viewVisibility);
+            String speed = getNetSpeed();
+            textView.setText(speed);
+        } catch (Exception e) {
+        }
     }
 }
