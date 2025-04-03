@@ -11,7 +11,8 @@
     <string name="url_mp4">https://liuliandsp.oss-cn-beijing.aliyuncs.com/%E5%9C%A3%E6%AF%8D%E4%B8%8E%E9%AD%94%E9%AC%BC%E4%BA%BF%E4%B8%87%E5%AF%8C%E7%BF%81/5.mp4</string>
 <!--    <string name="url_mp4">https://wiki.biaodu-tech.com:38082/%E3%80%8A%E6%9C%80%E5%A5%BD%E7%9A%84%E6%B5%8E%E5%8D%97%E3%80%8B%E5%AE%A3%E4%BC%A0%E7%89%87.mp4</string>-->
 <!--    <string name="url_mp4">http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4</string>-->
-    <string name="url_m3u8">http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com</string>
+<!--    <string name="url_m3u8">http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com</string>-->
+    <string name="url_m3u8">https://test-1347269025.cos.sa-saopaulo.myqcloud.com/media/movie/foreiowiw/playlist.m3u8</string>
     <string name="url_rtsp">rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4</string>
     <string name="url_rtmp">rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp</string>
     <string name="url_udp">udp://224.255.0.247:10000</string>

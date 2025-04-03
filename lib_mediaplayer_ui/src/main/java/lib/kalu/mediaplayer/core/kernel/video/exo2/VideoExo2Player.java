@@ -197,8 +197,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
             String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
-            mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
-            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.INIT_READY);
 //            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
 //                @Override
 //                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
@@ -210,8 +208,16 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //                    MediaLogUtil.log("onEXOLoadCompleted => ");
 //                }
 //            });
+
+            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.INIT_READY);
+
             MediaSource mediaSource = buildMediaSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
+            mExoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
+
+            boolean playWhenReady = args.isPlayWhenReady();
+            mExoPlayer.setPlayWhenReady(playWhenReady);
+
             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.PREPARE_START);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
@@ -220,7 +226,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 mExoPlayer.prepare();
             }
         } catch (Exception e) {
-            LogUtil.log("VideoExo2Player => startDecoder => Exception4 " + e.getMessage());
+            LogUtil.log("VideoExo2Player => startDecoder => Exception " + e.getMessage());
         }
     }
 
@@ -479,6 +485,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
      */
     @Override
     public void start() {
+        LogUtil.log("VideoExo2Player => start");
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");

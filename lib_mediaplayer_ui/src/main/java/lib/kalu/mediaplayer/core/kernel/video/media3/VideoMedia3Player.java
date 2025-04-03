@@ -191,10 +191,16 @@ public final class VideoMedia3Player extends VideoBasePlayer {
             String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
+
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
-            mExoPlayer.setRepeatMode(androidx.media3.exoplayer.ExoPlayer.REPEAT_MODE_OFF);
+
             MediaSource mediaSource = buildMediaSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
+            mExoPlayer.setRepeatMode(androidx.media3.exoplayer.ExoPlayer.REPEAT_MODE_OFF);
+
+            boolean playWhenReady = args.isPlayWhenReady();
+            mExoPlayer.setPlayWhenReady(playWhenReady);
+
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE_START);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
