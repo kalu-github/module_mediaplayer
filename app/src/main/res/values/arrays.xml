@@ -8,6 +8,7 @@
         <item>udp</item>
         <item>tencent</item>
         <item>https</item>
+        <item>ss_manifest</item>
         <item>dash_mpd</item>
         <item>hls_m3u8_mixed</item>
         <item>hls_m3u8_mixed</item>
@@ -22,6 +23,7 @@
         <item>udp://224.255.0.247:10000</item>
         <item>http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&amp;amp;bizid=1023&amp;amp;hy=SH&amp;amp;fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400</item>
         <item>https://media.w3.org/2010/05/sintel/trailer.mp4</item>
+        <item>http://streams.smooth.vertigo.com/elephantsdream/Elephants_Dream_1024 - h264 - st - aac.ism/manifest</item>
         <item>https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd</item>
         <item>https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8</item>
         <item>https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8</item>
