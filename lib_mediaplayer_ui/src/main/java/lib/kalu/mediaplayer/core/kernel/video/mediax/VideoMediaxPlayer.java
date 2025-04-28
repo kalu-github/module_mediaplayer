@@ -948,17 +948,19 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             //
             androidx.media3.common.Tracks tracks = mExoPlayer.getCurrentTracks();
             ImmutableList<androidx.media3.common.Tracks.Group> groups = tracks.getGroups();
-            for (int groupIndex = 0; groupIndex < groups.size(); groupIndex++) {
+            int groupCount = groups.size();
+            for (int groupIndex = 0; groupIndex < groupCount; groupIndex++) {
                 Tracks.Group group = groups.get(groupIndex);
                 if (null == group)
                     continue;
 
                 int trackType = group.getType();
+                int trackCount = group.length;
                 // 是否支持自适应播放
                 boolean isGroupAdaptiveSupported = group.isAdaptiveSupported();
                 boolean isGroupSelected = group.isSelected();
                 boolean isGroupSupported = group.isSupported();
-                for (int trackIndex = 0; trackIndex < group.length; trackIndex++) {
+                for (int trackIndex = 0; trackIndex < trackCount; trackIndex++) {
                     //
                     Format format = group.getTrackFormat(trackIndex);
                     // 轨道是否支持
@@ -1048,22 +1050,31 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                     if (null == object)
                         continue;
+                    object.put("groupCount", groupCount);
                     object.put("groupIndex", groupIndex);
+                    object.put("trackCount", trackCount);
                     object.put("trackIndex", trackIndex);
                     object.put("trackType", trackType);
                     object.put("isGroupAdaptiveSupported", isGroupAdaptiveSupported);
                     object.put("isGroupSupported", isGroupSupported);
                     object.put("isGroupSelected", isGroupSelected);
                     object.put("isTrackSupported", isTrackSupported);
+                    object.put("isTrackSelected", isTrackSelected);
 
-                    // fixbug
-                    if (trackType == C.TRACK_TYPE_VIDEO && isTrackSelected) {
+                    boolean isTrackMixed = trackCount > 1;
+                    object.put("isTrackMixed", isTrackMixed);
+
+                    // dash hls SmoothStreaming
+                    boolean isTrackMixedSelected;
+                    if (trackCount > 1 && trackType == C.TRACK_TYPE_VIDEO) {
                         int videoWidth = getPlayerApi().getVideoRender().getVideoWidth();
                         int videoHeight = getPlayerApi().getVideoRender().getVideoHeight();
                         int videoBitrate = getPlayerApi().getVideoRender().getVideoBitrate();
-                        isTrackSelected = (videoWidth == format.width && videoHeight == format.height && videoBitrate == format.bitrate);
+                        isTrackMixedSelected = (videoWidth == format.width && videoHeight == format.height && videoBitrate == format.bitrate);
+                    } else {
+                        isTrackMixedSelected = false;
                     }
-                    object.put("isTrackSelected", isTrackSelected);
+                    object.put("isTrackMixedSelected", isTrackMixedSelected);
 
                     object.put("id", format.id);
                     object.put("label", format.label);
@@ -1087,7 +1098,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     object.put("subsampleOffsetUs", format.subsampleOffsetUs);
                     object.put("hasPrerollSamples", format.hasPrerollSamples);
 
-                    LogUtil.log("VideoMediaxPlayer => getTrackInfo => groupIndex = " + groupIndex + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", info = " + object);
+                    LogUtil.log("VideoMediaxPlayer => getTrackInfo => groupIndex = " + groupIndex + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
 
                     if (null == result) {
                         result = new JSONArray();
@@ -1097,104 +1108,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 }
             }
 
-//            //
-//            DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
-//            MappingTrackSelector.MappedTrackInfo allTrackInfo = trackSelector.getCurrentMappedTrackInfo();
-//            int rendererCount = allTrackInfo.getRendererCount();
-//
-//            for (int rendererIndex = 0; rendererIndex < rendererCount; rendererIndex++) {
-//
-//                TrackGroupArray trackGroups = allTrackInfo.getTrackGroups(rendererIndex);
-//                int rendererType = allTrackInfo.getRendererType(rendererIndex);
-//
-//                int groupLength = trackGroups.length;
-//                //
-//                for (int groupIndex = 0; groupIndex < groupLength; groupIndex++) {
-//                    TrackGroup trackGroup = trackGroups.get(groupIndex);
-//                    int trackLength = trackGroup.length;
-//                    //
-//                    for (int trackIndex = 0; trackIndex < trackLength; trackIndex++) {
-//                        Format format = trackGroup.getFormat(trackIndex);
-//
-//
-//                        // 视频轨道
-//                        if (type == 1 && rendererType == C.TRACK_TYPE_VIDEO) {
-//                            if (null == object) {
-//                                object = new JSONObject();
-//                            }
-//
-//                        }
-//                        // 音频轨道
-//                        else if (type == 2 && rendererType == C.TRACK_TYPE_AUDIO) {
-//                            if (null == object) {
-//                                object = new JSONObject();
-//                            }
-//                            object.put("type", "audio");
-//
-//                        }
-//                        // 字幕轨道
-//                        else if (type == 3 && rendererType == C.TRACK_TYPE_TEXT) {
-//                            if (null == object) {
-//                                object = new JSONObject();
-//                            }
-//                            object.put("type", "text");
-//                            object.put("language", format.language);
-//                        }
-//                        // 视频轨道
-//                        else if (type == -1 && rendererType == C.TRACK_TYPE_VIDEO) {
-//                            if (null == object) {
-//                                object = new JSONObject();
-//                            }
-//                            object.put("type", "video");
-//                            object.put("bitrate", format.bitrate);
-//                            object.put("frameRate", format.frameRate);
-//                            object.put("width", format.width);
-//                            object.put("height", format.height);
-//                        }
-//                        // 音频轨道
-//                        else if (type == -1 && rendererType == C.TRACK_TYPE_AUDIO) {
-//                            if (null == object) {
-//                                object = new JSONObject();
-//                            }
-//                            object.put("type", "audio");
-//                            object.put("language", format.language);
-//                            object.put("sampleRate", format.sampleRate);
-//                            object.put("label", format.label);
-//                            object.put("channelCount", format.channelCount);
-//                        }
-//                        // 字幕轨道
-//                        else if (type == -1 && rendererType == C.TRACK_TYPE_TEXT) {
-//                            if (null == object) {
-//                                object = new JSONObject();
-//                            }
-//                            object.put("type", "text");
-//                            object.put("language", format.language);
-//                        }
-//                        // 未知
-//                        else if (type == -1) {
-//                            if (null == object) {
-//                                object = new JSONObject();
-//                            }
-//                            object.put("type", "unknown");
-//                        }
-//
-//                        if (null == object)
-//                            continue;
-//
-//                        object.put("rendererType", rendererType);
-//                        object.put("rendererIndex", rendererIndex);
-//                        object.put("groupIndex", groupIndex);
-//                        object.put("trackIndex", trackIndex);
-//                        object.put("id", format.id);
-//                        object.put("sampleMimeType", format.sampleMimeType);
-//
-//                        if (null == result) {
-//                            result = new JSONArray();
-//                        }
-//                        result.put(object);
-//                    }
-//                }
-//            }
+            //
             if (null == result)
                 throw new Exception("error: not find");
 
