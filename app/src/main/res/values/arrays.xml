@@ -9,8 +9,8 @@
         <item>tencent</item>
         <item>https</item>
         <item>dash_mpd</item>
-        <item>dash_m3u81</item>
-        <item>dash_m3u82</item>
+        <item>hls_m3u8_mixed</item>
+        <item>hls_m3u8_mixed</item>
         <item>track</item>
     </string-array>
 

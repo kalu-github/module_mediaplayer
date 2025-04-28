@@ -33,19 +33,12 @@ import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.RenderersFactory;
 import androidx.media3.exoplayer.analytics.AnalyticsListener;
 import androidx.media3.exoplayer.analytics.DefaultAnalyticsCollector;
-import androidx.media3.exoplayer.dash.DashMediaSource;
-import androidx.media3.exoplayer.hls.HlsMediaSource;
-import androidx.media3.exoplayer.smoothstreaming.SsMediaSource;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.LoadEventInfo;
 import androidx.media3.exoplayer.source.MediaLoadData;
 import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.source.ProgressiveMediaSource;
-import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
-import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
-import androidx.media3.exoplayer.trackselection.TrackSelection;
-import androidx.media3.exoplayer.trackselection.TrackSelectionArray;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 import androidx.media3.extractor.DefaultExtractorsFactory;
 
@@ -55,21 +48,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.Proxy;
-import java.net.ProxySelector;
-import java.net.SocketAddress;
-import java.net.URI;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.lang.reflect.Constructor;
+import java.util.ServiceLoader;
 
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.core.kernel.video.exo2.VideoExo2PlayerSimpleCache;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
-import okhttp3.ConnectionPool;
-import okhttp3.OkHttpClient;
 
 @UnstableApi
 public final class VideoMediaxPlayer extends VideoBasePlayer {
@@ -217,6 +202,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 mExoPlayer.prepare();
             }
         } catch (Exception e) {
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR_BUILD_SOURCE);
             LogUtil.log("VideoMediaxPlayer => startDecoder => Exception " + e.getMessage());
         }
     }
@@ -648,30 +634,56 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             // rtmp
             if (contentType == -100) {
                 Class<?> cls = Class.forName("com.google.android.exoplayer2.ext.rtmp.RtmpDataSource");
-                return new ProgressiveMediaSource.Factory((DataSource.Factory) cls.newInstance()).createMediaSource(builder.build());
+                DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
+                LogUtil.log("VideoMediaxPlayer => buildSource => rtmp");
+                return new ProgressiveMediaSource.Factory(factory).createMediaSource(builder.build());
             }
             // rtsp
             else if (contentType == C.CONTENT_TYPE_RTSP) {
+                Class<?> cls = Class.forName("androidx.media3.exoplayer.rtsp.RtspMediaSource$Factory");
+                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                constructor.setAccessible(true);
+                Object object = constructor.newInstance(dataSource);
+                LogUtil.log("VideoMediaxPlayer => buildSource => rtsp");
+                return ((MediaSource.Factory) object).createMediaSource(builder.build());
                 // return new RtspMediaSource.Factory().createMediaSource(builder.build());
-                return null;
             }
             // dash
             else if (contentType == C.CONTENT_TYPE_DASH) {
-                return new DashMediaSource.Factory(dataSource).createMediaSource(builder.build());
+                Class<?> cls = Class.forName("androidx.media3.exoplayer.dash.DashMediaSource$Factory");
+                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                constructor.setAccessible(true);
+                Object object = constructor.newInstance(dataSource);
+                LogUtil.log("VideoMediaxPlayer => buildSource => dash");
+                return ((MediaSource.Factory) object).createMediaSource(builder.build());
+//                return new DashMediaSource.Factory(dataSource).createMediaSource(builder.build());
             }
             // hls
             else if (contentType == C.CONTENT_TYPE_HLS) {
-                return new HlsMediaSource.Factory(dataSource).createMediaSource(builder.build());
+                Class<?> cls = Class.forName("androidx.media3.exoplayer.hls.HlsMediaSource$Factory");
+                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                constructor.setAccessible(true);
+                Object object = constructor.newInstance(dataSource);
+                LogUtil.log("VideoMediaxPlayer => buildSource => hls");
+                return ((MediaSource.Factory) object).createMediaSource(builder.build());
+//                return new HlsMediaSource.Factory(dataSource).createMediaSource(builder.build());
             }
             // SmoothStreaming
             else if (contentType == C.CONTENT_TYPE_SS) {
-                return new SsMediaSource.Factory(dataSource).createMediaSource(builder.build());
+                Class<?> cls = Class.forName("androidx.media3.exoplayer.smoothstreaming.SsMediaSource$Factory");
+                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                constructor.setAccessible(true);
+                Object object = constructor.newInstance(dataSource);
+                LogUtil.log("VideoMediaxPlayer => buildSource => SmoothStreaming");
+                return ((MediaSource.Factory) object).createMediaSource(builder.build());
+//                 return new SsMediaSource.Factory(dataSource).createMediaSource(builder.build());
             }
             // other
             else {
-                DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-                extractorsFactory.setConstantBitrateSeekingEnabled(true);
-                return new ProgressiveMediaSource.Factory(dataSource, extractorsFactory).createMediaSource(builder.build());
+                DefaultExtractorsFactory factory = new DefaultExtractorsFactory();
+                factory.setConstantBitrateSeekingEnabled(true);
+                LogUtil.log("VideoMediaxPlayer => buildSource => other");
+                return new ProgressiveMediaSource.Factory(dataSource, factory).createMediaSource(builder.build());
             }
         } catch (Exception e) {
             throw e;
@@ -894,39 +906,18 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
             LogUtil.log("VideoMediaxPlayer => setTrackInfo => groupIndex = " + groupIndex + ", trackIndex = " + trackIndex);
-
+            //
             androidx.media3.common.Tracks tracks = mExoPlayer.getCurrentTracks();
             ImmutableList<androidx.media3.common.Tracks.Group> groups = tracks.getGroups();
-
+            //
             TrackGroup trackGroup = groups.get(groupIndex).getMediaTrackGroup();
             TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
-
+            //
             TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters()
                     .buildUpon()
-//                    .setMaxVideoSizeSd()
-//                    .setPreferredAudioLanguage("hu")
                     .setOverrideForType(selectionOverride)
                     .build();
             mExoPlayer.setTrackSelectionParameters(selectionParameters);
-
-//            DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
-//            // 获取当前映射的轨道信息
-//            MappingTrackSelector.MappedTrackInfo mappedTrackInfo = trackSelector.getCurrentMappedTrackInfo();
-////            // 获取字幕轨道组
-//            TrackGroup trackGroup = mappedTrackInfo.getTrackGroups(rendererIndex).get(groupIndex);
-////            // 选择轨道组中的第一个轨道
-//            TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
-////            // 创建新的轨道选择参数
-//            TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters()
-//                    .buildUpon()
-////                    .setTrackTypeDisabled(C.TRACK_TYPE_VIDEO, false) // 确保视频轨道启用
-////                    .clearVideoSizeConstraints()
-////                    .clearOverrides()
-//                    .setOverrideForType(selectionOverride)
-//                    .build();
-//            // 应用新的轨道选择参数
-//            trackSelector.setParameters(selectionParameters);
-
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoMediaxPlayer => setTrackInfo => " + e.getMessage());

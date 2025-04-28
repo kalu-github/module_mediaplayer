@@ -1,3 +1,4 @@
 include ':app'
 include ':lib_mediaplayer_ui'
 include 'lib_mediaxplayer_r1.6.1_mini'
+include 'lib_mediaxplayer_r1.6.1_lite'
