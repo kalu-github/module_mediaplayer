@@ -41,16 +41,18 @@ public class TestDialog extends DialogFragment {
             for (int i = 0; i < length; i++) {
 
                 JSONObject object = array.getJSONObject(i);
+                boolean isTrackSupported = object.optBoolean("isTrackSupported", false);
 
                 String curName;
                 if (type == 1) {
+                    int bitrate = object.optInt("bitrate", 0);
                     int width = object.optInt("width", 0);
                     int height = object.optInt("height", 0);
-                    curName = width + "x" + height;
+                    curName = bitrate + "|" + width + "|" + height + "|" + (isTrackSupported ? "支持" : "不支持");
                 } else {
                     String id = object.optString("id", "null");
                     String sampleMimeType = object.optString("sampleMimeType", "null");
-                    curName = id + "-" + sampleMimeType;
+                    curName = id + "|" + sampleMimeType + "|" + (isTrackSupported ? "支持" : "不支持");
                 }
 
                 boolean isSelected = object.optBoolean("isSelected", false);
@@ -61,6 +63,7 @@ public class TestDialog extends DialogFragment {
                 radioButton.setChecked(isSelected);
                 radioButton.setText(curName);
                 radioButton.setTag(object);
+                radioButton.setEnabled(isTrackSupported);
 
                 //
                 RadioGroup radioGroup = view.findViewById(R.id.test_dialog_group);
