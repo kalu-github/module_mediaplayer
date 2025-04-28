@@ -1098,7 +1098,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     object.put("subsampleOffsetUs", format.subsampleOffsetUs);
                     object.put("hasPrerollSamples", format.hasPrerollSamples);
 
-                    LogUtil.log("VideoMediaxPlayer => getTrackInfo => groupIndex = " + groupIndex + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
+                    LogUtil.log("VideoMediaxPlayer => getTrackInfo => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
 
                     if (null == result) {
                         result = new JSONArray();
