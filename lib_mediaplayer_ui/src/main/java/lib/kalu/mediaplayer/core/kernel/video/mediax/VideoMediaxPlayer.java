@@ -19,6 +19,8 @@ import androidx.media3.common.TrackSelectionOverride;
 import androidx.media3.common.TrackSelectionParameters;
 import androidx.media3.common.Tracks;
 import androidx.media3.common.VideoSize;
+import androidx.media3.common.text.Cue;
+import androidx.media3.common.text.CueGroup;
 import androidx.media3.common.util.Clock;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.datasource.DataSource;
@@ -49,10 +51,13 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.ServiceLoader;
+import java.util.List;
 
+import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -500,9 +505,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         try {
             String url = args.getUrl();
-            Uri uri = Uri.parse(url);
-//            String scheme /= uri.getScheme();
-
+            if (null == url)
+                throw new Exception("warning: url null");
+            if (url.isEmpty())
+                throw new Exception("warning: url isEmpty");
 
             int contentType;
             String lowerCase = url.toLowerCase();
@@ -895,6 +901,24 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         @Override
         public void onSeekForwardIncrementChanged(EventTime eventTime, long l) {
             LogUtil.log("VideoMediaxPlayer => onSeekForwardIncrementChanged =>");
+        }
+
+        @Override
+        public void onCues(EventTime eventTime, CueGroup cueGroup) {
+            LogUtil.log("VideoMediaxPlayer => onSeekForwardIncrementChanged =>");
+        }
+
+        @Override
+        public void onCues(EventTime eventTime, List<Cue> cues) {
+            VideoPlayerApi playerApi = getPlayerApi();
+            ComponentSubtitle component = playerApi.findComponent(ComponentSubtitle.class);
+            if (null != component) {
+                lib.kalu.mediaplayer.widget.subtitle.exo.SubtitleView subtitleView = component.findViewById(R.id.module_mediaplayer_component_subtitle_root);
+                subtitleView.setCues(cues);
+            }
+            for (Cue cue : cues) {
+                LogUtil.log("VideoMediaxPlayer => onCues => cue = " + cue.text);
+            }
         }
     };
 

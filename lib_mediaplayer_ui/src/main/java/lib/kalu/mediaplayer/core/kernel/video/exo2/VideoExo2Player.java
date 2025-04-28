@@ -589,44 +589,35 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //            refreshHeaders(httpFactory, headers);
 
 
-            DataSource.Factory dataSourceFactory;
-            try {
-                int netType = getNetType();
-                LogUtil.log("VideoExo2Player => createMediaSource => netType = " + netType);
-                if (netType != PlayerType.NetType.EXO_OKHTTP)
-                    throw new Exception("warning: netType != PlayerType.NetType.EXO_OKHTTP");
-                Class<?> okhttpClass = Class.forName("okhttp3.OkHttpClient.Builder");
-                Class<?> factoryClass = Class.forName("com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource.Factory");
-                Object o = okhttpClass.newInstance();
-                long connectTimeout = args.getConnectTimout();
-                ((okhttp3.OkHttpClient.Builder) o).connectTimeout(connectTimeout, TimeUnit.MILLISECONDS);
-                ((okhttp3.OkHttpClient.Builder) o).connectionPool(new ConnectionPool(10, 60, TimeUnit.MINUTES));
-                ((okhttp3.OkHttpClient.Builder) o).retryOnConnectionFailure(true);
-                ((okhttp3.OkHttpClient.Builder) o).proxySelector(new ProxySelector() { // 禁止抓包
-                    @Override
-                    public List<Proxy> select(URI uri) {
-                        return Collections.singletonList(Proxy.NO_PROXY);
-                    }
+//                Class<?> okhttpClass = Class.forName("okhttp3.OkHttpClient.Builder");
+//                Class<?> factoryClass = Class.forName("com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource.Factory");
+//                Object o = okhttpClass.newInstance();
+//                long connectTimeout = args.getConnectTimout();
+//                ((okhttp3.OkHttpClient.Builder) o).connectTimeout(connectTimeout, TimeUnit.MILLISECONDS);
+//                ((okhttp3.OkHttpClient.Builder) o).connectionPool(new ConnectionPool(10, 60, TimeUnit.MINUTES));
+//                ((okhttp3.OkHttpClient.Builder) o).retryOnConnectionFailure(true);
+//                ((okhttp3.OkHttpClient.Builder) o).proxySelector(new ProxySelector() { // 禁止抓包
+//                    @Override
+//                    public List<Proxy> select(URI uri) {
+//                        return Collections.singletonList(Proxy.NO_PROXY);
+//                    }
+//
+//                    @Override
+//                    public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
+//                    }
+//                });
+//                OkHttpClient httpClient = ((OkHttpClient.Builder) o).build();
+//                Object instance = factoryClass.getDeclaredConstructor(Context.class).newInstance(httpClient);
+//                ((OkHttpDataSource.Factory) instance).setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
+//                dataSourceFactory = (OkHttpDataSource.Factory) instance;
 
-                    @Override
-                    public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
-                    }
-                });
-                OkHttpClient httpClient = ((OkHttpClient.Builder) o).build();
-                Object instance = factoryClass.getDeclaredConstructor(Context.class).newInstance(httpClient);
-                ((OkHttpDataSource.Factory) instance).setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
-                dataSourceFactory = (OkHttpDataSource.Factory) instance;
-            } catch (Exception e) {
-                LogUtil.log("VideoExo2Player => createMediaSource => Exception  " + e.getMessage());
-                DefaultHttpDataSource.Factory httpFactory = new DefaultHttpDataSource.Factory();
-                httpFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
-                long connectTimeout = args.getConnectTimout();
-                httpFactory.setConnectTimeoutMs((int) connectTimeout);
-                httpFactory.setReadTimeoutMs((int) connectTimeout);
-                httpFactory.setAllowCrossProtocolRedirects(true);
-                httpFactory.setKeepPostFor302Redirects(true);
-                dataSourceFactory = httpFactory;
-            }
+            DefaultHttpDataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory();
+            dataSourceFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
+            long connectTimeout = args.getConnectTimout();
+            dataSourceFactory.setConnectTimeoutMs((int) connectTimeout);
+            dataSourceFactory.setReadTimeoutMs((int) connectTimeout);
+            dataSourceFactory.setAllowCrossProtocolRedirects(true);
+            dataSourceFactory.setKeepPostFor302Redirects(true);
 
             int cacheType = args.getCacheType();
             boolean live = args.isLive();

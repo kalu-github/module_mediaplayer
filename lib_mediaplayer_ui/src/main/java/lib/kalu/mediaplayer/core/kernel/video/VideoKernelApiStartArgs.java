@@ -73,19 +73,6 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
         }
     }
 
-    @PlayerType.NetType.Value
-    default int getNetType() {
-        try {
-            StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
-            return args.getNetType();
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApiBase => getNetType => Exception " + e.getMessage());
-            return PlayerType.NetType.DEFAULT;
-        }
-    }
-
     default long getPlayWhenReadySeekToPosition() {
         try {
             StartArgs args = getStartArgs();

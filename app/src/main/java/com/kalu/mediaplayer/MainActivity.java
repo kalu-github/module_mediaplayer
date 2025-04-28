@@ -331,18 +331,6 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        @PlayerType.NetType
-        int netType;
-        int httpTypeId = ((RadioGroup) findViewById(R.id.main_exo_http)).getCheckedRadioButtonId();
-        switch (httpTypeId) {
-            case R.id.main_exo_http_okhttp:
-                netType = PlayerType.NetType.EXO_OKHTTP;
-                break;
-            default:
-                netType = PlayerType.NetType.DEFAULT;
-                break;
-        }
-
         @PlayerType.CacheType
         int cacheType;
         int cacheFlagId = ((RadioGroup) findViewById(R.id.main_cache)).getCheckedRadioButtonId();
@@ -386,8 +374,6 @@ public class MainActivity extends Activity {
                 .setCacheDirName(null)
                 // 快进类型（仅针对 MediaPlayer ExoPlayer IjkPlayer）
                 .setSeekType(PlayerType.SeekType.DEFAULT)
-                // 网络类型（仅针对 ExoPlayer）
-                .setNetType(netType)
                 .build();
     }
 }

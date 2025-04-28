@@ -20,6 +20,7 @@ import lib.kalu.mediaplayer.core.component.ComponentPrepareGradient;
 import lib.kalu.mediaplayer.core.component.ComponentMenu;
 import lib.kalu.mediaplayer.core.component.ComponentPause;
 import lib.kalu.mediaplayer.core.component.ComponentSeek;
+import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentWarningTrySee;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
@@ -149,6 +150,9 @@ public final class TestActivity extends Activity {
             // 起播详情
             ComponentWarningPlayInfo info = new ComponentWarningPlayInfo(getApplicationContext());
             playerLayout.addComponent(info);
+            // 字幕
+            ComponentSubtitle subtitle = new ComponentSubtitle(getApplicationContext());
+            playerLayout.addComponent(subtitle);
         } catch (Exception e) {
         }
     }

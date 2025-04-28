@@ -174,39 +174,6 @@
             </RadioGroup>
 
             <TextView
-                android:id="@+id/main_exo_http_title"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginLeft="6dp"
-                android:gravity="center_vertical|left"
-                android:text="网络类型"
-                android:textSize="14sp"
-                android:visibility="gone" />
-
-            <RadioGroup
-                android:id="@+id/main_exo_http"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <RadioButton
-                    android:id="@+id/main_exo_http_sample"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true"
-                    android:text="http" />
-
-                <RadioButton
-                    android:id="@+id/main_exo_http_okhttp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="false"
-                    android:text="okhttp" />
-
-            </RadioGroup>
-
-            <TextView
                 android:id="@+id/main_decoder_title"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"

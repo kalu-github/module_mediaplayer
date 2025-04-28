@@ -21,22 +21,6 @@ import java.lang.annotation.Target;
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
 public @interface PlayerType {
 
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface NetType {
-        int HTTP = 2_001;
-        int EXO_OKHTTP = 2_002;
-        int DEFAULT = HTTP;
-
-        @Documented
-        @Retention(CLASS)
-        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef({HTTP, EXO_OKHTTP, DEFAULT})
-        @interface Value {
-        }
-    }
-
     /**
      * 播放模式
      * 普通模式，小窗口模式，正常模式三种其中一种

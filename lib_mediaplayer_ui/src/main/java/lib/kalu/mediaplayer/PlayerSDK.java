@@ -27,11 +27,6 @@ public final class PlayerSDK {
         mPlayerBuilder = new PlayerArgs.Builder();
     }
 
-    public PlayerSDK setNetType(@PlayerType.NetType.Value int v) {
-        mPlayerBuilder.setNetType(v);
-        return this;
-    }
-
     public PlayerSDK setConnectTimeout(int v) {
         this.mPlayerBuilder.setConnectTimeout(v);
         return this;

@@ -126,14 +126,6 @@ public final class PlayerArgs {
         return seekType;
     }
 
-    // 网络类型
-    @PlayerType.NetType.Value
-    private int netType;
-
-    public int getNetType() {
-        return netType;
-    }
-
     /****************/
 
     private PlayerArgs(Builder builder) {
@@ -153,7 +145,6 @@ public final class PlayerArgs {
         cacheDirName = builder.cacheDirName;
         buriedEvent = builder.buriedEvent;
         seekType = builder.seekType;
-        netType = builder.netType;
         rotation = builder.rotation;
     }
 
@@ -175,7 +166,6 @@ public final class PlayerArgs {
         builder.setCacheDirName(this.cacheDirName);
         builder.setBuriedEvent(this.buriedEvent);
         builder.setSeekType(this.seekType);
-        builder.setNetType(this.netType);
         builder.setRotation(this.rotation);
         return builder;
     }
@@ -253,15 +243,6 @@ public final class PlayerArgs {
 
         public Builder setSeekType(@PlayerType.SeekType.Value int v) {
             seekType = v;
-            return this;
-        }
-
-        // 网络类型
-        @PlayerType.NetType.Value
-        private int netType = PlayerType.NetType.DEFAULT;
-
-        public Builder setNetType(@PlayerType.NetType.Value int v) {
-            netType = v;
             return this;
         }
 

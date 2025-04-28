@@ -58,14 +58,6 @@ public class StartArgs implements Serializable {
         return seekType;
     }
 
-    @PlayerType.NetType.Value
-    private int netType;
-
-    @PlayerType.NetType.Value
-    public int getNetType() {
-        return netType;
-    }
-
     // 视频渲染类型
     @PlayerType.RenderType.Value
     private int renderType;
@@ -303,7 +295,6 @@ public class StartArgs implements Serializable {
     public String toString() {
         return "StartArgs{" +
                 ", seekType=" + seekType +
-                ", netType=" + netType +
                 ", cacheType=" + cacheType +
                 ", cacheLocalType=" + cacheLocalType +
                 ", cacheSizeType=" + cacheSizeType +
@@ -347,7 +338,6 @@ public class StartArgs implements Serializable {
     public StartArgs(Builder builder) {
         this.decoderType = builder.decoderType;
         this.seekType = builder.seekType;
-        this.netType = builder.netType;
         this.cacheType = builder.cacheType;
         this.cacheLocalType = builder.cacheLocalType;
         this.cacheSizeType = builder.cacheSizeType;
@@ -389,7 +379,6 @@ public class StartArgs implements Serializable {
     public Builder newBuilder() {
         Builder builder = new Builder();
         builder.seekType = seekType;
-        builder.netType = netType;
         builder.cacheType = cacheType;
         builder.cacheLocalType = cacheLocalType;
         builder.cacheSizeType = cacheSizeType;
@@ -434,9 +423,6 @@ public class StartArgs implements Serializable {
 
         private final PlayerArgs playerArgs = PlayerSDK.init().getPlayerBuilder();
 
-        // 网络类型
-        @PlayerType.NetType.Value
-        private int netType = playerArgs.getNetType();
         // 解码器类型
         private int decoderType = playerArgs.getDecoderType();
         // 播放器类型
