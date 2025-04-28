@@ -12,7 +12,6 @@ import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
-import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -479,7 +478,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         if (position < trySeeDuration)
                             throw new Exception("waning: position<trySeeDuration");
                         // 试看结束
-                        LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateProgress => TRY_SEE_FINISH");
+//                        LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateProgress => TRY_SEE_FINISH");
                         stop(false, false);
                         callEvent(PlayerType.EventType.TRY_SEE_FINISH);
                     } catch (Exception e) {
@@ -570,9 +569,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
 
                 @Override
-                public void onUpdateSizeChanged(int kernel, int videoWidth, int videoHeight, int rotation, int scaleType) {
-                    LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onUpdateSizeChanged => kernel = " + kernel + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", rotation = " + ", scaleType = " + scaleType);
-                    setVideoFormat(videoWidth, videoHeight, rotation, scaleType);
+                public void onVideoFormatChanged(int kernel, int rotation, int scaleType, int width, int height, int bitrate) {
+//                    LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onVideoFormatChanged => kernel = " + kernel + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", rotation = " + ", scaleType = " + scaleType);
+                    setVideoFormat(kernel, rotation, scaleType, width, height, bitrate);
                 }
             });
         } catch (Exception e) {
@@ -580,31 +579,75 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default JSONArray getTrackInfo() {
+    default boolean setTrackInfo(int groupId, int trackId) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            JSONArray trackInfo = kernel.getTrackInfo();
+            return kernel.setTrackInfo(groupId, trackId);
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => setTrackInfo => " + e.getMessage());
+            return false;
+        }
+    }
+
+    default JSONArray getAllTrackInfo() {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            JSONArray trackInfo = kernel.getAllTrackInfo();
             if (null == trackInfo)
                 throw new Exception("trackInfo error: null");
             return trackInfo;
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => getTrackInfo => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => getAllTrackInfo => " + e.getMessage());
             return null;
         }
     }
 
-    default boolean switchTrack(int trackId) {
+    default JSONArray getVideoTrackInfo() {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            kernel.switchTrack(trackId);
-            return true;
+            JSONArray trackInfo = kernel.getVideoTrackInfo();
+            if (null == trackInfo)
+                throw new Exception("trackInfo error: null");
+            return trackInfo;
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => switchTrack => " + e.getMessage());
-            return false;
+            LogUtil.log("VideoPlayerApiKernel => getVideoTrackInfo => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default JSONArray getAudioTrackInfo() {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            JSONArray trackInfo = kernel.getAudioTrackInfo();
+            if (null == trackInfo)
+                throw new Exception("trackInfo error: null");
+            return trackInfo;
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => getAudioTrackInfo => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default JSONArray getTextTrackInfo() {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            JSONArray trackInfo = kernel.getTextTrackInfo();
+            if (null == trackInfo)
+                throw new Exception("trackInfo error: null");
+            return trackInfo;
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => getTextTrackInfo => " + e.getMessage());
+            return null;
         }
     }
 

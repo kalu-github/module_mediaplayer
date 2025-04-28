@@ -50,10 +50,10 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
         }
     }
 
-    default void setVideoFormat(int width, int height, @PlayerType.RotationType.Value int rotation, @PlayerType.ScaleType.Value int scaleType) {
+    default void setVideoFormat(int kernel, int rotation, int scaleType, int width, int height, int bitrate) {
         try {
             VideoRenderApi render = getVideoRender();
-            render.setVideoFormat(width, height, rotation, scaleType);
+            render.setVideoFormat(kernel, rotation, scaleType, width, height, bitrate);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => setVideoFormat => " + e.getMessage());
         }
@@ -255,12 +255,12 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
             @PlayerType.RenderType.Value
             int renderType = args.getRenderType();
 
-            if (decoderType == PlayerType.DecoderType.IJK_ALL_CODEC && kernelType == PlayerType.KernelType.IJK && renderType == PlayerType.RenderType.SURFACE_VIEW) {
+            if (decoderType == PlayerType.DecoderType.ONLY_CODEC && kernelType == PlayerType.KernelType.IJK && renderType == PlayerType.RenderType.SURFACE_VIEW) {
                 releaseRender();
                 StartArgs startArgs = new StartArgs.Builder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
                 checkRenderNull(startArgs, true);
                 attachRenderKernel();
-            } else if (decoderType == PlayerType.DecoderType.IJK_ALL_CODEC && kernelType == PlayerType.KernelType.IJK) {
+            } else if (decoderType == PlayerType.DecoderType.ONLY_CODEC && kernelType == PlayerType.KernelType.IJK) {
                 VideoRenderApi videoRender = getVideoRender();
                 videoRender.reset();
             } else if (kernelType == PlayerType.KernelType.IJK) {

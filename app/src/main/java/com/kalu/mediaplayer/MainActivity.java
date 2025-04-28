@@ -3,6 +3,7 @@ package com.kalu.mediaplayer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -32,22 +33,13 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initUrl();
+        initKernel();
+
+
         initAudio();
         initAsset();
-
-        RadioGroup radioGroup = findViewById(R.id.main_kernel);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                int visable = (i == R.id.main_kernel_exo_v2 || i == R.id.main_kernel_media3 || i == R.id.main_kernel_ijk ? View.VISIBLE : View.GONE);
-                findViewById(R.id.main_decoder_scroll).setVisibility(visable);
-                findViewById(R.id.main_decoder_title).setVisibility(visable);
-                findViewById(R.id.main_cache).setVisibility(visable);
-                findViewById(R.id.main_cache_title).setVisibility(visable);
-                findViewById(R.id.main_exo_http).setVisibility(visable);
-                findViewById(R.id.main_exo_http_title).setVisibility(visable);
-            }
-        });
 
 
         findViewById(R.id.main_button1).setOnClickListener(new View.OnClickListener() {
@@ -78,6 +70,40 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void initUrl() {
+        try {
+            String[] names = getResources().getStringArray(R.array.names);
+            String[] urls = getResources().getStringArray(R.array.urls);
+            if (names.length != urls.length)
+                throw new Exception();
+            RadioGroup radioGroup = findViewById(R.id.main_radio_group);
+            for (int i = 0; i < names.length; i++) {
+                RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
+                RadioButton radioButton = new RadioButton(getApplicationContext());
+                radioButton.setLayoutParams(layoutParams);
+                radioButton.setText(names[i]);
+                radioButton.setTag(urls[i]);
+                radioGroup.addView(radioButton);
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    private void initKernel() {
+        try {
+            String[] kernels = getResources().getStringArray(R.array.kernels);
+            RadioGroup radioGroup = findViewById(R.id.main_kernel_group);
+            for (int i = 0; i < kernels.length; i++) {
+                RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
+                RadioButton radioButton = new RadioButton(getApplicationContext());
+                radioButton.setLayoutParams(layoutParams);
+                radioButton.setText(kernels[i]);
+                radioGroup.addView(radioButton);
+            }
+        } catch (Exception e) {
+        }
     }
 
     private void initAudio() {
@@ -132,7 +158,7 @@ public class MainActivity extends Activity {
 
     private String getUrl() {
 
-        String videoUrl;
+        String videoUrl = "";
         try {
             EditText editText = findViewById(R.id.main_edit);
             String string = editText.getText().toString();
@@ -140,10 +166,15 @@ public class MainActivity extends Activity {
                 throw new Exception();
             videoUrl = string;
         } catch (Exception e) {
-            RadioGroup radioGroup = findViewById(R.id.main_radio);
-            int id = radioGroup.getCheckedRadioButtonId();
-            RadioButton radioButton = radioGroup.findViewById(id);
-            videoUrl = radioButton.getTag().toString();
+            RadioGroup radioGroup = findViewById(R.id.main_radio_group);
+            int childCount = radioGroup.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+                boolean checked = radioButton.isChecked();
+                if (checked) {
+                    videoUrl = radioButton.getTag().toString();
+                }
+            }
         }
 
         if ("test_1920~960.mp4".equals(videoUrl)) {
@@ -196,62 +227,59 @@ public class MainActivity extends Activity {
         Toast.makeText(getApplicationContext(), "初始化资源文件 => 成功", Toast.LENGTH_SHORT).show();
     }
 
+
+    private int getKernelType(){
+        try {
+            RadioGroup radioGroup = findViewById(R.id.main_kernel_group);
+            int childCount = radioGroup.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+                boolean checked = radioButton.isChecked();
+                if (checked) {
+                    return getResources().getIntArray(R.array.kernels_ids)[i];
+                }
+            }
+            throw new Exception();
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
     private void initPlayer() {
 
         @PlayerType.KernelType
-        int kernelType;
-        int kernelTypeId = ((RadioGroup) findViewById(R.id.main_kernel)).getCheckedRadioButtonId();
-        switch (kernelTypeId) {
-            case R.id.main_kernel_ijk:
-                kernelType = PlayerType.KernelType.IJK;
-                break;
-            case R.id.main_kernel_exo_v2:
-                kernelType = PlayerType.KernelType.EXO_V2;
-                break;
-            case R.id.main_kernel_vlc:
-                kernelType = PlayerType.KernelType.VLC;
-                break;
-            case R.id.main_kernel_ffplayer:
-                kernelType = PlayerType.KernelType.FFPLAYER;
-                break;
-            case R.id.main_kernel_media3:
-                kernelType = PlayerType.KernelType.MEDIA_V3;
-                break;
-            default:
-                kernelType = PlayerType.KernelType.ANDROID;
-                break;
-        }
+        int kernelType = getKernelType();
 
         @PlayerType.DecoderType
         int decoderType;
         int decoderId = ((RadioGroup) findViewById(R.id.main_decoder)).getCheckedRadioButtonId();
         switch (decoderId) {
             case R.id.main_exo_decoder_all_ffmpeg:
-                decoderType = PlayerType.DecoderType.EXO_ALL_FFMPEG;
+                decoderType = PlayerType.DecoderType.ONLY_FFMPEG;
                 break;
             case R.id.main_exo_decoder_video_codec_audio_ffmpeg:
-                decoderType = PlayerType.DecoderType.EXO_VIDEO_CODEC_AUDIO_FFMPEG;
+                decoderType = PlayerType.DecoderType.ONLY_VIDEO_CODEC_AUDIO_FFMPEG;
                 break;
             case R.id.main_exo_decoder_video_ffmpeg_audio_codec:
-                decoderType = PlayerType.DecoderType.EXO_VIDEO_FFMPEG_AUDIO_CODEC;
+                decoderType = PlayerType.DecoderType.ONLY_VIDEO_FFMPRG_AUDIO_CODEC;
                 break;
             case R.id.main_exo_decoder_only_video_codec:
-                decoderType = PlayerType.DecoderType.EXO_ONLY_VIDEO_CODEC;
+                decoderType = PlayerType.DecoderType.ONLY_VIDEO_CODEC;
                 break;
             case R.id.main_exo_decoder_only_video_ffmpeg:
-                decoderType = PlayerType.DecoderType.EXO_ONLY_VIDEO_FFMPEG;
+                decoderType = PlayerType.DecoderType.ONLY_VIDEO_FFMPEG;
                 break;
             case R.id.main_exo_decoder_only_audio_codec:
-                decoderType = PlayerType.DecoderType.EXO_ONLY_AUDIO_CODEC;
+                decoderType = PlayerType.DecoderType.ONLY_AUDIO_CODEC;
                 break;
             case R.id.main_exo_decoder_only_audio_ffmpeg:
-                decoderType = PlayerType.DecoderType.EXO_ONLY_AUDIO_FFMPEG;
+                decoderType = PlayerType.DecoderType.ONLY_AUDIO_FFMPEG;
                 break;
             case R.id.main_ijk_decoder_all_codec:
-                decoderType = PlayerType.DecoderType.IJK_ALL_CODEC;
+                decoderType = PlayerType.DecoderType.ONLY_CODEC;
                 break;
             case R.id.main_ijk_decoder_all_ffmpeg:
-                decoderType = PlayerType.DecoderType.IJK_ALL_FFMPEG;
+                decoderType = PlayerType.DecoderType.ONLY_FFMPEG;
                 break;
             default:
                 decoderType = PlayerType.DecoderType.DEFAULT;

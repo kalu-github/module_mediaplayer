@@ -50,14 +50,30 @@ interface VideoKernelApiBase {
 
     long getDuration();
 
-    default JSONArray getTrackInfo() {
-        return null;
-    }
-
-    default boolean switchTrack(int trackId) {
+    default boolean setTrackInfo(int groupIndex, int trackIndex) {
         return false;
     }
 
-    default void callPlayWhenReadyDelayedTimeComplete(Context context){
+    default JSONArray getTrackInfo(int type) {
+        return null;
+    }
+
+    default JSONArray getAllTrackInfo() {
+        return getTrackInfo(-1);
+    }
+
+    default JSONArray getVideoTrackInfo() {
+        return getTrackInfo(1);
+    }
+
+    default JSONArray getAudioTrackInfo() {
+        return getTrackInfo(2);
+    }
+
+    default JSONArray getTextTrackInfo() {
+        return getTrackInfo(3);
+    }
+
+    default void callPlayWhenReadyDelayedTimeComplete(Context context) {
     }
 }

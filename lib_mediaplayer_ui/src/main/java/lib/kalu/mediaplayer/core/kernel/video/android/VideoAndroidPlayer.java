@@ -537,7 +537,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 @PlayerType.ScaleType.Value
                 int scaleType = args.getscaleType();
                 int rotation = args.getRotation();
-                onUpdateSizeChanged(PlayerType.KernelType.ANDROID, videoWidth, videoHeight, rotation, scaleType);
+                onVideoFormatChanged(PlayerType.KernelType.ANDROID, rotation, scaleType, videoWidth, videoHeight, -1);
             } catch (Exception e) {
                 LogUtil.log("VideoAndroidPlayer => onVideoSizeChanged => " + e.getMessage());
             }

@@ -8,19 +8,4 @@
     <string name="retry">重试</string>
     <string name="loading">加载中</string>
     <string name="error">发生错误</string>
-    <string name="url_mp4">https://liuliandsp.oss-cn-beijing.aliyuncs.com/%E5%9C%A3%E6%AF%8D%E4%B8%8E%E9%AD%94%E9%AC%BC%E4%BA%BF%E4%B8%87%E5%AF%8C%E7%BF%81/5.mp4</string>
-<!--    <string name="url_mp4">https://wiki.biaodu-tech.com:38082/%E3%80%8A%E6%9C%80%E5%A5%BD%E7%9A%84%E6%B5%8E%E5%8D%97%E3%80%8B%E5%AE%A3%E4%BC%A0%E7%89%87.mp4</string>-->
-<!--    <string name="url_mp4">http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4</string>-->
-<!--    <string name="url_m3u8">http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com</string>-->
-    <string name="url_m3u8">https://test-1347269025.cos.sa-saopaulo.myqcloud.com/media/movie/foreiowiw/playlist.m3u8</string>
-    <string name="url_rtsp">rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4</string>
-    <string name="url_rtmp">rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp</string>
-    <string name="url_udp">udp://224.255.0.247:10000</string>
-    <string name="url_tencent">http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&amp;amp;bizid=1023&amp;amp;hy=SH&amp;amp;fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400</string>
-    <string name="url_https">https://media.w3.org/2010/05/sintel/trailer.mp4</string>
-    <string name="url_dash">https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd</string>
-    <string name="url_sx1">http://zteres.sn.chinamobile.com:6060/ystxds/32/movie62ff2023041019270000?AuthInfo=XtytY6od2CoxL3Ece34qrDut5VCPsz5XztCLvxBRpErVaX%2F0PpXSHHk8ZrK18wSwUcPUBpKvvT33aM%2FbcRBNJw%3D%3D&amp;version=v1.0&amp;BreakPoint=0&amp;virtualDomain=ystxds.vod_hpd.zte.com&amp;mescid=00000050280009590769&amp;programid=&amp;contentid=movie62ff2023041019270000&amp;videoid=00000050280009590769&amp;recommendtype=0&amp;userid=A089E4CA0921&amp;boid=&amp;stbid=&amp;terminalflag=1&amp;profilecode=&amp;usersessionid=755219691</string>
-    <string name="url_sx2">http://dbiptv.sn.chinamobile.com/36/16/20230421/279244996/279244996.ts/index.m3u8?fmt=ts2hls&amp;zoneoffset=0&amp;servicetype=0&amp;icpid=&amp;limitflux=-1&amp;limitdur=-1&amp;tenantId=8601&amp;accountinfo=%2C3472350%2C111.20.43.6%2C20230704094354%2Cprogram3d0c2023042120130000%2C3472350%2C-1%2C1%2C0%2C-1%2C1%2C1%2C100000209%2C%2C421355565%2C1%2C%2C422122706%2CEND&amp;GuardEncType=2&amp;it=H4sIAAAAAAAAAE2OwQqDMBBE_ybHoKKIh5wshUKxBW2vZUzWVIzGJir076vioZeFWd4bZnKQdDkJUFxTmMgsUlksZZyFWUBpFJJKqGkA5ulTWBExCWPaQRdWbdqzzF9hwKMg5etl1dZ2NtAi2MFi7mtyR1itktzSShLKN3yB59DakcbU2oHfDb4PZw6EUXUsG2Zj2LSFCr5bH-wNn9t-hCN1tXrnRAPjiY2QHTQV6OnPuzm1jvgBZnqa2-oAAAA</string>
-    <string name="url_sx3">http://dbiptv.sn.chinamobile.com/36/16/20230625/279497623/279497623.ts/index.m3u8?fmt=ts2hls&amp;zoneoffset=0&amp;servicetype=0&amp;icpid=&amp;limitflux=-1&amp;limitdur=-1&amp;tenantId=8601&amp;accountinfo=%2C3472350%2C111.20.43.6%2C20230704094330%2Cprogramd7102023062520360000%2C3472350%2C-1%2C1%2C0%2C-1%2C1%2C1%2C100000209%2C%2C426282804%2C1%2C%2C426282817%2CEND&amp;GuardEncType=2&amp;it=H4sIAAAAAAAAADWOwW7CMBiD3ybHKM2aEg45MSFNmjokyq7ITf6GirRhSUHi7WkZXHyw_VmeEix9fRqhys7JFUkJUZYfa9iWOmolykLLqtUs018djWQWIfSjr6NbsN_95lgILsWKz8qaZW0b4I14Fuvr0FIyxZvaU7r1lozLHb8hc3ifyGPq48h3AfdDCq8Ko-b1rKi0VqJaK6GVYtPiNsjnOWEn5E0cLkjkvqN_AqZDyMQusGd4qjGQGa8h_HM_yc1vHk1RXQXzAAAA</string>
-    <string name="url_track">https://aliyuncdnsaascloud.xjhktv.com/video/A%20Lin%2B%E5%80%AA%E5%AD%90%E5%86%88-%E4%B8%8D%E5%B1%91%E5%AE%8C%E7%BE%8E%5B%E5%9B%BD%5D%5B1080P%5D.mp4</string>
 </resources>

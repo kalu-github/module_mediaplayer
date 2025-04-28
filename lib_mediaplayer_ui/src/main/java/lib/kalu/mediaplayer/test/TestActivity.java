@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import org.json.JSONArray;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
@@ -24,6 +27,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
 import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
 /**
@@ -51,78 +55,63 @@ public final class TestActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        setContentView(R.layout.module_mediaplayer_test);
+        setContentView(R.layout.module_mediaplayer_test_activity);
 
         initListener();
         initComponent();
         startPlayer();
 
-//        // 音轨信息
-//        findViewById(R.id.module_mediaplayer_test_button21).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-//                JSONArray trackInfo = playerLayout.getTrackInfo();
-//                LogUtil.log("trackInfo = " + trackInfo);
-//            }
-//        });
-//        // 音轨信息2
-//        findViewById(R.id.module_mediaplayer_test_button22).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-//                playerLayout.switchTrack(1);
-//            }
-//        });
-//        // 音轨信息3
-//        findViewById(R.id.module_mediaplayer_test_button23).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-//                playerLayout.switchTrack(2);
-//            }
-//        });
-//        // 信息
-//        findViewById(R.id.module_mediaplayer_test_button8).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-////                VideoIjkPlayer videoIjkPlayer = playerLayout.getKernel();
-////                IjkTrackInfo[] trackInfo = videoIjkPlayer.getTrackInfo();
-////                String s = new Gson().toJson(trackInfo);
-////                MPLogUtil.log("TestActivity => onClick => "+s);
-//            }
-//        });
-//        // 跳转
-//        findViewById(R.id.module_mediaplayer_test_button0).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
-//                intent.putExtra(TestActivity.INTENT_URL, getUrl());
-//                startActivity(intent);
-//            }
-//        });
-//        // 换台
-//        findViewById(R.id.module_mediaplayer_test_button1).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startPlayer();
-//            }
-//        });
-//        // 全屏
-//        findViewById(R.id.module_mediaplayer_test_button2).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startFull();
-//            }
-//        });
-//        // 浮动
-//        findViewById(R.id.module_mediaplayer_test_button3).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startFloat();
-//            }
-//        });
+        // 视频轨道
+        findViewById(R.id.module_mediaplayer_track_video).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTrackInfo(1);
+            }
+        });
+        // 音频轨道
+        findViewById(R.id.module_mediaplayer_track_audio).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTrackInfo(2);
+            }
+        });
+        // 字幕轨道
+        findViewById(R.id.module_mediaplayer_track_text).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTrackInfo(3);
+            }
+        });
+    }
+
+    public void callTrackInfo(int groupIndex, int trackIndex) {
+        Toast.makeText(getApplicationContext(), "groupIndex = " + groupIndex + ", trackIndex = " + trackIndex, Toast.LENGTH_SHORT).show();
+        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        playerLayout.setTrackInfo(groupIndex, trackIndex);
+//        LogUtil.log("showTrackInfo -> type = " + type + ", trackInfo = " + trackInfo);
+    }
+
+    private void showTrackInfo(int type) {
+        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        JSONArray trackInfo;
+        if (type == 1) {
+            trackInfo = playerLayout.getVideoTrackInfo();
+        } else if (type == 2) {
+            trackInfo = playerLayout.getAudioTrackInfo();
+        } else {
+            trackInfo = playerLayout.getTextTrackInfo();
+        }
+        LogUtil.log("showTrackInfo -> type = " + type + ", trackInfo = " + trackInfo);
+
+        if (null != trackInfo) {
+            Bundle bundle = new Bundle();
+            bundle.putInt(TestDialog.BUNDLE_TYPE, type);
+            bundle.putString(TestDialog.BUNDLE_DATA, trackInfo.toString());
+
+            TestDialog testDialog = new TestDialog();
+            testDialog.setArguments(bundle);
+            testDialog.show(getFragmentManager(), "TestDialog");
+        }
     }
 
     private void initComponent() {

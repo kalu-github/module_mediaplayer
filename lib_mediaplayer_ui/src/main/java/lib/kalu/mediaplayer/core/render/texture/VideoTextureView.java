@@ -132,6 +132,11 @@ public class VideoTextureView extends TextureView implements VideoRenderApi {
     }
 
     @Override
+    public void setFixedSize(int width, int height) {
+
+    }
+
+    @Override
     public boolean hasFocus() {
         return false;
     }

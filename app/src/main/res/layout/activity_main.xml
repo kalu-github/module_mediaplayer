@@ -166,52 +166,10 @@
                 android:textSize="14sp" />
 
             <RadioGroup
-                android:id="@+id/main_kernel"
+                android:id="@+id/main_kernel_group"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/main_kernel_android"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true"
-                    android:text="android" />
-
-                <RadioButton
-                    android:id="@+id/main_kernel_media3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="false"
-                    android:text="media3" />
-
-                <RadioButton
-                    android:id="@+id/main_kernel_ijk"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="false"
-                    android:text="ijk" />
-
-                <RadioButton
-                    android:id="@+id/main_kernel_exo_v2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="false"
-                    android:text="exo2" />
-
-                <RadioButton
-                    android:id="@+id/main_kernel_vlc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="false"
-                    android:text="vlc" />
-
-                <RadioButton
-                    android:id="@+id/main_kernel_ffplayer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="false"
-                    android:text="ffplayer" />
 
             </RadioGroup>
 
@@ -441,122 +399,10 @@
                 android:fillViewport="true">
 
                 <RadioGroup
-                    android:id="@+id/main_radio"
+                    android:id="@+id/main_radio_group"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/main_radio0"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="test_540~960.mp4"
-                        android:text="540*960.mp4[h264]" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="test_1920~960.mp4"
-                        android:text="1920*960.mp4[h265]" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="test_544~960.mp4"
-                        android:text="544*960.mp4[h264]" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="@string/url_mp4"
-                        android:text="mp4" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="@string/url_m3u8"
-                        android:text="m3u8" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="@string/url_rtsp"
-                        android:text="rtsp" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="@string/url_rtmp"
-                        android:text="rtmp" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="@string/url_udp"
-                        android:text="udp" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:checked="true"
-                        android:tag="@string/url_tencent"
-                        android:text="test" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio9"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="@string/url_https"
-                        android:text="https" />
-                    <!--        <RadioButton-->
-                    <!--            android:id="@+id/main_radio9"-->
-                    <!--            android:layout_width="wrap_content"-->
-                    <!--            android:layout_height="match_parent"-->
-                    <!--            android:tag="https://media.w3.org/2010/05/sintel/trailer.mp4"-->
-                    <!--            android:text="https" />-->
-
-                    <RadioButton
-                        android:id="@+id/main_radio10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="@string/url_dash"
-                        android:text="dash" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio12"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="@string/url_sx1"
-                        android:text="m3u8-sn1" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio13"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="@string/url_sx2"
-                        android:text="m3u8-sn2" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio14"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="@string/url_sx3"
-                        android:text="m3u8-sn3" />
-
-                    <RadioButton
-                        android:id="@+id/main_radio15"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:tag="@string/url_track"
-                        android:text="track" />
 
                 </RadioGroup>
 

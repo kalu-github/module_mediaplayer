@@ -131,7 +131,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("error: args null");
 
             int decoderType = args.getDecoderType();
-            boolean useMediaCodec = (decoderType == PlayerType.DecoderType.IJK_ALL_CODEC);
+            boolean useMediaCodec = (decoderType == PlayerType.DecoderType.ONLY_CODEC);
             LogUtil.log("VideoMedia3Player => createDecoder => decoderType = " + decoderType);
 
             int player = IjkMediaPlayer.OPT_CATEGORY_PLAYER;
@@ -304,7 +304,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             if (null == args)
                 throw new Exception("error: args null");
             int decoderType = args.getDecoderType();
-            boolean useMediaCodec = (decoderType == PlayerType.DecoderType.IJK_ALL_CODEC);
+            boolean useMediaCodec = (decoderType == PlayerType.DecoderType.ONLY_CODEC);
             int codec = IjkMediaPlayer.OPT_CATEGORY_CODEC;
             // IJK_AVDISCARD_NONE    =-16, ///< discard nothing
             // IJK_AVDISCARD_DEFAULT =  0, ///< 如果包大小为0，则抛弃无效的包
@@ -563,49 +563,49 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         }
     }
 
-    @Override
-    public JSONArray getTrackInfo() {
-        try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
-            IjkTrackInfo[] ijkTrackInfos = mIjkPlayer.getTrackInfo();
-            if (null == ijkTrackInfos)
-                throw new Exception("ijkTrackInfos error: null");
-            JSONArray data = new JSONArray();
-            for (IjkTrackInfo t : ijkTrackInfos) {
-                if (null == t)
-                    continue;
-                JSONObject o = new JSONObject();
-                o.put("type", t.getTrackType());
-                o.put("launcher", t.getLanguage());
-                o.put("info", t.getInfoInline());
-                IMediaFormat format = t.getFormat();
-                if (null != format) {
-                    o.put("mime", format.getString("mime"));
-                    o.put("width", format.getInteger("width"));
-                    o.put("height", format.getInteger("height"));
-                }
-                data.put(o);
-            }
-            return data;
-        } catch (Exception e) {
-            LogUtil.log("VideoIjkPlayer => getTrackInfo => " + e.getMessage());
-            return null;
-        }
-    }
+//    @Override
+//    public JSONArray getTrackInfo() {
+//        try {
+//            if (null == mIjkPlayer)
+//                throw new Exception("mIjkPlayer error: null");
+//            IjkTrackInfo[] ijkTrackInfos = mIjkPlayer.getTrackInfo();
+//            if (null == ijkTrackInfos)
+//                throw new Exception("ijkTrackInfos error: null");
+//            JSONArray data = new JSONArray();
+//            for (IjkTrackInfo t : ijkTrackInfos) {
+//                if (null == t)
+//                    continue;
+//                JSONObject o = new JSONObject();
+//                o.put("type", t.getTrackType());
+//                o.put("launcher", t.getLanguage());
+//                o.put("info", t.getInfoInline());
+//                IMediaFormat format = t.getFormat();
+//                if (null != format) {
+//                    o.put("mime", format.getString("mime"));
+//                    o.put("width", format.getInteger("width"));
+//                    o.put("height", format.getInteger("height"));
+//                }
+//                data.put(o);
+//            }
+//            return data;
+//        } catch (Exception e) {
+//            LogUtil.log("VideoIjkPlayer => getTrackInfo => " + e.getMessage());
+//            return null;
+//        }
+//    }
 
-    @Override
-    public boolean switchTrack(int trackId) {
-        try {
-            if (null == mIjkPlayer)
-                throw new Exception("mIjkPlayer error: null");
-            mIjkPlayer.selectTrack(trackId);
-            return true;
-        } catch (Exception e) {
-            LogUtil.log("VideoIjkPlayer => switchTrack => " + e.getMessage());
-            return false;
-        }
-    }
+//    @Override
+//    public boolean switchTrack(int trackId) {
+//        try {
+//            if (null == mIjkPlayer)
+//                throw new Exception("mIjkPlayer error: null");
+//            mIjkPlayer.selectTrack(trackId);
+//            return true;
+//        } catch (Exception e) {
+//            LogUtil.log("VideoIjkPlayer => switchTrack => " + e.getMessage());
+//            return false;
+//        }
+//    }
 
     /**
      * 设置视频信息监听器
@@ -755,7 +755,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 @PlayerType.ScaleType.Value
                 int scaleType = args.getscaleType();
                 int rotation = args.getRotation();
-                onUpdateSizeChanged(PlayerType.KernelType.IJK, videoWidth, videoHeight, rotation, scaleType);
+                onVideoFormatChanged(PlayerType.KernelType.IJK, rotation, scaleType, videoWidth, videoHeight, -1);
             } catch (Exception e) {
                 LogUtil.log("VideoIjkPlayer => onVideoSizeChanged => " + e.getMessage());
             }

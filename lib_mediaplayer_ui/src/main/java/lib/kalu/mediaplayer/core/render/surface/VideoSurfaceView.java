@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.Surface;
+import android.view.SurfaceControl;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -204,7 +205,14 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
     }
 
     @Override
+    public void setFixedSize(int width, int height) {
+        getHolder().setFixedSize(width, width);
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
         try {
             int screenWidth = MeasureSpec.getSize(widthMeasureSpec);
             int screenHeight = MeasureSpec.getSize(heightMeasureSpec);
@@ -213,13 +221,13 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
                 throw new Exception("warning: measureSpec null");
             int width = measureSpec[0];
             int height = measureSpec[1];
+            LogUtil.log("VideoSurfaceView => onMeasure => width = " + width + ", height = " + height + ",screenWidth = " + screenWidth + ", screenHeight = " + screenHeight);
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             int specH = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             super.onMeasure(specW, specH);
-//            getHolder().setFixedSize(measureSpec[0], measureSpec[1]);
+            getHolder().setFixedSize(specW, specH);
         } catch (Exception e) {
             LogUtil.log("VideoSurfaceView => onMeasure => Exception " + e.getMessage());
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
 
@@ -244,7 +252,7 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
          */
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            LogUtil.log("VideoSurfaceView => surfaceChanged => holder = " + holder+", format = "+format+", width = "+width+", height = "+height);
+            LogUtil.log("VideoSurfaceView => surfaceChanged => holder = " + holder + ", format = " + format + ", width = " + width + ", height = " + height);
         }
 
         /**

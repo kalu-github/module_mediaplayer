@@ -468,7 +468,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 @PlayerType.ScaleType.Value
                 int scaleType = args.getscaleType();
                 int rotation = args.getRotation();
-                onUpdateSizeChanged(PlayerType.KernelType.FFPLAYER, videoWidth, videoHeight, rotation, scaleType);
+                onVideoFormatChanged(PlayerType.KernelType.FFPLAYER, rotation, scaleType, videoWidth, videoHeight, -1);
             } catch (Exception e) {
                 LogUtil.log("VideoFFmpegPlayer => onVideoSizeChanged => " + e.getMessage());
             }

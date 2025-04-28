@@ -1,0 +1,1208 @@
+package lib.kalu.mediaplayer.core.kernel.video.mediax;
+
+import static androidx.media3.common.MediaLibraryInfo.VERSION_SLASHY;
+
+import android.content.Context;
+import android.net.Uri;
+import android.os.Build;
+import android.view.Surface;
+
+import androidx.annotation.Nullable;
+import androidx.media3.common.C;
+import androidx.media3.common.Format;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.PlaybackException;
+import androidx.media3.common.PlaybackParameters;
+import androidx.media3.common.Player;
+import androidx.media3.common.TrackGroup;
+import androidx.media3.common.TrackSelectionOverride;
+import androidx.media3.common.TrackSelectionParameters;
+import androidx.media3.common.Tracks;
+import androidx.media3.common.VideoSize;
+import androidx.media3.common.util.Clock;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.datasource.DataSource;
+import androidx.media3.datasource.DefaultDataSource;
+import androidx.media3.datasource.DefaultHttpDataSource;
+import androidx.media3.datasource.cache.CacheDataSource;
+import androidx.media3.datasource.cache.SimpleCache;
+import androidx.media3.exoplayer.DecoderReuseEvaluation;
+import androidx.media3.exoplayer.DefaultLoadControl;
+import androidx.media3.exoplayer.ExoPlaybackException;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.RenderersFactory;
+import androidx.media3.exoplayer.analytics.AnalyticsListener;
+import androidx.media3.exoplayer.analytics.DefaultAnalyticsCollector;
+import androidx.media3.exoplayer.dash.DashMediaSource;
+import androidx.media3.exoplayer.hls.HlsMediaSource;
+import androidx.media3.exoplayer.smoothstreaming.SsMediaSource;
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
+import androidx.media3.exoplayer.source.LoadEventInfo;
+import androidx.media3.exoplayer.source.MediaLoadData;
+import androidx.media3.exoplayer.source.MediaSource;
+import androidx.media3.exoplayer.source.ProgressiveMediaSource;
+import androidx.media3.exoplayer.source.TrackGroupArray;
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
+import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
+import androidx.media3.exoplayer.trackselection.TrackSelection;
+import androidx.media3.exoplayer.trackselection.TrackSelectionArray;
+import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
+import androidx.media3.extractor.DefaultExtractorsFactory;
+
+import com.google.common.collect.ImmutableList;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.Proxy;
+import java.net.ProxySelector;
+import java.net.SocketAddress;
+import java.net.URI;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.core.kernel.video.exo2.VideoExo2PlayerSimpleCache;
+import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.util.LogUtil;
+import okhttp3.ConnectionPool;
+import okhttp3.OkHttpClient;
+
+@UnstableApi
+public final class VideoMediaxPlayer extends VideoBasePlayer {
+
+    private boolean mSeeking = false;
+    private boolean mBuffering = false;
+
+    private ExoPlayer mExoPlayer;
+
+    @Override
+    public ExoPlayer getPlayer() {
+        return mExoPlayer;
+    }
+
+    @Override
+    public void releaseDecoder(boolean isFromUser) {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            if (isFromUser) {
+                setEvent(null);
+            }
+            clear();
+            unRegistListener();
+            release();
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => releaseDecoder => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void createDecoder(Context context, StartArgs args) {
+        LogUtil.log("VideoMediaxPlayer => createDecoder =>");
+        try {
+            if (null != mExoPlayer)
+                throw new Exception("warning: null != mExoPlayer");
+            if (null == args)
+                throw new Exception("error: args null");
+
+            ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
+            builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
+            builder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
+            builder.setLoadControl(new DefaultLoadControl());
+            builder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));
+            builder.setTrackSelector(new DefaultTrackSelector(context));
+
+            int decoderType = args.getDecoderType();
+            LogUtil.log("VideoMediaxPlayer => createDecoder => decoderType = " + decoderType);
+            // all_ffmpeg
+            if (decoderType == PlayerType.DecoderType.ONLY_FFMPEG) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
+                LogUtil.log("VideoMediaxPlayer => createDecoder => EXO_ALL_FFMPEG");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // only_audio_ffmpeg
+            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyAudioFFmpegRenderersFactory");
+                LogUtil.log("VideoMediaxPlayer => createDecoder => EXO_ONLY_AUDIO_FFMPEG");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // only_video_ffmpeg
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyVideoFFmpegRenderersFactory");
+                LogUtil.log("VideoMediaxPlayer => createDecoder => EXO_ONLY_VIDEO_FFMPEG");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // video_codec_audio_ffmpeg
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC_AUDIO_FFMPEG) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoCodecAudioFFmpegRenderersFactory");
+                LogUtil.log("VideoMediaxPlayer => createDecoder => EXO_VIDEO_CODEC_AUDIO_FFMPEG");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // video_ffmpeg_audio_codec
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPRG_AUDIO_CODEC) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoFFmpegAudioCodecRenderersFactory");
+                LogUtil.log("VideoMediaxPlayer => createDecoder => EXO_VIDEO_FFMPEG_AUDIO_CODEC");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // only_audio_codec
+            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_CODEC) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyAudioCodecRenderersFactory");
+                LogUtil.log("VideoMediaxPlayer => createDecoder => EXO_ONLY_AUDIO_CODEC");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // only_video_codec
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC) {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyVideoCodecRenderersFactory");
+                LogUtil.log("VideoMediaxPlayer => createDecoder => EXO_ONLY_VIDEO_CODEC");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // all_codec (decoderType == PlayerType.DecoderType.EXO_ALL_CODEC)
+            else {
+                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoCodecAudioCodecRenderersFactory");
+                LogUtil.log("VideoMediaxPlayer => createDecoder => EXO_ALL_CODEC");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+
+            mExoPlayer = builder.build();
+            LogUtil.log("VideoMediaxPlayer => createDecoder => mExoPlayer = " + mExoPlayer);
+            registListener();
+
+            //播放器日志
+//        if (mExoPlayer.getTrackSelector() instanceof MappingTrackSelector) {
+//            mExoPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mExoPlayer.getTrackSelector(), "ExoPlayer"));
+//        }
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => createDecoder => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void startDecoder(Context context, StartArgs args) {
+        LogUtil.log("VideoMediaxPlayer => startDecoder => mExoPlayer = " + mExoPlayer);
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            if (null == args)
+                throw new Exception("error: args null");
+            String url = args.getUrl();
+            if (null == url)
+                throw new Exception("error: url null");
+
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
+
+            MediaSource mediaSource = buildSource(context, args);
+            mExoPlayer.setMediaSource(mediaSource);
+            mExoPlayer.setRepeatMode(androidx.media3.exoplayer.ExoPlayer.REPEAT_MODE_OFF);
+
+            boolean playWhenReady = args.isPlayWhenReady();
+            mExoPlayer.setPlayWhenReady(playWhenReady);
+
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE_START);
+            boolean prepareAsync = args.isPrepareAsync();
+            if (prepareAsync) {
+                mExoPlayer.prepare();
+            } else {
+                mExoPlayer.prepare();
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => startDecoder => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void initOptions(Context context, StartArgs args) {
+        LogUtil.log("VideoMediaxPlayer => initOptions =>");
+
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            if (null == args)
+                throw new Exception("error: args null");
+            boolean mute = isMute();
+            setVolume(mute ? 0L : 1L, mute ? 0L : 1L);
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => initOptions => Exception1 " + e.getMessage());
+        }
+
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            if (null == args)
+                throw new Exception("error: args null");
+            int seekParameters = args.getSeekType();
+            // seek model
+            if (seekParameters == PlayerType.SeekType.EXO_CLOSEST_SYNC) {
+                mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.CLOSEST_SYNC);
+            } else if (seekParameters == PlayerType.SeekType.EXO_PREVIOUS_SYNC) {
+                mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.PREVIOUS_SYNC);
+            } else if (seekParameters == PlayerType.SeekType.EXO_NEXT_SYNC) {
+                mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.NEXT_SYNC);
+            } else if (seekParameters == PlayerType.SeekType.EXO_EXACT) {
+                mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.EXACT);
+            } else {
+                mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.DEFAULT);
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => initOptions => Exception2 " + e.getMessage());
+        }
+
+        // log-jni
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            if (null == args)
+                throw new Exception("error: args null");
+            Class<?> clazz = Class.forName("androidx.media3.decoder.ffmpeg.FfmpegLibrary");
+            if (null == clazz)
+                throw new Exception("warning: androidx.media3.decoder.ffmpeg.FfmpegLibrary not find");
+            boolean log = args.isLog();
+//            androidx.media3.decoder.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => initOptions => Exception3 " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void setSurface(Surface surface, int w, int h) {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+//            if(null == surface)
+//                throw new Exception("surface error: null");
+            if (null == surface) {
+                mExoPlayer.setVideoSurface(null);
+                mExoPlayer.clearVideoSurface();
+            } else {
+                mExoPlayer.setVideoSurface(surface);
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => setSurface => " + e.getMessage());
+        }
+    }
+
+    /**
+     * 是否正在播放
+     */
+    @Override
+    public boolean isPlaying() {
+        try {
+            if (!isPrepared())
+                throw new Exception("mPrepared warning: false");
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            int state = mExoPlayer.getPlaybackState();
+            if (state == Player.STATE_BUFFERING || state == Player.STATE_READY) {
+                return mExoPlayer.getPlayWhenReady();
+            } else if (state == Player.STATE_IDLE || state == Player.STATE_ENDED) {
+                return false;
+            } else {
+                throw new Exception("not find");
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => isPlaying => " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public void seekTo(long seek) {
+        try {
+
+            if (seek < 0L)
+                throw new Exception("error: seek<0");
+            if (null == mExoPlayer)
+                throw new Exception("error: mMediaPlayer null");
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+
+            long duration = getDuration();
+            if (duration > 0L && seek > duration) {
+                seek = duration;
+            }
+
+            mSeeking = true;
+            long position = getPosition();
+            onEvent(PlayerType.KernelType.MEDIA_V3, seek < position ? PlayerType.EventType.SEEK_START_REWIND : PlayerType.EventType.SEEK_START_FORWARD);
+            mExoPlayer.seekTo(seek);
+            LogUtil.log("VideoMediaxPlayer => seekTo =>");
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => seekTo => " + e.getMessage());
+        }
+    }
+
+    /**
+     * 获取当前播放的位置
+     */
+    @Override
+    public long getPosition() {
+        try {
+            if (!isPrepared())
+                throw new Exception("mPrepared warning: false");
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            long currentPosition = mExoPlayer.getCurrentPosition();
+            if (currentPosition < 0)
+                throw new Exception("currentPosition warning: " + currentPosition);
+            return currentPosition;
+        } catch (Exception e) {
+//            MPLogUtil.log("VideoMediaxPlayer => getPosition => " + e.getMessage());
+            return 0L;
+        }
+    }
+
+    /**
+     * 获取视频总时长
+     */
+    @Override
+    public long getDuration() {
+        try {
+            if (!isPrepared())
+                throw new Exception("mPrepared warning: false");
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            long duration = mExoPlayer.getDuration();
+            if (duration <= 0)
+                throw new Exception("duration warning: " + duration);
+            return duration;
+        } catch (Exception e) {
+//            MPLogUtil.log("VideoMediaxPlayer => getDuration => " + e.getMessage());
+            return 0L;
+        }
+    }
+
+    /**
+     * 设置播放速度
+     */
+    @Override
+    public boolean setSpeed(float speed) {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mMediaPlayer error: null");
+            PlaybackParameters playbackParameters = mExoPlayer.getPlaybackParameters();
+            if (null != playbackParameters) {
+                playbackParameters = playbackParameters.withSpeed(speed);
+            } else {
+                playbackParameters = new PlaybackParameters(speed);
+            }
+            mExoPlayer.setPlaybackParameters(playbackParameters);
+            return true;
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => setSpeed => " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public void setVolume(float v1, float v2) {
+        try {
+            float value;
+            boolean mute = isMute();
+            LogUtil.log("VideoMediaxPlayer => setVolume => mute = " + mute);
+            if (mute) {
+                value = 0F;
+            } else {
+                value = Math.max(v1, v2);
+                if (value > 1f) {
+                    value = 1f;
+                }
+            }
+            LogUtil.log("VideoMediaxPlayer => setVolume => value = " + value);
+            mExoPlayer.setVolume(value);
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => setVolume => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void registListener() {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            mExoPlayer.addAnalyticsListener(mAnalyticsListener);
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => registListener => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void unRegistListener() {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            mExoPlayer.removeAnalyticsListener(mAnalyticsListener);
+            mExoPlayer.setPlaybackParameters(null);
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => unRegistListener => Exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void release() {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            mExoPlayer.setVideoSurface(null);
+            mExoPlayer.release();
+            mExoPlayer = null;
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => release => " + e.getMessage());
+        }
+    }
+
+    /**
+     * 播放
+     */
+    @Override
+    public void start() {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            mExoPlayer.play();
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => start => " + e.getMessage());
+        }
+    }
+
+    /**
+     * 暂停
+     */
+    @Override
+    public void pause() {
+        try {
+            if (!isPrepared())
+                throw new Exception("mPrepared warning: false");
+            if (null == mExoPlayer)
+                throw new Exception("mMediaPlayer error: null");
+            mExoPlayer.pause();
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => pause => " + e.getMessage());
+        }
+    }
+
+    /**
+     * 停止
+     */
+    @Override
+    public void stop() {
+        clear();
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            mExoPlayer.stop();
+//            mExoPlayer.reset();
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => stop => " + e.getMessage());
+        }
+    }
+
+    /************************/
+
+    private MediaSource buildSource(Context context, StartArgs args) throws Exception {
+
+        try {
+            String url = args.getUrl();
+            Uri uri = Uri.parse(url);
+//            String scheme /= uri.getScheme();
+
+
+            int contentType;
+            String lowerCase = url.toLowerCase();
+            // dash
+            if (lowerCase.endsWith(PlayerType.SchemeType._MPD)) {
+                contentType = C.CONTENT_TYPE_DASH;
+            }
+            // hls
+            else if (lowerCase.endsWith(PlayerType.SchemeType._M3U) || lowerCase.endsWith(PlayerType.SchemeType._M3U8)) {
+                contentType = C.CONTENT_TYPE_HLS;
+            }
+            // SmoothStreaming
+            else if (lowerCase.matches(PlayerType.SchemeType._MATCHES)) {
+                contentType = C.CONTENT_TYPE_SS;
+            }
+            // rtmp
+            else if (lowerCase.startsWith(PlayerType.SchemeType.RTMP)) {
+                contentType = -100;
+            }
+            // rtsp
+            else if (lowerCase.startsWith(PlayerType.SchemeType.RTSP)) {
+                contentType = C.CONTENT_TYPE_RTSP;
+            }
+            // other
+            else {
+                contentType = C.CONTENT_TYPE_OTHER;
+            }
+
+            // 2
+            MediaItem.Builder builder = new MediaItem.Builder();
+            builder.setUri(Uri.parse(url));
+
+            String subtitleUrl = args.getSubtitleUrl();
+            if (null != subtitleUrl && subtitleUrl.length() > 0) {
+//                MediaItem.SubtitleConfiguration.Builder subtitle = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(mediaUrl));
+//                subtitle.setMimeType(MimeTypes.APPLICATION_SUBRIP);
+//                subtitle.setLanguage("en");
+//                subtitle.setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT); // C.SELECTION_FLAG_DEFAULT
+//                builder.setSubtitleConfigurations(Arrays.asList(subtitle.build()));
+//
+//            MediaItem.SubtitleConfiguration.Builder builder = new MediaItem.SubtitleConfiguration.Builder(srtUri);
+//            builder.setMimeType(MimeTypes.APPLICATION_SUBRIP);
+//            builder.setMimeType(MimeTypes.TEXT_VTT);
+//            builder.setLanguage("en");
+//            builder.setSelectionFlags(C.SELECTION_FLAG_DEFAULT);
+//            MediaItem.SubtitleConfiguration subtitle = builder.build();
+//            MediaSource textMediaSource = new SingleSampleMediaSource.Factory(factory).createMediaSource(subtitle, C.TIME_UNSET);
+//            textMediaSource.getMediaItem().mediaMetadata.subtitle.toString();
+//            MediaLogUtil.log("SRT => " + subtitle);
+//            return new MergingMediaSource(mediaSource, srtSource);
+            }
+
+            // head
+//            refreshHeaders(httpFactory, headers);
+
+
+            DefaultHttpDataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory();
+            dataSourceFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + VERSION_SLASHY);
+            long connectTimeout = args.getConnectTimout();
+            dataSourceFactory.setConnectTimeoutMs((int) connectTimeout);
+            dataSourceFactory.setReadTimeoutMs((int) connectTimeout);
+            dataSourceFactory.setAllowCrossProtocolRedirects(true);
+            dataSourceFactory.setKeepPostFor302Redirects(true);
+
+            int cacheType = args.getCacheType();
+            boolean live = args.isLive();
+            if (live) {
+                cacheType = PlayerType.CacheType.EXO_CLOSE;
+            }
+
+            // 关闭缓存
+            DataSource.Factory dataSource;
+            if (lowerCase.startsWith(PlayerType.SchemeType.FILE) || cacheType == PlayerType.CacheType.EXO_CLOSE) {
+                dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
+            }
+            // 开启缓存
+            else {
+                @PlayerType.CacheLocalType.Value
+                int cacheLocalType = args.getCacheLocalType();
+                @PlayerType.CacheSizeType.Value
+                int cacheSizeType = args.getCacheSizeType();
+                String cacheDirName = args.getCacheDirName();
+
+                CacheDataSource.Factory dataSource1 = new CacheDataSource.Factory();
+                SimpleCache simpleCache1 = VideoMediaxPlayerSimpleCache.getSimpleCache(context, cacheLocalType, cacheSizeType, cacheDirName);
+                dataSource1.setCache(simpleCache1);
+                dataSource1.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+                dataSource1.setUpstreamDataSourceFactory(dataSourceFactory);
+                dataSource = dataSource1;
+
+//                // b
+//                VideoExoplayer2CacheDataSource.Factory dataSource1 = new VideoExoplayer2CacheDataSource.Factory();
+//                dataSource1.setUpstreamDataSourceFactory(dataSourceFactory);
+//                dataSource1.setFlags(VideoExoplayer2CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+//                SimpleCache simpleCache1 = VideoExoPlayer2Cache.getSimpleCache(context, cacheMax, cacheDir);
+//                dataSource1.setCache(simpleCache1);
+//                CacheDataSink.Factory sinkFactory1 = new CacheDataSink.Factory().setCache(simpleCache1).setFragmentSize(C.LENGTH_UNSET);
+//                dataSource1.setCacheWriteDataSinkFactory(sinkFactory1);
+//                dataSource = dataSource1;
+            }
+
+//            // test 增加音轨
+//            MediaItem.SubtitleConfiguration.Builder subtitle = new MediaItem.SubtitleConfiguration.Builder(Uri.parse("http://36.138.99.117:8197/data_source/dub/c4741e9b50dc/2023/02/13/b71f0e9a-9a69-43f8-bf71-fb7feb3f4f9a.mp3"));
+//            subtitle.setMimeType(MimeTypes.AUDIO_AC3);
+//            subtitle.setLanguage("aaaaa");
+//            subtitle.setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT); // C.SELECTION_FLAG_DEFAULT
+//            builder.setSubtitleConfigurations(Arrays.asList(subtitle.build()));
+
+//            // test
+//            ArrayList<MediaItem> mediaItems = new ArrayList<MediaItem>();
+//            mediaItems.add(builder.build());
+//
+//            // test 增加音轨
+//            MediaItem mediaItem = new MediaItem.Builder()
+//                    .setUri("http://36.138.99.117:8197/data_source/dub/c4741e9b50dc/2023/02/13/b71f0e9a-9a69-43f8-bf71-fb7feb3f4f9a.mp3")
+//                    .build();
+//            mediaItems.add(mediaItem);
+//
+//            DefaultMediaSourceFactory mediaSourceFactory = new DefaultMediaSourceFactory(new DefaultDataSource.Factory(context));
+//
+//            MediaSource[] mediaSources = new MediaSource[mediaItems.size()];
+//            for (MediaItem o : mediaItems) {
+//                int i = mediaItems.indexOf(o);
+//                mediaSources[i] = mediaSourceFactory.createMediaSource(o);
+//            }
+//            // 多路流合并
+//            return new MergingMediaSource(mediaSources);
+
+            // rtmp
+            if (contentType == -100) {
+                Class<?> cls = Class.forName("com.google.android.exoplayer2.ext.rtmp.RtmpDataSource");
+                return new ProgressiveMediaSource.Factory((DataSource.Factory) cls.newInstance()).createMediaSource(builder.build());
+            }
+            // rtsp
+            else if (contentType == C.CONTENT_TYPE_RTSP) {
+                // return new RtspMediaSource.Factory().createMediaSource(builder.build());
+                return null;
+            }
+            // dash
+            else if (contentType == C.CONTENT_TYPE_DASH) {
+                return new DashMediaSource.Factory(dataSource).createMediaSource(builder.build());
+            }
+            // hls
+            else if (contentType == C.CONTENT_TYPE_HLS) {
+                return new HlsMediaSource.Factory(dataSource).createMediaSource(builder.build());
+            }
+            // SmoothStreaming
+            else if (contentType == C.CONTENT_TYPE_SS) {
+                return new SsMediaSource.Factory(dataSource).createMediaSource(builder.build());
+            }
+            // other
+            else {
+                DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+                extractorsFactory.setConstantBitrateSeekingEnabled(true);
+                return new ProgressiveMediaSource.Factory(dataSource, extractorsFactory).createMediaSource(builder.build());
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    private final AnalyticsListener mAnalyticsListener = new AnalyticsListener() {
+
+        @Override
+        public void onPlayWhenReadyChanged(AnalyticsListener.EventTime eventTime, boolean playWhenReady, int reason) {
+//        MPLogUtil.log("VideoMediaxPlayer => onPlayWhenReadyChanged => playWhenReady = " + playWhenReady + ", reason = " + reason);
+        }
+
+        @Override
+        public void onPlayerError(AnalyticsListener.EventTime eventTime, PlaybackException error) {
+            try {
+                if (null == error)
+                    throw new Exception("PlaybackException error: null");
+                if (!(error instanceof ExoPlaybackException))
+                    throw new Exception("PlaybackException error: not instanceof ExoPlaybackException");
+                stop();
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+            } catch (Exception e) {
+                LogUtil.log("VideoMediaxPlayer => onPlayerError => error = " + error.getMessage());
+            }
+        }
+
+        @Override
+        public void onTimelineChanged(AnalyticsListener.EventTime eventTime, int reason) {
+            LogUtil.log("VideoMediaxPlayer => onTimelineChanged => reason = " + reason + ", totalBufferedDurationMs = " + eventTime.totalBufferedDurationMs + ", realtimeMs = " + eventTime.realtimeMs);
+        }
+
+        @Override
+        public void onEvents(Player player, AnalyticsListener.Events events) {
+//                    MediaLogUtil.log("VideoMediaxPlayer => onEvents => isPlaying = " + player.isPlaying());
+        }
+
+        @Override
+        public void onVideoSizeChanged(AnalyticsListener.EventTime eventTime, VideoSize videoSize) {
+            LogUtil.log("VideoMediaxPlayer => onVideoSizeChanged => width = " + videoSize.width + ", height = " + videoSize.height);
+        }
+
+        @Override
+        public void onIsPlayingChanged(AnalyticsListener.EventTime eventTime, boolean isPlaying) {
+            LogUtil.log("VideoMediaxPlayer => onIsPlayingChanged => isPlaying = " + isPlaying);
+        }
+
+        @Override
+        public void onLoadError(EventTime eventTime, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData, IOException e, boolean b) {
+            stop();
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.STOP);
+            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.ERROR);
+        }
+
+        @Override
+        public void onPlaybackStateChanged(AnalyticsListener.EventTime eventTime, int state) {
+
+            // 播放错误
+            if (state == Player.STATE_IDLE) {
+                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_IDLE =>");
+            }
+            // 播放完成
+            else if (state == Player.STATE_ENDED) {
+                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_ENDED =>");
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.COMPLETE);
+            }
+            // 播放开始
+            else if (state == Player.STATE_READY) {
+                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_READY =>");
+                try {
+                    if (!isPrepared())
+                        throw new Exception("warning: isPrepared false");
+
+                    if (mBuffering) {
+                        mBuffering = false;
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_STOP);
+                    }
+
+                    if (mSeeking) {
+                        mSeeking = false;
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_FINISH);
+
+                        try {
+                            long seek = getPlayWhenReadySeekToPosition();
+                            if (seek <= 0L)
+                                throw new Exception("warning: seek<=0");
+                            boolean playWhenReadySeekFinish = isPlayWhenReadySeekFinish();
+                            if (playWhenReadySeekFinish)
+                                throw new Exception("warning: playWhenReadySeekFinish true");
+                            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
+                            // 立即播放
+                            boolean playWhenReady = isPlayWhenReady();
+                            onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                            if (!playWhenReady) {
+                                pause();
+                                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PAUSE);
+                            }
+                        } catch (Exception e) {
+                            LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_READY => Exception1 " + e.getMessage());
+                        }
+
+                        try {
+//                            boolean prepared = isPrepared();
+//                            if (prepared)
+//                                throw new Exception("warning: prepared true");
+                            boolean playing = isPlaying();
+                            if (playing)
+                                throw new Exception("warning: playing true");
+                            start();
+                        } catch (Exception e) {
+                            LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_READY => Exception2 " + e.getMessage());
+                        }
+                    }
+
+                } catch (Exception e) {
+                    LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_READY => Exception3 " + e.getMessage());
+                }
+            }
+            // 播放缓冲
+            else if (state == Player.STATE_BUFFERING) {
+                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_BUFFERING =>");
+                try {
+                    if (!isPrepared())
+                        throw new Exception("mPrepared warning: false");
+                    mBuffering = true;
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_START);
+                } catch (Exception e) {
+                    LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_BUFFERING => Exception " + e.getMessage());
+                }
+            }
+            // UNKNOW
+            else {
+                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => UNKNOW => state = " + state);
+            }
+        }
+
+        @Override
+        public void onVideoInputFormatChanged(AnalyticsListener.EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
+            LogUtil.log("VideoMediaxPlayer => onVideoInputFormatChanged[出画面] => width = " + format.width + ", height = " + format.height);
+
+            try {
+//                boolean videoSizeChanged = isVideoSizeChanged();
+//                if (videoSizeChanged)
+//                    throw new Exception("warning: videoSizeChanged = true");
+                StartArgs args = getStartArgs();
+//                if (null == args)
+//                    throw new Exception("error: args null");
+//                setVideoSizeChanged(true);
+                @PlayerType.ScaleType.Value
+                int scaleType = args.getscaleType();
+                int rotation = args.getRotation();
+//                int rotation = (videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.DEFAULT);
+                onVideoFormatChanged(PlayerType.KernelType.MEDIA_V3, rotation, scaleType, format.width, format.height, format.bitrate);
+            } catch (Exception e) {
+                LogUtil.log("VideoMediaxPlayer => onVideoSizeChanged => " + e.getMessage());
+            }
+
+
+            try {
+                if (isPrepared())
+                    throw new Exception("warning: isPrepared true");
+
+
+                setPrepared(true);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE_COMPLETE);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
+                long seek = getPlayWhenReadySeekToPosition();
+                if (seek <= 0L) {
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
+                    // 立即播放
+                    boolean playWhenReady = isPlayWhenReady();
+                    onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                    if (!playWhenReady) {
+                        pause();
+                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PAUSE);
+                    }
+                } else {
+                    // 起播快进
+                    onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_START_FORWARD);
+                    setPlayWhenReadySeekFinish(true);
+                    seekTo(seek);
+                }
+            } catch (Exception e) {
+                LogUtil.log("VideoMediaxPlayer => onVideoInputFormatChanged => Exception " + e.getMessage());
+            }
+        }
+
+        @Override
+        public void onRenderedFirstFrame(AnalyticsListener.EventTime eventTime, Object output, long renderTimeMs) {
+            LogUtil.log("VideoMediaxPlayer => onRenderedFirstFrame =>");
+        }
+
+        @Override
+        public void onAudioInputFormatChanged(AnalyticsListener.EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
+            LogUtil.log("VideoMediaxPlayer => onAudioInputFormatChanged =>");
+        }
+
+        @Override
+        public void onSeekStarted(EventTime eventTime) {
+            LogUtil.log("VideoMediaxPlayer => onSeekStarted =>");
+        }
+
+        @Override
+        public void onSeekBackIncrementChanged(EventTime eventTime, long l) {
+            LogUtil.log("VideoMediaxPlayer => onSeekBackIncrementChanged =>");
+        }
+
+        @Override
+        public void onSeekForwardIncrementChanged(EventTime eventTime, long l) {
+            LogUtil.log("VideoMediaxPlayer => onSeekForwardIncrementChanged =>");
+        }
+    };
+
+    /*********/
+
+    @Override
+    public boolean setTrackInfo(int groupIndex, int trackIndex) {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            LogUtil.log("VideoMediaxPlayer => setTrackInfo => groupIndex = " + groupIndex + ", trackIndex = " + trackIndex);
+
+            androidx.media3.common.Tracks tracks = mExoPlayer.getCurrentTracks();
+            ImmutableList<androidx.media3.common.Tracks.Group> groups = tracks.getGroups();
+
+            TrackGroup trackGroup = groups.get(groupIndex).getMediaTrackGroup();
+            TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
+
+            TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters()
+                    .buildUpon()
+//                    .setMaxVideoSizeSd()
+//                    .setPreferredAudioLanguage("hu")
+                    .setOverrideForType(selectionOverride)
+                    .build();
+            mExoPlayer.setTrackSelectionParameters(selectionParameters);
+
+//            DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
+//            // 获取当前映射的轨道信息
+//            MappingTrackSelector.MappedTrackInfo mappedTrackInfo = trackSelector.getCurrentMappedTrackInfo();
+////            // 获取字幕轨道组
+//            TrackGroup trackGroup = mappedTrackInfo.getTrackGroups(rendererIndex).get(groupIndex);
+////            // 选择轨道组中的第一个轨道
+//            TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
+////            // 创建新的轨道选择参数
+//            TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters()
+//                    .buildUpon()
+////                    .setTrackTypeDisabled(C.TRACK_TYPE_VIDEO, false) // 确保视频轨道启用
+////                    .clearVideoSizeConstraints()
+////                    .clearOverrides()
+//                    .setOverrideForType(selectionOverride)
+//                    .build();
+//            // 应用新的轨道选择参数
+//            trackSelector.setParameters(selectionParameters);
+
+            return true;
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => setTrackInfo => " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public JSONArray getTrackInfo(int type) {
+
+
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+
+            //
+            JSONArray result = null;
+
+            //
+            androidx.media3.common.Tracks tracks = mExoPlayer.getCurrentTracks();
+            ImmutableList<androidx.media3.common.Tracks.Group> groups = tracks.getGroups();
+            for (int groupIndex = 0; groupIndex < groups.size(); groupIndex++) {
+                Tracks.Group group = groups.get(groupIndex);
+                if (null == group)
+                    continue;
+
+                int trackType = group.getType();
+                // 是否支持自适应播放
+                boolean isGroupAdaptiveSupported = group.isAdaptiveSupported();
+                boolean isGroupSelected = group.isSelected();
+                boolean isGroupSupported = group.isSupported();
+                for (int trackIndex = 0; trackIndex < group.length; trackIndex++) {
+                    //
+                    Format format = group.getTrackFormat(trackIndex);
+                    // 轨道是否支持
+                    boolean isTrackSupported = group.isTrackSupported(trackIndex);
+                    // 轨道是否被选中
+                    boolean isTrackSelected = group.isTrackSelected(trackIndex);
+
+                    JSONObject object = null;
+
+                    // 视频轨道
+                    if (type == 1 && trackType == C.TRACK_TYPE_VIDEO) {
+                        if (null == object) {
+                            object = new JSONObject();
+                        }
+                        object.put("bitrate", format.bitrate);
+                        object.put("width", format.width);
+                        object.put("height", format.height);
+                        object.put("frameRate", format.frameRate);
+                        object.put("rotationDegrees", format.rotationDegrees);
+                        object.put("pixelWidthHeightRatio", format.pixelWidthHeightRatio);
+                        object.put("projectionData", format.projectionData);
+                        object.put("stereoMode", format.stereoMode);
+                        object.put("colorInfo", format.colorInfo);
+                        object.put("maxSubLayers", format.maxSubLayers);
+                    }
+                    // 音频轨道
+                    else if (type == 2 && trackType == C.TRACK_TYPE_AUDIO) {
+                        if (null == object) {
+                            object = new JSONObject();
+                        }
+                        object.put("channelCount", format.channelCount);
+                        object.put("sampleRate", format.sampleRate);
+                        object.put("pcmEncoding", format.pcmEncoding);
+                        object.put("encoderDelay", format.encoderDelay);
+                        object.put("encoderPadding", format.encoderPadding);
+                    }
+                    // 字幕轨道
+                    else if (type == 3 && trackType == C.TRACK_TYPE_TEXT) {
+                        if (null == object) {
+                            object = new JSONObject();
+                        }
+                        object.put("accessibilityChannel", format.accessibilityChannel);
+                        object.put("cueReplacementBehavior", format.cueReplacementBehavior);
+                    }
+                    // 媒体信息
+                    else if (type == 4 && trackType == C.TRACK_TYPE_METADATA) {
+                    }
+                    // 视频轨道
+                    else if (type == -1 && trackType == C.TRACK_TYPE_VIDEO) {
+                        if (null == object) {
+                            object = new JSONObject();
+                        }
+                        object.put("bitrate", format.bitrate);
+                        object.put("width", format.width);
+                        object.put("height", format.height);
+                        object.put("frameRate", format.frameRate);
+                        object.put("rotationDegrees", format.rotationDegrees);
+                        object.put("pixelWidthHeightRatio", format.pixelWidthHeightRatio);
+                        object.put("projectionData", format.projectionData);
+                        object.put("stereoMode", format.stereoMode);
+                        object.put("colorInfo", format.colorInfo);
+                        object.put("maxSubLayers", format.maxSubLayers);
+                    }
+                    // 音频轨道
+                    else if (type == -1 && trackType == C.TRACK_TYPE_AUDIO) {
+                        if (null == object) {
+                            object = new JSONObject();
+                        }
+                        object.put("channelCount", format.channelCount);
+                        object.put("sampleRate", format.sampleRate);
+                        object.put("pcmEncoding", format.pcmEncoding);
+                        object.put("encoderDelay", format.encoderDelay);
+                        object.put("encoderPadding", format.encoderPadding);
+                    }
+                    // 字幕轨道
+                    else if (type == -1 && trackType == C.TRACK_TYPE_TEXT) {
+                        if (null == object) {
+                            object = new JSONObject();
+                        }
+                        object.put("accessibilityChannel", format.accessibilityChannel);
+                        object.put("cueReplacementBehavior", format.cueReplacementBehavior);
+                    }
+                    // 媒体信息
+                    else if (type == -1 && trackType == C.TRACK_TYPE_METADATA) {
+                    }
+
+
+                    if (null == object)
+                        continue;
+                    object.put("groupIndex", groupIndex);
+                    object.put("trackIndex", trackIndex);
+                    object.put("trackType", trackType);
+                    object.put("isGroupAdaptiveSupported", isGroupAdaptiveSupported);
+                    object.put("isGroupSupported", isGroupSupported);
+                    object.put("isGroupSelected", isGroupSelected);
+                    object.put("isTrackSupported", isTrackSupported);
+
+                    // fixbug
+                    if (trackType == C.TRACK_TYPE_VIDEO && isTrackSelected) {
+                        int videoWidth = getPlayerApi().getVideoRender().getVideoWidth();
+                        int videoHeight = getPlayerApi().getVideoRender().getVideoHeight();
+                        int videoBitrate = getPlayerApi().getVideoRender().getVideoBitrate();
+                        isTrackSelected = (videoWidth == format.width && videoHeight == format.height && videoBitrate == format.bitrate);
+                    }
+                    object.put("isTrackSelected", isTrackSelected);
+
+                    object.put("id", format.id);
+                    object.put("label", format.label);
+                    object.put("labels", format.labels);
+                    object.put("language", format.language);
+                    object.put("selectionFlags", format.selectionFlags);
+                    object.put("roleFlags", format.roleFlags);
+                    object.put("averageBitrate", format.averageBitrate);
+                    object.put("peakBitrate", format.peakBitrate);
+                    object.put("codecs", format.codecs);
+                    object.put("metadata", format.metadata);
+                    object.put("customData", format.customData);
+                    // Container specific.
+                    object.put("containerMimeType", format.containerMimeType);
+                    // Sample specific.
+                    object.put("sampleMimeType", format.sampleMimeType);
+                    object.put("maxInputSize", format.maxInputSize);
+                    object.put("maxNumReorderSamples", format.maxNumReorderSamples);
+                    object.put("initializationData", format.initializationData);
+                    object.put("drmInitData", format.drmInitData);
+                    object.put("subsampleOffsetUs", format.subsampleOffsetUs);
+                    object.put("hasPrerollSamples", format.hasPrerollSamples);
+
+                    LogUtil.log("VideoMediaxPlayer => getTrackInfo => groupIndex = " + groupIndex + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", info = " + object);
+
+                    if (null == result) {
+                        result = new JSONArray();
+                    }
+                    result.put(object);
+
+                }
+            }
+
+//            //
+//            DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
+//            MappingTrackSelector.MappedTrackInfo allTrackInfo = trackSelector.getCurrentMappedTrackInfo();
+//            int rendererCount = allTrackInfo.getRendererCount();
+//
+//            for (int rendererIndex = 0; rendererIndex < rendererCount; rendererIndex++) {
+//
+//                TrackGroupArray trackGroups = allTrackInfo.getTrackGroups(rendererIndex);
+//                int rendererType = allTrackInfo.getRendererType(rendererIndex);
+//
+//                int groupLength = trackGroups.length;
+//                //
+//                for (int groupIndex = 0; groupIndex < groupLength; groupIndex++) {
+//                    TrackGroup trackGroup = trackGroups.get(groupIndex);
+//                    int trackLength = trackGroup.length;
+//                    //
+//                    for (int trackIndex = 0; trackIndex < trackLength; trackIndex++) {
+//                        Format format = trackGroup.getFormat(trackIndex);
+//
+//
+//                        // 视频轨道
+//                        if (type == 1 && rendererType == C.TRACK_TYPE_VIDEO) {
+//                            if (null == object) {
+//                                object = new JSONObject();
+//                            }
+//
+//                        }
+//                        // 音频轨道
+//                        else if (type == 2 && rendererType == C.TRACK_TYPE_AUDIO) {
+//                            if (null == object) {
+//                                object = new JSONObject();
+//                            }
+//                            object.put("type", "audio");
+//
+//                        }
+//                        // 字幕轨道
+//                        else if (type == 3 && rendererType == C.TRACK_TYPE_TEXT) {
+//                            if (null == object) {
+//                                object = new JSONObject();
+//                            }
+//                            object.put("type", "text");
+//                            object.put("language", format.language);
+//                        }
+//                        // 视频轨道
+//                        else if (type == -1 && rendererType == C.TRACK_TYPE_VIDEO) {
+//                            if (null == object) {
+//                                object = new JSONObject();
+//                            }
+//                            object.put("type", "video");
+//                            object.put("bitrate", format.bitrate);
+//                            object.put("frameRate", format.frameRate);
+//                            object.put("width", format.width);
+//                            object.put("height", format.height);
+//                        }
+//                        // 音频轨道
+//                        else if (type == -1 && rendererType == C.TRACK_TYPE_AUDIO) {
+//                            if (null == object) {
+//                                object = new JSONObject();
+//                            }
+//                            object.put("type", "audio");
+//                            object.put("language", format.language);
+//                            object.put("sampleRate", format.sampleRate);
+//                            object.put("label", format.label);
+//                            object.put("channelCount", format.channelCount);
+//                        }
+//                        // 字幕轨道
+//                        else if (type == -1 && rendererType == C.TRACK_TYPE_TEXT) {
+//                            if (null == object) {
+//                                object = new JSONObject();
+//                            }
+//                            object.put("type", "text");
+//                            object.put("language", format.language);
+//                        }
+//                        // 未知
+//                        else if (type == -1) {
+//                            if (null == object) {
+//                                object = new JSONObject();
+//                            }
+//                            object.put("type", "unknown");
+//                        }
+//
+//                        if (null == object)
+//                            continue;
+//
+//                        object.put("rendererType", rendererType);
+//                        object.put("rendererIndex", rendererIndex);
+//                        object.put("groupIndex", groupIndex);
+//                        object.put("trackIndex", trackIndex);
+//                        object.put("id", format.id);
+//                        object.put("sampleMimeType", format.sampleMimeType);
+//
+//                        if (null == result) {
+//                            result = new JSONArray();
+//                        }
+//                        result.put(object);
+//                    }
+//                }
+//            }
+            if (null == result)
+                throw new Exception("error: not find");
+
+            LogUtil.log("VideoMediaxPlayer => getTrackInfo => type = " + type + ", result = " + result);
+            return result;
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => getTrackInfo => Exception " + e.getMessage());
+            return null;
+        }
+    }
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="false">
+
+    <lib.kalu.mediaplayer.widget.player.PlayerLayout
+        android:id="@+id/module_mediaplayer_test_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="@android:color/black"
+        android:focusable="true" />
+
+    <Button
+        android:id="@+id/module_mediaplayer_track_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="视频轨道" />
+
+    <Button
+        android:id="@+id/module_mediaplayer_track_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/module_mediaplayer_track_video"
+        android:layout_toRightOf="@id/module_mediaplayer_track_video"
+        android:text="音频轨道" />
+
+
+    <Button
+        android:id="@+id/module_mediaplayer_track_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/module_mediaplayer_track_audio"
+        android:layout_toRightOf="@id/module_mediaplayer_track_audio"
+        android:text="字幕轨道" />
+
+</RelativeLayout>

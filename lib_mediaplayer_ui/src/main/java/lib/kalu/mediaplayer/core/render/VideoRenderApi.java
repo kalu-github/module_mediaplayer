@@ -28,6 +28,7 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
 
     int[] mVideoWidth = new int[]{0};
     int[] mVideoHeight = new int[]{0};
+    int[] mVideoBitrate = new int[]{0};
 
     default void setVideoSize(int videoWidth, int videoHeight) {
         try {
@@ -47,6 +48,10 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
 
     default int getVideoHeight() {
         return this.mVideoHeight[0];
+    }
+
+    default int getVideoBitrate() {
+        return this.mVideoBitrate[0];
     }
 
     /********/
@@ -91,15 +96,15 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
 
     /********/
 
-    default void setVideoFormat(int videoWidth, int videoHeight, @PlayerType.RotationType.Value int videoRotation, @PlayerType.ScaleType.Value int videoScaleType) {
-        LogUtil.log("VideoRenderApi => setVideoFormat => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", videoRotation = " + videoRotation + ", videoScaleType = " + videoScaleType);
+    default void setVideoFormat(int kernel, int rotation, int scaleType, int width, int height, int bitrate) {
         try {
-            if (mVideoWidth[0] == videoWidth && mVideoHeight[0] == videoWidth && mVideoRotation[0] == videoRotation && mVideoScaleType[0] == videoScaleType)
-                throw new Exception("warning: mVideoWidth && mVideoHeight && mVideoRotation && mVideoScaleType not change");
-            this.mVideoWidth[0] = videoWidth;
-            this.mVideoHeight[0] = videoHeight;
-            this.mVideoRotation[0] = videoRotation;
-            this.mVideoScaleType[0] = videoScaleType;
+            if (mVideoWidth[0] == width && mVideoHeight[0] == height && mVideoRotation[0] == rotation && mVideoScaleType[0] == scaleType && mVideoBitrate[0] == bitrate)
+                throw new Exception("warning: not change");
+            this.mVideoWidth[0] = width;
+            this.mVideoHeight[0] = height;
+            this.mVideoBitrate[0] = bitrate;
+            this.mVideoRotation[0] = rotation;
+            this.mVideoScaleType[0] = scaleType;
             ((View) this).requestLayout();
         } catch (Exception e) {
             LogUtil.log("VideoRenderApi => setVideoFormat => Exception " + e.getMessage());
@@ -109,8 +114,9 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
     /********/
 
     default void init() {
-        mVideoWidth[0] = 0;
-        mVideoHeight[0] = 0;
+        mVideoWidth[0] = -1;
+        mVideoHeight[0] = -1;
+        mVideoBitrate[0] = -1;
         mVideoRotation[0] = PlayerType.RotationType.DEFAULT;
         mVideoScaleType[0] = PlayerType.ScaleType.DEFAULT;
     }
@@ -130,6 +136,8 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
     void setScaleX(float v);
 
     String screenshot(String url, long position);
+
+    void setFixedSize(int width, int height);
 
     /**
      * 注意：VideoView的宽高一定要定死，否者以下算法不成立
@@ -371,13 +379,14 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
                 float v1 = (float) screenWidth / screenHeight;
                 // 视频比例
                 float v2 = (float) videoWidth / videoHeight;
-//                LogUtil.log("VideoRenderApi => doMeasureSpec => AUTO => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", screenWidth = " + screenWidth + ", screenHeight = " + screenHeight);
-//                LogUtil.log("VideoRenderApi => doMeasureSpec => AUTO => v1 = " + v1 + ", v2 = " + v2);
+                LogUtil.log("VideoRenderApi => doMeasureSpec => AUTO => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", screenWidth = " + screenWidth + ", screenHeight = " + screenHeight);
+                LogUtil.log("VideoRenderApi => doMeasureSpec => AUTO => v1 = " + v1 + ", v2 = " + v2);
                 // 视频宽高比>屏幕宽高比, 以屏幕宽度为基准缩放
                 if (v2 > v1) {
                     float realW = screenWidth * 1F;
                     float realH = realW * videoHeight / videoWidth;
                     return new int[]{(int) realW, (int) realH};
+//                    return new int[]{448, 200};
                 }
                 // 视频宽高比<屏幕宽高比, 以屏幕高度为基准缩放
                 else if (v2 < v1) {

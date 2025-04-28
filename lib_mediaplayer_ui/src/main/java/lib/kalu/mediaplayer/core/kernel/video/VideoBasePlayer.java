@@ -104,13 +104,13 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     }
 
     @Override
-    public void onUpdateSizeChanged(int kernel, int videoWidth, int videoHeight, int rotation, @PlayerType.ScaleType.Value int scaleType) {
+    public void onVideoFormatChanged(int kernel, int rotation, int scaleType, int width, int height, int bitrate) {
         try {
             if (null == eventApi || null == eventApi)
                 throw new Exception("eventApi error: null");
-            eventApi.onUpdateSizeChanged(kernel, videoWidth, videoHeight, rotation, scaleType);
+            eventApi.onVideoFormatChanged(kernel, rotation, scaleType, width, height, bitrate);
         } catch (Exception e) {
-            LogUtil.log("VideoBasePlayer => onUpdateSizeChanged => " + e.getMessage());
+            LogUtil.log("VideoBasePlayer => onVideoFormatChanged => " + e.getMessage());
         }
     }
 

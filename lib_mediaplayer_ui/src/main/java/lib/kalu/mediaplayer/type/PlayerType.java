@@ -255,34 +255,31 @@ public @interface PlayerType {
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface DecoderType {
-        int ANDROID_ALL_CODEC = 10_000;
-        int EXO_ALL_CODEC = 10_001;
-        int EXO_ALL_FFMPEG = 10_004;
-        int EXO_ONLY_AUDIO_CODEC = 10_002;
-        int EXO_ONLY_VIDEO_CODEC = 10_003;
-        int EXO_ONLY_AUDIO_FFMPEG = 10_005;
-        int EXO_ONLY_VIDEO_FFMPEG = 10_006;
-        int EXO_VIDEO_CODEC_AUDIO_FFMPEG = 10_007;
-        int EXO_VIDEO_FFMPEG_AUDIO_CODEC = 10_008;
-        int IJK_ALL_CODEC = 10_009;
-        int IJK_ALL_FFMPEG = 10_010;
-        int DEFAULT = ANDROID_ALL_CODEC;
+        int ALL = 10_000; // 软解&硬解
+        int ONLY_CODEC = 10_001; // 硬解
+        int ONLY_FFMPEG = 10_002; // 软解
+        int ONLY_VIDEO_CODEC_AUDIO_FFMPEG = 10_003; // 视频硬解 音频软解
+        int ONLY_VIDEO_FFMPRG_AUDIO_CODEC = 10_004; // 视频软解 音频硬解
+        int ONLY_VIDEO_CODEC = 10_005;
+        int ONLY_VIDEO_FFMPEG = 10_006;
+        int ONLY_AUDIO_CODEC = 10_007;
+        int ONLY_AUDIO_FFMPEG = 10_008;
+
+        int DEFAULT = ALL;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @IntDef(value = {
-                DecoderType.ANDROID_ALL_CODEC,
-                DecoderType.EXO_ALL_CODEC,
-                DecoderType.EXO_ALL_FFMPEG,
-                DecoderType.EXO_ONLY_AUDIO_CODEC,
-                DecoderType.EXO_ONLY_VIDEO_CODEC,
-                DecoderType.EXO_ONLY_AUDIO_FFMPEG,
-                DecoderType.EXO_ONLY_VIDEO_FFMPEG,
-                DecoderType.EXO_VIDEO_CODEC_AUDIO_FFMPEG,
-                DecoderType.EXO_VIDEO_FFMPEG_AUDIO_CODEC,
-                DecoderType.IJK_ALL_CODEC,
-                DecoderType.IJK_ALL_FFMPEG,
+                DecoderType.ALL,
+                DecoderType.ONLY_CODEC,
+                DecoderType.ONLY_FFMPEG,
+                DecoderType.ONLY_VIDEO_CODEC_AUDIO_FFMPEG,
+                DecoderType.ONLY_VIDEO_FFMPRG_AUDIO_CODEC,
+                DecoderType.ONLY_VIDEO_CODEC,
+                DecoderType.ONLY_VIDEO_FFMPEG,
+                DecoderType.ONLY_AUDIO_CODEC,
+                DecoderType.ONLY_AUDIO_FFMPEG,
                 DecoderType.DEFAULT})
         @interface Value {
         }
@@ -330,8 +327,9 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface SchemeType {
 
-        String RTMP = "rtmp";
-        String RTSP = "rtsp";
+        String FILE = "file://";
+        String RTMP = "rtmp://";
+        String RTSP = "rtsp://";
         String _MPD = ".mpd";
         String _M3U = ".m3u";
         String _M3U8 = ".m3u8";
@@ -341,6 +339,7 @@ public @interface PlayerType {
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @StringDef(value = {
+                SchemeType.FILE,
                 SchemeType.RTMP,
                 SchemeType.RTSP,
                 SchemeType._MPD,
