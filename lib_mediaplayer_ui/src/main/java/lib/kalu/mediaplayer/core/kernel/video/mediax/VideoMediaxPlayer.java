@@ -40,12 +40,9 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.LoadEventInfo;
 import androidx.media3.exoplayer.source.MediaLoadData;
 import androidx.media3.exoplayer.source.MediaSource;
-import androidx.media3.exoplayer.source.MergingMediaSource;
 import androidx.media3.exoplayer.source.ProgressiveMediaSource;
-import androidx.media3.exoplayer.source.SingleSampleMediaSource;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
-import androidx.media3.extractor.DefaultExtractorsFactory;
 
 import com.google.common.collect.ImmutableList;
 
@@ -188,11 +185,29 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 throw new Exception("error: url null");
 
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
+
+                        MediaItem.SubtitleConfiguration subtitleConfiguration = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(url.replace("mp4", "vtt")))
+                                .setMimeType(MimeTypes.TEXT_VTT)  // 明确指定 WebVTT 格式
+                                .setLanguage("en")               // 设置字幕语言
+                                .setSelectionFlags(C.SELECTION_FLAG_DEFAULT) // 默认选中
+                                .build();
 //
-//            ProgressiveMediaSource source1 = new ProgressiveMediaSource.Factory(new DefaultDataSource.Factory(context))
+            ProgressiveMediaSource source1 = new ProgressiveMediaSource.Factory(new DefaultDataSource.Factory(context))
+                    .createMediaSource(new MediaItem.Builder()
+                            .setUri(Uri.parse(url))
+                            .build()
+                            .buildUpon()
+                            .setSubtitleConfigurations(Arrays.asList(subtitleConfiguration))
+                            .build());
+
+//            // 英语字幕源（外挂）
+//            ProgressiveMediaSource source2 = new ProgressiveMediaSource.Factory(new DefaultDataSource.Factory(context))
 //                    .createMediaSource(new MediaItem.Builder()
-//                            .setUri(Uri.parse(url))
+//                            .setUri(Uri.parse(url.replace("mp4", "vtt")))
+//                            .setMimeType(MimeTypes.TEXT_VTT)
 //                            .build());
+
+            mExoPlayer.setMediaSource(source1);
 //
 ////            // 英语音频源（外挂）
 ////            Uri audioEnUri = Uri.parse("https://sample-videos.com/audio/aac/crowd-cheering.aac");
@@ -206,19 +221,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 ////            // 英语字幕源（外挂）
 ////            SingleSampleMediaSource source3 = new SingleSampleMediaSource.Factory(new DefaultDataSource.Factory(context))
 ////                    .createMediaSource(subtitleConfiguration, 0);
-//            // 英语字幕源（外挂）
-//            ProgressiveMediaSource source3 = new ProgressiveMediaSource.Factory(new DefaultDataSource.Factory(context))
-//                    .createMediaSource(new MediaItem.Builder()
-//                            .setUri(Uri.parse(url.replace("mp4", "vtt")))
-//                            .setMimeType(MimeTypes.TEXT_VTT)
-//                            .build());
-//
 //            // 合并视频、音频和字幕
 ////            mExoPlayer.setMediaSource(source1);
 //            mExoPlayer.setMediaSource(new MergingMediaSource(source1, source3));
 
-            MediaSource mediaSource = buildSource(context, args);
-            mExoPlayer.setMediaSource(mediaSource);
+//            MediaSource mediaSource = buildSource(context, args);
+//            mExoPlayer.setMediaSource(mediaSource);
             mExoPlayer.setRepeatMode(androidx.media3.exoplayer.ExoPlayer.REPEAT_MODE_OFF);
 
             boolean playWhenReady = args.isPlayWhenReady();

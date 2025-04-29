@@ -217,6 +217,23 @@ public final class TestActivity extends Activity {
             if (null == args)
                 throw new Exception("error: args null");
             PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
+            videoLayout.setOnPlayerEventListener(new OnPlayerEventListener() {
+                @Override
+                public void onComplete() {
+
+                }
+
+                @Override
+                public void onStart() {
+                    PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+                    playerLayout.getAllTrackInfo();
+                }
+
+                @Override
+                public void onError(String info) {
+
+                }
+            });
             videoLayout.start(args);
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
