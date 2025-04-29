@@ -2,11 +2,8 @@
 /.idea
 /app/build
 /app/release/
-/lib__mediaxplayer*
+/lib_mediaxplayer*
 /lib_mediaplayer_ui/build
 /lib_mediaplayer_exoplayer*
 /lib_mediaplayer_ijkplayer*
 /lib_mediaplayer_ffplayer*
-/lib_mediaxplayer_r1.6.1_mini/build/
-/lib_mediaxplayer_r1.6.1_lite/build/
-/lib_mediaxplayer_r1.6.1_full/build/
