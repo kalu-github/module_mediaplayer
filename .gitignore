@@ -1,6 +1,7 @@
 /.gradle/
-/.idea
-/app/build
+/.idea/
+/build/
+/app/build/
 /app/release/
 /lib_mediaxplayer*
 /lib_mediaplayer_ui/build
