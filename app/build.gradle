@@ -98,8 +98,7 @@ dependencies {
     // ijk
     api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_mini_release_20240509.aar')
     // media3
-   // api files('libs/lib_mediaplayer_media3_r1.6.0_mini_release_20250427.aar')
-    api project(path: ':lib_mediaxplayer_r1.6.1_lite')
+    api files('libs/lib_player_mediax_mini_1.4.1_release_20250429.aar')
     // exo2
 //     api files('libs/lib_mediaplayer_exo_r2.19.1_full_release_20240717.aar')
     // ffplayer
