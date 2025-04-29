@@ -52,13 +52,13 @@ include_directories(
 )
 
 add_library(
-        media3-ffmpeg
+        mediax-ffmpeg
         SHARED
         ffmpeg_log.c
         ffmpeg_jni.cc)
 
 target_link_libraries(
-        media3-ffmpeg
+        mediax-ffmpeg
 
         # ffmpeg
         ffmpeg-avcodec-lib

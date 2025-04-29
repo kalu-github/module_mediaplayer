@@ -3,7 +3,12 @@
 //include ':lib_mediaplayer_media3player_r1.4.0_lite'
 //include ':lib_mediaplayer_media3player_r1.4.0_full'
 
+// 1.4.1
+//include ':lib_mediaxplayer_r1.4.1_full'
+//include ':lib_mediaxplayer_r1.4.1_lite'
+include ':lib_mediaxplayer_r1.4.1_mini'
+
 // 1.6.1
-//include ':lib_mediaxplayer_r1.6.1_full'
-//include ':lib_mediaxplayer_r1.6.1_lite'
+include ':lib_mediaxplayer_r1.6.1_full'
+include ':lib_mediaxplayer_r1.6.1_lite'
 include ':lib_mediaxplayer_r1.6.1_mini'

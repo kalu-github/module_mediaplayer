@@ -13,7 +13,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.0.2'
+        classpath 'com.android.tools.build:gradle:8.9.1'
     }
 }
 
@@ -29,6 +29,10 @@ allprojects {
         maven { url 'https://jitpack.io' }
         mavenCentral()
         google()
+    }
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:-options"
     }
 }
 

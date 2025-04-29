@@ -189,7 +189,7 @@ final class FfmpegVideoDecoder
         int sendPacketResult = ffmpegSendPacket(nativeContext, inputData, inputSize,
                 inputBuffer.timeUs);
         if (sendPacketResult == VIDEO_DECODER_ERROR_INVALID_DATA) {
-            outputBuffer.setFlags(C.BUFFER_FLAG_DECODE_ONLY);
+           // outputBuffer.setFlags(C.BUFFER_FLAG_DECODE_ONLY);
             return null;
         } else if (sendPacketResult == VIDEO_DECODER_ERROR_READ_FRAME) {
             // need read frame
@@ -199,7 +199,8 @@ final class FfmpegVideoDecoder
         }
 
         // receive frame
-        boolean decodeOnly = inputBuffer.isDecodeOnly();
+//        boolean decodeOnly = inputBuffer.isDecodeOnly();
+        boolean decodeOnly = inputBuffer.isEncrypted();
         // We need to dequeue the decoded frame from the decoder even when the input data is
         // decode-only.
         int getFrameResult = ffmpegReceiveFrame(nativeContext, outputMode, outputBuffer, decodeOnly);
@@ -210,7 +211,7 @@ final class FfmpegVideoDecoder
         }
 
         if (getFrameResult == VIDEO_DECODER_ERROR_INVALID_DATA) {
-            outputBuffer.addFlag(C.BUFFER_FLAG_DECODE_ONLY);
+          //  outputBuffer.addFlag(C.BUFFER_FLAG_DECODE_ONLY);
         }
 
         if (!decodeOnly) {

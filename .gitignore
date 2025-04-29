@@ -2,6 +2,7 @@
 /.gradle/
 /.idea
 /app/
+/build/
 /lib_mediaplayer_ui/
 /lib_mediaplayer_exoplayer*
 /lib_mediaplayer_ijkplayer*
@@ -14,6 +15,12 @@
 /lib_mediaplayer_media3player_r1.4.0_lite/build/
 /lib_mediaplayer_media3player_r1.4.0_full/.cxx/
 /lib_mediaplayer_media3player_r1.4.0_full/build/
+
+# 1.4.1
+/lib_mediaxplayer_r1.4.1_mini/build/
+/lib_mediaxplayer_r1.4.1_lite/build/
+/lib_mediaxplayer_r1.4.1_full/.cxx/
+/lib_mediaxplayer_r1.4.1_full/build/
 
 # 1.6.1
 /lib_mediaxplayer_r1.6.1_mini/build/

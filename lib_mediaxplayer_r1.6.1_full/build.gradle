@@ -7,7 +7,7 @@ android {
     compileSdk 35
 
     defaultConfig {
-        minSdk = 14
+        minSdk = 21 // 5.0
         targetSdk = 33
         versionCode 161
         versionName "1.6.1"
@@ -38,7 +38,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path "/src/main/cpp/CMakeLists.txt"
+            path "src/main/cpp/CMakeLists.txt"
         }
     }
 

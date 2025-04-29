@@ -27,9 +27,9 @@ import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DataSpec;
 import androidx.media3.datasource.TransferListener;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import io.antmedia.rtmp_client.RtmpClient;
-import io.antmedia.rtmp_client.RtmpClient.RtmpIOException;
 import java.io.IOException;
+
+import lib.kalu.mediax.rtmp.RtmpClient;
 
 /** A Real-Time Messaging Protocol (RTMP) {@link DataSource}. */
 @UnstableApi
@@ -78,7 +78,7 @@ public final class RtmpDataSource extends BaseDataSource {
   }
 
   @Override
-  public long open(DataSpec dataSpec) throws RtmpIOException {
+  public long open(DataSpec dataSpec) throws RtmpClient.RtmpIOException {
     transferInitializing(dataSpec);
     rtmpClient = new RtmpClient();
     rtmpClient.open(dataSpec.uri.toString(), false);
