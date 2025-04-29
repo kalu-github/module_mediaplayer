@@ -2,6 +2,7 @@ package com.kalu.mediaplayer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.icu.util.Freezable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,12 +35,34 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        try {
+            List<String> list = Arrays.asList("test.mp4", "test.vtt");
+            for (int i = 0; i < list.size(); i++) {
+                String fromPath = list.get(i);
+                String savePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + fromPath;
+                try {
+                    InputStream is = getApplicationContext().getAssets().open(fromPath);
+                    FileOutputStream fos = new FileOutputStream(savePath);
+                    byte[] buffer = new byte[1024];
+                    int byteCount = 0;
+                    while ((byteCount = is.read(buffer)) != -1) {// 循环从输入流读取
+                        // buffer字节
+                        fos.write(buffer, 0, byteCount);// 将读取的输入流写入到输出流
+                    }
+                    fos.flush();// 刷新缓冲区
+                    is.close();
+                    fos.close();
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "初始化资源文件 => 错误", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+            }
+            Toast.makeText(getApplicationContext(), "初始化资源文件 => 成功", Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+        }
+
         initUrl();
         initKernel();
-
-
-        initAudio();
-        initAsset();
 
 
         findViewById(R.id.main_button1).setOnClickListener(new View.OnClickListener() {
@@ -106,16 +129,6 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void initAudio() {
-//        PlayerManager.getInstance()
-//                .setLog(true)
-//                .setAudioKernel(PlayerType.AudioKernelType.AUDIO_IJK_MEDIACODEC)
-//                .build();
-//        AudioView audioView = findViewById(R.id.player_audio);
-//        String s = getResources().getString(R.string.url_tencent);
-//        audioView.start(s);
-    }
-
     private boolean isLive() {
         String url = getUrl();
         return "http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com".equals(url);
@@ -158,75 +171,50 @@ public class MainActivity extends Activity {
 
     private String getUrl() {
 
-        String videoUrl = "";
-        try {
-            EditText editText = findViewById(R.id.main_edit);
-            String string = editText.getText().toString();
-            if (null == string || string.length() == 0)
-                throw new Exception();
-            videoUrl = string;
-        } catch (Exception e) {
-            RadioGroup radioGroup = findViewById(R.id.main_radio_group);
-            int childCount = radioGroup.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
-                boolean checked = radioButton.isChecked();
-                if (checked) {
-                    videoUrl = radioButton.getTag().toString();
-                }
-            }
-        }
+//        String videoUrl = "";
+//        try {
+//            EditText editText = findViewById(R.id.main_edit);
+//            String string = editText.getText().toString();
+//            if (null == string || string.length() == 0)
+//                throw new Exception();
+//            videoUrl = string;
+//        } catch (Exception e) {
+//            RadioGroup radioGroup = findViewById(R.id.main_radio_group);
+//            int childCount = radioGroup.getChildCount();
+//            for (int i = 0; i < childCount; i++) {
+//                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+//                boolean checked = radioButton.isChecked();
+//                if (checked) {
+//                    videoUrl = radioButton.getTag().toString();
+//                }
+//            }
+//        }
+//
+//        if ("test_1920~960.mp4".equals(videoUrl)) {
+//            videoUrl = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + videoUrl;
+//        } else if ("test_540~960.mp4".equals(videoUrl)) {
+//            videoUrl = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + videoUrl;
+//        } else if ("test_544*960.mp4".equals(videoUrl)) {
+//            videoUrl = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + videoUrl;
+//        }
+//
+//        if (videoUrl.startsWith("udp")) {
+//            boolean checkUdpJoinGroup = UdpUtil.checkUdpJoinGroup(videoUrl);
+//            Toast.makeText(getApplicationContext(), "checkUdpJoinGroup = " + checkUdpJoinGroup + ", udp = " + videoUrl, Toast.LENGTH_SHORT).show();
+//        }
+//
+//        if (!videoUrl.startsWith("http")) {
+//            File file = new File(videoUrl);
+//            if (!file.exists()) {
+//                Toast.makeText(getApplicationContext(), "文件不存在", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+        return getApplicationContext().getFilesDir().getAbsolutePath() + "/test.mp4";
 
-        if ("test_1920~960.mp4".equals(videoUrl)) {
-            videoUrl = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + videoUrl;
-        } else if ("test_540~960.mp4".equals(videoUrl)) {
-            videoUrl = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + videoUrl;
-        } else if ("test_544*960.mp4".equals(videoUrl)) {
-            videoUrl = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + videoUrl;
-        }
-
-        if (videoUrl.startsWith("udp")) {
-            boolean checkUdpJoinGroup = UdpUtil.checkUdpJoinGroup(videoUrl);
-            Toast.makeText(getApplicationContext(), "checkUdpJoinGroup = " + checkUdpJoinGroup + ", udp = " + videoUrl, Toast.LENGTH_SHORT).show();
-        }
-
-        if (!videoUrl.startsWith("http")) {
-            File file = new File(videoUrl);
-            if (!file.exists()) {
-                Toast.makeText(getApplicationContext(), "文件不存在", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        return videoUrl;
+//        return videoUrl;
 //        return "http://zteres.sn.chinamobile.com:6060/ystxds/32/movie62ff2023041019270000?AuthInfo=XtytY6od2CoxL3Ece34qrDut5VCPsz5XztCLvxBRpErVaX%2F0PpXSHHk8ZrK18wSwUcPUBpKvvT33aM%2FbcRBNJw%3D%3D&version=v1.0&BreakPoint=0&virtualDomain=ystxds.vod_hpd.zte.com&mescid=00000050280009590769&programid=&contentid=movie62ff2023041019270000&videoid=00000050280009590769&recommendtype=0&userid=A089E4CA0921&boid=&stbid=&terminalflag=1&profilecode=&usersessionid=755219691";
 //        return "http://ottrrs.hl.chinamobile.com/88888888/16/20230427/276732502/276732502.ts?rrsip=ottrrs.hl.chinamobile.com&zoneoffset=0&servicetype=0&icpid=&limitflux=-1&limitdur=-1&tenantId=8601&accountinfo=%2C3918822%2C61.185.224.115%2C20230515181603%2C10019232542%2C3918822%2C0.0%2C1%2C0%2C-1%2C4%2C1%2C%2C%2C377747652%2C1%2C%2C377747857%2CEND&GuardEncType=2&it=H4sIAAAAAAAAAE2OQQuCMBzFv82Ow2kWO-xUBEFYoHWNf9tzidPVpkHfPg0PHd_j93u8IZDGYacImckTIIPA6p5L0nWaybVYZWkKWecs4lV4lTJNzjW9LbyZtWu5vYmECyG53HCxFqyaB_eOrEp-bDF2d4QlTGKJ8G40lIk1f1PkZG2ApaHxPT87-lyCWxCGajnXj86xYQ4VxXYq2IPi1ndPCjBHb3-cqslFsCfpliwK6vDnnYKZTnwBm4g0x-0AAAA";
     }
-
-    private void initAsset() {
-        List<String> list = Arrays.asList("test_544*960.mp4", "test_1920~960.mp4", "test_540~960.mp4", "test_002.mpeg", "xinzui.mp4", "v_3_4.mp4", "v_1_1.mkv", "video-h265.mkv", "video-test.rmvb", "video-h264-adts.m3u8", "video-h264-adts-0000.ts", "video-h264-adts-0001.ts", "video-sxgd.mpeg");
-        for (int i = 0; i < list.size(); i++) {
-            String fromPath = list.get(i);
-            String savePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + fromPath;
-            try {
-                InputStream is = getApplicationContext().getAssets().open(fromPath);
-                FileOutputStream fos = new FileOutputStream(savePath);
-                byte[] buffer = new byte[1024];
-                int byteCount = 0;
-                while ((byteCount = is.read(buffer)) != -1) {// 循环从输入流读取
-                    // buffer字节
-                    fos.write(buffer, 0, byteCount);// 将读取的输入流写入到输出流
-                }
-                fos.flush();// 刷新缓冲区
-                is.close();
-                fos.close();
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "初始化资源文件 => 错误", Toast.LENGTH_SHORT).show();
-                break;
-            }
-        }
-        Toast.makeText(getApplicationContext(), "初始化资源文件 => 成功", Toast.LENGTH_SHORT).show();
-    }
-
 
     private int getKernelType(){
         try {
