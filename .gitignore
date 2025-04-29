@@ -9,13 +9,6 @@
 /lib_mediaplayer_ffplayer*
 /lib_mediaplayer_vlcplayer*
 
-# 1.4.0
-/lib_mediaplayer_media3player_r1.4.0_mini/build/
-/lib_mediaplayer_media3player_r1.4.0_lite/.cxx/
-/lib_mediaplayer_media3player_r1.4.0_lite/build/
-/lib_mediaplayer_media3player_r1.4.0_full/.cxx/
-/lib_mediaplayer_media3player_r1.4.0_full/build/
-
 # 1.4.1
 /lib_mediaxplayer_r1.4.1_mini/build/
 /lib_mediaxplayer_r1.4.1_lite/build/
