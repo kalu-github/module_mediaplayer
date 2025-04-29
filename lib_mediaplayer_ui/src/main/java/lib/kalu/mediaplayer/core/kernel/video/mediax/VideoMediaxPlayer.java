@@ -35,7 +35,6 @@ import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.RenderersFactory;
 import androidx.media3.exoplayer.analytics.AnalyticsListener;
 import androidx.media3.exoplayer.analytics.DefaultAnalyticsCollector;
-import androidx.media3.exoplayer.dash.DashMediaSource;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.LoadEventInfo;
 import androidx.media3.exoplayer.source.MediaLoadData;
@@ -972,7 +971,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         object.put("projectionData", format.projectionData);
                         object.put("stereoMode", format.stereoMode);
                         object.put("colorInfo", format.colorInfo);
-                        object.put("maxSubLayers", format.maxSubLayers);
+//                        object.put("maxSubLayers", format.maxSubLayers);
                     }
                     // 音频轨道
                     else if (type == 2 && trackType == C.TRACK_TYPE_AUDIO) {
@@ -1010,7 +1009,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         object.put("projectionData", format.projectionData);
                         object.put("stereoMode", format.stereoMode);
                         object.put("colorInfo", format.colorInfo);
-                        object.put("maxSubLayers", format.maxSubLayers);
+//                        object.put("maxSubLayers", format.maxSubLayers);
                     }
                     // 音频轨道
                     else if (type == -1 && trackType == C.TRACK_TYPE_AUDIO) {
@@ -1084,7 +1083,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     object.put("initializationData", format.initializationData);
                     object.put("drmInitData", format.drmInitData);
                     object.put("subsampleOffsetUs", format.subsampleOffsetUs);
-                    object.put("hasPrerollSamples", format.hasPrerollSamples);
+//                    object.put("hasPrerollSamples", format.hasPrerollSamples);
 
                     LogUtil.log("VideoMediaxPlayer => getTrackInfo => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
 
