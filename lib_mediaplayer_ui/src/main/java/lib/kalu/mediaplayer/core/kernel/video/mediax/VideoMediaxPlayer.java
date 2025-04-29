@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.media3.common.C;
 import androidx.media3.common.Format;
 import androidx.media3.common.MediaItem;
+import androidx.media3.common.MimeTypes;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
@@ -39,6 +40,7 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.LoadEventInfo;
 import androidx.media3.exoplayer.source.MediaLoadData;
 import androidx.media3.exoplayer.source.MediaSource;
+import androidx.media3.exoplayer.source.MergingMediaSource;
 import androidx.media3.exoplayer.source.ProgressiveMediaSource;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
@@ -51,6 +53,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
@@ -186,7 +189,43 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
 
             MediaSource mediaSource = buildSource(context, args);
-            mExoPlayer.setMediaSource(mediaSource);
+
+            //            // 外挂字幕
+//            Uri subtitleUri = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.test);
+//            MediaItem.SubtitleConfiguration subtitleConfiguration = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
+//                    .setMimeType() // 指定格式（.srt对应SUBRIP）
+//                    .setLanguage("en") // 可选：设置语言标签（如"en"、"zh"）
+//                    .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT) // 标记为默认轨道
+//                    .build();
+
+//            // 外部音轨源（可选）
+//            Uri audioUri = Uri.parse("file:///sdcard/Download/audio_en.m4a");
+//            ProgressiveMediaSource mediaSource1 = new ProgressiveMediaSource.Factory(def).createMediaSource(MediaItem.fromUri(audioUri));
+
+
+            // 创建数据源工厂
+            DefaultHttpDataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory();
+            dataSourceFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + VERSION_SLASHY);
+            long connectTimeout = args.getConnectTimout();
+            dataSourceFactory.setConnectTimeoutMs((int) connectTimeout);
+            dataSourceFactory.setReadTimeoutMs((int) connectTimeout);
+            dataSourceFactory.setAllowCrossProtocolRedirects(true);
+            dataSourceFactory.setKeepPostFor302Redirects(true);
+
+            // 字幕源（WebVTT 格式）
+            Uri subtitleUri = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.test);
+            ProgressiveMediaSource mediaSource2 = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(
+                    new MediaItem.Builder()
+                            .setUri(subtitleUri)
+                            .setMimeType(MimeTypes.APPLICATION_SUBRIP)
+                            .build());
+
+            // 合并视频、音轨和字幕
+            MergingMediaSource mergingMediaSource = new MergingMediaSource(mediaSource, mediaSource);
+
+            mExoPlayer.setMediaSource(mergingMediaSource);
+//            mExoPlayer.addMediaSource(mediaSource1);
+//            mExoPlayer.addMediaSource(mediaSource2);
             mExoPlayer.setRepeatMode(androidx.media3.exoplayer.ExoPlayer.REPEAT_MODE_OFF);
 
             boolean playWhenReady = args.isPlayWhenReady();
@@ -509,34 +548,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 contentType = C.CONTENT_TYPE_OTHER;
             }
 
-            // 2
-            MediaItem.Builder builder = new MediaItem.Builder();
-            builder.setUri(Uri.parse(url));
 
-            String subtitleUrl = args.getSubtitleUrl();
-            if (null != subtitleUrl && subtitleUrl.length() > 0) {
-//                MediaItem.SubtitleConfiguration.Builder subtitle = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(mediaUrl));
-//                subtitle.setMimeType(MimeTypes.APPLICATION_SUBRIP);
-//                subtitle.setLanguage("en");
-//                subtitle.setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT); // C.SELECTION_FLAG_DEFAULT
-//                builder.setSubtitleConfigurations(Arrays.asList(subtitle.build()));
-//
-//            MediaItem.SubtitleConfiguration.Builder builder = new MediaItem.SubtitleConfiguration.Builder(srtUri);
-//            builder.setMimeType(MimeTypes.APPLICATION_SUBRIP);
-//            builder.setMimeType(MimeTypes.TEXT_VTT);
-//            builder.setLanguage("en");
-//            builder.setSelectionFlags(C.SELECTION_FLAG_DEFAULT);
-//            MediaItem.SubtitleConfiguration subtitle = builder.build();
-//            MediaSource textMediaSource = new SingleSampleMediaSource.Factory(factory).createMediaSource(subtitle, C.TIME_UNSET);
-//            textMediaSource.getMediaItem().mediaMetadata.subtitle.toString();
-//            MediaLogUtil.log("SRT => " + subtitle);
-//            return new MergingMediaSource(mediaSource, srtSource);
-            }
-
-            // head
-//            refreshHeaders(httpFactory, headers);
-
-
+            // 创建数据源工厂
             DefaultHttpDataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory();
             dataSourceFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + VERSION_SLASHY);
             long connectTimeout = args.getConnectTimout();
@@ -582,39 +595,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                dataSource = dataSource1;
             }
 
-//            // test 增加音轨
-//            MediaItem.SubtitleConfiguration.Builder subtitle = new MediaItem.SubtitleConfiguration.Builder(Uri.parse("http://36.138.99.117:8197/data_source/dub/c4741e9b50dc/2023/02/13/b71f0e9a-9a69-43f8-bf71-fb7feb3f4f9a.mp3"));
-//            subtitle.setMimeType(MimeTypes.AUDIO_AC3);
-//            subtitle.setLanguage("aaaaa");
-//            subtitle.setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT); // C.SELECTION_FLAG_DEFAULT
-//            builder.setSubtitleConfigurations(Arrays.asList(subtitle.build()));
-
-//            // test
-//            ArrayList<MediaItem> mediaItems = new ArrayList<MediaItem>();
-//            mediaItems.add(builder.build());
-//
-//            // test 增加音轨
-//            MediaItem mediaItem = new MediaItem.Builder()
-//                    .setUri("http://36.138.99.117:8197/data_source/dub/c4741e9b50dc/2023/02/13/b71f0e9a-9a69-43f8-bf71-fb7feb3f4f9a.mp3")
-//                    .build();
-//            mediaItems.add(mediaItem);
-//
-//            DefaultMediaSourceFactory mediaSourceFactory = new DefaultMediaSourceFactory(new DefaultDataSource.Factory(context));
-//
-//            MediaSource[] mediaSources = new MediaSource[mediaItems.size()];
-//            for (MediaItem o : mediaItems) {
-//                int i = mediaItems.indexOf(o);
-//                mediaSources[i] = mediaSourceFactory.createMediaSource(o);
-//            }
-//            // 多路流合并
-//            return new MergingMediaSource(mediaSources);
-
             // rtmp
             if (contentType == -100) {
                 Class<?> cls = Class.forName("com.google.android.exoplayer2.ext.rtmp.RtmpDataSource");
                 DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
                 LogUtil.log("VideoMediaxPlayer => buildSource => rtmp");
-                return new ProgressiveMediaSource.Factory(factory).createMediaSource(builder.build());
+                return new ProgressiveMediaSource.Factory(factory).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
             }
             // rtsp
             else if (contentType == C.CONTENT_TYPE_RTSP) {
@@ -623,8 +611,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 constructor.setAccessible(true);
                 Object object = constructor.newInstance(dataSource);
                 LogUtil.log("VideoMediaxPlayer => buildSource => rtsp");
-                return ((MediaSource.Factory) object).createMediaSource(builder.build());
-                // return new RtspMediaSource.Factory().createMediaSource(builder.build());
+                return ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
             }
             // dash
             else if (contentType == C.CONTENT_TYPE_DASH) {
@@ -633,8 +622,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 constructor.setAccessible(true);
                 Object object = constructor.newInstance(dataSource);
                 LogUtil.log("VideoMediaxPlayer => buildSource => dash");
-                return ((MediaSource.Factory) object).createMediaSource(builder.build());
-//                return new DashMediaSource.Factory(dataSource).createMediaSource(builder.build());
+                return ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
             }
             // hls
             else if (contentType == C.CONTENT_TYPE_HLS) {
@@ -643,8 +633,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 constructor.setAccessible(true);
                 Object object = constructor.newInstance(dataSource);
                 LogUtil.log("VideoMediaxPlayer => buildSource => hls");
-                return ((MediaSource.Factory) object).createMediaSource(builder.build());
-//                return new HlsMediaSource.Factory(dataSource).createMediaSource(builder.build());
+                return ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
             }
             // SmoothStreaming
             else if (contentType == C.CONTENT_TYPE_SS) {
@@ -653,15 +644,16 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 constructor.setAccessible(true);
                 Object object = constructor.newInstance(dataSource);
                 LogUtil.log("VideoMediaxPlayer => buildSource => SmoothStreaming");
-                return ((MediaSource.Factory) object).createMediaSource(builder.build());
-//                 return new SsMediaSource.Factory(dataSource).createMediaSource(builder.build());
+                return ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
             }
             // other
             else {
-                DefaultExtractorsFactory factory = new DefaultExtractorsFactory();
-                factory.setConstantBitrateSeekingEnabled(true);
                 LogUtil.log("VideoMediaxPlayer => buildSource => other");
-                return new ProgressiveMediaSource.Factory(dataSource, factory).createMediaSource(builder.build());
+                return new ProgressiveMediaSource.Factory(dataSource).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
             }
         } catch (Exception e) {
             throw e;
