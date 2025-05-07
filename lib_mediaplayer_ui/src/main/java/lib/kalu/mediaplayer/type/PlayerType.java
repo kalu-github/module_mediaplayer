@@ -319,6 +319,7 @@ public @interface PlayerType {
         String _MPD = ".mpd";
         String _M3U = ".m3u";
         String _M3U8 = ".m3u8";
+        String _MP4 = ".mp4";
         String _MATCHES = ".*\\.ism(l)?(/manifest(\\(.+\\))?)?";
 
         @Documented
@@ -331,6 +332,7 @@ public @interface PlayerType {
                 SchemeType._MPD,
                 SchemeType._M3U,
                 SchemeType._M3U8,
+                SchemeType._MP4,
                 SchemeType._MATCHES})
         @interface Value {
         }

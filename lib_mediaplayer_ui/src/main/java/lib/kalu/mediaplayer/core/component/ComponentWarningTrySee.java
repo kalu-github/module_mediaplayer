@@ -119,7 +119,7 @@ public class ComponentWarningTrySee extends RelativeLayout implements ComponentA
             seekBar.setProgress((int) position);
             seekBar.setMax((int) (max > 0 ? max : duration));
         } catch (Exception e) {
-            LogUtil.log("ComponentWarningTrySee => onUpdateProgress => Exception " + e.getMessage());
+          //  LogUtil.log("ComponentWarningTrySee => onUpdateProgress => Exception " + e.getMessage());
         }
     }
 

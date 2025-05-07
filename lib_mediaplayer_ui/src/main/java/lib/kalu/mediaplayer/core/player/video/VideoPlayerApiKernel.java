@@ -585,6 +585,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (null == kernel)
                 throw new Exception("warning: kernel null");
             return kernel.setTrackInfo(groupId, trackId);
+//            releaseRender();
+//            StartArgs startArgs = new StartArgs.Builder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
+//            checkRenderNull(startArgs, true);
+//            attachRenderKernel();
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => setTrackInfo => " + e.getMessage());
             return false;

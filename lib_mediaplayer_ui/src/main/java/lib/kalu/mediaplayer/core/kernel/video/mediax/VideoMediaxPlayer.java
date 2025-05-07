@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.media3.common.C;
 import androidx.media3.common.Format;
 import androidx.media3.common.MediaItem;
-import androidx.media3.common.MimeTypes;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
@@ -31,8 +30,10 @@ import androidx.media3.datasource.cache.CacheDataSource;
 import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.exoplayer.DecoderReuseEvaluation;
 import androidx.media3.exoplayer.DefaultLoadControl;
+import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlaybackException;
 import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.ExoTimeoutException;
 import androidx.media3.exoplayer.RenderersFactory;
 import androidx.media3.exoplayer.analytics.AnalyticsListener;
 import androidx.media3.exoplayer.analytics.DefaultAnalyticsCollector;
@@ -41,7 +42,9 @@ import androidx.media3.exoplayer.source.LoadEventInfo;
 import androidx.media3.exoplayer.source.MediaLoadData;
 import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.source.ProgressiveMediaSource;
+import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
+import androidx.media3.exoplayer.trackselection.FixedTrackSelection;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 
 import com.google.common.collect.ImmutableList;
@@ -51,9 +54,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
 import java.util.List;
 
+import ePT.epd;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
@@ -101,11 +104,59 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 throw new Exception("error: args null");
 
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
+
+            // 创建渲染器工厂
+            RenderersFactory renderersFactory = new DefaultRenderersFactory(context);
+            builder.setRenderersFactory(renderersFactory);
+
+            // 监听
             builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
-            builder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
-            builder.setLoadControl(new DefaultLoadControl());
-            builder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));
-            builder.setTrackSelector(new DefaultTrackSelector(context));
+
+
+            // 配置带宽测量器
+            DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter.Builder(context)
+                    // 初始带宽估算为5Mbps（5,000,000 bps）
+                    .setInitialBitrateEstimate(5_000_000)
+                    .build();
+            builder.setBandwidthMeter(bandwidthMeter);
+
+            // 缓冲缓存
+            DefaultLoadControl loadControl = new DefaultLoadControl.Builder()
+                    .setBufferDurationsMs(
+                            10_000, // 低带宽时最小缓冲10秒
+                            30_000, // 高带宽时最大缓冲30秒
+                            2500,
+                            5000
+                    )
+                    .build();
+            builder.setLoadControl(loadControl);
+
+            // 自适应码率
+            DefaultTrackSelector.Parameters parameters = DefaultTrackSelector.Parameters.getDefaults(context)
+                    .buildUpon()
+                    // 音频禁止混合 MIME 类型切换（如视频+音频单独切换）
+                    .setAllowAudioMixedMimeTypeAdaptiveness(false)
+                    // 视频禁止混合 MIME 类型切换（如视频+音频单独切换）
+                    .setAllowVideoMixedMimeTypeAdaptiveness(true)
+                    // 音频禁止非无缝切换
+                    .setAllowAudioNonSeamlessAdaptiveness(false)
+                    // 视频禁止非无缝切换
+                    .setAllowVideoNonSeamlessAdaptiveness(false)
+                    // 音频混合声道数量的自适应性
+                    .setAllowAudioMixedChannelCountAdaptiveness(true)
+                    // 音频混合采样率自适应
+                    .setAllowAudioMixedSampleRateAdaptiveness(true)
+                    // 音频混合时解码器支持自适应
+                    .setAllowAudioMixedDecoderSupportAdaptiveness(true)
+                    // 音频混合时解码器支持自适应
+                    .setAllowVideoMixedDecoderSupportAdaptiveness(true)
+                    .build();
+            AdaptiveTrackSelection.Factory factory = new AdaptiveTrackSelection.Factory(
+                    3000,// 至少 3 秒后才允许升码率
+                    1000, // 最多 1 秒后允许降码率
+                    25000, 0.7F);
+            DefaultTrackSelector trackSelector = new DefaultTrackSelector(context, parameters, factory);
+            builder.setTrackSelector(trackSelector);
 
             int decoderType = args.getDecoderType();
             LogUtil.log("VideoMediaxPlayer => createDecoder => decoderType = " + decoderType);
@@ -186,28 +237,28 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
 
-                        MediaItem.SubtitleConfiguration subtitleConfiguration = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(url.replace("mp4", "vtt")))
-                                .setMimeType(MimeTypes.TEXT_VTT)  // 明确指定 WebVTT 格式
-                                .setLanguage("en")               // 设置字幕语言
-                                .setSelectionFlags(C.SELECTION_FLAG_DEFAULT) // 默认选中
-                                .build();
-//
-            ProgressiveMediaSource source1 = new ProgressiveMediaSource.Factory(new DefaultDataSource.Factory(context))
-                    .createMediaSource(new MediaItem.Builder()
-                            .setUri(Uri.parse(url))
-                            .build()
-                            .buildUpon()
-                            .setSubtitleConfigurations(Arrays.asList(subtitleConfiguration))
-                            .build());
-
-//            // 英语字幕源（外挂）
-//            ProgressiveMediaSource source2 = new ProgressiveMediaSource.Factory(new DefaultDataSource.Factory(context))
+//            MediaItem.SubtitleConfiguration subtitleConfiguration = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(url.replace("mp4", "vtt")))
+//                    .setMimeType(MimeTypes.TEXT_VTT)  // 明确指定 WebVTT 格式
+//                    .setLanguage("en")               // 设置字幕语言
+//                    .setSelectionFlags(C.SELECTION_FLAG_DEFAULT) // 默认选中
+//                    .build();
+////
+//            ProgressiveMediaSource source1 = new ProgressiveMediaSource.Factory(new DefaultDataSource.Factory(context))
 //                    .createMediaSource(new MediaItem.Builder()
-//                            .setUri(Uri.parse(url.replace("mp4", "vtt")))
-//                            .setMimeType(MimeTypes.TEXT_VTT)
+//                            .setUri(Uri.parse(url))
+//                            .build()
+//                            .buildUpon()
+//                            .setSubtitleConfigurations(Arrays.asList(subtitleConfiguration))
 //                            .build());
-
-            mExoPlayer.setMediaSource(source1);
+//
+////            // 英语字幕源（外挂）
+////            ProgressiveMediaSource source2 = new ProgressiveMediaSource.Factory(new DefaultDataSource.Factory(context))
+////                    .createMediaSource(new MediaItem.Builder()
+////                            .setUri(Uri.parse(url.replace("mp4", "vtt")))
+////                            .setMimeType(MimeTypes.TEXT_VTT)
+////                            .build());
+//
+//            mExoPlayer.setMediaSource(source1);
 //
 ////            // 英语音频源（外挂）
 ////            Uri audioEnUri = Uri.parse("https://sample-videos.com/audio/aac/crowd-cheering.aac");
@@ -225,8 +276,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 ////            mExoPlayer.setMediaSource(source1);
 //            mExoPlayer.setMediaSource(new MergingMediaSource(source1, source3));
 
-//            MediaSource mediaSource = buildSource(context, args);
-//            mExoPlayer.setMediaSource(mediaSource);
+            MediaSource mediaSource = buildSource(context, args);
+            mExoPlayer.setMediaSource(mediaSource);
             mExoPlayer.setRepeatMode(androidx.media3.exoplayer.ExoPlayer.REPEAT_MODE_OFF);
 
             boolean playWhenReady = args.isPlayWhenReady();
@@ -282,13 +333,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     public void setSurface(Surface surface, int w, int h) {
         try {
             if (null == mExoPlayer)
-                throw new Exception("mExoPlayer error: null");
-            if (null == surface) {
-                mExoPlayer.setVideoSurface(null);
-                mExoPlayer.clearVideoSurface();
-            } else {
-                mExoPlayer.setVideoSurface(surface);
-            }
+                throw new Exception("error: mExoPlayer null");
+            mExoPlayer.clearVideoSurface();
+            if (null == surface)
+                throw new Exception("error: surface null");
+            mExoPlayer.setVideoSurface(surface);
             LogUtil.log("VideoMediaxPlayer => setSurface => completed");
         } catch (Exception e) {
             LogUtil.log("VideoMediaxPlayer => setSurface => " + e.getMessage());
@@ -544,6 +593,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             else if (lowerCase.startsWith(PlayerType.SchemeType.RTSP)) {
                 contentType = C.CONTENT_TYPE_RTSP;
             }
+            // mp4
+            else if (lowerCase.startsWith(PlayerType.SchemeType._MP4)) {
+                contentType = -200;
+            }
             // other
             else {
                 contentType = C.CONTENT_TYPE_OTHER;
@@ -649,10 +702,17 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         .setUri(Uri.parse(url))
                         .build());
             }
+            // mp4
+            else if (contentType == -200) {
+                LogUtil.log("VideoMediaxPlayer => buildSource => mp4");
+                return new ProgressiveMediaSource.Factory(dataSource).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
+            }
             // other
             else {
                 LogUtil.log("VideoMediaxPlayer => buildSource => other");
-                return new ProgressiveMediaSource.Factory(dataSource).createMediaSource(new MediaItem.Builder()
+                return new DefaultMediaSourceFactory(dataSource).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .build());
             }
@@ -885,6 +945,74 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 LogUtil.log("VideoMediaxPlayer => onCues => cue = " + cue.text);
             }
         }
+
+
+        private int videoIndex = -100;
+
+        /**
+         * 切换轨道
+         * @param eventTime
+         * @param trackSelectionParameters
+         */
+        @Override
+        public void onTrackSelectionParametersChanged(EventTime eventTime, TrackSelectionParameters trackSelectionParameters) {
+            LogUtil.log("VideoMediaxPlayer => onTrackSelectionParametersChanged => trackSelectionParameters = " + trackSelectionParameters);
+
+//
+//            int rendererCount = mExoPlayer.getRendererCount();
+//            for(int i=0;i<rendererCount;i++){
+//                int rendererType = mExoPlayer.getRendererType(i);
+//                LogUtil.log("VideoMediaxPlayer => onTrackSelectionParametersChanged => i = "+i+", rendererType = "+rendererType);
+//                mExoPlayer.getRenderer(i)
+//            .(videoRendererIndex, true) // 禁用视频渲染器
+//            player.setRendererDisabled(videoRendererIndex, false) // 重新启用
+
+//            DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
+//            DefaultTrackSelector.Parameters.Builder parameters = trackSelector.buildUponParameters();
+//            // 找到视频渲染器的索引
+//            for (int i = 0; i < trackSelector.getCurrentMappedTrackInfo().getRendererCount(); i++) {
+//                if (trackSelector.getCurrentMappedTrackInfo().getRendererType(i) == com.google.android.exoplayer2.C.TRACK_TYPE_VIDEO) {
+//                    videoIndex = i;
+//                    break;
+//                }
+//            }
+//            // 禁用视频渲染器
+//            parameters.setRendererDisabled(videoIndex, true);
+//            trackSelector.setParameters(parameters);
+
+        }
+
+        /**
+         * 切换轨道 完成
+         * @param eventTime
+         * @param tracks
+         */
+        @Override
+        public void onTracksChanged(EventTime eventTime, Tracks tracks) {
+            LogUtil.log("VideoMediaxPlayer => onTracksChanged => videoIndex = " + videoIndex);
+
+//            if (videoIndex != -100) {
+//                videoIndex = -100;
+//                DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
+//                DefaultTrackSelector.Parameters.Builder parameters = trackSelector.buildUponParameters();
+//                // 找到视频渲染器的索引
+//                for (int i = 0; i < trackSelector.getCurrentMappedTrackInfo().getRendererCount(); i++) {
+//                    if (trackSelector.getCurrentMappedTrackInfo().getRendererType(i) == com.google.android.exoplayer2.C.TRACK_TYPE_VIDEO) {
+//                        videoIndex = i;
+//                        LogUtil.log("VideoMediaxPlayer => onTracksChanged => i = " + i);
+//                        break;
+//                    }
+//                }
+//                // 禁用视频渲染器
+//                parameters.setRendererDisabled(videoIndex, true);
+//                trackSelector.setParameters(parameters);
+//            }
+        }
+
+        @Override
+        public void onSurfaceSizeChanged(EventTime eventTime, int i, int i1) {
+            LogUtil.log("VideoMediaxPlayer => onSurfaceSizeChanged => i = " + i + ", i1 = " + i1);
+        }
     };
 
     /*********/
@@ -901,12 +1029,28 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             //
             TrackGroup trackGroup = groups.get(groupIndex).getMediaTrackGroup();
             TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
+
+
+            DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
+            DefaultTrackSelector.Parameters.Builder parameters = trackSelector.buildUponParameters();
+            parameters.setOverrideForType(selectionOverride);
+            trackSelector.setParameters(parameters);
+
+
+//            new FixedTrackSelection.Factory().createTrackSelections()
+//
+//                    .createTrackSelection(
+//                    group = getTrackGroup(trackSelector), trackIndices = intArrayOf(selectedTrackIndex))
+
             //
-            TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters()
-                    .buildUpon()
-                    .setOverrideForType(selectionOverride)
-                    .build();
-            mExoPlayer.setTrackSelectionParameters(selectionParameters);
+//            TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters()
+//                    .buildUpon()
+//                    .clearOverrides()
+//                    .setPrioritizeImageOverVideoEnabled(false)
+//                    .setOverrideForType(selectionOverride)
+//                    .build();
+//
+//            mExoPlayer.setTrackSelectionParameters(selectionParameters);
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoMediaxPlayer => setTrackInfo => " + e.getMessage());

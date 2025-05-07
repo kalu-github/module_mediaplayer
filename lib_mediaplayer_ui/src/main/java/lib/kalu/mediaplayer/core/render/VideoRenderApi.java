@@ -156,7 +156,7 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
 //            heightMeasureSpec = widthMeasureSpec - heightMeasureSpec;
 //            widthMeasureSpec = widthMeasureSpec - heightMeasureSpec;
         }
-//        LogUtil.log("VideoRenderApi => doMeasureSpec => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
+        LogUtil.log("VideoRenderApi => doMeasureSpec => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
         // SCREEN_SCALE_ORIGINAL
         if (videoScaleType == PlayerType.ScaleType.REAL) {
             try {
@@ -386,7 +386,6 @@ public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlde
                     float realW = screenWidth * 1F;
                     float realH = realW * videoHeight / videoWidth;
                     return new int[]{(int) realW, (int) realH};
-//                    return new int[]{448, 200};
                 }
                 // 视频宽高比<屏幕宽高比, 以屏幕高度为基准缩放
                 else if (v2 < v1) {
