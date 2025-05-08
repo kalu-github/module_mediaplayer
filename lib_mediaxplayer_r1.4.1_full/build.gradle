@@ -79,6 +79,6 @@ dependencies {
 //    compileOnly("com.google.j2objc:j2objc-annotations:3.0.0")
 
     // api
-    api files('libs/guava-33.2.1-android.jar')
-    api files('libs/guava-failureaccess-1.0.2.jar')
+    compileOnly files('libs/guava-33.2.1-android.jar')
+    compileOnly files('libs/guava-failureaccess-1.0.2.jar')
 }

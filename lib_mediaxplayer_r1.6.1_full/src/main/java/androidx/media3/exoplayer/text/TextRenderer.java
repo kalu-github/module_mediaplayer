@@ -612,16 +612,16 @@ public final class TextRenderer extends BaseRenderer implements Callback {
 
   @RequiresNonNull("streamFormat")
   private void assertLegacyDecodingEnabledIfRequired() {
-    checkState(
-        legacyDecodingEnabled
-            || Objects.equals(streamFormat.sampleMimeType, MimeTypes.APPLICATION_CEA608)
-            || Objects.equals(streamFormat.sampleMimeType, MimeTypes.APPLICATION_MP4CEA608)
-            || Objects.equals(streamFormat.sampleMimeType, MimeTypes.APPLICATION_CEA708),
-        "Legacy decoding is disabled, can't handle "
-            + streamFormat.sampleMimeType
-            + " samples (expected "
-            + MimeTypes.APPLICATION_MEDIA3_CUES
-            + ").");
+//    checkState(
+//        legacyDecodingEnabled
+//            || Objects.equals(streamFormat.sampleMimeType, MimeTypes.APPLICATION_CEA608)
+//            || Objects.equals(streamFormat.sampleMimeType, MimeTypes.APPLICATION_MP4CEA608)
+//            || Objects.equals(streamFormat.sampleMimeType, MimeTypes.APPLICATION_CEA708),
+//        "Legacy decoding is disabled, can't handle "
+//            + streamFormat.sampleMimeType
+//            + " samples (expected "
+//            + MimeTypes.APPLICATION_MEDIA3_CUES
+//            + ").");
   }
 
   /** Returns whether {@link Format#sampleMimeType} is {@link MimeTypes#APPLICATION_MEDIA3_CUES}. */

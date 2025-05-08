@@ -1,23 +1,5 @@
-#
-
-#### androidx media
+####  20250508 fix 不支持vtt字幕
 
 ```
-https://mvnrepository.com/search?q=androidx+media3
-```
-
-#
-
-#### 
-
-
-#
-
-####
-
-```
-
-datasource_cronet => 网络请求库cronet
-
-exoplayer_ima => 广告
+androidx.media3.exoplayer.text.TextRenderer.assertLegacyDecodingEnabledIfRequired
 ```
