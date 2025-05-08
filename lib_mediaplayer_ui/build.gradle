@@ -64,6 +64,11 @@ repositories {
     }
 }
 dependencies {
+
+    // api
+    api files('libs/guava-33.2.1-android.jar')
+    api files('libs/guava-failureaccess-1.0.2')
+
     compileOnly 'androidx.annotation:annotation:1.7.1'
     compileOnly('com.squareup.okhttp3:okhttp:3.14.9')
     // ijk
