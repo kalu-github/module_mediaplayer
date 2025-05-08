@@ -760,6 +760,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             List<SubtitleArgs> subtitles = args.getExtraSubtitle();
             if (null != subtitles) {
                 for (SubtitleArgs subtitle : subtitles) {
+                    LogUtil.log("VideoMediaxPlayer => buildSource => url = " + subtitle.getUrl());
+                    LogUtil.log("VideoMediaxPlayer => buildSource => mimeType = " + subtitle.getMimeType());
+                    LogUtil.log("VideoMediaxPlayer => buildSource => language = " + subtitle.getLanguage());
+                    LogUtil.log("VideoMediaxPlayer => buildSource => label = " + subtitle.getLabel());
                     Uri subtitleUri = Uri.parse(subtitle.getUrl());
                     MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
                             .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
