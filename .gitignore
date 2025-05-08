@@ -3,8 +3,15 @@
 /build/
 /app/build/
 /app/release/
-/lib_mediaxplayer*
+
+# ui
 /lib_mediaplayer_ui/build
-/lib_mediaplayer_exoplayer*
+
+# mediax
+/lib_mediaxplayer*
+
+# exo
+/lib_exoplayer*
+
 /lib_mediaplayer_ijkplayer*
 /lib_mediaplayer_ffplayer*
