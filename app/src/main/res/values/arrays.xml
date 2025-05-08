@@ -32,6 +32,19 @@
         <item>https://aliyuncdnsaascloud.xjhktv.com/video/A%20Lin%2B%E5%80%AA%E5%AD%90%E5%86%88-%E4%B8%8D%E5%B1%91%E5%AE%8C%E7%BE%8E%5B%E5%9B%BD%5D%5B1080P%5D.mp4</item>
     </string-array>
 
+
+    <string-array name="subtitles_urls">
+        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/English.vtt</item>
+        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Spanish.vtt</item>
+        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt</item>
+    </string-array>
+
+    <string-array name="subtitles_launcher">
+        <item>英语</item>
+        <item>西班牙</item>
+        <item>巴西</item>
+    </string-array>
+
     <string-array name="kernels">
         <item>android</item>
         <item>exo2</item>

@@ -7,6 +7,7 @@ import androidx.annotation.IdRes;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.buried.BuriedEvent;
@@ -131,12 +132,6 @@ public class StartArgs implements Serializable {
         return title;
     }
 
-    // 字幕url
-    private String subtitleUrl;
-
-    public String getSubtitleUrl() {
-        return subtitleUrl;
-    }
 
     // 试看时长
     private long trySeeDuration = 0L;
@@ -291,6 +286,13 @@ public class StartArgs implements Serializable {
         return rotation;
     }
 
+    // 外挂字幕
+    private List<SubtitleArgs> extraSubtitle;
+
+    public List<SubtitleArgs> getExtraSubtitle() {
+        return extraSubtitle;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
@@ -310,7 +312,6 @@ public class StartArgs implements Serializable {
                 ", supportAutoRelease=" + supportAutoRelease +
                 ", url='" + url + '\'' +
                 ", title='" + title + '\'' +
-                ", subtitleUrl='" + subtitleUrl + '\'' +
                 ", trySeeDuration=" + trySeeDuration +
                 ", live=" + live +
                 ", looping=" + looping +
@@ -332,6 +333,7 @@ public class StartArgs implements Serializable {
                 ", episodeFlagLoaction=" + episodeFlagLoaction +
                 ", buriedEvent=" + buriedEvent +
                 ", rotation=" + rotation +
+                ", extraSubtitle=" + extraSubtitle +
                 '}';
     }
 
@@ -352,7 +354,7 @@ public class StartArgs implements Serializable {
         this.supportAutoRelease = builder.supportAutoRelease;
         this.url = builder.url;
         this.title = builder.title;
-        this.subtitleUrl = builder.subtitleUrl;
+        this.extraSubtitle = builder.extraSubtitle;
         this.trySeeDuration = builder.trySeeDuration;
         this.live = builder.live;
         this.looping = builder.looping;
@@ -394,7 +396,7 @@ public class StartArgs implements Serializable {
         builder.supportAutoRelease = supportAutoRelease;
         builder.url = url;
         builder.title = title;
-        builder.subtitleUrl = subtitleUrl;
+        builder.extraSubtitle = extraSubtitle;
         builder.trySeeDuration = trySeeDuration;
         builder.live = live;
         builder.looping = looping;
@@ -657,6 +659,14 @@ public class StartArgs implements Serializable {
 
         public Builder setEpisodePlayingIndex(int v) {
             this.episodePlayingIndex = v;
+            return this;
+        }
+
+        // 外挂字幕
+        private List<SubtitleArgs> extraSubtitle;
+
+        public Builder setExtraSubtitle(List<SubtitleArgs> v) {
+            this.extraSubtitle = v;
             return this;
         }
 

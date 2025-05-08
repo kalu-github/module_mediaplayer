@@ -10,7 +10,6 @@ import androidx.media3.common.C;
 import androidx.media3.common.Format;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MediaLibraryInfo;
-import androidx.media3.common.MimeTypes;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
@@ -50,7 +49,6 @@ import androidx.media3.exoplayer.trackselection.TrackSelector;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -62,11 +60,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
+import lib.kalu.mediaplayer.args.SubtitleArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -760,66 +756,22 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 mediaSources.add(source);
             }
 
-            /**
-             *  2025-04-25 20:01:32.609 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  streamsList = [# com.yyt.zapptv.model.proto.Playback$StreamTrack@37d8a524
-             *     format: "hls"
-             *     label: "HD"
-             *     quality: "HD"
-             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8", # com.yyt.zapptv.model.proto.Playback$StreamTrack@35014555
-             *     format: "hls"
-             *     label: "SD"
-             *     quality: "SD"
-             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8", # com.yyt.zapptv.model.proto.Playback$StreamTrack@5f9f9c57
-             *     format: "hls"
-             *     is_login: true
-             *     label: "FULL HD"
-             *     quality: "FHD"
-             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/1080p/index.m3u8"]
-             *     2025-04-25 20:01:32.612 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  subtitlesList = [# com.yyt.zapptv.model.proto.Playback$SubtitleTrack@b7ab61ea
-             *     format: "vtt"
-             *     label: "English"
-             *     language: "en"
-             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/English.vtt", # com.yyt.zapptv.model.proto.Playback$SubtitleTrack@6d66d2c6
-             *     format: "vtt"
-             *     label: "Espa\303\261ol"
-             *     language: "es"
-             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Spanish.vtt", # com.yyt.zapptv.model.proto.Playback$SubtitleTrack@925f4fa3
-             *     format: "vtt"
-             *     label: "Portugu\303\252s (Brasil)"
-             *     language: "pt"
-             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt"]
-             *     2025-04-25 20:01:32.612 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  audiosList = []
-             */
-
-            /**
-             *  "x-ssa" -> MimeTypes.TEXT_SSA
-             *         "vtt" -> MimeTypes.TEXT_VTT
-             *         else -> MimeTypes.TEXT_UNKNOWN
-             */
-
-            List<String> subtitleUrls = Arrays.asList("https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/English.vtt",
-                    "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Spanish.vtt",
-                    "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt");
-
-            List<String> subtitleLabls = Arrays.asList("English", "Espa\303\261ol", "Portugu\303\252s (Brasil)");
-            List<String> subtitleLanguages = Arrays.asList("en", "es", "pt");
-
             // 外挂字幕
-            for (int i = 0; i < 3; i++) {
-                Uri subtitleUri = Uri.parse(subtitleUrls.get(i));
-                MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
-//                        .setMimeType(MimeTypes.APPLICATION_SUBRIP) // 也可以用 MimeTypes.APPLICATION_SUBRIP
-                        .setMimeType(MimeTypes.TEXT_VTT) // 也可以用 MimeTypes.APPLICATION_SUBRIP
-                        .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
-                        .setLanguage(subtitleLanguages.get(i))
-                        .setLabel(subtitleLabls.get(i))
-                        .build();
-//                ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(dataSource)
-//                        .createMediaSource(subtitleConfig, C.TIME_UNSET);
-                SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
-                        .createMediaSource(subtitleConfig, C.TIME_UNSET);
-                //
-                mediaSources.add(source);
+            List<SubtitleArgs> subtitles = args.getExtraSubtitle();
+            if (null != subtitles) {
+                for (SubtitleArgs subtitle : subtitles) {
+                    Uri subtitleUri = Uri.parse(subtitle.getUrl());
+                    MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
+                            .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
+                            .setMimeType(subtitle.getMimeType()) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+                            .setLanguage(subtitle.getLanguage())
+                            .setLabel(subtitle.getLabel())
+                            .build();
+                    SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
+                            .createMediaSource(subtitleConfig, C.TIME_UNSET);
+                    //
+                    mediaSources.add(source);
+                }
             }
 
             return new MergingMediaSource(mediaSources.toArray(new MediaSource[0]));
@@ -1054,7 +1006,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             String language;
             try {
                 androidx.media3.common.Tracks tracks = mExoPlayer.getCurrentTracks();
-                ImmutableList<androidx.media3.common.Tracks.Group> groups = tracks.getGroups();
+                ImmutableList<Tracks.Group> groups = tracks.getGroups();
                 int groupCount = groups.size();
                 for (int groupIndex = 0; groupIndex < groupCount; groupIndex++) {
                     Tracks.Group group = groups.get(groupIndex);

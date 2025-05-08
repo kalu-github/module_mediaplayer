@@ -55,6 +55,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.args.SubtitleArgs;
 import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
@@ -564,53 +565,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
             builder.setUri(Uri.parse(url));
 
 
-            // 字幕
-            String subtitleUrl = args.getSubtitleUrl();
-            if (null != subtitleUrl && subtitleUrl.length() > 0) {
-//                MediaItem.SubtitleConfiguration.Builder subtitle = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(mediaUrl));
-//                subtitle.setMimeType(MimeTypes.APPLICATION_SUBRIP);
-//                subtitle.setLanguage("en");
-//                subtitle.setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT); // C.SELECTION_FLAG_DEFAULT
-//                builder.setSubtitleConfigurations(Arrays.asList(subtitle.build()));
-//
-//            MediaItem.SubtitleConfiguration.Builder builder = new MediaItem.SubtitleConfiguration.Builder(srtUri);
-//            builder.setMimeType(MimeTypes.APPLICATION_SUBRIP);
-//            builder.setMimeType(MimeTypes.TEXT_VTT);
-//            builder.setLanguage("en");
-//            builder.setSelectionFlags(C.SELECTION_FLAG_DEFAULT);
-//            MediaItem.SubtitleConfiguration subtitle = builder.build();
-//            MediaSource textMediaSource = new SingleSampleMediaSource.Factory(factory).createMediaSource(subtitle, C.TIME_UNSET);
-//            textMediaSource.getMediaItem().mediaMetadata.subtitle.toString();
-//            MediaLogUtil.log("SRT => " + subtitle);
-//            return new MergingMediaSource(mediaSource, srtSource);
-            }
-
-            // head
-//            refreshHeaders(httpFactory, headers);
-
-
-//                Class<?> okhttpClass = Class.forName("okhttp3.OkHttpClient.Builder");
-//                Class<?> factoryClass = Class.forName("com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource.Factory");
-//                Object o = okhttpClass.newInstance();
-//                long connectTimeout = args.getConnectTimout();
-//                ((okhttp3.OkHttpClient.Builder) o).connectTimeout(connectTimeout, TimeUnit.MILLISECONDS);
-//                ((okhttp3.OkHttpClient.Builder) o).connectionPool(new ConnectionPool(10, 60, TimeUnit.MINUTES));
-//                ((okhttp3.OkHttpClient.Builder) o).retryOnConnectionFailure(true);
-//                ((okhttp3.OkHttpClient.Builder) o).proxySelector(new ProxySelector() { // 禁止抓包
-//                    @Override
-//                    public List<Proxy> select(URI uri) {
-//                        return Collections.singletonList(Proxy.NO_PROXY);
-//                    }
-//
-//                    @Override
-//                    public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
-//                    }
-//                });
-//                OkHttpClient httpClient = ((OkHttpClient.Builder) o).build();
-//                Object instance = factoryClass.getDeclaredConstructor(Context.class).newInstance(httpClient);
-//                ((OkHttpDataSource.Factory) instance).setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
-//                dataSourceFactory = (OkHttpDataSource.Factory) instance;
-
             DefaultHttpDataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory()
                     .setUserAgent(ExoPlayerLibraryInfo.VERSION_SLASHY)
                     .setConnectTimeoutMs((int) args.getConnectTimout())
@@ -793,64 +747,22 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 mediaSources.add(source);
             }
 
-            /**
-             *  2025-04-25 20:01:32.609 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  streamsList = [# com.yyt.zapptv.model.proto.Playback$StreamTrack@37d8a524
-             *     format: "hls"
-             *     label: "HD"
-             *     quality: "HD"
-             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8", # com.yyt.zapptv.model.proto.Playback$StreamTrack@35014555
-             *     format: "hls"
-             *     label: "SD"
-             *     quality: "SD"
-             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8", # com.yyt.zapptv.model.proto.Playback$StreamTrack@5f9f9c57
-             *     format: "hls"
-             *     is_login: true
-             *     label: "FULL HD"
-             *     quality: "FHD"
-             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/1080p/index.m3u8"]
-             *     2025-04-25 20:01:32.612 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  subtitlesList = [# com.yyt.zapptv.model.proto.Playback$SubtitleTrack@b7ab61ea
-             *     format: "vtt"
-             *     label: "English"
-             *     language: "en"
-             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/English.vtt", # com.yyt.zapptv.model.proto.Playback$SubtitleTrack@6d66d2c6
-             *     format: "vtt"
-             *     label: "Espa\303\261ol"
-             *     language: "es"
-             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Spanish.vtt", # com.yyt.zapptv.model.proto.Playback$SubtitleTrack@925f4fa3
-             *     format: "vtt"
-             *     label: "Portugu\303\252s (Brasil)"
-             *     language: "pt"
-             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt"]
-             *     2025-04-25 20:01:32.612 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  audiosList = []
-             */
-
-            /**
-             *  "x-ssa" -> MimeTypes.TEXT_SSA
-             *         "vtt" -> MimeTypes.TEXT_VTT
-             *         else -> MimeTypes.TEXT_UNKNOWN
-             */
-
-            List<String> subtitleUrls = Arrays.asList("https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/English.vtt",
-                    "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Spanish.vtt",
-                    "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt");
-
-            List<String> subtitleLabls = Arrays.asList("English", "Espa\303\261ol", "Portugu\303\252s (Brasil)");
-            List<String> subtitleLanguages = Arrays.asList("en", "es", "pt");
-
             // 外挂字幕
-            for (int i = 0; i < 3; i++) {
-                Uri subtitleUri = Uri.parse(subtitleUrls.get(i));
-                MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
-//                        .setMimeType(MimeTypes.APPLICATION_SUBRIP) // 也可以用 MimeTypes.APPLICATION_SUBRIP
-                        .setMimeType(MimeTypes.TEXT_VTT) // 也可以用 MimeTypes.APPLICATION_SUBRIP
-                        .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
-                        .setLanguage(subtitleLanguages.get(i))
-                        .setLabel(subtitleLabls.get(i))
-                        .build();
-                SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
-                        .createMediaSource(subtitleConfig, C.TIME_UNSET);
-                //
-                mediaSources.add(source);
+            List<SubtitleArgs> subtitles = args.getExtraSubtitle();
+            if (null != subtitles) {
+                for (SubtitleArgs subtitle : subtitles) {
+                    Uri subtitleUri = Uri.parse(subtitle.getUrl());
+                    MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
+                            .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
+                            .setMimeType(subtitle.getMimeType()) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+                            .setLanguage(subtitle.getLanguage())
+                            .setLabel(subtitle.getLabel())
+                            .build();
+                    SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
+                            .createMediaSource(subtitleConfig, C.TIME_UNSET);
+                    //
+                    mediaSources.add(source);
+                }
             }
 
             return new MergingMediaSource(mediaSources.toArray(new MediaSource[0]));

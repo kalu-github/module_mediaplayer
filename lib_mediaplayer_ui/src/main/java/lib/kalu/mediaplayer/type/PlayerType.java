@@ -456,4 +456,23 @@ public @interface PlayerType {
         @interface Value {
         }
     }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface SubtitleType {
+
+        String TEXT_VTT = "text/vtt";
+        String TEXT_SSA = "text/x-ssa";
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @StringDef(value = {
+                SubtitleType.TEXT_VTT,
+                SubtitleType.TEXT_SSA
+        })
+        @interface Value {
+        }
+    }
 }

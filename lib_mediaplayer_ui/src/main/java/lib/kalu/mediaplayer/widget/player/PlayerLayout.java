@@ -488,18 +488,6 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final String getSubtitleUrl() {
-        try {
-            StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("warning: args null");
-            return args.getSubtitleUrl();
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getSubtitleUrl => " + e.getMessage());
-            return null;
-        }
-    }
-
     public final String getUrl() {
         try {
             StartArgs args = getStartArgs();
