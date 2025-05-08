@@ -2,23 +2,16 @@ apply plugin: 'com.android.library'
 
 android {
 
-    compileSdkVersion 32
-    buildToolsVersion "32.0.0"
-    namespace 'lib.kalu.mediaplayer'
-
     compileOptions.encoding = "UTF-8"
-    ndkPath "C:\\Users\\kalu\\AppData\\Local\\Android\\Sdk\\ndk\\16.1.4479499"
-    ndkVersion "16.1.4479499"
+    namespace 'lib.kalu.mediaplayer'
+    compileSdk 32
 
     defaultConfig {
 
-        minSdkVersion 14
-        targetSdkVersion 32
-
-        ndk {
-//            abiFilters 'armeabi-v7a'
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
-        }
+        minSdk = 14 // 4.0
+        targetSdk = 32
+        versionCode 100
+        versionName "1.0.0"
 
         //添加此行
         flavorDimensions "default"
@@ -28,15 +21,17 @@ android {
         variant.outputs.all {
             def type = new String(buildType.name).toLowerCase()
             def time = new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08"))
-            outputFileName = "lib_mediaplayer_ui_" + type + "_" + time + ".aar"
+            outputFileName = "lib_player_ui_${variant.mergedFlavor.versionName}_${type}_${time}.aar"
         }
     }
 
     buildTypes {
         release {
-            minifyEnabled true
+//            minifyEnabled true
+//            consumerProguardFiles 'consumer-rules.pro'
+//            proguardFiles 'proguard-rules.pro', 'consumer-rules.pro'
+            minifyEnabled false
             consumerProguardFiles 'consumer-rules.pro'
-            proguardFiles 'proguard-rules.pro', 'consumer-rules.pro'
         }
         debug {
             minifyEnabled false
@@ -74,7 +69,7 @@ dependencies {
     // ijk
     compileOnly files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.13_mini_release_20240430.aar')
     // exo2
-    compileOnly files('libs/lib_mediaplayer_exo_r2.19.1_mini_release_20250508.aar')
+    compileOnly files('libs/lib_player_exo_mini_2.19.1_release_20250508.aar')
     // media3
     compileOnly files('libs/lib_player_mediax_mini_1.4.1_release_20250508.aar')
     // ffplayer
