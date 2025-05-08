@@ -50,7 +50,7 @@ interface VideoKernelApiBase {
 
     long getDuration();
 
-    default boolean setTrackInfo(int groupIndex, int trackIndex) {
+    default boolean setTrackSubtitle(String language) {
         return false;
     }
 
@@ -58,19 +58,19 @@ interface VideoKernelApiBase {
         return null;
     }
 
-    default JSONArray getAllTrackInfo() {
+    default JSONArray getTrackInfoAll() {
         return getTrackInfo(-1);
     }
 
-    default JSONArray getVideoTrackInfo() {
+    default JSONArray getTrackInfoVideo() {
         return getTrackInfo(1);
     }
 
-    default JSONArray getAudioTrackInfo() {
+    default JSONArray getTrackInfoAudio() {
         return getTrackInfo(2);
     }
 
-    default JSONArray getTextTrackInfo() {
+    default JSONArray getTrackInfoSubtitle() {
         return getTrackInfo(3);
     }
 

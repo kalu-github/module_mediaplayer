@@ -85,22 +85,26 @@ public final class TestActivity extends Activity {
         });
     }
 
-    public void callTrackInfo(int groupIndex, int trackIndex) {
-        Toast.makeText(getApplicationContext(), "groupIndex = " + groupIndex + ", trackIndex = " + trackIndex, Toast.LENGTH_SHORT).show();
+    public void setTrackVideo() {
+    }
+
+    public void setTrackAudio() {
+    }
+
+    public void setTrackSubtitle(String language) {
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.setTrackInfo(groupIndex, trackIndex);
-//        LogUtil.log("showTrackInfo -> type = " + type + ", trackInfo = " + trackInfo);
+        playerLayout.setTrackSubtitle(language);
     }
 
     private void showTrackInfo(int type) {
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
         JSONArray trackInfo;
         if (type == 1) {
-            trackInfo = playerLayout.getVideoTrackInfo();
+            trackInfo = playerLayout.getTrackInfoVideo();
         } else if (type == 2) {
-            trackInfo = playerLayout.getAudioTrackInfo();
+            trackInfo = playerLayout.getTrackInfoAudio();
         } else {
-            trackInfo = playerLayout.getTextTrackInfo();
+            trackInfo = playerLayout.getTrackInfoSubtitle();
         }
         LogUtil.log("showTrackInfo -> type = " + type + ", trackInfo = " + trackInfo);
 
@@ -226,7 +230,7 @@ public final class TestActivity extends Activity {
                 @Override
                 public void onStart() {
                     PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                    playerLayout.getAllTrackInfo();
+                    playerLayout.getTrackInfoAll();
                 }
 
                 @Override

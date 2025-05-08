@@ -4,6 +4,8 @@ package lib.kalu.mediaplayer.core.player.video;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
+
 import java.util.HashMap;
 
 import lib.kalu.mediaplayer.core.component.ComponentApi;
@@ -140,6 +142,37 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
         }
     }
 
+    default void callSubtitle(int kernel, String language, CharSequence result) {
+
+        // component
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).onUpdateSubtitle(kernel, language, result);
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiComponent => callSubtitle => " + e.getMessage());
+        }
+
+//        // listenr
+//        try {
+//            OnPlayerProgressListener progressListener = getOnPlayerProgressListener();
+//            if (null != progressListener) {
+//                progressListener.onProgress(position, duration);
+//            }
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApiListener => callProgress => " + e.getMessage());
+//        }
+    }
+
     /**************/
 
     default void clearOnPlayerListener() {
@@ -153,58 +186,58 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
 
     HashMap<VideoPlayerApiBase, OnPlayerEventListener> mOnPlayerEventListener = new HashMap<>();
 
-   default OnPlayerEventListener getOnPlayerEventListener(){
-       try {
-           OnPlayerEventListener listener = mOnPlayerEventListener.get(this);
-           if (null == listener)
-               throw new Exception("warning: listener null");
-           return listener;
-       } catch (Exception e) {
-           LogUtil.log("VideoPlayerApiListener => getOnPlayerEventListener => Exception " + e.getMessage());
-           return null;
-       }
-   }
+    default OnPlayerEventListener getOnPlayerEventListener() {
+        try {
+            OnPlayerEventListener listener = mOnPlayerEventListener.get(this);
+            if (null == listener)
+                throw new Exception("warning: listener null");
+            return listener;
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiListener => getOnPlayerEventListener => Exception " + e.getMessage());
+            return null;
+        }
+    }
 
-   default void setOnPlayerEventListener(OnPlayerEventListener l){
-       mOnPlayerEventListener.put(this, l);
-   }
+    default void setOnPlayerEventListener(OnPlayerEventListener l) {
+        mOnPlayerEventListener.put(this, l);
+    }
 
 
     /**************/
 
     HashMap<VideoPlayerApiBase, OnPlayerProgressListener> mOnPlayerProgressListener = new HashMap<>();
 
-   default OnPlayerProgressListener getOnPlayerProgressListener(){
-       try {
-           OnPlayerProgressListener listener = mOnPlayerProgressListener.get(this);
-           if (null == listener)
-               throw new Exception("warning: listener null");
-           return listener;
-       } catch (Exception e) {
-           LogUtil.log("VideoPlayerApiListener => getOnPlayerProgressListener => Exception " + e.getMessage());
-           return null;
-       }
-   }
+    default OnPlayerProgressListener getOnPlayerProgressListener() {
+        try {
+            OnPlayerProgressListener listener = mOnPlayerProgressListener.get(this);
+            if (null == listener)
+                throw new Exception("warning: listener null");
+            return listener;
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiListener => getOnPlayerProgressListener => Exception " + e.getMessage());
+            return null;
+        }
+    }
 
-   default void setOnPlayerProgressListener(OnPlayerProgressListener l){
-       mOnPlayerProgressListener.put(this, l);
-   }
+    default void setOnPlayerProgressListener(OnPlayerProgressListener l) {
+        mOnPlayerProgressListener.put(this, l);
+    }
 
     /**************/
 
     HashMap<VideoPlayerApiBase, OnPlayerWindowListener> mOnPlayerWindowListener = new HashMap<>();
 
-   default OnPlayerWindowListener getOnPlayerWindowListener(){
-       try {
-           OnPlayerWindowListener listener = mOnPlayerWindowListener.get(this);
-           if (null == listener)
-               throw new Exception("warning: listener null");
-           return listener;
-       } catch (Exception e) {
-           LogUtil.log("VideoPlayerApiListener => getOnPlayerWindowListener => Exception " + e.getMessage());
-           return null;
-       }
-   }
+    default OnPlayerWindowListener getOnPlayerWindowListener() {
+        try {
+            OnPlayerWindowListener listener = mOnPlayerWindowListener.get(this);
+            if (null == listener)
+                throw new Exception("warning: listener null");
+            return listener;
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiListener => getOnPlayerWindowListener => Exception " + e.getMessage());
+            return null;
+        }
+    }
 
     default void setOnPlayerWindowListener(OnPlayerWindowListener l) {
         mOnPlayerWindowListener.put(this, l);

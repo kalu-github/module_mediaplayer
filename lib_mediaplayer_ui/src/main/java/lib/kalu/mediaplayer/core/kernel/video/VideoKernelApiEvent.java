@@ -1,12 +1,17 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
 
+import androidx.annotation.Nullable;
+
 import lib.kalu.mediaplayer.type.PlayerType;
 
 
 public interface VideoKernelApiEvent {
 
     default void onUpdateProgress(long position, long duration) {
+    }
+
+    default void onUpdateSubtitle(int kernel, String language, CharSequence result) {
     }
 
     default void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {

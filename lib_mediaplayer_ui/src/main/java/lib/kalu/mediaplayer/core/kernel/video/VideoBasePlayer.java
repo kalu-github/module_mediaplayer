@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
+import androidx.annotation.Nullable;
+
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -89,6 +91,37 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
                 duration = 0;
             eventApi.onUpdateProgress(position, duration);
         } catch (Exception e) {
+            LogUtil.log("VideoBasePlayer => onUpdateProgress => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void onUpdateProgress(long position, long duration) {
+        try {
+            if (null == eventApi)
+                throw new Exception("eventApi warning: null");
+//            boolean playing = isPlaying();
+//            if (!playing)
+//                throw new Exception("playing warning: false");
+            if (position < 0)
+                position = 0;
+            if (duration < 0)
+                duration = 0;
+            eventApi.onUpdateProgress(position, duration);
+        } catch (Exception e) {
+            LogUtil.log("VideoBasePlayer => onUpdateProgress => " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    public void onUpdateSubtitle(int kernel, String language, CharSequence result) {
+        try {
+            if (null == eventApi || null == eventApi)
+                throw new Exception("eventApi error: null");
+            eventApi.onUpdateSubtitle(kernel, language, result);
+        } catch (Exception e) {
+            LogUtil.log("VideoBasePlayer => onUpdateSubtitle => " + e.getMessage());
         }
     }
 

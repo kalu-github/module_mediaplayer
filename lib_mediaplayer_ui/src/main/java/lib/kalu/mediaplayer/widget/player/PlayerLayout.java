@@ -637,74 +637,74 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final boolean setTrackInfo(int groupIndex, int trackIndex) {
+    public final boolean setTrackSubtitle(String language) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.setTrackInfo(groupIndex, trackIndex);
+            return playerView.setTrackSubtitle(language);
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => setTrackInfo => " + e.getMessage());
+            LogUtil.log("PlayerLayout => setTrackSubtitle => " + e.getMessage());
             return false;
         }
     }
 
-    public final JSONArray getAllTrackInfo() {
+    public final JSONArray getTrackInfoAll() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            JSONArray trackInfo = playerView.getAllTrackInfo();
+            JSONArray trackInfo = playerView.getTrackInfoAll();
             if (null == trackInfo)
                 throw new Exception("trackInfo error: null");
             return trackInfo;
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getAllTrackInfo => " + e.getMessage());
+            LogUtil.log("PlayerLayout => getTrackInfoAll => " + e.getMessage());
             return null;
         }
     }
 
-    public final JSONArray getVideoTrackInfo() {
+    public final JSONArray getTrackInfoVideo() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            JSONArray trackInfo = playerView.getVideoTrackInfo();
+            JSONArray trackInfo = playerView.getTrackInfoVideo();
             if (null == trackInfo)
                 throw new Exception("trackInfo error: null");
             return trackInfo;
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getVideoTrackInfo => " + e.getMessage());
+            LogUtil.log("PlayerLayout => getTrackInfoVideo => " + e.getMessage());
             return null;
         }
     }
 
-    public final JSONArray getAudioTrackInfo() {
+    public final JSONArray getTrackInfoAudio() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            JSONArray trackInfo = playerView.getAudioTrackInfo();
+            JSONArray trackInfo = playerView.getTrackInfoAudio();
             if (null == trackInfo)
                 throw new Exception("trackInfo error: null");
             return trackInfo;
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getAudioTrackInfo => " + e.getMessage());
+            LogUtil.log("PlayerLayout => getTrackInfoAudio => " + e.getMessage());
             return null;
         }
     }
 
-    public final JSONArray getTextTrackInfo() {
+    public final JSONArray getTrackInfoSubtitle() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            JSONArray trackInfo = playerView.getTextTrackInfo();
+            JSONArray trackInfo = playerView.getTrackInfoSubtitle();
             if (null == trackInfo)
                 throw new Exception("trackInfo error: null");
             return trackInfo;
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getTextTrackInfo => " + e.getMessage());
+            LogUtil.log("PlayerLayout => getTrackInfoSubtitle => " + e.getMessage());
             return null;
         }
     }

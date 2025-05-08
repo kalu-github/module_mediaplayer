@@ -91,7 +91,16 @@ public class TestDialog extends DialogFragment {
                         int trackIndex = object.optInt("trackIndex", -1);
                         //
                         dismiss();
-                        ((TestActivity) getActivity()).callTrackInfo(groupIndex, trackIndex);
+
+
+                        if (type == 1) {
+                            ((TestActivity) getActivity()).setTrackVideo();
+                        } else if (type == 3) {
+                            String language = object.optString("language", "null");
+                            ((TestActivity) getActivity()).setTrackSubtitle(language);
+                        } else {
+                            ((TestActivity) getActivity()).setTrackAudio();
+                        }
                     }
                 });
             }

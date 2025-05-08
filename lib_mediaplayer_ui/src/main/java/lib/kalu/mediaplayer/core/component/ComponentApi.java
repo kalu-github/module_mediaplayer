@@ -18,6 +18,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.R;
@@ -298,6 +299,9 @@ public interface ComponentApi {
     /******************/
 
     default void onUpdateProgress(boolean isFromUser, long trySeeDuration, long position, long duration) {
+    }
+
+    default void onUpdateSubtitle(int kernel, String language, CharSequence result) {
     }
 
     /*******************/

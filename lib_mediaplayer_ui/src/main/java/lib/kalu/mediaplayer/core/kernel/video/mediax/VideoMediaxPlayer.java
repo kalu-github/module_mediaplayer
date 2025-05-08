@@ -1,11 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.video.mediax;
 
-import static androidx.media3.common.C.SELECTION_FLAG_DEFAULT;
-import static androidx.media3.common.MediaLibraryInfo.VERSION_SLASHY;
-
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.view.Surface;
 
 import androidx.annotation.Nullable;
@@ -17,8 +13,6 @@ import androidx.media3.common.MimeTypes;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
-import androidx.media3.common.TrackGroup;
-import androidx.media3.common.TrackSelectionOverride;
 import androidx.media3.common.TrackSelectionParameters;
 import androidx.media3.common.Tracks;
 import androidx.media3.common.VideoSize;
@@ -36,7 +30,6 @@ import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlaybackException;
 import androidx.media3.exoplayer.ExoPlayer;
-import androidx.media3.exoplayer.ExoTimeoutException;
 import androidx.media3.exoplayer.RenderersFactory;
 import androidx.media3.exoplayer.analytics.AnalyticsListener;
 import androidx.media3.exoplayer.analytics.DefaultAnalyticsCollector;
@@ -49,7 +42,6 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource;
 import androidx.media3.exoplayer.source.SingleSampleMediaSource;
 import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
-import androidx.media3.exoplayer.trackselection.FixedTrackSelection;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 
@@ -60,13 +52,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import ePT.epd;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
@@ -1134,56 +1123,74 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     /*********/
 
     @Override
-    public boolean setTrackInfo(int groupIndex, int trackIndex) {
+    public boolean setTrackSubtitle(String language) {
         try {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
-            LogUtil.log("VideoMediaxPlayer => setTrackInfo => groupIndex = " + groupIndex + ", trackIndex = " + trackIndex);
-
-
-            // 获取 TrackSelector
             TrackSelector trackSelector = mExoPlayer.getTrackSelector();
             TrackSelectionParameters selectionParameters = trackSelector.getParameters()
                     .buildUpon()
                     .setPreferredTextLanguage("en")
                     .build();
             trackSelector.setParameters(selectionParameters);
-
-//            //
-//            androidx.media3.common.Tracks tracks = mExoPlayer.getCurrentTracks();
-//            ImmutableList<androidx.media3.common.Tracks.Group> groups = tracks.getGroups();
-//            //
-//            TrackGroup trackGroup = groups.get(groupIndex).getMediaTrackGroup();
-//            TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
-//
-//
-//            DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
-//            DefaultTrackSelector.Parameters.Builder parameters = trackSelector.buildUponParameters();
-////            parameters.setOverrideForType(selectionOverride);
-//            parameters.setPreferredTextLanguages("pt");  // 设置为英文
-//            trackSelector.setParameters(parameters);
-
-
-//            new FixedTrackSelection.Factory().createTrackSelections()
-//
-//                    .createTrackSelection(
-//                    group = getTrackGroup(trackSelector), trackIndices = intArrayOf(selectedTrackIndex))
-
-            //
-//            TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters()
-//                    .buildUpon()
-//                    .clearOverrides()
-//                    .setPrioritizeImageOverVideoEnabled(false)
-//                    .setOverrideForType(selectionOverride)
-//                    .build();
-//
-//            mExoPlayer.setTrackSelectionParameters(selectionParameters);
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoMediaxPlayer => setTrackInfo => " + e.getMessage());
             return false;
         }
     }
+
+//    @Override
+//    public boolean setTrackInfo(int groupIndex, int trackIndex) {
+//        try {
+//            if (null == mExoPlayer)
+//                throw new Exception("error: mExoPlayer null");
+//            LogUtil.log("VideoMediaxPlayer => setTrackInfo => groupIndex = " + groupIndex + ", trackIndex = " + trackIndex);
+//
+//
+//            // 获取 TrackSelector
+//            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+//            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
+//                    .buildUpon()
+//                    .setPreferredTextLanguage("en")
+//                    .build();
+//            trackSelector.setParameters(selectionParameters);
+//
+////            //
+////            androidx.media3.common.Tracks tracks = mExoPlayer.getCurrentTracks();
+////            ImmutableList<androidx.media3.common.Tracks.Group> groups = tracks.getGroups();
+////            //
+////            TrackGroup trackGroup = groups.get(groupIndex).getMediaTrackGroup();
+////            TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
+////
+////
+////            DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
+////            DefaultTrackSelector.Parameters.Builder parameters = trackSelector.buildUponParameters();
+//////            parameters.setOverrideForType(selectionOverride);
+////            parameters.setPreferredTextLanguages("pt");  // 设置为英文
+////            trackSelector.setParameters(parameters);
+//
+//
+////            new FixedTrackSelection.Factory().createTrackSelections()
+////
+////                    .createTrackSelection(
+////                    group = getTrackGroup(trackSelector), trackIndices = intArrayOf(selectedTrackIndex))
+//
+//            //
+////            TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters()
+////                    .buildUpon()
+////                    .clearOverrides()
+////                    .setPrioritizeImageOverVideoEnabled(false)
+////                    .setOverrideForType(selectionOverride)
+////                    .build();
+////
+////            mExoPlayer.setTrackSelectionParameters(selectionParameters);
+//            return true;
+//        } catch (Exception e) {
+//            LogUtil.log("VideoMediaxPlayer => setTrackInfo => " + e.getMessage());
+//            return false;
+//        }
+//    }
 
     @Override
     public JSONArray getTrackInfo(int type) {
