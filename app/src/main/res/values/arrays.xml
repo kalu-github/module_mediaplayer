@@ -12,6 +12,7 @@
         <item>dash_mpd</item>
         <item>hls_m3u8_mixed</item>
         <item>hls_m3u8_mixed</item>
+        <item>hls_m3u8</item>
         <item>track</item>
     </string-array>
 
@@ -27,6 +28,7 @@
         <item>https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd</item>
         <item>https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8</item>
         <item>https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8</item>
+        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/1080p/index.m3u8</item>
         <item>https://aliyuncdnsaascloud.xjhktv.com/video/A%20Lin%2B%E5%80%AA%E5%AD%90%E5%86%88-%E4%B8%8D%E5%B1%91%E5%AE%8C%E7%BE%8E%5B%E5%9B%BD%5D%5B1080P%5D.mp4</item>
     </string-array>
 

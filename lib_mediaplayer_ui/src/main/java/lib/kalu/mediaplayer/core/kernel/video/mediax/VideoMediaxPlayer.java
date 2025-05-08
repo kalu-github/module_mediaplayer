@@ -1,5 +1,6 @@
 package lib.kalu.mediaplayer.core.kernel.video.mediax;
 
+import static androidx.media3.common.C.SELECTION_FLAG_DEFAULT;
 import static androidx.media3.common.MediaLibraryInfo.VERSION_SLASHY;
 
 import android.content.Context;
@@ -11,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.media3.common.C;
 import androidx.media3.common.Format;
 import androidx.media3.common.MediaItem;
+import androidx.media3.common.MediaLibraryInfo;
+import androidx.media3.common.MimeTypes;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
@@ -41,10 +44,13 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.LoadEventInfo;
 import androidx.media3.exoplayer.source.MediaLoadData;
 import androidx.media3.exoplayer.source.MediaSource;
+import androidx.media3.exoplayer.source.MergingMediaSource;
 import androidx.media3.exoplayer.source.ProgressiveMediaSource;
+import androidx.media3.exoplayer.source.SingleSampleMediaSource;
 import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.FixedTrackSelection;
+import androidx.media3.exoplayer.trackselection.TrackSelector;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 
 import com.google.common.collect.ImmutableList;
@@ -54,6 +60,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import ePT.epd;
@@ -275,6 +285,33 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //            // 合并视频、音频和字幕
 ////            mExoPlayer.setMediaSource(source1);
 //            mExoPlayer.setMediaSource(new MergingMediaSource(source1, source3));
+
+
+//            MediaItem.SubtitleConfiguration subtitleConfiguration = new MediaItem.SubtitleConfiguration.Builder(Uri.parse("https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt"))
+//                    .setMimeType(MimeTypes.APPLICATION_SUBRIP) // 根据字幕文件格式设置 MIME 类型
+//                    .setLanguage("pt") // 设置字幕语言
+////                    .setSelectionFlags(SELECTION_FLAG_DEFAULT)
+//                    .build();
+//            MediaItem mediaItem = new MediaItem.Builder().setUri(Uri.parse("https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8"))
+//                    .setSubtitleConfigurations(List.of(subtitleConfiguration))
+//                    .build();
+//            mExoPlayer.setMediaItem(mediaItem);
+
+
+//            StartArgs build = args.newBuilder().setUrl("https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8").build();
+//            MediaSource mediaSource = buildSource(context, build);
+//            Uri subtitleUri = Uri.parse("https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt");
+//            MediaItem.SubtitleConfiguration subtitleConfiguration = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
+////                                .setMimeType(MimeTypes.TEXT_VTT)  // 明确指定 WebVTT 格式
+//                    .setMimeType("application/x-subrip") // 根据字幕文件格式设置 MIME 类型
+//                    .setLanguage("pt")               // 设置字幕语言
+//                    .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT) // 默认选中
+//                    .build();
+//            // 英语字幕源（外挂）
+//            SingleSampleMediaSource source3 = new SingleSampleMediaSource.Factory(new DefaultDataSource.Factory(context))
+//                    .createMediaSource(subtitleConfiguration, 0);
+//
+//            mExoPlayer.setMediaSource(new MergingMediaSource(mediaSource, source3));
 
             MediaSource mediaSource = buildSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
@@ -604,13 +641,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
 
             // 创建数据源工厂
-            DefaultHttpDataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory();
-            dataSourceFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + VERSION_SLASHY);
-            long connectTimeout = args.getConnectTimout();
-            dataSourceFactory.setConnectTimeoutMs((int) connectTimeout);
-            dataSourceFactory.setReadTimeoutMs((int) connectTimeout);
-            dataSourceFactory.setAllowCrossProtocolRedirects(true);
-            dataSourceFactory.setKeepPostFor302Redirects(true);
+            DefaultHttpDataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory()
+                    .setUserAgent(MediaLibraryInfo.VERSION_SLASHY)
+                    .setConnectTimeoutMs((int) args.getConnectTimout())
+                    .setReadTimeoutMs((int) args.getConnectTimout())
+                    .setAllowCrossProtocolRedirects(true)
+                    .setKeepPostFor302Redirects(true);
 
             int cacheType = args.getCacheType();
             boolean live = args.isLive();
@@ -649,14 +685,18 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                dataSource = dataSource1;
             }
 
+            //
+            List<MediaSource> mediaSources = new LinkedList<>();
+
             // rtmp
             if (contentType == -100) {
                 Class<?> cls = Class.forName("com.google.android.exoplayer2.ext.rtmp.RtmpDataSource");
                 DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
                 LogUtil.log("VideoMediaxPlayer => buildSource => rtmp");
-                return new ProgressiveMediaSource.Factory(factory).createMediaSource(new MediaItem.Builder()
+                ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(factory).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .build());
+                mediaSources.add(source);
             }
             // rtsp
             else if (contentType == C.CONTENT_TYPE_RTSP) {
@@ -665,9 +705,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 constructor.setAccessible(true);
                 Object object = constructor.newInstance(dataSource);
                 LogUtil.log("VideoMediaxPlayer => buildSource => rtsp");
-                return ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .build());
+                mediaSources.add(source);
             }
             // dash
             else if (contentType == C.CONTENT_TYPE_DASH) {
@@ -676,9 +717,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 constructor.setAccessible(true);
                 Object object = constructor.newInstance(dataSource);
                 LogUtil.log("VideoMediaxPlayer => buildSource => dash");
-                return ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .build());
+                mediaSources.add(source);
             }
             // hls
             else if (contentType == C.CONTENT_TYPE_HLS) {
@@ -687,9 +729,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 constructor.setAccessible(true);
                 Object object = constructor.newInstance(dataSource);
                 LogUtil.log("VideoMediaxPlayer => buildSource => hls");
-                return ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+
+                MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .build());
+                mediaSources.add(source);
             }
             // SmoothStreaming
             else if (contentType == C.CONTENT_TYPE_SS) {
@@ -698,30 +742,101 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 constructor.setAccessible(true);
                 Object object = constructor.newInstance(dataSource);
                 LogUtil.log("VideoMediaxPlayer => buildSource => SmoothStreaming");
-                return ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .build());
+                mediaSources.add(source);
             }
             // mp4
             else if (contentType == -200) {
                 LogUtil.log("VideoMediaxPlayer => buildSource => mp4");
-                return new ProgressiveMediaSource.Factory(dataSource).createMediaSource(new MediaItem.Builder()
+                ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(dataSource).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .build());
+                mediaSources.add(source);
             }
             // other
             else {
                 LogUtil.log("VideoMediaxPlayer => buildSource => other");
-                return new DefaultMediaSourceFactory(dataSource).createMediaSource(new MediaItem.Builder()
+                MediaSource source = new DefaultMediaSourceFactory(dataSource).createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .build());
+                mediaSources.add(source);
             }
+
+            /**
+             *  2025-04-25 20:01:32.609 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  streamsList = [# com.yyt.zapptv.model.proto.Playback$StreamTrack@37d8a524
+             *     format: "hls"
+             *     label: "HD"
+             *     quality: "HD"
+             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8", # com.yyt.zapptv.model.proto.Playback$StreamTrack@35014555
+             *     format: "hls"
+             *     label: "SD"
+             *     quality: "SD"
+             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8", # com.yyt.zapptv.model.proto.Playback$StreamTrack@5f9f9c57
+             *     format: "hls"
+             *     is_login: true
+             *     label: "FULL HD"
+             *     quality: "FHD"
+             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/1080p/index.m3u8"]
+             *     2025-04-25 20:01:32.612 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  subtitlesList = [# com.yyt.zapptv.model.proto.Playback$SubtitleTrack@b7ab61ea
+             *     format: "vtt"
+             *     label: "English"
+             *     language: "en"
+             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/English.vtt", # com.yyt.zapptv.model.proto.Playback$SubtitleTrack@6d66d2c6
+             *     format: "vtt"
+             *     label: "Espa\303\261ol"
+             *     language: "es"
+             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Spanish.vtt", # com.yyt.zapptv.model.proto.Playback$SubtitleTrack@925f4fa3
+             *     format: "vtt"
+             *     label: "Portugu\303\252s (Brasil)"
+             *     language: "pt"
+             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt"]
+             *     2025-04-25 20:01:32.612 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  audiosList = []
+             */
+
+            /**
+             *  "x-ssa" -> MimeTypes.TEXT_SSA
+             *         "vtt" -> MimeTypes.TEXT_VTT
+             *         else -> MimeTypes.TEXT_UNKNOWN
+             */
+
+            List<String> subtitleUrls = Arrays.asList("https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/English.vtt",
+                    "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Spanish.vtt",
+                    "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt");
+
+            List<String> subtitleLabls = Arrays.asList("English", "Espa\303\261ol", "Portugu\303\252s (Brasil)");
+            List<String> subtitleLanguages = Arrays.asList("en", "es", "pt");
+
+            // 外挂字幕
+            for (int i = 0; i < 3; i++) {
+                Uri subtitleUri = Uri.parse(subtitleUrls.get(i));
+                MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
+//                        .setMimeType(MimeTypes.APPLICATION_SUBRIP) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+                        .setMimeType(MimeTypes.TEXT_VTT) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+                        .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
+                        .setLanguage(subtitleLanguages.get(i))
+                        .setLabel(subtitleLabls.get(i))
+                        .build();
+                SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
+                        .createMediaSource(subtitleConfig, C.TIME_UNSET);
+                //
+                mediaSources.add(source);
+            }
+
+            return new MergingMediaSource(mediaSources.toArray(new MediaSource[0]));
+
         } catch (Exception e) {
             throw e;
         }
     }
 
     private final AnalyticsListener mAnalyticsListener = new AnalyticsListener() {
+
+        @Override
+        public void onPlayerErrorChanged(EventTime eventTime, @Nullable PlaybackException e) {
+            LogUtil.log("VideoMediaxPlayer => onPlayerErrorChanged => message = " + e.getMessage(), e);
+        }
 
         @Override
         public void onPlayWhenReadyChanged(AnalyticsListener.EventTime eventTime, boolean playWhenReady, int reason) {
@@ -775,7 +890,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             // 播放错误
             if (state == Player.STATE_IDLE) {
-                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_IDLE =>");
+                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_IDLE => state = " + state);
             }
             // 播放完成
             else if (state == Player.STATE_ENDED) {
@@ -930,11 +1045,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
         @Override
         public void onCues(EventTime eventTime, CueGroup cueGroup) {
-            LogUtil.log("VideoMediaxPlayer => onSeekForwardIncrementChanged =>");
+            LogUtil.log("VideoMediaxPlayer => onCues => cueGroup = " + cueGroup);
         }
 
         @Override
         public void onCues(EventTime eventTime, List<Cue> cues) {
+            LogUtil.log("VideoMediaxPlayer => onCues => cues = " + cues);
             VideoPlayerApi playerApi = getPlayerApi();
             ComponentSubtitle component = playerApi.findComponent(ComponentSubtitle.class);
             if (null != component) {
@@ -1023,18 +1139,29 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
             LogUtil.log("VideoMediaxPlayer => setTrackInfo => groupIndex = " + groupIndex + ", trackIndex = " + trackIndex);
-            //
-            androidx.media3.common.Tracks tracks = mExoPlayer.getCurrentTracks();
-            ImmutableList<androidx.media3.common.Tracks.Group> groups = tracks.getGroups();
-            //
-            TrackGroup trackGroup = groups.get(groupIndex).getMediaTrackGroup();
-            TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
 
 
-            DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
-            DefaultTrackSelector.Parameters.Builder parameters = trackSelector.buildUponParameters();
-            parameters.setOverrideForType(selectionOverride);
-            trackSelector.setParameters(parameters);
+            // 获取 TrackSelector
+            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
+                    .buildUpon()
+                    .setPreferredTextLanguage("en")
+                    .build();
+            trackSelector.setParameters(selectionParameters);
+
+//            //
+//            androidx.media3.common.Tracks tracks = mExoPlayer.getCurrentTracks();
+//            ImmutableList<androidx.media3.common.Tracks.Group> groups = tracks.getGroups();
+//            //
+//            TrackGroup trackGroup = groups.get(groupIndex).getMediaTrackGroup();
+//            TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
+//
+//
+//            DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
+//            DefaultTrackSelector.Parameters.Builder parameters = trackSelector.buildUponParameters();
+////            parameters.setOverrideForType(selectionOverride);
+//            parameters.setPreferredTextLanguages("pt");  // 设置为英文
+//            trackSelector.setParameters(parameters);
 
 
 //            new FixedTrackSelection.Factory().createTrackSelections()
@@ -1169,6 +1296,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     }
                     // 媒体信息
                     else if (type == -1 && trackType == C.TRACK_TYPE_METADATA) {
+                        LogUtil.log("VideoMediaxPlayer => getTrackInfo[C.TRACK_TYPE_METADATA] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
+                    }
+                    // 未知
+                    else {
+                        LogUtil.log("VideoMediaxPlayer => getTrackInfo[Unknow] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
                     }
 
 

@@ -49,6 +49,10 @@ public class TestDialog extends DialogFragment {
                     int width = object.optInt("width", 0);
                     int height = object.optInt("height", 0);
                     curName = bitrate + "|" + width + "|" + height + "|" + (isTrackSupported ? "支持" : "不支持");
+                } else if (type == 3) {
+                    String id = object.optString("id", "null");
+                    String language = object.optString("language", "null");
+                    curName = id + "|" + language + "|" + (isTrackSupported ? "支持" : "不支持");
                 } else {
                     String id = object.optString("id", "null");
                     String sampleMimeType = object.optString("sampleMimeType", "null");

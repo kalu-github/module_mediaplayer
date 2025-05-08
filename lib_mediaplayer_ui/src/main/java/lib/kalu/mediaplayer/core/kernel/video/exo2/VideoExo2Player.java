@@ -2,8 +2,11 @@ package lib.kalu.mediaplayer.core.kernel.video.exo2;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.view.Surface;
+
+import androidx.media3.common.MimeTypes;
+import androidx.media3.exoplayer.source.MergingMediaSource;
+import androidx.media3.exoplayer.source.SingleSampleMediaSource;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -36,6 +39,7 @@ import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionOverride;
 import com.google.android.exoplayer2.trackselection.TrackSelectionParameters;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
@@ -50,11 +54,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.SocketAddress;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -554,6 +561,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
             else if (lowerCase.startsWith(PlayerType.SchemeType.RTSP)) {
                 contentType = C.CONTENT_TYPE_RTSP;
             }
+            // mp4
+            else if (lowerCase.startsWith(PlayerType.SchemeType._MP4)) {
+                contentType = -200;
+            }
             // other
             else {
                 contentType = C.CONTENT_TYPE_OTHER;
@@ -611,13 +622,12 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //                ((OkHttpDataSource.Factory) instance).setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
 //                dataSourceFactory = (OkHttpDataSource.Factory) instance;
 
-            DefaultHttpDataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory();
-            dataSourceFactory.setUserAgent("(Linux;Android " + Build.VERSION.RELEASE + ") " + ExoPlayerLibraryInfo.VERSION_SLASHY);
-            long connectTimeout = args.getConnectTimout();
-            dataSourceFactory.setConnectTimeoutMs((int) connectTimeout);
-            dataSourceFactory.setReadTimeoutMs((int) connectTimeout);
-            dataSourceFactory.setAllowCrossProtocolRedirects(true);
-            dataSourceFactory.setKeepPostFor302Redirects(true);
+           DefaultHttpDataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory()
+                   .setUserAgent(ExoPlayerLibraryInfo.VERSION_SLASHY)
+                   .setConnectTimeoutMs((int) args.getConnectTimout())
+                   .setReadTimeoutMs((int) args.getConnectTimout())
+                   .setAllowCrossProtocolRedirects(true)
+                   .setKeepPostFor302Redirects(true);
 
             int cacheType = args.getCacheType();
             boolean live = args.isLive();
@@ -682,39 +692,186 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //            }
 //            // 多路流合并
 //            return new MergingMediaSource(mediaSources);
+//
+//            //
+//            List<androidx.media3.exoplayer.source.MediaSource> mediaSources = new LinkedList<>();
+//
+//            // rtmp
+//            if (contentType == -100) {
+//                Class<?> cls = Class.forName("com.google.android.exoplayer2.ext.rtmp.RtmpDataSource");
+//                return new ProgressiveMediaSource.Factory((DataSource.Factory) cls.newInstance()).createMediaSource(builder.build());
+//            }
+//            // rtsp
+//            else if (contentType == C.CONTENT_TYPE_RTSP) {
+//                 return new RtspMediaSource.Factory().createMediaSource(builder.build());
+//            }
+//            // dash
+//            else if (contentType == C.CONTENT_TYPE_DASH) {
+//                return new DashMediaSource.Factory(dataSource).createMediaSource(builder.build());
+//            }
+//            // hls
+//            else if (contentType == C.CONTENT_TYPE_HLS) {
+//                return new HlsMediaSource.Factory(dataSource).createMediaSource(builder.build());
+//            }
+//            // SmoothStreaming
+//            else if (contentType == C.CONTENT_TYPE_SS) {
+//                return new SsMediaSource.Factory(dataSource).createMediaSource(builder.build());
+//            }
+//            // other
+//            else {
+//                DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+//                extractorsFactory.setConstantBitrateSeekingEnabled(true);
+//                return new ProgressiveMediaSource.Factory(dataSource, extractorsFactory).createMediaSource(builder.build());
+//            }
+
+
+            //
+            List<MediaSource> mediaSources = new LinkedList<>();
 
             // rtmp
             if (contentType == -100) {
                 Class<?> cls = Class.forName("com.google.android.exoplayer2.ext.rtmp.RtmpDataSource");
-                return new ProgressiveMediaSource.Factory((DataSource.Factory) cls.newInstance()).createMediaSource(builder.build());
+                DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
+                LogUtil.log("VideoExo2Player => buildSource => rtmp");
+                ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(factory).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
+                mediaSources.add(source);
             }
             // rtsp
             else if (contentType == C.CONTENT_TYPE_RTSP) {
-                 return new RtspMediaSource.Factory().createMediaSource(builder.build());
+                Class<?> cls = Class.forName("com.google.android.exoplayer2.source.rtsp.RtspMediaSource$Factory");
+                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                constructor.setAccessible(true);
+                Object object = constructor.newInstance(dataSource);
+                LogUtil.log("VideoExo2Player => buildSource => rtsp");
+                MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
+                mediaSources.add(source);
             }
             // dash
             else if (contentType == C.CONTENT_TYPE_DASH) {
-                return new DashMediaSource.Factory(dataSource).createMediaSource(builder.build());
+                Class<?> cls = Class.forName("com.google.android.exoplayer2.source.dash.DashMediaSource$Factory");
+                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                constructor.setAccessible(true);
+                Object object = constructor.newInstance(dataSource);
+                LogUtil.log("VideoExo2Player => buildSource => dash");
+                MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
+                mediaSources.add(source);
             }
             // hls
             else if (contentType == C.CONTENT_TYPE_HLS) {
-                return new HlsMediaSource.Factory(dataSource).createMediaSource(builder.build());
+                Class<?> cls = Class.forName("com.google.android.exoplayer2.source.hls.HlsMediaSource$Factory");
+                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                constructor.setAccessible(true);
+                Object object = constructor.newInstance(dataSource);
+                LogUtil.log("VideoExo2Player => buildSource => hls");
+
+                MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
+                mediaSources.add(source);
             }
             // SmoothStreaming
             else if (contentType == C.CONTENT_TYPE_SS) {
-                return new SsMediaSource.Factory(dataSource).createMediaSource(builder.build());
+                Class<?> cls = Class.forName("androidx.media3.exoplayer.smoothstreaming.SsMediaSource$Factory");
+                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                constructor.setAccessible(true);
+                Object object = constructor.newInstance(dataSource);
+                LogUtil.log("VideoExo2Player => buildSource => SmoothStreaming");
+                MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
+                mediaSources.add(source);
+            }
+            // mp4
+            else if (contentType == -200) {
+                LogUtil.log("VideoExo2Player => buildSource => mp4");
+                ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(dataSource).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
+                mediaSources.add(source);
             }
             // other
             else {
-                DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-                extractorsFactory.setConstantBitrateSeekingEnabled(true);
-                return new ProgressiveMediaSource.Factory(dataSource, extractorsFactory).createMediaSource(builder.build());
+                LogUtil.log("VideoExo2Player => buildSource => other");
+                MediaSource source = new DefaultMediaSourceFactory(dataSource).createMediaSource(new MediaItem.Builder()
+                        .setUri(Uri.parse(url))
+                        .build());
+                mediaSources.add(source);
             }
+
+            /**
+             *  2025-04-25 20:01:32.609 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  streamsList = [# com.yyt.zapptv.model.proto.Playback$StreamTrack@37d8a524
+             *     format: "hls"
+             *     label: "HD"
+             *     quality: "HD"
+             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8", # com.yyt.zapptv.model.proto.Playback$StreamTrack@35014555
+             *     format: "hls"
+             *     label: "SD"
+             *     quality: "SD"
+             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8", # com.yyt.zapptv.model.proto.Playback$StreamTrack@5f9f9c57
+             *     format: "hls"
+             *     is_login: true
+             *     label: "FULL HD"
+             *     quality: "FHD"
+             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/1080p/index.m3u8"]
+             *     2025-04-25 20:01:32.612 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  subtitlesList = [# com.yyt.zapptv.model.proto.Playback$SubtitleTrack@b7ab61ea
+             *     format: "vtt"
+             *     label: "English"
+             *     language: "en"
+             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/English.vtt", # com.yyt.zapptv.model.proto.Playback$SubtitleTrack@6d66d2c6
+             *     format: "vtt"
+             *     label: "Espa\303\261ol"
+             *     language: "es"
+             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Spanish.vtt", # com.yyt.zapptv.model.proto.Playback$SubtitleTrack@925f4fa3
+             *     format: "vtt"
+             *     label: "Portugu\303\252s (Brasil)"
+             *     language: "pt"
+             *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt"]
+             *     2025-04-25 20:01:32.612 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  audiosList = []
+             */
+
+            /**
+             *  "x-ssa" -> MimeTypes.TEXT_SSA
+             *         "vtt" -> MimeTypes.TEXT_VTT
+             *         else -> MimeTypes.TEXT_UNKNOWN
+             */
+
+            List<String> subtitleUrls = Arrays.asList("https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/English.vtt",
+                    "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Spanish.vtt",
+                    "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt");
+
+            List<String> subtitleLabls = Arrays.asList("English", "Espa\303\261ol", "Portugu\303\252s (Brasil)");
+            List<String> subtitleLanguages = Arrays.asList("en", "es", "pt");
+
+            // 外挂字幕
+            for (int i = 0; i < 3; i++) {
+                Uri subtitleUri = Uri.parse(subtitleUrls.get(i));
+                MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
+//                        .setMimeType(MimeTypes.APPLICATION_SUBRIP) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+                        .setMimeType(MimeTypes.TEXT_VTT) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+                        .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
+                        .setLanguage(subtitleLanguages.get(i))
+                        .setLabel(subtitleLabls.get(i))
+                        .build();
+                SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
+                        .createMediaSource(subtitleConfig, C.TIME_UNSET);
+                //
+                mediaSources.add(source);
+            }
+
+            return new MergingMediaSource(mediaSources.toArray(new MediaSource[0]));
+
+
         } catch (Exception e) {
             throw e;
         }
     }
-   
+
     private final AnalyticsListener mAnalyticsListener = new AnalyticsListener() {
 
         @Override
@@ -891,19 +1048,27 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 throw new Exception("error: mExoPlayer null");
             LogUtil.log("VideoExo2Player => setTrackInfo => groupIndex = " + groupIndex+", trackIndex = "+trackIndex);
 
-            Tracks tracks = mExoPlayer.getCurrentTracks();
-            ImmutableList<Tracks.Group> groups = tracks.getGroups();
-
-            TrackGroup trackGroup = groups.get(groupIndex).getMediaTrackGroup();
-            TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
-
-            TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters()
+            // 获取 TrackSelector
+            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
                     .buildUpon()
-//                    .setMaxVideoSizeSd()
-//                    .setPreferredAudioLanguage("hu")
-                    .setOverrideForType(selectionOverride)
+                    .setPreferredTextLanguage("en")
                     .build();
-            mExoPlayer.setTrackSelectionParameters(selectionParameters);
+            trackSelector.setParameters(selectionParameters);
+//
+//            Tracks tracks = mExoPlayer.getCurrentTracks();
+//            ImmutableList<Tracks.Group> groups = tracks.getGroups();
+//
+//            TrackGroup trackGroup = groups.get(groupIndex).getMediaTrackGroup();
+//            TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
+//
+//            TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters()
+//                    .buildUpon()
+////                    .setMaxVideoSizeSd()
+////                    .setPreferredAudioLanguage("hu")
+//                    .setOverrideForType(selectionOverride)
+//                    .build();
+//            mExoPlayer.setTrackSelectionParameters(selectionParameters);
 
 //            DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
 //            // 获取当前映射的轨道信息
