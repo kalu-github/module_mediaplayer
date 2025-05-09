@@ -653,6 +653,18 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
+    default boolean toggleTrack(int groupIndex, int trackIndex) {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            return kernel.toggleTrack(groupIndex, trackIndex);
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => toggleTrack => " + e.getMessage());
+            return false;
+        }
+    }
+
     default JSONArray getTrackInfoAll() {
         try {
             VideoKernelApi kernel = getVideoKernel();

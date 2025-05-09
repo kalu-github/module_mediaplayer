@@ -70,6 +70,10 @@ interface VideoKernelApiBase {
         return false;
     }
 
+    default boolean toggleTrack(int groupIndex, int trackIndex) {
+        return false;
+    }
+
     default JSONArray getTrackInfo(int type) {
         return null;
     }

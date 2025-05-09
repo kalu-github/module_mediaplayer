@@ -13,6 +13,8 @@ import androidx.media3.common.MediaLibraryInfo;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
+import androidx.media3.common.TrackGroup;
+import androidx.media3.common.TrackSelectionOverride;
 import androidx.media3.common.TrackSelectionParameters;
 import androidx.media3.common.Tracks;
 import androidx.media3.common.VideoSize;
@@ -40,10 +42,12 @@ import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.source.MergingMediaSource;
 import androidx.media3.exoplayer.source.ProgressiveMediaSource;
 import androidx.media3.exoplayer.source.SingleSampleMediaSource;
+import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.text.TextOutput;
 import androidx.media3.exoplayer.text.TextRenderer;
 import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
+import androidx.media3.exoplayer.trackselection.FixedTrackSelection;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 
@@ -1187,6 +1191,29 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoMediaxPlayer => toggleTrackRoleFlagVideo => " + e.getMessage());
+            return false;
+        }
+    }
+
+
+    @Override
+    public boolean toggleTrack(int groupIndex, int trackIndex) {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            // 假设法语音频轨道索引为 1
+            TrackGroupArray trackGroups = mExoPlayer.getCurrentTrackGroups();
+            TrackGroup trackGroup = trackGroups.get(groupIndex);
+
+            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
+                    .buildUpon()
+                    .setOverrideForType(new TrackSelectionOverride(trackGroup, trackIndex))
+                    .build();
+            trackSelector.setParameters(selectionParameters);
+            return true;
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => toggleTrack => " + e.getMessage());
             return false;
         }
     }

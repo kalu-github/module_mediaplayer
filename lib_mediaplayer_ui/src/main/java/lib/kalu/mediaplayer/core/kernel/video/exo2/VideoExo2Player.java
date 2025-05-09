@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.os.Looper;
 import android.view.Surface;
 
-import androidx.annotation.Nullable;
-
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -32,11 +30,14 @@ import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.SingleSampleMediaSource;
+import com.google.android.exoplayer2.source.TrackGroup;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.text.Cue;
 import com.google.android.exoplayer2.text.CueGroup;
 import com.google.android.exoplayer2.text.TextOutput;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionOverride;
 import com.google.android.exoplayer2.trackselection.TrackSelectionParameters;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -783,7 +784,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     private final AnalyticsListener mAnalyticsListener = new AnalyticsListener() {
 
         @Override
-        public void onPlayerErrorChanged(EventTime eventTime, @Nullable PlaybackException error) {
+        public void onPlayerErrorChanged(EventTime eventTime, PlaybackException error) {
             LogUtil.log("VideoExo2Player => onPlayerErrorChanged => message = " + error.getMessage(), error);
         }
 
@@ -1114,6 +1115,28 @@ public final class VideoExo2Player extends VideoBasePlayer {
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoExo2Player => toggleTrackRoleFlagVideo => " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean toggleTrack(int groupIndex, int trackIndex) {
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            // 假设法语音频轨道索引为 1
+            TrackGroupArray trackGroups = mExoPlayer.getCurrentTrackGroups();
+            TrackGroup trackGroup = trackGroups.get(groupIndex);
+
+            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
+                    .buildUpon()
+                    .setOverrideForType(new TrackSelectionOverride(trackGroup, trackIndex))
+                    .build();
+            trackSelector.setParameters(selectionParameters);
+            return true;
+        } catch (Exception e) {
+            LogUtil.log("VideoExo2Player => toggleTrack => " + e.getMessage());
             return false;
         }
     }

@@ -684,6 +684,18 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
+    public final boolean toggleTrack(int groupIndex, int trackIndex) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.toggleTrack(groupIndex, trackIndex);
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => toggleTrack => " + e.getMessage());
+            return false;
+        }
+    }
+
     public final JSONArray getTrackInfo() {
         try {
             PlayerView playerView = getPlayerView();

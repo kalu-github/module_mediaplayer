@@ -84,10 +84,10 @@ public final class TestActivity extends Activity {
         });
     }
 
-//    public void toggleTrackLanguageSubtitle(String language) {
-//        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-//        playerLayout.toggleTrackLanguageSubtitle(language);
-//    }
+    public void toggleTrack(int groupIndex, int trackIndex) {
+        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        playerLayout.toggleTrack(groupIndex, trackIndex);
+    }
 
     public void toggleTrackRoleFlagSubtitle(int roleFlag) {
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
