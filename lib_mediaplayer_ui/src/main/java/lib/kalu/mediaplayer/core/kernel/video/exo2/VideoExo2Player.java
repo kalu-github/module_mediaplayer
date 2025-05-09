@@ -1270,22 +1270,21 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     object.put("isGroupSupported", isGroupSupported);
                     object.put("isGroupSelected", isGroupSelected);
                     object.put("isTrackSupported", isTrackSupported);
-                    object.put("isTrackSelected", isTrackSelected);
 
-                    boolean isTrackMixed = trackCount > 1;
-                    object.put("isTrackMixed", isTrackMixed);
-
-                    // dash hls SmoothStreaming
-                    boolean isTrackMixedSelected;
-                    if (trackCount > 1 && trackType == C.TRACK_TYPE_VIDEO) {
+                    // 自适应码率
+                    if (isGroupAdaptiveSupported && trackType == androidx.media3.common.C.TRACK_TYPE_VIDEO) {
                         int videoWidth = getPlayerApi().getVideoRender().getVideoWidth();
                         int videoHeight = getPlayerApi().getVideoRender().getVideoHeight();
                         int videoBitrate = getPlayerApi().getVideoRender().getVideoBitrate();
-                        isTrackMixedSelected = (videoWidth == format.width && videoHeight == format.height && videoBitrate == format.bitrate);
+                        boolean selected = (videoWidth == format.width && videoHeight == format.height && videoBitrate == format.bitrate);
+                        if (selected) {
+                            object.put("isTrackSelected", isTrackSelected);
+                        } else {
+                            object.put("isTrackSelected", false);
+                        }
                     } else {
-                        isTrackMixedSelected = false;
+                        object.put("isTrackSelected", isTrackSelected);
                     }
-                    object.put("isTrackMixedSelected", isTrackMixedSelected);
 
                     object.put("id", format.id);
                     object.put("label", format.label);

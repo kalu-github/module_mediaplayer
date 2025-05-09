@@ -10,6 +10,7 @@ import androidx.media3.common.C;
 import androidx.media3.common.Format;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MediaLibraryInfo;
+import androidx.media3.common.MediaMetadata;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
@@ -1327,11 +1328,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     }
                     // 媒体信息
                     else if (type == -1 && trackType == C.TRACK_TYPE_METADATA) {
-                      //  LogUtil.log("VideoMediaxPlayer => getTrackInfo[C.TRACK_TYPE_METADATA] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
+                        //  LogUtil.log("VideoMediaxPlayer => getTrackInfo[C.TRACK_TYPE_METADATA] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
                     }
                     // 未知
                     else {
-                      //  LogUtil.log("VideoMediaxPlayer => getTrackInfo[Unknow] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
+                        //  LogUtil.log("VideoMediaxPlayer => getTrackInfo[Unknow] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
                     }
 
 
@@ -1346,22 +1347,21 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     object.put("isGroupSupported", isGroupSupported);
                     object.put("isGroupSelected", isGroupSelected);
                     object.put("isTrackSupported", isTrackSupported);
-                    object.put("isTrackSelected", isTrackSelected);
 
-                    boolean isTrackMixed = trackCount > 1;
-                    object.put("isTrackMixed", isTrackMixed);
-
-                    // dash hls SmoothStreaming
-                    boolean isTrackMixedSelected;
-                    if (trackCount > 1 && trackType == C.TRACK_TYPE_VIDEO) {
+                    // 自适应码率
+                    if (isGroupAdaptiveSupported && trackType == C.TRACK_TYPE_VIDEO) {
                         int videoWidth = getPlayerApi().getVideoRender().getVideoWidth();
                         int videoHeight = getPlayerApi().getVideoRender().getVideoHeight();
                         int videoBitrate = getPlayerApi().getVideoRender().getVideoBitrate();
-                        isTrackMixedSelected = (videoWidth == format.width && videoHeight == format.height && videoBitrate == format.bitrate);
+                        boolean selected = (videoWidth == format.width && videoHeight == format.height && videoBitrate == format.bitrate);
+                        if (selected) {
+                            object.put("isTrackSelected", isTrackSelected);
+                        } else {
+                            object.put("isTrackSelected", false);
+                        }
                     } else {
-                        isTrackMixedSelected = false;
+                        object.put("isTrackSelected", isTrackSelected);
                     }
-                    object.put("isTrackMixedSelected", isTrackMixedSelected);
 
                     object.put("id", format.id);
                     object.put("label", format.label);
@@ -1385,7 +1385,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     object.put("subsampleOffsetUs", format.subsampleOffsetUs);
 //                    object.put("hasPrerollSamples", format.hasPrerollSamples);
 
-                  //  LogUtil.log("VideoMediaxPlayer => getTrackInfo => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
+                    //  LogUtil.log("VideoMediaxPlayer => getTrackInfo => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
 
                     if (null == result) {
                         result = new JSONArray();

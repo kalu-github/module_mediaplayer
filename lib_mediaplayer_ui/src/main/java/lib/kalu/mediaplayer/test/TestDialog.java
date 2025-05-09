@@ -75,6 +75,7 @@ public class TestDialog extends DialogFragment {
                 radioButton.setText(curName);
                 radioButton.setTag(object);
                 boolean isTrackSelected = object.optBoolean("isTrackSelected", false);
+                boolean isTrackMixed = object.optBoolean("isTrackMixed", false);
                 radioButton.setChecked(isTrackSelected);
                 boolean isTrackSupported = object.optBoolean("isTrackSupported", false);
                 radioButton.setEnabled(isTrackSupported);
