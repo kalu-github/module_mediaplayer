@@ -111,12 +111,12 @@ public class TestDialog extends DialogFragment {
                         }
                         // 字幕轨道
                         else if (type == 3) {
-                            int roleFlags = object.optInt("roleFlags", -1);
-                            ((TestActivity) getActivity()).toggleTrackRoleFlagSubtitle(roleFlags);
-//                            int groupIndex = object.optInt("groupIndex", -1);
-//                            int trackIndex = object.optInt("trackIndex", -1);
-////                            int roleFlags = object.optInt("roleFlags", -1);
-//                            ((TestActivity) getActivity()).toggleTrack(groupIndex, trackIndex);
+//                            int roleFlags = object.optInt("roleFlags", -1);
+//                            ((TestActivity) getActivity()).toggleTrackRoleFlagSubtitle(roleFlags);
+                            int groupIndex = object.optInt("groupIndex", -1);
+                            int trackIndex = object.optInt("trackIndex", -1);
+//                            int roleFlags = object.optInt("roleFlags", -1);
+                            ((TestActivity) getActivity()).toggleTrack(groupIndex, trackIndex);
                         }
 
                         //

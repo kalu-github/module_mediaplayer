@@ -42,12 +42,10 @@ import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.source.MergingMediaSource;
 import androidx.media3.exoplayer.source.ProgressiveMediaSource;
 import androidx.media3.exoplayer.source.SingleSampleMediaSource;
-import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.text.TextOutput;
 import androidx.media3.exoplayer.text.TextRenderer;
 import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
-import androidx.media3.exoplayer.trackselection.FixedTrackSelection;
 import androidx.media3.exoplayer.trackselection.TrackSelector;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 
@@ -1201,9 +1199,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
-            // 假设法语音频轨道索引为 1
-            TrackGroupArray trackGroups = mExoPlayer.getCurrentTrackGroups();
-            TrackGroup trackGroup = trackGroups.get(groupIndex);
+            Tracks tracks = mExoPlayer.getCurrentTracks();
+            ImmutableList<Tracks.Group> tracksGroups = tracks.getGroups();
+            TrackGroup trackGroup = tracksGroups.get(groupIndex).getMediaTrackGroup();
 
             TrackSelector trackSelector = mExoPlayer.getTrackSelector();
             TrackSelectionParameters selectionParameters = trackSelector.getParameters()
