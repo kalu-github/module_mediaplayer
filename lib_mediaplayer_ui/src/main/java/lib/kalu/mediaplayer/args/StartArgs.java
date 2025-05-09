@@ -1,8 +1,6 @@
 package lib.kalu.mediaplayer.args;
 
 
-import androidx.annotation.DrawableRes;
-
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -206,16 +204,16 @@ public class StartArgs implements Serializable {
     }
 
     // 外挂字幕
-    private List<SubtitleTrack> extraTrackSubtitle;
+    private List<TrackArgs> extraTrackSubtitle;
 
-    public List<SubtitleTrack> getExtraTrackSubtitle() {
+    public List<TrackArgs> getExtraTrackSubtitle() {
         return extraTrackSubtitle;
     }
 
     // 外挂音轨
-    private List<AudioTrack> extraTrackAudio;
+    private List<TrackArgs> extraTrackAudio;
 
-    public List<AudioTrack> getExtraTrackAudio() {
+    public List<TrackArgs> getExtraTrackAudio() {
         return extraTrackAudio;
     }
 
@@ -479,17 +477,17 @@ public class StartArgs implements Serializable {
 
 
         // 外挂字幕
-        private List<SubtitleTrack> extraTrackSubtitle;
+        private List<TrackArgs> extraTrackSubtitle;
 
-        public Builder setExtraTrackSubtitle(List<SubtitleTrack> v) {
+        public Builder setExtraTrackSubtitle(List<TrackArgs> v) {
             this.extraTrackSubtitle = v;
             return this;
         }
 
         // 外挂音轨
-        private List<AudioTrack> extraTrackAudio;
+        private List<TrackArgs> extraTrackAudio;
 
-        public Builder setExtraTrackAudio(List<AudioTrack> v) {
+        public Builder setExtraTrackAudio(List<TrackArgs> v) {
             this.extraTrackAudio = v;
             return this;
         }

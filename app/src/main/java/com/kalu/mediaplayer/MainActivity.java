@@ -21,7 +21,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.SubtitleTrack;
+import lib.kalu.mediaplayer.args.TrackArgs;
 import lib.kalu.mediaplayer.test.TestActivity;
 import lib.kalu.mediaplayer.type.PlayerType;
 
@@ -216,8 +216,8 @@ public class MainActivity extends Activity {
     }
 
 
-    private List<SubtitleTrack> getSubtitle() {
-        ArrayList<SubtitleTrack> list = new ArrayList<>();
+    private List<TrackArgs> getSubtitle() {
+        ArrayList<TrackArgs> list = new ArrayList<>();
 
         //
         ViewGroup viewGroup = findViewById(R.id.main_subtitles);
@@ -226,11 +226,11 @@ public class MainActivity extends Activity {
             CheckBox checkBox = (CheckBox) viewGroup.getChildAt(i);
             boolean checked = checkBox.isChecked();
             if (checked) {
-                SubtitleTrack subtitleTrack = new SubtitleTrack();
+                TrackArgs subtitleTrack = new TrackArgs();
                 subtitleTrack.setLabel("");
                 subtitleTrack.setLanguage(checkBox.getText().toString());
                 subtitleTrack.setUrl((String) checkBox.getTag());
-                subtitleTrack.setMimeType(PlayerType.SubtitleTrackType.TEXT_VTT);
+                subtitleTrack.setMimeType(PlayerType.TrackType.TEXT_VTT);
                 //
                 list.add(subtitleTrack);
             }

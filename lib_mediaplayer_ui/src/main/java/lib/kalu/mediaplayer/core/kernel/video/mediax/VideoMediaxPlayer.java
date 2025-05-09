@@ -58,9 +58,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import lib.kalu.mediaplayer.args.AudioTrack;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.SubtitleTrack;
+import lib.kalu.mediaplayer.args.TrackArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -685,14 +684,16 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             // 外挂字幕
-            List<SubtitleTrack> extraTrackSubtitle = args.getExtraTrackSubtitle();
+            List<TrackArgs> extraTrackSubtitle = args.getExtraTrackSubtitle();
             if (null != extraTrackSubtitle) {
-                for (SubtitleTrack track : extraTrackSubtitle) {
+                for (TrackArgs track : extraTrackSubtitle) {
                     Uri subtitleUri = Uri.parse(track.getUrl());
                     MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
                             .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
                             .setMimeType(track.getMimeType()) // 也可以用 MimeTypes.APPLICATION_SUBRIP
                             .setLanguage(track.getLanguage())
+//                    可以指定轨道是主音频（C.ROLE_FLAG_MAIN）、备用音频（如旁白，C.ROLE_FLAG_ALTERNATE）、字幕等
+//                            .setRoleFlags()
                             .setLabel(track.getLabel())
                             .build();
                     SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
@@ -703,9 +704,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             // 外挂音轨
-            List<AudioTrack> extraTrackAudio = args.getExtraTrackAudio();
+            List<TrackArgs> extraTrackAudio = args.getExtraTrackAudio();
             if (null != extraTrackAudio) {
-                for (AudioTrack track : extraTrackAudio) {
+                for (TrackArgs track : extraTrackAudio) {
                     MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
                             .createMediaSource(new MediaItem.Builder()
                                     .setUri(track.getUrl())
@@ -1074,12 +1075,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             TrackSelector trackSelector = mExoPlayer.getTrackSelector();
             TrackSelectionParameters selectionParameters = trackSelector.getParameters()
                     .buildUpon()
-                    .setPreferredTextLanguage("en")
+                    .setPreferredTextLanguage(language)
                     .build();
             trackSelector.setParameters(selectionParameters);
             return true;
         } catch (Exception e) {
-            LogUtil.log("VideoMediaxPlayer => setTrackInfo => " + e.getMessage());
+            LogUtil.log("VideoMediaxPlayer => setTrackSubtitle => " + e.getMessage());
             return false;
         }
     }

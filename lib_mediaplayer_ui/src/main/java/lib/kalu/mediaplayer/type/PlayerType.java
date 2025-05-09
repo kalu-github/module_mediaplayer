@@ -436,30 +436,14 @@ public @interface PlayerType {
         }
     }
 
+
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface SubtitleTrackType {
+    @interface TrackType {
 
         String TEXT_VTT = "text/vtt";
         String TEXT_SSA = "text/x-ssa";
-
-        @Documented
-        @Retention(CLASS)
-        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @StringDef(value = {
-                SubtitleTrackType.TEXT_VTT,
-                SubtitleTrackType.TEXT_SSA
-        })
-        @interface Value {
-        }
-    }
-
-
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface AudioTrackType {
 
         String AUDIO_MP4 = "audio/mp4";
         String AUDIO_AAC = "audio/mp4a-latm";
@@ -500,40 +484,42 @@ public @interface PlayerType {
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @StringDef(value = {
-                AudioTrackType.AUDIO_MP4,
-                AudioTrackType.AUDIO_AAC,
-                AudioTrackType.AUDIO_MATROSKA,
-                AudioTrackType.AUDIO_WEBM,
-                AudioTrackType.AUDIO_MPEG,
-                AudioTrackType.AUDIO_MPEG_L1,
-                AudioTrackType.AUDIO_MPEG_L2,
-                AudioTrackType.AUDIO_MPEGH_MHA1,
-                AudioTrackType.AUDIO_MPEGH_MHM1,
-                AudioTrackType.AUDIO_RAW,
-                AudioTrackType.AUDIO_ALAW,
-                AudioTrackType.AUDIO_MLAW,
-                AudioTrackType.AUDIO_AC3,
-                AudioTrackType.AUDIO_E_AC3,
-                AudioTrackType.AUDIO_E_AC3_JOC,
-                AudioTrackType.AUDIO_AC4,
-                AudioTrackType.AUDIO_TRUEHD,
-                AudioTrackType.AUDIO_DTS,
-                AudioTrackType.AUDIO_DTS_HD,
-                AudioTrackType.AUDIO_DTS_EXPRESS,
-                AudioTrackType.AUDIO_DTS_X,
-                AudioTrackType.AUDIO_VORBIS,
-                AudioTrackType.AUDIO_OPUS,
-                AudioTrackType.AUDIO_AMR,
-                AudioTrackType.AUDIO_AMR_NB,
-                AudioTrackType.AUDIO_AMR_WB,
-                AudioTrackType.AUDIO_FLAC,
-                AudioTrackType.AUDIO_ALAC,
-                AudioTrackType.AUDIO_MSGSM,
-                AudioTrackType.AUDIO_OGG,
-                AudioTrackType.AUDIO_WAV,
-                AudioTrackType.AUDIO_MIDI,
-                AudioTrackType.AUDIO_EXOPLAYER_MIDI,
-                AudioTrackType.AUDIO_UNKNOWN})
+                TrackType.TEXT_VTT,
+                TrackType.TEXT_SSA,
+                TrackType.AUDIO_MP4,
+                TrackType.AUDIO_AAC,
+                TrackType.AUDIO_MATROSKA,
+                TrackType.AUDIO_WEBM,
+                TrackType.AUDIO_MPEG,
+                TrackType.AUDIO_MPEG_L1,
+                TrackType.AUDIO_MPEG_L2,
+                TrackType.AUDIO_MPEGH_MHA1,
+                TrackType.AUDIO_MPEGH_MHM1,
+                TrackType.AUDIO_RAW,
+                TrackType.AUDIO_ALAW,
+                TrackType.AUDIO_MLAW,
+                TrackType.AUDIO_AC3,
+                TrackType.AUDIO_E_AC3,
+                TrackType.AUDIO_E_AC3_JOC,
+                TrackType.AUDIO_AC4,
+                TrackType.AUDIO_TRUEHD,
+                TrackType.AUDIO_DTS,
+                TrackType.AUDIO_DTS_HD,
+                TrackType.AUDIO_DTS_EXPRESS,
+                TrackType.AUDIO_DTS_X,
+                TrackType.AUDIO_VORBIS,
+                TrackType.AUDIO_OPUS,
+                TrackType.AUDIO_AMR,
+                TrackType.AUDIO_AMR_NB,
+                TrackType.AUDIO_AMR_WB,
+                TrackType.AUDIO_FLAC,
+                TrackType.AUDIO_ALAC,
+                TrackType.AUDIO_MSGSM,
+                TrackType.AUDIO_OGG,
+                TrackType.AUDIO_WAV,
+                TrackType.AUDIO_MIDI,
+                TrackType.AUDIO_EXOPLAYER_MIDI,
+                TrackType.AUDIO_UNKNOWN})
         @interface Value {
         }
     }

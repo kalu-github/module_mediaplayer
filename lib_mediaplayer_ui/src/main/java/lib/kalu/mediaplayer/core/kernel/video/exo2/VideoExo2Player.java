@@ -15,7 +15,6 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.MediaMetadata;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -46,7 +45,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.util.Clock;
-import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.video.VideoSize;
 import com.google.common.collect.ImmutableList;
 
@@ -59,9 +57,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import lib.kalu.mediaplayer.args.AudioTrack;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.SubtitleTrack;
+import lib.kalu.mediaplayer.args.TrackArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -722,9 +719,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
 
             // 外挂字幕
-            List<SubtitleTrack> extraTrackSubtitle = args.getExtraTrackSubtitle();
+            List<TrackArgs> extraTrackSubtitle = args.getExtraTrackSubtitle();
             if (null != extraTrackSubtitle) {
-                for (SubtitleTrack track : extraTrackSubtitle) {
+                for (TrackArgs track : extraTrackSubtitle) {
                     Uri subtitleUri = Uri.parse(track.getUrl());
                     MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
                             .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
@@ -740,9 +737,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
 
             // 外挂音轨
-            List<AudioTrack> extraTrackAudio = args.getExtraTrackAudio();
+            List<TrackArgs> extraTrackAudio = args.getExtraTrackAudio();
             if (null != extraTrackAudio) {
-                for (AudioTrack track : extraTrackAudio) {
+                for (TrackArgs track : extraTrackAudio) {
                     MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
                             .createMediaSource(new MediaItem.Builder()
                                     .setUri(track.getUrl())
@@ -1003,7 +1000,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             TrackSelector trackSelector = mExoPlayer.getTrackSelector();
             TrackSelectionParameters selectionParameters = trackSelector.getParameters()
                     .buildUpon()
-                    .setPreferredTextLanguage("en")
+                    .setPreferredTextLanguage(language)
                     .build();
             trackSelector.setParameters(selectionParameters);
             return true;
