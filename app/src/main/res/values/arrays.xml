@@ -69,4 +69,28 @@
         <item>only_ffmpeg</item>
     </string-array>
 
+    <string-array name="decoders">
+        <item>all</item>
+        <item>only_codec</item>
+        <item>only_ffmpeg</item>
+        <item>only_video_codec_audio_ffmpeg</item>
+        <item>only_video_ffmprg_audio_codec</item>
+        <item>only_video_codec</item>
+        <item>only_video_ffmpeg</item>
+        <item>only_audio_codec</item>
+        <item>only_audio_ffmpeg</item>
+    </string-array>
+
+    <integer-array name="decoders_ids">
+        <item>10000</item>
+        <item>10001</item>
+        <item>10002</item>
+        <item>10003</item>
+        <item>10004</item>
+        <item>10005</item>
+        <item>10006</item>
+        <item>10007</item>
+        <item>10008</item>
+    </integer-array>
+
 </resources>

@@ -36,36 +36,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        try {
-            List<String> list = Arrays.asList("test.mp4", "test.vtt");
-            for (int i = 0; i < list.size(); i++) {
-                String fromPath = list.get(i);
-                String savePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + fromPath;
-                try {
-                    InputStream is = getApplicationContext().getAssets().open(fromPath);
-                    FileOutputStream fos = new FileOutputStream(savePath);
-                    byte[] buffer = new byte[1024];
-                    int byteCount = 0;
-                    while ((byteCount = is.read(buffer)) != -1) {// 循环从输入流读取
-                        // buffer字节
-                        fos.write(buffer, 0, byteCount);// 将读取的输入流写入到输出流
-                    }
-                    fos.flush();// 刷新缓冲区
-                    is.close();
-                    fos.close();
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "初始化资源文件 => 错误", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-            }
-            Toast.makeText(getApplicationContext(), "初始化资源文件 => 成功", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-        }
-
-        initUrl();
-        initSubtitle();
-        initKernel();
-
+        init();
 
         findViewById(R.id.main_button1).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +62,38 @@ public class MainActivity extends Activity {
         });
     }
 
-    private void initUrl() {
+    private void init() {
+
+        // decoders
+        try {
+            String[] strings = getResources().getStringArray(R.array.decoders);
+            LinearLayout viewGroup = findViewById(R.id.main_decoder);
+            for (int i = 0; i < strings.length; i++) {
+                RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
+                RadioButton radioButton = new RadioButton(getApplicationContext());
+                radioButton.setLayoutParams(layoutParams);
+                radioButton.setText(strings[i]);
+                viewGroup.addView(radioButton);
+            }
+        } catch (Exception e) {
+        }
+
+
+        // kernel
+        try {
+            String[] kernels = getResources().getStringArray(R.array.kernels);
+            RadioGroup radioGroup = findViewById(R.id.main_kernel_group);
+            for (int i = 0; i < kernels.length; i++) {
+                RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
+                RadioButton radioButton = new RadioButton(getApplicationContext());
+                radioButton.setLayoutParams(layoutParams);
+                radioButton.setText(kernels[i]);
+                radioGroup.addView(radioButton);
+            }
+        } catch (Exception e) {
+        }
+
+        // url
         try {
             String[] names = getResources().getStringArray(R.array.names);
             String[] urls = getResources().getStringArray(R.array.urls);
@@ -108,9 +110,8 @@ public class MainActivity extends Activity {
             }
         } catch (Exception e) {
         }
-    }
 
-    private void initSubtitle() {
+        // subtitle
         /**
          *  2025-04-25 20:01:32.609 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  streamsList = [# com.yyt.zapptv.model.proto.Playback$StreamTrack@37d8a524
          *     format: "hls"
@@ -155,19 +156,31 @@ public class MainActivity extends Activity {
             }
         } catch (Exception e) {
         }
-    }
 
-    private void initKernel() {
+        // copy
         try {
-            String[] kernels = getResources().getStringArray(R.array.kernels);
-            RadioGroup radioGroup = findViewById(R.id.main_kernel_group);
-            for (int i = 0; i < kernels.length; i++) {
-                RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
-                RadioButton radioButton = new RadioButton(getApplicationContext());
-                radioButton.setLayoutParams(layoutParams);
-                radioButton.setText(kernels[i]);
-                radioGroup.addView(radioButton);
+            List<String> list = Arrays.asList("test.mp4", "test.vtt");
+            for (int i = 0; i < list.size(); i++) {
+                String fromPath = list.get(i);
+                String savePath = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + fromPath;
+                try {
+                    InputStream is = getApplicationContext().getAssets().open(fromPath);
+                    FileOutputStream fos = new FileOutputStream(savePath);
+                    byte[] buffer = new byte[1024];
+                    int byteCount = 0;
+                    while ((byteCount = is.read(buffer)) != -1) {// 循环从输入流读取
+                        // buffer字节
+                        fos.write(buffer, 0, byteCount);// 将读取的输入流写入到输出流
+                    }
+                    fos.flush();// 刷新缓冲区
+                    is.close();
+                    fos.close();
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "初始化资源文件 => 错误", Toast.LENGTH_SHORT).show();
+                    break;
+                }
             }
+            Toast.makeText(getApplicationContext(), "初始化资源文件 => 成功", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
         }
     }
@@ -273,46 +286,24 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void initPlayer() {
-
-        @PlayerType.KernelType
-        int kernelType = getKernelType();
-
-        @PlayerType.DecoderType
-        int decoderType;
-        int decoderId = ((RadioGroup) findViewById(R.id.main_decoder)).getCheckedRadioButtonId();
-        switch (decoderId) {
-            case R.id.main_exo_decoder_all_ffmpeg:
-                decoderType = PlayerType.DecoderType.ONLY_FFMPEG;
-                break;
-            case R.id.main_exo_decoder_video_codec_audio_ffmpeg:
-                decoderType = PlayerType.DecoderType.ONLY_VIDEO_CODEC_AUDIO_FFMPEG;
-                break;
-            case R.id.main_exo_decoder_video_ffmpeg_audio_codec:
-                decoderType = PlayerType.DecoderType.ONLY_VIDEO_FFMPRG_AUDIO_CODEC;
-                break;
-            case R.id.main_exo_decoder_only_video_codec:
-                decoderType = PlayerType.DecoderType.ONLY_VIDEO_CODEC;
-                break;
-            case R.id.main_exo_decoder_only_video_ffmpeg:
-                decoderType = PlayerType.DecoderType.ONLY_VIDEO_FFMPEG;
-                break;
-            case R.id.main_exo_decoder_only_audio_codec:
-                decoderType = PlayerType.DecoderType.ONLY_AUDIO_CODEC;
-                break;
-            case R.id.main_exo_decoder_only_audio_ffmpeg:
-                decoderType = PlayerType.DecoderType.ONLY_AUDIO_FFMPEG;
-                break;
-            case R.id.main_ijk_decoder_all_codec:
-                decoderType = PlayerType.DecoderType.ONLY_CODEC;
-                break;
-            case R.id.main_ijk_decoder_all_ffmpeg:
-                decoderType = PlayerType.DecoderType.ONLY_FFMPEG;
-                break;
-            default:
-                decoderType = PlayerType.DecoderType.DEFAULT;
-                break;
+    private int getDecodeType() {
+        try {
+            RadioGroup radioGroup = findViewById(R.id.main_decoder);
+            int childCount = radioGroup.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+                boolean checked = radioButton.isChecked();
+                if (checked) {
+                    return getResources().getIntArray(R.array.decoders_ids)[i];
+                }
+            }
+            throw new Exception();
+        } catch (Exception e) {
+            return -1;
         }
+    }
+
+    private void initPlayer() {
 
         @PlayerType.RenderType
         int renderType;
@@ -377,11 +368,11 @@ public class MainActivity extends Activity {
                 // 数据埋点（监听播放器操作日志）
                 .setBuriedEvent(new LogBuriedEvent())
                 // 播放器类型（MediaPlayer Media3Player ExoPlayer IjkPLayer）
-                .setKernelType(kernelType)
+                .setKernelType(getKernelType())
                 // 渲染类型（TextuteView SurafecView）
                 .setRenderType(renderType)
                 // 解码器类型（仅针对 Media3Player ExoPlayer IjkPLayer）
-                .setDecoderType(decoderType)
+                .setDecoderType(getDecodeType())
                 // 画面比例（自动 全屏 原始 1:1 4:3 5:4 16:9 16:10）
                 .setScaleType(scaleType)
                 // 超时时间（默认20s）
