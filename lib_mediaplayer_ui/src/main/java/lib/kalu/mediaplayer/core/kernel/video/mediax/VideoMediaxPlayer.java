@@ -947,7 +947,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             LogUtil.log("VideoMediaxPlayer => onCues => cues = " + cues);
 
             //
-            String language;
+            String language = null;
             try {
                 androidx.media3.common.Tracks tracks = mExoPlayer.getCurrentTracks();
                 ImmutableList<Tracks.Group> groups = tracks.getGroups();
@@ -976,7 +976,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         }
                     }
                 }
-                throw new Exception();
+                if (null == language)
+                    throw new Exception();
             } catch (Exception e) {
                 language = "null";
             }

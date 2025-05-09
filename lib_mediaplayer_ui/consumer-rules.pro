@@ -31,6 +31,15 @@
 -keep class lib.kalu.mediaplayer.args.StartArgs$Builder {
     public <methods>;
 }
+-keep class lib.kalu.mediaplayer.args.PlayerArgs {
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.args.PlayerArgs$Builder {
+    public <methods>;
+}
+-keep class lib.kalu.mediaplayer.args.TrackArgs {
+    public <methods>;
+}
 
 # type
 -keep @interface lib.kalu.mediaplayer.type.PlayerType {
@@ -72,10 +81,7 @@
 -keep @interface lib.kalu.mediaplayer.type.PlayerType$SpeedType {
     *;
 }
--keep @interface lib.kalu.mediaplayer.type.PlayerType$SubtitleTrackType {
-    *;
-}
--keep @interface lib.kalu.mediaplayer.type.PlayerType$AudioTrackType {
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$TrackType {
     *;
 }
 

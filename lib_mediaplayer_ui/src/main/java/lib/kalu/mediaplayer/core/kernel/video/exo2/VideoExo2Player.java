@@ -942,7 +942,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             LogUtil.log("VideoExo2Player => onCues => cuesLength = " + cues.size());
 
             //
-            String language;
+            String language = null;
             try {
                 Tracks tracks = mExoPlayer.getCurrentTracks();
                 ImmutableList<Tracks.Group> groups = tracks.getGroups();
@@ -971,7 +971,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
                         }
                     }
                 }
-                throw new Exception();
+                if (null == language)
+                    throw new Exception();
             } catch (Exception e) {
                 language = "null";
             }
