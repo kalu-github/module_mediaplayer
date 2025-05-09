@@ -100,7 +100,7 @@ dependencies {
     // exo2
     api files('libs/lib_player_exo_mini_2.19.1_release_20250508.aar')
     // ijk
-    api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_mini_release_20240509.aar')
+    api files('libs/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_full_release_20240509.aar')
     // ffplayer
 //    api files('libs/lib_mediaplayer_ffplayer_ff3.4.13_mini_release_20240508.aar')
     // vlc

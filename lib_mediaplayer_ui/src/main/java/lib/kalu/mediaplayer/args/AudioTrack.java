@@ -4,19 +4,21 @@ import java.io.Serializable;
 
 import lib.kalu.mediaplayer.type.PlayerType;
 
-public final class SubtitleArgs implements Serializable {
+public final class AudioTrack implements Serializable {
 
-    @PlayerType.SubtitleType.Value
+
+    @PlayerType.AudioTrackType.Value
     private String mimeType;
     private String language;
     private String label;
     private String url;
 
+    @PlayerType.AudioTrackType.Value
     public String getMimeType() {
         return mimeType;
     }
 
-    public void setMimeType(String mimeType) {
+    public void setMimeType(@PlayerType.AudioTrackType.Value String mimeType) {
         this.mimeType = mimeType;
     }
 

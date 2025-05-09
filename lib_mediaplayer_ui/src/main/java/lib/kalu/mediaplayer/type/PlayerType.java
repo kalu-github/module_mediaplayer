@@ -460,7 +460,7 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface SubtitleType {
+    @interface SubtitleTrackType {
 
         String TEXT_VTT = "text/vtt";
         String TEXT_SSA = "text/x-ssa";
@@ -469,9 +469,92 @@ public @interface PlayerType {
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
         @StringDef(value = {
-                SubtitleType.TEXT_VTT,
-                SubtitleType.TEXT_SSA
+                SubtitleTrackType.TEXT_VTT,
+                SubtitleTrackType.TEXT_SSA
         })
+        @interface Value {
+        }
+    }
+
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface AudioTrackType {
+
+        String AUDIO_MP4 = "audio/mp4";
+        String AUDIO_AAC = "audio/mp4a-latm";
+        String AUDIO_MATROSKA = "audio/x-matroska";
+        String AUDIO_WEBM = "audio/webm";
+        String AUDIO_MPEG = "audio/mpeg";
+        String AUDIO_MPEG_L1 = "audio/mpeg-L1";
+        String AUDIO_MPEG_L2 = "audio/mpeg-L2";
+        String AUDIO_MPEGH_MHA1 = "audio/mha1";
+        String AUDIO_MPEGH_MHM1 = "audio/mhm1";
+        String AUDIO_RAW = "audio/raw";
+        String AUDIO_ALAW = "audio/g711-alaw";
+        String AUDIO_MLAW = "audio/g711-mlaw";
+        String AUDIO_AC3 = "audio/ac3";
+        String AUDIO_E_AC3 = "audio/eac3";
+        String AUDIO_E_AC3_JOC = "audio/eac3-joc";
+        String AUDIO_AC4 = "audio/ac4";
+        String AUDIO_TRUEHD = "audio/true-hd";
+        String AUDIO_DTS = "audio/vnd.dts";
+        String AUDIO_DTS_HD = "audio/vnd.dts.hd";
+        String AUDIO_DTS_EXPRESS = "audio/vnd.dts.hd;profile=lbr";
+        String AUDIO_DTS_X = "audio/vnd.dts.uhd;profile=p2";
+        String AUDIO_VORBIS = "audio/vorbis";
+        String AUDIO_OPUS = "audio/opus";
+        String AUDIO_AMR = "audio/amr";
+        String AUDIO_AMR_NB = "audio/3gpp";
+        String AUDIO_AMR_WB = "audio/amr-wb";
+        String AUDIO_FLAC = "audio/flac";
+        String AUDIO_ALAC = "audio/alac";
+        String AUDIO_MSGSM = "audio/gsm";
+        String AUDIO_OGG = "audio/ogg";
+        String AUDIO_WAV = "audio/wav";
+        String AUDIO_MIDI = "audio/midi";
+        String AUDIO_EXOPLAYER_MIDI = "audio/x-exoplayer-midi";
+        String AUDIO_UNKNOWN = "audio/x-unknown";
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @StringDef(value = {
+                AudioTrackType.AUDIO_MP4,
+                AudioTrackType.AUDIO_AAC,
+                AudioTrackType.AUDIO_MATROSKA,
+                AudioTrackType.AUDIO_WEBM,
+                AudioTrackType.AUDIO_MPEG,
+                AudioTrackType.AUDIO_MPEG_L1,
+                AudioTrackType.AUDIO_MPEG_L2,
+                AudioTrackType.AUDIO_MPEGH_MHA1,
+                AudioTrackType.AUDIO_MPEGH_MHM1,
+                AudioTrackType.AUDIO_RAW,
+                AudioTrackType.AUDIO_ALAW,
+                AudioTrackType.AUDIO_MLAW,
+                AudioTrackType.AUDIO_AC3,
+                AudioTrackType.AUDIO_E_AC3,
+                AudioTrackType.AUDIO_E_AC3_JOC,
+                AudioTrackType.AUDIO_AC4,
+                AudioTrackType.AUDIO_TRUEHD,
+                AudioTrackType.AUDIO_DTS,
+                AudioTrackType.AUDIO_DTS_HD,
+                AudioTrackType.AUDIO_DTS_EXPRESS,
+                AudioTrackType.AUDIO_DTS_X,
+                AudioTrackType.AUDIO_VORBIS,
+                AudioTrackType.AUDIO_OPUS,
+                AudioTrackType.AUDIO_AMR,
+                AudioTrackType.AUDIO_AMR_NB,
+                AudioTrackType.AUDIO_AMR_WB,
+                AudioTrackType.AUDIO_FLAC,
+                AudioTrackType.AUDIO_ALAC,
+                AudioTrackType.AUDIO_MSGSM,
+                AudioTrackType.AUDIO_OGG,
+                AudioTrackType.AUDIO_WAV,
+                AudioTrackType.AUDIO_MIDI,
+                AudioTrackType.AUDIO_EXOPLAYER_MIDI,
+                AudioTrackType.AUDIO_UNKNOWN})
         @interface Value {
         }
     }

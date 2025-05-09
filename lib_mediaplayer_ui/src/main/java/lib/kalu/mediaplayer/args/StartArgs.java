@@ -2,7 +2,6 @@ package lib.kalu.mediaplayer.args;
 
 
 import androidx.annotation.DrawableRes;
-import androidx.annotation.IdRes;
 
 import org.json.JSONObject;
 
@@ -287,10 +286,17 @@ public class StartArgs implements Serializable {
     }
 
     // 外挂字幕
-    private List<SubtitleArgs> extraSubtitle;
+    private List<SubtitleTrack> extraTrackSubtitle;
 
-    public List<SubtitleArgs> getExtraSubtitle() {
-        return extraSubtitle;
+    public List<SubtitleTrack> getExtraTrackSubtitle() {
+        return extraTrackSubtitle;
+    }
+
+    // 外挂音轨
+    private List<AudioTrack> extraTrackAudio;
+
+    public List<AudioTrack> getExtraTrackAudio() {
+        return extraTrackAudio;
     }
 
     @Override
@@ -333,7 +339,8 @@ public class StartArgs implements Serializable {
                 ", episodeFlagLoaction=" + episodeFlagLoaction +
                 ", buriedEvent=" + buriedEvent +
                 ", rotation=" + rotation +
-                ", extraSubtitle=" + extraSubtitle +
+                ", extraTrackSubtitle=" + extraTrackSubtitle +
+                ", extraTrackAudio=" + extraTrackAudio +
                 '}';
     }
 
@@ -354,7 +361,8 @@ public class StartArgs implements Serializable {
         this.supportAutoRelease = builder.supportAutoRelease;
         this.url = builder.url;
         this.title = builder.title;
-        this.extraSubtitle = builder.extraSubtitle;
+        this.extraTrackSubtitle = builder.extraTrackSubtitle;
+        this.extraTrackAudio = builder.extraTrackAudio;
         this.trySeeDuration = builder.trySeeDuration;
         this.live = builder.live;
         this.looping = builder.looping;
@@ -396,7 +404,8 @@ public class StartArgs implements Serializable {
         builder.supportAutoRelease = supportAutoRelease;
         builder.url = url;
         builder.title = title;
-        builder.extraSubtitle = extraSubtitle;
+        builder.extraTrackSubtitle = extraTrackSubtitle;
+        builder.extraTrackAudio = extraTrackAudio;
         builder.trySeeDuration = trySeeDuration;
         builder.live = live;
         builder.looping = looping;
@@ -663,10 +672,18 @@ public class StartArgs implements Serializable {
         }
 
         // 外挂字幕
-        private List<SubtitleArgs> extraSubtitle;
+        private List<SubtitleTrack> extraTrackSubtitle;
 
-        public Builder setExtraSubtitle(List<SubtitleArgs> v) {
-            this.extraSubtitle = v;
+        public Builder setExtraTrackSubtitle(List<SubtitleTrack> v) {
+            this.extraTrackSubtitle = v;
+            return this;
+        }
+
+        // 外挂音轨
+        private List<AudioTrack> extraTrackAudio;
+
+        public Builder setExtraTrackAudio(List<AudioTrack> v) {
+            this.extraTrackAudio = v;
             return this;
         }
 

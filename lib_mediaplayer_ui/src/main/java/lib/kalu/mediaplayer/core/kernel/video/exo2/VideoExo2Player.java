@@ -2,20 +2,24 @@ package lib.kalu.mediaplayer.core.kernel.video.exo2;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Looper;
 import android.view.Surface;
 
 import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.MediaMetadata;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.Renderer;
 import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.Tracks;
@@ -31,6 +35,8 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 import com.google.android.exoplayer2.text.Cue;
 import com.google.android.exoplayer2.text.CueGroup;
+import com.google.android.exoplayer2.text.TextOutput;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionParameters;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
@@ -39,26 +45,24 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
-import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.video.VideoSize;
+import com.google.common.collect.ImmutableList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.args.AudioTrack;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.SubtitleArgs;
-import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
+import lib.kalu.mediaplayer.args.SubtitleTrack;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
-import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -99,12 +103,67 @@ public final class VideoExo2Player extends VideoBasePlayer {
             if (null == args)
                 throw new Exception("error: args null");
 
-            ExoPlayer.Builder builder = new ExoPlayer.Builder(context);
-            builder.setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT));
-            builder.setBandwidthMeter(DefaultBandwidthMeter.getSingletonInstance(context));
-            builder.setLoadControl(new DefaultLoadControl());
-            builder.setMediaSourceFactory(new DefaultMediaSourceFactory(context));
-            builder.setTrackSelector(new DefaultTrackSelector(context));
+            ExoPlayer.Builder builder = new ExoPlayer.Builder(context)
+                    // 播放器调试和诊断相关的配置项
+                    .setUsePlatformDiagnostics(false)
+                    // 创建渲染器工厂
+                    .setRenderersFactory(new DefaultRenderersFactory(context) {
+                        @Override
+                        protected void buildTextRenderers(Context context, TextOutput textOutput, Looper looper, int i, ArrayList<Renderer> arrayList) {
+                            super.buildTextRenderers(context, textOutput, looper, i, arrayList);
+//                            TextRenderer textRenderer = new TextRenderer(textOutput, looper);
+//                            textRenderer.experimentalSetLegacyDecodingEnabled(true);
+//                            arrayList.arrayListadd(textRenderer);
+                        }
+                    })
+                    .setMediaSourceFactory(new DefaultMediaSourceFactory(context)
+//                            .experimentalParseSubtitlesDuringExtraction(true)
+                    )
+                    // 监听
+                    .setAnalyticsCollector(new DefaultAnalyticsCollector(Clock.DEFAULT))
+                    // 配置带宽测量器
+                    .setBandwidthMeter(new DefaultBandwidthMeter.Builder(context)
+                            // 初始带宽估算为5Mbps（5,000,000 bps）
+                            .setInitialBitrateEstimate(5_000_000)
+                            .build())
+                    // 缓冲缓存
+                    .setLoadControl(new DefaultLoadControl.Builder().setBufferDurationsMs(
+                                    10_000, // 低带宽时最小缓冲10秒
+                                    30_000, // 高带宽时最大缓冲30秒
+                                    2500,
+                                    5000
+                            )
+                            .build())
+                    // 自适应码率
+                    .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context)
+                            .buildUpon()
+                            // 主字幕轨道
+                            .setPreferredTextRoleFlags(C.ROLE_FLAG_MAIN)
+                            // 主音频轨道
+                            .setPreferredAudioRoleFlags(C.ROLE_FLAG_MAIN)
+                            // 主视频轨道
+                            .setPreferredVideoRoleFlags(C.ROLE_FLAG_MAIN)
+                            // 音频禁止混合 MIME 类型切换（如视频+音频单独切换）
+                            .setAllowAudioMixedMimeTypeAdaptiveness(false)
+                            // 视频禁止混合 MIME 类型切换（如视频+音频单独切换）
+                            .setAllowVideoMixedMimeTypeAdaptiveness(true)
+                            // 音频禁止非无缝切换
+                            // .setAllowAudioNonSeamlessAdaptiveness(false)
+                            // 视频禁止非无缝切换
+                            .setAllowVideoNonSeamlessAdaptiveness(false)
+                            // 音频混合声道数量的自适应性
+                            .setAllowAudioMixedChannelCountAdaptiveness(true)
+                            // 音频混合采样率自适应
+                            .setAllowAudioMixedSampleRateAdaptiveness(true)
+                            // 音频混合时解码器支持自适应
+                            .setAllowAudioMixedDecoderSupportAdaptiveness(true)
+                            // 音频混合时解码器支持自适应
+                            .setAllowVideoMixedDecoderSupportAdaptiveness(true)
+                            .build(),
+                            new AdaptiveTrackSelection.Factory(
+                                    3000,// 至少 3 秒后才允许升码率
+                                    1000, // 最多 1 秒后允许降码率
+                                    25000, 0.7F)));
 
             int decoderType = args.getDecoderType();
             LogUtil.log("VideoExo2Player => createDecoder => decoderType = " + decoderType);
@@ -192,17 +251,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
             String url = args.getUrl();
             if (null == url)
                 throw new Exception("error: url null");
-//            mediaSource.addEventListener(new Handler(), new MediaSourceEventListener() {
-//                @Override
-//                public void onLoadStarted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
-//                    MediaLogUtil.log("onEXOLoadStarted => ");
-//                }
-//
-//                @Override
-//                public void onLoadCompleted(int windowIndex, @Nullable MediaSource.MediaPeriodId mediaPeriodId, LoadEventInfo loadEventInfo, MediaLoadData mediaLoadData) {
-//                    MediaLogUtil.log("onEXOLoadCompleted => ");
-//                }
-//            });
 
             onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.INIT_READY);
 
@@ -280,8 +328,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
             Class<?> clazz = Class.forName("com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary");
             if (null == clazz)
                 throw new Exception("warning: com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary not find");
-//            boolean log = args.isLog();
-//            com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
+            // boolean log = args.isLog();
+            // com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
         } catch (Exception e) {
         }
     }
@@ -291,14 +339,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
-//            if(null == surface)
-//                throw new Exception("surface error: null");
-            if (null == surface) {
-                mExoPlayer.setVideoSurface(null);
-                mExoPlayer.clearVideoSurface();
-            } else {
-                mExoPlayer.setVideoSurface(surface);
-            }
+            mExoPlayer.clearVideoSurface();
+            if (null == surface)
+                throw new Exception("surface error: null");
+            mExoPlayer.setVideoSurface(surface);
         } catch (Exception e) {
             LogUtil.log("VideoExo2Player => setSurface => " + e.getMessage());
         }
@@ -547,13 +591,13 @@ public final class VideoExo2Player extends VideoBasePlayer {
             else if (lowerCase.startsWith(PlayerType.SchemeType.RTMP)) {
                 contentType = -100;
             }
-            // rtsp
-            else if (lowerCase.startsWith(PlayerType.SchemeType.RTSP)) {
-                contentType = C.CONTENT_TYPE_RTSP;
-            }
             // mp4
             else if (lowerCase.startsWith(PlayerType.SchemeType._MP4)) {
                 contentType = -200;
+            }
+            // rtsp
+            else if (lowerCase.startsWith(PlayerType.SchemeType.RTSP)) {
+                contentType = C.CONTENT_TYPE_RTSP;
             }
             // other
             else {
@@ -591,82 +635,12 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 int cacheSizeType = args.getCacheSizeType();
                 String cacheDirName = args.getCacheDirName();
 
-                CacheDataSource.Factory dataSource1 = new CacheDataSource.Factory();
-                SimpleCache simpleCache1 = VideoExo2PlayerSimpleCache.getSimpleCache(context, cacheLocalType, cacheSizeType, cacheDirName);
-                dataSource1.setCache(simpleCache1);
-                dataSource1.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-                dataSource1.setUpstreamDataSourceFactory(dataSourceFactory);
-                dataSource = dataSource1;
-
-//                // b
-//                VideoExoplayer2CacheDataSource.Factory dataSource1 = new VideoExoplayer2CacheDataSource.Factory();
-//                dataSource1.setUpstreamDataSourceFactory(dataSourceFactory);
-//                dataSource1.setFlags(VideoExoplayer2CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-//                SimpleCache simpleCache1 = VideoExoPlayer2Cache.getSimpleCache(context, cacheMax, cacheDir);
-//                dataSource1.setCache(simpleCache1);
-//                CacheDataSink.Factory sinkFactory1 = new CacheDataSink.Factory().setCache(simpleCache1).setFragmentSize(C.LENGTH_UNSET);
-//                dataSource1.setCacheWriteDataSinkFactory(sinkFactory1);
-//                dataSource = dataSource1;
+                dataSource = new CacheDataSource.Factory()
+                        .setCache(VideoExo2PlayerSimpleCache.getSimpleCache(context, cacheLocalType, cacheSizeType, cacheDirName))
+//                        .setCacheWriteDataSinkFactory(new CacheDataSink.Factory().setCache(simpleCache1).setFragmentSize(C.LENGTH_UNSET))
+                        .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+                        .setUpstreamDataSourceFactory(dataSourceFactory);
             }
-
-//            // test 增加音轨
-//            MediaItem.SubtitleConfiguration.Builder subtitle = new MediaItem.SubtitleConfiguration.Builder(Uri.parse("http://36.138.99.117:8197/data_source/dub/c4741e9b50dc/2023/02/13/b71f0e9a-9a69-43f8-bf71-fb7feb3f4f9a.mp3"));
-//            subtitle.setMimeType(MimeTypes.AUDIO_AC3);
-//            subtitle.setLanguage("aaaaa");
-//            subtitle.setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT); // C.SELECTION_FLAG_DEFAULT
-//            builder.setSubtitleConfigurations(Arrays.asList(subtitle.build()));
-
-//            // test
-//            ArrayList<MediaItem> mediaItems = new ArrayList<MediaItem>();
-//            mediaItems.add(builder.build());
-//
-//            // test 增加音轨
-//            MediaItem mediaItem = new MediaItem.Builder()
-//                    .setUri("http://36.138.99.117:8197/data_source/dub/c4741e9b50dc/2023/02/13/b71f0e9a-9a69-43f8-bf71-fb7feb3f4f9a.mp3")
-//                    .build();
-//            mediaItems.add(mediaItem);
-//
-//            DefaultMediaSourceFactory mediaSourceFactory = new DefaultMediaSourceFactory(new DefaultDataSource.Factory(context));
-//
-//            MediaSource[] mediaSources = new MediaSource[mediaItems.size()];
-//            for (MediaItem o : mediaItems) {
-//                int i = mediaItems.indexOf(o);
-//                mediaSources[i] = mediaSourceFactory.createMediaSource(o);
-//            }
-//            // 多路流合并
-//            return new MergingMediaSource(mediaSources);
-//
-//            //
-//            List<exoplayer.source.MediaSource> mediaSources = new LinkedList<>();
-//
-//            // rtmp
-//            if (contentType == -100) {
-//                Class<?> cls = Class.forName("com.google.android.exoplayer2.ext.rtmp.RtmpDataSource");
-//                return new ProgressiveMediaSource.Factory((DataSource.Factory) cls.newInstance()).createMediaSource(builder.build());
-//            }
-//            // rtsp
-//            else if (contentType == C.CONTENT_TYPE_RTSP) {
-//                 return new RtspMediaSource.Factory().createMediaSource(builder.build());
-//            }
-//            // dash
-//            else if (contentType == C.CONTENT_TYPE_DASH) {
-//                return new DashMediaSource.Factory(dataSource).createMediaSource(builder.build());
-//            }
-//            // hls
-//            else if (contentType == C.CONTENT_TYPE_HLS) {
-//                return new HlsMediaSource.Factory(dataSource).createMediaSource(builder.build());
-//            }
-//            // SmoothStreaming
-//            else if (contentType == C.CONTENT_TYPE_SS) {
-//                return new SsMediaSource.Factory(dataSource).createMediaSource(builder.build());
-//            }
-//            // other
-//            else {
-//                DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-//                extractorsFactory.setConstantBitrateSeekingEnabled(true);
-//                return new ProgressiveMediaSource.Factory(dataSource, extractorsFactory).createMediaSource(builder.build());
-//            }
-
 
             //
             List<MediaSource> mediaSources = new LinkedList<>();
@@ -748,15 +722,44 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
 
             // 外挂字幕
-            List<SubtitleArgs> subtitles = args.getExtraSubtitle();
-            if (null != subtitles) {
-                for (SubtitleArgs subtitle : subtitles) {
-                    Uri subtitleUri = Uri.parse(subtitle.getUrl());
+            List<SubtitleTrack> extraTrackSubtitle = args.getExtraTrackSubtitle();
+            if (null != extraTrackSubtitle) {
+                for (SubtitleTrack track : extraTrackSubtitle) {
+                    Uri subtitleUri = Uri.parse(track.getUrl());
                     MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
                             .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
-                            .setMimeType(subtitle.getMimeType()) // 也可以用 MimeTypes.APPLICATION_SUBRIP
-                            .setLanguage(subtitle.getLanguage())
-                            .setLabel(subtitle.getLabel())
+                            .setMimeType(track.getMimeType()) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+                            .setLanguage(track.getLanguage())
+                            .setLabel(track.getLabel())
+                            .build();
+                    SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
+                            .createMediaSource(subtitleConfig, C.TIME_UNSET);
+                    //
+                    mediaSources.add(source);
+                }
+            }
+
+            // 外挂音轨
+            List<AudioTrack> extraTrackAudio = args.getExtraTrackAudio();
+            if (null != extraTrackAudio) {
+                for (AudioTrack track : extraTrackAudio) {
+//                    MediaItem mediaItem = new MediaItem.Builder()
+//                            .setUri(track.getUrl())
+//                            .setMediaMetadata(new MediaMetadata.Builder()
+//                                    .setTitle("Video Title")
+//                                    .setSubtitle()
+//                                    .build())
+//                            .build();
+//                    ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(dataSourceFactory)
+//                            .createMediaSource(mediaItem);
+//                    //
+//                    mediaSources.add(source);
+                    Uri subtitleUri = Uri.parse(track.getUrl());
+                    MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
+                            .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
+                            .setMimeType(track.getMimeType()) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+                            .setLanguage(track.getLanguage())
+                            .setLabel(track.getLabel())
                             .build();
                     SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
                             .createMediaSource(subtitleConfig, C.TIME_UNSET);
@@ -955,6 +958,41 @@ public final class VideoExo2Player extends VideoBasePlayer {
         public void onCues(EventTime eventTime, List<Cue> cues) {
             LogUtil.log("VideoExo2Player => onCues => cuesLength = " + cues.size());
 
+            //
+            String language;
+            try {
+                Tracks tracks = mExoPlayer.getCurrentTracks();
+                ImmutableList<Tracks.Group> groups = tracks.getGroups();
+                int groupCount = groups.size();
+                for (int groupIndex = 0; groupIndex < groupCount; groupIndex++) {
+                    Tracks.Group group = groups.get(groupIndex);
+                    if (null == group)
+                        continue;
+
+                    boolean isGroupSelected = group.isSelected();
+                    if (!isGroupSelected)
+                        continue;
+                    int trackCount = group.length;
+                    for (int trackIndex = 0; trackIndex < trackCount; trackIndex++) {
+                        //
+                        Format format = group.getTrackFormat(trackIndex);
+                        // 字幕轨道
+                        int trackType = group.getType();
+                        if (trackType == C.TRACK_TYPE_TEXT) {
+                            // 轨道是否被选中
+                            boolean isTrackSelected = group.isTrackSelected(trackIndex);
+                            if (isTrackSelected) {
+                                language = format.language;
+                                break;
+                            }
+                        }
+                    }
+                }
+                throw new Exception();
+            } catch (Exception e) {
+                language = "null";
+            }
+
             try {
                 if (null == cues)
                     throw new Exception();
@@ -971,8 +1009,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
     };
 
-    private String language;
-
     @Override
     public boolean setTrackSubtitle(String language) {
         try {
@@ -984,7 +1020,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     .setPreferredTextLanguage("en")
                     .build();
             trackSelector.setParameters(selectionParameters);
-            this.language = language;
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoExo2Player => setTrackSubtitle => " + e.getMessage());

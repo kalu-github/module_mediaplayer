@@ -24,7 +24,6 @@ import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DefaultDataSource;
 import androidx.media3.datasource.DefaultHttpDataSource;
 import androidx.media3.datasource.cache.CacheDataSource;
-import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.exoplayer.DecoderReuseEvaluation;
 import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
@@ -56,12 +55,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import lib.kalu.mediaplayer.args.AudioTrack;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.SubtitleArgs;
+import lib.kalu.mediaplayer.args.SubtitleTrack;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -138,6 +137,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 自适应码率
                     .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context)
                             .buildUpon()
+                            // 主字幕轨道
+                            .setPreferredTextRoleFlags(C.ROLE_FLAG_MAIN)
+                            // 主音频轨道
+                            .setPreferredAudioRoleFlags(C.ROLE_FLAG_MAIN)
+                            // 主视频轨道
+                            .setPreferredVideoRoleFlags(C.ROLE_FLAG_MAIN)
                             // 音频禁止混合 MIME 类型切换（如视频+音频单独切换）
                             .setAllowAudioMixedMimeTypeAdaptiveness(false)
                             // 视频禁止混合 MIME 类型切换（如视频+音频单独切换）
@@ -238,72 +243,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 throw new Exception("error: url null");
 
             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.INIT_READY);
-
-//            MediaItem.SubtitleConfiguration subtitleConfiguration = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(url.replace("mp4", "vtt")))
-//                    .setMimeType(MimeTypes.TEXT_VTT)  // 明确指定 WebVTT 格式
-//                    .setLanguage("en")               // 设置字幕语言
-//                    .setSelectionFlags(C.SELECTION_FLAG_DEFAULT) // 默认选中
-//                    .build();
-////
-//            ProgressiveMediaSource source1 = new ProgressiveMediaSource.Factory(new DefaultDataSource.Factory(context))
-//                    .createMediaSource(new MediaItem.Builder()
-//                            .setUri(Uri.parse(url))
-//                            .build()
-//                            .buildUpon()
-//                            .setSubtitleConfigurations(Arrays.asList(subtitleConfiguration))
-//                            .build());
-//
-////            // 英语字幕源（外挂）
-////            ProgressiveMediaSource source2 = new ProgressiveMediaSource.Factory(new DefaultDataSource.Factory(context))
-////                    .createMediaSource(new MediaItem.Builder()
-////                            .setUri(Uri.parse(url.replace("mp4", "vtt")))
-////                            .setMimeType(MimeTypes.TEXT_VTT)
-////                            .build());
-//
-//            mExoPlayer.setMediaSource(source1);
-//
-////            // 英语音频源（外挂）
-////            Uri audioEnUri = Uri.parse("https://sample-videos.com/audio/aac/crowd-cheering.aac");
-////            ProgressiveMediaSource source2 = new ProgressiveMediaSource.Factory(videoDataSourceFactory).createMediaSource(MediaItem.fromUri(audioEnUri));
-//
-////            MediaItem.SubtitleConfiguration subtitleConfiguration = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(url.replace("mp4", "vtt")))
-////                    .setMimeType(MimeTypes.TEXT_VTT)  // 明确指定 WebVTT 格式
-////                    .setLanguage("en")               // 设置字幕语言
-////                    .setSelectionFlags(C.SELECTION_FLAG_DEFAULT) // 默认选中
-////                    .build();
-////            // 英语字幕源（外挂）
-////            SingleSampleMediaSource source3 = new SingleSampleMediaSource.Factory(new DefaultDataSource.Factory(context))
-////                    .createMediaSource(subtitleConfiguration, 0);
-//            // 合并视频、音频和字幕
-////            mExoPlayer.setMediaSource(source1);
-//            mExoPlayer.setMediaSource(new MergingMediaSource(source1, source3));
-
-
-//            MediaItem.SubtitleConfiguration subtitleConfiguration = new MediaItem.SubtitleConfiguration.Builder(Uri.parse("https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt"))
-//                    .setMimeType(MimeTypes.APPLICATION_SUBRIP) // 根据字幕文件格式设置 MIME 类型
-//                    .setLanguage("pt") // 设置字幕语言
-////                    .setSelectionFlags(SELECTION_FLAG_DEFAULT)
-//                    .build();
-//            MediaItem mediaItem = new MediaItem.Builder().setUri(Uri.parse("https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8"))
-//                    .setSubtitleConfigurations(List.of(subtitleConfiguration))
-//                    .build();
-//            mExoPlayer.setMediaItem(mediaItem);
-
-
-//            StartArgs build = args.newBuilder().setUrl("https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8").build();
-//            MediaSource mediaSource = buildSource(context, build);
-//            Uri subtitleUri = Uri.parse("https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt");
-//            MediaItem.SubtitleConfiguration subtitleConfiguration = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
-////                                .setMimeType(MimeTypes.TEXT_VTT)  // 明确指定 WebVTT 格式
-//                    .setMimeType("application/x-subrip") // 根据字幕文件格式设置 MIME 类型
-//                    .setLanguage("pt")               // 设置字幕语言
-//                    .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT) // 默认选中
-//                    .build();
-//            // 英语字幕源（外挂）
-//            SingleSampleMediaSource source3 = new SingleSampleMediaSource.Factory(new DefaultDataSource.Factory(context))
-//                    .createMediaSource(subtitleConfiguration, 0);
-//
-//            mExoPlayer.setMediaSource(new MergingMediaSource(mediaSource, source3));
 
             MediaSource mediaSource = buildSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
@@ -618,13 +557,13 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             else if (lowerCase.startsWith(PlayerType.SchemeType.RTMP)) {
                 contentType = -100;
             }
-            // rtsp
-            else if (lowerCase.startsWith(PlayerType.SchemeType.RTSP)) {
-                contentType = C.CONTENT_TYPE_RTSP;
-            }
             // mp4
             else if (lowerCase.startsWith(PlayerType.SchemeType._MP4)) {
                 contentType = -200;
+            }
+            // rtsp
+            else if (lowerCase.startsWith(PlayerType.SchemeType.RTSP)) {
+                contentType = C.CONTENT_TYPE_RTSP;
             }
             // other
             else {
@@ -659,22 +598,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 int cacheSizeType = args.getCacheSizeType();
                 String cacheDirName = args.getCacheDirName();
 
-                CacheDataSource.Factory dataSource1 = new CacheDataSource.Factory();
-                SimpleCache simpleCache1 = VideoMediaxPlayerSimpleCache.getSimpleCache(context, cacheLocalType, cacheSizeType, cacheDirName);
-                dataSource1.setCache(simpleCache1);
-                dataSource1.setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-                dataSource1.setUpstreamDataSourceFactory(dataSourceFactory);
-                dataSource = dataSource1;
-
-//                // b
-//                VideoExoplayer2CacheDataSource.Factory dataSource1 = new VideoExoplayer2CacheDataSource.Factory();
-//                dataSource1.setUpstreamDataSourceFactory(dataSourceFactory);
-//                dataSource1.setFlags(VideoExoplayer2CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-//                SimpleCache simpleCache1 = VideoExoPlayer2Cache.getSimpleCache(context, cacheMax, cacheDir);
-//                dataSource1.setCache(simpleCache1);
-//                CacheDataSink.Factory sinkFactory1 = new CacheDataSink.Factory().setCache(simpleCache1).setFragmentSize(C.LENGTH_UNSET);
-//                dataSource1.setCacheWriteDataSinkFactory(sinkFactory1);
-//                dataSource = dataSource1;
+                dataSource = new CacheDataSource.Factory()
+                        .setCache(VideoMediaxPlayerSimpleCache.getSimpleCache(context, cacheLocalType, cacheSizeType, cacheDirName))
+//                        .setCacheWriteDataSinkFactory(new CacheDataSink.Factory().setCache(simpleCache1).setFragmentSize(C.LENGTH_UNSET))
+                        .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+                        .setUpstreamDataSourceFactory(dataSourceFactory);
             }
 
             //
@@ -757,19 +685,33 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             // 外挂字幕
-            List<SubtitleArgs> subtitles = args.getExtraSubtitle();
-            if (null != subtitles) {
-                for (SubtitleArgs subtitle : subtitles) {
-                    LogUtil.log("VideoMediaxPlayer => buildSource => url = " + subtitle.getUrl());
-                    LogUtil.log("VideoMediaxPlayer => buildSource => mimeType = " + subtitle.getMimeType());
-                    LogUtil.log("VideoMediaxPlayer => buildSource => language = " + subtitle.getLanguage());
-                    LogUtil.log("VideoMediaxPlayer => buildSource => label = " + subtitle.getLabel());
-                    Uri subtitleUri = Uri.parse(subtitle.getUrl());
+            List<SubtitleTrack> extraTrackSubtitle = args.getExtraTrackSubtitle();
+            if (null != extraTrackSubtitle) {
+                for (SubtitleTrack track : extraTrackSubtitle) {
+                    Uri subtitleUri = Uri.parse(track.getUrl());
                     MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
                             .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
-                            .setMimeType(subtitle.getMimeType()) // 也可以用 MimeTypes.APPLICATION_SUBRIP
-                            .setLanguage(subtitle.getLanguage())
-                            .setLabel(subtitle.getLabel())
+                            .setMimeType(track.getMimeType()) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+                            .setLanguage(track.getLanguage())
+                            .setLabel(track.getLabel())
+                            .build();
+                    SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
+                            .createMediaSource(subtitleConfig, C.TIME_UNSET);
+                    //
+                    mediaSources.add(source);
+                }
+            }
+
+            // 外挂音轨
+            List<AudioTrack> extraTrackAudio = args.getExtraTrackAudio();
+            if (null != extraTrackAudio) {
+                for (AudioTrack track : extraTrackAudio) {
+                    Uri subtitleUri = Uri.parse(track.getUrl());
+                    MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
+                            .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
+                            .setMimeType(track.getMimeType())
+                            .setLanguage(track.getLanguage())
+                            .setLabel(track.getLabel())
                             .build();
                     SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
                             .createMediaSource(subtitleConfig, C.TIME_UNSET);

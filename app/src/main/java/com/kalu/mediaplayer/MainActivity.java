@@ -2,10 +2,8 @@ package com.kalu.mediaplayer;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.icu.util.Freezable;
 import android.os.Bundle;
 import android.text.Editable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -15,7 +13,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -24,10 +21,9 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.SubtitleArgs;
+import lib.kalu.mediaplayer.args.SubtitleTrack;
 import lib.kalu.mediaplayer.test.TestActivity;
 import lib.kalu.mediaplayer.type.PlayerType;
-import lib.kalu.mediaplayer.util.UdpUtil;
 
 /**
  * description:
@@ -224,8 +220,8 @@ public class MainActivity extends Activity {
     }
 
 
-    private List<SubtitleArgs> getSubtitle() {
-        ArrayList<SubtitleArgs> list = new ArrayList<>();
+    private List<SubtitleTrack> getSubtitle() {
+        ArrayList<SubtitleTrack> list = new ArrayList<>();
 
         //
         ViewGroup viewGroup = findViewById(R.id.main_subtitles);
@@ -234,13 +230,13 @@ public class MainActivity extends Activity {
             CheckBox checkBox = (CheckBox) viewGroup.getChildAt(i);
             boolean checked = checkBox.isChecked();
             if (checked) {
-                SubtitleArgs subtitleArgs = new SubtitleArgs();
-                subtitleArgs.setLabel("");
-                subtitleArgs.setLanguage(checkBox.getText().toString());
-                subtitleArgs.setUrl((String) checkBox.getTag());
-                subtitleArgs.setMimeType(PlayerType.SubtitleType.TEXT_VTT);
+                SubtitleTrack subtitleTrack = new SubtitleTrack();
+                subtitleTrack.setLabel("");
+                subtitleTrack.setLanguage(checkBox.getText().toString());
+                subtitleTrack.setUrl((String) checkBox.getTag());
+                subtitleTrack.setMimeType(PlayerType.SubtitleType.TEXT_VTT);
                 //
-                list.add(subtitleArgs);
+                list.add(subtitleTrack);
             }
         }
 

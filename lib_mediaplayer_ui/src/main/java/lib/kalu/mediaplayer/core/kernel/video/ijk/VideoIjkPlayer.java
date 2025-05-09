@@ -353,10 +353,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             mIjkPlayer.setOnPreparedListener(onPreparedListener);
             mIjkPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
             mIjkPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
-            mIjkPlayer.setOnTimedTextListener(onTimedTextListener);
             // 设置视频缓冲更新监听事件
             mIjkPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
             mIjkPlayer.setOnNativeInvokeListener(onNativeInvokeListener);
+            // 字幕
+            mIjkPlayer.setOnTimedTextListener(onTimedTextListener);
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => registListener => Exception " + e.getMessage());
         }
