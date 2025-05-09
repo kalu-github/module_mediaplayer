@@ -75,7 +75,7 @@ public class MainActivity extends Activity {
                 // 2
                 StartArgs args = new StartArgs.Builder()
                         .setUrl(getUrl())
-                        .setExtraSubtitle(getSubtitle())
+                        .setExtraTrackSubtitle(getSubtitle())
                         .setTitle("测试视频")
                         .setLive(isLive())
                         .setLooping(isLooping())

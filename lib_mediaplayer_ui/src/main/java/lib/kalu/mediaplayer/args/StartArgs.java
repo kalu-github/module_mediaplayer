@@ -189,86 +189,6 @@ public class StartArgs implements Serializable {
         return prepareAsync;
     }
 
-    // 透传数据
-    private JSONObject extra;
-
-    public JSONObject getExtra() {
-        return extra;
-    }
-
-    // 多剧集 选中
-    private int episodePlayingIndex = -1;
-
-    public int getEpisodePlayingIndex() {
-        return episodePlayingIndex;
-    }
-
-    // 多剧集 总数
-    private int episodeItemCount = -1;
-
-    public int getEpisodeItemCount() {
-        return episodeItemCount;
-    }
-
-    // 多剧集 收费角标
-    private String episodeFlagVipImgUrl;
-
-    public String getEpisodeFlagVipImgUrl() {
-        return episodeFlagVipImgUrl;
-    }
-
-    // 多剧集 收费角标
-    private String episodeFlagVipFilePath;
-
-    public String getEpisodeFlagVipFilePath() {
-        return episodeFlagVipFilePath;
-    }
-
-    // 多剧集 收费角标
-    @DrawableRes
-    private int episodeFlagVipResourceId;
-
-    public int getEpisodeFlagVipResourceId() {
-        return episodeFlagVipResourceId;
-    }
-
-    // 多剧集 免费角标
-    private String episodeFlagFreeImgUrl;
-
-    public String getEpisodeFlagFreeImgUrl() {
-        return episodeFlagFreeImgUrl;
-    }
-
-    // 多剧集 免费角标
-    private String episodeFlagFreeFilePath;
-
-    public String getEpisodeFlagFreeFilePath() {
-        return episodeFlagFreeFilePath;
-    }
-
-    // 多剧集 免费角标
-    @DrawableRes
-    private int episodeFlagFreeResourceId;
-
-    public int getEpisodeFlagFreeResourceId() {
-        return episodeFlagFreeResourceId;
-    }
-
-    // 多剧集 角标位置
-    @PlayerType.EpisodeFlagLoactionType.Value
-    private int episodeFlagLoaction;
-
-    @PlayerType.EpisodeFlagLoactionType.Value
-    public int getEpisodeFlagLoaction() {
-        return episodeFlagLoaction;
-    }
-
-    // 多剧集 免费剧集
-    private int episodeFreeItemCount = -1;
-
-    public int getEpisodeFreeItemCount() {
-        return episodeFreeItemCount;
-    }
 
     // 数据埋点
     private BuriedEvent buriedEvent;
@@ -299,6 +219,13 @@ public class StartArgs implements Serializable {
         return extraTrackAudio;
     }
 
+    // 透传数据
+    private JSONObject extraData;
+
+    public JSONObject getExtraData() {
+        return extraData;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
@@ -326,21 +253,11 @@ public class StartArgs implements Serializable {
                 ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime +
                 ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition +
                 ", prepareAsync=" + prepareAsync +
-                ", extra=" + extra +
-                ", episodePlayingIndex=" + episodePlayingIndex +
-                ", episodeItemCount=" + episodeItemCount +
-                ", episodeFreeItemCount=" + episodeFreeItemCount +
-                ", episodeFlagFreeResourceId=" + episodeFlagFreeResourceId +
-                ", episodeFlagFreeFilePath=" + episodeFlagFreeFilePath +
-                ", episodeFlagFreeImgUrl=" + episodeFlagFreeImgUrl +
-                ", episodeFlagVipResourceId=" + episodeFlagVipResourceId +
-                ", episodeFlagVipFilePath=" + episodeFlagVipFilePath +
-                ", episodeFlagVipImgUrl=" + episodeFlagVipImgUrl +
-                ", episodeFlagLoaction=" + episodeFlagLoaction +
                 ", buriedEvent=" + buriedEvent +
                 ", rotation=" + rotation +
                 ", extraTrackSubtitle=" + extraTrackSubtitle +
                 ", extraTrackAudio=" + extraTrackAudio +
+                ", extraData=" + extraData +
                 '}';
     }
 
@@ -361,8 +278,6 @@ public class StartArgs implements Serializable {
         this.supportAutoRelease = builder.supportAutoRelease;
         this.url = builder.url;
         this.title = builder.title;
-        this.extraTrackSubtitle = builder.extraTrackSubtitle;
-        this.extraTrackAudio = builder.extraTrackAudio;
         this.trySeeDuration = builder.trySeeDuration;
         this.live = builder.live;
         this.looping = builder.looping;
@@ -371,19 +286,11 @@ public class StartArgs implements Serializable {
         this.playWhenReadyDelayedTime = builder.playWhenReadyDelayedTime;
         this.playWhenReadySeekToPosition = builder.playWhenReadySeekToPosition;
         this.prepareAsync = builder.prepareAsync;
-        this.extra = builder.extra;
-        this.episodePlayingIndex = builder.episodePlayingIndex;
-        this.episodeItemCount = builder.episodeItemCount;
-        this.episodeFreeItemCount = builder.episodeFreeItemCount;
-        this.episodeFlagFreeResourceId = builder.episodeFlagFreeResourceId;
-        this.episodeFlagFreeFilePath = builder.episodeFlagFreeFilePath;
-        this.episodeFlagFreeImgUrl = builder.episodeFlagFreeImgUrl;
-        this.episodeFlagVipResourceId = builder.episodeFlagVipResourceId;
-        this.episodeFlagVipFilePath = builder.episodeFlagVipFilePath;
-        this.episodeFlagVipImgUrl = builder.episodeFlagVipImgUrl;
-        this.episodeFlagLoaction = builder.episodeFlagLoaction;
         this.buriedEvent = builder.buriedEvent;
         this.rotation = builder.rotation;
+        this.extraTrackSubtitle = builder.extraTrackSubtitle;
+        this.extraTrackAudio = builder.extraTrackAudio;
+        this.extraData = builder.extraData;
     }
 
     public Builder newBuilder() {
@@ -404,8 +311,6 @@ public class StartArgs implements Serializable {
         builder.supportAutoRelease = supportAutoRelease;
         builder.url = url;
         builder.title = title;
-        builder.extraTrackSubtitle = extraTrackSubtitle;
-        builder.extraTrackAudio = extraTrackAudio;
         builder.trySeeDuration = trySeeDuration;
         builder.live = live;
         builder.looping = looping;
@@ -414,19 +319,11 @@ public class StartArgs implements Serializable {
         builder.playWhenReadyDelayedTime = playWhenReadyDelayedTime;
         builder.playWhenReadySeekToPosition = playWhenReadySeekToPosition;
         builder.prepareAsync = prepareAsync;
-        builder.extra = extra;
-        builder.episodePlayingIndex = episodePlayingIndex;
-        builder.episodeItemCount = episodeItemCount;
-        builder.episodeFreeItemCount = episodeFreeItemCount;
-        builder.episodeFlagFreeResourceId = episodeFlagFreeResourceId;
-        builder.episodeFlagFreeFilePath = episodeFlagFreeFilePath;
-        builder.episodeFlagFreeImgUrl = episodeFlagFreeImgUrl;
-        builder.episodeFlagVipResourceId = episodeFlagVipResourceId;
-        builder.episodeFlagVipFilePath = episodeFlagVipFilePath;
-        builder.episodeFlagVipImgUrl = episodeFlagVipImgUrl;
-        builder.episodeFlagLoaction = episodeFlagLoaction;
         builder.buriedEvent = buriedEvent;
         builder.rotation = rotation;
+        builder.extraTrackSubtitle = extraTrackSubtitle;
+        builder.extraTrackAudio = extraTrackAudio;
+        builder.extraData = extraData;
         return builder;
     }
 
@@ -580,96 +477,6 @@ public class StartArgs implements Serializable {
             return this;
         }
 
-        // 透传数据
-        private JSONObject extra;
-
-        public Builder setExtra(JSONObject v) {
-            this.extra = v;
-            return this;
-        }
-
-        // 多剧集 收费角标
-        private String episodeFlagVipImgUrl = null;
-
-        public Builder setEpisodeFlagVipImgUrl(String v) {
-            this.episodeFlagVipImgUrl = v;
-            return this;
-        }
-
-        // 多剧集 收费角标
-        private String episodeFlagVipFilePath = null;
-
-        public Builder setEpisodeFlagVipFilePath(String v) {
-            this.episodeFlagVipFilePath = v;
-            return this;
-        }
-
-        // 多剧集 收费角标
-        @DrawableRes
-        private int episodeFlagVipResourceId = 0;
-
-        public Builder setEpisodeFlagVipResourceId(@DrawableRes int v) {
-            this.episodeFlagVipResourceId = v;
-            return this;
-        }
-
-        // 多剧集 免费角标
-        private String episodeFlagFreeImgUrl = null;
-
-        public Builder setEpisodeFlagFreeImgUrl(String v) {
-            this.episodeFlagFreeImgUrl = v;
-            return this;
-        }
-
-        // 多剧集 免费角标
-        @DrawableRes
-        private int episodeFlagFreeResourceId = 0;
-
-        public Builder setEpisodeFlagFreeResourceId(@DrawableRes int v) {
-            this.episodeFlagFreeResourceId = v;
-            return this;
-        }
-
-        // 多剧集 免费角标
-        private String episodeFlagFreeFilePath = null;
-
-        public Builder setEpisodeFlagFreeFilePath(String v) {
-            this.episodeFlagFreeFilePath = v;
-            return this;
-        }
-
-        // 多剧集 角标位置
-        @PlayerType.EpisodeFlagLoactionType.Value
-        private int episodeFlagLoaction = PlayerType.EpisodeFlagLoactionType.DEFAULT;
-
-        public Builder setEpisodeFlagLoaction(@PlayerType.EpisodeFlagLoactionType.Value int v) {
-            this.episodeFlagLoaction = v;
-            return this;
-        }
-
-        // 多剧集 免费剧集
-        private int episodeFreeItemCount = -1;
-
-        public Builder setEpisodeFreeItemCount(int v) {
-            this.episodeFreeItemCount = v;
-            return this;
-        }
-
-        // 多剧集 总数
-        private int episodeItemCount = -1;
-
-        public Builder setEpisodeItemCount(int v) {
-            this.episodeItemCount = v;
-            return this;
-        }
-
-        // 多剧集 选中
-        private int episodePlayingIndex = -1;
-
-        public Builder setEpisodePlayingIndex(int v) {
-            this.episodePlayingIndex = v;
-            return this;
-        }
 
         // 外挂字幕
         private List<SubtitleTrack> extraTrackSubtitle;
@@ -684,6 +491,14 @@ public class StartArgs implements Serializable {
 
         public Builder setExtraTrackAudio(List<AudioTrack> v) {
             this.extraTrackAudio = v;
+            return this;
+        }
+
+        // 透传数据
+        private JSONObject extraData;
+
+        public Builder setExtraData(JSONObject v) {
+            this.extraData = v;
             return this;
         }
 
