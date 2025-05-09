@@ -8,10 +8,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
+
+import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.args.TrackArgs;
 import lib.kalu.mediaplayer.core.component.ComponentBuffering;
 import lib.kalu.mediaplayer.core.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.component.ComponentError;
@@ -84,29 +89,29 @@ public final class TestActivity extends Activity {
         });
     }
 
-    public void toggleTrack(int groupIndex, int trackIndex) {
+    public void toggleTrack(TrackArgs trackArgs) {
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.toggleTrack(groupIndex, trackIndex);
+        playerLayout.toggleTrack(trackArgs);
     }
 
-    public void toggleTrackRoleFlagSubtitle(int roleFlag) {
-        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.toggleTrackRoleFlagSubtitle(roleFlag);
-    }
-
-    public void toggleTrackRoleFlagAudio(int roleFlag) {
-        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.toggleTrackRoleFlagAudio(roleFlag);
-    }
-
-    public void toggleTrackRoleFlagVideo(int roleFlag) {
-        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.toggleTrackRoleFlagVideo(roleFlag);
-    }
+//    public void toggleTrackRoleFlagSubtitle(int roleFlag) {
+//        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+//        playerLayout.toggleTrackRoleFlagSubtitle(roleFlag);
+//    }
+//
+//    public void toggleTrackRoleFlagAudio(int roleFlag) {
+//        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+//        playerLayout.toggleTrackRoleFlagAudio(roleFlag);
+//    }
+//
+//    public void toggleTrackRoleFlagVideo(int roleFlag) {
+//        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+//        playerLayout.toggleTrackRoleFlagVideo(roleFlag);
+//    }
 
     private void showTrackInfo(int type) {
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        JSONArray trackInfo;
+        List<TrackArgs> trackInfo;
         if (type == 1) {
             trackInfo = playerLayout.getTrackInfoVideo();
         } else if (type == 2) {
@@ -119,7 +124,7 @@ public final class TestActivity extends Activity {
         if (null != trackInfo) {
             Bundle bundle = new Bundle();
             bundle.putInt(TestDialog.BUNDLE_TYPE, type);
-            bundle.putString(TestDialog.BUNDLE_DATA, trackInfo.toString());
+            bundle.putString(TestDialog.BUNDLE_DATA, new Gson().toJson(trackInfo));
 
             TestDialog testDialog = new TestDialog();
             testDialog.setArguments(bundle);

@@ -1090,114 +1090,120 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     /*********/
 
 
+//    @Override
+//    public boolean toggleTrackLanguageSubtitle(String language) {
+//        try {
+//            if (null == language)
+//                throw new Exception("warning: language null");
+//            if (language.isEmpty())
+//                throw new Exception("warning: language empty");
+//            if (null == mExoPlayer)
+//                throw new Exception("error: mExoPlayer null");
+//            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+//            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
+//                    .buildUpon()
+//                    .setPreferredTextLanguage(language)
+//                    .build();
+//            trackSelector.setParameters(selectionParameters);
+//            return true;
+//        } catch (Exception e) {
+//            LogUtil.log("VideoMediaxPlayer => toggleTrackLanguageSubtitle => " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    @Override
+//    public boolean toggleTrackLanguageAudio(String language) {
+//        try {
+//            if (null == language)
+//                throw new Exception("warning: language null");
+//            if (language.isEmpty())
+//                throw new Exception("warning: language empty");
+//            if (null == mExoPlayer)
+//                throw new Exception("error: mExoPlayer null");
+//            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+//            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
+//                    .buildUpon()
+//                    .setPreferredAudioLanguage(language)
+//                    .build();
+//            trackSelector.setParameters(selectionParameters);
+//            return true;
+//        } catch (Exception e) {
+//            LogUtil.log("VideoMediaxPlayer => toggleTrackLanguageAudio => " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    @Override
+//    public boolean toggleTrackRoleFlagSubtitle(int roleFlag) {
+//        try {
+//            if (roleFlag == -1)
+//                throw new Exception("error: roleFlag == -1");
+//            if (null == mExoPlayer)
+//                throw new Exception("error: mExoPlayer null");
+//            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+//            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
+//                    .buildUpon()
+//                    .setPreferredTextRoleFlags(roleFlag)
+//                    .build();
+//            trackSelector.setParameters(selectionParameters);
+//            return true;
+//        } catch (Exception e) {
+//            LogUtil.log("VideoMediaxPlayer => toggleTrackRoleFlagSubtitle => " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    @Override
+//    public boolean toggleTrackRoleFlagAudio(int roleFlag) {
+//        try {
+//            if (roleFlag == -1)
+//                throw new Exception("error: roleFlag == -1");
+//            if (null == mExoPlayer)
+//                throw new Exception("error: mExoPlayer null");
+//            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+//            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
+//                    .buildUpon()
+//                    .setPreferredAudioRoleFlags(roleFlag)
+//                    .build();
+//            trackSelector.setParameters(selectionParameters);
+//            return true;
+//        } catch (Exception e) {
+//            LogUtil.log("VideoMediaxPlayer => toggleTrackRoleFlagAudio => " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    @Override
+//    public boolean toggleTrackRoleFlagVideo(int roleFlag) {
+//        try {
+//            if (roleFlag == -1)
+//                throw new Exception("error: roleFlag == -1");
+//            if (null == mExoPlayer)
+//                throw new Exception("error: mExoPlayer null");
+//            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+//            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
+//                    .buildUpon()
+//                    .setPreferredVideoRoleFlags(roleFlag)
+//                    .build();
+//            trackSelector.setParameters(selectionParameters);
+//            return true;
+//        } catch (Exception e) {
+//            LogUtil.log("VideoMediaxPlayer => toggleTrackRoleFlagVideo => " + e.getMessage());
+//            return false;
+//        }
+//    }
     @Override
-    public boolean toggleTrackLanguageSubtitle(String language) {
+    public boolean toggleTrack(TrackArgs trackArgs) {
         try {
-            if (null == language)
-                throw new Exception("warning: language null");
-            if (language.isEmpty())
-                throw new Exception("warning: language empty");
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
-            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
-            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
-                    .buildUpon()
-                    .setPreferredTextLanguage(language)
-                    .build();
-            trackSelector.setParameters(selectionParameters);
-            return true;
-        } catch (Exception e) {
-            LogUtil.log("VideoMediaxPlayer => toggleTrackLanguageSubtitle => " + e.getMessage());
-            return false;
-        }
-    }
-
-    @Override
-    public boolean toggleTrackLanguageAudio(String language) {
-        try {
-            if (null == language)
-                throw new Exception("warning: language null");
-            if (language.isEmpty())
-                throw new Exception("warning: language empty");
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
-            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
-            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
-                    .buildUpon()
-                    .setPreferredAudioLanguage(language)
-                    .build();
-            trackSelector.setParameters(selectionParameters);
-            return true;
-        } catch (Exception e) {
-            LogUtil.log("VideoMediaxPlayer => toggleTrackLanguageAudio => " + e.getMessage());
-            return false;
-        }
-    }
-
-    @Override
-    public boolean toggleTrackRoleFlagSubtitle(int roleFlag) {
-        try {
-            if (roleFlag == -1)
-                throw new Exception("error: roleFlag == -1");
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
-            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
-            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
-                    .buildUpon()
-                    .setPreferredTextRoleFlags(roleFlag)
-                    .build();
-            trackSelector.setParameters(selectionParameters);
-            return true;
-        } catch (Exception e) {
-            LogUtil.log("VideoMediaxPlayer => toggleTrackRoleFlagSubtitle => " + e.getMessage());
-            return false;
-        }
-    }
-
-    @Override
-    public boolean toggleTrackRoleFlagAudio(int roleFlag) {
-        try {
-            if (roleFlag == -1)
-                throw new Exception("error: roleFlag == -1");
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
-            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
-            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
-                    .buildUpon()
-                    .setPreferredAudioRoleFlags(roleFlag)
-                    .build();
-            trackSelector.setParameters(selectionParameters);
-            return true;
-        } catch (Exception e) {
-            LogUtil.log("VideoMediaxPlayer => toggleTrackRoleFlagAudio => " + e.getMessage());
-            return false;
-        }
-    }
-
-    @Override
-    public boolean toggleTrackRoleFlagVideo(int roleFlag) {
-        try {
-            if (roleFlag == -1)
-                throw new Exception("error: roleFlag == -1");
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
-            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
-            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
-                    .buildUpon()
-                    .setPreferredVideoRoleFlags(roleFlag)
-                    .build();
-            trackSelector.setParameters(selectionParameters);
-            return true;
-        } catch (Exception e) {
-            LogUtil.log("VideoMediaxPlayer => toggleTrackRoleFlagVideo => " + e.getMessage());
-            return false;
-        }
-    }
-
-
-    @Override
-    public boolean toggleTrack(int groupIndex, int trackIndex) {
-        try {
+            if (null == trackArgs)
+                throw new Exception("error: trackArgs null");
+            int groupIndex = trackArgs.getGroupIndex();
+            if (groupIndex == -1)
+                throw new Exception("error: groupIndex == -1");
+            int trackIndex = trackArgs.getTrackIndex();
+            if (trackIndex == -1)
+                throw new Exception("error: trackIndex == -1");
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
             Tracks tracks = mExoPlayer.getCurrentTracks();
@@ -1218,7 +1224,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public JSONArray getTrackInfo(int type) {
+    public List<TrackArgs> getTrackInfo(int type) {
 
 
         try {
@@ -1226,7 +1232,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 throw new Exception("error: mExoPlayer null");
 
             //
-            JSONArray result = null;
+            LinkedList<TrackArgs> list = new LinkedList<>();
 
             //
             androidx.media3.common.Tracks tracks = mExoPlayer.getCurrentTracks();
@@ -1251,156 +1257,143 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 轨道是否被选中
                     boolean isTrackSelected = group.isTrackSelected(trackIndex);
 
-                    JSONObject object = null;
+
+                    TrackArgs trackArgs = new TrackArgs();
 
                     // 视频轨道
-                    if (type == 1 && trackType == C.TRACK_TYPE_VIDEO) {
-                        if (null == object) {
-                            object = new JSONObject();
-                        }
-                        object.put("bitrate", format.bitrate);
-                        object.put("width", format.width);
-                        object.put("height", format.height);
-                        object.put("frameRate", format.frameRate);
-                        object.put("rotationDegrees", format.rotationDegrees);
-                        object.put("pixelWidthHeightRatio", format.pixelWidthHeightRatio);
-                        object.put("projectionData", format.projectionData);
-                        object.put("stereoMode", format.stereoMode);
-                        object.put("colorInfo", format.colorInfo);
+                    if (type == 1 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_VIDEO) {
+
+                        trackArgs.setBitrate(format.bitrate);
+                        trackArgs.setWidth(format.width);
+                        trackArgs.setHeight(format.height);
+
+//                        object.put("frameRate", format.frameRate);
+//                        object.put("rotationDegrees", format.rotationDegrees);
+//                        object.put("pixelWidthHeightRatio", format.pixelWidthHeightRatio);
+//                        object.put("projectionData", format.projectionData);
+//                        object.put("stereoMode", format.stereoMode);
+//                        object.put("colorInfo", format.colorInfo);
 //                        object.put("maxSubLayers", format.maxSubLayers);
                     }
                     // 音频轨道
-                    else if (type == 2 && trackType == C.TRACK_TYPE_AUDIO) {
-                        if (null == object) {
-                            object = new JSONObject();
-                        }
-                        object.put("channelCount", format.channelCount);
-                        object.put("sampleRate", format.sampleRate);
-                        object.put("pcmEncoding", format.pcmEncoding);
-                        object.put("encoderDelay", format.encoderDelay);
-                        object.put("encoderPadding", format.encoderPadding);
+                    else if (type == 2 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_AUDIO) {
+//                        object.put("channelCount", format.channelCount);
+//                        object.put("sampleRate", format.sampleRate);
+//                        object.put("pcmEncoding", format.pcmEncoding);
+//                        object.put("encoderDelay", format.encoderDelay);
+//                        object.put("encoderPadding", format.encoderPadding);
                     }
                     // 字幕轨道
-                    else if (type == 3 && trackType == C.TRACK_TYPE_TEXT) {
-                        if (null == object) {
-                            object = new JSONObject();
-                        }
-                        object.put("accessibilityChannel", format.accessibilityChannel);
-                        object.put("cueReplacementBehavior", format.cueReplacementBehavior);
+                    else if (type == 3 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_TEXT) {
+//                        object.put("accessibilityChannel", format.accessibilityChannel);
+                        //  object.put("cueReplacementBehavior", format.cueReplacementBehavior);
                     }
                     // 媒体信息
-                    else if (type == 4 && trackType == C.TRACK_TYPE_METADATA) {
+                    else if (type == 4 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_METADATA) {
                     }
                     // 视频轨道
-                    else if (type == -1 && trackType == C.TRACK_TYPE_VIDEO) {
-                        if (null == object) {
-                            object = new JSONObject();
-                        }
-                        object.put("bitrate", format.bitrate);
-                        object.put("width", format.width);
-                        object.put("height", format.height);
-                        object.put("frameRate", format.frameRate);
-                        object.put("rotationDegrees", format.rotationDegrees);
-                        object.put("pixelWidthHeightRatio", format.pixelWidthHeightRatio);
-                        object.put("projectionData", format.projectionData);
-                        object.put("stereoMode", format.stereoMode);
-                        object.put("colorInfo", format.colorInfo);
+                    else if (type == -1 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_VIDEO) {
+
+                        trackArgs.setBitrate(format.bitrate);
+                        trackArgs.setWidth(format.width);
+                        trackArgs.setHeight(format.height);
+
+//                        object.put("frameRate", format.frameRate);
+//                        object.put("rotationDegrees", format.rotationDegrees);
+//                        object.put("pixelWidthHeightRatio", format.pixelWidthHeightRatio);
+//                        object.put("projectionData", format.projectionData);
+//                        object.put("stereoMode", format.stereoMode);
+//                        object.put("colorInfo", format.colorInfo);
 //                        object.put("maxSubLayers", format.maxSubLayers);
                     }
                     // 音频轨道
-                    else if (type == -1 && trackType == C.TRACK_TYPE_AUDIO) {
-                        if (null == object) {
-                            object = new JSONObject();
-                        }
-                        object.put("channelCount", format.channelCount);
-                        object.put("sampleRate", format.sampleRate);
-                        object.put("pcmEncoding", format.pcmEncoding);
-                        object.put("encoderDelay", format.encoderDelay);
-                        object.put("encoderPadding", format.encoderPadding);
+                    else if (type == -1 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_AUDIO) {
+//                        object.put("channelCount", format.channelCount);
+//                        object.put("sampleRate", format.sampleRate);
+//                        object.put("pcmEncoding", format.pcmEncoding);
+//                        object.put("encoderDelay", format.encoderDelay);
+//                        object.put("encoderPadding", format.encoderPadding);
                     }
                     // 字幕轨道
-                    else if (type == -1 && trackType == C.TRACK_TYPE_TEXT) {
-                        if (null == object) {
-                            object = new JSONObject();
-                        }
-                        object.put("accessibilityChannel", format.accessibilityChannel);
-                        object.put("cueReplacementBehavior", format.cueReplacementBehavior);
+                    else if (type == -1 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_TEXT) {
+//                        object.put("accessibilityChannel", format.accessibilityChannel);
+                        //   object.put("cueReplacementBehavior", format.cueReplacementBehavior);
                     }
                     // 媒体信息
-                    else if (type == -1 && trackType == C.TRACK_TYPE_METADATA) {
-                        //  LogUtil.log("VideoMediaxPlayer => getTrackInfo[C.TRACK_TYPE_METADATA] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
+                    else if (type == -1 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_METADATA) {
+                        // LogUtil.log("VideoExo2Player => getTrackInfo[C.TRACK_TYPE_METADATA] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
+                        continue;
                     }
                     // 未知
                     else {
-                        //  LogUtil.log("VideoMediaxPlayer => getTrackInfo[Unknow] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
+                        //  LogUtil.log("VideoExo2Player => getTrackInfo[Unknow] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
+                        continue;
                     }
 
 
-                    if (null == object)
-                        continue;
-                    object.put("groupCount", groupCount);
-                    object.put("groupIndex", groupIndex);
-                    object.put("trackCount", trackCount);
-                    object.put("trackIndex", trackIndex);
-                    object.put("trackType", trackType);
-                    object.put("isGroupAdaptiveSupported", isGroupAdaptiveSupported);
-                    object.put("isGroupSupported", isGroupSupported);
-                    object.put("isGroupSelected", isGroupSelected);
-                    object.put("isTrackSupported", isTrackSupported);
+                    trackArgs.setGroupCount(groupCount);
+                    trackArgs.setGroupIndex(groupIndex);
+                    trackArgs.setTrackCount(trackCount);
+                    trackArgs.setTrackIndex(trackIndex);
+                    trackArgs.setTrackType(trackType);
+
+                    trackArgs.setGroupAdaptiveSupported(isGroupAdaptiveSupported);
+                    trackArgs.setGroupSupported(isGroupSupported);
+                    trackArgs.setGroupSelected(isGroupSelected);
+                    trackArgs.setTrackSupported(isTrackSupported);
 
                     // 自适应码率
-                    if (isGroupAdaptiveSupported && trackType == C.TRACK_TYPE_VIDEO) {
+                    if (isGroupAdaptiveSupported && trackType == androidx.media3.common.C.TRACK_TYPE_VIDEO) {
                         int videoWidth = getPlayerApi().getVideoRender().getVideoWidth();
                         int videoHeight = getPlayerApi().getVideoRender().getVideoHeight();
                         int videoBitrate = getPlayerApi().getVideoRender().getVideoBitrate();
                         boolean selected = (videoWidth == format.width && videoHeight == format.height && videoBitrate == format.bitrate);
                         if (selected) {
-                            object.put("isTrackSelected", isTrackSelected);
+                            trackArgs.setTrackSelected(true);
                         } else {
-                            object.put("isTrackSelected", false);
+                            trackArgs.setTrackSelected(false);
                         }
                     } else {
-                        object.put("isTrackSelected", isTrackSelected);
+                        trackArgs.setTrackSelected(isTrackSelected);
                     }
 
-                    object.put("id", format.id);
-                    object.put("label", format.label);
-                    object.put("labels", format.labels);
-                    object.put("language", format.language);
-                    object.put("selectionFlags", format.selectionFlags);
-                    object.put("roleFlags", format.roleFlags);
-                    object.put("averageBitrate", format.averageBitrate);
-                    object.put("peakBitrate", format.peakBitrate);
-                    object.put("codecs", format.codecs);
-                    object.put("metadata", format.metadata);
-                    object.put("customData", format.customData);
-                    // Container specific.
-                    object.put("containerMimeType", format.containerMimeType);
-                    // Sample specific.
-                    object.put("sampleMimeType", format.sampleMimeType);
-                    object.put("maxInputSize", format.maxInputSize);
-                    object.put("maxNumReorderSamples", format.maxNumReorderSamples);
-                    object.put("initializationData", format.initializationData);
-                    object.put("drmInitData", format.drmInitData);
-                    object.put("subsampleOffsetUs", format.subsampleOffsetUs);
-//                    object.put("hasPrerollSamples", format.hasPrerollSamples);
 
-                    //  LogUtil.log("VideoMediaxPlayer => getTrackInfo => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
+                    trackArgs.setId(format.id);
+                    trackArgs.setLabel(format.label);
 
-                    if (null == result) {
-                        result = new JSONArray();
-                    }
-                    result.put(object);
+//                    object.put("labels", format.labels);
 
+
+                    trackArgs.setLanguage(format.language);
+                    trackArgs.setRoleFlags(format.roleFlags);
+                    trackArgs.setSelectionFlags(format.selectionFlags);
+                    trackArgs.setSampleMimeType(format.sampleMimeType);
+//                    object.put("averageBitrate", format.averageBitrate);
+//                    object.put("peakBitrate", format.peakBitrate);
+//                    object.put("codecs", format.codecs);
+//                    object.put("metadata", format.metadata);
+////                    object.put("customData", format.customData);
+//                    // Container specific.
+//                    object.put("containerMimeType", format.containerMimeType);
+//                    object.put("maxInputSize", format.maxInputSize);
+////                    object.put("maxNumReorderSamples", format.maxNumReorderSamples);
+//                    object.put("initializationData", format.initializationData);
+//                    object.put("drmInitData", format.drmInitData);
+//                    object.put("subsampleOffsetUs", format.subsampleOffsetUs);
+////                    object.put("hasPrerollSamples", format.hasPrerollSamples);
+
+                    //   LogUtil.log("VideoExo2Player => getTrackInfo => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
+                    //
+                    list.add(trackArgs);
                 }
             }
 
             //
-            if (null == result)
-                throw new Exception("error: not find");
+            if (list.isEmpty())
+                throw new Exception("error: list empty");
 
-            LogUtil.log("VideoMediaxPlayer => getTrackInfo => type = " + type + ", result = " + result);
-            return result;
+//            LogUtil.log("VideoMediaxPlayer => getTrackInfo => type = " + type + ", list = " + list);
+            return list;
         } catch (Exception e) {
             LogUtil.log("VideoMediaxPlayer => getTrackInfo => Exception " + e.getMessage());
             return null;

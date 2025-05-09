@@ -7,8 +7,11 @@ import androidx.annotation.FloatRange;
 
 import org.json.JSONArray;
 
+import java.util.List;
+
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.args.TrackArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
@@ -589,136 +592,124 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default boolean toggleTrackLanguageSubtitle(String language) {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
-            return kernel.toggleTrackLanguageSubtitle(language);
-//            releaseRender();
-//            StartArgs startArgs = new StartArgs.Builder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
-//            checkRenderNull(startArgs, true);
-//            attachRenderKernel();
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => toggleTrackLanguageSubtitle => " + e.getMessage());
-            return false;
-        }
-    }
+//    default boolean toggleTrackLanguageSubtitle(String language) {
+//        try {
+//            VideoKernelApi kernel = getVideoKernel();
+//            if (null == kernel)
+//                throw new Exception("warning: kernel null");
+//            return kernel.toggleTrackLanguageSubtitle(language);
+////            releaseRender();
+////            StartArgs startArgs = new StartArgs.Builder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
+////            checkRenderNull(startArgs, true);
+////            attachRenderKernel();
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApiKernel => toggleTrackLanguageSubtitle => " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    default boolean toggleTrackLanguageAudio(String language) {
+//        try {
+//            VideoKernelApi kernel = getVideoKernel();
+//            if (null == kernel)
+//                throw new Exception("warning: kernel null");
+//            return kernel.toggleTrackLanguageAudio(language);
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApiKernel => toggleTrackLanguageAudio => " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    default boolean toggleTrackRoleFlagSubtitle(int roleFlag) {
+//        try {
+//            VideoKernelApi kernel = getVideoKernel();
+//            if (null == kernel)
+//                throw new Exception("warning: kernel null");
+//            return kernel.toggleTrackRoleFlagSubtitle(roleFlag);
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApiKernel => toggleTrackRoleFlagSubtitle => " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    default boolean toggleTrackRoleFlagAudio(int roleFlag) {
+//        try {
+//            VideoKernelApi kernel = getVideoKernel();
+//            if (null == kernel)
+//                throw new Exception("warning: kernel null");
+//            return kernel.toggleTrackRoleFlagAudio(roleFlag);
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApiKernel => toggleTrackRoleFlagAudio => " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    default boolean toggleTrackRoleFlagVideo(int roleFlag) {
+//        try {
+//            VideoKernelApi kernel = getVideoKernel();
+//            if (null == kernel)
+//                throw new Exception("warning: kernel null");
+//            return kernel.toggleTrackRoleFlagVideo(roleFlag);
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApiKernel => toggleTrackRoleFlagVideo => " + e.getMessage());
+//            return false;
+//        }
+//    }
 
-    default boolean toggleTrackLanguageAudio(String language) {
+    default boolean toggleTrack(TrackArgs trackArgs) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            return kernel.toggleTrackLanguageAudio(language);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => toggleTrackLanguageAudio => " + e.getMessage());
-            return false;
-        }
-    }
-
-    default boolean toggleTrackRoleFlagSubtitle(int roleFlag) {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
-            return kernel.toggleTrackRoleFlagSubtitle(roleFlag);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => toggleTrackRoleFlagSubtitle => " + e.getMessage());
-            return false;
-        }
-    }
-
-    default boolean toggleTrackRoleFlagAudio(int roleFlag) {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
-            return kernel.toggleTrackRoleFlagAudio(roleFlag);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => toggleTrackRoleFlagAudio => " + e.getMessage());
-            return false;
-        }
-    }
-
-    default boolean toggleTrackRoleFlagVideo(int roleFlag) {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
-            return kernel.toggleTrackRoleFlagVideo(roleFlag);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => toggleTrackRoleFlagVideo => " + e.getMessage());
-            return false;
-        }
-    }
-
-    default boolean toggleTrack(int groupIndex, int trackIndex) {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            if (null == kernel)
-                throw new Exception("warning: kernel null");
-            return kernel.toggleTrack(groupIndex, trackIndex);
+            return kernel.toggleTrack(trackArgs);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => toggleTrack => " + e.getMessage());
             return false;
         }
     }
 
-    default JSONArray getTrackInfoAll() {
+    default List<TrackArgs> getTrackInfoAll() {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            JSONArray trackInfo = kernel.getTrackInfoAll();
-            if (null == trackInfo)
-                throw new Exception("trackInfo error: null");
-            return trackInfo;
+            return kernel.getTrackInfoAll();
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => getTrackInfoAll => " + e.getMessage());
             return null;
         }
     }
 
-    default JSONArray getTrackInfoVideo() {
+    default List<TrackArgs> getTrackInfoVideo() {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            JSONArray trackInfo = kernel.getTrackInfoVideo();
-            if (null == trackInfo)
-                throw new Exception("trackInfo error: null");
-            return trackInfo;
+            return kernel.getTrackInfoVideo();
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => getTrackInfoVideo => " + e.getMessage());
             return null;
         }
     }
 
-    default JSONArray getTrackInfoAudio() {
+    default List<TrackArgs> getTrackInfoAudio() {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            JSONArray trackInfo = kernel.getTrackInfoAudio();
-            if (null == trackInfo)
-                throw new Exception("trackInfo error: null");
-            return trackInfo;
+            return kernel.getTrackInfoAudio();
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => getTrackInfoAudio => " + e.getMessage());
             return null;
         }
     }
 
-    default JSONArray getTrackInfoSubtitle() {
+    default List<TrackArgs> getTrackInfoSubtitle() {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            JSONArray trackInfo = kernel.getTrackInfoSubtitle();
-            if (null == trackInfo)
-                throw new Exception("trackInfo error: null");
-            return trackInfo;
+            return kernel.getTrackInfoSubtitle();
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => getTrackInfoSubtitle => " + e.getMessage());
             return null;

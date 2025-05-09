@@ -66,6 +66,8 @@ dependencies {
 
     compileOnly 'androidx.annotation:annotation:1.7.1'
     compileOnly('com.squareup.okhttp3:okhttp:3.14.9')
+    compileOnly("com.google.code.gson:gson:2.13.1")
+
     // ijk
     compileOnly files('libs/lib_mediaplayer_ijk_k0.8.8_ff3.4.13_mini_release_20240430.aar')
     // exo2

@@ -17,6 +17,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.args.TrackArgs;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
@@ -624,132 +625,120 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final boolean toggleTrackLanguageSubtitle(String language) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            return playerView.toggleTrackLanguageSubtitle(language);
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => toggleTrackLanguageSubtitle => " + e.getMessage());
-            return false;
-        }
-    }
+//    public final boolean toggleTrackLanguageSubtitle(String language) {
+//        try {
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("playerView error: null");
+//            return playerView.toggleTrackLanguageSubtitle(language);
+//        } catch (Exception e) {
+//            LogUtil.log("PlayerLayout => toggleTrackLanguageSubtitle => " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    public final boolean toggleTrackLanguageAudio(String language) {
+//        try {
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("playerView error: null");
+//            return playerView.toggleTrackLanguageAudio(language);
+//        } catch (Exception e) {
+//            LogUtil.log("PlayerLayout => toggleTrackLanguageAudio => " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    public final boolean toggleTrackRoleFlagSubtitle(int roleFlag) {
+//        try {
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("playerView error: null");
+//            return playerView.toggleTrackRoleFlagSubtitle(roleFlag);
+//        } catch (Exception e) {
+//            LogUtil.log("PlayerLayout => toggleTrackRoleFlagSubtitle => " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    public final boolean toggleTrackRoleFlagAudio(int roleFlag) {
+//        try {
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("playerView error: null");
+//            return playerView.toggleTrackRoleFlagAudio(roleFlag);
+//        } catch (Exception e) {
+//            LogUtil.log("PlayerLayout => toggleTrackRoleFlagAudio => " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    public final boolean toggleTrackRoleFlagVideo(int roleFlag) {
+//        try {
+//            PlayerView playerView = getPlayerView();
+//            if (null == playerView)
+//                throw new Exception("playerView error: null");
+//            return playerView.toggleTrackRoleFlagVideo(roleFlag);
+//        } catch (Exception e) {
+//            LogUtil.log("PlayerLayout => toggleTrackRoleFlagVideo => " + e.getMessage());
+//            return false;
+//        }
+//    }
 
-    public final boolean toggleTrackLanguageAudio(String language) {
+    public final boolean toggleTrack(TrackArgs trackArgs) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.toggleTrackLanguageAudio(language);
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => toggleTrackLanguageAudio => " + e.getMessage());
-            return false;
-        }
-    }
-
-    public final boolean toggleTrackRoleFlagSubtitle(int roleFlag) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            return playerView.toggleTrackRoleFlagSubtitle(roleFlag);
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => toggleTrackRoleFlagSubtitle => " + e.getMessage());
-            return false;
-        }
-    }
-
-    public final boolean toggleTrackRoleFlagAudio(int roleFlag) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            return playerView.toggleTrackRoleFlagAudio(roleFlag);
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => toggleTrackRoleFlagAudio => " + e.getMessage());
-            return false;
-        }
-    }
-
-    public final boolean toggleTrackRoleFlagVideo(int roleFlag) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            return playerView.toggleTrackRoleFlagVideo(roleFlag);
-        } catch (Exception e) {
-            LogUtil.log("PlayerLayout => toggleTrackRoleFlagVideo => " + e.getMessage());
-            return false;
-        }
-    }
-
-    public final boolean toggleTrack(int groupIndex, int trackIndex) {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            return playerView.toggleTrack(groupIndex, trackIndex);
+            return playerView.toggleTrack(trackArgs);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => toggleTrack => " + e.getMessage());
             return false;
         }
     }
 
-    public final JSONArray getTrackInfo() {
+    public final List<TrackArgs> getTrackInfo() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            JSONArray trackInfo = playerView.getTrackInfoAll();
-            if (null == trackInfo)
-                throw new Exception("trackInfo error: null");
-            return trackInfo;
+            return playerView.getTrackInfoAll();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => getTrackInfo => " + e.getMessage());
             return null;
         }
     }
 
-    public final JSONArray getTrackInfoVideo() {
+    public final List<TrackArgs> getTrackInfoVideo() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            JSONArray trackInfo = playerView.getTrackInfoVideo();
-            if (null == trackInfo)
-                throw new Exception("trackInfo error: null");
-            return trackInfo;
+            return playerView.getTrackInfoVideo();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => getTrackInfoVideo => " + e.getMessage());
             return null;
         }
     }
 
-    public final JSONArray getTrackInfoAudio() {
+    public final List<TrackArgs> getTrackInfoAudio() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            JSONArray trackInfo = playerView.getTrackInfoAudio();
-            if (null == trackInfo)
-                throw new Exception("trackInfo error: null");
-            return trackInfo;
+            return playerView.getTrackInfoAudio();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => getTrackInfoAudio => " + e.getMessage());
             return null;
         }
     }
 
-    public final JSONArray getTrackInfoSubtitle() {
+    public final List<TrackArgs> getTrackInfoSubtitle() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            JSONArray trackInfo = playerView.getTrackInfoSubtitle();
-            if (null == trackInfo)
-                throw new Exception("trackInfo error: null");
-            return trackInfo;
+            return playerView.getTrackInfoSubtitle();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => getTrackInfoSubtitle => " + e.getMessage());
             return null;

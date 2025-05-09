@@ -90,7 +90,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.squareup.okhttp3:okhttp:3.14.9'
     implementation 'com.github.bumptech.glide:glide:4.16.0'
-
+    implementation 'com.google.code.gson:gson:2.13.1'
 
     // ui
     implementation project(path: ':lib_mediaplayer_ui')

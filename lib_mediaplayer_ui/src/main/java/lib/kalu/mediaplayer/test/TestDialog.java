@@ -10,11 +10,18 @@ import android.widget.RadioGroup;
 
 import androidx.annotation.Nullable;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.args.TrackArgs;
 
 public class TestDialog extends DialogFragment {
 
@@ -33,37 +40,38 @@ public class TestDialog extends DialogFragment {
 
         try {
 
-            String string = getArguments().getString(BUNDLE_DATA, "{}");
+            String string = getArguments().getString(BUNDLE_DATA, null);
+
+            Type typetoken = new TypeToken<List<TrackArgs>>() {
+            }.getType();
+            List<TrackArgs> list = new Gson().fromJson(string, typetoken);
+
             int type = getArguments().getInt(BUNDLE_TYPE, 1);
 
-            JSONArray array = new JSONArray(string);
-            int length = array.length();
-            for (int i = 0; i < length; i++) {
 
-                JSONObject object = array.getJSONObject(i);
-
+            for (TrackArgs track : list) {
                 String curName;
                 // 视频轨道
                 if (type == 1) {
-                    int bitrate = object.optInt("bitrate", 0);
-                    int width = object.optInt("width", 0);
-                    int height = object.optInt("height", 0);
-                    String sampleMimeType = object.optString("sampleMimeType", "null");
-                    int roleFlags = object.optInt("roleFlags", -1);
-                    String language = object.optString("language", "null");
+                    int bitrate = track.getBitrate();
+                    int width = track.getWidth();
+                    int height = track.getHeight();
+                    String sampleMimeType = track.getSampleMimeType();
+                    int roleFlags = track.getRoleFlags();
+                    String language = track.getLanguage();
                     curName = "roleFlags = " + roleFlags + ", language = " + language + ", sampleMimeType = " + sampleMimeType + ", bitrate = " + bitrate + ", width = " + width + ", height = " + height;
                 }
                 // 音频轨道
                 else if (type == 2) {
-                    String sampleMimeType = object.optString("sampleMimeType", "null");
-                    int roleFlags = object.optInt("roleFlags", -1);
-                    String language = object.optString("language", "null");
+                    String sampleMimeType = track.getSampleMimeType();
+                    int roleFlags = track.getRoleFlags();
+                    String language = track.getLanguage();
                     curName = "roleFlags = " + roleFlags + ", language = " + language + ", sampleMimeType = " + sampleMimeType;
                 }
                 // 字幕轨道
                 else if (type == 3) {
-                    int roleFlags = object.optInt("roleFlags", -1);
-                    String language = object.optString("language", "null");
+                    int roleFlags = track.getRoleFlags();
+                    String language = track.getLanguage();
                     curName = "roleFlags = " + roleFlags + ", language = " + language;
                 } else {
                     continue;
@@ -73,11 +81,9 @@ public class TestDialog extends DialogFragment {
                 RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
                 radioButton.setLayoutParams(layoutParams);
                 radioButton.setText(curName);
-                radioButton.setTag(object);
-                boolean isTrackSelected = object.optBoolean("isTrackSelected", false);
-                boolean isTrackMixed = object.optBoolean("isTrackMixed", false);
+                boolean isTrackSelected = track.isTrackSelected();
                 radioButton.setChecked(isTrackSelected);
-                boolean isTrackSupported = object.optBoolean("isTrackSupported", false);
+                boolean isTrackSupported = track.isTrackSupported();
                 radioButton.setEnabled(isTrackSupported);
 
                 //
@@ -89,35 +95,21 @@ public class TestDialog extends DialogFragment {
                     @Override
                     public void onClick(View view) {
 
-
-                        Object tag = view.getTag();
-                        JSONObject object = null;
-                        try {
-                            object = new JSONObject(tag.toString());
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-
                         // 视频轨道
                         if (type == 1) {
-                            int groupIndex = object.optInt("groupIndex", -1);
-                            int trackIndex = object.optInt("trackIndex", -1);
-//                            int roleFlags = object.optInt("roleFlags", -1);
-                            ((TestActivity) getActivity()).toggleTrack(groupIndex, trackIndex);
+                            ((TestActivity) getActivity()).toggleTrack(track);
                         }
                         // 音频轨道
                         else if (type == 2) {
-                            int roleFlags = object.optInt("roleFlags", -1);
-                            ((TestActivity) getActivity()).toggleTrackRoleFlagAudio(roleFlags);
+//                            int roleFlags = object.optInt("roleFlags", -1);
+//                            ((TestActivity) getActivity()).toggleTrackRoleFlagAudio(roleFlags);
+                            ((TestActivity) getActivity()).toggleTrack(track);
                         }
                         // 字幕轨道
                         else if (type == 3) {
 //                            int roleFlags = object.optInt("roleFlags", -1);
 //                            ((TestActivity) getActivity()).toggleTrackRoleFlagSubtitle(roleFlags);
-                            int groupIndex = object.optInt("groupIndex", -1);
-                            int trackIndex = object.optInt("trackIndex", -1);
-//                            int roleFlags = object.optInt("roleFlags", -1);
-                            ((TestActivity) getActivity()).toggleTrack(groupIndex, trackIndex);
+                            ((TestActivity) getActivity()).toggleTrack(track);
                         }
 
                         //

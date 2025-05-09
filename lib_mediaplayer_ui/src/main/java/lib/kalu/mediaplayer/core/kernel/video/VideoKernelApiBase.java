@@ -4,6 +4,9 @@ import android.content.Context;
 
 import org.json.JSONArray;
 
+import java.util.List;
+
+import lib.kalu.mediaplayer.args.TrackArgs;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.type.PlayerType;
 
@@ -50,47 +53,47 @@ interface VideoKernelApiBase {
 
     long getDuration();
 
-    default boolean toggleTrackLanguageSubtitle(String language) {
+//    default boolean toggleTrackLanguageSubtitle(String language) {
+//        return false;
+//    }
+//
+//    default boolean toggleTrackLanguageAudio(String language) {
+//        return false;
+//    }
+//
+//    default boolean toggleTrackRoleFlagSubtitle(int roleFlag) {
+//        return false;
+//    }
+//
+//    default boolean toggleTrackRoleFlagAudio(int roleFlag) {
+//        return false;
+//    }
+//
+//    default boolean toggleTrackRoleFlagVideo(int roleFlag) {
+//        return false;
+//    }
+
+    default boolean toggleTrack(TrackArgs trackArgs) {
         return false;
     }
 
-    default boolean toggleTrackLanguageAudio(String language) {
-        return false;
-    }
-
-    default boolean toggleTrackRoleFlagSubtitle(int roleFlag) {
-        return false;
-    }
-
-    default boolean toggleTrackRoleFlagAudio(int roleFlag) {
-        return false;
-    }
-
-    default boolean toggleTrackRoleFlagVideo(int roleFlag) {
-        return false;
-    }
-
-    default boolean toggleTrack(int groupIndex, int trackIndex) {
-        return false;
-    }
-
-    default JSONArray getTrackInfo(int type) {
+    default List<TrackArgs> getTrackInfo(int type) {
         return null;
     }
 
-    default JSONArray getTrackInfoAll() {
+    default List<TrackArgs> getTrackInfoAll() {
         return getTrackInfo(-1);
     }
 
-    default JSONArray getTrackInfoVideo() {
+    default List<TrackArgs> getTrackInfoVideo() {
         return getTrackInfo(1);
     }
 
-    default JSONArray getTrackInfoAudio() {
+    default List<TrackArgs> getTrackInfoAudio() {
         return getTrackInfo(2);
     }
 
-    default JSONArray getTrackInfoSubtitle() {
+    default List<TrackArgs> getTrackInfoSubtitle() {
         return getTrackInfo(3);
     }
 
