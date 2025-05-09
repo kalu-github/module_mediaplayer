@@ -589,18 +589,66 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default boolean setTrackSubtitle(String language) {
+    default boolean toggleTrackLanguageSubtitle(String language) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            return kernel.setTrackSubtitle(language);
+            return kernel.toggleTrackLanguageSubtitle(language);
 //            releaseRender();
 //            StartArgs startArgs = new StartArgs.Builder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
 //            checkRenderNull(startArgs, true);
 //            attachRenderKernel();
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => setTrackSubtitle => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => toggleTrackLanguageSubtitle => " + e.getMessage());
+            return false;
+        }
+    }
+
+    default boolean toggleTrackLanguageAudio(String language) {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            return kernel.toggleTrackLanguageAudio(language);
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => toggleTrackLanguageAudio => " + e.getMessage());
+            return false;
+        }
+    }
+
+    default boolean toggleTrackRoleFlagSubtitle(int roleFlag) {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            return kernel.toggleTrackRoleFlagSubtitle(roleFlag);
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => toggleTrackRoleFlagSubtitle => " + e.getMessage());
+            return false;
+        }
+    }
+
+    default boolean toggleTrackRoleFlagAudio(int roleFlag) {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            return kernel.toggleTrackRoleFlagAudio(roleFlag);
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => toggleTrackRoleFlagAudio => " + e.getMessage());
+            return false;
+        }
+    }
+
+    default boolean toggleTrackRoleFlagVideo(int roleFlag) {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            return kernel.toggleTrackRoleFlagVideo(roleFlag);
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => toggleTrackRoleFlagVideo => " + e.getMessage());
             return false;
         }
     }

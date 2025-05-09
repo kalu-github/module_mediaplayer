@@ -56,6 +56,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.args.TrackArgs;
@@ -722,12 +723,32 @@ public final class VideoExo2Player extends VideoBasePlayer {
             List<TrackArgs> extraTrackSubtitle = args.getExtraTrackSubtitle();
             if (null != extraTrackSubtitle) {
                 for (TrackArgs track : extraTrackSubtitle) {
-                    Uri subtitleUri = Uri.parse(track.getUrl());
-                    MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
+                    int roleFlags = track.getRoleFlags();
+                    if (roleFlags == -1)
+                        continue;
+                    String sutitleUrl = track.getUrl();
+                    if (null == sutitleUrl)
+                        continue;
+                    if (sutitleUrl.isEmpty())
+                        continue;
+                    String mimeType = track.getMimeType();
+                    if (null == mimeType)
+                        continue;
+                    if (mimeType.isEmpty())
+                        continue;
+                    String language = track.getLanguage();
+                    if (null == language)
+                        continue;
+                    if (language.isEmpty())
+                        continue;
+                    MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(sutitleUrl))
                             .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
-                            .setMimeType(track.getMimeType()) // 也可以用 MimeTypes.APPLICATION_SUBRIP
-                            .setLanguage(track.getLanguage())
+                            .setMimeType(mimeType) // 也可以用 MimeTypes.APPLICATION_SUBRIP
+                            .setLanguage(language)
+                            .setRoleFlags(roleFlags)
                             .setLabel(track.getLabel())
+                            .setId(track.getId())
+                            .setSelectionFlags(track.getSelectionFlags())
                             .build();
                     SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
                             .createMediaSource(subtitleConfig, C.TIME_UNSET);
@@ -994,7 +1015,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     };
 
     @Override
-    public boolean setTrackSubtitle(String language) {
+    public boolean toggleTrackLanguageSubtitle(String language) {
         try {
             if (null == language)
                 throw new Exception("warning: language null");
@@ -1010,12 +1031,93 @@ public final class VideoExo2Player extends VideoBasePlayer {
             trackSelector.setParameters(selectionParameters);
             return true;
         } catch (Exception e) {
-            LogUtil.log("VideoExo2Player => setTrackSubtitle => " + e.getMessage());
+            LogUtil.log("VideoExo2Player => toggleTrackLanguageSubtitle => " + e.getMessage());
             return false;
         }
     }
 
     @Override
+    public boolean toggleTrackLanguageAudio(String language) {
+        try {
+            if (null == language)
+                throw new Exception("warning: language null");
+            if (language.isEmpty())
+                throw new Exception("warning: language empty");
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
+                    .buildUpon()
+                    .setPreferredAudioLanguage(language)
+                    .build();
+            trackSelector.setParameters(selectionParameters);
+            return true;
+        } catch (Exception e) {
+            LogUtil.log("VideoExo2Player => toggleTrackLanguageAudio => " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean toggleTrackRoleFlagSubtitle(int roleFlag) {
+        try {
+            if (roleFlag == -1)
+                throw new Exception("error: roleFlag == -1");
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
+                    .buildUpon()
+                    .setPreferredTextRoleFlags(roleFlag)
+                    .build();
+            trackSelector.setParameters(selectionParameters);
+            return true;
+        } catch (Exception e) {
+            LogUtil.log("VideoExo2Player => toggleTrackRoleFlagSubtitle => " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean toggleTrackRoleFlagAudio(int roleFlag) {
+        try {
+            if (roleFlag == -1)
+                throw new Exception("error: roleFlag == -1");
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
+                    .buildUpon()
+                    .setPreferredAudioRoleFlags(roleFlag)
+                    .build();
+            trackSelector.setParameters(selectionParameters);
+            return true;
+        } catch (Exception e) {
+            LogUtil.log("VideoExo2Player => toggleTrackRoleFlagAudio => " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean toggleTrackRoleFlagVideo(int roleFlag) {
+        try {
+            if (roleFlag == -1)
+                throw new Exception("error: roleFlag == -1");
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
+            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
+                    .buildUpon()
+                    .setPreferredVideoRoleFlags(roleFlag)
+                    .build();
+            trackSelector.setParameters(selectionParameters);
+            return true;
+        } catch (Exception e) {
+            LogUtil.log("VideoExo2Player => toggleTrackRoleFlagVideo => " + e.getMessage());
+            return false;
+        }
+    }
+
     public JSONArray getTrackInfo(int type) {
 
 

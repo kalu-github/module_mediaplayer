@@ -227,7 +227,7 @@ public class MainActivity extends Activity {
             boolean checked = checkBox.isChecked();
             if (checked) {
                 TrackArgs subtitleTrack = new TrackArgs();
-                subtitleTrack.setLabel("");
+                subtitleTrack.setRoleFlags((int) System.nanoTime());
                 subtitleTrack.setLanguage(checkBox.getText().toString());
                 subtitleTrack.setUrl((String) checkBox.getTag());
                 subtitleTrack.setMimeType(PlayerType.TrackType.TEXT_VTT);

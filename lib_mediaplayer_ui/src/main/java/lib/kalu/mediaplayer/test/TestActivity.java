@@ -84,15 +84,24 @@ public final class TestActivity extends Activity {
         });
     }
 
-    public void setTrackVideo() {
-    }
+//    public void toggleTrackLanguageSubtitle(String language) {
+//        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+//        playerLayout.toggleTrackLanguageSubtitle(language);
+//    }
 
-    public void setTrackAudio() {
-    }
-
-    public void setTrackSubtitle(String language) {
+    public void toggleTrackRoleFlagSubtitle(int roleFlag) {
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.setTrackSubtitle(language);
+        playerLayout.toggleTrackRoleFlagSubtitle(roleFlag);
+    }
+
+    public void toggleTrackRoleFlagAudio(int roleFlag) {
+        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        playerLayout.toggleTrackRoleFlagAudio(roleFlag);
+    }
+
+    public void toggleTrackRoleFlagVideo(int roleFlag) {
+        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        playerLayout.toggleTrackRoleFlagVideo(roleFlag);
     }
 
     private void showTrackInfo(int type) {
@@ -217,8 +226,6 @@ public final class TestActivity extends Activity {
 
                 @Override
                 public void onStart() {
-                    PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                    playerLayout.getTrackInfoAll();
                 }
 
                 @Override

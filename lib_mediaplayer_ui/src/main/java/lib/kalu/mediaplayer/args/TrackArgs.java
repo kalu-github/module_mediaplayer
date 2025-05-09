@@ -12,6 +12,11 @@ public final class TrackArgs implements Serializable {
     private String label;
     private String url;
 
+
+    private String id;
+    private int roleFlags = -1;
+    private int selectionFlags = -1;
+
     @PlayerType.TrackType.Value
     public String getMimeType() {
         return mimeType;
@@ -43,5 +48,29 @@ public final class TrackArgs implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public int getRoleFlags() {
+        return roleFlags;
+    }
+
+    public void setRoleFlags(int roleFlags) {
+        this.roleFlags = roleFlags;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public int getSelectionFlags() {
+        return selectionFlags;
+    }
+
+    public void setSelectionFlags(int selectionFlags) {
+        this.selectionFlags = selectionFlags;
     }
 }

@@ -41,32 +41,42 @@ public class TestDialog extends DialogFragment {
             for (int i = 0; i < length; i++) {
 
                 JSONObject object = array.getJSONObject(i);
-                boolean isTrackSupported = object.optBoolean("isTrackSupported", false);
 
                 String curName;
+                // 视频轨道
                 if (type == 1) {
                     int bitrate = object.optInt("bitrate", 0);
                     int width = object.optInt("width", 0);
                     int height = object.optInt("height", 0);
-                    curName = bitrate + "|" + width + "|" + height + "|" + (isTrackSupported ? "支持" : "不支持");
-                } else if (type == 3) {
-                    String id = object.optString("id", "null");
-                    String language = object.optString("language", "null");
-                    curName = id + "|" + language + "|" + (isTrackSupported ? "支持" : "不支持");
-                } else {
-                    String id = object.optString("id", "null");
                     String sampleMimeType = object.optString("sampleMimeType", "null");
-                    curName = id + "|" + sampleMimeType + "|" + (isTrackSupported ? "支持" : "不支持");
+                    int roleFlags = object.optInt("roleFlags", -1);
+                    String language = object.optString("language", "null");
+                    curName = "roleFlags = " + roleFlags + ", language = " + language + ", sampleMimeType = " + sampleMimeType + ", bitrate = " + bitrate + ", width = " + width + ", height = " + height;
                 }
-
-                boolean isSelected = object.optBoolean("isSelected", false);
+                // 音频轨道
+                else if (type == 2) {
+                    String sampleMimeType = object.optString("sampleMimeType", "null");
+                    int roleFlags = object.optInt("roleFlags", -1);
+                    String language = object.optString("language", "null");
+                    curName = "roleFlags = " + roleFlags + ", language = " + language + ", sampleMimeType = " + sampleMimeType;
+                }
+                // 字幕轨道
+                else if (type == 3) {
+                    int roleFlags = object.optInt("roleFlags", -1);
+                    String language = object.optString("language", "null");
+                    curName = "roleFlags = " + roleFlags + ", language = " + language;
+                } else {
+                    continue;
+                }
 
                 RadioButton radioButton = new RadioButton(view.getContext());
                 RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
                 radioButton.setLayoutParams(layoutParams);
-                radioButton.setChecked(isSelected);
                 radioButton.setText(curName);
                 radioButton.setTag(object);
+                boolean isTrackSelected = object.optBoolean("isTrackSelected", false);
+                radioButton.setChecked(isTrackSelected);
+                boolean isTrackSupported = object.optBoolean("isTrackSupported", false);
                 radioButton.setEnabled(isTrackSupported);
 
                 //
@@ -87,20 +97,27 @@ public class TestDialog extends DialogFragment {
                             throw new RuntimeException(e);
                         }
 
-                        int groupIndex = object.optInt("groupIndex", -1);
-                        int trackIndex = object.optInt("trackIndex", -1);
                         //
                         dismiss();
 
-
+                        // 视频轨道
                         if (type == 1) {
-                            ((TestActivity) getActivity()).setTrackVideo();
-                        } else if (type == 3) {
-                            String language = object.optString("language", "null");
-                            ((TestActivity) getActivity()).setTrackSubtitle(language);
-                        } else {
-                            ((TestActivity) getActivity()).setTrackAudio();
+                            int roleFlags = object.optInt("roleFlags", -1);
+                            ((TestActivity) getActivity()).toggleTrackRoleFlagVideo(roleFlags);
                         }
+                        // 音频轨道
+                        else if (type == 2) {
+                            int roleFlags = object.optInt("roleFlags", -1);
+                            ((TestActivity) getActivity()).toggleTrackRoleFlagAudio(roleFlags);
+                        }
+                        // 字幕轨道
+                        else if (type == 3) {
+                            int roleFlags = object.optInt("roleFlags", -1);
+                            ((TestActivity) getActivity()).toggleTrackRoleFlagSubtitle(roleFlags);
+                        }
+
+                        //
+                        dismiss();
                     }
                 });
             }

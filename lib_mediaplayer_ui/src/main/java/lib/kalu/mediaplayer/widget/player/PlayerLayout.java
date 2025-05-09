@@ -624,19 +624,67 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final boolean setTrackSubtitle(String language) {
+    public final boolean toggleTrackLanguageSubtitle(String language) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.setTrackSubtitle(language);
+            return playerView.toggleTrackLanguageSubtitle(language);
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => setTrackSubtitle => " + e.getMessage());
+            LogUtil.log("PlayerLayout => toggleTrackLanguageSubtitle => " + e.getMessage());
             return false;
         }
     }
 
-    public final JSONArray getTrackInfoAll() {
+    public final boolean toggleTrackLanguageAudio(String language) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.toggleTrackLanguageAudio(language);
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => toggleTrackLanguageAudio => " + e.getMessage());
+            return false;
+        }
+    }
+
+    public final boolean toggleTrackRoleFlagSubtitle(int roleFlag) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.toggleTrackRoleFlagSubtitle(roleFlag);
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => toggleTrackRoleFlagSubtitle => " + e.getMessage());
+            return false;
+        }
+    }
+
+    public final boolean toggleTrackRoleFlagAudio(int roleFlag) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.toggleTrackRoleFlagAudio(roleFlag);
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => toggleTrackRoleFlagAudio => " + e.getMessage());
+            return false;
+        }
+    }
+
+    public final boolean toggleTrackRoleFlagVideo(int roleFlag) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.toggleTrackRoleFlagVideo(roleFlag);
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => toggleTrackRoleFlagVideo => " + e.getMessage());
+            return false;
+        }
+    }
+
+    public final JSONArray getTrackInfo() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -646,7 +694,7 @@ public class PlayerLayout extends RelativeLayout {
                 throw new Exception("trackInfo error: null");
             return trackInfo;
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getTrackInfoAll => " + e.getMessage());
+            LogUtil.log("PlayerLayout => getTrackInfo => " + e.getMessage());
             return null;
         }
     }
