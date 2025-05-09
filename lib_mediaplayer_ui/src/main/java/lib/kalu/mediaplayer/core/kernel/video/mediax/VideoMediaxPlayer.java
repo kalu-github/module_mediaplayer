@@ -706,15 +706,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             List<AudioTrack> extraTrackAudio = args.getExtraTrackAudio();
             if (null != extraTrackAudio) {
                 for (AudioTrack track : extraTrackAudio) {
-                    Uri subtitleUri = Uri.parse(track.getUrl());
-                    MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
-                            .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
-                            .setMimeType(track.getMimeType())
-                            .setLanguage(track.getLanguage())
-                            .setLabel(track.getLabel())
-                            .build();
-                    SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
-                            .createMediaSource(subtitleConfig, C.TIME_UNSET);
+                    MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
+                            .createMediaSource(new MediaItem.Builder()
+                                    .setUri(track.getUrl())
+                                    .setMimeType(track.getMimeType())
+                                    .setMediaId(track.getLabel())
+                                    .build());
                     //
                     mediaSources.add(source);
                 }

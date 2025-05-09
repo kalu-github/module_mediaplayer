@@ -743,26 +743,12 @@ public final class VideoExo2Player extends VideoBasePlayer {
             List<AudioTrack> extraTrackAudio = args.getExtraTrackAudio();
             if (null != extraTrackAudio) {
                 for (AudioTrack track : extraTrackAudio) {
-//                    MediaItem mediaItem = new MediaItem.Builder()
-//                            .setUri(track.getUrl())
-//                            .setMediaMetadata(new MediaMetadata.Builder()
-//                                    .setTitle("Video Title")
-//                                    .setSubtitle()
-//                                    .build())
-//                            .build();
-//                    ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(dataSourceFactory)
-//                            .createMediaSource(mediaItem);
-//                    //
-//                    mediaSources.add(source);
-                    Uri subtitleUri = Uri.parse(track.getUrl());
-                    MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(subtitleUri)
-                            .setSelectionFlags(C.SELECTION_FLAG_AUTOSELECT)
-                            .setMimeType(track.getMimeType()) // 也可以用 MimeTypes.APPLICATION_SUBRIP
-                            .setLanguage(track.getLanguage())
-                            .setLabel(track.getLabel())
-                            .build();
-                    SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
-                            .createMediaSource(subtitleConfig, C.TIME_UNSET);
+                    MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
+                            .createMediaSource(new MediaItem.Builder()
+                                    .setUri(track.getUrl())
+                                    .setMimeType(track.getMimeType())
+                                    .setMediaId(track.getLabel())
+                                    .build());
                     //
                     mediaSources.add(source);
                 }
