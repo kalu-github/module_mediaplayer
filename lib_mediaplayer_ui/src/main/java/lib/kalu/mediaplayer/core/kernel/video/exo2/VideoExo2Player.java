@@ -995,6 +995,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
     @Override
     public boolean setTrackSubtitle(String language) {
         try {
+            if (null == language)
+                throw new Exception("warning: language null");
+            if (language.isEmpty())
+                throw new Exception("warning: language empty");
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
             TrackSelector trackSelector = mExoPlayer.getTrackSelector();
@@ -1010,60 +1014,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
     }
 
-//    @Override
-//    public boolean setTrackInfo(int groupIndex, int trackIndex) {
-//        try {
-//            if (null == mExoPlayer)
-//                throw new Exception("error: mExoPlayer null");
-//            LogUtil.log("VideoExo2Player => setTrackInfo => groupIndex = " + groupIndex + ", trackIndex = " + trackIndex);
-//
-//            // 获取 TrackSelector
-//            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
-//            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
-//                    .buildUpon()
-//                    .setPreferredTextLanguage("en")
-//                    .build();
-//            trackSelector.setParameters(selectionParameters);
-////
-////            Tracks tracks = mExoPlayer.getCurrentTracks();
-////            ImmutableList<Tracks.Group> groups = tracks.getGroups();
-////
-////            TrackGroup trackGroup = groups.get(groupIndex).getMediaTrackGroup();
-////            TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
-////
-////            TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters()
-////                    .buildUpon()
-//////                    .setMaxVideoSizeSd()
-//////                    .setPreferredAudioLanguage("hu")
-////                    .setOverrideForType(selectionOverride)
-////                    .build();
-////            mExoPlayer.setTrackSelectionParameters(selectionParameters);
-//
-
-    /// /            DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
-    /// /            // 获取当前映射的轨道信息
-    /// /            MappingTrackSelector.MappedTrackInfo mappedTrackInfo = trackSelector.getCurrentMappedTrackInfo();
-    /// ///            // 获取字幕轨道组
-    /// /            TrackGroup trackGroup = mappedTrackInfo.getTrackGroups(rendererIndex).get(groupIndex);
-    /// ///            // 选择轨道组中的第一个轨道
-    /// /            TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
-    /// ///            // 创建新的轨道选择参数
-    /// /            TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters()
-    /// /                    .buildUpon()
-    /// ///                    .setTrackTypeDisabled(C.TRACK_TYPE_VIDEO, false) // 确保视频轨道启用
-    /// ///                    .clearVideoSizeConstraints()
-    /// ///                    .clearOverrides()
-    /// /                    .setOverrideForType(selectionOverride)
-    /// /                    .build();
-    /// /            // 应用新的轨道选择参数
-    /// /            trackSelector.setParameters(selectionParameters);
-//
-//            return true;
-//        } catch (Exception e) {
-//            LogUtil.log("VideoExo2Player => setTrackInfo => " + e.getMessage());
-//            return false;
-//        }
-//    }
     @Override
     public JSONArray getTrackInfo(int type) {
 

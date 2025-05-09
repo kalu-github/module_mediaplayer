@@ -1070,6 +1070,10 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public boolean setTrackSubtitle(String language) {
         try {
+            if (null == language)
+                throw new Exception("warning: language null");
+            if (language.isEmpty())
+                throw new Exception("warning: language empty");
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
             TrackSelector trackSelector = mExoPlayer.getTrackSelector();
@@ -1085,58 +1089,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
-//    @Override
-//    public boolean setTrackInfo(int groupIndex, int trackIndex) {
-//        try {
-//            if (null == mExoPlayer)
-//                throw new Exception("error: mExoPlayer null");
-//            LogUtil.log("VideoMediaxPlayer => setTrackInfo => groupIndex = " + groupIndex + ", trackIndex = " + trackIndex);
-//
-//
-//            // 获取 TrackSelector
-//            TrackSelector trackSelector = mExoPlayer.getTrackSelector();
-//            TrackSelectionParameters selectionParameters = trackSelector.getParameters()
-//                    .buildUpon()
-//                    .setPreferredTextLanguage("en")
-//                    .build();
-//            trackSelector.setParameters(selectionParameters);
-//
-////            //
-////            androidx.media3.common.Tracks tracks = mExoPlayer.getCurrentTracks();
-////            ImmutableList<androidx.media3.common.Tracks.Group> groups = tracks.getGroups();
-////            //
-////            TrackGroup trackGroup = groups.get(groupIndex).getMediaTrackGroup();
-////            TrackSelectionOverride selectionOverride = new TrackSelectionOverride(trackGroup, trackIndex);
-////
-////
-////            DefaultTrackSelector trackSelector = (DefaultTrackSelector) mExoPlayer.getTrackSelector();
-////            DefaultTrackSelector.Parameters.Builder parameters = trackSelector.buildUponParameters();
-//////            parameters.setOverrideForType(selectionOverride);
-////            parameters.setPreferredTextLanguages("pt");  // 设置为英文
-////            trackSelector.setParameters(parameters);
-//
-//
-////            new FixedTrackSelection.Factory().createTrackSelections()
-////
-////                    .createTrackSelection(
-////                    group = getTrackGroup(trackSelector), trackIndices = intArrayOf(selectedTrackIndex))
-//
-//            //
-
-    /// /            TrackSelectionParameters selectionParameters = mExoPlayer.getTrackSelectionParameters()
-    /// /                    .buildUpon()
-    /// /                    .clearOverrides()
-    /// /                    .setPrioritizeImageOverVideoEnabled(false)
-    /// /                    .setOverrideForType(selectionOverride)
-    /// /                    .build();
-    /// /
-    /// /            mExoPlayer.setTrackSelectionParameters(selectionParameters);
-//            return true;
-//        } catch (Exception e) {
-//            LogUtil.log("VideoMediaxPlayer => setTrackInfo => " + e.getMessage());
-//            return false;
-//        }
-//    }
     @Override
     public JSONArray getTrackInfo(int type) {
 
