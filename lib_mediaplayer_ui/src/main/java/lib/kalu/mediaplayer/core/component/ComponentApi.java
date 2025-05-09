@@ -18,15 +18,12 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 import lib.kalu.mediaplayer.widget.player.PlayerView;
 
 public interface ComponentApi {
@@ -580,21 +577,6 @@ public interface ComponentApi {
         }
     }
 
-    default OnPlayerEpisodeListener getOnPlayerEpisodeListener() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("error: playerView null");
-            OnPlayerEpisodeListener onPlayerEpisodeListener = playerView.getOnPlayerEpisodeListener();
-            if (null == onPlayerEpisodeListener)
-                throw new Exception("warning: onPlayerEpisodeListener null");
-            return onPlayerEpisodeListener;
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => getOnPlayerEpisodeListener => " + e.getMessage());
-            return null;
-        }
-    }
-
     default StartArgs getStartArgs() {
         try {
             PlayerView playerView = getPlayerView();
@@ -615,19 +597,7 @@ public interface ComponentApi {
             StartArgs args = getStartArgs();
             if (null == args)
                 throw new Exception("error: args null");
-            String title = args.getTitle();
-            int episodeItemCount = args.getEpisodeItemCount();
-            if (episodeItemCount <= 0) {
-                return title;
-            } else {
-                StringBuilder builder = new StringBuilder();
-                builder.append(title);
-                int index = args.getEpisodePlayingIndex();
-                int num = index + 1;
-                String s = ((View) this).getResources().getString(R.string.module_mediaplayer_string_title, num);
-                builder.append(s);
-                return builder.toString();
-            }
+            return args.getTitle();
         } catch (Exception e) {
             LogUtil.log("ComponentApi => getTitle => " + e.getMessage());
             return null;

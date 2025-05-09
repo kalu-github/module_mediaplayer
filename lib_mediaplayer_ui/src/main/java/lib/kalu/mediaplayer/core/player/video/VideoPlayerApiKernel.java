@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 
 import androidx.annotation.FloatRange;
-import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
 
@@ -13,7 +12,6 @@ import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
-import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -552,25 +550,30 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             onBuriedComplete();
                             // 关闭屏幕常亮
                             setScreenKeep(false);
-                            // 多剧集
-                            int episodeItemCount = args.getEpisodeItemCount();
-                            OnPlayerEpisodeListener onPlayerEpisodeListener = getOnPlayerEpisodeListener();
-                            if (episodeItemCount > 0 && null != onPlayerEpisodeListener) {
-                                int episodePlayingIndex = args.getEpisodePlayingIndex();
-                                int nextPlayIndex = episodePlayingIndex + 1;
-                                if (nextPlayIndex >= episodeItemCount) {
-                                    onPlayerEpisodeListener.onEnd();
-                                } else {
-                                    onPlayerEpisodeListener.onEpisode(nextPlayIndex);
-                                }
+                            //
+                            boolean looping = args.isLooping();
+                            if (looping) {
+                                restart();
                             }
-                            // 单剧集
-                            else {
-                                boolean looping = args.isLooping();
-                                if (looping) {
-                                    restart();
-                                }
-                            }
+//                            // 多剧集
+//                            int episodeItemCount = args.getEpisodeItemCount();
+//                            OnPlayerEpisodeListener onPlayerEpisodeListener = getOnPlayerEpisodeListener();
+//                            if (episodeItemCount > 0 && null != onPlayerEpisodeListener) {
+//                                int episodePlayingIndex = args.getEpisodePlayingIndex();
+//                                int nextPlayIndex = episodePlayingIndex + 1;
+//                                if (nextPlayIndex >= episodeItemCount) {
+//                                    onPlayerEpisodeListener.onEnd();
+//                                } else {
+//                                    onPlayerEpisodeListener.onEpisode(nextPlayIndex);
+//                                }
+//                            }
+//                            // 单剧集
+//                            else {
+//                                boolean looping = args.isLooping();
+//                                if (looping) {
+//                                    restart();
+//                                }
+//                            }
                             break;
                     }
                 }

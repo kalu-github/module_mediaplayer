@@ -60,9 +60,6 @@
 -keep @interface lib.kalu.mediaplayer.type.PlayerType$CacheSizeType {
     *;
 }
--keep @interface lib.kalu.mediaplayer.type.PlayerType$NetType {
-    *;
-}
 -keep @interface lib.kalu.mediaplayer.type.PlayerType$SeekType {
     *;
 }
@@ -75,7 +72,10 @@
 -keep @interface lib.kalu.mediaplayer.type.PlayerType$SpeedType {
     *;
 }
--keep @interface lib.kalu.mediaplayer.type.PlayerType$EpisodeFlagLoactionType {
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$SubtitleTrackType {
+    *;
+}
+-keep @interface lib.kalu.mediaplayer.type.PlayerType$AudioTrackType {
     *;
 }
 

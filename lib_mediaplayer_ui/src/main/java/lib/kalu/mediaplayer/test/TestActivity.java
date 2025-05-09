@@ -23,7 +23,6 @@ import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentWarningTrySee;
-import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
@@ -164,17 +163,6 @@ public final class TestActivity extends Activity {
     private void initListener() {
         // playerLayout
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.setOnPlayerEpisodeListener(new OnPlayerEpisodeListener() {
-            @Override
-            public void onEpisode(int pos) {
-                startPlayer(pos);
-            }
-
-            @Override
-            public void onEnd() {
-                startPlayer(0);
-            }
-        });
         playerLayout.setOnPlayerWindowListener(new OnPlayerWindowListener() {
             @Override
             public void onWindow(int state) {
@@ -239,20 +227,6 @@ public final class TestActivity extends Activity {
                 }
             });
             videoLayout.start(args);
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void startPlayer(int position) {
-
-        try {
-            StartArgs args = (StartArgs) getIntent().getSerializableExtra(INTENT_ARGS);
-            if (null == args)
-                throw new Exception("error: args null");
-            StartArgs newArgs = args.newBuilder().setEpisodePlayingIndex(position).build();
-            PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-            videoLayout.start(newArgs);
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
