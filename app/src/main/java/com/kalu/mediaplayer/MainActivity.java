@@ -74,7 +74,6 @@ public class MainActivity extends Activity {
                 LayoutInflater.from(this).inflate(R.layout.activity_main_radio_button, viewGroup);
                 RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
                 radioButton.setText(strings[i]);
-                viewGroup.addView(radioButton);
             }
         } catch (Exception e) {
         }
@@ -88,7 +87,6 @@ public class MainActivity extends Activity {
                 LayoutInflater.from(this).inflate(R.layout.activity_main_radio_button, viewGroup);
                 RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
                 radioButton.setText(kernels[i]);
-                viewGroup.addView(radioButton);
             }
         } catch (Exception e) {
         }
@@ -105,7 +103,6 @@ public class MainActivity extends Activity {
                 RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
                 radioButton.setText(names[i]);
                 radioButton.setTag(urls[i]);
-                viewGroup.addView(radioButton);
             }
         } catch (Exception e) {
         }
@@ -150,7 +147,6 @@ public class MainActivity extends Activity {
                 CheckBox checkBox  = (CheckBox) viewGroup.getChildAt(i);
                 checkBox.setTag(subtitle_urls[i]);
                 checkBox.setText(subtitles_launcher[i]);
-                viewGroup.addView(checkBox);
             }
         } catch (Exception e) {
         }
