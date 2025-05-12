@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Layout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -67,11 +69,10 @@ public class MainActivity extends Activity {
         // decoders
         try {
             String[] strings = getResources().getStringArray(R.array.decoders);
-            LinearLayout viewGroup = findViewById(R.id.main_decoder);
+            ViewGroup viewGroup = findViewById(R.id.main_decoder);
             for (int i = 0; i < strings.length; i++) {
-                RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
-                RadioButton radioButton = new RadioButton(getApplicationContext());
-                radioButton.setLayoutParams(layoutParams);
+                LayoutInflater.from(this).inflate(R.layout.activity_main_radio_button, viewGroup);
+                RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
                 radioButton.setText(strings[i]);
                 viewGroup.addView(radioButton);
             }
@@ -82,13 +83,12 @@ public class MainActivity extends Activity {
         // kernel
         try {
             String[] kernels = getResources().getStringArray(R.array.kernels);
-            RadioGroup radioGroup = findViewById(R.id.main_kernel_group);
+            ViewGroup viewGroup = findViewById(R.id.main_kernel_group);
             for (int i = 0; i < kernels.length; i++) {
-                RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
-                RadioButton radioButton = new RadioButton(getApplicationContext());
-                radioButton.setLayoutParams(layoutParams);
+                LayoutInflater.from(this).inflate(R.layout.activity_main_radio_button, viewGroup);
+                RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
                 radioButton.setText(kernels[i]);
-                radioGroup.addView(radioButton);
+                viewGroup.addView(radioButton);
             }
         } catch (Exception e) {
         }
@@ -99,14 +99,13 @@ public class MainActivity extends Activity {
             String[] urls = getResources().getStringArray(R.array.urls);
             if (names.length != urls.length)
                 throw new Exception();
-            RadioGroup radioGroup = findViewById(R.id.main_radio_group);
+            ViewGroup viewGroup = findViewById(R.id.main_radio_group);
             for (int i = 0; i < names.length; i++) {
-                RadioGroup.LayoutParams layoutParams = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
-                RadioButton radioButton = new RadioButton(getApplicationContext());
-                radioButton.setLayoutParams(layoutParams);
+                LayoutInflater.from(this).inflate(R.layout.activity_main_radio_button, viewGroup);
+                RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
                 radioButton.setText(names[i]);
                 radioButton.setTag(urls[i]);
-                radioGroup.addView(radioButton);
+                viewGroup.addView(radioButton);
             }
         } catch (Exception e) {
         }
@@ -145,11 +144,10 @@ public class MainActivity extends Activity {
         try {
             String[] subtitle_urls = getResources().getStringArray(R.array.subtitles_urls);
             String[] subtitles_launcher = getResources().getStringArray(R.array.subtitles_launcher);
-            LinearLayout viewGroup = findViewById(R.id.main_subtitles);
+            ViewGroup viewGroup = findViewById(R.id.main_subtitles);
             for (int i = 0; i < 3; i++) {
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
-                CheckBox checkBox = new CheckBox(getApplicationContext());
-                checkBox.setLayoutParams(layoutParams);
+                LayoutInflater.from(this).inflate(R.layout.activity_main_radio_button, viewGroup);
+                CheckBox checkBox  = (CheckBox) viewGroup.getChildAt(i);
                 checkBox.setTag(subtitle_urls[i]);
                 checkBox.setText(subtitles_launcher[i]);
                 viewGroup.addView(checkBox);
