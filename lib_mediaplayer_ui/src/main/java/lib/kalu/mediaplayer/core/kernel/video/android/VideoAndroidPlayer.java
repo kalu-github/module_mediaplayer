@@ -473,19 +473,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
 
                 }
             } catch (Exception e) {
-                LogUtil.log("VideoAndroidPlayer => onSeekComplete => Exception1 " + e.getMessage());
-            }
-
-            try {
-//                boolean prepared = isPrepared();
-//                if (prepared)
-//                    throw new Exception("warning: prepared true");
-                boolean playing = isPlaying();
-                if (playing)
-                    throw new Exception("warning: playing true");
-                start();
-            } catch (Exception e) {
-                LogUtil.log("VideoAndroidPlayer => onSeekComplete => Exception2 " + e.getMessage());
+                LogUtil.log("VideoAndroidPlayer => onSeekComplete => Exception " + e.getMessage());
             }
         }
     };
