@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../librtmp/rtmp.h"
 #include "../librtmp/log.h"
 #include "xiecc_rtmp.h"

@@ -4,7 +4,7 @@ android {
 
     compileOptions.encoding = "UTF-8"
     namespace 'lib.kalu.exoplayer2'
-    compileSdk 35
+    compileSdk 33
 
     defaultConfig {
         minSdk = 14 // 4.0
@@ -65,7 +65,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path "/src/main/cpp/CMakeLists.txt"
+            path "src/main/cpp/CMakeLists.txt"
         }
     }
 }
