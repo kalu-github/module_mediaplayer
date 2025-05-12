@@ -32,6 +32,7 @@
 #-keep class xx.xx.xx{*;} 保持类名，同时保持里面的内容不被混淆
 
 # Proguard rules specific to the common module.
+-dontwarn com.google.android.exoplayer2.**
 
 # Don't warn about checkerframework and Kotlin annotations
 -dontwarn org.checkerframework.**
