@@ -123,46 +123,44 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 配置带宽测量器
                     .setBandwidthMeter(new DefaultBandwidthMeter.Builder(context)
                             // 初始带宽估算为5Mbps（5,000,000 bps）
-                            .setInitialBitrateEstimate(5_000_000)
+//                            .setInitialBitrateEstimate(5_000_000)
                             .build())
                     // 缓冲缓存
-                    .setLoadControl(new DefaultLoadControl.Builder().setBufferDurationsMs(
-                                    10_000, // 低带宽时最小缓冲10秒
-                                    30_000, // 高带宽时最大缓冲30秒
-                                    2500,
-                                    5000
-                            )
+                    .setLoadControl(new DefaultLoadControl.Builder()
+                            // 低带宽时最小缓冲10秒｜ 高带宽时最大缓冲30秒
+//                            .setBufferDurationsMs(50000, 50000, 2500, 2500)
                             .build())
                     // 自适应码率
                     .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context)
                             .buildUpon()
-                            // 主字幕轨道
-                            .setPreferredTextRoleFlags(C.ROLE_FLAG_MAIN)
-                            // 主音频轨道
-                            .setPreferredAudioRoleFlags(C.ROLE_FLAG_MAIN)
-                            // 主视频轨道
-                            .setPreferredVideoRoleFlags(C.ROLE_FLAG_MAIN)
-                            // 音频禁止混合 MIME 类型切换（如视频+音频单独切换）
-                            .setAllowAudioMixedMimeTypeAdaptiveness(false)
-                            // 视频禁止混合 MIME 类型切换（如视频+音频单独切换）
-                            .setAllowVideoMixedMimeTypeAdaptiveness(true)
-                            // 音频禁止非无缝切换
-                            .setAllowAudioNonSeamlessAdaptiveness(false)
-                            // 视频禁止非无缝切换
-                            .setAllowVideoNonSeamlessAdaptiveness(false)
-                            // 音频混合声道数量的自适应性
-                            .setAllowAudioMixedChannelCountAdaptiveness(true)
-                            // 音频混合采样率自适应
-                            .setAllowAudioMixedSampleRateAdaptiveness(true)
-                            // 音频混合时解码器支持自适应
-                            .setAllowAudioMixedDecoderSupportAdaptiveness(true)
-                            // 音频混合时解码器支持自适应
-                            .setAllowVideoMixedDecoderSupportAdaptiveness(true)
+//                            // 主字幕轨道
+//                            .setPreferredTextRoleFlags(C.ROLE_FLAG_MAIN)
+//                            // 主音频轨道
+//                            .setPreferredAudioRoleFlags(C.ROLE_FLAG_MAIN)
+//                            // 主视频轨道
+//                            .setPreferredVideoRoleFlags(C.ROLE_FLAG_MAIN)
+//                            // 音频禁止混合 MIME 类型切换（如视频+音频单独切换）
+//                            .setAllowAudioMixedMimeTypeAdaptiveness(false)
+//                            // 视频禁止混合 MIME 类型切换（如视频+音频单独切换）
+//                            .setAllowVideoMixedMimeTypeAdaptiveness(true)
+//                            // 音频禁止非无缝切换
+//                            .setAllowAudioNonSeamlessAdaptiveness(false)
+//                            // 视频禁止非无缝切换
+//                            .setAllowVideoNonSeamlessAdaptiveness(false)
+//                            // 音频混合声道数量的自适应性
+//                            .setAllowAudioMixedChannelCountAdaptiveness(true)
+//                            // 音频混合采样率自适应
+//                            .setAllowAudioMixedSampleRateAdaptiveness(true)
+//                            // 音频混合时解码器支持自适应
+//                            .setAllowAudioMixedDecoderSupportAdaptiveness(true)
+//                            // 音频混合时解码器支持自适应
+//                            .setAllowVideoMixedDecoderSupportAdaptiveness(true)
                             .build(),
                             new AdaptiveTrackSelection.Factory(
-                                    3000,// 至少 3 秒后才允许升码率
-                                    1000, // 最多 1 秒后允许降码率
-                                    25000, 0.7F)));
+                                    10000,// 至少 10 秒后才允许升码率
+                                    25000, // 最多 2.5 秒后允许降码率
+                                    25000, //
+                                    0.7F))); //
 
             int decoderType = args.getDecoderType();
             LogUtil.log("VideoMediaxPlayer => createDecoder => decoderType = " + decoderType);
