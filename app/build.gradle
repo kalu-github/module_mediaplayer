@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
 
+    namespace 'com.kalu.mediaplayer'
     compileSdkVersion 34
     buildToolsVersion "34.0.0"
-    namespace 'com.kalu.mediaplayer'
 
     defaultConfig {
 
-        minSdkVersion 23
+        minSdkVersion 19 // android4.4
         targetSdkVersion 34
         multiDexEnabled true
 
@@ -65,9 +65,9 @@ android {
     }
 
     compileOptions {
+//        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-        coreLibraryDesugaringEnabled true // 关键配置
     }
     packagingOptions {
         exclude 'com/google/common/util/concurrent/ListenableFuture.class'
@@ -85,8 +85,7 @@ repositories {
 }
 dependencies {
 
-    // android 6.0 兼容lambda
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+//    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 
     implementation('androidx.appcompat:appcompat:1.6.1')
 //    implementation('androidx.appcompat:appcompat:1.6.1') {
