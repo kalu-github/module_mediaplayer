@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
             String[] subtitles_launcher = getResources().getStringArray(R.array.subtitles_launcher);
             ViewGroup viewGroup = findViewById(R.id.main_subtitles);
             for (int i = 0; i < 3; i++) {
-                LayoutInflater.from(this).inflate(R.layout.activity_main_radio_button, viewGroup);
+                LayoutInflater.from(this).inflate(R.layout.activity_main_check_box, viewGroup);
                 CheckBox checkBox  = (CheckBox) viewGroup.getChildAt(i);
                 checkBox.setTag(subtitle_urls[i]);
                 checkBox.setText(subtitles_launcher[i]);
