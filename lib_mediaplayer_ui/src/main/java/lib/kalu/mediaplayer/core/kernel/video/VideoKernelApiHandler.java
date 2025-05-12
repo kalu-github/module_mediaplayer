@@ -101,7 +101,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                                     onEvent(kernelType, PlayerType.EventType.START);
                                     // 起播快进
                                     onEvent(kernelType, PlayerType.EventType.SEEK_START_FORWARD);
-                                    setPlayWhenReadySeekFinish(true);
+                                  //  setPlayWhenReadySeekFinish(true);
                                     seekTo(seek);
                                 }
                             }

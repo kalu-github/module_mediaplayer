@@ -20,6 +20,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class VideoAndroidPlayer extends VideoBasePlayer {
 
+    private boolean mPlayWhenReadySeeking = false;
     private MediaPlayer mMediaPlayer = null;
 
     @Override
@@ -431,7 +432,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                         } else {
                             // 起播快进
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.SEEK_START_REWIND);
-                            setPlayWhenReadySeekFinish(true);
+                            mPlayWhenReadySeeking = true;
                             seekTo(seek);
                         }
                     } catch (Exception e) {
@@ -451,18 +452,25 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.SEEK_FINISH);
 
             try {
-                long seek = getPlayWhenReadySeekToPosition();
-                if (seek <= 0L)
-                    throw new Exception("warning: seek<=0");
-                boolean playWhenReadySeekFinish = isPlayWhenReadySeekFinish();
-                if (playWhenReadySeekFinish)
-                    throw new Exception("warning: playWhenReadySeekFinish true");
-                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START);
-                boolean playWhenReady = isPlayWhenReady();
-                onEvent(PlayerType.KernelType.ANDROID, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
-                if (!playWhenReady) {
-                    pause();
-                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PAUSE);
+                // 起播快进
+                if (mPlayWhenReadySeeking) {
+                    mPlayWhenReadySeeking = false;
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START);
+                    boolean playWhenReady = isPlayWhenReady();
+                    onEvent(PlayerType.KernelType.ANDROID, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                    if (playWhenReady) {
+                        boolean playing = isPlaying();
+                        if (playing)
+                            throw new Exception("warning: isPlaying true");
+                        start();
+                    } else {
+                        pause();
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PAUSE);
+                    }
+                }
+                // 正常快进&快退
+                else {
+
                 }
             } catch (Exception e) {
                 LogUtil.log("VideoAndroidPlayer => onSeekComplete => Exception1 " + e.getMessage());

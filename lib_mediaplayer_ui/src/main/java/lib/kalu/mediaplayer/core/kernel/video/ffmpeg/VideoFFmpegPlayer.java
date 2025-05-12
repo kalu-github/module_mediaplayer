@@ -26,6 +26,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
+    private boolean mPlayWhenReadySeeking = false;
     private FFmpegPlayer mFFmpegPlayer = null;
 
     @Override
@@ -355,7 +356,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                     } else {
                         onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.SEEK_START_FORWARD);
                         // 起播快进
-                        setPlayWhenReadySeekFinish(true);
+                        mPlayWhenReadySeeking = true;
                         seekTo(seek);
                     }
                 } catch (Exception e) {
@@ -373,34 +374,28 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.SEEK_FINISH);
 
             try {
-                long seek = getPlayWhenReadySeekToPosition();
-                if (seek <= 0L)
-                    throw new Exception("warning: seek<=0");
-                boolean playWhenReadySeekFinish = isPlayWhenReadySeekFinish();
-                if (playWhenReadySeekFinish)
-                    throw new Exception("warning: playWhenReadySeekFinish true");
-                onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.START);
-                // 立即播放
-                boolean playWhenReady = isPlayWhenReady();
-                onEvent(PlayerType.KernelType.FFPLAYER, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
-                if (!playWhenReady) {
-                    pause();
-                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.PAUSE);
+                // 起播快进
+                if (mPlayWhenReadySeeking) {
+                    mPlayWhenReadySeeking = false;
+                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.START);
+                    boolean playWhenReady = isPlayWhenReady();
+                    onEvent(PlayerType.KernelType.FFPLAYER, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                    if (playWhenReady) {
+                        boolean playing = isPlaying();
+                        if (playing)
+                            throw new Exception("warning: isPlaying true");
+                        start();
+                    } else {
+                        pause();
+                        onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.PAUSE);
+                    }
+                }
+                // 正常快进&快退
+                else {
+
                 }
             } catch (Exception e) {
-                LogUtil.log("VideoFFmpegPlayer => onSeekComplete => Exception1 " + e.getMessage());
-            }
-
-            try {
-//                boolean prepared = isPrepared();
-//                if (prepared)
-//                    throw new Exception("warning: prepared true");
-                boolean playing = isPlaying();
-                if (playing)
-                    throw new Exception("warning: playing true");
-                start();
-            } catch (Exception e) {
-                LogUtil.log("VideoFFmpegPlayer => onSeekComplete => Exception2 " + e.getMessage());
+                LogUtil.log("VideoFFmpegPlayer => onSeekComplete => Exception " + e.getMessage());
             }
         }
     };
