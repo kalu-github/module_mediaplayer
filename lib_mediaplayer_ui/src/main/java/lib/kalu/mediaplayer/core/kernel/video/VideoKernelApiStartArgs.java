@@ -18,7 +18,6 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
 
     default void clearArgs() {
         setDoWindowing(false);
-        setPlayWhenReadySeekFinish(false);
         setMute(false);
         setPrepared(false);
         setVideoSizeChanged(false);
@@ -105,23 +104,23 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
         }
     }
 
-    HashMap<VideoKernelApiBase, Boolean> mPlayWhenReadySeekFinish = new HashMap<>();
+//    HashMap<VideoKernelApiBase, Boolean> mPlayWhenReadySeekFinish = new HashMap<>();
 
-    default boolean isPlayWhenReadySeekFinish() {
-        try {
-            Boolean aBoolean = mPlayWhenReadySeekFinish.get(this);
-            if (null == aBoolean)
-                throw new Exception("warning: aBoolean null");
-            return aBoolean;
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApiStartArgs => isPlayWhenReadySeekFinish => Exception " + e.getMessage());
-            return false;
-        }
-    }
-
-    default void setPlayWhenReadySeekFinish(boolean v) {
-        mPlayWhenReadySeekFinish.put(this, v);
-    }
+//    default boolean isPlayWhenReadySeekFinish() {
+//        try {
+//            Boolean aBoolean = mPlayWhenReadySeekFinish.get(this);
+//            if (null == aBoolean)
+//                throw new Exception("warning: aBoolean null");
+//            return aBoolean;
+//        } catch (Exception e) {
+//            LogUtil.log("VideoKernelApiStartArgs => isPlayWhenReadySeekFinish => Exception " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    default void setPlayWhenReadySeekFinish(boolean v) {
+//        mPlayWhenReadySeekFinish.put(this, v);
+//    }
 
     HashMap<VideoKernelApiBase, Boolean> mDoWindowing = new HashMap<>();
 

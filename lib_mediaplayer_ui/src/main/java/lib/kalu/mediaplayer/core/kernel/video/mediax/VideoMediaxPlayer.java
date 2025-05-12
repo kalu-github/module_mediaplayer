@@ -10,7 +10,6 @@ import androidx.media3.common.C;
 import androidx.media3.common.Format;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MediaLibraryInfo;
-import androidx.media3.common.MediaMetadata;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
@@ -52,9 +51,6 @@ import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 
 import com.google.common.collect.ImmutableList;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -70,6 +66,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 @UnstableApi
 public final class VideoMediaxPlayer extends VideoBasePlayer {
 
+    private boolean mPlayWhenReadySeeking = false;
     private boolean mSeeking = false;
     private boolean mBuffering = false;
 
@@ -612,7 +609,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             // rtmp
             if (contentType == -100) {
-                Class<?> cls = Class.forName("com.google.android.exoplayer2.ext.rtmp.RtmpDataSource");
+                Class<?> cls = Class.forName("ext.rtmp.RtmpDataSource");
                 DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
                 LogUtil.log("VideoMediaxPlayer => buildSource => rtmp");
                 ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(factory).createMediaSource(new MediaItem.Builder()
@@ -805,80 +802,90 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             // 播放错误
             if (state == Player.STATE_IDLE) {
-                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_IDLE => state = " + state);
+                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_IDLE] = " + state);
             }
             // 播放完成
             else if (state == Player.STATE_ENDED) {
-                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_ENDED =>");
+                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_ENDED] = " + state);
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.COMPLETE);
             }
             // 播放开始
             else if (state == Player.STATE_READY) {
-                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_READY =>");
+                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_READY] = " + state);
                 try {
                     if (!isPrepared())
                         throw new Exception("warning: isPrepared false");
 
+                    // buffering
                     if (mBuffering) {
+                        LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_READY] -> buffering");
                         mBuffering = false;
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_STOP);
                     }
-
-                    if (mSeeking) {
+                    // seeking
+                    else if (mSeeking) {
+                        LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_READY] -> seeking");
                         mSeeking = false;
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_FINISH);
 
-                        try {
-                            long seek = getPlayWhenReadySeekToPosition();
-                            if (seek <= 0L)
-                                throw new Exception("warning: seek<=0");
-                            boolean playWhenReadySeekFinish = isPlayWhenReadySeekFinish();
-                            if (playWhenReadySeekFinish)
-                                throw new Exception("warning: playWhenReadySeekFinish true");
+                        // 起播快进
+                        if (mPlayWhenReadySeeking) {
+                            mPlayWhenReadySeeking = false;
                             onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
                             // 立即播放
                             boolean playWhenReady = isPlayWhenReady();
                             onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
-                            if (!playWhenReady) {
+                            if (playWhenReady) {
+                                boolean playing = isPlaying();
+                                if (playing)
+                                    throw new Exception("warning: isPlaying true");
+                                start();
+                            } else {
                                 pause();
                                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PAUSE);
                             }
-                        } catch (Exception e) {
-                            LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_READY => Exception1 " + e.getMessage());
                         }
+                        // 正常快进&快退
+                        else {
 
-                        try {
-//                            boolean prepared = isPrepared();
-//                            if (prepared)
-//                                throw new Exception("warning: prepared true");
+                        }
+                    }
+                    // start ready
+                    else {
+                        LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_READY] -> start ready");
+
+                        boolean playWhenReady = isPlayWhenReady();
+                        onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                        if (playWhenReady) {
                             boolean playing = isPlaying();
                             if (playing)
-                                throw new Exception("warning: playing true");
+                                throw new Exception("warning: isPlaying true");
                             start();
-                        } catch (Exception e) {
-                            LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_READY => Exception2 " + e.getMessage());
+                        } else {
+                            pause();
+                            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PAUSE);
                         }
                     }
 
                 } catch (Exception e) {
-                    LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_READY => Exception3 " + e.getMessage());
+                    LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_READY] -> Exception " + e.getMessage());
                 }
             }
             // 播放缓冲
             else if (state == Player.STATE_BUFFERING) {
-                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_BUFFERING =>");
+                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_BUFFERING] = " + state);
                 try {
                     if (!isPrepared())
                         throw new Exception("mPrepared warning: false");
                     mBuffering = true;
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_START);
                 } catch (Exception e) {
-                    LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => STATE_BUFFERING => Exception " + e.getMessage());
+                    LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_BUFFERING] -> Exception " + state);
                 }
             }
-            // UNKNOW
+            // ????
             else {
-                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged => UNKNOW => state = " + state);
+                LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[????] = " + state);
             }
         }
 
@@ -886,46 +893,36 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         public void onVideoInputFormatChanged(AnalyticsListener.EventTime eventTime, Format format, @Nullable DecoderReuseEvaluation decoderReuseEvaluation) {
             LogUtil.log("VideoMediaxPlayer => onVideoInputFormatChanged[出画面] => width = " + format.width + ", height = " + format.height);
 
+            // 视频信息
             try {
-//                boolean videoSizeChanged = isVideoSizeChanged();
-//                if (videoSizeChanged)
-//                    throw new Exception("warning: videoSizeChanged = true");
                 StartArgs args = getStartArgs();
-//                if (null == args)
-//                    throw new Exception("error: args null");
-//                setVideoSizeChanged(true);
+                if (null == args)
+                    throw new Exception("error: args null");
                 @PlayerType.ScaleType.Value
                 int scaleType = args.getscaleType();
                 int rotation = args.getRotation();
 //                int rotation = (videoSize.unappliedRotationDegrees > 0 ? videoSize.unappliedRotationDegrees : PlayerType.RotationType.DEFAULT);
                 onVideoFormatChanged(PlayerType.KernelType.MEDIA_V3, rotation, scaleType, format.width, format.height, format.bitrate);
             } catch (Exception e) {
-                LogUtil.log("VideoMediaxPlayer => onVideoSizeChanged => " + e.getMessage());
+                LogUtil.log("VideoMediaxPlayer => onVideoInputFormatChanged => " + e.getMessage());
             }
 
-
+            // 起播快进??
             try {
                 if (isPrepared())
                     throw new Exception("warning: isPrepared true");
-
-
                 setPrepared(true);
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE_COMPLETE);
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
                 long seek = getPlayWhenReadySeekToPosition();
+                // 立即播放
                 if (seek <= 0L) {
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.START);
-                    // 立即播放
-                    boolean playWhenReady = isPlayWhenReady();
-                    onEvent(PlayerType.KernelType.MEDIA_V3, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
-                    if (!playWhenReady) {
-                        pause();
-                        onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PAUSE);
-                    }
-                } else {
-                    // 起播快进
+                }
+                // 起播快进
+                else {
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.SEEK_START_FORWARD);
-                    setPlayWhenReadySeekFinish(true);
+                    mPlayWhenReadySeeking = true;
                     seekTo(seek);
                 }
             } catch (Exception e) {
@@ -1043,7 +1040,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //            DefaultTrackSelector.Parameters.Builder parameters = trackSelector.buildUponParameters();
 //            // 找到视频渲染器的索引
 //            for (int i = 0; i < trackSelector.getCurrentMappedTrackInfo().getRendererCount(); i++) {
-//                if (trackSelector.getCurrentMappedTrackInfo().getRendererType(i) == com.google.android.exoplayer2.C.TRACK_TYPE_VIDEO) {
+//                if (trackSelector.getCurrentMappedTrackInfo().getRendererType(i) == C.TRACK_TYPE_VIDEO) {
 //                    videoIndex = i;
 //                    break;
 //                }
@@ -1069,7 +1066,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                DefaultTrackSelector.Parameters.Builder parameters = trackSelector.buildUponParameters();
 //                // 找到视频渲染器的索引
 //                for (int i = 0; i < trackSelector.getCurrentMappedTrackInfo().getRendererCount(); i++) {
-//                    if (trackSelector.getCurrentMappedTrackInfo().getRendererType(i) == com.google.android.exoplayer2.C.TRACK_TYPE_VIDEO) {
+//                    if (trackSelector.getCurrentMappedTrackInfo().getRendererType(i) == C.TRACK_TYPE_VIDEO) {
 //                        videoIndex = i;
 //                        LogUtil.log("VideoMediaxPlayer => onTracksChanged => i = " + i);
 //                        break;
@@ -1261,7 +1258,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     TrackArgs trackArgs = new TrackArgs();
 
                     // 视频轨道
-                    if (type == 1 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_VIDEO) {
+                    if (type == 1 && trackType == C.TRACK_TYPE_VIDEO) {
 
                         trackArgs.setBitrate(format.bitrate);
                         trackArgs.setWidth(format.width);
@@ -1276,7 +1273,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                        object.put("maxSubLayers", format.maxSubLayers);
                     }
                     // 音频轨道
-                    else if (type == 2 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_AUDIO) {
+                    else if (type == 2 && trackType == C.TRACK_TYPE_AUDIO) {
 //                        object.put("channelCount", format.channelCount);
 //                        object.put("sampleRate", format.sampleRate);
 //                        object.put("pcmEncoding", format.pcmEncoding);
@@ -1284,15 +1281,15 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                        object.put("encoderPadding", format.encoderPadding);
                     }
                     // 字幕轨道
-                    else if (type == 3 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_TEXT) {
+                    else if (type == 3 && trackType == C.TRACK_TYPE_TEXT) {
 //                        object.put("accessibilityChannel", format.accessibilityChannel);
                         //  object.put("cueReplacementBehavior", format.cueReplacementBehavior);
                     }
                     // 媒体信息
-                    else if (type == 4 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_METADATA) {
+                    else if (type == 4 && trackType == C.TRACK_TYPE_METADATA) {
                     }
                     // 视频轨道
-                    else if (type == -1 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_VIDEO) {
+                    else if (type == -1 && trackType == C.TRACK_TYPE_VIDEO) {
 
                         trackArgs.setBitrate(format.bitrate);
                         trackArgs.setWidth(format.width);
@@ -1307,7 +1304,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                        object.put("maxSubLayers", format.maxSubLayers);
                     }
                     // 音频轨道
-                    else if (type == -1 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_AUDIO) {
+                    else if (type == -1 && trackType == C.TRACK_TYPE_AUDIO) {
 //                        object.put("channelCount", format.channelCount);
 //                        object.put("sampleRate", format.sampleRate);
 //                        object.put("pcmEncoding", format.pcmEncoding);
@@ -1315,12 +1312,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //                        object.put("encoderPadding", format.encoderPadding);
                     }
                     // 字幕轨道
-                    else if (type == -1 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_TEXT) {
+                    else if (type == -1 && trackType == C.TRACK_TYPE_TEXT) {
 //                        object.put("accessibilityChannel", format.accessibilityChannel);
                         //   object.put("cueReplacementBehavior", format.cueReplacementBehavior);
                     }
                     // 媒体信息
-                    else if (type == -1 && trackType == com.google.android.exoplayer2.C.TRACK_TYPE_METADATA) {
+                    else if (type == -1 && trackType == C.TRACK_TYPE_METADATA) {
                         // LogUtil.log("VideoExo2Player => getTrackInfo[C.TRACK_TYPE_METADATA] => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported);
                         continue;
                     }

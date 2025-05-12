@@ -110,26 +110,12 @@ public final class TestActivity extends Activity {
 //    }
 
     private void showTrackInfo(int type) {
-        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        List<TrackArgs> trackInfo;
-        if (type == 1) {
-            trackInfo = playerLayout.getTrackInfoVideo();
-        } else if (type == 2) {
-            trackInfo = playerLayout.getTrackInfoAudio();
-        } else {
-            trackInfo = playerLayout.getTrackInfoSubtitle();
-        }
-       // LogUtil.log("showTrackInfo -> type = " + type + ", trackInfo = " + trackInfo);
+        Bundle bundle = new Bundle();
+        bundle.putInt(TestDialog.BUNDLE_TYPE, type);
 
-        if (null != trackInfo) {
-            Bundle bundle = new Bundle();
-            bundle.putInt(TestDialog.BUNDLE_TYPE, type);
-            bundle.putString(TestDialog.BUNDLE_DATA, new Gson().toJson(trackInfo));
-
-            TestDialog testDialog = new TestDialog();
-            testDialog.setArguments(bundle);
-            testDialog.show(getFragmentManager(), "TestDialog");
-        }
+        TestDialog dialog = new TestDialog();
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), "TestDialog");
     }
 
     private void initComponent() {

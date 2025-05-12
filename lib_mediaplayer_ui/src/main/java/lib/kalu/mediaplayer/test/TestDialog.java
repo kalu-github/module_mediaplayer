@@ -23,10 +23,10 @@ import java.util.List;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.TrackArgs;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
 public class TestDialog extends DialogFragment {
 
-    public static String BUNDLE_DATA = "BUNDLE_DATA";
     public static String BUNDLE_TYPE = "BUNDLE_TYPE";
 
     @Nullable
@@ -40,15 +40,17 @@ public class TestDialog extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         try {
-
-            String string = getArguments().getString(BUNDLE_DATA, null);
-
-            Type typetoken = new TypeToken<List<TrackArgs>>() {
-            }.getType();
-            List<TrackArgs> list = new Gson().fromJson(string, typetoken);
-
             int type = getArguments().getInt(BUNDLE_TYPE, 1);
-
+            PlayerLayout playerLayout = getActivity().findViewById(R.id.module_mediaplayer_test_video);
+            List<TrackArgs> list;
+            if (type == 1) {
+                list = playerLayout.getTrackInfoVideo();
+            } else if (type == 2) {
+                list = playerLayout.getTrackInfoAudio();
+            } else {
+                list = playerLayout.getTrackInfoSubtitle();
+            }
+            // LogUtil.log("showTrackInfo -> type = " + type + ", trackInfo = " + trackInfo);
 
             for (TrackArgs track : list) {
                 String curName;
