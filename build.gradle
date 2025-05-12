@@ -9,7 +9,6 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:8.0.2'
-       // classpath 'com.android.tools:desugar_jdk_libs:2.1.5'
     }
 }
 

@@ -22,6 +22,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.TrackArgs;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class TestDialog extends DialogFragment {
 
@@ -95,29 +96,14 @@ public class TestDialog extends DialogFragment {
                     @Override
                     public void onClick(View view) {
 
-                        // 视频轨道
-                        if (type == 1) {
-                            ((TestActivity) getActivity()).toggleTrack(track);
-                        }
-                        // 音频轨道
-                        else if (type == 2) {
-//                            int roleFlags = object.optInt("roleFlags", -1);
-//                            ((TestActivity) getActivity()).toggleTrackRoleFlagAudio(roleFlags);
-                            ((TestActivity) getActivity()).toggleTrack(track);
-                        }
-                        // 字幕轨道
-                        else if (type == 3) {
-//                            int roleFlags = object.optInt("roleFlags", -1);
-//                            ((TestActivity) getActivity()).toggleTrackRoleFlagSubtitle(roleFlags);
-                            ((TestActivity) getActivity()).toggleTrack(track);
-                        }
-
+                        ((TestActivity) getActivity()).toggleTrack(track);
                         //
                         dismiss();
                     }
                 });
             }
         } catch (Exception e) {
+            LogUtil.log("TestDialog -> onViewCreated -> error: "+e.getMessage(), e);
         }
     }
 }

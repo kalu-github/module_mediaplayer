@@ -5,6 +5,9 @@
 -dontwarn lib.kalu.ijkplayer.**
 -dontwarn lib.kalu.media3.**
 
+-dontwarn com.google.common.util.concurrent.internal.InternalFutureFailureAccess
+-dontwarn com.google.common.util.concurrent.internal.InternalFutures
+
 # 保护主动抛出异常
 #-keepattributes Exceptions
 #-keepattributes Exceptions,SourceFile,LineNumberTable

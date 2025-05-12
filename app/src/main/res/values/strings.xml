@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">播放器</string>
+    <string name="app_name">players</string>
 
     <string name="start">开始</string>
     <string name="pause">暂停</string>

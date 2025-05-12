@@ -119,7 +119,7 @@ public final class TestActivity extends Activity {
         } else {
             trackInfo = playerLayout.getTrackInfoSubtitle();
         }
-        LogUtil.log("showTrackInfo -> type = " + type + ", trackInfo = " + trackInfo);
+       // LogUtil.log("showTrackInfo -> type = " + type + ", trackInfo = " + trackInfo);
 
         if (null != trackInfo) {
             Bundle bundle = new Bundle();
