@@ -860,9 +860,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     }
                     // start ready
                     else {
-                        LogUtil.log("VideoExo2Player => onPlaybackStateChanged -> state[Player.STATE_READY] -> start ready");
+                        LogUtil.log("VideoExo2Player => onPlaybackStateChanged -> state[Player.STATE_READY] -> start ready ");
 
                         boolean playWhenReady = isPlayWhenReady();
+                        LogUtil.log("VideoExo2Player => onPlaybackStateChanged -> state[Player.STATE_READY] -> playWhenReady = "+playWhenReady);
                         onEvent(PlayerType.KernelType.EXO_V2, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                         if (playWhenReady) {
                             boolean playing = isPlaying();
