@@ -50,6 +50,7 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSink;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheKeyFactory;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
+import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.video.VideoSize;
@@ -678,9 +679,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     dir.mkdirs();
                 }
 
-                LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
-                StandaloneDatabaseProvider provider = new StandaloneDatabaseProvider(context);
-                SimpleCache simpleCache = new SimpleCache(dir, evictor, provider);
+                SimpleCache simpleCache = new SimpleCache(dir,
+                        new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024)
+//                        new StandaloneDatabaseProvider(context)
+                );
 
                 dataSource = new CacheDataSource.Factory()
                         .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
