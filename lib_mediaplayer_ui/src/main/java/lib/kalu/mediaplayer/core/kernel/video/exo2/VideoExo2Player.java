@@ -22,6 +22,7 @@ import com.google.android.exoplayer2.SeekParameters;
 import com.google.android.exoplayer2.Tracks;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.analytics.DefaultAnalyticsCollector;
+import com.google.android.exoplayer2.database.StandaloneDatabaseProvider;
 import com.google.android.exoplayer2.decoder.DecoderReuseEvaluation;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.LoadEventInfo;
@@ -40,14 +41,21 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionOverride;
 import com.google.android.exoplayer2.trackselection.TrackSelectionParameters;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.FileDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSink;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheKeyFactory;
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
+import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.video.VideoSize;
 import com.google.common.collect.ImmutableList;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -619,12 +627,12 @@ public final class VideoExo2Player extends VideoBasePlayer {
             int cacheType = args.getCacheType();
             boolean live = args.isLive();
             if (live) {
-                cacheType = PlayerType.CacheType.EXO_CLOSE;
+                cacheType = PlayerType.CacheType.CLOSE;
             }
 
             // 关闭缓存
             DataSource.Factory dataSource;
-            if (lowerCase.startsWith(PlayerType.SchemeType.FILE) || cacheType == PlayerType.CacheType.EXO_CLOSE) {
+            if (lowerCase.startsWith(PlayerType.SchemeType.FILE) || cacheType == PlayerType.CacheType.CLOSE) {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
             }
             // 开启缓存
@@ -635,11 +643,98 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 int cacheSizeType = args.getCacheSizeType();
                 String cacheDirName = args.getCacheDirName();
 
+                // 缓存大小
+                int size;
+                switch (cacheSizeType) {
+                    case PlayerType.CacheSizeType._100:
+                        size = 100;
+                        break;
+                    case PlayerType.CacheSizeType._200:
+                        size = 200;
+                        break;
+                    case PlayerType.CacheSizeType._400:
+                        size = 400;
+                        break;
+                    case PlayerType.CacheSizeType._800:
+                        size = 800;
+                        break;
+                    default:
+                        size = 1024;
+                        break;
+                }
+
+
+                // 缓存位置
+                File dir;
+                if (cacheLocalType == PlayerType.CacheLocalType.EXTERNAL) {
+                    File externalCacheDir = context.getExternalCacheDir();
+                    dir = new File(externalCacheDir, cacheDirName);
+                } else {
+                    File cacheDir = context.getCacheDir();
+                    dir = new File(cacheDir, cacheDirName);
+                }
+
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+
+                LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024);
+                StandaloneDatabaseProvider provider = new StandaloneDatabaseProvider(context);
+                SimpleCache simpleCache = new SimpleCache(dir, evictor, provider);
+
                 dataSource = new CacheDataSource.Factory()
-                        .setCache(VideoExo2PlayerSimpleCache.getSimpleCache(context, cacheLocalType, cacheSizeType, cacheDirName))
-//                        .setCacheWriteDataSinkFactory(new CacheDataSink.Factory().setCache(simpleCache1).setFragmentSize(C.LENGTH_UNSET))
                         .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
-                        .setUpstreamDataSourceFactory(dataSourceFactory);
+                        .setCache(simpleCache)
+                        // 网络请求工厂
+                        .setUpstreamDataSourceFactory(dataSourceFactory)
+                        // 缓存读取工厂
+                        .setCacheReadDataSourceFactory(new FileDataSource.Factory())
+                        // 写入数据到缓存
+                        .setCacheWriteDataSinkFactory(new CacheDataSink.Factory()
+                                .setFragmentSize(CacheDataSink.DEFAULT_FRAGMENT_SIZE)
+                                .setCache(simpleCache))
+                        // 自定义缓存键
+                        .setCacheKeyFactory(new CacheKeyFactory() {
+                            @Override
+                            public String buildCacheKey(DataSpec dataSpec) {
+
+
+                                String url = dataSpec.uri.toString();
+                                long position = dataSpec.position;
+                                long absoluteStreamPosition = dataSpec.absoluteStreamPosition;
+                                long length = dataSpec.length;
+//                                // 对于 HLS 分段，添加主播放列表的标识
+//                                if (dataSpec.playbackProperties != null &&
+//                                        mediaItem.playbackProperties.parentId != null) {
+//                                    String parentId = mediaItem.playbackProperties.parentId;
+//                                    return parentId + "#" + uri;  // 格式：主播放列表ID#分段URL
+//                                }
+
+                                if (url.endsWith(".m3u8")) {
+                                    int i = url.lastIndexOf("/");
+                                    int hashCode = url.substring(0, i).hashCode();
+                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey m3u8 => position = " + position + ", absoluteStreamPosition = " + absoluteStreamPosition + ", length = " + length + ", hashCode = " + hashCode);
+                                    return "hls_playlist#" + hashCode;
+                                } else if (url.endsWith(".ts")) {
+                                    int i = url.lastIndexOf("/");
+                                    int hashCode = url.substring(0, i).hashCode();
+                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey ts => position = " + position + ", absoluteStreamPosition = " + absoluteStreamPosition + ", length = " + length + ", hashCode = " + hashCode);
+                                    return "hls_segment#" + hashCode + "#" + url.hashCode();
+                                } else {
+                                    return url;
+                                }
+                            }
+                        })
+                        // 监听
+                        .setEventListener(new CacheDataSource.EventListener() {
+                            @Override
+                            public void onCachedBytesRead(long l, long l1) {
+                            }
+
+                            @Override
+                            public void onCacheIgnored(int i) {
+                            }
+                        });
             }
 
             //

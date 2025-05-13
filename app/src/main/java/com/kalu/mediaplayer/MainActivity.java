@@ -360,14 +360,12 @@ public class MainActivity extends Activity {
 
         @PlayerType.CacheType
         int cacheType;
-        int cacheFlagId = ((RadioGroup) findViewById(R.id.main_cache)).getCheckedRadioButtonId();
-        switch (cacheFlagId) {
-            case R.id.main_cache_yes:
-                cacheType = PlayerType.CacheType.EXO_OPEN;
-                break;
-            default:
-                cacheType = PlayerType.CacheType.DEFAULT;
-                break;
+        boolean cacheChecked = ((CheckBox) findViewById(R.id.main_cache_yes)).isChecked();
+        if(cacheChecked){
+            cacheType = PlayerType.CacheType.OPEN;
+        }
+        else{
+            cacheType = PlayerType.CacheType.CLOSE;
         }
 
         PlayerSDK.init()

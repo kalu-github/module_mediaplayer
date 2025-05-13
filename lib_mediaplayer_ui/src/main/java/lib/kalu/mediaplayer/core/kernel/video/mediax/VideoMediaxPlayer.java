@@ -585,12 +585,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             int cacheType = args.getCacheType();
             boolean live = args.isLive();
             if (live) {
-                cacheType = PlayerType.CacheType.EXO_CLOSE;
+                cacheType = PlayerType.CacheType.CLOSE;
             }
 
             // 关闭缓存
             DataSource.Factory dataSource;
-            if (lowerCase.startsWith(PlayerType.SchemeType.FILE) || cacheType == PlayerType.CacheType.EXO_CLOSE) {
+            if (lowerCase.startsWith(PlayerType.SchemeType.FILE) || cacheType == PlayerType.CacheType.CLOSE) {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
             }
             // 开启缓存

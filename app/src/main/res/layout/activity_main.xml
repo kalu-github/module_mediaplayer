@@ -197,41 +197,6 @@
             </HorizontalScrollView>
 
             <TextView
-                android:id="@+id/main_cache_title"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginLeft="6dp"
-                android:gravity="center_vertical|left"
-                android:text="缓存类型"
-                android:textSize="14sp"
-                android:visibility="gone" />
-
-            <RadioGroup
-                android:id="@+id/main_cache"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <RadioButton
-                    android:id="@+id/main_cache_yes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="false"
-                    android:enabled="true"
-                    android:text="开启" />
-
-                <RadioButton
-                    android:id="@+id/main_cache_null"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true"
-                    android:enabled="true"
-                    android:text="关闭" />
-
-            </RadioGroup>
-
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:layout_marginLeft="6dp"
@@ -276,6 +241,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="延迟播放" />
+
+                <CheckBox
+                    android:id="@+id/main_cache_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="边播边缓存" />
 
             </LinearLayout>
 

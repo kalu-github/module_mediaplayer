@@ -375,14 +375,17 @@ public @interface PlayerType {
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface CacheType {
 
-        int DEFAULT = 9_001;
-        int EXO_OPEN = 9_002;
-        int EXO_CLOSE = 9_003;
+        int OPEN = 9_000;
+        int CLOSE = 9_001;
+        int DEFAULT = CLOSE;
 
         @Documented
         @Retention(CLASS)
         @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef(value = {CacheType.DEFAULT, CacheType.EXO_OPEN, CacheType.EXO_CLOSE})
+        @IntDef(value = {
+                CacheType.OPEN,
+                CacheType.CLOSE,
+                CacheType.DEFAULT})
         @interface Value {
         }
     }
