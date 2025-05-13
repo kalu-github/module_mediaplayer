@@ -98,10 +98,8 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
                 eventListener.onBufferingStart();
             } else if (state == PlayerType.EventType.BUFFERING_STOP) {
                 eventListener.onBufferingStop();
-            } else if (state == PlayerType.EventType.PREPARE_START) {
-                eventListener.onPrepareStart();
-            } else if (state == PlayerType.EventType.PREPARE_COMPLETE) {
-                eventListener.onPrepareComplete();
+            } else if (state == PlayerType.EventType.PREPARE) {
+                eventListener.onPrepare();
             }
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiBase => callEvent => " + e.getMessage());

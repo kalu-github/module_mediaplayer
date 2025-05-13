@@ -24,12 +24,12 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.EventType.PREPARE_START:
-                LogUtil.log("ComponentLoadingGradient => callEvent => PREPARE_START");
+            case PlayerType.EventType.INIT:
+                LogUtil.log("ComponentLoadingGradient => callEvent => INIT");
                 show();
                 break;
-            case PlayerType.EventType.PREPARE_COMPLETE:
-                LogUtil.log("ComponentLoadingGradient => callEvent => PREPARE_COMPLETE");
+            case PlayerType.EventType.VIDEO_RENDERING_START:
+                LogUtil.log("ComponentLoadingGradient => callEvent => VIDEO_RENDERING_START");
                 hide();
                 break;
             case PlayerType.EventType.ERROR:

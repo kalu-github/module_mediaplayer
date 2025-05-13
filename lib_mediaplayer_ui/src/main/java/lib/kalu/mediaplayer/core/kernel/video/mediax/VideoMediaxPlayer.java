@@ -250,8 +250,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             boolean playWhenReady = args.isPlayWhenReady();
             mExoPlayer.setPlayWhenReady(playWhenReady);
-
-            onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE_START);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
                 mExoPlayer.prepare();
@@ -918,7 +916,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 if (isPrepared())
                     throw new Exception("warning: isPrepared true");
                 setPrepared(true);
-                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE_COMPLETE);
+                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE);
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
                 long seek = getPlayWhenReadySeekToPosition();
                 // 立即播放

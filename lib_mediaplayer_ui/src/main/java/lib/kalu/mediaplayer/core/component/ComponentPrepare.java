@@ -24,12 +24,12 @@ public class ComponentPrepare extends RelativeLayout implements ComponentApi {
     @Override
     public void callEvent(int playState) {
         switch (playState) {
-            case PlayerType.EventType.PREPARE_START:
-                LogUtil.log("ComponentLoading => callEvent => show => PREPARE_START");
+            case PlayerType.EventType.INIT:
+                LogUtil.log("ComponentLoading => callEvent => show => INIT");
                 show();
                 break;
-            case PlayerType.EventType.PREPARE_COMPLETE:
-                LogUtil.log("ComponentLoading => callEvent => show => PREPARE_COMPLETE");
+            case PlayerType.EventType.VIDEO_RENDERING_START:
+                LogUtil.log("ComponentLoading => callEvent => show => VIDEO_RENDERING_START");
                 hide();
                 break;
             case PlayerType.EventType.ERROR:

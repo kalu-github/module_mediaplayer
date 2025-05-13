@@ -76,7 +76,6 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 throw new Exception("url error: " + url);
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.INIT_READY);
             mFFmpegPlayer.setDataSource(context, Uri.parse(url), null);
-            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.PREPARE_START);
             mFFmpegPlayer.prepare();
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => startDecoder => " + e.getMessage());
@@ -349,7 +348,6 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                     if (isPrepared())
                         throw new Exception("warning: mPrepared true");
                     setPrepared(true);
-                    onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.PREPARE_COMPLETE);
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_RENDERING_START);
                     long seek = getPlayWhenReadySeekToPosition();
                     if (seek <= 0) {
@@ -412,6 +410,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         @Override
         public void onPrepared(FFmpegPlayer mp) {
             LogUtil.log("VideoFFmpegPlayer => onPrepared =>");
+            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.PREPARE);
             start();
         }
     };
