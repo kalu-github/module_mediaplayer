@@ -19,270 +19,255 @@ import lib.kalu.mediaplayer.util.LogUtil;
  */
 public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelApiEvent, VideoKernelApiStartArgs {
 
-    default void clearHandler() {
-        stopPlayWhenReadyDelayedTime();
-        stopCheckBufferingTimeout();
-        stopCheckPreparedPlaying();
-        stopCheckConnectTimeout();
+    int WHAT_PlayWhenReadyDelayedTime = 1000;
+    int WHAT_ConnectTimeout = 2000;
+    int WHAT_CheckPreparedPlaying = 3000;
+    int WHAT_ProgressUpdate = 4000;
+    int WHAT_BufferingTimeout = 5000;
+
+    HashMap<VideoKernelApiBase, android.os.Handler> mHandler = new HashMap<>();
+
+    default void parseTimer(Message msg) {
+
+        try {
+            if (null == msg)
+                throw new Exception("warning: msg null");
+            // 延迟播放
+            if (msg.what == WHAT_PlayWhenReadyDelayedTime) {
+                onEvent(msg.arg1, PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE);
+                initDecoderPlayWhenReadyDelayed((Context) msg.obj);
+            }
+            // 网络超时
+            else if (msg.what == WHAT_ConnectTimeout) {
+                if (isPrepared())
+                    throw new Exception("warning: isPrepared true");
+                long timeout = ((long[]) msg.obj)[1];
+                long start = ((long[]) msg.obj)[0];
+                long cast = System.currentTimeMillis() - start;
+                if (cast >= timeout) {
+                    onEvent(msg.arg1, PlayerType.EventType.ERROR);
+                    getPlayerApi().stop(true, false);
+                    throw new Exception("warning: connect timeout");
+                } else {
+                    sendMessageConnectTimeout(msg.arg1, start, timeout);
+                }
+            }
+            // 解决部分盒子不回调 info code=3
+            else if (msg.what == WHAT_CheckPreparedPlaying) {
+                if (isPrepared())
+                    throw new Exception("warning: isPrepared true");
+                boolean playing = isPlaying();
+                if (playing) {
+                    setPrepared(true);
+                    onEvent(msg.arg1, PlayerType.EventType.PREPARE_COMPLETE);
+                    long seek = getPlayWhenReadySeekToPosition();
+                    if (seek <= 0) {
+                        onEvent(msg.arg1, PlayerType.EventType.START);
+                    } else {
+                        onEvent(msg.arg1, PlayerType.EventType.START);
+                        // 起播快进
+                        onEvent(msg.arg1, PlayerType.EventType.SEEK_START_FORWARD);
+                        //  setPlayWhenReadySeekFinish(true);
+                        seekTo(seek);
+                    }
+                } else {
+                    sendMessageCheckPreparedPlaying(msg.arg1);
+                }
+            }
+            // 更新进度条
+            else if (msg.what == WHAT_ProgressUpdate) {
+                if (isPrepared()) {
+                    onUpdateProgress();
+                }
+                sendMessageProgressUpdate(msg.arg1);
+            }
+            // 缓冲超时
+            else if (msg.what == WHAT_BufferingTimeout) {
+                if (isPrepared())
+                    throw new Exception("warning: isPrepared true");
+                long timeout = ((long[]) msg.obj)[1];
+                long start = ((long[]) msg.obj)[0];
+                long cast = System.currentTimeMillis() - start;
+                if (cast >= timeout) {
+                    onEvent(msg.arg1, PlayerType.EventType.ERROR_BUFFERING_TIMEOUT);
+                    //
+                    removeMessagesBufferingTimeout();
+                    //
+                    getPlayerApi().stop(true, true);
+                    //
+                    if (msg.arg2 != 1)
+                        throw new Exception("warning: bufferingTimeoutRetry false");
+                    //
+                    boolean live = isLive();
+                    if (live) {
+                        getPlayerApi().restart();
+                    } else {
+                        long position = getPosition();
+                        getPlayerApi().restart(position);
+                    }
+                } else {
+                    boolean buffering = isBuffering();
+                    if (buffering) {
+                        sendMessageConnectTimeout(msg.arg1, start, timeout);
+                    } else {
+                        removeMessagesBufferingTimeout();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiHandler => parseTimer => Exception " + e.getMessage());
+        }
+    }
+
+    default void releaseTimer() {
+        try {
+            Handler handler = mHandler.get(this);
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            LogUtil.log("VideoKernelApiHandler => releaseTimer =>");
+            handler.removeCallbacksAndMessages(null);
+            mHandler.remove(this);
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiHandler => releaseTimer => " + e.getMessage());
+        }
+    }
+
+    default void createTimer() {
+        try {
+            Handler handler = mHandler.get(this);
+            if (null != handler)
+                throw new Exception("warning: handler not null");
+            LogUtil.log("VideoKernelApiHandler => createTimer =>");
+            mHandler.put(this, new android.os.Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(@NonNull Message msg) {
+                    parseTimer(msg);
+                }
+            });
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiHandler => createTimer => " + e.getMessage());
+        }
     }
 
     /***********/
-
-    HashMap<VideoKernelApiBase, android.os.Handler> mHandlerPlayWhenReadyDelayedTime = new HashMap<>();
 
     default void startPlayWhenReadyDelayedTime(Context context, @PlayerType.KernelType.Value int kernelType, long delayedTime) {
         try {
+            Handler handler = mHandler.get(this);
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            LogUtil.log("VideoKernelApiHandler => startPlayWhenReadyDelayedTime =>");
+            //
             onEvent(kernelType, PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_START);
-            Handler handler = mHandlerPlayWhenReadyDelayedTime.get(this);
-            if (null == handler) {
-                handler = new android.os.Handler(Looper.getMainLooper()) {
-                    @Override
-                    public void handleMessage(@NonNull Message msg) {
-                        try {
-                            onEvent(kernelType, PlayerType.EventType.INIT_PLAY_WHEN_READY_DELAYED_TIME_COMPLETE);
-                            callPlayWhenReadyDelayedTimeComplete(context);
-                        } catch (Exception e) {
-                            LogUtil.log("VideoKernelApiHandler => startPlayWhenReadyDelayedTime => Exception2 " + e.getMessage());
-                        } finally {
-                            stopCheckPreparedPlaying();
-                        }
-                    }
-                };
-                mHandlerPlayWhenReadyDelayedTime.put(this, handler);
-            }
-            handler.removeCallbacksAndMessages(null);
-            handler.sendEmptyMessageDelayed(10008, delayedTime);
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHandler => startPlayWhenReadyDelayedTime => Exception1 " + e.getMessage());
-        }
-    }
-
-    default void stopPlayWhenReadyDelayedTime() {
-        try {
-            Handler handler = mHandlerPlayWhenReadyDelayedTime.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            handler.removeCallbacksAndMessages(null);
-            mHandlerPlayWhenReadyDelayedTime.remove(this);
-            LogUtil.log("VideoKernelApiHandler => playWhenReadyDelayedTime => stop mHandlerPlayWhenReadyDelayedTime");
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHandler => playWhenReadyDelayedTime => " + e.getMessage());
-        }
-    }
-
-    /***********/
-
-    HashMap<VideoKernelApiBase, android.os.Handler> mHandlerPreparedPlaying = new HashMap<>();
-
-    default void startCheckPreparedPlaying(@PlayerType.KernelType.Value int kernelType) {
-        try {
-            if (isPrepared())
-                throw new Exception("warning: isPrepared true");
-            if (!isPrepared())
-                throw new Exception("warning: isPrepared false");
-            Handler handler = mHandlerPreparedPlaying.get(this);
-            if (null == handler) {
-                handler = new android.os.Handler(Looper.getMainLooper()) {
-                    @Override
-                    public void handleMessage(@NonNull Message msg) {
-                        try {
-                            if (msg.what != 10001)
-                                throw new Exception("warning: msg.what != 10001");
-                            if (isPrepared())
-                                throw new Exception("warning: mPrepared true");
-                            // 开播
-                            if (isPlaying()) {
-                                setPrepared(true);
-                                onEvent(kernelType, PlayerType.EventType.PREPARE_COMPLETE);
-                                long seek = getPlayWhenReadySeekToPosition();
-                                if (seek <= 0) {
-                                    onEvent(kernelType, PlayerType.EventType.START);
-                                } else {
-                                    onEvent(kernelType, PlayerType.EventType.START);
-                                    // 起播快进
-                                    onEvent(kernelType, PlayerType.EventType.SEEK_START_FORWARD);
-                                  //  setPlayWhenReadySeekFinish(true);
-                                    seekTo(seek);
-                                }
-                            }
-                            // 轮询
-                            else {
-                                LogUtil.log("VideoKernelApiHandler => startCheckPreparedPlaying => loop next");
-                                sendEmptyMessageDelayed(10001, 1000);
-                            }
-                        } catch (Exception e) {
-                            LogUtil.log("VideoKernelApiHandler => startCheckPreparedPlaying => Exception2 " + e.getMessage());
-                            stopCheckPreparedPlaying();
-                        }
-                    }
-                };
-                mHandlerPreparedPlaying.put(this, handler);
-            }
-            handler.removeCallbacksAndMessages(null);
-            handler.sendEmptyMessageDelayed(10001, 1000);
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHandler => startCheckPreparedPlaying => Exception1 " + e.getMessage());
-            stopCheckPreparedPlaying();
-        }
-    }
-
-    default void stopCheckPreparedPlaying() {
-        try {
-            Handler handler = mHandlerPreparedPlaying.get(this);
-            if (null == handler)
-                throw new Exception("warning: handler null");
-            handler.removeCallbacksAndMessages(null);
-            mHandlerPreparedPlaying.remove(this);
-            LogUtil.log("VideoKernelApiHandler => stopCheckPreparedPlaying => stop mHandlerPreparedPlaying");
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHandler => stopCheckPreparedPlaying => " + e.getMessage());
-        }
-    }
-
-    /***********/
-
-    HashMap<VideoKernelApiBase, android.os.Handler> mHandlerConnectTimeout = new HashMap<>();
-
-    default void startCheckConnectTimeout(@PlayerType.KernelType.Value int kernelType, long timeout) {
-        try {
-            if (isPrepared())
-                throw new Exception("warning: isPrepared true");
-            Handler handler = mHandlerConnectTimeout.get(this);
-            if (null == handler) {
-                handler = new android.os.Handler(Looper.getMainLooper()) {
-                    @Override
-                    public void handleMessage(@NonNull Message msg) {
-                        try {
-                            if (isPrepared())
-                                throw new Exception("warning: isPrepared true");
-                            if (msg.what != 10002)
-                                throw new Exception("warning: msg.what != 10002");
-                            long start = (long) msg.obj;
-                            long current = System.currentTimeMillis();
-                            long cast = current - start;
-                            // 超时
-                            if (cast >= timeout) {
-                                onEvent(kernelType, PlayerType.EventType.ERROR);
-                                getPlayerApi().stop(true, false);
-                                throw new Exception("warning: connect timeout");
-                            }
-                            // 轮询
-                            else {
-                                LogUtil.log("VideoKernelApiHandler => startCheckConnectTimeout => loop next, cast = " + cast);
-                                Message message = Message.obtain();
-                                message.what = 10002;
-                                message.obj = start;
-                                sendMessageDelayed(message, 1000);
-                            }
-                        } catch (Exception e) {
-                            LogUtil.log("VideoKernelApiHandler => startCheckConnectTimeout => Exception2 " + e.getMessage());
-                            stopCheckConnectTimeout();
-                        }
-                    }
-                };
-                mHandlerConnectTimeout.put(this, handler);
-            }
-            handler.removeCallbacksAndMessages(null);
+            //
             Message message = Message.obtain();
-            message.what = 10002;
-            message.obj = System.currentTimeMillis();
+            message.what = WHAT_PlayWhenReadyDelayedTime;
+            message.arg1 = kernelType;
+            message.obj = context;
+            handler.sendMessageDelayed(message, delayedTime);
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiHandler => startPlayWhenReadyDelayedTime => Exception " + e.getMessage());
+        }
+    }
+
+    default void sendMessageConnectTimeout(@PlayerType.KernelType.Value int kernelType, long timeMillis, long timeout) {
+        try {
+            Handler handler = mHandler.get(this);
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            LogUtil.log("VideoKernelApiHandler => sendMessageConnectTimeout =>");
+            Message message = Message.obtain();
+            message.what = WHAT_ConnectTimeout;
+            message.arg1 = kernelType;
+            message.obj = new long[]{timeMillis, timeout};
             handler.sendMessageDelayed(message, 1000);
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHandler => startCheckConnectTimeout => Exception1 " + e.getMessage());
-            stopCheckConnectTimeout();
+            LogUtil.log("VideoKernelApiHandler => sendMessageConnectTimeout => Exception " + e.getMessage());
         }
     }
 
-    default void stopCheckConnectTimeout() {
+    default void removeMessagesConnectTimeout() {
         try {
-            Handler handler = mHandlerConnectTimeout.get(this);
+            Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            handler.removeCallbacksAndMessages(null);
-            mHandlerConnectTimeout.remove(this);
-            LogUtil.log("VideoKernelApiHandler => stopCheckConnectTimeout => stop mHandlerConnectTimeout");
+            LogUtil.log("VideoKernelApiHandler => removeMessagesConnectTimeout =>");
+            handler.removeMessages(WHAT_ConnectTimeout);
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHandler => stopCheckConnectTimeout => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHandler => removeMessagesConnectTimeout => Exception " + e.getMessage());
         }
     }
 
     /***********/
 
-    HashMap<VideoKernelApiBase, android.os.Handler> mHandlerBufferingTimeout = new HashMap<>();
-
-    default void startCheckBufferingTimeout(@PlayerType.KernelType.Value int kernelType, boolean bufferingTimeoutRetry, long timeout) {
+    default void sendMessageCheckPreparedPlaying(@PlayerType.KernelType.Value int kernelType) {
         try {
-            if (isPrepared())
-                throw new Exception("warning: isPlaying true");
-            Handler handler = mHandlerBufferingTimeout.get(this);
-            if (null == handler) {
-                handler = new android.os.Handler(Looper.getMainLooper()) {
-                    @Override
-                    public void handleMessage(@NonNull Message msg) {
-
-                        try {
-                            if (isPrepared())
-                                throw new Exception("warning: isPrepared true");
-                            if (msg.what != 10003)
-                                throw new Exception("warning: msg.what != 10003");
-                            long start = (long) msg.obj;
-                            long current = System.currentTimeMillis();
-                            float cast = current - start;
-
-                            // 超时
-                            if (cast >= timeout) {
-                                onEvent(kernelType, PlayerType.EventType.ERROR_BUFFERING_TIMEOUT);
-                                // 1
-                                stopCheckBufferingTimeout();
-//                              // 2
-                                getPlayerApi().stop(true, true);
-                                if (!bufferingTimeoutRetry)
-                                    throw new Exception("warning: bufferingTimeoutRetry false");
-                                boolean live = isLive();
-                                if (live) {
-                                    getPlayerApi().restart();
-                                } else {
-                                    long position = getPosition();
-                                    getPlayerApi().restart(position);
-                                }
-                            }
-                            // 轮询
-                            else {
-                                LogUtil.log("VideoKernelApiHandler => startCheckBufferingTimeout => loop next, cast = " + cast);
-                                Message message = Message.obtain();
-                                message.what = 10003;
-                                message.obj = start;
-                                sendMessageDelayed(message, 1000);
-                            }
-                        } catch (Exception e) {
-                            LogUtil.log("VideoKernelApiHandler => startCheckBufferingTimeout => " + e.getMessage());
-                            stopCheckBufferingTimeout();
-                        }
-                    }
-                };
-                mHandlerBufferingTimeout.put(this, handler);
-            }
-            handler.removeCallbacksAndMessages(null);
+            Handler handler = mHandler.get(this);
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            LogUtil.log("VideoKernelApiHandler => sendMessageCheckPreparedPlaying =>");
             Message message = Message.obtain();
-            message.what = 10003;
-            message.obj = System.currentTimeMillis();
+            message.what = WHAT_CheckPreparedPlaying;
+            message.arg1 = kernelType;
             handler.sendMessageDelayed(message, 1000);
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHandler => startCheckBufferingTimeout => " + e.getMessage());
-            stopCheckBufferingTimeout();
+            LogUtil.log("VideoKernelApiHandler => sendMessageCheckPreparedPlaying => Exception " + e.getMessage());
         }
     }
 
-    default void stopCheckBufferingTimeout() {
+    default void sendMessageProgressUpdate(@PlayerType.KernelType.Value int kernelType) {
         try {
-            Handler handler = mHandlerBufferingTimeout.get(this);
+            Handler handler = mHandler.get(this);
             if (null == handler)
                 throw new Exception("warning: handler null");
-            handler.removeCallbacksAndMessages(null);
-            mHandlerBufferingTimeout.remove(this);
-            LogUtil.log("VideoKernelApiHandler => stopCheckBufferingTimeout => stop mHandlerBufferingTimeout");
+            LogUtil.log("VideoKernelApiHandler => sendMessageProgressUpdate =>");
+            Message message = Message.obtain();
+            message.what = WHAT_ProgressUpdate;
+            message.arg1 = kernelType;
+            handler.sendMessageDelayed(message, 1000);
         } catch (Exception e) {
-            LogUtil.log("VideoKernelApiHandler => stopCheckBufferingTimeout => " + e.getMessage());
+            LogUtil.log("VideoKernelApiHandler => sendMessageProgressUpdate => Exception " + e.getMessage());
+        }
+    }
+
+    default void removeMessagesProgressUpdate() {
+        try {
+            Handler handler = mHandler.get(this);
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            LogUtil.log("VideoKernelApiHandler => removeMessagesProgressUpdate =>");
+            handler.removeMessages(WHAT_ProgressUpdate);
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiHandler => removeMessagesProgressUpdate => Exception " + e.getMessage());
+        }
+    }
+
+    default void sendMessageBufferingTimeout(@PlayerType.KernelType.Value int kernelType, boolean bufferingTimeoutRetry, long timeMillis, long timeout) {
+        try {
+            Handler handler = mHandler.get(this);
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            LogUtil.log("VideoKernelApiHandler => sendMessageBufferingTimeout =>");
+            Message message = Message.obtain();
+            message.what = WHAT_BufferingTimeout;
+            message.arg1 = kernelType;
+            message.arg2 = bufferingTimeoutRetry ? 1 : 0;
+            message.obj = new long[]{timeMillis, timeMillis};
+            handler.sendMessageDelayed(message, 1000);
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiHandler => sendMessageBufferingTimeout => Exception " + e.getMessage());
+        }
+    }
+
+    default void removeMessagesBufferingTimeout() {
+        try {
+            Handler handler = mHandler.get(this);
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            LogUtil.log("VideoKernelApiHandler => removeMessagesBufferingTimeout =>");
+            handler.removeMessages(WHAT_BufferingTimeout);
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiHandler => removeMessagesBufferingTimeout => Exception " + e.getMessage());
         }
     }
 }

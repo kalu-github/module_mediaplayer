@@ -19,6 +19,7 @@ import lib.kalu.vlc.widget.VlcPlayer;
 
 public final class VideoVlcPlayer extends VideoBasePlayer {
 
+    private boolean isBuffering = false;
     private lib.kalu.vlc.widget.VlcPlayer mVlcPlayer;
 
     @Override
@@ -133,6 +134,11 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
         } catch (Exception e) {
             LogUtil.log("VideoVlcPlayer => release => " + e.getMessage());
         }
+    }
+
+    @Override
+    public boolean isBuffering() {
+        return isBuffering;
     }
 
     /**

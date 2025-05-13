@@ -8,7 +8,7 @@ import lib.kalu.mediaplayer.type.PlayerType;
 
 public interface VideoKernelApiEvent {
 
-    default void onUpdateProgress(long position, long duration) {
+    default void onUpdateProgress() {
     }
 
     default void onUpdateSubtitle(int kernel, String language, CharSequence result) {

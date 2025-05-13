@@ -50,7 +50,7 @@ public class TestDialog extends DialogFragment {
             } else {
                 list = playerLayout.getTrackInfoSubtitle();
             }
-            // LogUtil.log("showTrackInfo -> type = " + type + ", trackInfo = " + trackInfo);
+             LogUtil.log("TestDialog -> showTrackInfo -> type = " + type + ", trackInfo = " + list);
 
             for (TrackArgs track : list) {
                 String curName;

@@ -4,7 +4,8 @@
         <item>dash_mpd</item>
         <item>hls_m3u8_mixed</item>
         <item>hls_m3u8_mixed</item>
-        <item>hls_m3u8_extra_subtitle</item>
+        <item>hls_m3u8_extra</item>
+        <item>hls_m3u8</item>
         <item>mp4</item>
         <item>m3u8</item>
         <item>rtsp</item>
@@ -21,6 +22,7 @@
         <item>https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8</item>
         <item>https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8</item>
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8</item>
+        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8</item>
         <item>http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4</item>
         <item>https://test-1347269025.cos.sa-saopaulo.myqcloud.com/media/movie/foreiowiw/playlist.m3u8</item>
         <item>rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4</item>
@@ -32,14 +34,21 @@
         <item>https://aliyuncdnsaascloud.xjhktv.com/video/A%20Lin%2B%E5%80%AA%E5%AD%90%E5%86%88-%E4%B8%8D%E5%B1%91%E5%AE%8C%E7%BE%8E%5B%E5%9B%BD%5D%5B1080P%5D.mp4</item>
     </string-array>
 
+    <string-array name="hls_extra_video_urls">
+        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8</item>
+        <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/1080p/index.m3u8</item>
+    </string-array>
 
-    <string-array name="subtitles_urls">
+    <string-array name="hls_extra_audio_urls">
+    </string-array>
+
+    <string-array name="hls_extra_subtitle_urls">
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/English.vtt</item>
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Spanish.vtt</item>
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt</item>
     </string-array>
 
-    <string-array name="subtitles_launcher">
+    <string-array name="hls_extra_subtitle_languages">
         <item>en</item>
         <item>es</item>
         <item>pt</item>

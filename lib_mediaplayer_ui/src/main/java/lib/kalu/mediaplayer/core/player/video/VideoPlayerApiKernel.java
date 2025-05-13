@@ -191,7 +191,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
     default void stop(boolean callEvent, boolean clearTag) {
         setScreenKeep(false);
-        stopRenderUpdateProgress();
         stopKernel(callEvent, clearTag);
     }
 
@@ -336,8 +335,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            // 心跳
-            startRenderUpdateProgress();
+            // 定时器
+            kernel.createTimer();
             // 播放
             Context context = getBaseContext();
             kernel.initDecoder(context, args);
@@ -358,6 +357,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             }
             // 执行
             kernel.stop();
+            // 定时器
+            kernel.releaseTimer();
             // 数据
             if (clearTag) {
                 setTags(null);
@@ -383,8 +384,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: playing false");
             // 埋点
             onBuriedPause();
-            // 心跳
-            stopRenderUpdateProgress();
             // 执行
             kernel.pause();
             if (!callEvent)
@@ -408,8 +407,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 throw new Exception("warning: playing true");
             // 埋点
             onBuriedResume();
-            // 心跳
-            startRenderUpdateProgress();
             // 执行
             kernel.start();
             setScreenKeep(true);
@@ -462,14 +459,15 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         try {
             VideoKernelApi videoKernel = getVideoKernel();
             if (null == videoKernel)
-                throw new Exception("");
+                throw new Exception("warning: videoKernel null");
             videoKernel.setPlayerApi((VideoPlayerApi) this);
             videoKernel.setKernelApi(new VideoKernelApiEvent() {
 
                 @Override
-                public void onUpdateProgress(long position, long duration) {
-
+                public void onUpdateProgress() {
                     try {
+                        long position = getPosition();
+                        long duration = getDuration();
                         long trySeeDuration = getTrySeeDuration();
                         callProgress(trySeeDuration, position, duration);
 
@@ -501,20 +499,37 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     callEvent(event);
 
                     switch (event) {
+                        //
+                        case PlayerType.EventType.INIT_READY:
+                            long connectTimeout = args.getConnectTimout();
+                            @PlayerType.KernelType.Value
+                            int kernelType = args.getKernelType();
+                            long timeMillis = System.currentTimeMillis();
+                            videoKernel.sendMessageConnectTimeout(kernelType, timeMillis, connectTimeout);
+                            break;
                         // 缓冲开始
                         case PlayerType.EventType.BUFFERING_START:
                             // 埋点
                             onBuriedBufferingStart();
+                            //
+                            boolean bufferingTimeoutRetry = args.isBufferingTimeoutRetry();
+                            long connectTimout = args.getConnectTimout();
+                            long timeMillis1 = System.currentTimeMillis();
+                            videoKernel.sendMessageBufferingTimeout(kernel, bufferingTimeoutRetry, timeMillis1, connectTimout);
                             break;
                         // 缓冲结束
                         case PlayerType.EventType.BUFFERING_STOP:
                             // 埋点
                             onBuriedBufferingStop();
+                            //
+                            videoKernel.removeMessagesBufferingTimeout();
                             break;
                         // 视频首帧
                         case PlayerType.EventType.VIDEO_RENDERING_START:
                             // 埋点
                             onBuriedVideoRenderingStart();
+                            //
+                            videoKernel.removeMessagesConnectTimeout();
                             break;
                         // 播放开始-默认
                         case PlayerType.EventType.START:
@@ -524,6 +539,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             initRenderView();
 //                          // 检查View是否可见
                             checkVideoVisibility();
+                            //
+                            videoKernel.sendMessageProgressUpdate(kernel);
                             break;
                         // 快进
                         case PlayerType.EventType.SEEK_START_FORWARD:
@@ -546,6 +563,18 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             onBuriedError(event);
                             // 执行
                             setScreenKeep(false);
+                            // 停止轮训
+                            videoKernel.removeMessagesProgressUpdate();
+                            break;
+                        //
+                        case PlayerType.EventType.PAUSE:
+                            // 停止轮训
+                            videoKernel.removeMessagesProgressUpdate();
+                            break;
+                        //
+                        case PlayerType.EventType.RESUME:
+                            // 停止轮训
+                            videoKernel.sendMessageProgressUpdate(kernel);
                             break;
                         // 播放结束
                         case PlayerType.EventType.COMPLETE:
@@ -598,10 +627,11 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //            if (null == kernel)
 //                throw new Exception("warning: kernel null");
 //            return kernel.toggleTrackLanguageSubtitle(language);
-////            releaseRender();
-////            StartArgs startArgs = new StartArgs.Builder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
-////            checkRenderNull(startArgs, true);
-////            attachRenderKernel();
+
+    /// /            releaseRender();
+    /// /            StartArgs startArgs = new StartArgs.Builder().setRenderType(PlayerType.RenderType.SURFACE_VIEW).build();
+    /// /            checkRenderNull(startArgs, true);
+    /// /            attachRenderKernel();
 //        } catch (Exception e) {
 //            LogUtil.log("VideoPlayerApiKernel => toggleTrackLanguageSubtitle => " + e.getMessage());
 //            return false;
@@ -655,7 +685,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //            return false;
 //        }
 //    }
-
     default boolean toggleTrack(TrackArgs trackArgs) {
         try {
             VideoKernelApi kernel = getVideoKernel();

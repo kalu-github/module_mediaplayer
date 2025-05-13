@@ -80,34 +80,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
         try {
             if (null == eventApi)
                 throw new Exception("eventApi warning: null");
-//            boolean playing = isPlaying();
-//            if (!playing)
-//                throw new Exception("playing warning: false");
-            long position = getPosition();
-            if (position < 0)
-                position = 0;
-            long duration = getDuration();
-            if (duration < 0)
-                duration = 0;
-            eventApi.onUpdateProgress(position, duration);
-        } catch (Exception e) {
-            LogUtil.log("VideoBasePlayer => onUpdateProgress => " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void onUpdateProgress(long position, long duration) {
-        try {
-            if (null == eventApi)
-                throw new Exception("eventApi warning: null");
-//            boolean playing = isPlaying();
-//            if (!playing)
-//                throw new Exception("playing warning: false");
-            if (position < 0)
-                position = 0;
-            if (duration < 0)
-                duration = 0;
-            eventApi.onUpdateProgress(position, duration);
+            eventApi.onUpdateProgress();
         } catch (Exception e) {
             LogUtil.log("VideoBasePlayer => onUpdateProgress => " + e.getMessage());
         }

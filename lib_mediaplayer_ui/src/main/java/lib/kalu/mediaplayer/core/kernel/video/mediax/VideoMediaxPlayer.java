@@ -66,9 +66,9 @@ import lib.kalu.mediaplayer.util.LogUtil;
 @UnstableApi
 public final class VideoMediaxPlayer extends VideoBasePlayer {
 
+    private boolean isBuffering = false;
     private boolean mPlayWhenReadySeeking = false;
     private boolean mSeeking = false;
-    private boolean mBuffering = false;
 
     private ExoPlayer mExoPlayer;
 
@@ -123,12 +123,15 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 配置带宽测量器
                     .setBandwidthMeter(new DefaultBandwidthMeter.Builder(context)
                             // 初始带宽估算为5Mbps（5,000,000 bps）
-//                            .setInitialBitrateEstimate(5_000_000)
+                            .setInitialBitrateEstimate(5_000_000)
                             .build())
                     // 缓冲缓存
                     .setLoadControl(new DefaultLoadControl.Builder()
-                            // 低带宽时最小缓冲10秒｜ 高带宽时最大缓冲30秒
-//                            .setBufferDurationsMs(50000, 50000, 2500, 2500)
+                            // minBufferMs 最小缓冲时长的参数，单位为毫秒
+                            // maxBufferMs 限制最大缓冲时长的参数，单位是毫秒
+                            // bufferForPlaybackMs 如果设置 bufferForPlaybackMs 为 5000，那么播放器会在开始播放前先缓冲 5 秒钟的媒体数据
+                            // bufferForPlaybackAfterRebufferMs 用于指定在播放过程中出现重新缓冲（Rebuffer）后，为了保证后续播放流畅，需要再次缓冲的时长，单位同样是毫秒
+                            .setBufferDurationsMs(10_0000, 10_0000, 5000, 5000)
                             .build())
                     // 自适应码率
                     .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context)
@@ -479,6 +482,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
         }
     }
 
+    @Override
+    public boolean isBuffering() {
+        return isBuffering;
+    }
+
     /**
      * 播放
      */
@@ -815,9 +823,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         throw new Exception("warning: isPrepared false");
 
                     // buffering
-                    if (mBuffering) {
+                    if (isBuffering) {
                         LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_READY] -> buffering");
-                        mBuffering = false;
+                        isBuffering = false;
                         onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_STOP);
                     }
                     // seeking
@@ -875,7 +883,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 try {
                     if (!isPrepared())
                         throw new Exception("mPrepared warning: false");
-                    mBuffering = true;
+                    isBuffering = true;
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_START);
                 } catch (Exception e) {
                     LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_BUFFERING] -> Exception " + state);

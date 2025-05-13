@@ -167,21 +167,21 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
 //        }
 //    }
 
-    default void stopRenderUpdateProgress() {
-        try {
-            VideoRenderApi videoRender = getVideoRender();
-            videoRender.stopUpdateProgress();
-        } catch (Exception e) {
-        }
-    }
-
-    default void startRenderUpdateProgress() {
-        try {
-            VideoRenderApi videoRender = getVideoRender();
-            videoRender.startUpdateProgress();
-        } catch (Exception e) {
-        }
-    }
+//    default void stopRenderUpdateProgress() {
+//        try {
+//            VideoRenderApi videoRender = getVideoRender();
+//            videoRender.stopUpdateProgress();
+//        } catch (Exception e) {
+//        }
+//    }
+//
+//    default void startRenderUpdateProgress() {
+//        try {
+//            VideoRenderApi videoRender = getVideoRender();
+//            videoRender.startUpdateProgress();
+//        } catch (Exception e) {
+//        }
+//    }
 
     default void releaseRender() {
         try {

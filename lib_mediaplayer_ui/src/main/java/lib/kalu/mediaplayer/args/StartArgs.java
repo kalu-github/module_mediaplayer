@@ -217,6 +217,13 @@ public class StartArgs implements Serializable {
         return extraTrackAudio;
     }
 
+    // 外挂视频轨道
+    private List<TrackArgs> extraTrackVideo;
+
+    public List<TrackArgs> getExtraTrackVideo() {
+        return extraTrackVideo;
+    }
+
     // 透传数据
     private JSONObject extraData;
 
@@ -255,6 +262,7 @@ public class StartArgs implements Serializable {
                 ", rotation=" + rotation +
                 ", extraTrackSubtitle=" + extraTrackSubtitle +
                 ", extraTrackAudio=" + extraTrackAudio +
+                ", extraTrackVideo=" + extraTrackVideo +
                 ", extraData=" + extraData +
                 '}';
     }
@@ -288,6 +296,7 @@ public class StartArgs implements Serializable {
         this.rotation = builder.rotation;
         this.extraTrackSubtitle = builder.extraTrackSubtitle;
         this.extraTrackAudio = builder.extraTrackAudio;
+        this.extraTrackVideo = builder.extraTrackVideo;
         this.extraData = builder.extraData;
     }
 
@@ -321,6 +330,7 @@ public class StartArgs implements Serializable {
         builder.rotation = rotation;
         builder.extraTrackSubtitle = extraTrackSubtitle;
         builder.extraTrackAudio = extraTrackAudio;
+        builder.extraTrackVideo = extraTrackVideo;
         builder.extraData = extraData;
         return builder;
     }
@@ -489,6 +499,14 @@ public class StartArgs implements Serializable {
 
         public Builder setExtraTrackAudio(List<TrackArgs> v) {
             this.extraTrackAudio = v;
+            return this;
+        }
+
+        // 外挂视频轨道
+        private List<TrackArgs> extraTrackVideo;
+
+        public Builder setExtraTrackVideo(List<TrackArgs> v) {
+            this.extraTrackVideo = v;
             return this;
         }
 

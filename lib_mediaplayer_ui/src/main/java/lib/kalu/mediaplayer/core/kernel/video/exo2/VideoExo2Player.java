@@ -65,7 +65,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
     private boolean mPlayWhenReadySeeking = false;
     private boolean mSeeking = false;
-    private boolean mBuffering = false;
+    private boolean isBuffering = false;
     private ExoPlayer mExoPlayer;
 
     @Override
@@ -123,40 +123,43 @@ public final class VideoExo2Player extends VideoBasePlayer {
                             .build())
                     // 缓冲缓存
                     .setLoadControl(new DefaultLoadControl.Builder()
-                            // 低带宽时最小缓冲10秒｜ 高带宽时最大缓冲30秒
-                            .setBufferDurationsMs(50000, 50000, 2500, 2500)
+                            // minBufferMs 最小缓冲时长的参数，单位为毫秒
+                            // maxBufferMs 限制最大缓冲时长的参数，单位是毫秒
+                            // bufferForPlaybackMs 如果设置 bufferForPlaybackMs 为 5000，那么播放器会在开始播放前先缓冲 5 秒钟的媒体数据
+                            // bufferForPlaybackAfterRebufferMs 用于指定在播放过程中出现重新缓冲（Rebuffer）后，为了保证后续播放流畅，需要再次缓冲的时长，单位同样是毫秒
+                            .setBufferDurationsMs(60_000, 60_000, 5_000, 5_000)
                             .build())
                     // 自适应码率
                     .setTrackSelector(new DefaultTrackSelector(context, DefaultTrackSelector.Parameters.getDefaults(context)
                             .buildUpon()
-//                            // 主字幕轨道
-//                            .setPreferredTextRoleFlags(C.ROLE_FLAG_MAIN)
-//                            // 主音频轨道
-//                            .setPreferredAudioRoleFlags(C.ROLE_FLAG_MAIN)
-//                            // 主视频轨道
-//                            .setPreferredVideoRoleFlags(C.ROLE_FLAG_MAIN)
-//                            // 音频禁止混合 MIME 类型切换（如视频+音频单独切换）
-//                            .setAllowAudioMixedMimeTypeAdaptiveness(false)
-//                            // 视频禁止混合 MIME 类型切换（如视频+音频单独切换）
-//                            .setAllowVideoMixedMimeTypeAdaptiveness(true)
-//                            // 音频禁止非无缝切换
-//                            // .setAllowAudioNonSeamlessAdaptiveness(false)
-//                            // 视频禁止非无缝切换
-//                            .setAllowVideoNonSeamlessAdaptiveness(false)
-//                            // 音频混合声道数量的自适应性
-//                            .setAllowAudioMixedChannelCountAdaptiveness(true)
-//                            // 音频混合采样率自适应
-//                            .setAllowAudioMixedSampleRateAdaptiveness(true)
-//                            // 音频混合时解码器支持自适应
-//                            .setAllowAudioMixedDecoderSupportAdaptiveness(true)
-//                            // 音频混合时解码器支持自适应
-//                            .setAllowVideoMixedDecoderSupportAdaptiveness(true)
+                            // 主字幕轨道
+                            .setPreferredTextRoleFlags(C.ROLE_FLAG_MAIN)
+                            // 主音频轨道
+                            .setPreferredAudioRoleFlags(C.ROLE_FLAG_MAIN)
+                            // 主视频轨道
+                            .setPreferredVideoRoleFlags(C.ROLE_FLAG_MAIN)
+                            // 音频禁止混合 MIME 类型切换（如视频+音频单独切换）
+                            .setAllowAudioMixedMimeTypeAdaptiveness(true)
+                            // 视频禁止混合 MIME 类型切换（如视频+音频单独切换）
+                            .setAllowVideoMixedMimeTypeAdaptiveness(true)
+                            // 音频禁止非无缝切换
+                            // .setAllowAudioNonSeamlessAdaptiveness(false)
+                            // 视频禁止非无缝切换
+                            .setAllowVideoNonSeamlessAdaptiveness(true)
+                            // 音频混合声道数量的自适应性
+                            .setAllowAudioMixedChannelCountAdaptiveness(true)
+                            // 音频混合采样率自适应
+                            .setAllowAudioMixedSampleRateAdaptiveness(true)
+                            // 音频混合时解码器支持自适应
+                            .setAllowAudioMixedDecoderSupportAdaptiveness(true)
+                            // 音频混合时解码器支持自适应
+                            .setAllowVideoMixedDecoderSupportAdaptiveness(true)
                             .build(),
                             // 10000, 25000, 25000, 0.7F
                             new AdaptiveTrackSelection.Factory(
-                                    10000,// 至少 10 秒后才允许升码率
-                                    25000, // 最多 2.5 秒后允许降码率
-                                    25000, //
+                                    10_000,// 至少 10 秒后才允许升码率
+                                    25_000, // 最多 2.5 秒后允许降码率
+                                    25_000, //
                                     0.7F))); //
 
             int decoderType = args.getDecoderType();
@@ -513,6 +516,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
     }
 
+    @Override
+    public boolean isBuffering() {
+        return isBuffering;
+    }
+
     /**
      * 播放
      */
@@ -715,7 +723,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 mediaSources.add(source);
             }
 
-            // 外挂字幕
+            // 外挂字幕轨道
             List<TrackArgs> extraTrackSubtitle = args.getExtraTrackSubtitle();
             if (null != extraTrackSubtitle) {
                 for (TrackArgs track : extraTrackSubtitle) {
@@ -753,15 +761,30 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 }
             }
 
-            // 外挂音轨
+            // 外挂音频轨道
             List<TrackArgs> extraTrackAudio = args.getExtraTrackAudio();
             if (null != extraTrackAudio) {
                 for (TrackArgs track : extraTrackAudio) {
                     MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
                             .createMediaSource(new MediaItem.Builder()
                                     .setUri(track.getUrl())
-                                    .setMimeType(track.getMimeType())
-                                    .setMediaId(track.getLabel())
+//                                    .setMimeType(track.getMimeType())
+//                                    .setMediaId(track.getLabel())
+                                    .build());
+                    //
+                    mediaSources.add(source);
+                }
+            }
+
+            // 外挂视频轨道
+            List<TrackArgs> extraTrackVideo = args.getExtraTrackVideo();
+            if (null != extraTrackVideo) {
+                for (TrackArgs track : extraTrackVideo) {
+                    MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
+                            .createMediaSource(new MediaItem.Builder()
+                                    .setUri(track.getUrl())
+//                                    .setMimeType(track.getMimeType())
+//                                    .setMediaId(track.getLabel())
                                     .build());
                     //
                     mediaSources.add(source);
@@ -802,9 +825,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
                         throw new Exception("warning: isPrepared false");
 
                     // buffering
-                    if (mBuffering) {
+                    if (isBuffering) {
                         LogUtil.log("VideoExo2Player => onPlaybackStateChanged -> state[Player.STATE_READY] -> buffering");
-                        mBuffering = false;
+                        isBuffering = false;
                         onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.BUFFERING_STOP);
                     }
                     // seeking
@@ -862,7 +885,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 try {
                     if (!isPrepared())
                         throw new Exception("mPrepared warning: false");
-                    mBuffering = true;
+                    isBuffering = true;
                     onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.BUFFERING_START);
                 } catch (Exception e) {
                     LogUtil.log("VideoExo2Player => onPlaybackStateChanged -> state[Player.STATE_BUFFERING] -> Exception " + state);

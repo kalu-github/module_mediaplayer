@@ -48,7 +48,8 @@ public class MainActivity extends Activity {
                 // 2
                 StartArgs args = new StartArgs.Builder()
                         .setUrl(getUrl())
-                        .setExtraTrackSubtitle(getSubtitle())
+                        .setExtraTrackSubtitle(getExtraSubtitle())
+                        .setExtraTrackVideo(getExtraVideo())
                         .setTitle("测试视频")
                         .setLive(isLive())
                         .setLooping(isLooping())
@@ -97,56 +98,12 @@ public class MainActivity extends Activity {
             String[] urls = getResources().getStringArray(R.array.urls);
             if (names.length != urls.length)
                 throw new Exception();
-            ViewGroup viewGroup = findViewById(R.id.main_radio_group);
+            ViewGroup viewGroup = findViewById(R.id.main_urls);
             for (int i = 0; i < names.length; i++) {
                 LayoutInflater.from(this).inflate(R.layout.activity_main_radio_button, viewGroup);
                 RadioButton radioButton = (RadioButton) viewGroup.getChildAt(i);
                 radioButton.setText(names[i]);
                 radioButton.setTag(urls[i]);
-            }
-        } catch (Exception e) {
-        }
-
-        // subtitle
-        /**
-         *  2025-04-25 20:01:32.609 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  streamsList = [# com.yyt.zapptv.model.proto.Playback$StreamTrack@37d8a524
-         *     format: "hls"
-         *     label: "HD"
-         *     quality: "HD"
-         *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8", # com.yyt.zapptv.model.proto.Playback$StreamTrack@35014555
-         *     format: "hls"
-         *     label: "SD"
-         *     quality: "SD"
-         *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8", # com.yyt.zapptv.model.proto.Playback$StreamTrack@5f9f9c57
-         *     format: "hls"
-         *     is_login: true
-         *     label: "FULL HD"
-         *     quality: "FHD"
-         *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/1080p/index.m3u8"]
-         *     2025-04-25 20:01:32.612 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  subtitlesList = [# com.yyt.zapptv.model.proto.Playback$SubtitleTrack@b7ab61ea
-         *     format: "vtt"
-         *     label: "English"
-         *     language: "en"
-         *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/English.vtt", # com.yyt.zapptv.model.proto.Playback$SubtitleTrack@6d66d2c6
-         *     format: "vtt"
-         *     label: "Espa\303\261ol"
-         *     language: "es"
-         *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Spanish.vtt", # com.yyt.zapptv.model.proto.Playback$SubtitleTrack@925f4fa3
-         *     format: "vtt"
-         *     label: "Portugu\303\252s (Brasil)"
-         *     language: "pt"
-         *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt"]
-         *     2025-04-25 20:01:32.612 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  audiosList = []
-         */
-        try {
-            String[] subtitle_urls = getResources().getStringArray(R.array.subtitles_urls);
-            String[] subtitles_launcher = getResources().getStringArray(R.array.subtitles_launcher);
-            ViewGroup viewGroup = findViewById(R.id.main_subtitles);
-            for (int i = 0; i < 3; i++) {
-                LayoutInflater.from(this).inflate(R.layout.activity_main_check_box, viewGroup);
-                CheckBox checkBox  = (CheckBox) viewGroup.getChildAt(i);
-                checkBox.setTag(subtitle_urls[i]);
-                checkBox.setText(subtitles_launcher[i]);
             }
         } catch (Exception e) {
         }
@@ -210,27 +167,95 @@ public class MainActivity extends Activity {
     }
 
 
-    private List<TrackArgs> getSubtitle() {
-        ArrayList<TrackArgs> list = new ArrayList<>();
+    private List<TrackArgs> getExtraSubtitle() {
+        /**
+         *  2025-04-25 20:01:32.609 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  streamsList = [# com.yyt.zapptv.model.proto.Playback$StreamTrack@37d8a524
+         *     format: "hls"
+         *     label: "HD"
+         *     quality: "HD"
+         *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8", # com.yyt.zapptv.model.proto.Playback$StreamTrack@35014555
+         *     format: "hls"
+         *     label: "SD"
+         *     quality: "SD"
+         *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8", # com.yyt.zapptv.model.proto.Playback$StreamTrack@5f9f9c57
+         *     format: "hls"
+         *     is_login: true
+         *     label: "FULL HD"
+         *     quality: "FHD"
+         *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/1080p/index.m3u8"]
+         *     2025-04-25 20:01:32.612 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  subtitlesList = [# com.yyt.zapptv.model.proto.Playback$SubtitleTrack@b7ab61ea
+         *     format: "vtt"
+         *     label: "English"
+         *     language: "en"
+         *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/English.vtt", # com.yyt.zapptv.model.proto.Playback$SubtitleTrack@6d66d2c6
+         *     format: "vtt"
+         *     label: "Espa\303\261ol"
+         *     language: "es"
+         *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Spanish.vtt", # com.yyt.zapptv.model.proto.Playback$SubtitleTrack@925f4fa3
+         *     format: "vtt"
+         *     label: "Portugu\303\252s (Brasil)"
+         *     language: "pt"
+         *     url: "https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/subtitles/Portuguese.vtt"]
+         *     2025-04-25 20:01:32.612 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  audiosList = []
+         */
 
-        //
-        ViewGroup viewGroup = findViewById(R.id.main_subtitles);
-        int childCount = viewGroup.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            CheckBox checkBox = (CheckBox) viewGroup.getChildAt(i);
-            boolean checked = checkBox.isChecked();
-            if (checked) {
-                TrackArgs subtitleTrack = new TrackArgs();
-                subtitleTrack.setRoleFlags((int) System.nanoTime());
-                subtitleTrack.setLanguage(checkBox.getText().toString());
-                subtitleTrack.setUrl((String) checkBox.getTag());
-                subtitleTrack.setMimeType(PlayerType.TrackType.TEXT_VTT);
-                //
-                list.add(subtitleTrack);
+
+        try {
+            RadioGroup radioGroup = findViewById(R.id.main_urls);
+            int childCount = radioGroup.getChildCount();
+            for (int n = 0; n < childCount; n++) {
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(n);
+                boolean checked = radioButton.isChecked();
+                if (checked && n == 3) {
+                    ArrayList<TrackArgs> list = new ArrayList<>();
+                    String[] urls = getResources().getStringArray(R.array.hls_extra_subtitle_urls);
+                    String[] languages = getResources().getStringArray(R.array.hls_extra_subtitle_languages);
+                    for (int i = 0; i < 3; i++) {
+                        TrackArgs subtitleTrack = new TrackArgs();
+                        subtitleTrack.setRoleFlags((int) System.nanoTime());
+                        subtitleTrack.setLanguage(languages[i]);
+                        subtitleTrack.setUrl(urls[i]);
+                        subtitleTrack.setMimeType(PlayerType.TrackType.TEXT_VTT);
+                        //
+                        list.add(subtitleTrack);
+                    }
+
+                    return list;
+                }
             }
+            throw new Exception();
+        } catch (Exception e) {
+            return null;
         }
+    }
 
-        return list;
+    private List<TrackArgs> getExtraVideo() {
+
+        try {
+            RadioGroup radioGroup = findViewById(R.id.main_urls);
+            int childCount = radioGroup.getChildCount();
+            for (int n = 0; n < childCount; n++) {
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(n);
+                boolean checked = radioButton.isChecked();
+                if (checked && n == 3) {
+                    ArrayList<TrackArgs> list = new ArrayList<>();
+                    String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
+                    for (int i = 0; i < 3; i++) {
+                        TrackArgs trackArgs = new TrackArgs();
+                        trackArgs.setRoleFlags((int) System.nanoTime());
+                        trackArgs.setUrl(urls[i]);
+//                        subtitleTrack.setMimeType(PlayerType.TrackType.TEXT_VTT);
+                        //
+                        list.add(trackArgs);
+                    }
+
+                    return list;
+                }
+            }
+            throw new Exception();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private String getUrl() {
@@ -240,7 +265,7 @@ public class MainActivity extends Activity {
         try {
 
             //
-            RadioGroup radioGroup = findViewById(R.id.main_radio_group);
+            RadioGroup radioGroup = findViewById(R.id.main_urls);
             int childCount = radioGroup.getChildCount();
             for (int i = 0; i < childCount; i++) {
                 RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);

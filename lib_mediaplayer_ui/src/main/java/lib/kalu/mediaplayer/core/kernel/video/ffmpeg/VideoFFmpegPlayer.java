@@ -26,6 +26,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
+    private boolean isBuffering = false;
     private boolean mPlayWhenReadySeeking = false;
     private FFmpegPlayer mFFmpegPlayer = null;
 
@@ -156,6 +157,11 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => start => " + e.getMessage());
         }
+    }
+
+    @Override
+    public boolean isBuffering() {
+        return isBuffering;
     }
 
     /**
@@ -322,6 +328,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             // 缓冲开始
             if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
                 if (isPrepared()) {
+                    isBuffering = true;
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_START);
                 } else {
                     LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what + ", mPrepared = false");
@@ -330,6 +337,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             // 缓冲结束
             else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
                 if (isPrepared()) {
+                    isBuffering = false;
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_STOP);
                 } else {
                     LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what + ", mPrepared = false");

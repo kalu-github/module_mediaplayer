@@ -30,8 +30,10 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
     void unRegistListener();
 
     default void clear() {
+        //
         clearArgs();
-        clearHandler();
+        //
+        // releaseTimer();
     }
 
     default void createDecoder(Context context, StartArgs args) {
@@ -60,31 +62,24 @@ public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBas
         }
         // 立即播放
         else {
-            initDecoder2(context);
-        }
-    }
-
-    default void initDecoder2(Context context) {
-        try {
-            StartArgs args = getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
-            // 1
-            long connectTimeout = args.getConnectTimout();
-            @PlayerType.KernelType.Value
-            int kernelType = args.getKernelType();
-            startCheckConnectTimeout(kernelType, connectTimeout);
             // 2
             initOptions(context, args);
             startDecoder(context, args);
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApi => initDecoder2 => Exception " + e.getMessage());
         }
     }
 
     @Override
-    default void callPlayWhenReadyDelayedTimeComplete(Context context) {
-        initDecoder2(context);
+    default void initDecoderPlayWhenReadyDelayed(Context context) {
+        try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            // 2
+            initOptions(context, args);
+            startDecoder(context, args);
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApi => callPlayWhenReadyDelayedTimeComplete => Exception " + e.getMessage());
+        }
     }
 
     /***********/

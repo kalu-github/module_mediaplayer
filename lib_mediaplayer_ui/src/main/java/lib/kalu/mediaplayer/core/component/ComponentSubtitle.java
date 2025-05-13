@@ -2,6 +2,12 @@ package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.style.CharacterStyle;
+import android.text.style.ForegroundColorSpan;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -46,12 +52,29 @@ public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
 
     @Override
     public void onUpdateSubtitle(int kernel, String language, CharSequence result) {
-        LogUtil.log("ComponentSubtitle -> onUpdateSubtitle -> kernel = " + kernel + ", language = " + language+", result = "+result);
-        TextView textView = findViewById(R.id.module_mediaplayer_component_subtitle_root);
-        if (null == result) {
+        LogUtil.log("ComponentSubtitle -> onUpdateSubtitle -> kernel = " + kernel + ", language = " + language + ", result = " + result);
+
+        try {
+            if (null == result)
+                throw new Exception("warning: result null");
+            int length = result.length();
+            if (length == 0)
+                throw new Exception("warning: result.length() == 0");
+            SpannableString spannableString = new SpannableString(result);
+            spannableString.setSpan(new CharacterStyle() {
+                @Override
+                public void updateDrawState(TextPaint textPaint) {
+                    textPaint.setStyle(Paint.Style.STROKE);
+                    textPaint.setStrokeWidth(1f);
+                    textPaint.setColor(Color.BLACK);
+                }
+            }, 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new ForegroundColorSpan(Color.WHITE), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            TextView textView = findViewById(R.id.module_mediaplayer_component_subtitle_root);
+            textView.setText(spannableString);
+        } catch (Exception e) {
+            TextView textView = findViewById(R.id.module_mediaplayer_component_subtitle_root);
             textView.setText("");
-        } else {
-            textView.setText(result);
         }
     }
 

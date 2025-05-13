@@ -22,7 +22,7 @@ import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
-public interface VideoRenderApi extends VideoRenderApiBase, VideoRenderApiHanlder {
+public interface VideoRenderApi extends VideoRenderApiBase {
 
     /********/
 

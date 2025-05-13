@@ -47,6 +47,8 @@ interface VideoKernelApiBase {
 
     void release();
 
+    boolean isBuffering();
+
     boolean isPlaying();
 
     long getPosition();
@@ -97,6 +99,6 @@ interface VideoKernelApiBase {
         return getTrackInfo(3);
     }
 
-    default void callPlayWhenReadyDelayedTimeComplete(Context context) {
+    default void initDecoderPlayWhenReadyDelayed(Context context) {
     }
 }

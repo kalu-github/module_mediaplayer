@@ -33,6 +33,7 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class VideoIjkPlayer extends VideoBasePlayer {
 
+    private boolean isBuffering = false;
     private boolean mPlayWhenReadySeeking = false;
     private IjkMediaPlayer mIjkPlayer = null;
 
@@ -434,6 +435,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
+    public boolean isBuffering() {
+        return isBuffering;
+    }
+
+    @Override
     public void start() {
         try {
             if (null == mIjkPlayer)
@@ -627,6 +633,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 // 缓冲开始
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
                     if (isPrepared()) {
+                        isBuffering = true;
                         onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_START);
                     } else {
                         LogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", mPrepared = false");
@@ -635,6 +642,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 // 缓冲结束
                 case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
                     if (isPrepared()) {
+                        isBuffering = false;
                         onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_STOP);
                     } else {
                         LogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", mPrepared = false");
