@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
 
     private long getSeek() {
         CheckBox checkBox = findViewById(R.id.main_seek_yes);
-        return checkBox.isChecked() ? 100 * 1000L : 0L;
+        return checkBox.isChecked() ? 300 * 1000L : 0L;
     }
 
     private int getPlayWhenReadyDelayedTime() {

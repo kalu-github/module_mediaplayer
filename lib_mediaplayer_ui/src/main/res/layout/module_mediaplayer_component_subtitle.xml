@@ -4,15 +4,25 @@
     android:layout_height="match_parent"
     android:focusable="false">
 
-    <TextView
+    <RelativeLayout
         android:id="@+id/module_mediaplayer_component_subtitle_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="48dp"
-        android:focusable="false"
-        android:gravity="center"
-        android:textSize="36sp" />
+        android:layout_marginBottom="48dp">
+
+
+        <lib.kalu.mediaplayer.widget.subtitle.StrokeTextView
+            android:id="@+id/module_mediaplayer_component_subtitle_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:gravity="center"
+            android:textColor="@color/module_mediaplayer_color_ffffff"
+            android:textSize="28sp" />
+
+
+    </RelativeLayout>
 
 </RelativeLayout>
