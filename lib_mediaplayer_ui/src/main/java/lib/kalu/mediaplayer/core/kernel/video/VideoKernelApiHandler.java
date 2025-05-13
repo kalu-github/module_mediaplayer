@@ -54,25 +54,25 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             }
             // 解决部分盒子不回调 info code=3
             else if (msg.what == WHAT_CheckPreparedPlaying) {
-                if (isPrepared())
-                    throw new Exception("warning: isPrepared true");
-                boolean playing = isPlaying();
-                if (playing) {
-                    setPrepared(true);
-                    onEvent(msg.arg1, PlayerType.EventType.PREPARE_COMPLETE);
-                    long seek = getPlayWhenReadySeekToPosition();
-                    if (seek <= 0) {
-                        onEvent(msg.arg1, PlayerType.EventType.START);
-                    } else {
-                        onEvent(msg.arg1, PlayerType.EventType.START);
-                        // 起播快进
-                        onEvent(msg.arg1, PlayerType.EventType.SEEK_START_FORWARD);
-                        //  setPlayWhenReadySeekFinish(true);
-                        seekTo(seek);
-                    }
-                } else {
-                    sendMessageCheckPreparedPlaying(msg.arg1);
-                }
+//                if (isPrepared())
+//                    throw new Exception("warning: isPrepared true");
+//                boolean playing = isPlaying();
+//                if (playing) {
+//                    setPrepared(true);
+//                    onEvent(msg.arg1, PlayerType.EventType.PREPARE_COMPLETE);
+//                    long seek = getPlayWhenReadySeekToPosition();
+//                    if (seek <= 0) {
+//                        onEvent(msg.arg1, PlayerType.EventType.START);
+//                    } else {
+//                        onEvent(msg.arg1, PlayerType.EventType.START);
+//                        // 起播快进
+//                        onEvent(msg.arg1, PlayerType.EventType.SEEK_START_FORWARD);
+//                        //  setPlayWhenReadySeekFinish(true);
+//                        seekTo(seek);
+//                    }
+//                } else {
+//                    sendMessageCheckPreparedPlaying(msg.arg1);
+//                }
             }
             // 更新进度条
             else if (msg.what == WHAT_ProgressUpdate) {

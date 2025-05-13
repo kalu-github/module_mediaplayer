@@ -397,7 +397,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.ERROR);
                 }
             } catch (Exception e) {
-                LogUtil.log("VideoAndroidPlayer => onError => " + e.getMessage());
+                LogUtil.log("VideoAndroidPlayer => onError => Exception " + e.getMessage());
             }
             return true;
         }
@@ -409,57 +409,61 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public boolean onInfo(MediaPlayer mp, int what, int extra) {
             LogUtil.log("VideoAndroidPlayer => onInfo => what = " + what + ", extra = " + extra);
-            switch (what) {
+
+            try {
                 // 缓冲开始
-                case MediaPlayer.MEDIA_INFO_BUFFERING_START:
-                    try {
-                        if (!isPrepared())
-                            throw new Exception("warning: isPrepared false");
-                        isBuffering = true;
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.BUFFERING_START);
-                    } catch (Exception e) {
-                        LogUtil.log("VideoAndroidPlayer => onInfo => Exception1 " + e.getMessage());
-                    }
-                    break;
+                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
+                    if (!isPrepared())
+                        throw new Exception("warning: isPrepared false");
+                    isBuffering = true;
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.BUFFERING_START);
+                }
                 // 缓冲结束
-                case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-                    try {
-                        if (!isPrepared())
-                            throw new Exception("warning: isPrepared false");
-                        isBuffering = false;
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.BUFFERING_STOP);
-                    } catch (Exception e) {
-                        LogUtil.log("VideoAndroidPlayer => onInfo => Exception2 " + e.getMessage());
-                    }
-                    break;
-//                // 开始播放
-                case 903:
-                case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
-                    try {
-                        if (isPrepared())
-                            throw new Exception("warning: mPrepared true");
-                        setPrepared(true);
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PREPARE_COMPLETE);
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_RENDERING_START);
-                        long seek = getPlayWhenReadySeekToPosition();
-                        if (seek <= 0L) {
+                else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
+                    if (!isPrepared())
+                        throw new Exception("warning: isPrepared false");
+                    isBuffering = false;
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.BUFFERING_STOP);
+                }
+                // 开始播放
+                else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START || what == 903) {
+                    if (isPrepared())
+                        throw new Exception("warning: mPrepared true");
+                    setPrepared(true);
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PREPARE_COMPLETE);
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.VIDEO_RENDERING_START);
+                    long seek = getPlayWhenReadySeekToPosition();
+                    LogUtil.log("VideoAndroidPlayer => onInfo => seek = " + seek);
+                    // 起播正常
+                    if (seek <= 0L) {
+                        boolean playWhenReady = isPlayWhenReady();
+                        LogUtil.log("VideoAndroidPlayer => onInfo => playWhenReady = " + playWhenReady);
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START);
+                        onEvent(PlayerType.KernelType.ANDROID, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                        if (playWhenReady) {
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START);
-                            boolean playWhenReady = isPlayWhenReady();
-                            onEvent(PlayerType.KernelType.ANDROID, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
-                            if (!playWhenReady) {
-                                pause();
-                                onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PAUSE);
-                            }
+//                            boolean playing = isPlaying();
+//                            if (playing)
+//                                throw new Exception("warning: isPlaying true");
+//                            start();
                         } else {
-                            // 起播快进
-                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.SEEK_START_REWIND);
-                            mPlayWhenReadySeeking = true;
-                            seekTo(seek);
+                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PAUSE);
+                            pause();
                         }
-                    } catch (Exception e) {
-                        LogUtil.log("VideoAndroidPlayer => onInfo => Exception3 " + e.getMessage());
                     }
-                    break;
+                    // 起播快进
+                    else {
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.SEEK_START_REWIND);
+                        mPlayWhenReadySeeking = true;
+                        seekTo(seek);
+                    }
+                }
+                // not find
+                else {
+                    throw new Exception("warning: not find");
+                }
+            } catch (Exception e) {
+                LogUtil.log("VideoAndroidPlayer => onInfo => Exception " + e.getMessage());
             }
             return true;
         }
@@ -469,8 +473,6 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
         @Override
         public void onSeekComplete(MediaPlayer mediaPlayer) {
             LogUtil.log("VideoAndroidPlayer => onSeekComplete =>");
-
-            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.SEEK_FINISH);
 
             try {
                 // 起播快进
@@ -491,7 +493,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                 }
                 // 正常快进&快退
                 else {
-
+                    onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.SEEK_FINISH);
                 }
             } catch (Exception e) {
                 LogUtil.log("VideoAndroidPlayer => onSeekComplete => Exception " + e.getMessage());
@@ -505,10 +507,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
             LogUtil.log("VideoAndroidPlayer => onPrepared =>");
 
             // 解决部分盒子不回调 info code=3
-            try {
-                sendMessageCheckPreparedPlaying(PlayerType.KernelType.ANDROID);
-            } catch (Exception e) {
-            }
+            // sendMessageCheckPreparedPlaying(PlayerType.KernelType.ANDROID);
 
             // 播放
             start();

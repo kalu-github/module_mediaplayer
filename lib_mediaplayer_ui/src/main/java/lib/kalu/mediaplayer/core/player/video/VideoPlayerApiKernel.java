@@ -500,7 +500,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                     switch (event) {
                         //
-                        case PlayerType.EventType.INIT_READY:
+                        case PlayerType.EventType.INIT:
                             long connectTimeout = args.getConnectTimout();
                             @PlayerType.KernelType.Value
                             int kernelType = args.getKernelType();
@@ -530,6 +530,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             onBuriedVideoRenderingStart();
                             //
                             videoKernel.removeMessagesConnectTimeout();
+                            //
+                            videoKernel.sendMessageProgressUpdate(kernel);
                             break;
                         // 播放开始-默认
                         case PlayerType.EventType.START:
@@ -539,8 +541,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             initRenderView();
 //                          // 检查View是否可见
                             checkVideoVisibility();
-                            //
-                            videoKernel.sendMessageProgressUpdate(kernel);
                             break;
                         // 快进
                         case PlayerType.EventType.SEEK_START_FORWARD:
