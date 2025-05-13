@@ -48,8 +48,8 @@ public class MainActivity extends Activity {
                 // 2
                 StartArgs args = new StartArgs.Builder()
                         .setUrl(getUrl())
-                        .setExtraTrackSubtitle(getExtraSubtitle())
-                        .setExtraTrackVideo(getExtraVideo())
+                        .setExtraTrackSubtitle(getExtra(0))
+                        .setExtraTrackVideo(getExtra(1))
                         .setTitle("测试视频")
                         .setLive(isLive())
                         .setLooping(isLooping())
@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
 
     private long getSeek() {
         CheckBox checkBox = findViewById(R.id.main_seek_yes);
-        return checkBox.isChecked() ? 10 * 1000L : 0L;
+        return checkBox.isChecked() ? 20 * 1000L : 0L;
     }
 
     private int getPlayWhenReadyDelayedTime() {
@@ -167,7 +167,7 @@ public class MainActivity extends Activity {
     }
 
 
-    private List<TrackArgs> getExtraSubtitle() {
+    private List<TrackArgs> getExtra(int type) {
         /**
          *  2025-04-25 20:01:32.609 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  streamsList = [# com.yyt.zapptv.model.proto.Playback$StreamTrack@37d8a524
          *     format: "hls"
@@ -206,7 +206,13 @@ public class MainActivity extends Activity {
             for (int n = 0; n < childCount; n++) {
                 RadioButton radioButton = (RadioButton) radioGroup.getChildAt(n);
                 boolean checked = radioButton.isChecked();
-                if (checked && n == 3) {
+                if (!checked)
+                    continue;
+                CharSequence text = radioButton.getText();
+                if (!"hls_m3u8_extra".equals(text))
+                    continue;
+
+                if (type == 0) {
                     ArrayList<TrackArgs> list = new ArrayList<>();
                     String[] urls = getResources().getStringArray(R.array.hls_extra_subtitle_urls);
                     String[] languages = getResources().getStringArray(R.array.hls_extra_subtitle_languages);
@@ -219,25 +225,8 @@ public class MainActivity extends Activity {
                         //
                         list.add(subtitleTrack);
                     }
-
                     return list;
-                }
-            }
-            throw new Exception();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private List<TrackArgs> getExtraVideo() {
-
-        try {
-            RadioGroup radioGroup = findViewById(R.id.main_urls);
-            int childCount = radioGroup.getChildCount();
-            for (int n = 0; n < childCount; n++) {
-                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(n);
-                boolean checked = radioButton.isChecked();
-                if (checked && n == 3) {
+                } else if (type == 1) {
                     ArrayList<TrackArgs> list = new ArrayList<>();
                     String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
                     for (int i = 0; i < 3; i++) {
