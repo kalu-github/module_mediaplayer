@@ -49,15 +49,10 @@ import com.google.android.exoplayer2.upstream.FileDataSource;
 import com.google.android.exoplayer2.upstream.cache.Cache;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSink;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
-import com.google.android.exoplayer2.upstream.cache.CacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.CacheKeyFactory;
 import com.google.android.exoplayer2.upstream.cache.CacheSpan;
-import com.google.android.exoplayer2.upstream.cache.CachedContent;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
-import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
-import com.google.android.exoplayer2.upstream.cache.SimpleCacheSpan;
-import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.video.VideoSize;
 import com.google.common.collect.ImmutableList;
@@ -715,34 +710,13 @@ public final class VideoExo2Player extends VideoBasePlayer {
                         //
                         new StandaloneDatabaseProvider(context)
                 ) {
-                    @Override
-                    public synchronized File startFile(String key, long position, long length) throws CacheException {
-//                        Assertions.checkState(!released);
-//                        checkInitialization();
-//
-//                        CachedContent cachedContent = contentIndex.get(key);
-//                        Assertions.checkNotNull(cachedContent);
-//                        Assertions.checkState(cachedContent.isFullyLocked(position, length));
-//                        if (!cacheDir.exists()) {
-//                            // The cache directory has been deleted from underneath us. Recreate it, and remove in-memory
-//                            // spans corresponding to cache files that no longer exist.
-//                            createCacheDirectories(cacheDir);
-//                            removeStaleSpans();
-//                        }
-//                        evictor.onStartFile(this, key, position, length);
-//                        // Randomly distribute files into subdirectories with a uniform distribution.
-//                        File cacheSubDir = new File(cacheDir, Integer.toString(random.nextInt(SUBDIRECTORY_COUNT)));
-//                        if (!cacheSubDir.exists()) {
-//                            createCacheDirectories(cacheSubDir);
-//                        }
-//                        long lastTouchTimestamp = System.currentTimeMillis();
-//                        return SimpleCacheSpan.getCacheFile(
-//                                cacheSubDir, cachedContent.id, position, lastTouchTimestamp);
-
-
-                        if (key.contains("/"))
-
-                    }
+//                    @Override
+//                    public synchronized File startFile(String s, long l, long l1) throws CacheException {
+//                        File sourceFile = super.startFile(s, l, l1);
+//                        File destFile = new File(sourceFile.getParent(), s);
+//                        sourceFile.renameTo(destFile);
+//                        return destFile;
+//                    }
                 };
 //                simpleCache.addListener(url, new Cache.Listener() {
 //                    @Override
@@ -786,7 +760,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                                     int i = subUrl.lastIndexOf("/");
                                     int hashCode = subUrl.substring(0, i).hashCode();
                                     LogUtil.log("VideoExo2Player => buildSource => buildCacheKey ts => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", hashCode = " + hashCode);
-                                    return "hls_playlist_" + hashCode + "/hls_segment#" + hashCode + "#" + subUrl.hashCode();
+                                    return "hls_segment#" + hashCode + "#" + subUrl.hashCode();
                                 } else {
                                     return url;
                                 }
