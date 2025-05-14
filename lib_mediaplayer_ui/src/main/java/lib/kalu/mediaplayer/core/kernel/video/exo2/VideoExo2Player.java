@@ -521,6 +521,12 @@ public final class VideoExo2Player extends VideoBasePlayer {
     @Override
     public void release() {
         try {
+            if (null != mSimpleCache) {
+                mSimpleCache.release();
+            }
+            if (null != mHlsManifest) {
+                mHlsManifest = null;
+            }
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
             mExoPlayer.setVideoSurface(null);
@@ -718,7 +724,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                                     int i = subUrl.lastIndexOf("/");
                                     String playlistName = subUrl.substring(0, i);
                                     int hashCode = playlistName.hashCode();
-                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey m3u8 => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", hashCode = " + hashCode + ", playlistName = " + playlistName);
+//                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey m3u8 => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", hashCode = " + hashCode + ", playlistName = " + playlistName);
                                     return "hls_playlist_" + hashCode;
                                 } else if (subUrl.endsWith(".ts")) {
                                     int i = subUrl.lastIndexOf("/");
@@ -726,21 +732,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
                                     int playlistCode = playlistName.hashCode();
                                     String segmentName = subUrl.substring(i + 1);
                                     int segmentCode = segmentName.hashCode();
-                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey ts => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", segmentCode = " + segmentCode + ", segmentName = " + segmentName);
+//                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey ts => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", segmentCode = " + segmentCode + ", segmentName = " + segmentName);
                                     return "hls_segment_" + playlistCode + "_" + segmentCode;
                                 } else {
                                     return url;
                                 }
-                            }
-                        })
-                        // 监听
-                        .setEventListener(new CacheDataSource.EventListener() {
-                            @Override
-                            public void onCachedBytesRead(long l, long l1) {
-                            }
-
-                            @Override
-                            public void onCacheIgnored(int i) {
                             }
                         });
             }
