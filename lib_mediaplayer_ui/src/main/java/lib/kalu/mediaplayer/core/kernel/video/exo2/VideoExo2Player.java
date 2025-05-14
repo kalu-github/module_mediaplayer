@@ -680,8 +680,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 }
 
                 SimpleCache simpleCache = new SimpleCache(dir,
-                        new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024)
-//                        new StandaloneDatabaseProvider(context)
+                        new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024),
+                        new StandaloneDatabaseProvider(context)
                 );
 
                 dataSource = new CacheDataSource.Factory()
@@ -784,7 +784,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 Object object = constructor.newInstance(dataSource);
                 LogUtil.log("VideoExo2Player => buildSource => hls");
 
-                MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                MediaSource source = ((MediaSource.Factory) object)
+                        .createMediaSource(new MediaItem.Builder()
                         .setUri(Uri.parse(url))
                         .build());
                 mediaSources.add(source);
