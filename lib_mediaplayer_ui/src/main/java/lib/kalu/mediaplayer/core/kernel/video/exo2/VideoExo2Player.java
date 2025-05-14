@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.os.Looper;
 import android.view.Surface;
 
-import androidx.media3.exoplayer.hls.playlist.DefaultHlsPlaylistTracker;
-
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -36,7 +34,6 @@ import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.hls.HlsManifest;
 import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist;
-import com.google.android.exoplayer2.source.hls.playlist.HlsMultivariantPlaylist;
 import com.google.android.exoplayer2.text.Cue;
 import com.google.android.exoplayer2.text.CueGroup;
 import com.google.android.exoplayer2.text.TextOutput;
@@ -51,10 +48,8 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.FileDataSource;
-import com.google.android.exoplayer2.upstream.cache.Cache;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSink;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
-import com.google.android.exoplayer2.upstream.cache.CacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.CacheKeyFactory;
 import com.google.android.exoplayer2.upstream.cache.CacheSpan;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
@@ -70,10 +65,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NavigableSet;
-import java.util.TreeSet;
 
+import lib.kalu.mediaplayer.args.HlsSpanInfo;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.TrackArgs;
+import lib.kalu.mediaplayer.args.TrackInfo;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -831,9 +826,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
 
             // 外挂字幕轨道
-            List<TrackArgs> extraTrackSubtitle = args.getExtraTrackSubtitle();
+            List<TrackInfo> extraTrackSubtitle = args.getExtraTrackSubtitle();
             if (null != extraTrackSubtitle) {
-                for (TrackArgs track : extraTrackSubtitle) {
+                for (TrackInfo track : extraTrackSubtitle) {
                     int roleFlags = track.getRoleFlags();
                     if (roleFlags == -1)
                         continue;
@@ -869,9 +864,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
 
             // 外挂音频轨道
-            List<TrackArgs> extraTrackAudio = args.getExtraTrackAudio();
+            List<TrackInfo> extraTrackAudio = args.getExtraTrackAudio();
             if (null != extraTrackAudio) {
-                for (TrackArgs track : extraTrackAudio) {
+                for (TrackInfo track : extraTrackAudio) {
                     MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
                             .createMediaSource(new MediaItem.Builder()
                                     .setUri(track.getUrl())
@@ -884,9 +879,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
 
             // 外挂视频轨道
-            List<TrackArgs> extraTrackVideo = args.getExtraTrackVideo();
+            List<TrackInfo> extraTrackVideo = args.getExtraTrackVideo();
             if (null != extraTrackVideo) {
-                for (TrackArgs track : extraTrackVideo) {
+                for (TrackInfo track : extraTrackVideo) {
                     MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
                             .createMediaSource(new MediaItem.Builder()
                                     .setUri(track.getUrl())
@@ -1261,14 +1256,14 @@ public final class VideoExo2Player extends VideoBasePlayer {
 //    }
 
     @Override
-    public boolean toggleTrack(TrackArgs trackArgs) {
+    public boolean toggleTrack(TrackInfo trackInfo) {
         try {
-            if (null == trackArgs)
+            if (null == trackInfo)
                 throw new Exception("error: trackArgs null");
-            int groupIndex = trackArgs.getGroupIndex();
+            int groupIndex = trackInfo.getGroupIndex();
             if (groupIndex == -1)
                 throw new Exception("error: groupIndex == -1");
-            int trackIndex = trackArgs.getTrackIndex();
+            int trackIndex = trackInfo.getTrackIndex();
             if (trackIndex == -1)
                 throw new Exception("error: trackIndex == -1");
             if (null == mExoPlayer)
@@ -1290,14 +1285,14 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
     }
 
-    public List<TrackArgs> getTrackInfo(int type) {
+    public List<TrackInfo> getTrackInfo(int type) {
 
         try {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
 
             //
-            LinkedList<TrackArgs> list = new LinkedList<>();
+            LinkedList<TrackInfo> list = new LinkedList<>();
 
             //
             Tracks tracks = mExoPlayer.getCurrentTracks();
@@ -1322,15 +1317,15 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     // 轨道是否被选中
                     boolean isTrackSelected = group.isTrackSelected(trackIndex);
 
-                    TrackArgs trackArgs = new TrackArgs();
+                    TrackInfo trackInfo = new TrackInfo();
 
                     // 视频轨道
                     if (type == 1 && trackType == C.TRACK_TYPE_VIDEO) {
 
 
-                        trackArgs.setBitrate(format.bitrate);
-                        trackArgs.setWidth(format.width);
-                        trackArgs.setHeight(format.height);
+                        trackInfo.setBitrate(format.bitrate);
+                        trackInfo.setWidth(format.width);
+                        trackInfo.setHeight(format.height);
 
 //                        object.put("frameRate", format.frameRate);
 //                        object.put("rotationDegrees", format.rotationDegrees);
@@ -1359,9 +1354,9 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     // 视频轨道
                     else if (type == -1 && trackType == C.TRACK_TYPE_VIDEO) {
 
-                        trackArgs.setBitrate(format.bitrate);
-                        trackArgs.setWidth(format.width);
-                        trackArgs.setHeight(format.height);
+                        trackInfo.setBitrate(format.bitrate);
+                        trackInfo.setWidth(format.width);
+                        trackInfo.setHeight(format.height);
 
 //                        object.put("frameRate", format.frameRate);
 //                        object.put("rotationDegrees", format.rotationDegrees);
@@ -1396,16 +1391,16 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     }
 
 
-                    trackArgs.setGroupCount(groupCount);
-                    trackArgs.setGroupIndex(groupIndex);
-                    trackArgs.setTrackCount(trackCount);
-                    trackArgs.setTrackIndex(trackIndex);
-                    trackArgs.setTrackType(trackType);
+                    trackInfo.setGroupCount(groupCount);
+                    trackInfo.setGroupIndex(groupIndex);
+                    trackInfo.setTrackCount(trackCount);
+                    trackInfo.setTrackIndex(trackIndex);
+                    trackInfo.setTrackType(trackType);
 
-                    trackArgs.setGroupAdaptiveSupported(isGroupAdaptiveSupported);
-                    trackArgs.setGroupSupported(isGroupSupported);
-                    trackArgs.setGroupSelected(isGroupSelected);
-                    trackArgs.setTrackSupported(isTrackSupported);
+                    trackInfo.setGroupAdaptiveSupported(isGroupAdaptiveSupported);
+                    trackInfo.setGroupSupported(isGroupSupported);
+                    trackInfo.setGroupSelected(isGroupSelected);
+                    trackInfo.setTrackSupported(isTrackSupported);
 
                     // 自适应码率
                     if (isGroupAdaptiveSupported && trackType == androidx.media3.common.C.TRACK_TYPE_VIDEO) {
@@ -1414,25 +1409,25 @@ public final class VideoExo2Player extends VideoBasePlayer {
                         int videoBitrate = getPlayerApi().getVideoRender().getVideoBitrate();
                         boolean selected = (videoWidth == format.width && videoHeight == format.height && videoBitrate == format.bitrate);
                         if (selected) {
-                            trackArgs.setTrackSelected(true);
+                            trackInfo.setTrackSelected(true);
                         } else {
-                            trackArgs.setTrackSelected(false);
+                            trackInfo.setTrackSelected(false);
                         }
                     } else {
-                        trackArgs.setTrackSelected(isTrackSelected);
+                        trackInfo.setTrackSelected(isTrackSelected);
                     }
 
 
-                    trackArgs.setId(format.id);
-                    trackArgs.setLabel(format.label);
+                    trackInfo.setId(format.id);
+                    trackInfo.setLabel(format.label);
 
 //                    object.put("labels", format.labels);
 
 
-                    trackArgs.setLanguage(format.language);
-                    trackArgs.setRoleFlags(format.roleFlags);
-                    trackArgs.setSelectionFlags(format.selectionFlags);
-                    trackArgs.setSampleMimeType(format.sampleMimeType);
+                    trackInfo.setLanguage(format.language);
+                    trackInfo.setRoleFlags(format.roleFlags);
+                    trackInfo.setSelectionFlags(format.selectionFlags);
+                    trackInfo.setSampleMimeType(format.sampleMimeType);
 //                    object.put("averageBitrate", format.averageBitrate);
 //                    object.put("peakBitrate", format.peakBitrate);
 //                    object.put("codecs", format.codecs);
@@ -1450,7 +1445,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     //   LogUtil.log("VideoExo2Player => getTrackInfo => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
 
                     //
-                    list.add(trackArgs);
+                    list.add(trackInfo);
                 }
             }
 
@@ -1466,37 +1461,53 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
     }
 
+
     @Override
-    public void testHls() {
+    public List<HlsSpanInfo> getBufferedHlsSpanInfo() {
         try {
+            if (null == mHlsManifest)
+                throw new Exception("warning: mHlsManifest null");
+            if (null == mSimpleCache)
+                throw new Exception("warning: mSimpleCache null");
+
+            //
+            ArrayList<HlsSpanInfo> list = null;
+            //
             HlsMediaPlaylist mediaPlaylist = mHlsManifest.mediaPlaylist;
             String url = mediaPlaylist.baseUri;
             int lastIndexOf = url.lastIndexOf("/");
             String baseUrl = url.substring(0, lastIndexOf);
-            LogUtil.log("VideoExo2Player => testHls => baseUrl = " + baseUrl + ", url = " + url);
-
             int playlistCode = baseUrl.hashCode();
-//                String key = "hls_playlist_" + hashCode;
-//                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(key);
-//                for (CacheSpan cacheSpan : cachedSpans) {
-//                    LogUtil.log("VideoExo2Player => onTimelineChanged => baseUrl = " + baseUrl + ", url = " + url + ", isCached = " + cacheSpan.isCached);
-//                }
-
-
+            //
             for (HlsMediaPlaylist.Segment segment : mediaPlaylist.segments) {
 
                 String segmentUrl = baseUrl + "/" + segment.url;
-                long relativeStartTimeUs = segment.relativeStartTimeUs;
-                long durationUs = segment.durationUs;
-
                 int segmentCode = segment.url.hashCode();
                 String key = "hls_segment_" + playlistCode + "_" + segmentCode;
                 NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(key);
-                for (CacheSpan cacheSpan : cachedSpans) {
-                    LogUtil.log("VideoExo2Player => testHls => relativeStartTimeUs = " + relativeStartTimeUs + ", durationUs = " + durationUs + ", segmentUrl = " + segmentUrl + ", isCached = " + cacheSpan.isCached + ", cachedSpans = " + cachedSpans.size() + ", key = " + key);
+                for (CacheSpan span : cachedSpans) {
+                    if (null == span)
+                        continue;
+                    if (!span.isCached)
+                        continue;
+                    HlsSpanInfo hlsSpanInfo = new HlsSpanInfo();
+                    hlsSpanInfo.setPath(span.file.getAbsolutePath());
+                    hlsSpanInfo.setUrl(segmentUrl);
+                    hlsSpanInfo.setRelativeStartTimeUs(segment.relativeStartTimeUs);
+                    hlsSpanInfo.setDurationUs(segment.durationUs);
+                    //
+                    if (null == list) {
+                        list = new ArrayList<>(0);
+                    }
+                    list.add(hlsSpanInfo);
                 }
             }
+            if (null == list)
+                throw new Exception("warning: list null");
+            return list;
         } catch (Exception e) {
+            LogUtil.log("VideoExo2Player => getBufferedHlsSpanInfo => Exception " + e.getMessage());
+            return null;
         }
     }
 }

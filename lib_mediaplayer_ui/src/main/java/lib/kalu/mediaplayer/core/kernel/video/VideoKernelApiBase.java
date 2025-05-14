@@ -2,11 +2,9 @@ package lib.kalu.mediaplayer.core.kernel.video;
 
 import android.content.Context;
 
-import org.json.JSONArray;
-
 import java.util.List;
 
-import lib.kalu.mediaplayer.args.TrackArgs;
+import lib.kalu.mediaplayer.args.TrackInfo;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
 import lib.kalu.mediaplayer.type.PlayerType;
 
@@ -75,27 +73,27 @@ interface VideoKernelApiBase {
 //        return false;
 //    }
 
-    default boolean toggleTrack(TrackArgs trackArgs) {
+    default boolean toggleTrack(TrackInfo trackInfo) {
         return false;
     }
 
-    default List<TrackArgs> getTrackInfo(int type) {
+    default List<TrackInfo> getTrackInfo(int type) {
         return null;
     }
 
-    default List<TrackArgs> getTrackInfoAll() {
+    default List<TrackInfo> getTrackInfoAll() {
         return getTrackInfo(-1);
     }
 
-    default List<TrackArgs> getTrackInfoVideo() {
+    default List<TrackInfo> getTrackInfoVideo() {
         return getTrackInfo(1);
     }
 
-    default List<TrackArgs> getTrackInfoAudio() {
+    default List<TrackInfo> getTrackInfoAudio() {
         return getTrackInfo(2);
     }
 
-    default List<TrackArgs> getTrackInfoSubtitle() {
+    default List<TrackInfo> getTrackInfoSubtitle() {
         return getTrackInfo(3);
     }
 

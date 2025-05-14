@@ -204,23 +204,23 @@ public class StartArgs implements Serializable {
     }
 
     // 外挂字幕
-    private List<TrackArgs> extraTrackSubtitle;
+    private List<TrackInfo> extraTrackSubtitle;
 
-    public List<TrackArgs> getExtraTrackSubtitle() {
+    public List<TrackInfo> getExtraTrackSubtitle() {
         return extraTrackSubtitle;
     }
 
     // 外挂音轨
-    private List<TrackArgs> extraTrackAudio;
+    private List<TrackInfo> extraTrackAudio;
 
-    public List<TrackArgs> getExtraTrackAudio() {
+    public List<TrackInfo> getExtraTrackAudio() {
         return extraTrackAudio;
     }
 
     // 外挂视频轨道
-    private List<TrackArgs> extraTrackVideo;
+    private List<TrackInfo> extraTrackVideo;
 
-    public List<TrackArgs> getExtraTrackVideo() {
+    public List<TrackInfo> getExtraTrackVideo() {
         return extraTrackVideo;
     }
 
@@ -487,25 +487,25 @@ public class StartArgs implements Serializable {
 
 
         // 外挂字幕
-        private List<TrackArgs> extraTrackSubtitle;
+        private List<TrackInfo> extraTrackSubtitle;
 
-        public Builder setExtraTrackSubtitle(List<TrackArgs> v) {
+        public Builder setExtraTrackSubtitle(List<TrackInfo> v) {
             this.extraTrackSubtitle = v;
             return this;
         }
 
         // 外挂音轨
-        private List<TrackArgs> extraTrackAudio;
+        private List<TrackInfo> extraTrackAudio;
 
-        public Builder setExtraTrackAudio(List<TrackArgs> v) {
+        public Builder setExtraTrackAudio(List<TrackInfo> v) {
             this.extraTrackAudio = v;
             return this;
         }
 
         // 外挂视频轨道
-        private List<TrackArgs> extraTrackVideo;
+        private List<TrackInfo> extraTrackVideo;
 
-        public Builder setExtraTrackVideo(List<TrackArgs> v) {
+        public Builder setExtraTrackVideo(List<TrackInfo> v) {
             this.extraTrackVideo = v;
             return this;
         }

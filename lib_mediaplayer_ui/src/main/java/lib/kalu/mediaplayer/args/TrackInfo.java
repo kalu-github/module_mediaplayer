@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import lib.kalu.mediaplayer.type.PlayerType;
 
-public final class TrackArgs implements Serializable {
+public final class TrackInfo implements Serializable {
 
     @PlayerType.TrackType.Value
     private String mimeType;

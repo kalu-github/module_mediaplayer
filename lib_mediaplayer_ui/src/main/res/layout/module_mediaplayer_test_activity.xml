@@ -37,4 +37,13 @@
         android:layout_toRightOf="@id/module_mediaplayer_track_audio"
         android:text="字幕轨道" />
 
+
+    <Button
+        android:id="@+id/module_mediaplayer_hls_span"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/module_mediaplayer_track_text"
+        android:layout_toRightOf="@id/module_mediaplayer_track_text"
+        android:text="缓存信息" />
+
 </RelativeLayout>

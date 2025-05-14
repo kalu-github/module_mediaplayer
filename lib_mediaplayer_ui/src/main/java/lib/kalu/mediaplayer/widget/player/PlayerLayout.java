@@ -11,13 +11,12 @@ import android.widget.RelativeLayout;
 import androidx.annotation.ColorInt;
 import androidx.annotation.RequiresApi;
 
-import org.json.JSONArray;
-
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.args.HlsSpanInfo;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.TrackArgs;
+import lib.kalu.mediaplayer.args.TrackInfo;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
@@ -685,19 +684,19 @@ public class PlayerLayout extends RelativeLayout {
 //        }
 //    }
 
-    public final boolean toggleTrack(TrackArgs trackArgs) {
+    public final boolean toggleTrack(TrackInfo trackInfo) {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.toggleTrack(trackArgs);
+            return playerView.toggleTrack(trackInfo);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => toggleTrack => " + e.getMessage());
             return false;
         }
     }
 
-    public final List<TrackArgs> getTrackInfo() {
+    public final List<TrackInfo> getTrackInfo() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -709,7 +708,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final List<TrackArgs> getTrackInfoVideo() {
+    public final List<TrackInfo> getTrackInfoVideo() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -721,7 +720,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final List<TrackArgs> getTrackInfoAudio() {
+    public final List<TrackInfo> getTrackInfoAudio() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -733,7 +732,7 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final List<TrackArgs> getTrackInfoSubtitle() {
+    public final List<TrackInfo> getTrackInfoSubtitle() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
@@ -741,6 +740,18 @@ public class PlayerLayout extends RelativeLayout {
             return playerView.getTrackInfoSubtitle();
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => getTrackInfoSubtitle => " + e.getMessage());
+            return null;
+        }
+    }
+
+    public final List<HlsSpanInfo> getBufferedHlsSpanInfo() {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.getBufferedHlsSpanInfo();
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => getBufferedHlsSpanInfo => " + e.getMessage());
             return null;
         }
     }

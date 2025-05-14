@@ -40,7 +40,7 @@
 -keep class lib.kalu.mediaplayer.args.PlayerArgs$Builder {
     public <methods>;
 }
--keep class lib.kalu.mediaplayer.args.TrackArgs {
+-keep class lib.kalu.mediaplayer.args.TrackInfo {
     public <methods>;
 }
 

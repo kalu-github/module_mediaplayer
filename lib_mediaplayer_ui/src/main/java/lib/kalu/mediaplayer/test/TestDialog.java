@@ -10,18 +10,10 @@ import android.widget.RadioGroup;
 
 import androidx.annotation.Nullable;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.args.TrackArgs;
+import lib.kalu.mediaplayer.args.TrackInfo;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.player.PlayerLayout;
 
@@ -42,7 +34,7 @@ public class TestDialog extends DialogFragment {
         try {
             int type = getArguments().getInt(BUNDLE_TYPE, 1);
             PlayerLayout playerLayout = getActivity().findViewById(R.id.module_mediaplayer_test_video);
-            List<TrackArgs> list;
+            List<TrackInfo> list;
             if (type == 1) {
                 list = playerLayout.getTrackInfoVideo();
             } else if (type == 2) {
@@ -52,7 +44,7 @@ public class TestDialog extends DialogFragment {
             }
              LogUtil.log("TestDialog -> showTrackInfo -> type = " + type + ", trackInfo = " + list);
 
-            for (TrackArgs track : list) {
+            for (TrackInfo track : list) {
                 String curName;
                 // 视频轨道
                 if (type == 1) {

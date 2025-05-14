@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -23,7 +21,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.TrackArgs;
+import lib.kalu.mediaplayer.args.TrackInfo;
 import lib.kalu.mediaplayer.test.TestActivity;
 import lib.kalu.mediaplayer.type.PlayerType;
 
@@ -167,7 +165,7 @@ public class MainActivity extends Activity {
     }
 
 
-    private List<TrackArgs> getExtra(int type) {
+    private List<TrackInfo> getExtra(int type) {
         /**
          *  2025-04-25 20:01:32.609 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  streamsList = [# com.yyt.zapptv.model.proto.Playback$StreamTrack@37d8a524
          *     format: "hls"
@@ -213,11 +211,11 @@ public class MainActivity extends Activity {
                     continue;
 
                 if (type == 0) {
-                    ArrayList<TrackArgs> list = new ArrayList<>();
+                    ArrayList<TrackInfo> list = new ArrayList<>();
                     String[] urls = getResources().getStringArray(R.array.hls_extra_subtitle_urls);
                     String[] languages = getResources().getStringArray(R.array.hls_extra_subtitle_languages);
                     for (int i = 0; i < 3; i++) {
-                        TrackArgs subtitleTrack = new TrackArgs();
+                        TrackInfo subtitleTrack = new TrackInfo();
                         subtitleTrack.setRoleFlags((int) System.nanoTime());
                         subtitleTrack.setLanguage(languages[i]);
                         subtitleTrack.setUrl(urls[i]);
@@ -227,15 +225,15 @@ public class MainActivity extends Activity {
                     }
                     return list;
                 } else if (type == 1) {
-                    ArrayList<TrackArgs> list = new ArrayList<>();
+                    ArrayList<TrackInfo> list = new ArrayList<>();
                     String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
                     for (int i = 0; i < 3; i++) {
-                        TrackArgs trackArgs = new TrackArgs();
-                        trackArgs.setRoleFlags((int) System.nanoTime());
-                        trackArgs.setUrl(urls[i]);
+                        TrackInfo trackInfo = new TrackInfo();
+                        trackInfo.setRoleFlags((int) System.nanoTime());
+                        trackInfo.setUrl(urls[i]);
 //                        subtitleTrack.setMimeType(PlayerType.TrackType.TEXT_VTT);
                         //
-                        list.add(trackArgs);
+                        list.add(trackInfo);
                     }
 
                     return list;

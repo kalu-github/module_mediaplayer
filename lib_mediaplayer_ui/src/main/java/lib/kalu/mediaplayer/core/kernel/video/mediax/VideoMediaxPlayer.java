@@ -58,7 +58,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.TrackArgs;
+import lib.kalu.mediaplayer.args.TrackInfo;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -688,9 +688,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             // 外挂字幕
-            List<TrackArgs> extraTrackSubtitle = args.getExtraTrackSubtitle();
+            List<TrackInfo> extraTrackSubtitle = args.getExtraTrackSubtitle();
             if (null != extraTrackSubtitle) {
-                for (TrackArgs track : extraTrackSubtitle) {
+                for (TrackInfo track : extraTrackSubtitle) {
                     int roleFlags = track.getRoleFlags();
                     if (roleFlags == -1)
                         continue;
@@ -726,9 +726,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
 
             // 外挂音轨
-            List<TrackArgs> extraTrackAudio = args.getExtraTrackAudio();
+            List<TrackInfo> extraTrackAudio = args.getExtraTrackAudio();
             if (null != extraTrackAudio) {
-                for (TrackArgs track : extraTrackAudio) {
+                for (TrackInfo track : extraTrackAudio) {
                     MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
                             .createMediaSource(new MediaItem.Builder()
                                     .setUri(track.getUrl())
@@ -1195,14 +1195,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //        }
 //    }
     @Override
-    public boolean toggleTrack(TrackArgs trackArgs) {
+    public boolean toggleTrack(TrackInfo trackInfo) {
         try {
-            if (null == trackArgs)
+            if (null == trackInfo)
                 throw new Exception("error: trackArgs null");
-            int groupIndex = trackArgs.getGroupIndex();
+            int groupIndex = trackInfo.getGroupIndex();
             if (groupIndex == -1)
                 throw new Exception("error: groupIndex == -1");
-            int trackIndex = trackArgs.getTrackIndex();
+            int trackIndex = trackInfo.getTrackIndex();
             if (trackIndex == -1)
                 throw new Exception("error: trackIndex == -1");
             if (null == mExoPlayer)
@@ -1225,7 +1225,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public List<TrackArgs> getTrackInfo(int type) {
+    public List<TrackInfo> getTrackInfo(int type) {
 
 
         try {
@@ -1233,7 +1233,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 throw new Exception("error: mExoPlayer null");
 
             //
-            LinkedList<TrackArgs> list = new LinkedList<>();
+            LinkedList<TrackInfo> list = new LinkedList<>();
 
             //
             androidx.media3.common.Tracks tracks = mExoPlayer.getCurrentTracks();
@@ -1259,14 +1259,14 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     boolean isTrackSelected = group.isTrackSelected(trackIndex);
 
 
-                    TrackArgs trackArgs = new TrackArgs();
+                    TrackInfo trackInfo = new TrackInfo();
 
                     // 视频轨道
                     if (type == 1 && trackType == C.TRACK_TYPE_VIDEO) {
 
-                        trackArgs.setBitrate(format.bitrate);
-                        trackArgs.setWidth(format.width);
-                        trackArgs.setHeight(format.height);
+                        trackInfo.setBitrate(format.bitrate);
+                        trackInfo.setWidth(format.width);
+                        trackInfo.setHeight(format.height);
 
 //                        object.put("frameRate", format.frameRate);
 //                        object.put("rotationDegrees", format.rotationDegrees);
@@ -1295,9 +1295,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     // 视频轨道
                     else if (type == -1 && trackType == C.TRACK_TYPE_VIDEO) {
 
-                        trackArgs.setBitrate(format.bitrate);
-                        trackArgs.setWidth(format.width);
-                        trackArgs.setHeight(format.height);
+                        trackInfo.setBitrate(format.bitrate);
+                        trackInfo.setWidth(format.width);
+                        trackInfo.setHeight(format.height);
 
 //                        object.put("frameRate", format.frameRate);
 //                        object.put("rotationDegrees", format.rotationDegrees);
@@ -1332,16 +1332,16 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     }
 
 
-                    trackArgs.setGroupCount(groupCount);
-                    trackArgs.setGroupIndex(groupIndex);
-                    trackArgs.setTrackCount(trackCount);
-                    trackArgs.setTrackIndex(trackIndex);
-                    trackArgs.setTrackType(trackType);
+                    trackInfo.setGroupCount(groupCount);
+                    trackInfo.setGroupIndex(groupIndex);
+                    trackInfo.setTrackCount(trackCount);
+                    trackInfo.setTrackIndex(trackIndex);
+                    trackInfo.setTrackType(trackType);
 
-                    trackArgs.setGroupAdaptiveSupported(isGroupAdaptiveSupported);
-                    trackArgs.setGroupSupported(isGroupSupported);
-                    trackArgs.setGroupSelected(isGroupSelected);
-                    trackArgs.setTrackSupported(isTrackSupported);
+                    trackInfo.setGroupAdaptiveSupported(isGroupAdaptiveSupported);
+                    trackInfo.setGroupSupported(isGroupSupported);
+                    trackInfo.setGroupSelected(isGroupSelected);
+                    trackInfo.setTrackSupported(isTrackSupported);
 
                     // 自适应码率
                     if (isGroupAdaptiveSupported && trackType == androidx.media3.common.C.TRACK_TYPE_VIDEO) {
@@ -1350,25 +1350,25 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                         int videoBitrate = getPlayerApi().getVideoRender().getVideoBitrate();
                         boolean selected = (videoWidth == format.width && videoHeight == format.height && videoBitrate == format.bitrate);
                         if (selected) {
-                            trackArgs.setTrackSelected(true);
+                            trackInfo.setTrackSelected(true);
                         } else {
-                            trackArgs.setTrackSelected(false);
+                            trackInfo.setTrackSelected(false);
                         }
                     } else {
-                        trackArgs.setTrackSelected(isTrackSelected);
+                        trackInfo.setTrackSelected(isTrackSelected);
                     }
 
 
-                    trackArgs.setId(format.id);
-                    trackArgs.setLabel(format.label);
+                    trackInfo.setId(format.id);
+                    trackInfo.setLabel(format.label);
 
 //                    object.put("labels", format.labels);
 
 
-                    trackArgs.setLanguage(format.language);
-                    trackArgs.setRoleFlags(format.roleFlags);
-                    trackArgs.setSelectionFlags(format.selectionFlags);
-                    trackArgs.setSampleMimeType(format.sampleMimeType);
+                    trackInfo.setLanguage(format.language);
+                    trackInfo.setRoleFlags(format.roleFlags);
+                    trackInfo.setSelectionFlags(format.selectionFlags);
+                    trackInfo.setSampleMimeType(format.sampleMimeType);
 //                    object.put("averageBitrate", format.averageBitrate);
 //                    object.put("peakBitrate", format.peakBitrate);
 //                    object.put("codecs", format.codecs);
@@ -1385,7 +1385,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
                     //   LogUtil.log("VideoExo2Player => getTrackInfo => groupCount = " + groupCount + ", groupIndex = " + groupIndex + ", trackCount = " + trackCount + ", trackIndex = " + trackIndex + ", trackType = " + trackType + ", isGroupAdaptiveSupported = " + isGroupAdaptiveSupported + ", isGroupSelected = " + isGroupSelected + ", isGroupSupported = " + isGroupSupported + ", isTrackSelected = " + isTrackSelected + ", isTrackSupported = " + isTrackSupported + ", isTrackMixed = " + isTrackMixed + ", isTrackMixedSelected = " + isTrackMixedSelected + ", format = " + object);
                     //
-                    list.add(trackArgs);
+                    list.add(trackInfo);
                 }
             }
 

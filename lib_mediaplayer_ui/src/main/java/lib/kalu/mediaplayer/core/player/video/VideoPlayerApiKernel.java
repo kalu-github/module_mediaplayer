@@ -5,13 +5,12 @@ import android.view.View;
 
 import androidx.annotation.FloatRange;
 
-import org.json.JSONArray;
-
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.args.HlsSpanInfo;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.TrackArgs;
+import lib.kalu.mediaplayer.args.TrackInfo;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
@@ -466,10 +465,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 @Override
                 public void onUpdateProgress() {
 
-                    //
-                    videoKernel.testHls();
-
-
                     try {
                         long position = getPosition();
                         long duration = getDuration();
@@ -690,19 +685,19 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 //            return false;
 //        }
 //    }
-    default boolean toggleTrack(TrackArgs trackArgs) {
+    default boolean toggleTrack(TrackInfo trackInfo) {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            return kernel.toggleTrack(trackArgs);
+            return kernel.toggleTrack(trackInfo);
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => toggleTrack => " + e.getMessage());
             return false;
         }
     }
 
-    default List<TrackArgs> getTrackInfoAll() {
+    default List<TrackInfo> getTrackInfoAll() {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -714,7 +709,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default List<TrackArgs> getTrackInfoVideo() {
+    default List<TrackInfo> getTrackInfoVideo() {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -726,7 +721,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default List<TrackArgs> getTrackInfoAudio() {
+    default List<TrackInfo> getTrackInfoAudio() {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -738,7 +733,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default List<TrackArgs> getTrackInfoSubtitle() {
+    default List<TrackInfo> getTrackInfoSubtitle() {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
@@ -746,6 +741,18 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             return kernel.getTrackInfoSubtitle();
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiKernel => getTrackInfoSubtitle => " + e.getMessage());
+            return null;
+        }
+    }
+
+    default List<HlsSpanInfo> getBufferedHlsSpanInfo() {
+        try {
+            VideoKernelApi kernel = getVideoKernel();
+            if (null == kernel)
+                throw new Exception("warning: kernel null");
+            return kernel.getBufferedHlsSpanInfo();
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiKernel => getBufferedHlsSpanInfo => " + e.getMessage());
             return null;
         }
     }

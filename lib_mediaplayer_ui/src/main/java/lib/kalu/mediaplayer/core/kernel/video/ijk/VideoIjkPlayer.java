@@ -3,14 +3,7 @@ package lib.kalu.mediaplayer.core.kernel.video.ijk;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
-import android.os.Message;
 import android.view.Surface;
-
-import androidx.annotation.NonNull;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -29,7 +22,7 @@ import lib.kalu.ijkplayer.inter.OnVideoSizeChangedListener;
 import lib.kalu.ijkplayer.misc.IMediaFormat;
 import lib.kalu.ijkplayer.misc.IjkTrackInfo;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.TrackArgs;
+import lib.kalu.mediaplayer.args.TrackInfo;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -781,7 +774,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
 
 
     @Override
-    public boolean toggleTrack(TrackArgs trackArgs) {
+    public boolean toggleTrack(TrackInfo trackInfo) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("error: null");
@@ -794,7 +787,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public List<TrackArgs> getTrackInfo(int type) {
+    public List<TrackInfo> getTrackInfo(int type) {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("error: mIjkPlayer null");

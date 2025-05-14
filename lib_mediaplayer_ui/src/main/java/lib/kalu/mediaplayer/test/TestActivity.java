@@ -8,15 +8,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.args.HlsSpanInfo;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.TrackArgs;
+import lib.kalu.mediaplayer.args.TrackInfo;
 import lib.kalu.mediaplayer.core.component.ComponentBuffering;
 import lib.kalu.mediaplayer.core.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.component.ComponentError;
@@ -87,11 +84,28 @@ public final class TestActivity extends Activity {
                 showTrackInfo(3);
             }
         });
+
+        findViewById(R.id.module_mediaplayer_hls_span).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+                List<HlsSpanInfo> list = playerLayout.getBufferedHlsSpanInfo();
+                if (null != list) {
+                    for (HlsSpanInfo span : list) {
+                        long durationUs = span.getDurationUs();
+                        long relativeStartTimeUs = span.getRelativeStartTimeUs();
+                        String path = span.getPath();
+                        String url = span.getUrl();
+                        LogUtil.log("TestActivity -> getBufferedHlsSpanInfo -> durationUs = " + durationUs + ", relativeStartTimeUs = " + relativeStartTimeUs + ", path = " + path + ", url = " + url);
+                    }
+                }
+            }
+        });
     }
 
-    public void toggleTrack(TrackArgs trackArgs) {
+    public void toggleTrack(TrackInfo trackInfo) {
         PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-        playerLayout.toggleTrack(trackArgs);
+        playerLayout.toggleTrack(trackInfo);
     }
 
 //    public void toggleTrackRoleFlagSubtitle(int roleFlag) {

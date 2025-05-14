@@ -7,18 +7,12 @@ import android.media.MediaPlayer;
 import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Looper;
-import android.os.Message;
 import android.view.Surface;
-
-import androidx.annotation.NonNull;
 
 import java.util.List;
 
-import lib.kalu.ijkplayer.misc.IMediaFormat;
-import lib.kalu.ijkplayer.misc.IjkTrackInfo;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.TrackArgs;
+import lib.kalu.mediaplayer.args.TrackInfo;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -565,7 +559,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
     };
 
     @Override
-    public List<TrackArgs> getTrackInfo(int type) {
+    public List<TrackInfo> getTrackInfo(int type) {
         try {
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN)
                 throw new Exception("warning: mBuild.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN");
