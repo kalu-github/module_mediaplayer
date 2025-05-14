@@ -465,6 +465,11 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                 @Override
                 public void onUpdateProgress() {
+
+                    //
+                    videoKernel.testHls();
+
+
                     try {
                         long position = getPosition();
                         long duration = getDuration();

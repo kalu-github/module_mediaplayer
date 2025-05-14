@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Looper;
 import android.view.Surface;
 
+import androidx.media3.exoplayer.hls.playlist.DefaultHlsPlaylistTracker;
+
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -32,6 +34,9 @@ import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 import com.google.android.exoplayer2.source.TrackGroup;
+import com.google.android.exoplayer2.source.hls.HlsManifest;
+import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist;
+import com.google.android.exoplayer2.source.hls.playlist.HlsMultivariantPlaylist;
 import com.google.android.exoplayer2.text.Cue;
 import com.google.android.exoplayer2.text.CueGroup;
 import com.google.android.exoplayer2.text.TextOutput;
@@ -49,6 +54,7 @@ import com.google.android.exoplayer2.upstream.FileDataSource;
 import com.google.android.exoplayer2.upstream.cache.Cache;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSink;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.CacheKeyFactory;
 import com.google.android.exoplayer2.upstream.cache.CacheSpan;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
@@ -63,6 +69,8 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.args.TrackArgs;
@@ -76,6 +84,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
     private boolean mPlayWhenReadySeeking = false;
     private boolean mSeeking = false;
     private boolean isBuffering = false;
+
+
+    private HlsManifest mHlsManifest;
+    private SimpleCache mSimpleCache;
     private ExoPlayer mExoPlayer;
 
     @Override
@@ -639,105 +651,61 @@ public final class VideoExo2Player extends VideoBasePlayer {
             }
             // 开启缓存
             else {
-                @PlayerType.CacheLocalType.Value
-                int cacheLocalType = args.getCacheLocalType();
-                @PlayerType.CacheSizeType.Value
-                int cacheSizeType = args.getCacheSizeType();
-                String cacheDirName = args.getCacheDirName();
 
-                // 缓存大小
-                int size;
-                switch (cacheSizeType) {
-                    case PlayerType.CacheSizeType._100:
-                        size = 100;
-                        break;
-                    case PlayerType.CacheSizeType._200:
-                        size = 200;
-                        break;
-                    case PlayerType.CacheSizeType._400:
-                        size = 400;
-                        break;
-                    case PlayerType.CacheSizeType._800:
-                        size = 800;
-                        break;
-                    default:
-                        size = 1024;
-                        break;
+
+                if (null == mSimpleCache) {
+                    @PlayerType.CacheLocalType.Value
+                    int cacheLocalType = args.getCacheLocalType();
+                    @PlayerType.CacheSizeType.Value
+                    int cacheSizeType = args.getCacheSizeType();
+                    String cacheDirName = args.getCacheDirName();
+
+                    // 缓存大小
+                    int size;
+                    switch (cacheSizeType) {
+                        case PlayerType.CacheSizeType._100:
+                            size = 100;
+                            break;
+                        case PlayerType.CacheSizeType._200:
+                            size = 200;
+                            break;
+                        case PlayerType.CacheSizeType._400:
+                            size = 400;
+                            break;
+                        case PlayerType.CacheSizeType._800:
+                            size = 800;
+                            break;
+                        default:
+                            size = 1024;
+                            break;
+                    }
+
+
+                    // 缓存位置
+                    File dir;
+                    if (cacheLocalType == PlayerType.CacheLocalType.EXTERNAL) {
+                        File externalCacheDir = context.getExternalCacheDir();
+                        dir = new File(externalCacheDir, cacheDirName);
+                    } else {
+                        File cacheDir = context.getCacheDir();
+                        dir = new File(cacheDir, cacheDirName);
+                    }
+
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+
+                    mSimpleCache = new SimpleCache(dir,
+                            //
+                            new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024),
+                            //
+                            new StandaloneDatabaseProvider(context)
+                    );
                 }
-
-
-                // 缓存位置
-                File dir;
-                if (cacheLocalType == PlayerType.CacheLocalType.EXTERNAL) {
-                    File externalCacheDir = context.getExternalCacheDir();
-                    dir = new File(externalCacheDir, cacheDirName);
-                } else {
-                    File cacheDir = context.getCacheDir();
-                    dir = new File(cacheDir, cacheDirName);
-                }
-
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-
-                SimpleCache simpleCache = new SimpleCache(dir,
-                        //
-                        new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024) {
-                            @Override
-                            public void onStartFile(Cache cache, String s, long l, long l1) {
-                                super.onStartFile(cache, s, l, l1);
-                                LogUtil.log("VideoExo2Player => buildSource => onStartFile => key = " + cache.getKeys() + ", s = " + s + ", l = " + l + ", l1 = " + l1);
-                            }
-
-                            @Override
-                            public void onSpanAdded(Cache cache, CacheSpan cacheSpan) {
-                                super.onSpanAdded(cache, cacheSpan);
-                                LogUtil.log("VideoExo2Player => buildSource => onSpanAdded => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
-                            }
-
-                            @Override
-                            public void onSpanRemoved(Cache cache, CacheSpan cacheSpan) {
-                                super.onSpanRemoved(cache, cacheSpan);
-                                LogUtil.log("VideoExo2Player => buildSource => onSpanRemoved => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
-                            }
-
-                            @Override
-                            public void onSpanTouched(Cache cache, CacheSpan cacheSpan, CacheSpan cacheSpan1) {
-                                super.onSpanTouched(cache, cacheSpan, cacheSpan1);
-                                LogUtil.log("VideoExo2Player => buildSource => onSpanTouched => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
-                            }
-                        },
-                        //
-                        new StandaloneDatabaseProvider(context)
-                ) {
-//                    @Override
-//                    public synchronized File startFile(String s, long l, long l1) throws CacheException {
-//                        File sourceFile = super.startFile(s, l, l1);
-//                        File destFile = new File(sourceFile.getParent(), s);
-//                        sourceFile.renameTo(destFile);
-//                        return destFile;
-//                    }
-                };
-//                simpleCache.addListener(url, new Cache.Listener() {
-//                    @Override
-//                    public void onSpanAdded(Cache cache, CacheSpan cacheSpan) {
-//                        LogUtil.log("VideoExo2Player => buildSource => onSpanAdded => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
-//                    }
-//
-//                    @Override
-//                    public void onSpanRemoved(Cache cache, CacheSpan cacheSpan) {
-//                        LogUtil.log("VideoExo2Player => buildSource => onSpanRemoved => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
-//                    }
-//
-//                    @Override
-//                    public void onSpanTouched(Cache cache, CacheSpan cacheSpan, CacheSpan cacheSpan1) {
-//                        LogUtil.log("VideoExo2Player => buildSource => onSpanTouched => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
-//                    }
-//                });
 
                 dataSource = new CacheDataSource.Factory()
                         .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
-                        .setCache(simpleCache)
+                        .setCache(mSimpleCache)
                         // 网络请求工厂
                         .setUpstreamDataSourceFactory(dataSourceFactory)
                         // 缓存读取工厂
@@ -745,7 +713,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                         // 写入数据到缓存
                         .setCacheWriteDataSinkFactory(new CacheDataSink.Factory()
                                 .setFragmentSize(CacheDataSink.DEFAULT_FRAGMENT_SIZE)
-                                .setCache(simpleCache))
+                                .setCache(mSimpleCache))
                         // 自定义缓存键
                         .setCacheKeyFactory(new CacheKeyFactory() {
                             @Override
@@ -753,14 +721,18 @@ public final class VideoExo2Player extends VideoBasePlayer {
                                 String subUrl = dataSpec.uri.toString();
                                 if (subUrl.endsWith(".m3u8")) {
                                     int i = subUrl.lastIndexOf("/");
-                                    int hashCode = subUrl.substring(0, i).hashCode();
-                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey m3u8 => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", hashCode = " + hashCode);
+                                    String playlistName = subUrl.substring(0, i);
+                                    int hashCode = playlistName.hashCode();
+                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey m3u8 => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", hashCode = " + hashCode + ", playlistName = " + playlistName);
                                     return "hls_playlist_" + hashCode;
                                 } else if (subUrl.endsWith(".ts")) {
                                     int i = subUrl.lastIndexOf("/");
-                                    int hashCode = subUrl.substring(0, i).hashCode();
-                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey ts => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", hashCode = " + hashCode);
-                                    return "hls_segment#" + hashCode + "#" + subUrl.hashCode();
+                                    String playlistName = subUrl.substring(0, i);
+                                    int playlistCode = playlistName.hashCode();
+                                    String segmentName = subUrl.substring(i + 1);
+                                    int segmentCode = segmentName.hashCode();
+                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey ts => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", segmentCode = " + segmentCode + ", segmentName = " + segmentName);
+                                    return "hls_segment_" + playlistCode + "_" + segmentCode;
                                 } else {
                                     return url;
                                 }
@@ -935,6 +907,15 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     private final AnalyticsListener mAnalyticsListener = new AnalyticsListener() {
+
+        @Override
+        public void onTimelineChanged(EventTime eventTime, int i) {
+            Object manifest = mExoPlayer.getCurrentManifest();
+            LogUtil.log("VideoExo2Player => onTimelineChanged => manifest = " + manifest);
+            if (manifest instanceof HlsManifest) {
+                mHlsManifest = (HlsManifest) manifest;
+            }
+        }
 
         @Override
         public void onPlayerErrorChanged(EventTime eventTime, PlaybackException error) {
@@ -1482,6 +1463,40 @@ public final class VideoExo2Player extends VideoBasePlayer {
         } catch (Exception e) {
             LogUtil.log("VideoExo2Player => getTrackInfo => Exception " + e.getMessage());
             return null;
+        }
+    }
+
+    @Override
+    public void testHls() {
+        try {
+            HlsMediaPlaylist mediaPlaylist = mHlsManifest.mediaPlaylist;
+            String url = mediaPlaylist.baseUri;
+            int lastIndexOf = url.lastIndexOf("/");
+            String baseUrl = url.substring(0, lastIndexOf);
+            LogUtil.log("VideoExo2Player => testHls => baseUrl = " + baseUrl + ", url = " + url);
+
+            int playlistCode = baseUrl.hashCode();
+//                String key = "hls_playlist_" + hashCode;
+//                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(key);
+//                for (CacheSpan cacheSpan : cachedSpans) {
+//                    LogUtil.log("VideoExo2Player => onTimelineChanged => baseUrl = " + baseUrl + ", url = " + url + ", isCached = " + cacheSpan.isCached);
+//                }
+
+
+            for (HlsMediaPlaylist.Segment segment : mediaPlaylist.segments) {
+
+                String segmentUrl = baseUrl + "/" + segment.url;
+                long relativeStartTimeUs = segment.relativeStartTimeUs;
+                long durationUs = segment.durationUs;
+
+                int segmentCode = segment.url.hashCode();
+                String key = "hls_segment_" + playlistCode + "_" + segmentCode;
+                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(key);
+                for (CacheSpan cacheSpan : cachedSpans) {
+                    LogUtil.log("VideoExo2Player => testHls => relativeStartTimeUs = " + relativeStartTimeUs + ", durationUs = " + durationUs + ", segmentUrl = " + segmentUrl + ", isCached = " + cacheSpan.isCached + ", cachedSpans = " + cachedSpans.size() + ", key = " + key);
+                }
+            }
+        } catch (Exception e) {
         }
     }
 }

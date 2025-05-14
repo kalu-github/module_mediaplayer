@@ -13,7 +13,11 @@ import lib.kalu.mediaplayer.util.LogUtil;
  * @date: 2021-05-12 09:40
  */
 
-public interface VideoKernelApi extends VideoKernelApiHandler, VideoKernelApiBase, VideoKernelApiEvent, VideoKernelApiStartArgs {
+public interface VideoKernelApi extends VideoKernelApiHandler,
+        VideoKernelApiBase,
+        VideoKernelApiEvent,
+        VideoKernelApiStartArgs,
+        VideoKernelApiHls {
 
     void onUpdateProgress();
 

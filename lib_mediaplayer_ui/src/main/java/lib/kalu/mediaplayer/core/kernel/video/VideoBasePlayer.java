@@ -1,5 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
+import android.nfc.tech.Ndef;
+
 import androidx.annotation.Nullable;
 
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
@@ -123,4 +125,7 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
     public final void setEvent(VideoKernelApiEvent eventApi) {
         this.eventApi = eventApi;
     }
+
+
+
 }
