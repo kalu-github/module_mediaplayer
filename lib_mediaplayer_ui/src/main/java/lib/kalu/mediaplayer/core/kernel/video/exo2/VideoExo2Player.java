@@ -52,9 +52,12 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.CacheKeyFactory;
 import com.google.android.exoplayer2.upstream.cache.CacheSpan;
+import com.google.android.exoplayer2.upstream.cache.CachedContent;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
+import com.google.android.exoplayer2.upstream.cache.SimpleCacheSpan;
+import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.video.VideoSize;
 import com.google.common.collect.ImmutableList;
@@ -683,40 +686,64 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 }
 
                 SimpleCache simpleCache = new SimpleCache(dir,
-                        // new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024),
-                        new CacheEvictor() {
-                            @Override
-                            public boolean requiresCacheSpanTouches() {
-                                return false;
-                            }
-
-                            @Override
-                            public void onCacheInitialized() {
-
-                            }
-
+                        //
+                        new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024) {
                             @Override
                             public void onStartFile(Cache cache, String s, long l, long l1) {
+                                super.onStartFile(cache, s, l, l1);
                                 LogUtil.log("VideoExo2Player => buildSource => onStartFile => key = " + cache.getKeys() + ", s = " + s + ", l = " + l + ", l1 = " + l1);
                             }
 
                             @Override
                             public void onSpanAdded(Cache cache, CacheSpan cacheSpan) {
+                                super.onSpanAdded(cache, cacheSpan);
                                 LogUtil.log("VideoExo2Player => buildSource => onSpanAdded => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
                             }
 
                             @Override
                             public void onSpanRemoved(Cache cache, CacheSpan cacheSpan) {
+                                super.onSpanRemoved(cache, cacheSpan);
                                 LogUtil.log("VideoExo2Player => buildSource => onSpanRemoved => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
                             }
 
                             @Override
                             public void onSpanTouched(Cache cache, CacheSpan cacheSpan, CacheSpan cacheSpan1) {
+                                super.onSpanTouched(cache, cacheSpan, cacheSpan1);
                                 LogUtil.log("VideoExo2Player => buildSource => onSpanTouched => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
                             }
                         },
+                        //
                         new StandaloneDatabaseProvider(context)
-                );
+                ) {
+                    @Override
+                    public synchronized File startFile(String key, long position, long length) throws CacheException {
+//                        Assertions.checkState(!released);
+//                        checkInitialization();
+//
+//                        CachedContent cachedContent = contentIndex.get(key);
+//                        Assertions.checkNotNull(cachedContent);
+//                        Assertions.checkState(cachedContent.isFullyLocked(position, length));
+//                        if (!cacheDir.exists()) {
+//                            // The cache directory has been deleted from underneath us. Recreate it, and remove in-memory
+//                            // spans corresponding to cache files that no longer exist.
+//                            createCacheDirectories(cacheDir);
+//                            removeStaleSpans();
+//                        }
+//                        evictor.onStartFile(this, key, position, length);
+//                        // Randomly distribute files into subdirectories with a uniform distribution.
+//                        File cacheSubDir = new File(cacheDir, Integer.toString(random.nextInt(SUBDIRECTORY_COUNT)));
+//                        if (!cacheSubDir.exists()) {
+//                            createCacheDirectories(cacheSubDir);
+//                        }
+//                        long lastTouchTimestamp = System.currentTimeMillis();
+//                        return SimpleCacheSpan.getCacheFile(
+//                                cacheSubDir, cachedContent.id, position, lastTouchTimestamp);
+
+
+                        if (key.contains("/"))
+
+                    }
+                };
 //                simpleCache.addListener(url, new Cache.Listener() {
 //                    @Override
 //                    public void onSpanAdded(Cache cache, CacheSpan cacheSpan) {
@@ -754,12 +781,12 @@ public final class VideoExo2Player extends VideoBasePlayer {
                                     int i = subUrl.lastIndexOf("/");
                                     int hashCode = subUrl.substring(0, i).hashCode();
                                     LogUtil.log("VideoExo2Player => buildSource => buildCacheKey m3u8 => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", hashCode = " + hashCode);
-                                    return "hls_playlist#" + hashCode;
+                                    return "hls_playlist_" + hashCode;
                                 } else if (subUrl.endsWith(".ts")) {
                                     int i = subUrl.lastIndexOf("/");
                                     int hashCode = subUrl.substring(0, i).hashCode();
                                     LogUtil.log("VideoExo2Player => buildSource => buildCacheKey ts => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", hashCode = " + hashCode);
-                                    return "hls_segment#" + hashCode + "#" + subUrl.hashCode();
+                                    return "hls_playlist_" + hashCode + "/hls_segment#" + hashCode + "#" + subUrl.hashCode();
                                 } else {
                                     return url;
                                 }
