@@ -56,7 +56,7 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
  * migration guide</a> for more details, including a script to help with the migration.
  */
 @Deprecated
-public class SimpleCache implements Cache {
+public final class SimpleCache implements Cache {
 
     private static final String TAG = "SimpleCache";
     /**

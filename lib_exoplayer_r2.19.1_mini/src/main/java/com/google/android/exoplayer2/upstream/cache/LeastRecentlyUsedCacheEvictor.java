@@ -27,7 +27,7 @@ import java.util.TreeSet;
  *     migration guide</a> for more details, including a script to help with the migration.
  */
 @Deprecated
-public class LeastRecentlyUsedCacheEvictor implements CacheEvictor {
+public final class LeastRecentlyUsedCacheEvictor implements CacheEvictor {
 
   private final long maxBytes;
   private final TreeSet<CacheSpan> leastRecentlyUsed;
