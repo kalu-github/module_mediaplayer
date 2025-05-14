@@ -46,9 +46,12 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.FileDataSource;
+import com.google.android.exoplayer2.upstream.cache.Cache;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSink;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.CacheKeyFactory;
+import com.google.android.exoplayer2.upstream.cache.CacheSpan;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
@@ -680,9 +683,56 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 }
 
                 SimpleCache simpleCache = new SimpleCache(dir,
-                        new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024),
+                        // new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024),
+                        new CacheEvictor() {
+                            @Override
+                            public boolean requiresCacheSpanTouches() {
+                                return false;
+                            }
+
+                            @Override
+                            public void onCacheInitialized() {
+
+                            }
+
+                            @Override
+                            public void onStartFile(Cache cache, String s, long l, long l1) {
+                                LogUtil.log("VideoExo2Player => buildSource => onStartFile => key = " + cache.getKeys() + ", s = " + s + ", l = " + l + ", l1 = " + l1);
+                            }
+
+                            @Override
+                            public void onSpanAdded(Cache cache, CacheSpan cacheSpan) {
+                                LogUtil.log("VideoExo2Player => buildSource => onSpanAdded => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
+                            }
+
+                            @Override
+                            public void onSpanRemoved(Cache cache, CacheSpan cacheSpan) {
+                                LogUtil.log("VideoExo2Player => buildSource => onSpanRemoved => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
+                            }
+
+                            @Override
+                            public void onSpanTouched(Cache cache, CacheSpan cacheSpan, CacheSpan cacheSpan1) {
+                                LogUtil.log("VideoExo2Player => buildSource => onSpanTouched => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
+                            }
+                        },
                         new StandaloneDatabaseProvider(context)
                 );
+//                simpleCache.addListener(url, new Cache.Listener() {
+//                    @Override
+//                    public void onSpanAdded(Cache cache, CacheSpan cacheSpan) {
+//                        LogUtil.log("VideoExo2Player => buildSource => onSpanAdded => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
+//                    }
+//
+//                    @Override
+//                    public void onSpanRemoved(Cache cache, CacheSpan cacheSpan) {
+//                        LogUtil.log("VideoExo2Player => buildSource => onSpanRemoved => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
+//                    }
+//
+//                    @Override
+//                    public void onSpanTouched(Cache cache, CacheSpan cacheSpan, CacheSpan cacheSpan1) {
+//                        LogUtil.log("VideoExo2Player => buildSource => onSpanTouched => key = " + cacheSpan.key + ", path = " + cacheSpan.file.getAbsolutePath());
+//                    }
+//                });
 
                 dataSource = new CacheDataSource.Factory()
                         .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
@@ -699,29 +749,17 @@ public final class VideoExo2Player extends VideoBasePlayer {
                         .setCacheKeyFactory(new CacheKeyFactory() {
                             @Override
                             public String buildCacheKey(DataSpec dataSpec) {
-
-
-                                String url = dataSpec.uri.toString();
-                                long position = dataSpec.position;
-                                long absoluteStreamPosition = dataSpec.absoluteStreamPosition;
-                                long length = dataSpec.length;
-//                                // 对于 HLS 分段，添加主播放列表的标识
-//                                if (dataSpec.playbackProperties != null &&
-//                                        mediaItem.playbackProperties.parentId != null) {
-//                                    String parentId = mediaItem.playbackProperties.parentId;
-//                                    return parentId + "#" + uri;  // 格式：主播放列表ID#分段URL
-//                                }
-
-                                if (url.endsWith(".m3u8")) {
-                                    int i = url.lastIndexOf("/");
-                                    int hashCode = url.substring(0, i).hashCode();
-                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey m3u8 => position = " + position + ", absoluteStreamPosition = " + absoluteStreamPosition + ", length = " + length + ", hashCode = " + hashCode);
+                                String subUrl = dataSpec.uri.toString();
+                                if (subUrl.endsWith(".m3u8")) {
+                                    int i = subUrl.lastIndexOf("/");
+                                    int hashCode = subUrl.substring(0, i).hashCode();
+                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey m3u8 => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", hashCode = " + hashCode);
                                     return "hls_playlist#" + hashCode;
-                                } else if (url.endsWith(".ts")) {
-                                    int i = url.lastIndexOf("/");
-                                    int hashCode = url.substring(0, i).hashCode();
-                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey ts => position = " + position + ", absoluteStreamPosition = " + absoluteStreamPosition + ", length = " + length + ", hashCode = " + hashCode);
-                                    return "hls_segment#" + hashCode + "#" + url.hashCode();
+                                } else if (subUrl.endsWith(".ts")) {
+                                    int i = subUrl.lastIndexOf("/");
+                                    int hashCode = subUrl.substring(0, i).hashCode();
+                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey ts => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", hashCode = " + hashCode);
+                                    return "hls_segment#" + hashCode + "#" + subUrl.hashCode();
                                 } else {
                                     return url;
                                 }
@@ -786,8 +824,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
                 MediaSource source = ((MediaSource.Factory) object)
                         .createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .build());
+                                .setUri(Uri.parse(url))
+                                .build());
                 mediaSources.add(source);
             }
             // SmoothStreaming
