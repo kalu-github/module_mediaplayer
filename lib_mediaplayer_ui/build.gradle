@@ -62,7 +62,7 @@ dependencies {
 
     // api
     api files('libs/guava-33.2.1-android.jar')
-    api files('libs/guava-failureaccess-1.0.2')
+    api files('libs/guava-failureaccess-1.0.2.jar')
 
     compileOnly 'androidx.annotation:annotation:1.7.1'
     compileOnly('com.squareup.okhttp3:okhttp:3.14.9')
