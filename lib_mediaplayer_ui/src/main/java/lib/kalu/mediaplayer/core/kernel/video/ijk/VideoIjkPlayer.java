@@ -462,7 +462,6 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 throw new Exception("mIjkPlayer error: null");
             LogUtil.log("VideoIjkPlayer => stop =>");
             mIjkPlayer.stop();
-            mIjkPlayer.reset();
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => stop => " + e.getMessage());
         } finally {
