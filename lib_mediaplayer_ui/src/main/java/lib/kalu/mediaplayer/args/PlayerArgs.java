@@ -50,19 +50,17 @@ public final class PlayerArgs {
     }
 
     @PlayerType.CacheLocalType.Value
-    private int cacheLocalType;
+    private int cacheLocal;
 
     @PlayerType.CacheLocalType.Value
-    public int getCacheLocalType() {
-        return cacheLocalType;
+    public int getCacheLocal() {
+        return cacheLocal;
     }
 
-    @PlayerType.CacheSizeType.Value
-    private int cacheSizeType;
+    private int cacheSize;
 
-    @PlayerType.CacheSizeType.Value
     public int getCacheSizeType() {
-        return cacheSizeType;
+        return cacheSize;
     }
 
     private String cacheDirName;
@@ -140,8 +138,8 @@ public final class PlayerArgs {
         decoderType = builder.decoderType;
         scaleType = builder.scaleType;
         cacheType = builder.cacheType;
-        cacheLocalType = builder.cacheLocalType;
-        cacheSizeType = builder.cacheSizeType;
+        cacheLocal = builder.cacheLocal;
+        cacheSize = builder.cacheSize;
         cacheDirName = builder.cacheDirName;
         buriedEvent = builder.buriedEvent;
         seekType = builder.seekType;
@@ -161,8 +159,8 @@ public final class PlayerArgs {
         builder.setDecoderType(this.decoderType);
         builder.setScaleType(this.scaleType);
         builder.setCacheType(this.cacheType);
-        builder.setCacheLocalType(this.cacheLocalType);
-        builder.setCacheSizeType(this.cacheSizeType);
+        builder.setCacheLocal(this.cacheLocal);
+        builder.setCacheSize(this.cacheSize);
         builder.setCacheDirName(this.cacheDirName);
         builder.setBuriedEvent(this.buriedEvent);
         builder.setSeekType(this.seekType);
@@ -211,24 +209,23 @@ public final class PlayerArgs {
 
         // 缓存位置
         @PlayerType.CacheLocalType.Value
-        private int cacheLocalType = PlayerType.CacheLocalType.DEFAULT;
+        private int cacheLocal = PlayerType.CacheLocalType.DEFAULT;
 
-        public Builder setCacheLocalType(@PlayerType.CacheLocalType.Value int v) {
-            cacheLocalType = v;
+        public Builder setCacheLocal(@PlayerType.CacheLocalType.Value int v) {
+            cacheLocal = v;
             return this;
         }
 
         // 缓存大小
-        @PlayerType.CacheSizeType.Value
-        private int cacheSizeType = PlayerType.CacheSizeType.DEFAULT;
+        private int cacheSize = 500;
 
-        public Builder setCacheSizeType(@PlayerType.CacheSizeType.Value int v) {
-            cacheSizeType = v;
+        public Builder setCacheSize(int v) {
+            cacheSize = v;
             return this;
         }
 
         // 缓存文件夹名
-        private String cacheDirName = "mp_cache";
+        private String cacheDirName = "video_cache";
 
         public Builder setCacheDirName(@Nullable String v) {
             if (null != v && !v.isEmpty()) {

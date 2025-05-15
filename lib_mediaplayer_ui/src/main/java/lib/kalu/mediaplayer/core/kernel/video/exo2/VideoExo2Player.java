@@ -640,62 +640,37 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     .setKeepPostFor302Redirects(true);
 
             int cacheType = args.getCacheType();
-            boolean live = args.isLive();
-            if (live) {
+            if (lowerCase.startsWith(PlayerType.SchemeType.FILE)) {
+                cacheType = PlayerType.CacheType.CLOSE;
+            } else if (args.isLive()) {
                 cacheType = PlayerType.CacheType.CLOSE;
             }
 
             // 关闭缓存
             DataSource.Factory dataSource;
-            if (lowerCase.startsWith(PlayerType.SchemeType.FILE) || cacheType == PlayerType.CacheType.CLOSE) {
+            if (cacheType == PlayerType.CacheType.CLOSE) {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
             }
             // 开启缓存
             else {
-
-
                 if (null == mSimpleCache) {
-                    @PlayerType.CacheLocalType.Value
-                    int cacheLocalType = args.getCacheLocalType();
-                    @PlayerType.CacheSizeType.Value
-                    int cacheSizeType = args.getCacheSizeType();
-                    String cacheDirName = args.getCacheDirName();
 
-                    // 缓存大小
-                    int size;
-                    switch (cacheSizeType) {
-                        case PlayerType.CacheSizeType._100:
-                            size = 100;
-                            break;
-                        case PlayerType.CacheSizeType._200:
-                            size = 200;
-                            break;
-                        case PlayerType.CacheSizeType._400:
-                            size = 400;
-                            break;
-                        case PlayerType.CacheSizeType._800:
-                            size = 800;
-                            break;
-                        default:
-                            size = 1024;
-                            break;
-                    }
-
-
-                    // 缓存位置
+                    int local = args.getCacheLocal();
+                    String dirName = args.getCacheDirName();
                     File dir;
-                    if (cacheLocalType == PlayerType.CacheLocalType.EXTERNAL) {
+                    if (local == PlayerType.CacheLocalType.EXTERNAL) {
                         File externalCacheDir = context.getExternalCacheDir();
-                        dir = new File(externalCacheDir, cacheDirName);
+                        dir = new File(externalCacheDir, dirName);
                     } else {
                         File cacheDir = context.getCacheDir();
-                        dir = new File(cacheDir, cacheDirName);
+                        dir = new File(cacheDir, dirName);
                     }
 
                     if (!dir.exists()) {
                         dir.mkdirs();
                     }
 
+                    int size = args.getCacheSize();
                     mSimpleCache = new SimpleCache(dir,
                             //
                             new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024),
@@ -720,20 +695,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
                             @Override
                             public String buildCacheKey(DataSpec dataSpec) {
                                 String subUrl = dataSpec.uri.toString();
-                                if (subUrl.endsWith(".m3u8")) {
-                                    int i = subUrl.lastIndexOf("/");
-                                    String playlistName = subUrl.substring(0, i);
-                                    int hashCode = playlistName.hashCode();
-//                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey m3u8 => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", hashCode = " + hashCode + ", playlistName = " + playlistName);
-                                    return "hls_playlist_" + hashCode;
-                                } else if (subUrl.endsWith(".ts")) {
-                                    int i = subUrl.lastIndexOf("/");
-                                    String playlistName = subUrl.substring(0, i);
-                                    int playlistCode = playlistName.hashCode();
-                                    String segmentName = subUrl.substring(i + 1);
-                                    int segmentCode = segmentName.hashCode();
-//                                    LogUtil.log("VideoExo2Player => buildSource => buildCacheKey ts => position = " + dataSpec.position + ", absoluteStreamPosition = " + dataSpec.absoluteStreamPosition + ", length = " + dataSpec.length + ", segmentCode = " + segmentCode + ", segmentName = " + segmentName);
-                                    return "hls_segment_" + playlistCode + "_" + segmentCode;
+                                if (subUrl.endsWith(PlayerType.MarkType.M3U8)) {
+                                    return subUrl;
+                                } else if (subUrl.endsWith(PlayerType.MarkType.TS)) {
+                                    return subUrl;
                                 } else {
                                     return url;
                                 }
@@ -1457,7 +1422,6 @@ public final class VideoExo2Player extends VideoBasePlayer {
         }
     }
 
-
     @Override
     public List<HlsSpanInfo> getBufferedHlsSpanInfo() {
         try {
@@ -1471,16 +1435,13 @@ public final class VideoExo2Player extends VideoBasePlayer {
             //
             HlsMediaPlaylist mediaPlaylist = mHlsManifest.mediaPlaylist;
             String url = mediaPlaylist.baseUri;
-            int lastIndexOf = url.lastIndexOf("/");
+            int lastIndexOf = url.lastIndexOf(PlayerType.MarkType.SEPARATOR);
             String baseUrl = url.substring(0, lastIndexOf);
-            int playlistCode = baseUrl.hashCode();
             //
             for (HlsMediaPlaylist.Segment segment : mediaPlaylist.segments) {
 
-                String segmentUrl = baseUrl + "/" + segment.url;
-                int segmentCode = segment.url.hashCode();
-                String key = "hls_segment_" + playlistCode + "_" + segmentCode;
-                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(key);
+                String segmentUrl = baseUrl + PlayerType.MarkType.SEPARATOR + segment.url;
+                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(segmentUrl);
                 for (CacheSpan span : cachedSpans) {
                     if (null == span)
                         continue;

@@ -21,19 +21,17 @@ public class StartArgs implements Serializable {
     }
 
     @PlayerType.CacheLocalType.Value
-    protected int cacheLocalType;
+    protected int cacheLocal;
 
     @PlayerType.CacheLocalType.Value
-    public int getCacheLocalType() {
-        return cacheLocalType;
+    public int getCacheLocal() {
+        return cacheLocal;
     }
 
-    @PlayerType.CacheSizeType.Value
-    private int cacheSizeType;
+    private int cacheSize;
 
-    @PlayerType.CacheSizeType.Value
-    public int getCacheSizeType() {
-        return cacheSizeType;
+    public int getCacheSize() {
+        return cacheSize;
     }
 
     private String cacheDirName;
@@ -236,8 +234,8 @@ public class StartArgs implements Serializable {
         return "StartArgs{" +
                 ", seekType=" + seekType +
                 ", cacheType=" + cacheType +
-                ", cacheLocalType=" + cacheLocalType +
-                ", cacheSizeType=" + cacheSizeType +
+                ", cacheLocal=" + cacheLocal +
+                ", cacheSize=" + cacheSize +
                 ", cacheDirName=" + cacheDirName +
                 ", renderType=" + renderType +
                 ", scaleType=" + scaleType +
@@ -271,8 +269,8 @@ public class StartArgs implements Serializable {
         this.decoderType = builder.decoderType;
         this.seekType = builder.seekType;
         this.cacheType = builder.cacheType;
-        this.cacheLocalType = builder.cacheLocalType;
-        this.cacheSizeType = builder.cacheSizeType;
+        this.cacheLocal = builder.cacheLocal;
+        this.cacheSize = builder.cacheSize;
         this.cacheDirName = builder.cacheDirName;
         this.renderType = builder.renderType;
         this.scaleType = builder.scaleType;
@@ -304,8 +302,8 @@ public class StartArgs implements Serializable {
         Builder builder = new Builder();
         builder.seekType = seekType;
         builder.cacheType = cacheType;
-        builder.cacheLocalType = cacheLocalType;
-        builder.cacheSizeType = cacheSizeType;
+        builder.cacheLocal = cacheLocal;
+        builder.cacheSize = cacheSize;
         builder.cacheDirName = cacheDirName;
         builder.decoderType = decoderType;
         builder.renderType = renderType;
@@ -373,10 +371,9 @@ public class StartArgs implements Serializable {
         private int cacheType = playerArgs.getCacheType();
 
         @PlayerType.CacheLocalType.Value
-        private int cacheLocalType = playerArgs.getCacheLocalType();
+        private int cacheLocal = playerArgs.getCacheLocal();
 
-        @PlayerType.CacheSizeType.Value
-        private int cacheSizeType = playerArgs.getCacheSizeType();
+        private int cacheSize = playerArgs.getCacheSizeType();
 
         private String cacheDirName = playerArgs.getCacheDirName();
 

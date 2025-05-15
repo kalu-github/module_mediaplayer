@@ -309,36 +309,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface SchemeType {
-
-        String FILE = "file://";
-        String RTMP = "rtmp://";
-        String RTSP = "rtsp://";
-        String _MPD = ".mpd";
-        String _M3U = ".m3u";
-        String _M3U8 = ".m3u8";
-        String _MP4 = ".mp4";
-        String _MATCHES = ".*\\.ism(l)?(/manifest(\\(.+\\))?)?";
-
-        @Documented
-        @Retention(CLASS)
-        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @StringDef(value = {
-                SchemeType.FILE,
-                SchemeType.RTMP,
-                SchemeType.RTSP,
-                SchemeType._MPD,
-                SchemeType._M3U,
-                SchemeType._M3U8,
-                SchemeType._MP4,
-                SchemeType._MATCHES})
-        @interface Value {
-        }
-    }
-
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface SpeedType {
         int _0_5 = 8_001;
         int _1_0 = 8_002;
@@ -409,34 +379,6 @@ public @interface PlayerType {
         @interface Value {
         }
     }
-
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface CacheSizeType {
-
-        int AUTO = 11_001;
-        int _100 = 11_002;
-        int _200 = 11_003;
-        int _400 = 11_004;
-        int _800 = 11_005;
-        int DEFAULT = AUTO;
-
-        @Documented
-        @Retention(CLASS)
-        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef(value = {
-                CacheSizeType.AUTO,
-                CacheSizeType.DEFAULT,
-                CacheSizeType._100,
-                CacheSizeType._200,
-                CacheSizeType._400,
-                CacheSizeType._800,
-        })
-        @interface Value {
-        }
-    }
-
 
     @Documented
     @Retention(CLASS)
@@ -521,6 +463,64 @@ public @interface PlayerType {
                 TrackType.AUDIO_MIDI,
                 TrackType.AUDIO_EXOPLAYER_MIDI,
                 TrackType.AUDIO_UNKNOWN})
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface SchemeType {
+
+        String FILE = "file://";
+        String RTMP = "rtmp://";
+        String RTSP = "rtsp://";
+        String _MPD = ".mpd";
+        String _M3U = ".m3u";
+        String _M3U8 = ".m3u8";
+        String _TS = ".ts";
+        String _MP4 = ".mp4";
+        String _MATCHES = ".*\\.ism(l)?(/manifest(\\(.+\\))?)?";
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @StringDef(value = {
+                SchemeType.FILE,
+                SchemeType.RTMP,
+                SchemeType.RTSP,
+                SchemeType._MPD,
+                SchemeType._M3U,
+                SchemeType._M3U8,
+                SchemeType._TS,
+                SchemeType._MP4,
+                SchemeType._MATCHES})
+        @interface Value {
+        }
+    }
+
+    @Documented
+    @Retention(CLASS)
+    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+    @interface MarkType {
+
+        String SEPARATOR = "/";
+        String UNDERLINE = "_";
+//        String HLS_PLAYLIST = "hls_playlist_";
+//        String HLS_SEGMENT = "hls_segment_";
+        String M3U8 = ".m3u8";
+        String TS = ".ts";
+
+        @Documented
+        @Retention(CLASS)
+        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+        @StringDef(value = {
+                MarkType.SEPARATOR,
+                MarkType.UNDERLINE,
+//                MarkType.HLS_PLAYLIST,
+//                MarkType.HLS_SEGMENT,
+                MarkType.M3U8,
+                MarkType.TS})
         @interface Value {
         }
     }

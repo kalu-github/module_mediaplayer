@@ -359,10 +359,9 @@ public class MainActivity extends Activity {
         @PlayerType.CacheType
         int cacheType;
         boolean cacheChecked = ((CheckBox) findViewById(R.id.main_cache_yes)).isChecked();
-        if(cacheChecked){
+        if (cacheChecked) {
             cacheType = PlayerType.CacheType.OPEN;
-        }
-        else{
+        } else {
             cacheType = PlayerType.CacheType.CLOSE;
         }
 
@@ -387,14 +386,14 @@ public class MainActivity extends Activity {
                 .setInitRelease(false)
                 // 播放器生命周期自动销毁（默认true）
                 .setSupportAutoRelease(false)
-                // 缓存类型（仅针对 ExoPlayer）
+                // 缓存类型（仅针对 Exo Media3）
                 .setCacheType(cacheType)
-                // 缓存类型（仅针对 ExoPlayer）
-                .setCacheLocalType(PlayerType.CacheLocalType.DEFAULT)
-                // 缓存大小（仅针对 ExoPlayer）
-                .setCacheSizeType(PlayerType.CacheSizeType.DEFAULT)
+                // 缓存类型（仅针对 Exo Media3）
+                .setCacheLocal(PlayerType.CacheLocalType.DEFAULT)
+                // 缓存大小（仅针对 Exo Media3）
+                .setCacheSize(500)
                 // 缓存文件夹（仅针对 ExoPlayer）
-                .setCacheDirName(null)
+                .setCacheDirName("test_cache")
                 // 快进类型（仅针对 MediaPlayer ExoPlayer IjkPlayer）
                 .setSeekType(PlayerType.SeekType.DEFAULT)
                 .build();

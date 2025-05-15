@@ -47,13 +47,13 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setCacheLocalType(@PlayerType.CacheLocalType.Value int v) {
-        mPlayerBuilder.setCacheLocalType(v);
+    public PlayerSDK setCacheLocal(@PlayerType.CacheLocalType.Value int v) {
+        mPlayerBuilder.setCacheLocal(v);
         return this;
     }
 
-    public PlayerSDK setCacheSizeType(@PlayerType.CacheSizeType.Value int v) {
-        mPlayerBuilder.setCacheSizeType(v);
+    public PlayerSDK setCacheSize(int v) {
+        mPlayerBuilder.setCacheSize(v);
         return this;
     }
 

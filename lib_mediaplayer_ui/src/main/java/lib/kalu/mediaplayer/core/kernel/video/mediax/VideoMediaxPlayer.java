@@ -22,10 +22,18 @@ import androidx.media3.common.text.Cue;
 import androidx.media3.common.text.CueGroup;
 import androidx.media3.common.util.Clock;
 import androidx.media3.common.util.UnstableApi;
+import androidx.media3.database.StandaloneDatabaseProvider;
 import androidx.media3.datasource.DataSource;
+import androidx.media3.datasource.DataSpec;
 import androidx.media3.datasource.DefaultDataSource;
 import androidx.media3.datasource.DefaultHttpDataSource;
+import androidx.media3.datasource.FileDataSource;
+import androidx.media3.datasource.cache.CacheDataSink;
 import androidx.media3.datasource.cache.CacheDataSource;
+import androidx.media3.datasource.cache.CacheKeyFactory;
+import androidx.media3.datasource.cache.CacheSpan;
+import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
+import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.exoplayer.DecoderReuseEvaluation;
 import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
@@ -35,6 +43,8 @@ import androidx.media3.exoplayer.Renderer;
 import androidx.media3.exoplayer.RenderersFactory;
 import androidx.media3.exoplayer.analytics.AnalyticsListener;
 import androidx.media3.exoplayer.analytics.DefaultAnalyticsCollector;
+import androidx.media3.exoplayer.hls.HlsManifest;
+import androidx.media3.exoplayer.hls.playlist.HlsMediaPlaylist;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.LoadEventInfo;
 import androidx.media3.exoplayer.source.MediaLoadData;
@@ -51,12 +61,15 @@ import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 
 import com.google.common.collect.ImmutableList;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NavigableSet;
 
+import lib.kalu.mediaplayer.args.HlsSpanInfo;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.args.TrackInfo;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
@@ -70,6 +83,8 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     private boolean mPlayWhenReadySeeking = false;
     private boolean mSeeking = false;
 
+    private HlsManifest mHlsManifest;
+    private SimpleCache mSimpleCache;
     private ExoPlayer mExoPlayer;
 
     @Override
@@ -470,6 +485,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void release() {
         try {
+            if (null != mSimpleCache) {
+                mSimpleCache.release();
+            }
+            if (null != mHlsManifest) {
+                mHlsManifest = null;
+            }
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
             mExoPlayer.setVideoSurface(null);
@@ -583,29 +604,72 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                     .setKeepPostFor302Redirects(true);
 
             int cacheType = args.getCacheType();
-            boolean live = args.isLive();
-            if (live) {
+            if (lowerCase.startsWith(PlayerType.SchemeType.FILE)) {
+                cacheType = PlayerType.CacheType.CLOSE;
+            } else if (args.isLive()) {
                 cacheType = PlayerType.CacheType.CLOSE;
             }
 
             // 关闭缓存
             DataSource.Factory dataSource;
-            if (lowerCase.startsWith(PlayerType.SchemeType.FILE) || cacheType == PlayerType.CacheType.CLOSE) {
+            if (cacheType == PlayerType.CacheType.CLOSE) {
                 dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
             }
             // 开启缓存
             else {
-                @PlayerType.CacheLocalType.Value
-                int cacheLocalType = args.getCacheLocalType();
-                @PlayerType.CacheSizeType.Value
-                int cacheSizeType = args.getCacheSizeType();
-                String cacheDirName = args.getCacheDirName();
+
+                if (null == mSimpleCache) {
+
+                    int local = args.getCacheLocal();
+                    String dirName = args.getCacheDirName();
+                    File dir;
+                    if (local == PlayerType.CacheLocalType.EXTERNAL) {
+                        File externalCacheDir = context.getExternalCacheDir();
+                        dir = new File(externalCacheDir, dirName);
+                    } else {
+                        File cacheDir = context.getCacheDir();
+                        dir = new File(cacheDir, dirName);
+                    }
+
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+
+                    int size = args.getCacheSize();
+                    mSimpleCache = new SimpleCache(dir,
+                            //
+                            new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024),
+                            //
+                            new StandaloneDatabaseProvider(context)
+                    );
+                }
+
 
                 dataSource = new CacheDataSource.Factory()
-                        .setCache(VideoMediaxPlayerSimpleCache.getSimpleCache(context, cacheLocalType, cacheSizeType, cacheDirName))
-//                        .setCacheWriteDataSinkFactory(new CacheDataSink.Factory().setCache(simpleCache1).setFragmentSize(C.LENGTH_UNSET))
                         .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
-                        .setUpstreamDataSourceFactory(dataSourceFactory);
+                        .setCache(mSimpleCache)
+                        // 网络请求工厂
+                        .setUpstreamDataSourceFactory(dataSourceFactory)
+                        // 缓存读取工厂
+                        .setCacheReadDataSourceFactory(new FileDataSource.Factory())
+                        // 写入数据到缓存
+                        .setCacheWriteDataSinkFactory(new CacheDataSink.Factory()
+                                .setFragmentSize(CacheDataSink.DEFAULT_FRAGMENT_SIZE)
+                                .setCache(mSimpleCache))
+                        // 自定义缓存键
+                        .setCacheKeyFactory(new CacheKeyFactory() {
+                            @Override
+                            public String buildCacheKey(DataSpec dataSpec) {
+                                String subUrl = dataSpec.uri.toString();
+                                if (subUrl.endsWith(PlayerType.MarkType.M3U8)) {
+                                    return subUrl;
+                                } else if (subUrl.endsWith(PlayerType.MarkType.TS)) {
+                                    return subUrl;
+                                } else {
+                                    return url;
+                                }
+                            }
+                        });
             }
 
             //
@@ -750,6 +814,15 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     private final AnalyticsListener mAnalyticsListener = new AnalyticsListener() {
 
         @Override
+        public void onTimelineChanged(AnalyticsListener.EventTime eventTime, int i) {
+            Object manifest = mExoPlayer.getCurrentManifest();
+            LogUtil.log("VideoMediaxPlayer => onTimelineChanged => manifest = " + manifest);
+            if (manifest instanceof HlsManifest) {
+                mHlsManifest = (HlsManifest) manifest;
+            }
+        }
+
+        @Override
         public void onPlayerErrorChanged(EventTime eventTime, @Nullable PlaybackException e) {
             LogUtil.log("VideoMediaxPlayer => onPlayerErrorChanged => message = " + e.getMessage(), e);
         }
@@ -774,12 +847,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             }
         }
 
-        @Override
-        public void onTimelineChanged(AnalyticsListener.EventTime eventTime, int reason) {
-            LogUtil.log("VideoMediaxPlayer => onTimelineChanged => reason = " + reason + ", totalBufferedDurationMs = " + eventTime.totalBufferedDurationMs + ", realtimeMs = " + eventTime.realtimeMs);
-        }
-
-        @Override
         public void onEvents(Player player, AnalyticsListener.Events events) {
 //                    MediaLogUtil.log("VideoMediaxPlayer => onEvents => isPlaying = " + player.isPlaying());
         }
@@ -1397,6 +1464,52 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             return list;
         } catch (Exception e) {
             LogUtil.log("VideoMediaxPlayer => getTrackInfo => Exception " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<HlsSpanInfo> getBufferedHlsSpanInfo() {
+        try {
+            if (null == mHlsManifest)
+                throw new Exception("warning: mHlsManifest null");
+            if (null == mSimpleCache)
+                throw new Exception("warning: mSimpleCache null");
+
+            //
+            ArrayList<HlsSpanInfo> list = null;
+            //
+            HlsMediaPlaylist mediaPlaylist = mHlsManifest.mediaPlaylist;
+            String url = mediaPlaylist.baseUri;
+            int lastIndexOf = url.lastIndexOf(PlayerType.MarkType.SEPARATOR);
+            String baseUrl = url.substring(0, lastIndexOf);
+            //
+            for (HlsMediaPlaylist.Segment segment : mediaPlaylist.segments) {
+
+                String segmentUrl = baseUrl + PlayerType.MarkType.SEPARATOR + segment.url;
+                NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(segmentUrl);
+                for (CacheSpan span : cachedSpans) {
+                    if (null == span)
+                        continue;
+                    if (!span.isCached)
+                        continue;
+                    HlsSpanInfo hlsSpanInfo = new HlsSpanInfo();
+                    hlsSpanInfo.setPath(span.file.getAbsolutePath());
+                    hlsSpanInfo.setUrl(segmentUrl);
+                    hlsSpanInfo.setRelativeStartTimeUs(segment.relativeStartTimeUs);
+                    hlsSpanInfo.setDurationUs(segment.durationUs);
+                    //
+                    if (null == list) {
+                        list = new ArrayList<>(0);
+                    }
+                    list.add(hlsSpanInfo);
+                }
+            }
+            if (null == list)
+                throw new Exception("warning: list null");
+            return list;
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => getBufferedHlsSpanInfo => Exception " + e.getMessage());
             return null;
         }
     }
