@@ -695,6 +695,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                             @Override
                             public String buildCacheKey(DataSpec dataSpec) {
                                 String subUrl = dataSpec.uri.toString();
+//                                LogUtil.log("VideoExo2Player => buildSource => buildCacheKey => subUrl = " + subUrl);
                                 if (subUrl.endsWith(PlayerType.MarkType.M3U8)) {
                                     return subUrl;
                                 } else if (subUrl.endsWith(PlayerType.MarkType.TS)) {
@@ -1435,12 +1436,16 @@ public final class VideoExo2Player extends VideoBasePlayer {
             //
             HlsMediaPlaylist mediaPlaylist = mHlsManifest.mediaPlaylist;
             String url = mediaPlaylist.baseUri;
+//            LogUtil.log("VideoExo2Player => getBufferedHlsSpanInfo => url = " + url);
             int lastIndexOf = url.lastIndexOf(PlayerType.MarkType.SEPARATOR);
             String baseUrl = url.substring(0, lastIndexOf);
+//            LogUtil.log("VideoExo2Player => getBufferedHlsSpanInfo => baseUrl = " + baseUrl);
             //
             for (HlsMediaPlaylist.Segment segment : mediaPlaylist.segments) {
 
+
                 String segmentUrl = baseUrl + PlayerType.MarkType.SEPARATOR + segment.url;
+//                LogUtil.log("VideoExo2Player => getBufferedHlsSpanInfo => segment.title = " + segment.title+", segment.url = "+segment.url);
                 NavigableSet<CacheSpan> cachedSpans = mSimpleCache.getCachedSpans(segmentUrl);
                 for (CacheSpan span : cachedSpans) {
                     if (null == span)
