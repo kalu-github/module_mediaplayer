@@ -2,6 +2,9 @@ package com.kalu.mediaplayer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.net.UrlQuerySanitizer;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -13,8 +16,18 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +37,7 @@ import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.args.TrackInfo;
 import lib.kalu.mediaplayer.test.TestActivity;
 import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
  * description:
@@ -47,7 +61,7 @@ public class MainActivity extends Activity {
                 StartArgs args = new StartArgs.Builder()
                         .setUrl(getUrl())
                         .setExtraTrackSubtitle(getExtra(0))
-                        .setExtraTrackVideo(getExtra(1))
+//                        .setExtraTrackVideo(getExtra(1))
                         .setTitle("测试视频")
                         .setLive(isLive())
                         .setLooping(isLooping())
@@ -258,7 +272,107 @@ public class MainActivity extends Activity {
                 RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
                 boolean checked = radioButton.isChecked();
                 if (checked) {
-                    return radioButton.getTag().toString();
+
+                    CharSequence text = radioButton.getText();
+                    if ("hls_m3u8_extra".equals(text)) {
+                        /**
+                         * #EXTM3U
+                         * #EXT-X-STREAM-INF: PROGRAM-ID=1, BANDWIDTH=1280000
+                         * http://example.com/low.m3u8
+                         * #EXT-X-STREAM-INF: PROGRAM-ID=1, BANDWIDTH=2560000
+                         * http://example.com/mid.m3u8
+                         * #EXT-X-STREAM-INF: PROGRAM-ID=1, BANDWIDTH=7680000
+                         * http://example.com/hi.m3u8
+                         * #EXT-X-STREAM-INF: PROGRAM-ID=1, BANDWIDTH=65000, CODECS="mp4a.40.5"
+                         * http://example.com/audio-only.m3u8
+                         */
+
+                        String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
+
+                        StringBuilder stringBuilder = new StringBuilder();
+                        stringBuilder.append("#EXTM3U");
+                        stringBuilder.append("\n");
+                        stringBuilder.append("#EXT-X-STREAM-INF: PROGRAM-ID=1, BANDWIDTH=1280000");
+                        stringBuilder.append("\n");
+                        stringBuilder.append(urls[0]);
+                        stringBuilder.append("\n");
+                        stringBuilder.append("#EXT-X-STREAM-INF: PROGRAM-ID=2, BANDWIDTH=2560000");
+                        stringBuilder.append("\n");
+                        stringBuilder.append(urls[1]);
+                        stringBuilder.append("\n");
+                        stringBuilder.append("#EXT-X-STREAM-INF: PROGRAM-ID=3, BANDWIDTH=7680000");
+                        stringBuilder.append("\n");
+                        stringBuilder.append(urls[2]);
+
+                        /**
+                         *
+                         * #EXT-X-MEDIA 属性详解
+                         *
+                         * 1. TYPE - 媒体类型
+                         * 必填属性，指定媒体资源的类型，可选值包括：
+                         * AUDIO：音频流（如不同语言的音轨）。
+                         * SUBTITLES：字幕流（如不同语言的字幕）。
+                         * CLOSED-CAPTIONS：隐藏字幕（类似字幕流，但实现方式可能不同）。
+                         * VIDEO：视频流（较少用，通常视频流通过 #EXT-X-STREAM-INF 定义）。
+                         *
+                         * 示例：
+                         *
+                         * plaintext
+                         * #EXT-X-MEDIA:TYPE=AUDIO,NAME="English",GROUP-ID="audio-en",DEFAULT=YES,AUTOSELECT=YES,URI="audio_en.m3u8"
+                         *
+                         * 2. GROUP-ID - 分组 ID
+                         * 必填属性，用于将同类媒体资源分组（如不同语言的音频流归为同一组）。同一组内的媒体资源可通过 NAME 或 LANGUAGE 区分。
+                         * 示例：GROUP-ID="audio-lang"（音频分组）、GROUP-ID="subs-lang"（字幕分组）。
+                         * 3. NAME - 媒体名称
+                         * 可选属性，媒体资源的可读名称（如语言名称），用于客户端展示（如播放器的语言选择菜单）。
+                         * 示例：NAME="中文"、NAME="English"。
+                         * 4. LANGUAGE - 语言代码
+                         * 可选属性，指定媒体资源的语言，遵循 RFC 5646 标准（如 zh-CN、en）。
+                         * 示例：LANGUAGE="zh-Hans"（简体中文）、LANGUAGE="en"（英语）。
+                         * 5. DEFAULT - 是否为默认资源
+                         * 可选属性，值为 YES 或 NO，指定该媒体资源是否为客户端默认选择。
+                         * 同一分组中最多只能有一个 DEFAULT=YES 的资源。
+                         * 示例：DEFAULT=YES（默认音频流）。
+                         * 6. AUTOSELECT - 是否自动选择
+                         * 可选属性，值为 YES 或 NO，指定客户端是否在无用户干预时自动选择该资源。
+                         * 若 AUTOSELECT=YES，客户端会根据环境（如系统语言）自动选择匹配的资源。
+                         * 示例：AUTOSELECT=YES（自动选择匹配语言的字幕）。
+                         * 7. FORCED - 是否为强制显示
+                         * 可选属性，值为 YES 或 NO，仅用于字幕流（TYPE=SUBTITLES）。
+                         * YES：表示该字幕为强制显示（如非对话的字幕，无需用户手动选择）。
+                         * 示例：FORCED=YES（强制显示的字幕）。
+                         * 8. URI - 资源地址
+                         * 必填属性，指定媒体资源的 URI（相对或绝对路径），通常为另一个 M3U8 播放列表（如音频流的子播放列表）。
+                         * 示例：URI="audio_eng.m3u8"、URI="subs_chn.srt"（若字幕为 SRT 格式）。
+                         * 9. INSTREAM-ID - 流内唯一标识
+                         * 可选属性，用于标识同一媒体类型中的不同流（如同一语言的不同音频编码）。
+                         * 示例：INSTREAM-ID="aac-eng"、INSTREAM-ID="opus-eng"。
+                         */
+
+                        /**
+                         * 多语言音频流
+                         * #EXT-X-MEDIA:TYPE=AUDIO,NAME="中文",GROUP-ID="audio-lang",LANGUAGE="zh-CN",DEFAULT=YES,URI="audio_zh.m3u8"
+                         * #EXT-X-MEDIA:TYPE=AUDIO,NAME="English",GROUP-ID="audio-lang",LANGUAGE="en",DEFAULT=NO,URI="audio_en.m3u8"
+                         */
+
+                        /**
+                         * 多语言字幕流
+                         * #EXT-X-MEDIA:TYPE=SUBTITLES,NAME="简体中文",GROUP-ID="subs-lang",LANGUAGE="zh-Hans",AUTOSELECT=YES,URI="subs_zh.srt"
+                         * #EXT-X-MEDIA:TYPE=SUBTITLES,NAME="English",GROUP-ID="subs-lang",LANGUAGE="en",AUTOSELECT=NO,URI="subs_en.srt"
+                         */
+
+                        String filename = urls.hashCode() + "";
+                        String filePath = getFilesDir().getAbsolutePath() + "/" + filename + ".m3u8";
+                        String content = stringBuilder.toString();
+
+                        FileOutputStream fos = new FileOutputStream(filePath);
+                        byte[] bytes = content.getBytes();
+                        fos.write(bytes);
+
+                        return filePath;
+                    } else {
+                        return radioButton.getTag().toString();
+                    }
                 }
             }
 
@@ -271,6 +385,7 @@ public class MainActivity extends Activity {
             //
             throw new Exception();
         } catch (Exception e) {
+            LogUtil.log("MainActivity => getUrl => Exception " + e.getMessage(), e);
             return "";
         }
     }
