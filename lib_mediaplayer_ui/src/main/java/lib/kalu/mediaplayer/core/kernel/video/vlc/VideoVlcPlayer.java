@@ -19,6 +19,8 @@ import lib.kalu.vlc.widget.VlcPlayer;
 
 public final class VideoVlcPlayer extends VideoBasePlayer {
 
+    private boolean isVideoSizeChanged = false;
+    private boolean isPrepared = false;
     private boolean isBuffering = false;
     private lib.kalu.vlc.widget.VlcPlayer mVlcPlayer;
 
@@ -80,8 +82,15 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
         try {
             if (null == mVlcPlayer)
                 throw new Exception("error: mVlcPlayer null");
-            boolean mute = isMute();
-            setVolume(mute ? 0L : 1L, mute ? 0L : 1L);
+            boolean mute = args.isMute();
+            if (mute) {
+                mVlcPlayer.setVolume(0f, 0f);
+            } else {
+                mVlcPlayer.setVolume(1f, 1f);
+            }
+
+            boolean looping = args.isLooping();
+            mVlcPlayer.setLooping(looping);
         } catch (Exception e) {
             LogUtil.log("VideoVlcPlayer => initOptions => Exception " + e.getMessage());
         }
@@ -160,7 +169,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public void pause() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -192,7 +201,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public boolean isPlaying() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -220,7 +229,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public long getPosition() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -240,7 +249,7 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
     @Override
     public long getDuration() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mVlcPlayer)
                 throw new Exception("mVlcPlayer error: null");
@@ -252,6 +261,11 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
 //            MPLogUtil.log("VideoVlcPlayer => getDuration => " + e.getMessage());
             return 0L;
         }
+    }
+
+    @Override
+    public boolean isPrepared() {
+        return isPrepared;
     }
 
     @Override
@@ -279,17 +293,16 @@ public final class VideoVlcPlayer extends VideoBasePlayer {
 
     @Override
     public void setVolume(float v1, float v2) {
-        if (null != mVlcPlayer) {
-            boolean videoMute = isMute();
-            if (videoMute) {
-                mVlcPlayer.setVolume(0F, 0F);
-            } else {
-                float value = Math.max(v1, v2);
-                if (value > 1f) {
-                    value = 1f;
-                }
-                mVlcPlayer.setVolume(value, value);
-            }
+
+        try {
+            if (null == mVlcPlayer)
+                throw new Exception("mVlcPlayer error: null");
+            float volume = Math.max(v1, v2);
+            if (volume < 0)
+                throw new Exception("error: volume < 0");
+            mVlcPlayer.setVolume(volume, volume);
+        } catch (Exception e) {
+            LogUtil.log("VideoVlcPlayer => setVolume => Exception " + e.getMessage());
         }
     }
 

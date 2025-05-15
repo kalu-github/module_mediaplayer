@@ -26,6 +26,8 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class VideoFFmpegPlayer extends VideoBasePlayer {
 
+    private boolean isVideoSizeChanged = false;
+    private boolean isPrepared = false;
     private boolean isBuffering = false;
     private boolean mPlayWhenReadySeeking = false;
     private FFmpegPlayer mFFmpegPlayer = null;
@@ -90,8 +92,14 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("error: mFFmpegPlayer null");
-            boolean mute = isMute();
-            setVolume(mute ? 0L : 1L, mute ? 0L : 1L);
+            boolean mute = args.isMute();
+            if (mute) {
+                mFFmpegPlayer.setVolume(0f, 0f);
+            } else {
+                mFFmpegPlayer.setVolume(1f, 1f);
+            }
+            boolean looping = args.isLooping();
+            mFFmpegPlayer.setLooping(looping);
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => initOptions => Exception " + e.getMessage());
         }
@@ -183,7 +191,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public void pause() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -214,7 +222,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public boolean isPlaying() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -259,7 +267,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public long getPosition() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -279,7 +287,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
     @Override
     public long getDuration() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
@@ -291,6 +299,11 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
 //            MPLogUtil.log("VideoFFmpegPlayer => getDuration => " + e.getMessage());
             return 0L;
         }
+    }
+
+    @Override
+    public boolean isPrepared() {
+        return isPrepared;
     }
 
     @Override
@@ -326,7 +339,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             LogUtil.log("VideoFFmpegPlayer => onInfo => what = " + what);
             // 缓冲开始
             if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                if (isPrepared()) {
+                if (isPrepared) {
                     isBuffering = true;
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_START);
                 } else {
@@ -335,7 +348,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             }
             // 缓冲结束
             else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                if (isPrepared()) {
+                if (isPrepared) {
                     isBuffering = false;
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.BUFFERING_STOP);
                 } else {
@@ -345,9 +358,9 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
             // 开始播放
             else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                 try {
-                    if (isPrepared())
+                    if (isPrepared)
                         throw new Exception("warning: mPrepared true");
-                    setPrepared(true);
+                    isPrepared = true;
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.VIDEO_RENDERING_START);
                     long seek = getPlayWhenReadySeekToPosition();
                     if (seek <= 0) {
@@ -460,13 +473,12 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                 int videoHeight = mp.getVideoHeight();
                 if (videoHeight <= 0)
                     throw new Exception("error: videoHeight <=0");
-                boolean videoSizeChanged = isVideoSizeChanged();
-                if (videoSizeChanged)
+                if (isVideoSizeChanged)
                     throw new Exception("warning: videoSizeChanged = true");
                 StartArgs args = getStartArgs();
                 if (null == args)
                     throw new Exception("error: args null");
-                setVideoSizeChanged(true);
+                isVideoSizeChanged = true;
                 @PlayerType.ScaleType.Value
                 int scaleType = args.getscaleType();
                 int rotation = args.getRotation();
@@ -484,16 +496,10 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
         try {
             if (null == mFFmpegPlayer)
                 throw new Exception("mFFmpegPlayer error: null");
-            float value;
-            if (isMute()) {
-                value = 0F;
-            } else {
-                value = Math.max(v1, v2);
-            }
-            if (value > 1f) {
-                value = 1f;
-            }
-            mFFmpegPlayer.setVolume(value, value);
+            float volume = Math.max(v1, v2);
+            if (volume < 0)
+                throw new Exception("error: volume < 0");
+            mFFmpegPlayer.setVolume(volume, volume);
         } catch (Exception e) {
             LogUtil.log("VideoFFmpegPlayer => setVolume => " + e.getMessage());
         }

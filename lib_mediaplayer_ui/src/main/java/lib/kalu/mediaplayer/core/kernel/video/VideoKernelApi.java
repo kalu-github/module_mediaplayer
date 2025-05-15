@@ -49,13 +49,6 @@ public interface VideoKernelApi extends VideoKernelApiHandler,
             setStartArgs(args);
         } catch (Exception e) {
         }
-        try {
-            boolean mute = args.isMute();
-            setMute(mute);
-            boolean looping = args.isLooping();
-            setLooping(looping);
-        } catch (Exception e) {
-        }
 
         long playWhenReadyDelayedTime = args.getPlayWhenReadyDelayedTime();
         // 延迟播放

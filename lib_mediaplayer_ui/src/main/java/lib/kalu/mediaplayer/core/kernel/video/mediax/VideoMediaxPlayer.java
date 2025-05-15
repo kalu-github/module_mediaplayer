@@ -79,6 +79,8 @@ import lib.kalu.mediaplayer.util.LogUtil;
 @UnstableApi
 public final class VideoMediaxPlayer extends VideoBasePlayer {
 
+    private boolean isVideoSizeChanged = false;
+    private boolean isPrepared = false;
     private boolean isBuffering = false;
     private boolean mPlayWhenReadySeeking = false;
     private boolean mSeeking = false;
@@ -261,10 +263,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             MediaSource mediaSource = buildSource(context, args);
             mExoPlayer.setMediaSource(mediaSource);
-            mExoPlayer.setRepeatMode(androidx.media3.exoplayer.ExoPlayer.REPEAT_MODE_OFF);
-
-            boolean playWhenReady = args.isPlayWhenReady();
-            mExoPlayer.setPlayWhenReady(playWhenReady);
             boolean prepareAsync = args.isPrepareAsync();
             if (prepareAsync) {
                 mExoPlayer.prepare();
@@ -280,14 +278,27 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
     @Override
     public void initOptions(Context context, StartArgs args) {
+
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer warning: null");
+            boolean mute = args.isMute();
+            if (mute) {
+                mExoPlayer.setVolume(0f);
+            } else {
+                mExoPlayer.setVolume(1f);
+            }
+            boolean looping = args.isLooping();
+            mExoPlayer.setRepeatMode(looping ? Player.REPEAT_MODE_ALL : Player.REPEAT_MODE_OFF);
+            boolean playWhenReady = args.isPlayWhenReady();
+            mExoPlayer.setPlayWhenReady(playWhenReady);
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => initOptions => " + e.getMessage());
+        }
+
         try {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
-            if (null == args)
-                throw new Exception("error: args null");
-            //
-            boolean mute = isMute();
-            setVolume(mute ? 0L : 1L, mute ? 0L : 1L);
             //
             boolean log = args.isLog();
             lib.kalu.mediax.util.MediaLogUtil.setLogger(log);
@@ -331,7 +342,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public boolean isPlaying() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -382,7 +393,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public long getPosition() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -402,7 +413,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public long getDuration() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mExoPlayer error: null");
@@ -414,6 +425,11 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 //            MPLogUtil.log("VideoMediaxPlayer => getDuration => " + e.getMessage());
             return 0L;
         }
+    }
+
+    @Override
+    public boolean isPrepared() {
+        return isPrepared;
     }
 
     /**
@@ -441,19 +457,12 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void setVolume(float v1, float v2) {
         try {
-            float value;
-            boolean mute = isMute();
-            LogUtil.log("VideoMediaxPlayer => setVolume => mute = " + mute);
-            if (mute) {
-                value = 0F;
-            } else {
-                value = Math.max(v1, v2);
-                if (value > 1f) {
-                    value = 1f;
-                }
-            }
-            LogUtil.log("VideoMediaxPlayer => setVolume => value = " + value);
-            mExoPlayer.setVolume(value);
+            if (null == mExoPlayer)
+                throw new Exception("mExoPlayer error: null");
+            float volume = Math.max(v1, v2);
+            if (volume < 0)
+                throw new Exception("error: volume < 0");
+            mExoPlayer.setVolume(volume);
         } catch (Exception e) {
             LogUtil.log("VideoMediaxPlayer => setVolume => " + e.getMessage());
         }
@@ -526,7 +535,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     @Override
     public void pause() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mExoPlayer)
                 throw new Exception("mMediaPlayer error: null");
@@ -884,7 +893,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             else if (state == Player.STATE_READY) {
                 LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_READY] = " + state);
                 try {
-                    if (!isPrepared())
+                    if (!isPrepared)
                         throw new Exception("warning: isPrepared false");
 
                     // buffering
@@ -946,7 +955,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             else if (state == Player.STATE_BUFFERING) {
                 LogUtil.log("VideoMediaxPlayer => onPlaybackStateChanged -> state[Player.STATE_BUFFERING] = " + state);
                 try {
-                    if (!isPrepared())
+                    if (!isPrepared)
                         throw new Exception("mPrepared warning: false");
                     isBuffering = true;
                     onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.BUFFERING_START);
@@ -980,9 +989,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             // 起播快进??
             try {
-                if (isPrepared())
+                if (isPrepared)
                     throw new Exception("warning: isPrepared true");
-                setPrepared(true);
+                isPrepared = true;
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PREPARE);
                 onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.VIDEO_RENDERING_START);
                 long seek = getPlayWhenReadySeekToPosition();

@@ -18,9 +18,6 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
 
     default void clearArgs() {
         setDoWindowing(false);
-        setMute(false);
-        setPrepared(false);
-        setVideoSizeChanged(false);
         setStartArgs(null);
     }
 
@@ -120,77 +117,5 @@ interface VideoKernelApiStartArgs extends VideoKernelApiBase {
             LogUtil.log("VideoKernelApiStartArgs => isDoWindowing => Exception " + e.getMessage());
             return false;
         }
-    }
-
-    HashMap<VideoKernelApiBase, Boolean> mLooping = new HashMap<>();
-
-    default void setLooping(boolean v) {
-        mLooping.put(this, v);
-    }
-
-    default boolean isLooping() {
-        try {
-            Boolean aBoolean = mLooping.get(this);
-            if (null == aBoolean)
-                throw new Exception("warning: aBoolean null");
-            return aBoolean;
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApiStartArgs => isLooping => Exception " + e.getMessage());
-            return false;
-        }
-    }
-
-    HashMap<VideoKernelApiBase, Boolean> mMute = new HashMap<>();
-
-    default boolean isMute() {
-        try {
-            Boolean aBoolean = mMute.get(this);
-            if (null == aBoolean)
-                throw new Exception("warning: aBoolean null");
-            return aBoolean;
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApiStartArgs => isMute => Exception " + e.getMessage());
-            return false;
-        }
-    }
-
-    default void setMute(boolean v) {
-        mMute.put(this, v);
-    }
-
-    HashMap<VideoKernelApiBase, Boolean> mPrepared = new HashMap<>();
-
-    default boolean isPrepared() {
-        try {
-            Boolean aBoolean = mPrepared.get(this);
-            if (null == aBoolean)
-                throw new Exception("warning: aBoolean null");
-            return aBoolean;
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApiStartArgs => isPrepared => Exception " + e.getMessage());
-            return false;
-        }
-    }
-
-    default void setPrepared(boolean v) {
-        mPrepared.put(this, v);
-    }
-
-    HashMap<VideoKernelApiBase, Boolean> mVideoSizeChanged = new HashMap<>();
-
-    default boolean isVideoSizeChanged() {
-        try {
-            Boolean aBoolean = mVideoSizeChanged.get(this);
-            if (null == aBoolean)
-                throw new Exception("warning: aBoolean null");
-            return aBoolean;
-        } catch (Exception e) {
-            LogUtil.log("VideoKernelApiStartArgs => isVideoSizeChanged => Exception " + e.getMessage());
-            return false;
-        }
-    }
-
-    default void setVideoSizeChanged(boolean v) {
-        mVideoSizeChanged.put(this, v);
     }
 }

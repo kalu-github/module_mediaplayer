@@ -53,6 +53,10 @@ interface VideoKernelApiBase {
 
     long getDuration();
 
+    boolean isPrepared();
+
+//    boolean isVideoSizeChanged();
+
 //    default boolean toggleTrackLanguageSubtitle(String language) {
 //        return false;
 //    }

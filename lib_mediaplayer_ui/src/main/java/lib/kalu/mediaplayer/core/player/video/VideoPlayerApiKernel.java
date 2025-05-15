@@ -134,20 +134,14 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         try {
             LogUtil.log("VideoPlayerApiKernel => setMute => enable = " + enable);
             VideoKernelApi kernel = getVideoKernel();
-            kernel.setMute(enable);
+            if (enable) {
+                kernel.setVolume(0f, 0f);
+            } else {
+                kernel.setVolume(1f, 1f);
+            }
         } catch (Exception e) {
         }
     }
-
-    default void setLooping(boolean looping) {
-        try {
-            LogUtil.log("VideoPlayerApiKernel => setLooping => looping = " + looping);
-            VideoKernelApi kernel = getVideoKernel();
-            kernel.setLooping(looping);
-        } catch (Exception e) {
-        }
-    }
-
 
     default void toggle() {
         toggle(true);
@@ -295,15 +289,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         try {
             VideoKernelApi kernel = getVideoKernel();
             return kernel.isPrepared();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    default boolean isMute() {
-        try {
-            VideoKernelApi kernel = getVideoKernel();
-            return kernel.isMute();
         } catch (Exception e) {
             return false;
         }

@@ -29,6 +29,8 @@ import lib.kalu.mediaplayer.util.LogUtil;
 
 public final class VideoIjkPlayer extends VideoBasePlayer {
 
+    private boolean isVideoSizeChanged = false;
+    private boolean isPrepared = false;
     private boolean isBuffering = false;
     private boolean mPlayWhenReadySeeking = false;
     private IjkMediaPlayer mIjkPlayer = null;
@@ -103,9 +105,15 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("error: mIjkPlayer null");
-            LogUtil.log("VideoIjkPlayer => initOptions => step1");
-            boolean mute = isMute();
-            setVolume(mute ? 0L : 1L, mute ? 0L : 1L);
+            boolean mute = args.isMute();
+            if (mute) {
+                mIjkPlayer.setVolume(0f, 0f);
+            } else {
+                mIjkPlayer.setVolume(1f, 1f);
+            }
+
+            boolean looping = args.isLooping();
+            mIjkPlayer.setLooping(looping);
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => initOptions => step1 Exception " + e.getMessage());
         }
@@ -407,7 +415,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             LogUtil.log("VideoIjkPlayer => pause =>");
             mIjkPlayer.pause();
@@ -465,7 +473,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public boolean isPlaying() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -502,7 +510,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public long getPosition() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -519,7 +527,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
     @Override
     public long getDuration() {
         try {
-            if (!isPrepared())
+            if (!isPrepared)
                 throw new Exception("mPrepared warning: false");
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
@@ -531,6 +539,11 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
             LogUtil.log("VideoIjkPlayer => getDuration => " + e.getMessage());
             return 0L;
         }
+    }
+
+    @Override
+    public boolean isPrepared() {
+        return isPrepared;
     }
 
     @Override
@@ -553,17 +566,10 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         try {
             if (null == mIjkPlayer)
                 throw new Exception("mIjkPlayer error: null");
-            LogUtil.log("VideoIjkPlayer => setVolume =>");
-            boolean videoMute = isMute();
-            if (videoMute) {
-                mIjkPlayer.setVolume(0F, 0F);
-            } else {
-                float value = Math.max(v1, v2);
-                if (value > 1f) {
-                    value = 1f;
-                }
-                mIjkPlayer.setVolume(value, value);
-            }
+            float volume = Math.max(v1, v2);
+            if (volume < 0)
+                throw new Exception("error: volume < 0");
+            mIjkPlayer.setVolume(volume, volume);
         } catch (Exception e) {
             LogUtil.log("VideoIjkPlayer => setVolume => " + e.getMessage());
         }
@@ -576,73 +582,73 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
         @Override
         public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
             LogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", extra = " + extra);
-            switch (what) {
+
+            try {
                 // 拉流开始
-                case IMediaPlayer.MEDIA_INFO_OPEN_INPUT:
-                    break;
+                if (what == IMediaPlayer.MEDIA_INFO_OPEN_INPUT) {
+
+                }
                 // 拉流成功
-                case IMediaPlayer.MEDIA_INFO_COMPONENT_OPEN:
-//                    onEvent(kernelType, PlayerType.EventType.LOADING_STOP);
-                    break;
+                else if (what == IMediaPlayer.MEDIA_INFO_COMPONENT_OPEN) {
+
+                }
                 // 缓冲开始
-                case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
-                    if (isPrepared()) {
-                        isBuffering = true;
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_START);
-                    } else {
-                        LogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", mPrepared = false");
-                    }
-                    break;
+                else if (what == IMediaPlayer.MEDIA_INFO_BUFFERING_START) {
+                    if (!isPrepared)
+                        throw new Exception("warning: prepared false");
+                    isBuffering = true;
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_START);
+                }
                 // 缓冲结束
-                case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
-                    if (isPrepared()) {
-                        isBuffering = false;
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_STOP);
-                    } else {
-                        LogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", mPrepared = false");
-                    }
-                    break;
-                // 出画面 => 起播
-                case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
-                    try {
-                        if (isPrepared())
-                            throw new Exception("warning: mPrepared true");
-                        setPrepared(true);
-                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_RENDERING_START);
-                        long seek = getPlayWhenReadySeekToPosition();
-                        if (seek <= 0) {
-                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.START);
-                            // 立即播放
-                            boolean playWhenReady = isPlayWhenReady();
-                            onEvent(PlayerType.KernelType.IJK, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
-                            if (!playWhenReady) {
-                                pause();
-                                onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.PAUSE);
-                            }
-                        } else {
-                            // 起播快进
-                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.SEEK_START_FORWARD);
-                            mPlayWhenReadySeeking = true;
-                            seekTo(seek);
+                else if (what == IMediaPlayer.MEDIA_INFO_BUFFERING_END) {
+                    if (!isPrepared)
+                        throw new Exception("warning: prepared false");
+                    isBuffering = false;
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.BUFFERING_STOP);
+                }
+                // 开始播放
+                else if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
+
+//                    // 出画面 => 快进起播
+//                    case IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START:
+//                        try {
+//                            if (!mPrepared)
+//                                throw new Exception("error: mPrepared false");
+//                            onEvent(kernelType, PlayerType.EventType.VIDEO_START_SEEK);
+//                        } catch (Exception e) {
+//                            MPLogUtil.log("VideoIjkPlayer => onInfo => " + e.getMessage());
+//                        }
+//                        break;
+
+                    if (isPrepared)
+                        throw new Exception("warning: isPrepared true");
+                    isPrepared = true;
+                    onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.VIDEO_RENDERING_START);
+                    long seek = getPlayWhenReadySeekToPosition();
+                    LogUtil.log("VideoIjkPlayer => onInfo => seek = " + seek);
+                    if (seek <= 0) {
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.START);
+                        // 立即播放
+                        boolean playWhenReady = isPlayWhenReady();
+                        LogUtil.log("VideoIjkPlayer => onInfo => playWhenReady = " + playWhenReady);
+                        onEvent(PlayerType.KernelType.IJK, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
+                        if (!playWhenReady) {
+                            pause();
+                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.PAUSE);
                         }
-                    } catch (Exception e) {
-                        LogUtil.log("VideoIjkPlayer => onInfo => what = " + what + ", msg = " + e.getMessage());
+                    } else {
+                        // 起播快进
+                        onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.SEEK_START_FORWARD);
+                        mPlayWhenReadySeeking = true;
+                        seekTo(seek);
                     }
-                    break;
-//                // 出画面 => 快进起播
-//                case IMediaPlayer.MEDIA_INFO_VIDEO_SEEK_RENDERING_START:
-//                    try {
-//                        if (!mPrepared)
-//                            throw new Exception("error: mPrepared false");
-//                        onEvent(kernelType, PlayerType.EventType.VIDEO_START_SEEK);
-//                    } catch (Exception e) {
-//                        MPLogUtil.log("VideoIjkPlayer => onInfo => " + e.getMessage());
-//                    }
-//                    break;
-                // 通知
-                default:
-//                    onEvent(kernelType, what);
-                    break;
+                }
+                // not find
+                else {
+                    throw new Exception("warning: not find");
+                }
+            } catch (Exception e) {
+                LogUtil.log("VideoIjkPlayer => onInfo => Exception " + e.getMessage());
             }
             return true;
         }
@@ -703,13 +709,12 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 int videoHeight = iMediaPlayer.getVideoHeight();
                 if (videoHeight <= 0)
                     throw new Exception("error: videoHeight <=0");
-                boolean videoSizeChanged = isVideoSizeChanged();
-                if (videoSizeChanged)
+                if (isVideoSizeChanged)
                     throw new Exception("warning: videoSizeChanged = true");
                 StartArgs args = getStartArgs();
                 if (null == args)
                     throw new Exception("error: args null");
-                setVideoSizeChanged(true);
+                isVideoSizeChanged = true;
                 @PlayerType.ScaleType.Value
                 int scaleType = args.getscaleType();
                 int rotation = args.getRotation();
@@ -803,7 +808,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                 int trackType = ijkTrackInfo.getTrackType();
                 String infoInline = ijkTrackInfo.getInfoInline();
                 IMediaFormat format = ijkTrackInfo.getFormat();
-                LogUtil.log("VideoIjkPlayer => getTrackInfo => trackType = " + trackType+", language = "+language+", infoInline = "+infoInline+", format = "+format);
+                LogUtil.log("VideoIjkPlayer => getTrackInfo => trackType = " + trackType + ", language = " + language + ", infoInline = " + infoInline + ", format = " + format);
 //                JSONObject o = new JSONObject();
 //                o.put("type", t.getTrackType());
 //                o.put("launcher", t.getLanguage());
