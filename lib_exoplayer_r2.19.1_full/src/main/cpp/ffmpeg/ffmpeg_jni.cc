@@ -36,14 +36,8 @@ extern "C" {
 #include <libavutil/error.h>
 #include <libavutil/opt.h>
 #include <libswresample/swresample.h>
-#include "ffmpeg_log.h"
+#include "logging.h"
 }
-
-#define LOG_TAG "MP_EXO_FFMPEG_JNI"
-#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__))
-//#define LOG_TAG "MP_EXO_FFMPEG_JNI"
-//#define LOGE(...) ((void)_exo_logger_print(ANDROID_LOG_ERROR, LOG_TAG, \
-//                   __VA_ARGS__))
 
 #define LIBRARY_FUNC(RETURN_TYPE, NAME, ...)                              \
   extern "C" {                                                            \

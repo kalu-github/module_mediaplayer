@@ -16,7 +16,7 @@
 #include <android/log.h>
 #include <jni.h>
 #include <stdlib.h>
-#include "ffmpeg_log.h"
+#include "logging.h"
 
 extern "C" {
 #ifdef __cplusplus
@@ -32,12 +32,6 @@ extern "C" {
 #include "ffmpeg3/armeabi-v7a/include/libavutil/opt.h"
 #include "ffmpeg3/armeabi-v7a/include/libswresample/swresample.h"
 }
-
-#define LOG_TAG "MP_EXO_FFMPEG_JNI"
-#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__))
-//#define LOG_TAG "MP_EXO_FFMPEG_JNI"
-//#define LOGE(...) ((void)_exo_logger_print(ANDROID_LOG_ERROR, LOG_TAG, \
-//                   __VA_ARGS__))
 
 #define LIBRARY_FUNC(RETURN_TYPE, NAME, ...)                              \
   extern "C" {                                                            \

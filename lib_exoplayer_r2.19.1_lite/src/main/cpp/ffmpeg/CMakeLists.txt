@@ -36,7 +36,7 @@ include_directories(
 add_library(
         exoplayer2-ffmpeg
         SHARED
-        ffmpeg_log.c
+        logging.c
         ffmpeg_jni.cc)
 
 target_link_libraries(

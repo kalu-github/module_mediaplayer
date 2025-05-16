@@ -49,13 +49,13 @@ set_target_properties(ffmpeg-swscale-lib
 
 include_directories(
         ffmpeg3/${ANDROID_ABI}/include
-        #ffmpeg_log.h
+        logging.h
 )
 
 add_library(
         exoplayer2-ffmpeg
         SHARED
-        ffmpeg_log.c
+        logging.c
         ffmpeg_jni.cc)
 
 target_link_libraries(
