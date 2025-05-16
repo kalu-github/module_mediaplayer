@@ -31,32 +31,19 @@
 #-keep class xx.xx.xx.**{*;} 把本包和所含子包下的类名都保持，同时保持里面的内容不被混淆
 #-keep class xx.xx.xx{*;} 保持类名，同时保持里面的内容不被混淆
 
-# Proguard rules specific to the common module.
+# exoplayer r2.19.1
 -dontwarn com.google.android.exoplayer2.**
-
-# Don't warn about checkerframework and Kotlin annotations
 -dontwarn org.checkerframework.**
 -dontwarn kotlin.annotations.jvm.**
 -dontwarn javax.annotation.**
-
-# From https://github.com/google/guava/wiki/UsingProGuardWithGuava
 -dontwarn java.lang.ClassValue
 -dontwarn java.lang.SafeVarargs
 -dontwarn javax.lang.model.element.Modifier
 -dontwarn sun.misc.Unsafe
-
-# Don't warn about Guava's compile-only dependencies.
-# These lines are needed for ProGuard but not R8.
 -dontwarn com.google.errorprone.annotations.**
 -dontwarn com.google.j2objc.annotations.**
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
-
-# Workaround for https://issuetracker.google.com/issues/112297269
-# This is needed for ProGuard but not R8.
 -keepclassmembernames class com.google.common.base.Function { *; }
-# Proguard rules specific to the core module.
-
-# Constructors accessed via reflection in DefaultRenderersFactory
 -dontnote com.google.android.exoplayer2.ext.vp9.LibvpxVideoRenderer
 -keepclassmembers class com.google.android.exoplayer2.ext.vp9.LibvpxVideoRenderer {
   <init>(long, android.os.Handler, com.google.android.exoplayer2.video.VideoRendererEventListener, int);
@@ -77,8 +64,6 @@
 -keepclassmembers class com.google.android.exoplayer2.ext.ffmpeg.FfmpegAudioRenderer {
   <init>(android.os.Handler, com.google.android.exoplayer2.audio.AudioRendererEventListener, com.google.android.exoplayer2.audio.AudioSink);
 }
-
-# Constructors accessed via reflection in DefaultDownloaderFactory
 -dontnote com.google.android.exoplayer2.source.dash.offline.DashDownloader
 -keepclassmembers class com.google.android.exoplayer2.source.dash.offline.DashDownloader {
   <init>(com.google.android.exoplayer2.MediaItem, com.google.android.exoplayer2.upstream.cache.CacheDataSource$Factory, java.util.concurrent.Executor);
@@ -91,8 +76,6 @@
 -keepclassmembers class com.google.android.exoplayer2.source.smoothstreaming.offline.SsDownloader {
   <init>(com.google.android.exoplayer2.MediaItem, com.google.android.exoplayer2.upstream.cache.CacheDataSource$Factory, java.util.concurrent.Executor);
 }
-
-# Constructors accessed via reflection in DefaultMediaSourceFactory
 -dontnote com.google.android.exoplayer2.source.dash.DashMediaSource$Factory
 -keepclasseswithmembers class com.google.android.exoplayer2.source.dash.DashMediaSource$Factory {
   <init>(com.google.android.exoplayer2.upstream.DataSource$Factory);
@@ -109,14 +92,9 @@
 -keepclasseswithmembers class com.google.android.exoplayer2.source.rtsp.RtspMediaSource$Factory {
   <init>();
 }
-# Proguard rules specific to the DataSource module.
-
-# Constant folding for resource integers may mean that a resource passed to this method appears to be unused. Keep the method to prevent this from happening.
 -keepclassmembers class com.google.android.exoplayer2.upstream.RawResourceDataSource {
   public static android.net.Uri buildRawResourceUri(int);
 }
-
-# Constructors accessed via reflection in DefaultDataSource
 -dontnote com.google.android.exoplayer2.ext.rtmp.RtmpDataSource
 -keepclassmembers class com.google.android.exoplayer2.ext.rtmp.RtmpDataSource {
   <init>();
