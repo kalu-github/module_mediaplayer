@@ -209,16 +209,16 @@ public class StartArgs implements Serializable {
     }
 
     // 外挂音轨
-    private List<TrackInfo> extraTrackAudio;
+    private List<String> extraTrackAudio;
 
-    public List<TrackInfo> getExtraTrackAudio() {
+    public List<String> getExtraTrackAudio() {
         return extraTrackAudio;
     }
 
     // 外挂视频轨道
-    private List<TrackInfo> extraTrackVideo;
+    private List<String> extraTrackVideo;
 
-    public List<TrackInfo> getExtraTrackVideo() {
+    public List<String> getExtraTrackVideo() {
         return extraTrackVideo;
     }
 
@@ -492,17 +492,17 @@ public class StartArgs implements Serializable {
         }
 
         // 外挂音轨
-        private List<TrackInfo> extraTrackAudio;
+        private List<String> extraTrackAudio;
 
-        public Builder setExtraTrackAudio(List<TrackInfo> v) {
+        public Builder setExtraTrackAudio(List<String> v) {
             this.extraTrackAudio = v;
             return this;
         }
 
         // 外挂视频轨道
-        private List<TrackInfo> extraTrackVideo;
+        private List<String> extraTrackVideo;
 
-        public Builder setExtraTrackVideo(List<TrackInfo> v) {
+        public Builder setExtraTrackVideo(List<String> v) {
             this.extraTrackVideo = v;
             return this;
         }

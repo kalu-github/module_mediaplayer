@@ -61,8 +61,8 @@ public class MainActivity extends Activity {
                 StartArgs args = new StartArgs.Builder()
                         .setUrl(getUrl())
                         .setExtraTrackSubtitle(getExtra(0))
-                        .setExtraTrackVideo(getExtra(1))
-                        .setExtraTrackAudio(getExtra(2))
+                        .setExtraTrackVideo(getExtraVideoUrls())
+                        .setExtraTrackAudio(getExtraAudioUrls())
                         .setTitle("测试视频")
                         .setLive(isLive())
                         .setLooping(isLooping())
@@ -257,7 +257,7 @@ public class MainActivity extends Activity {
                 } else if (type == 1) {
                     ArrayList<TrackInfo> list = new ArrayList<>();
                     String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
-                    for (int i = 0; i < 3; i++) {
+                    for (int i = 0; i < urls.length; i++) {
                         TrackInfo trackInfo = new TrackInfo();
                         trackInfo.setRoleFlags((int) System.nanoTime());
                         trackInfo.setUrl(urls[i]);
@@ -268,6 +268,36 @@ public class MainActivity extends Activity {
 
                     return list;
                 }
+            }
+            throw new Exception();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private List<String> getExtraAudioUrls() {
+        return null;
+    }
+
+    private List<String> getExtraVideoUrls() {
+
+        try {
+            RadioGroup radioGroup = findViewById(R.id.main_urls);
+            int childCount = radioGroup.getChildCount();
+            for (int n = 0; n < childCount; n++) {
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(n);
+                boolean checked = radioButton.isChecked();
+                if (!checked)
+                    continue;
+                CharSequence text = radioButton.getText();
+                if (!"hls_m3u8_vod_extra".equals(text))
+                    continue;
+                ArrayList<String> list = new ArrayList<>();
+                String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
+                for (int i = 0; i < urls.length; i++) {
+                    list.add(urls[i]);
+                }
+                return list;
             }
             throw new Exception();
         } catch (Exception e) {
@@ -290,7 +320,7 @@ public class MainActivity extends Activity {
                 if (checked) {
 
                     CharSequence text = radioButton.getText();
-                    if ("hls_m3u8_vod_extra".equals(text)) {
+                    if ("hls_m3u811_vod_extra".equals(text)) {
 
 
                         StringBuilder stringBuilder = new StringBuilder();

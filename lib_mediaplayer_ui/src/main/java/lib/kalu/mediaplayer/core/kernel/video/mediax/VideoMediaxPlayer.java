@@ -698,83 +698,109 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             //
             List<MediaSource> mediaSources = new LinkedList<>();
 
-            // rtmp
-            if (contentType == -100) {
-                Class<?> cls = Class.forName("ext.rtmp.RtmpDataSource");
-                DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
-                LogUtil.log("VideoMediaxPlayer => buildSource => rtmp");
-                ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(factory).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .build());
-                mediaSources.add(source);
+            // 视频轨道
+            ArrayList<String> vUrls = new ArrayList<>();
+            vUrls.add(url);
+            List<String> extraTrackVideo = args.getExtraTrackVideo();
+            if (null != extraTrackVideo) {
+                for (String vUrl : extraTrackVideo) {
+                    vUrls.add(vUrl);
+                }
             }
-            // rtsp
-            else if (contentType == C.CONTENT_TYPE_RTSP) {
-                Class<?> cls = Class.forName("androidx.media3.exoplayer.rtsp.RtspMediaSource$Factory");
-                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-                constructor.setAccessible(true);
-                Object object = constructor.newInstance(dataSource);
-                LogUtil.log("VideoMediaxPlayer => buildSource => rtsp");
-                MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .build());
-                mediaSources.add(source);
-            }
-            // dash
-            else if (contentType == C.CONTENT_TYPE_DASH) {
-                Class<?> cls = Class.forName("androidx.media3.exoplayer.dash.DashMediaSource$Factory");
-                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-                constructor.setAccessible(true);
-                Object object = constructor.newInstance(dataSource);
-                LogUtil.log("VideoMediaxPlayer => buildSource => dash");
-                MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .build());
-                mediaSources.add(source);
-            }
-            // hls
-            else if (contentType == C.CONTENT_TYPE_HLS) {
-                Class<?> cls = Class.forName("androidx.media3.exoplayer.hls.HlsMediaSource$Factory");
-                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-                constructor.setAccessible(true);
-                Object object = constructor.newInstance(dataSource);
-                LogUtil.log("VideoMediaxPlayer => buildSource => hls");
+            for (String vUrl : vUrls) {
+                // rtmp
+                if (contentType == -100) {
+                    Class<?> cls = Class.forName("ext.rtmp.RtmpDataSource");
+                    DataSource.Factory factory = (DataSource.Factory) cls.newInstance();
+                    LogUtil.log("VideoMediaxPlayer => buildSource => rtmp");
+                    ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(factory).createMediaSource(new MediaItem.Builder()
+                            .setUri(Uri.parse(vUrl))
+                            .build());
+                    mediaSources.add(source);
+                }
+                // rtsp
+                else if (contentType == C.CONTENT_TYPE_RTSP) {
+                    Class<?> cls = Class.forName("androidx.media3.exoplayer.rtsp.RtspMediaSource$Factory");
+                    Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                    constructor.setAccessible(true);
+                    Object object = constructor.newInstance(dataSource);
+                    LogUtil.log("VideoMediaxPlayer => buildSource => rtsp");
+                    MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                            .setUri(Uri.parse(vUrl))
+                            .build());
+                    mediaSources.add(source);
+                }
+                // dash
+                else if (contentType == C.CONTENT_TYPE_DASH) {
+                    Class<?> cls = Class.forName("androidx.media3.exoplayer.dash.DashMediaSource$Factory");
+                    Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                    constructor.setAccessible(true);
+                    Object object = constructor.newInstance(dataSource);
+                    LogUtil.log("VideoMediaxPlayer => buildSource => dash");
+                    MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                            .setUri(Uri.parse(vUrl))
+                            .build());
+                    mediaSources.add(source);
+                }
+                // hls
+                else if (contentType == C.CONTENT_TYPE_HLS) {
+                    Class<?> cls = Class.forName("androidx.media3.exoplayer.hls.HlsMediaSource$Factory");
+                    Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                    constructor.setAccessible(true);
+                    Object object = constructor.newInstance(dataSource);
+                    LogUtil.log("VideoMediaxPlayer => buildSource => hls");
 
-                MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .build());
-                mediaSources.add(source);
-            }
-            // SmoothStreaming
-            else if (contentType == C.CONTENT_TYPE_SS) {
-                Class<?> cls = Class.forName("androidx.media3.exoplayer.smoothstreaming.SsMediaSource$Factory");
-                Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
-                constructor.setAccessible(true);
-                Object object = constructor.newInstance(dataSource);
-                LogUtil.log("VideoMediaxPlayer => buildSource => SmoothStreaming");
-                MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .build());
-                mediaSources.add(source);
-            }
-            // mp4
-            else if (contentType == -200) {
-                LogUtil.log("VideoMediaxPlayer => buildSource => mp4");
-                ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(dataSource).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .build());
-                mediaSources.add(source);
-            }
-            // other
-            else {
-                LogUtil.log("VideoMediaxPlayer => buildSource => other");
-                MediaSource source = new DefaultMediaSourceFactory(dataSource).createMediaSource(new MediaItem.Builder()
-                        .setUri(Uri.parse(url))
-                        .build());
-                mediaSources.add(source);
+                    MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                            .setUri(Uri.parse(vUrl))
+                            .build());
+                    mediaSources.add(source);
+                }
+                // SmoothStreaming
+                else if (contentType == C.CONTENT_TYPE_SS) {
+                    Class<?> cls = Class.forName("androidx.media3.exoplayer.smoothstreaming.SsMediaSource$Factory");
+                    Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
+                    constructor.setAccessible(true);
+                    Object object = constructor.newInstance(dataSource);
+                    LogUtil.log("VideoMediaxPlayer => buildSource => SmoothStreaming");
+                    MediaSource source = ((MediaSource.Factory) object).createMediaSource(new MediaItem.Builder()
+                            .setUri(Uri.parse(vUrl))
+                            .build());
+                    mediaSources.add(source);
+                }
+                // mp4
+                else if (contentType == -200) {
+                    LogUtil.log("VideoMediaxPlayer => buildSource => mp4");
+                    ProgressiveMediaSource source = new ProgressiveMediaSource.Factory(dataSource).createMediaSource(new MediaItem.Builder()
+                            .setUri(Uri.parse(vUrl))
+                            .build());
+                    mediaSources.add(source);
+                }
+                // other
+                else {
+                    LogUtil.log("VideoMediaxPlayer => buildSource => other");
+                    MediaSource source = new DefaultMediaSourceFactory(dataSource).createMediaSource(new MediaItem.Builder()
+                            .setUri(Uri.parse(vUrl))
+                            .build());
+                    mediaSources.add(source);
+                }
             }
 
-            // 外挂字幕
+            // 音频轨道
+            List<String> extraTrackAudio = args.getExtraTrackAudio();
+            if (null != extraTrackAudio) {
+                for (String aUrl : extraTrackAudio) {
+                    MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
+                            .createMediaSource(new MediaItem.Builder()
+                                    .setUri(aUrl)
+//                                    .setMimeType(track.getMimeType())
+//                                    .setMediaId(track.getLabel())
+                                    .build());
+                    //
+                    mediaSources.add(source);
+                }
+            }
+
+            // 字幕轨道
             List<TrackInfo> extraTrackSubtitle = args.getExtraTrackSubtitle();
             if (null != extraTrackSubtitle) {
                 for (TrackInfo track : extraTrackSubtitle) {
@@ -807,21 +833,6 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                             .build();
                     SingleSampleMediaSource source = new SingleSampleMediaSource.Factory(dataSource)
                             .createMediaSource(subtitleConfig, C.TIME_UNSET);
-                    //
-                    mediaSources.add(source);
-                }
-            }
-
-            // 外挂音轨
-            List<TrackInfo> extraTrackAudio = args.getExtraTrackAudio();
-            if (null != extraTrackAudio) {
-                for (TrackInfo track : extraTrackAudio) {
-                    MediaSource source = new DefaultMediaSourceFactory(dataSourceFactory)
-                            .createMediaSource(new MediaItem.Builder()
-                                    .setUri(track.getUrl())
-                                    .setMimeType(track.getMimeType())
-                                    .setMediaId(track.getLabel())
-                                    .build());
                     //
                     mediaSources.add(source);
                 }
