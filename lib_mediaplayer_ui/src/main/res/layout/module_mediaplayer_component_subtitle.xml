@@ -19,7 +19,9 @@
             android:layout_height="wrap_content"
             android:focusable="false"
             android:gravity="center"
-            android:textColor="@color/module_mediaplayer_color_ffffff"
+            android:clipToOutline="false"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
             android:textSize="28sp" />
 
 

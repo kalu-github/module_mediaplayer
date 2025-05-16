@@ -5,6 +5,7 @@ import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -66,19 +67,8 @@ public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
             int length = result.length();
             if (length == 0)
                 throw new Exception("warning: result.length() == 0");
-            SpannableString spannableString = new SpannableString(result);
-//            spannableString.setSpan(new CharacterStyle() {
-//                @Override
-//                public void updateDrawState(TextPaint textPaint) {
-//                    textPaint.setStyle(Paint.Style.STROKE);
-//                    textPaint.setStrokeWidth(2f);
-//                    textPaint.setColor(Color.BLACK);
-//                }
-//            }, 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannableString.setSpan(new MaskFilterSpan(new BlurMaskFilter(10, BlurMaskFilter.Blur.SOLID))
-                    , 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             TextView textView = findViewById(R.id.module_mediaplayer_component_subtitle_text);
-            textView.setText(spannableString);
+            textView.setText(result);
         } catch (Exception e) {
             TextView textView = findViewById(R.id.module_mediaplayer_component_subtitle_text);
             textView.setText("");
