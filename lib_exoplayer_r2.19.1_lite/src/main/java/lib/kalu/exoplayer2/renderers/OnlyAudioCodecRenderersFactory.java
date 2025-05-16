@@ -14,18 +14,22 @@ import java.util.ArrayList;
 
 import lib.kalu.exoplayer2.util.ExoLogUtil;
 
-public class OnlyAudioCodecRenderersFactory extends BaseRenderersFactory {
+public final class OnlyAudioCodecRenderersFactory extends AllRenderersFactory {
 
     public OnlyAudioCodecRenderersFactory(Context context) {
         super(context);
-        ExoLogUtil.log("BaseRenderersFactory => BaseOnlyMediaCodecAudioRenderersFactory =>");
+        ExoLogUtil.log("DefaultRenderersFactory => OnlyAudioCodecRenderersFactory =>");
     }
 
     @Override
-    protected void addAudioFFmpegRenderers(@NonNull ArrayList<Renderer> out) {
+    protected void addAudioFFmpeg(@NonNull ArrayList<Renderer> out) {
     }
 
     @Override
-    protected void addVideoCodecRenderers(@NonNull Context context, @ExtensionRendererMode int extensionRendererMode, @NonNull MediaCodecSelector mediaCodecSelector, @NonNull boolean enableDecoderFallback, @NonNull Handler eventHandler, @NonNull VideoRendererEventListener eventListener, @NonNull long allowedVideoJoiningTimeMs, @NonNull ArrayList<Renderer> out) {
+    protected void addVideoCodec(@NonNull Context context, @ExtensionRendererMode int extensionRendererMode, @NonNull MediaCodecSelector mediaCodecSelector, @NonNull boolean enableDecoderFallback, @NonNull Handler eventHandler, @NonNull VideoRendererEventListener eventListener, @NonNull long allowedVideoJoiningTimeMs, @NonNull ArrayList<Renderer> out) {
+    }
+
+    @Override
+    protected void addVideoFFmpeg(long allowedJoiningTimeMs, @Nullable Handler eventHandler, @Nullable VideoRendererEventListener eventListener, int maxDroppedFramesToNotify, @NonNull ArrayList<Renderer> out) {
     }
 }
