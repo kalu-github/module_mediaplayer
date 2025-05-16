@@ -29,7 +29,7 @@
 -keep class lib.kalu.exoplayer2.rtmp.RtmpClient{
     native <methods>;
 }
--keep class com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary{
+-keepclasseswithmembernames class * {
     native <methods>;
 }
 
