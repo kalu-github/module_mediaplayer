@@ -44,6 +44,11 @@
 #### 更新
 
 ```
+2025-05-16
+1. 新增：exoplayer2 media3 视频多轨道 音频多轨道 字幕多轨道 支持
+```
+
+```
 2024-07-18
 1. 新增：GLSurfaceView
 ```
@@ -307,9 +312,9 @@ PlayerSDK.init()
                 // 缓存类型（默认关闭, 仅针对 ExoPlayer）
                 .setCacheType(PlayerType.CacheType.DEFAULT)
                 // 缓存类型（默认内部）
-                .setCacheLocalType(PlayerType.CacheLocalType.DEFAULT)
+                .setCacheLocal(PlayerType.CacheLocalType.DEFAULT)
                 // 缓存大小
-                .setCacheSizeType(PlayerType.CacheSizeType.DEFAULT)
+                .setCacheSize(PlayerType.CacheSizeType.DEFAULT)
                 // 缓存文件夹
                 .setCacheDirName(null)
                 // 快进类型（仅针对 MediaPlayer ExoPlayer）
@@ -349,11 +354,7 @@ PlayerSDK.init()
                 // 试看
                 .setTrySeeDuration(0L)
                 // 选集, 补充数据
-                .setExtra(null)
-                // 选集, 总数
-                .setEpisodeItemCount(0)
-                // 选集, 默认播放
-                .setEpisodePlayingIndex(0).build();
+                .setExtra(null);
         // step2 播放
         PlayerLayout.start(build);
 ```
