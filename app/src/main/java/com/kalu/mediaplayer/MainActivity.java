@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
                 // 2
                 StartArgs args = new StartArgs.Builder()
                         .setUrl(getUrl())
-                        .setExtraTrackSubtitle(getExtra(0))
+                        .setExtraTrackSubtitle(getExtraSubtitleUrls())
                         .setExtraTrackVideo(getExtraVideoUrls())
                         .setExtraTrackAudio(getExtraAudioUrls())
                         .setTitle("测试视频")
@@ -195,7 +195,7 @@ public class MainActivity extends Activity {
     }
 
 
-    private List<TrackInfo> getExtra(int type) {
+    private List<TrackInfo> getExtraSubtitleUrls() {
         /**
          *  2025-04-25 20:01:32.609 25895-25932 PlayerViewModel         com.yyt.zapptv                       D  streamsList = [# com.yyt.zapptv.model.proto.Playback$StreamTrack@37d8a524
          *     format: "hls"
@@ -240,34 +240,19 @@ public class MainActivity extends Activity {
                 if (!"hls_m3u8_vod_extra".equals(text))
                     continue;
 
-                if (type == 0) {
-                    ArrayList<TrackInfo> list = new ArrayList<>();
-                    String[] urls = getResources().getStringArray(R.array.hls_extra_subtitle_urls);
-                    String[] languages = getResources().getStringArray(R.array.hls_extra_subtitle_languages);
-                    for (int i = 0; i < 3; i++) {
-                        TrackInfo subtitleTrack = new TrackInfo();
-                        subtitleTrack.setRoleFlags((int) System.nanoTime());
-                        subtitleTrack.setLanguage(languages[i]);
-                        subtitleTrack.setUrl(urls[i]);
-                        subtitleTrack.setMimeType(PlayerType.TrackType.TEXT_VTT);
-                        //
-                        list.add(subtitleTrack);
-                    }
-                    return list;
-                } else if (type == 1) {
-                    ArrayList<TrackInfo> list = new ArrayList<>();
-                    String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
-                    for (int i = 0; i < urls.length; i++) {
-                        TrackInfo trackInfo = new TrackInfo();
-                        trackInfo.setRoleFlags((int) System.nanoTime());
-                        trackInfo.setUrl(urls[i]);
-//                        subtitleTrack.setMimeType(PlayerType.TrackType.TEXT_VTT);
-                        //
-                        list.add(trackInfo);
-                    }
-
-                    return list;
+                ArrayList<TrackInfo> list = new ArrayList<>();
+                String[] urls = getResources().getStringArray(R.array.hls_extra_subtitle_urls);
+                String[] languages = getResources().getStringArray(R.array.hls_extra_subtitle_languages);
+                for (int i = 0; i < 3; i++) {
+                    TrackInfo subtitleTrack = new TrackInfo();
+                    subtitleTrack.setRoleFlags((int) System.nanoTime());
+                    subtitleTrack.setLanguage(languages[i]);
+                    subtitleTrack.setUrl(urls[i]);
+                    subtitleTrack.setMimeType(PlayerType.TrackType.TEXT_VTT);
+                    //
+                    list.add(subtitleTrack);
                 }
+                return list;
             }
             throw new Exception();
         } catch (Exception e) {
