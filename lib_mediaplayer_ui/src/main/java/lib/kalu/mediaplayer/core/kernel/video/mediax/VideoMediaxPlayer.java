@@ -118,7 +118,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 throw new Exception("warning: null != mExoPlayer");
             if (null == args)
                 throw new Exception("error: args null");
-
+            LogUtil.log("VideoMediaxPlayer => createDecoder =>");
             ExoPlayer.Builder builder = new ExoPlayer.Builder(context)
                     // 播放器调试和诊断相关的配置项
                     .setUsePlatformDiagnostics(false)
@@ -184,51 +184,65 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
 
             int decoderType = args.getDecoderType();
             LogUtil.log("VideoMediaxPlayer => createDecoder => decoderType = " + decoderType);
-            // all_ffmpeg
+            // only_ffmpeg
             if (decoderType == PlayerType.DecoderType.ONLY_FFMPEG) {
+                LogUtil.log("VideoMediaxPlayer => createDecoder => only_ffmpeg");
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
-                LogUtil.log("VideoMediaxPlayer => createDecoder => ONLY_FFMPEG");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((RenderersFactory) newInstance);
             }
-            // only_audio_ffmpeg
-            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
-                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyAudioFFmpegRenderersFactory");
-                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                builder.setRenderersFactory((RenderersFactory) newInstance);
-            }
-            // only_video_ffmpeg
-            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
-                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyVideoFFmpegRenderersFactory");
+            // only_codec
+            else if (decoderType == PlayerType.DecoderType.ONLY_CODEC) {
+                LogUtil.log("VideoMediaxPlayer => createDecoder => only_codec");
+                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoCodecAudioCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // video_codec_audio_ffmpeg
             else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC_AUDIO_FFMPEG) {
+                LogUtil.log("VideoMediaxPlayer => createDecoder => only_video_codec_audio_ffmpeg");
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoCodecAudioFFmpegRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // video_ffmpeg_audio_codec
             else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPRG_AUDIO_CODEC) {
+                LogUtil.log("VideoMediaxPlayer => createDecoder => only_video_ffmprg_audio_codec");
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoFFmpegAudioCodecRenderersFactory");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // only_audio_ffmpeg
+            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
+                LogUtil.log("VideoMediaxPlayer => createDecoder => only_audio_ffmpeg");
+                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyAudioFFmpegRenderersFactory");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // only_video_ffmpeg
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
+                LogUtil.log("VideoMediaxPlayer => createDecoder => only_video_ffmpeg");
+                Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyVideoFFmpegRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // only_audio_codec
             else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_CODEC) {
+                LogUtil.log("VideoMediaxPlayer => createDecoder => only_audio_codec");
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyAudioCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // only_video_codec
             else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC) {
+                LogUtil.log("VideoMediaxPlayer => createDecoder => only_video_codec");
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.OnlyVideoCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((RenderersFactory) newInstance);
             }
             // all_codec (decoderType == PlayerType.DecoderType.EXO_ALL_CODEC)
             else {
+                LogUtil.log("VideoMediaxPlayer => createDecoder => only_video_codec");
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoCodecAudioCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((RenderersFactory) newInstance);
