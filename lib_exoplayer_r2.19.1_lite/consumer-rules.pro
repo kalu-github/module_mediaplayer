@@ -26,6 +26,13 @@
     public <methods>;
 }
 
+-keep class lib.kalu.exoplayer2.rtmp.RtmpClient{
+    native <methods>;
+}
+-keep class com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary{
+    native <methods>;
+}
+
 #-keep class xx.xx.xx.*   本包下的类名保持
 #-keep class xx.xx.xx.**  把本包和所含子包下的类名都保持
 #-keep class xx.xx.xx.**{*;} 把本包和所含子包下的类名都保持，同时保持里面的内容不被混淆
