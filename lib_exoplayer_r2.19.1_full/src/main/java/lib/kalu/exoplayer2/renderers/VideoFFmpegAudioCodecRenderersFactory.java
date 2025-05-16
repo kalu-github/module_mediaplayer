@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.Renderer;
 import com.google.android.exoplayer2.mediacodec.MediaCodecSelector;
 import com.google.android.exoplayer2.video.VideoRendererEventListener;
@@ -14,22 +14,18 @@ import java.util.ArrayList;
 
 import lib.kalu.exoplayer2.util.ExoLogUtil;
 
-public class VideoFFmpegAudioCodecRenderersFactory extends BaseRenderersFactory {
+public final class VideoFFmpegAudioCodecRenderersFactory extends AllRenderersFactory {
 
     public VideoFFmpegAudioCodecRenderersFactory(Context context) {
         super(context);
-        ExoLogUtil.log("BaseRenderersFactory => BaseVideoFFmpegAudioMediaCodecRenderersFactory =>");
-    }
-
-    protected int initRendererMode() {
-        return DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON;
+        ExoLogUtil.log("DefaultRenderersFactory => VideoFFmpegAudioCodecRenderersFactory =>");
     }
 
     @Override
-    protected void addAudioFFmpegRenderers(@NonNull ArrayList<Renderer> out) {
+    protected void addVideoCodec(@NonNull Context context, @ExtensionRendererMode int extensionRendererMode, @NonNull MediaCodecSelector mediaCodecSelector, @NonNull boolean enableDecoderFallback, @NonNull Handler eventHandler, @NonNull VideoRendererEventListener eventListener, @NonNull long allowedVideoJoiningTimeMs, @NonNull ArrayList<Renderer> out) {
     }
 
     @Override
-    protected void addVideoCodecRenderers(@NonNull Context context, @ExtensionRendererMode int extensionRendererMode, @NonNull MediaCodecSelector mediaCodecSelector, @NonNull boolean enableDecoderFallback, @NonNull Handler eventHandler, @NonNull VideoRendererEventListener eventListener, @NonNull long allowedVideoJoiningTimeMs, @NonNull ArrayList<Renderer> out) {
+    protected void addAudioFFmpeg(@NonNull ArrayList<Renderer> out) {
     }
 }
