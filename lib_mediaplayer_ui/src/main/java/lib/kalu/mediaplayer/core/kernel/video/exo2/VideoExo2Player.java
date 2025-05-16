@@ -645,7 +645,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             builder.setUri(Uri.parse(url));
 
 
-            DefaultHttpDataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory()
+            lib.kalu.mediaplayer.core.kernel.video.exo2.DefaultHttpDataSource.Factory dataSourceFactory = new lib.kalu.mediaplayer.core.kernel.video.exo2.DefaultHttpDataSource.Factory()
                     .setUserAgent(ExoPlayerLibraryInfo.VERSION_SLASHY)
                     .setConnectTimeoutMs((int) args.getConnectTimout())
                     .setReadTimeoutMs((int) args.getConnectTimout())
