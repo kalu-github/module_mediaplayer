@@ -169,8 +169,12 @@ AUDIO_DECODER_FUNC(jint, ffmpegDecode, jlong context, jobject inputData,
         LOGE("Context must be non-NULL.");
         return -1;
     }
-    if (!inputData || !outputData) {
-        LOGE("Input and output buffers must be non-NULL.");
+    if (!inputData) {
+        LOGE("Input buffers must be non-NULL.");
+        return -1;
+    }
+    if (!outputData) {
+        LOGE("Output buffers must be non-NULL.");
         return -1;
     }
     if (inputSize < 0) {

@@ -19,7 +19,7 @@ public final class OnlyAudioCodecRenderersFactory extends DefaultRenderersFactor
 
     public OnlyAudioCodecRenderersFactory(Context context) {
         super(context);
-        MediaLogUtil.log("BaseRenderersFactory => OnlyAudioCodecRenderersFactory =>");
+        MediaLogUtil.log("DefaultRenderersFactory => OnlyAudioCodecRenderersFactory =>");
     }
 
     @Override

@@ -33,7 +33,20 @@
     native <methods>;
 }
 -keep, includedescriptorclasses class androidx.media3.decoder.ffmpeg.FfmpegAudioDecoder {
-  private java.nio.ByteBuffer growOutputBuffer(androidx.media3.decoder.SimpleDecoderOutputBuffer, int);
+    private java.nio.ByteBuffer growOutputBuffer(androidx.media3.decoder.SimpleDecoderOutputBuffer, int);
+}
+
+-dontnote androidx.media3.decoder.ffmpeg.FfmpegVideoRenderer
+-keepclassmembers class androidx.media3.decoder.ffmpeg.FfmpegVideoRenderer {
+    <init>(long, android.os.Handler, androidx.media3.exoplayer.video.VideoRendererEventListener, int);
+}
+
+-dontnote androidx.media3.decoder.VideoDecoderOutputBuffer
+-keepclassmembers class androidx.media3.decoder.VideoDecoderOutputBuffer {
+    public java.nio.ByteBuffer[] yuvPlanes;
+    public void initForPrivateFrame(int, int);
+    public boolean initForYuvFrame(int , int , int , int , int);
+    public void init(long, int, java.nio.ByteBuffer);
 }
 
 #-keep class xx.xx.xx.*   本包下的类名保持

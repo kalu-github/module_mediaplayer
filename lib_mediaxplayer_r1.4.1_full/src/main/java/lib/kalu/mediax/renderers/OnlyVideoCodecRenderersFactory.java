@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import lib.kalu.mediax.util.MediaLogUtil;
 
 @UnstableApi
-public class OnlyVideoCodecRenderersFactory extends DefaultRenderersFactory {
+public final class OnlyVideoCodecRenderersFactory extends DefaultRenderersFactory {
 
     public OnlyVideoCodecRenderersFactory(Context context) {
         super(context);
-        MediaLogUtil.log("BaseRenderersFactory => OnlyVideoCodecRenderersFactory =>");
+        MediaLogUtil.log("DefaultRenderersFactory => OnlyVideoCodecRenderersFactory =>");
     }
 
     @Override

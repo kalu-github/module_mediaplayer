@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import lib.kalu.mediax.util.MediaLogUtil;
 
 @UnstableApi
-public class VideoFFmpegAudioFFmpegRenderersFactory extends DefaultRenderersFactory {
+public final class VideoFFmpegAudioFFmpegRenderersFactory extends DefaultRenderersFactory {
 
     public VideoFFmpegAudioFFmpegRenderersFactory(Context context) {
         super(context);
-        MediaLogUtil.log("BaseRenderersFactory => VideoFFmpegAudioFFmpegRenderersFactory =>");
+        MediaLogUtil.log("DefaultRenderersFactory => VideoFFmpegAudioFFmpegRenderersFactory =>");
     }
 
     @Override
