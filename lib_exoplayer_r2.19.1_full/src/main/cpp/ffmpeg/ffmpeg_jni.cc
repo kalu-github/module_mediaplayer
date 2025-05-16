@@ -130,7 +130,7 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 }
 
 LIBRARY_FUNC(void, ffmpegLogger, jboolean enable) {
-//    _exo_enable_logger(enable);
+    setLevel(enable);
 }
 
 LIBRARY_FUNC(jstring, ffmpegGetVersion) {
