@@ -381,13 +381,3 @@ https://mvnrepository.com/artifact/org.videolan.android/libvlc-all
 adb shell am start -n com.kalu.mediaplayer/com.kalu.mediaplayer.MainActivity
 https://hejunlin.blog.csdn.net/article/details/57075026?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-57075026-blog-80149176.235%5Ev31%5Epc_relevant_increate_t0_download_v2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-57075026-blog-80149176.235%5Ev31%5Epc_relevant_increate_t0_download_v2&utm_relevant_index=2
 ```
-
-#
-
-#### 编译
-
-```
-https://github.com/kalu-github/exoplayer-ff3.4.12-audio
-https://github.com/kalu-github/ijkplayer-ffmpeg-4.4.4
-https://github.com/kalu-github/ijkplayer-ffmpeg-3.4.12
-```
