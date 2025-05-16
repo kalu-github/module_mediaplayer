@@ -979,7 +979,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
         @Override
         public void onVideoInputFormatChanged(EventTime eventTime, Format format, DecoderReuseEvaluation decoderReuseEvaluation) {
-            LogUtil.log("VideoExo2Player => onVideoInputFormatChanged[出画面] =>");
+            LogUtil.log("VideoExo2Player => onVideoInputFormatChanged[出画面] => width = " + format.width + ", height = " + format.height + ", bitrate = " + format.bitrate);
 
             // 视频信息
             try {

@@ -202,4 +202,31 @@ public final class TrackInfo implements Serializable {
     public void setSampleMimeType(String sampleMimeType) {
         this.sampleMimeType = sampleMimeType;
     }
+
+    @Override
+    public String toString() {
+        return "TrackInfo{" +
+                "mimeType='" + mimeType + '\'' +
+                ", language='" + language + '\'' +
+                ", label='" + label + '\'' +
+                ", url='" + url + '\'' +
+                ", id='" + id + '\'' +
+                ", roleFlags=" + roleFlags +
+                ", selectionFlags=" + selectionFlags +
+                ", groupCount=" + groupCount +
+                ", trackCount=" + trackCount +
+                ", groupIndex=" + groupIndex +
+                ", trackIndex=" + trackIndex +
+                ", trackType=" + trackType +
+                ", isGroupAdaptiveSupported=" + isGroupAdaptiveSupported +
+                ", isGroupSupported=" + isGroupSupported +
+                ", isGroupSelected=" + isGroupSelected +
+                ", isTrackSupported=" + isTrackSupported +
+                ", isTrackSelected=" + isTrackSelected +
+                ", bitrate=" + bitrate +
+                ", width=" + width +
+                ", height=" + height +
+                ", sampleMimeType='" + sampleMimeType + '\'' +
+                '}';
+    }
 }

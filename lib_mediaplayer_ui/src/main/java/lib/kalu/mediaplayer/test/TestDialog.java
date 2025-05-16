@@ -42,9 +42,12 @@ public class TestDialog extends DialogFragment {
             } else {
                 list = playerLayout.getTrackInfoSubtitle();
             }
-             LogUtil.log("TestDialog -> showTrackInfo -> type = " + type + ", trackInfo = " + list);
 
             for (TrackInfo track : list) {
+
+
+                LogUtil.log("TestDialog -> showTrackInfo -> type = " + track.toString());
+
                 String curName;
                 // 视频轨道
                 if (type == 1) {

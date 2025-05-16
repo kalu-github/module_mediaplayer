@@ -3,12 +3,12 @@
     <string-array name="names">
         <item>ss_manifest</item>
         <item>dash_mpd</item>
-        <item>hls_m3u8_mixed</item>
-        <item>hls_m3u8_mixed</item>
-        <item>hls_m3u8_extra</item>
-        <item>hls_m3u8</item>
+        <item>hls_m3u8_vod_mixed</item>
+        <item>hls_m3u8_vod_mixed</item>
+        <item>hls_m3u8_vod_extra</item>
+        <item>hls_m3u8_vod</item>
+        <item>hls_m3u8_live</item>
         <item>mp4</item>
-        <item>m3u8</item>
         <item>rtsp</item>
         <item>rtmp</item>
         <item>udp</item>
@@ -24,8 +24,8 @@
         <item>https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8</item>
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/480p/index.m3u8</item>
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/387923cf/720p/index.m3u8</item>
-        <item>http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4</item>
         <item>https://test-1347269025.cos.sa-saopaulo.myqcloud.com/media/movie/foreiowiw/playlist.m3u8</item>
+        <item>http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4</item>
         <item>rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4</item>
         <item>rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp</item>
         <item>udp://224.255.0.247:10000</item>
@@ -39,6 +39,7 @@
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/720p/index.m3u8</item>
         <item>https://media-1347269025.cos.sa-saopaulo.myqcloud.com/movie/5f2751d1/1080p/index.m3u8</item>
     </string-array>
+
 
     <string-array name="hls_extra_audio_urls">
     </string-array>

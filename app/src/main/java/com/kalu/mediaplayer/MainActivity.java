@@ -148,11 +148,6 @@ public class MainActivity extends Activity {
         }
     }
 
-    private boolean isLive() {
-        String url = getUrl();
-        return "http://39.134.19.248:6610/yinhe/2/ch00000090990000001335/index.m3u8?virtualDomain=yinhe.live_hls.zte.com".equals(url);
-    }
-
     private long getSeek() {
         CheckBox checkBox = findViewById(R.id.main_seek_yes);
         return checkBox.isChecked() ? 300 * 1000L : 0L;
@@ -171,6 +166,26 @@ public class MainActivity extends Activity {
     private boolean isPlayWhenReady() {
         CheckBox checkBox = findViewById(R.id.main_play_when_ready_yes);
         return checkBox.isChecked();
+    }
+
+    private boolean isLive() {
+        try {
+            RadioGroup radioGroup = findViewById(R.id.main_urls);
+            int childCount = radioGroup.getChildCount();
+            for (int n = 0; n < childCount; n++) {
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(n);
+                boolean checked = radioButton.isChecked();
+                if (!checked)
+                    continue;
+                CharSequence text = radioButton.getText();
+                if (!"hls_m3u8_live".equals(text))
+                    continue;
+                return true;
+            }
+            throw new Exception();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private boolean isLooping() {
@@ -221,7 +236,7 @@ public class MainActivity extends Activity {
                 if (!checked)
                     continue;
                 CharSequence text = radioButton.getText();
-                if (!"hls_m3u8_extra".equals(text))
+                if (!"hls_m3u8_vod_extra".equals(text))
                     continue;
 
                 if (type == 0) {
@@ -274,35 +289,67 @@ public class MainActivity extends Activity {
                 if (checked) {
 
                     CharSequence text = radioButton.getText();
-                    if ("hls_m3u8_extra".equals(text)) {
-                        /**
-                         * #EXTM3U
-                         * #EXT-X-STREAM-INF: PROGRAM-ID=1, BANDWIDTH=1280000
-                         * http://example.com/low.m3u8
-                         * #EXT-X-STREAM-INF: PROGRAM-ID=1, BANDWIDTH=2560000
-                         * http://example.com/mid.m3u8
-                         * #EXT-X-STREAM-INF: PROGRAM-ID=1, BANDWIDTH=7680000
-                         * http://example.com/hi.m3u8
-                         * #EXT-X-STREAM-INF: PROGRAM-ID=1, BANDWIDTH=65000, CODECS="mp4a.40.5"
-                         * http://example.com/audio-only.m3u8
-                         */
+                    if ("hls_m3u8_vod_extra".equals(text)) {
 
-                        String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
 
                         StringBuilder stringBuilder = new StringBuilder();
                         stringBuilder.append("#EXTM3U");
                         stringBuilder.append("\n");
-                        stringBuilder.append("#EXT-X-STREAM-INF: PROGRAM-ID=1, BANDWIDTH=1280000");
+                        stringBuilder.append("#EXT-X-VERSION:3");
+
+                        /**
+                         *
+                         * #EXT-X-STREAM-INF
+                         *
+                         * 1. 必须属性
+                         * BANDWIDTH
+                         * 指定该变体流的平均比特率（单位：bps）。客户端以此为基准评估网络带宽是否足够播放该流。
+                         * 示例：BANDWIDTH=1280000（1.28 Mbps）
+                         * URI（隐含关联）
+                         * 虽非直接写在EXT-X-STREAM-INF内，但该标签后必须紧跟一个指向子播放列表（Media Playlist）的URI。子播放列表包含实际媒体片段（.ts文件）的索引。
+                         * 2. 常用可选属性
+                         * RESOLUTION  stringBuilder.append("\n");
+                         * 视频分辨率（宽度×高度，单位：像素）。
+                         * 示例：RESOLUTION=1280x720（720p）
+                         * CODECS
+                         * 编码格式，包含视频和音频的编解码器信息。
+                         * 示例：CODECS="avc1.64001F,mp4a.40.2"（H.264视频 + AAC音频）
+                         * FRAME-RATE
+                         * 视频帧率（单位：fps）。
+                         * 示例：FRAME-RATE=30
+                         * AUDIO
+                         * 关联音频流的组ID（当音频与视频分离时使用）。
+                         * 示例：AUDIO="audio-group"
+                         * SUBTITLES
+                         * 关联字幕流的组ID。
+                         * 示例：SUBTITLES="subtitle-group"
+                         * PROGRAM-ID
+                         * 唯一标识符，用于区分同一M3U8中的不同节目（通常为1）。
+                         * 示例：PROGRAM-ID=1
+                         */
+
+                        /**
+                         * #EXT-X-STREAM-INF:BANDWIDTH=493000,CODECS="mp4a.40.2,avc1.66.30",RESOLUTION=224x100,FRAME-RATE=24
+                         */
+
+                        // 视频轨道
+                        String[] urls = getResources().getStringArray(R.array.hls_extra_video_urls);
                         stringBuilder.append("\n");
-                        stringBuilder.append(urls[0]);
                         stringBuilder.append("\n");
-                        stringBuilder.append("#EXT-X-STREAM-INF: PROGRAM-ID=2, BANDWIDTH=2560000");
-                        stringBuilder.append("\n");
-                        stringBuilder.append(urls[1]);
-                        stringBuilder.append("\n");
-                        stringBuilder.append("#EXT-X-STREAM-INF: PROGRAM-ID=3, BANDWIDTH=7680000");
-                        stringBuilder.append("\n");
-                        stringBuilder.append(urls[2]);
+                        stringBuilder.append("# video track");
+                        for (int n = 0; n < 3; n++) {
+                            stringBuilder.append("\n");
+                            if (n == 0) {
+                                stringBuilder.append("#EXT-X-STREAM-INF:BANDWIDTH=1200000,CODECS=\"mp4a.40.2,avc1.66.30\",RESOLUTION=854x480,FRAME-RATE=24,SUBTITLES=\"subs-group\"");
+                            } else if (n == 1) {
+                                stringBuilder.append("#EXT-X-STREAM-INF:BANDWIDTH=6400000,CODECS=\"mp4a.40.2,avc1.66.30\",RESOLUTION=1280x720,FRAME-RATE=24,SUBTITLES=\"subs-group\"");
+                            } else {
+                                stringBuilder.append("#EXT-X-STREAM-INF:BANDWIDTH=12800000,CODECS=\"mp4a.40.2,avc1.66.30\",RESOLUTION=1920x1080,FRAME-RATE=24,SUBTITLES=\"subs-group\"");
+                            }
+                            stringBuilder.append("\n");
+                            stringBuilder.append(urls[n]);
+                        }
+
 
                         /**
                          *
@@ -355,13 +402,38 @@ public class MainActivity extends Activity {
                          * #EXT-X-MEDIA:TYPE=AUDIO,NAME="English",GROUP-ID="audio-lang",LANGUAGE="en",DEFAULT=NO,URI="audio_en.m3u8"
                          */
 
+                        // 音频轨道
+//                        stringBuilder.append("\n");
+//                        stringBuilder.append("\n");
+//                        stringBuilder.append("# audio track");
+
+
                         /**
                          * 多语言字幕流
-                         * #EXT-X-MEDIA:TYPE=SUBTITLES,NAME="简体中文",GROUP-ID="subs-lang",LANGUAGE="zh-Hans",AUTOSELECT=YES,URI="subs_zh.srt"
-                         * #EXT-X-MEDIA:TYPE=SUBTITLES,NAME="English",GROUP-ID="subs-lang",LANGUAGE="en",AUTOSELECT=NO,URI="subs_en.srt"
+                         * #EXT-X-MEDIA:TYPE=SUBTITLES,NAME="English",GROUP-ID="subs-lang",LANGUAGE="English",AUTOSELECT=YES,URI="subs_zh.srt"
+                         * #EXT-X-MEDIA:TYPE=SUBTITLES,NAME="Spanish",GROUP-ID="subs-lang",LANGUAGE="Spanish",AUTOSELECT=YES,URI="subs_en.srt"
+                         * #EXT-X-MEDIA:TYPE=SUBTITLES,NAME="Portuguese",GROUP-ID="subs-lang",LANGUAGE="Portuguese",AUTOSELECT=YES,URI="subs_en.srt"
                          */
 
-                        String filename = urls.hashCode() + "";
+                        // 字幕轨道
+//                        String[] subtitles = getResources().getStringArray(R.array.hls_extra_subtitle_urls);
+//                        stringBuilder.append("\n");
+//                        stringBuilder.append("\n");
+//                        stringBuilder.append("# subtitle track");
+//                        for (int n = 0; n < 3; n++) {
+//                            stringBuilder.append("\n");
+//                            if (n == 0) {
+//                                stringBuilder.append("#EXT-X-MEDIA:TYPE=SUBTITLES,AUTOSELECT=YES,GROUP-ID=\"subs-group\",LANGUAGE=\"en\",NAME=\"English\",URI=\"");
+//                            } else if (n == 1) {
+//                                stringBuilder.append("#EXT-X-MEDIA:TYPE=SUBTITLES,AUTOSELECT=NO,GROUP-ID=\"subs-group\",LANGUAGE=\"es\",NAME=\"Spanish\",URI=\"");
+//                            } else {
+//                                stringBuilder.append("#EXT-X-MEDIA:TYPE=SUBTITLES,AUTOSELECT=NO,GROUP-ID=\"subs-group\",LANGUAGE=\"pt\",NAME=\"Portuguese\",URI=\"");
+//                            }
+//                            stringBuilder.append(subtitles[n]);
+//                            stringBuilder.append("\"");
+//                        }
+
+                        String filename = stringBuilder.hashCode() + "";
                         String filePath = getFilesDir().getAbsolutePath() + "/" + filename + ".m3u8";
                         String content = stringBuilder.toString();
 
