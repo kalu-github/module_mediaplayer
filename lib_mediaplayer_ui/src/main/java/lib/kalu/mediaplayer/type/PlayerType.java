@@ -243,7 +243,7 @@ public @interface PlayerType {
         int ONLY_CODEC = 10_001; // 硬解
         int ONLY_FFMPEG = 10_002; // 软解
         int ONLY_VIDEO_CODEC_AUDIO_FFMPEG = 10_003; // 视频硬解 音频软解
-        int ONLY_VIDEO_FFMPRG_AUDIO_CODEC = 10_004; // 视频软解 音频硬解
+        int ONLY_VIDEO_FFMPEG_AUDIO_CODEC = 10_004; // 视频软解 音频硬解
         int ONLY_VIDEO_CODEC = 10_005;
         int ONLY_VIDEO_FFMPEG = 10_006;
         int ONLY_AUDIO_CODEC = 10_007;
@@ -259,7 +259,7 @@ public @interface PlayerType {
                 DecoderType.ONLY_CODEC,
                 DecoderType.ONLY_FFMPEG,
                 DecoderType.ONLY_VIDEO_CODEC_AUDIO_FFMPEG,
-                DecoderType.ONLY_VIDEO_FFMPRG_AUDIO_CODEC,
+                DecoderType.ONLY_VIDEO_FFMPEG_AUDIO_CODEC,
                 DecoderType.ONLY_VIDEO_CODEC,
                 DecoderType.ONLY_VIDEO_FFMPEG,
                 DecoderType.ONLY_AUDIO_CODEC,

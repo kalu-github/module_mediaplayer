@@ -185,57 +185,64 @@ public final class VideoExo2Player extends VideoBasePlayer {
             LogUtil.log("VideoExo2Player => createDecoder => decoderType = " + decoderType);
             // only_ffmpeg
             if (decoderType == PlayerType.DecoderType.ONLY_FFMPEG) {
+                LogUtil.log("VideoExo2Player => createDecoder => only_ffmpeg");
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoFFmpegAudioFFmpegRenderersFactory");
-                LogUtil.log("VideoExo2Player => createDecoder => EXO_ALL_FFMPEG");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((RenderersFactory) newInstance);
             }
-            // only_ffmpeg_audio
-            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyAudioFFmpegRenderersFactory");
-                LogUtil.log("VideoExo2Player => createDecoder => EXO_ONLY_AUDIO_FFMPEG");
-                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                builder.setRenderersFactory((RenderersFactory) newInstance);
-            }
-            // only_ffmpeg_video
-            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyVideoFFmpegRenderersFactory");
-                LogUtil.log("VideoExo2Player => createDecoder => EXO_ONLY_VIDEO_FFMPEG");
-                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                builder.setRenderersFactory((RenderersFactory) newInstance);
-            }
-            // video_mediacodec_audio_ffmpeg
-            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC_AUDIO_FFMPEG) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoCodecAudioFFmpegRenderersFactory");
-                LogUtil.log("VideoExo2Player => createDecoder => EXO_VIDEO_CODEC_AUDIO_FFMPEG");
-                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                builder.setRenderersFactory((RenderersFactory) newInstance);
-            }
-            // video_ffmpeg_audio_mediacodec
-            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPRG_AUDIO_CODEC) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoFFmpegAudioCodecRenderersFactory");
-                LogUtil.log("VideoExo2Player => createDecoder => EXO_VIDEO_FFMPEG_AUDIO_CODEC");
-                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                builder.setRenderersFactory((RenderersFactory) newInstance);
-            }
-            // only_mediacodec_audio
-            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_CODEC) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyAudioCodecRenderersFactory");
-                LogUtil.log("VideoExo2Player => createDecoder => EXO_ONLY_AUDIO_CODEC");
-                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                builder.setRenderersFactory((RenderersFactory) newInstance);
-            }
-            // only_mediacodec_video
-            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC) {
-                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyVideoCodecRenderersFactory");
-                LogUtil.log("VideoExo2Player => createDecoder => EXO_ONLY_VIDEO_CODEC");
-                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
-                builder.setRenderersFactory((RenderersFactory) newInstance);
-            }
-            // only_mediacodec (decoderType == PlayerType.DecoderType.EXO_ALL_CODEC)
-            else {
+            // only_codec
+            else if (decoderType == PlayerType.DecoderType.ONLY_CODEC) {
+                LogUtil.log("VideoExo2Player => createDecoder => only_codec");
                 Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoCodecAudioCodecRenderersFactory");
-                LogUtil.log("VideoExo2Player => createDecoder => EXO_ALL_CODEC");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // ONLY_VIDEO_CODEC_AUDIO_FFMPEG
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC_AUDIO_FFMPEG) {
+                LogUtil.log("VideoExo2Player => createDecoder => only_video_codec_audio_ffmpeg");
+                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoCodecAudioFFmpegRenderersFactory");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // only_video_ffmpeg_audio_codec
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG_AUDIO_CODEC) {
+                LogUtil.log("VideoExo2Player => createDecoder => only_video_ffmpeg_audio_codec");
+                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.VideoFFmpegAudioCodecRenderersFactory");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // only_audio_ffmpeg
+            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_FFMPEG) {
+                LogUtil.log("VideoExo2Player => createDecoder => only_audio_ffmpeg");
+                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyAudioFFmpegRenderersFactory");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // only_video_ffmpeg
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG) {
+                LogUtil.log("VideoExo2Player => createDecoder => only_video_ffmpeg");
+                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyVideoFFmpegRenderersFactory");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // only_audio_codec
+            else if (decoderType == PlayerType.DecoderType.ONLY_AUDIO_CODEC) {
+                LogUtil.log("VideoExo2Player => createDecoder => only_audio_codec");
+                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyAudioCodecRenderersFactory");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // only_video_codec
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_CODEC) {
+                LogUtil.log("VideoExo2Player => createDecoder => only_video_codec");
+                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.OnlyVideoCodecRenderersFactory");
+                Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
+                builder.setRenderersFactory((RenderersFactory) newInstance);
+            }
+            // all
+            else {
+                LogUtil.log("VideoExo2Player => createDecoder => all");
+                Class<?> clazz = Class.forName("lib.kalu.exoplayer2.renderers.AllRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((com.google.android.exoplayer2.RenderersFactory) newInstance);
             }

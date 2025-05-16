@@ -205,9 +205,9 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((RenderersFactory) newInstance);
             }
-            // video_ffmpeg_audio_codec
-            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPRG_AUDIO_CODEC) {
-                LogUtil.log("VideoMediaxPlayer => createDecoder => only_video_ffmprg_audio_codec");
+            // only_video_ffmpeg_audio_codec
+            else if (decoderType == PlayerType.DecoderType.ONLY_VIDEO_FFMPEG_AUDIO_CODEC) {
+                LogUtil.log("VideoMediaxPlayer => createDecoder => only_video_ffmpeg_audio_codec");
                 Class<?> clazz = Class.forName("lib.kalu.mediax.renderers.VideoFFmpegAudioCodecRenderersFactory");
                 Object newInstance = clazz.getDeclaredConstructor(Context.class).newInstance(context);
                 builder.setRenderersFactory((RenderersFactory) newInstance);
