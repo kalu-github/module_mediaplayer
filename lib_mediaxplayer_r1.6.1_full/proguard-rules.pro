@@ -4,3 +4,10 @@
 -classobfuscationdictionary proguard-rules-dict-mini.txt
 # 指定package模糊字典
 -packageobfuscationdictionary proguard-rules-dict-mini.txt
+
+
+# mediax
+-dontwarn androidx.media3.**
+-keep class androidx.media3.** {
+    *;
+}
