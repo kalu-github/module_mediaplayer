@@ -1,16 +1,21 @@
 # Project exclude paths
 local.properties
+/build/
 /.gradle/
 /.idea
 /app/
-/lib_mediaplayer_ui/
 
-# mediax
-/lib_mediaxplayer*
 /lib_mediaplayer_ijkplayer*
 /lib_mediaplayer_ffplayer*
 /lib_mediaplayer_vlcplayer*
 
+# ui
+/lib_mediaplayer_ui/
+
+# mediax
+/lib_mediaxplayer*
+
+# exoplayer
 /lib_exoplayer_r2.19.1_mini/build/
 /lib_exoplayer_r2.19.1_lite/.cxx/
 /lib_exoplayer_r2.19.1_lite/build/

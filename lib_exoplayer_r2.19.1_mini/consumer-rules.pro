@@ -33,6 +33,19 @@
     native <methods>;
 }
 
+-dontnote com.google.android.exoplayer2.ext.ffmpeg.FfmpegVideoRenderer
+-keepclassmembers class com.google.android.exoplayer2.ext.ffmpeg.FfmpegVideoRenderer {
+    <init>(long, android.os.Handler, com.google.android.exoplayer2.video.VideoRendererEventListener, int);
+}
+
+-dontnote com.google.android.exoplayer2.decoder.VideoDecoderOutputBuffer
+-keepclassmembers class com.google.android.exoplayer2.decoder.VideoDecoderOutputBuffer {
+    public java.nio.ByteBuffer[] yuvPlanes;
+    public void initForPrivateFrame(int, int);
+    public boolean initForYuvFrame(int , int , int , int , int);
+    public void init(long, int, java.nio.ByteBuffer);
+}
+
 #-keep class xx.xx.xx.*   本包下的类名保持
 #-keep class xx.xx.xx.**  把本包和所含子包下的类名都保持
 #-keep class xx.xx.xx.**{*;} 把本包和所含子包下的类名都保持，同时保持里面的内容不被混淆
