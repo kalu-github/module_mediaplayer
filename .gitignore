@@ -3,11 +3,15 @@
 /.idea
 /app/
 /build/
-/lib_mediaplayer_ui/
-/lib_mediaplayer_exoplayer*
 /lib_mediaplayer_ijkplayer*
 /lib_mediaplayer_ffplayer*
 /lib_mediaplayer_vlcplayer*
+
+# ui
+/lib_mediaplayer_ui/
+
+# exoplayer
+/lib_exoplayer*
 
 # 1.4.1
 /lib_mediaxplayer_r1.4.1_mini/build/
