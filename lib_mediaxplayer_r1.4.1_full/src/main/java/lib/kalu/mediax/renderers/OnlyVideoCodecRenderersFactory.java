@@ -17,22 +17,22 @@ import java.util.ArrayList;
 import lib.kalu.mediax.util.MediaLogUtil;
 
 @UnstableApi
-public class OnlyVideoCodecRenderersFactory extends BaseRenderersFactory {
+public class OnlyVideoCodecRenderersFactory extends DefaultRenderersFactory {
 
     public OnlyVideoCodecRenderersFactory(Context context) {
         super(context);
-        MediaLogUtil.log("BaseRenderersFactory => BaseOnlyMediaCodecVideoRenderersFactory =>");
+        MediaLogUtil.log("BaseRenderersFactory => OnlyVideoCodecRenderersFactory =>");
     }
 
     @Override
-    protected void addAudioCodecRenderer(@NonNull Context context, @ExtensionRendererMode int extensionRendererMode, @NonNull MediaCodecSelector mediaCodecSelector, @NonNull boolean enableDecoderFallback, @NonNull AudioSink audioSink, @NonNull Handler eventHandler, @NonNull AudioRendererEventListener eventListener, @NonNull ArrayList<Renderer> out) {
+    protected void addVideoFFmpeg(long allowedJoiningTimeMs, @Nullable Handler eventHandler, @Nullable VideoRendererEventListener eventListener, int maxDroppedFramesToNotify, @NonNull ArrayList<Renderer> out) {
     }
 
     @Override
-    protected void addAudioFFmpegRenderers(@NonNull ArrayList<Renderer> out) {
+    protected void addAudioFFmpeg(@NonNull ArrayList<Renderer> out) {
     }
 
     @Override
-    protected void addVideoFFmpegRenderers(long allowedJoiningTimeMs, @Nullable Handler eventHandler, @Nullable VideoRendererEventListener eventListener, int maxDroppedFramesToNotify, @NonNull ArrayList<Renderer> out) {
+    protected void addAudioCodec(@NonNull Context context, @ExtensionRendererMode int extensionRendererMode, @NonNull MediaCodecSelector mediaCodecSelector, @NonNull boolean enableDecoderFallback, @NonNull AudioSink audioSink, @NonNull Handler eventHandler, @NonNull AudioRendererEventListener eventListener, @NonNull ArrayList<Renderer> out) {
     }
 }

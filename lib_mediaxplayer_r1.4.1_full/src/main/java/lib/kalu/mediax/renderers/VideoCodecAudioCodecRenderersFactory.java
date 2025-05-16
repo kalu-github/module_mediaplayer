@@ -14,18 +14,18 @@ import java.util.ArrayList;
 import lib.kalu.mediax.util.MediaLogUtil;
 
 @UnstableApi
-public class VideoCodecAudioCodecRenderersFactory extends BaseRenderersFactory {
+public class VideoCodecAudioCodecRenderersFactory extends DefaultRenderersFactory {
 
     public VideoCodecAudioCodecRenderersFactory(Context context) {
         super(context);
-        MediaLogUtil.log("BaseRenderersFactory => BaseOnlyMediaCodecRenderersFactory =>");
+        MediaLogUtil.log("BaseRenderersFactory => VideoCodecAudioCodecRenderersFactory =>");
     }
 
     @Override
-    protected void addAudioFFmpegRenderers(@NonNull ArrayList<Renderer> out) {
+    protected void addVideoFFmpeg(long allowedJoiningTimeMs, @Nullable Handler eventHandler, @Nullable VideoRendererEventListener eventListener, int maxDroppedFramesToNotify, @NonNull ArrayList<Renderer> out) {
     }
 
     @Override
-    protected void addVideoFFmpegRenderers(long allowedJoiningTimeMs, @Nullable Handler eventHandler, @Nullable VideoRendererEventListener eventListener, int maxDroppedFramesToNotify, @NonNull ArrayList<Renderer> out) {
+    protected void addAudioFFmpeg(@NonNull ArrayList<Renderer> out) {
     }
 }
