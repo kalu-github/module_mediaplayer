@@ -8,7 +8,7 @@ public interface VideoKernelApiEvent {
     default void onUpdateProgress() {
     }
 
-    default void onUpdateSubtitle(int kernel, String language, CharSequence result) {
+    default void onUpdateSubtitle(int kernel, CharSequence result) {
     }
 
     default void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {

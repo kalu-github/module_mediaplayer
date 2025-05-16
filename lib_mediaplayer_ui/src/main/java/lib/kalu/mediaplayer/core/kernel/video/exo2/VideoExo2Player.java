@@ -1071,41 +1071,41 @@ public final class VideoExo2Player extends VideoBasePlayer {
         public void onCues(EventTime eventTime, List<Cue> cues) {
             LogUtil.log("VideoExo2Player => onCues => cuesLength = " + cues.size());
 
-            //
-            String language = null;
-            try {
-                Tracks tracks = mExoPlayer.getCurrentTracks();
-                ImmutableList<Tracks.Group> groups = tracks.getGroups();
-                int groupCount = groups.size();
-                for (int groupIndex = 0; groupIndex < groupCount; groupIndex++) {
-                    Tracks.Group group = groups.get(groupIndex);
-                    if (null == group)
-                        continue;
-
-                    boolean isGroupSelected = group.isSelected();
-                    if (!isGroupSelected)
-                        continue;
-                    int trackCount = group.length;
-                    for (int trackIndex = 0; trackIndex < trackCount; trackIndex++) {
-                        //
-                        Format format = group.getTrackFormat(trackIndex);
-                        // 字幕轨道
-                        int trackType = group.getType();
-                        if (trackType == C.TRACK_TYPE_TEXT) {
-                            // 轨道是否被选中
-                            boolean isTrackSelected = group.isTrackSelected(trackIndex);
-                            if (isTrackSelected) {
-                                language = format.language;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (null == language)
-                    throw new Exception();
-            } catch (Exception e) {
-                language = "null";
-            }
+//            //
+//            String language = null;
+//            try {
+//                Tracks tracks = mExoPlayer.getCurrentTracks();
+//                ImmutableList<Tracks.Group> groups = tracks.getGroups();
+//                int groupCount = groups.size();
+//                for (int groupIndex = 0; groupIndex < groupCount; groupIndex++) {
+//                    Tracks.Group group = groups.get(groupIndex);
+//                    if (null == group)
+//                        continue;
+//
+//                    boolean isGroupSelected = group.isSelected();
+//                    if (!isGroupSelected)
+//                        continue;
+//                    int trackCount = group.length;
+//                    for (int trackIndex = 0; trackIndex < trackCount; trackIndex++) {
+//                        //
+//                        Format format = group.getTrackFormat(trackIndex);
+//                        // 字幕轨道
+//                        int trackType = group.getType();
+//                        if (trackType == C.TRACK_TYPE_TEXT) {
+//                            // 轨道是否被选中
+//                            boolean isTrackSelected = group.isTrackSelected(trackIndex);
+//                            if (isTrackSelected) {
+//                                language = format.language;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+//                if (null == language)
+//                    throw new Exception();
+//            } catch (Exception e) {
+//                language = "null";
+//            }
 
             try {
                 if (null == cues)
@@ -1114,11 +1114,11 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     throw new Exception();
                 for (Cue cue : cues) {
                     if (null != cue.text && cue.text.length() > 0) {
-                        onUpdateSubtitle(PlayerType.KernelType.EXO_V2, language, cue.text);
+                        onUpdateSubtitle(PlayerType.KernelType.EXO_V2, cue.text);
                     }
                 }
             } catch (Exception e) {
-                onUpdateSubtitle(PlayerType.KernelType.EXO_V2, language, null);
+                onUpdateSubtitle(PlayerType.KernelType.EXO_V2, null);
             }
         }
     };

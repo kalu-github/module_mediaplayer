@@ -137,7 +137,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
         }
     }
 
-    default void callSubtitle(int kernel, String language, CharSequence result) {
+    default void callSubtitle(int kernel, CharSequence result) {
 
         // component
         try {
@@ -151,7 +151,7 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
                     continue;
                 if (!(childAt instanceof ComponentApi))
                     continue;
-                ((ComponentApi) childAt).onUpdateSubtitle(kernel, language, result);
+                ((ComponentApi) childAt).onUpdateSubtitle(kernel, result);
             }
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiComponent => callSubtitle => " + e.getMessage());

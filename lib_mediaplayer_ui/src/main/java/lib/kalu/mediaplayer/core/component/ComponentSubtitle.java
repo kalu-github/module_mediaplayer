@@ -57,8 +57,8 @@ public class ComponentSubtitle extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void onUpdateSubtitle(int kernel, String language, CharSequence result) {
-        LogUtil.log("ComponentSubtitle -> onUpdateSubtitle -> kernel = " + kernel + ", language = " + language + ", result = " + result);
+    public void onUpdateSubtitle(int kernel, CharSequence result) {
+        LogUtil.log("ComponentSubtitle -> onUpdateSubtitle -> kernel = " + kernel + ", result = " + result);
 
 
         try {

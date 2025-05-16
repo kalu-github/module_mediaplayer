@@ -298,7 +298,7 @@ public interface ComponentApi {
     default void onUpdateProgress(boolean isFromUser, long trySeeDuration, long position, long duration) {
     }
 
-    default void onUpdateSubtitle(int kernel, String language, CharSequence result) {
+    default void onUpdateSubtitle(int kernel, CharSequence result) {
     }
 
     /*******************/

@@ -90,11 +90,11 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
 
 
     @Override
-    public void onUpdateSubtitle(int kernel, String language, CharSequence result) {
+    public void onUpdateSubtitle(int kernel, CharSequence result) {
         try {
             if (null == eventApi || null == eventApi)
                 throw new Exception("eventApi error: null");
-            eventApi.onUpdateSubtitle(kernel, language, result);
+            eventApi.onUpdateSubtitle(kernel, result);
         } catch (Exception e) {
             LogUtil.log("VideoBasePlayer => onUpdateSubtitle => " + e.getMessage());
         }

@@ -471,9 +471,9 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
 
                 @Override
-                public void onUpdateSubtitle(int kernel, String language, CharSequence result) {
+                public void onUpdateSubtitle(int kernel, CharSequence result) {
 //                    VideoKernelApiEvent.super.onUpdateSubtitle(kernel, language, result);
-                    callSubtitle(kernel, language, result);
+                    callSubtitle(kernel, result);
                 }
 
                 @Override
