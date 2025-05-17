@@ -6,6 +6,8 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary;
+
 @Keep
 public final class ExoLogUtil {
 
@@ -14,6 +16,7 @@ public final class ExoLogUtil {
 
     public static void setLogger(boolean enable) {
         mLog = enable;
+        FfmpegLibrary.ffmpegLogger(mLog);
     }
 
     public static void log(@NonNull String message) {
