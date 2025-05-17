@@ -1,8 +1,8 @@
 // app/src/main/cpp/logging.c
 #include "logging.h"
 
-// 默认开启
-int logLevel = 1;
+// 默认关闭
+int logLevel = 0;
 
 void setLevel(jboolean flag) {
     if (flag) {
