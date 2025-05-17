@@ -25,6 +25,8 @@ import com.google.android.exoplayer2.util.MimeTypes;
 
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
+import lib.kalu.exoplayer2.util.ExoLogUtil;
+
 /**
  * Configures and queries the underlying native library.
  *
@@ -38,17 +40,8 @@ public final class FfmpegLibrary {
 
     static {
         ExoPlayerLibraryInfo.registerModule("goog.exo.ffmpeg");
+        System.loadLibrary("exoplayer2-ffmpeg");
     }
-
-    private static final String TAG = "FfmpegLibrary";
-
-    private static final LibraryLoader LOADER =
-            new LibraryLoader("exoplayer2-ffmpeg") {
-                @Override
-                protected void loadLibrary(String name) {
-                    System.loadLibrary(name);
-                }
-            };
 
     private static @MonotonicNonNull String version;
     private static int inputBufferPaddingSize = C.LENGTH_UNSET;
@@ -57,21 +50,10 @@ public final class FfmpegLibrary {
     }
 
     /**
-     * Override the names of the FFmpeg native libraries. If an application wishes to call this
-     * method, it must do so before calling any other method defined by this class, and before
-     * instantiating a {@link FfmpegAudioRenderer} instance.
-     *
-     * @param libraries The names of the FFmpeg native libraries.
-     */
-    public static void setLibraries(String... libraries) {
-        LOADER.setLibraries(libraries);
-    }
-
-    /**
      * Returns whether the underlying library is available, loading it if necessary.
      */
     public static boolean isAvailable() {
-        return LOADER.isAvailable();
+        return true;
     }
 
     /**
@@ -116,7 +98,7 @@ public final class FfmpegLibrary {
             return false;
         }
         if (!ffmpegHasDecoder(codecName)) {
-            Log.w(TAG, "No " + codecName + " decoder available. Check the FFmpeg build configuration.");
+            ExoLogUtil.log("FfmpegLibrary -> No " + codecName + " decoder available. Check the FFmpeg build configuration.");
             return false;
         }
         return true;

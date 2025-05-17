@@ -746,27 +746,7 @@ VIDEO_DECODER_FUNC(jint, ffmpegRenderFrame, jlong jContext, jobject jSurface,
     return VIDEO_DECODER_SUCCESS;
 }
 
-//LIBRARY_FUNC(void, ffmpegLogger, jboolean enable) {
-//
-//}
-
-//JNIEXPORT void JNICALL
-//Java_com_example_MyClass_printMessage(JNIEnv *env, jobject thiz, jstring message) {
-//    const char *msg = (*env)->GetStringUTFChars(env, message, NULL);
-//    if (msg == NULL) {
-//        // 内存分配失败，JNI 会抛出 OutOfMemoryError
-//        return;
-//    }
-//
-//    printf("Native: %s\n", msg);
-//    (*env)->ReleaseStringUTFChars(env, message, msg);
-//}
-
-extern "C"
-JNIEXPORT void JNICALL
-Java_com_google_android_exoplayer2_ext_ffmpeg_FfmpegLibrary_ffmpegLogger__Z(JNIEnv *env,
-                                                                            jclass clazz,
-                                                                            jboolean enable) {
+LIBRARY_FUNC(void, ffmpegLogger, jboolean enable) {
     LOGE("ffmpegLogger start");
     setLevel(enable);
     LOGE("ffmpegLogger finish");
