@@ -61,6 +61,7 @@ import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -308,7 +309,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             boolean playWhenReady = args.isPlayWhenReady();
             mExoPlayer.setPlayWhenReady(playWhenReady);
         } catch (Exception e) {
-            LogUtil.log("VideoExo2Player => initOptions => " + e.getMessage());
+            LogUtil.log("VideoExo2Player => initOptions => Exception step1 " + e.getMessage());
         }
 
         try {
@@ -329,7 +330,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 mExoPlayer.setSeekParameters(SeekParameters.DEFAULT);
             }
         } catch (Exception e) {
-            LogUtil.log("VideoExo2Player => initOptions => " + e.getMessage());
+            LogUtil.log("VideoExo2Player => initOptions => Exception step2 " + e.getMessage());
         }
 
         // log
@@ -338,26 +339,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 throw new Exception("error: mExoPlayer null");
             if (null == args)
                 throw new Exception("error: args null");
-            Class<?> clazz = Class.forName("lib.kalu.exoplayer2.util.ExoLogUtil");
-            if (null == clazz)
-                throw new Exception("warning: lib.kalu.exoplayer2.util.ExoLogUtil not find");
             boolean log = args.isLog();
             lib.kalu.exoplayer2.util.ExoLogUtil.setLogger(log);
         } catch (Exception e) {
-        }
-
-        // log-jni
-        try {
-            if (null == mExoPlayer)
-                throw new Exception("error: mExoPlayer null");
-            if (null == args)
-                throw new Exception("error: args null");
-            Class<?> clazz = Class.forName("com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary");
-            if (null == clazz)
-                throw new Exception("warning: com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary not find");
-            // boolean log = args.isLog();
-            // com.google.android.exoplayer2.ext.ffmpeg.FfmpegLibrary.ffmpegLogger(log);
-        } catch (Exception e) {
+            LogUtil.log("VideoExo2Player => initOptions => Exception step3 " + e.getMessage());
         }
     }
 

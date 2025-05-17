@@ -307,7 +307,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             boolean playWhenReady = args.isPlayWhenReady();
             mExoPlayer.setPlayWhenReady(playWhenReady);
         } catch (Exception e) {
-            LogUtil.log("VideoMediaxPlayer => initOptions => " + e.getMessage());
+            LogUtil.log("VideoMediaxPlayer => initOptions => Exception step1 " + e.getMessage());
         }
 
         try {
@@ -329,9 +329,20 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
             } else {
                 mExoPlayer.setSeekParameters(androidx.media3.exoplayer.SeekParameters.DEFAULT);
             }
-            LogUtil.log("VideoMediaxPlayer => initOptions => completed");
         } catch (Exception e) {
-            LogUtil.log("VideoMediaxPlayer => initOptions => Exception " + e.getMessage());
+            LogUtil.log("VideoMediaxPlayer => initOptions => Exception step2 " + e.getMessage());
+        }
+
+        // log
+        try {
+            if (null == mExoPlayer)
+                throw new Exception("error: mExoPlayer null");
+            if (null == args)
+                throw new Exception("error: args null");
+            boolean log = args.isLog();
+            lib.kalu.mediax.util.MediaLogUtil.setLogger(log);
+        } catch (Exception e) {
+            LogUtil.log("VideoMediaxPlayer => initOptions => Exception step3 " + e.getMessage());
         }
     }
 
