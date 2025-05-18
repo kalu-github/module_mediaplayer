@@ -61,32 +61,33 @@ public @interface PlayerType {
         int START_PLAY_WHEN_READY_TRUE = 3_007; // 立即播放
         int START_PLAY_WHEN_READY_FALSE = 3_008;  // 不立即播放
         int PAUSE = 3_009; // 播放暂停
-        int RESUME = 3_010; // 播放恢复
-        int COMPLETE = 3_0011; // 播放完成
-        int STOP = 3_012; // 播放停止
-        int RELEASE = 3_013; // 播放销毁
-        int SEEK_START_FORWARD = 3_014; // 快进
-        int SEEK_START_REWIND = 3_015; // 快退
-        int SEEK_FINISH = 3_016; // 快退
-        int BUFFERING_START = 3_017; // 缓冲
-        int BUFFERING_STOP = 3_018; // 缓冲
-        int WINDOW_FULL_START = 3_019;
-        int WINDOW_FULL_SUCC = 3_020;
-        int WINDOW_FULL_FAIL = 3_021;
-        int WINDOW_FLOAT_START = 3_022;
-        int WINDOW_FLOAT_SUCC = 3_023;
-        int WINDOW_FLOAT_FAIL = 3_024;
-        int TRY_SEE_START = 3_025;
-        int TRY_SEE_FINISH = 3_026;
+        int PAUSE_PlAY_WHEN_READY = 3_010; // 播放暂停
+        int RESUME = 3_011; // 播放恢复
+        int COMPLETE = 3_0012; // 播放完成
+        int STOP = 3_013; // 播放停止
+        int RELEASE = 3_014; // 播放销毁
+        int SEEK_START_FORWARD = 3_015; // 快进
+        int SEEK_START_REWIND = 3_016; // 快退
+        int SEEK_FINISH = 3_017; // 快退
+        int BUFFERING_START = 3_018; // 缓冲
+        int BUFFERING_STOP = 3_019; // 缓冲
+        int WINDOW_FULL_START = 3_020;
+        int WINDOW_FULL_SUCC = 3_021;
+        int WINDOW_FULL_FAIL = 3_022;
+        int WINDOW_FLOAT_START = 3_023;
+        int WINDOW_FLOAT_SUCC = 3_024;
+        int WINDOW_FLOAT_FAIL = 3_025;
+        int TRY_SEE_START = 3_026;
+        int TRY_SEE_FINISH = 3_027;
 
-        int ERROR = 3_027; // 播放错误
-        int ERROR_BUILD_SOURCE = 3_028; // 播放错误
-        int ERROR_BUFFERING_TIMEOUT = 3_029;
+        int ERROR = 3_028; // 播放错误
+        int ERROR_BUILD_SOURCE = 3_029; // 播放错误
+        int ERROR_BUFFERING_TIMEOUT = 3_030;
 
-        int COMPONENT_MENU_SHOW = 3_030;
-        int COMPONENT_MENU_HIDE = 3_031;
-        int COMPONENT_SEEK_SHOW = 3_032;
-        int COMPONENT_SEEK_HIDE = 3_033;
+        int COMPONENT_MENU_SHOW = 3_031;
+        int COMPONENT_MENU_HIDE = 3_032;
+        int COMPONENT_SEEK_SHOW = 3_033;
+        int COMPONENT_SEEK_HIDE = 3_034;
 
         @Documented
         @Retention(CLASS)
@@ -102,6 +103,7 @@ public @interface PlayerType {
                 START_PLAY_WHEN_READY_TRUE,
                 START_PLAY_WHEN_READY_FALSE,
                 PAUSE,
+                PAUSE_PlAY_WHEN_READY,
                 RESUME,
                 COMPLETE,
                 STOP,

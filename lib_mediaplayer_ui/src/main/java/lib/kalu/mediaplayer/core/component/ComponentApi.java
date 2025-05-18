@@ -90,9 +90,9 @@ public interface ComponentApi {
         }
     }
 
-    default boolean checkComponentShowingDispatchKeyEvent() {
-        return true;
-    }
+//    default boolean checkComponentShowingDispatchKeyEvent() {
+//        return true;
+//    }
 
     /******************/
 

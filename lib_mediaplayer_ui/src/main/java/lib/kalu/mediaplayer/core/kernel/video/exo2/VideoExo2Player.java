@@ -918,7 +918,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                                 start();
                             } else {
                                 pause();
-                                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.PAUSE);
+                                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.PAUSE_PlAY_WHEN_READY);
                             }
                         }
                         // 正常快进&快退

@@ -478,7 +478,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                 @Override
                 public void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {
-//                    LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
+                    LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
 
                     // 透传
                     callEvent(event);

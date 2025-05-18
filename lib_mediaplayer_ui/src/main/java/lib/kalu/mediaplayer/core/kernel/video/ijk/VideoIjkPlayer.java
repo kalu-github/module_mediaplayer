@@ -633,7 +633,7 @@ public final class VideoIjkPlayer extends VideoBasePlayer {
                         onEvent(PlayerType.KernelType.IJK, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                         if (!playWhenReady) {
                             pause();
-                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.PAUSE);
+                            onEvent(PlayerType.KernelType.IJK, PlayerType.EventType.PAUSE_PlAY_WHEN_READY);
                         }
                     } else {
                         // 起播快进

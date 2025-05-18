@@ -7,6 +7,12 @@
 
 -dontwarn com.google.common.util.concurrent.internal.InternalFutureFailureAccess
 -dontwarn com.google.common.util.concurrent.internal.InternalFutures
+-dontwarn com.google.errorprone.annotations.CanIgnoreReturnValue
+-dontwarn com.google.errorprone.annotations.DoNotCall
+-dontwarn com.google.errorprone.annotations.DoNotMock
+-dontwarn com.google.errorprone.annotations.concurrent.LazyInit
+-dontwarn com.google.j2objc.annotations.RetainedWith
+-dontwarn javax.annotation.CheckForNull
 
 # 保护主动抛出异常
 #-keepattributes Exceptions

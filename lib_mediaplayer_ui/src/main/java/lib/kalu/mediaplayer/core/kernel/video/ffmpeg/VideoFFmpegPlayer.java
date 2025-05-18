@@ -370,7 +370,7 @@ public final class VideoFFmpegPlayer extends VideoBasePlayer {
                         onEvent(PlayerType.KernelType.FFPLAYER, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                         if (!playWhenReady) {
                             pause();
-                            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.PAUSE);
+                            onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.PAUSE_PlAY_WHEN_READY);
                         }
                     } else {
                         onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.SEEK_START_FORWARD);

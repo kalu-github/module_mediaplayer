@@ -440,9 +440,9 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                     LogUtil.log("VideoAndroidPlayer => onInfo => seek = " + seek);
                     // 起播正常
                     if (seek <= 0L) {
+                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START);
                         boolean playWhenReady = isPlayWhenReady();
                         LogUtil.log("VideoAndroidPlayer => onInfo => playWhenReady = " + playWhenReady);
-                        onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START);
                         onEvent(PlayerType.KernelType.ANDROID, playWhenReady ? PlayerType.EventType.START_PLAY_WHEN_READY_TRUE : PlayerType.EventType.START_PLAY_WHEN_READY_FALSE);
                         if (playWhenReady) {
                             onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.START);
@@ -451,7 +451,7 @@ public final class VideoAndroidPlayer extends VideoBasePlayer {
                                 throw new Exception("warning: isPlaying true");
                             start();
                         } else {
-                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PAUSE);
+                            onEvent(PlayerType.KernelType.ANDROID, PlayerType.EventType.PAUSE_PlAY_WHEN_READY);
                             pause();
                         }
                     }

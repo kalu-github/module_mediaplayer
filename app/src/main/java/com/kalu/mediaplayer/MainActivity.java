@@ -576,7 +576,7 @@ public class MainActivity extends Activity {
 
         PlayerSDK.init()
                 // 日志开关
-                .setLog(checked)
+                .setLog(true)
                 // 数据埋点（监听播放器操作日志）
                 .setBuriedEvent(new LogBuriedEvent())
                 // 播放器类型（MediaPlayer Media3Player ExoPlayer IjkPLayer）

@@ -958,7 +958,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
                                 start();
                             } else {
                                 pause();
-                                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PAUSE);
+                                onEvent(PlayerType.KernelType.MEDIA_V3, PlayerType.EventType.PAUSE_PlAY_WHEN_READY);
                             }
                         }
                         // 正常快进&快退
