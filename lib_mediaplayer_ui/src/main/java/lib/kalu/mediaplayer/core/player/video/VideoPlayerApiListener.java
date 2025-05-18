@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import java.util.HashMap;
 
 import lib.kalu.mediaplayer.core.component.ComponentApi;
+import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
@@ -235,5 +236,25 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
 
     default void setOnPlayerWindowListener(OnPlayerWindowListener l) {
         mOnPlayerWindowListener.put(this, l);
+    }
+
+    /**************/
+
+    HashMap<VideoPlayerApiBase, OnPlayerEpisodeListener> mOnPlayerEpisodeListener = new HashMap<>();
+
+    default OnPlayerEpisodeListener getOnPlayerEpisodeListener() {
+        try {
+            OnPlayerEpisodeListener listener = mOnPlayerEpisodeListener.get(this);
+            if (null == listener)
+                throw new Exception("warning: listener null");
+            return listener;
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiListener => getOnPlayerEpisodeListener => Exception " + e.getMessage());
+            return null;
+        }
+    }
+
+    default void setOnPlayerEpisodeListener(OnPlayerEpisodeListener l) {
+        mOnPlayerEpisodeListener.put(this, l);
     }
 }

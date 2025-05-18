@@ -69,9 +69,6 @@
 -keep @interface lib.kalu.mediaplayer.type.PlayerType$CacheLocalType {
     *;
 }
--keep @interface lib.kalu.mediaplayer.type.PlayerType$CacheSizeType {
-    *;
-}
 -keep @interface lib.kalu.mediaplayer.type.PlayerType$SeekType {
     *;
 }
