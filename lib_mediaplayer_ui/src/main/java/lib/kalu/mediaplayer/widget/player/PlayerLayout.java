@@ -72,7 +72,6 @@ public class PlayerLayout extends RelativeLayout {
             return playerView.dispatchKeyEvent(event);
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => dispatchKeyEvent => " + e.getMessage());
-//            return super.dispatchKeyEvent(event);
             return false;
         }
     }

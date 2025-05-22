@@ -23,6 +23,7 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        // LogUtil.log("ComponentPause => dispatchKeyEvent => action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
         if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             try {
                 boolean componentShowing = isComponentShowing();
@@ -40,29 +41,15 @@ public class ComponentPause extends RelativeLayout implements ComponentApi {
                 LogUtil.log("ComponentPause => dispatchKeyEvent => Exception1 " + e.getMessage());
             }
         }
-        // keycode_enter || keycode_dpad_center
-        else if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER)) {
-            try {
-//                boolean menuShowing = isComponentShowing(ComponentApiMenu.class);
-//                if (menuShowing)
-//                    throw new Exception("warning: ComponentApiMenu true");
-//                boolean bufferingShowing = isComponentShowing(ComponentApiBuffering.class);
-//                if (bufferingShowing)
-//                    throw new Exception("warning: ComponentApiBuffering true");
-//                boolean seekShowing = isComponentShowing(ComponentApiSeek.class);
-//                if (seekShowing)
-//                    throw new Exception("warning: ComponentApiSeek true");
-//                boolean warningPlayInfoShowing = isComponentShowing(ComponentApiWarningPlayInfo.class);
-//                if (warningPlayInfoShowing)
-//                    throw new Exception("warning: ComponentApiWarningPlayInfo true");
-//                boolean warningTrySeeShowing = isComponentShowing(ComponentApiWarningTrySee.class);
-//                if (warningTrySeeShowing)
-//                    throw new Exception("warning: ComponentApiWarningTrySee true");
-                toggle();
-                return true;
-            } catch (Exception e) {
-                LogUtil.log("ComponentPause => dispatchKeyEvent => Exception2 " + e.getMessage());
-            }
+        // keycode_enter
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+            toggle();
+            return true;
+        }
+        // keycode_dpad_center
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER) {
+            toggle();
+            return true;
         }
         return false;
     }

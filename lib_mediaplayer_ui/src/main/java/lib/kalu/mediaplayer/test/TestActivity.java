@@ -59,8 +59,8 @@ public final class TestActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         setContentView(R.layout.module_mediaplayer_test_activity);
 
-        initListener();
         initComponent();
+        initListener();
         startPlayer();
 
         // 视频轨道
@@ -133,45 +133,42 @@ public final class TestActivity extends Activity {
     }
 
     private void initComponent() {
-        try {
-            PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-            // menu
-            ComponentMenu menu = new ComponentMenu(getApplicationContext());
-            playerLayout.addComponent(menu);
-            // loading
-            ComponentPrepareGradient loading = new ComponentPrepareGradient(getApplicationContext());
-            loading.setComponentBackgroundColorInt(Color.BLACK);
-            playerLayout.addComponent(loading);
-            // seek
-            ComponentSeek seek = new ComponentSeek(getApplicationContext());
-            playerLayout.addComponent(seek);
-            // complete
-            ComponentComplete end = new ComponentComplete(getApplicationContext());
-            playerLayout.addComponent(end);
-            // error
-            ComponentError error = new ComponentError(getApplicationContext());
-            error.setComponentBackgroundColorInt(Color.BLACK);
-            playerLayout.addComponent(error);
-            // net
-            ComponentBuffering speed = new ComponentBuffering(getApplicationContext());
-            playerLayout.addComponent(speed);
-            // init
-            ComponentInit init = new ComponentInit(getApplicationContext());
-            playerLayout.addComponent(init);
-            // pause
-            ComponentPause pause = new ComponentPause(getApplicationContext());
-            playerLayout.addComponent(pause);
-            // try
-            ComponentWarningTrySee trys = new ComponentWarningTrySee(getApplicationContext());
-            playerLayout.addComponent(trys);
-            // 起播详情
-            ComponentWarningPlayInfo info = new ComponentWarningPlayInfo(getApplicationContext());
-            playerLayout.addComponent(info);
-            // 字幕
-            ComponentSubtitle subtitle = new ComponentSubtitle(getApplicationContext());
-            playerLayout.addComponent(subtitle);
-        } catch (Exception e) {
-        }
+        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+        // menu
+        ComponentMenu menu = new ComponentMenu(getApplicationContext());
+        playerLayout.addComponent(menu);
+        // loading
+        ComponentPrepareGradient loading = new ComponentPrepareGradient(getApplicationContext());
+        loading.setComponentBackgroundColorInt(Color.BLACK);
+        playerLayout.addComponent(loading);
+        // seek
+        ComponentSeek seek = new ComponentSeek(getApplicationContext());
+        playerLayout.addComponent(seek);
+        // complete
+        ComponentComplete end = new ComponentComplete(getApplicationContext());
+        playerLayout.addComponent(end);
+        // error
+        ComponentError error = new ComponentError(getApplicationContext());
+        error.setComponentBackgroundColorInt(Color.BLACK);
+        playerLayout.addComponent(error);
+        // net
+        ComponentBuffering speed = new ComponentBuffering(getApplicationContext());
+        playerLayout.addComponent(speed);
+        // init
+        ComponentInit init = new ComponentInit(getApplicationContext());
+        playerLayout.addComponent(init);
+        // pause
+        ComponentPause pause = new ComponentPause(getApplicationContext());
+        playerLayout.addComponent(pause);
+        // try
+        ComponentWarningTrySee trys = new ComponentWarningTrySee(getApplicationContext());
+        playerLayout.addComponent(trys);
+        // 起播详情
+        ComponentWarningPlayInfo info = new ComponentWarningPlayInfo(getApplicationContext());
+        playerLayout.addComponent(info);
+        // 字幕
+        ComponentSubtitle subtitle = new ComponentSubtitle(getApplicationContext());
+        playerLayout.addComponent(subtitle);
     }
 
     private void initListener() {

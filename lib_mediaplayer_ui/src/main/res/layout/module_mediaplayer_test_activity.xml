@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:focusable="false"
         android:text="视频轨道" />
 
     <Button
@@ -26,8 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/module_mediaplayer_track_video"
         android:layout_toRightOf="@id/module_mediaplayer_track_video"
+        android:focusable="false"
         android:text="音频轨道" />
-
 
     <Button
         android:id="@+id/module_mediaplayer_track_text"
@@ -35,8 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/module_mediaplayer_track_audio"
         android:layout_toRightOf="@id/module_mediaplayer_track_audio"
+        android:focusable="false"
         android:text="字幕轨道" />
-
 
     <Button
         android:id="@+id/module_mediaplayer_hls_span"
@@ -44,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/module_mediaplayer_track_text"
         android:layout_toRightOf="@id/module_mediaplayer_track_text"
+        android:focusable="false"
         android:text="缓存信息" />
 
 </RelativeLayout>
