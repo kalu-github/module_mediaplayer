@@ -23,8 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.TrackInfo;
+import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.proxy.Proxy;
 import lib.kalu.mediaplayer.test.TestActivity;

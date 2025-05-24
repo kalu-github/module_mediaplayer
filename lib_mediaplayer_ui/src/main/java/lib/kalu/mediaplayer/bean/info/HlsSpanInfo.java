@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.args;
+package lib.kalu.mediaplayer.bean.info;
 
 import java.io.Serializable;
 

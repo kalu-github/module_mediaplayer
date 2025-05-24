@@ -70,9 +70,9 @@ import java.util.List;
 import java.util.NavigableSet;
 
 import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.mediaplayer.args.HlsSpanInfo;
-import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.TrackInfo;
+import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
+import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;

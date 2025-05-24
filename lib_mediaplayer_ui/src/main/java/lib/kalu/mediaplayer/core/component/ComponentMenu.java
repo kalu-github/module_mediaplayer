@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;

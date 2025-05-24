@@ -4,11 +4,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Looper;
-import android.os.Message;
 import android.view.Surface;
-
-import androidx.annotation.NonNull;
 
 import lib.kalu.ffplayer.FFmpegPlayer;
 import lib.kalu.ffplayer.inter.OnBufferingUpdateListener;
@@ -18,7 +14,7 @@ import lib.kalu.ffplayer.inter.OnInfoListener;
 import lib.kalu.ffplayer.inter.OnPreparedListener;
 import lib.kalu.ffplayer.inter.OnSeekCompleteListener;
 import lib.kalu.ffplayer.inter.OnVideoSizeChangedListener;
-import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;

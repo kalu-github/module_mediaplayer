@@ -2,13 +2,9 @@ package lib.kalu.mediaplayer.core.kernel.video.vlc;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Looper;
-import android.os.Message;
 import android.view.Surface;
 
-import androidx.annotation.NonNull;
-
-import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;

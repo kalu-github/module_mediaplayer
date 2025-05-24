@@ -33,26 +33,11 @@
     public <methods>;
 }
 
-# proxy
--keep class lib.kalu.mediaplayer.proxy.** {
-    public <fields>;
+# bean
+-keep class lib.kalu.mediaplayer.bean.** {
     public <methods>;
 }
-
-# args
--keep class lib.kalu.mediaplayer.args.StartArgs {
-    public <methods>;
-}
--keep class lib.kalu.mediaplayer.args.StartArgs$Builder {
-    public <methods>;
-}
--keep class lib.kalu.mediaplayer.args.PlayerArgs {
-    public <methods>;
-}
--keep class lib.kalu.mediaplayer.args.PlayerArgs$Builder {
-    public <methods>;
-}
--keep class lib.kalu.mediaplayer.args.TrackInfo {
+-keep class lib.kalu.mediaplayer.bean.**$** {
     public <methods>;
 }
 
@@ -73,12 +58,6 @@
     *;
 }
 -keep @interface lib.kalu.mediaplayer.type.PlayerType$ScaleType {
-    *;
-}
--keep @interface lib.kalu.mediaplayer.type.PlayerType$CacheType {
-    *;
-}
--keep @interface lib.kalu.mediaplayer.type.PlayerType$CacheLocalType {
     *;
 }
 -keep @interface lib.kalu.mediaplayer.type.PlayerType$SeekType {

@@ -2,7 +2,7 @@ package com.kalu.mediaplayer.proxy;
 
 import android.util.Log;
 
-import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.StartArgs;
 
 public final class ProxyBuried implements lib.kalu.mediaplayer.bean.proxy.ProxyBuried {
     @Override

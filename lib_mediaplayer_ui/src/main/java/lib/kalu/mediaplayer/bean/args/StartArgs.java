@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.args;
+package lib.kalu.mediaplayer.bean.args;
 
 
 import org.json.JSONObject;
@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.mediaplayer.bean.cache.Cache;
+import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.type.PlayerType;
 
 public class StartArgs implements Serializable {

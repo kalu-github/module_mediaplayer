@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.args;
+package lib.kalu.mediaplayer.bean.args;
 
 
 import lib.kalu.mediaplayer.bean.cache.Cache;

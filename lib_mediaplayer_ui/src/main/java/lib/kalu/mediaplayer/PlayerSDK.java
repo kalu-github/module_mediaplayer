@@ -1,7 +1,7 @@
 package lib.kalu.mediaplayer;
 
 
-import lib.kalu.mediaplayer.args.PlayerArgs;
+import lib.kalu.mediaplayer.bean.args.PlayerArgs;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.proxy.Proxy;
 import lib.kalu.mediaplayer.type.PlayerType;

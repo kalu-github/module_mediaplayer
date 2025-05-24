@@ -3,7 +3,7 @@ package lib.kalu.mediaplayer.core.kernel.video;
 import android.content.Context;
 import android.view.Surface;
 
-import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 

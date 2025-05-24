@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.core.player.video;
 
 import android.view.View;
 
-import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.LogUtil;
 

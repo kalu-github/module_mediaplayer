@@ -3,7 +3,7 @@ package lib.kalu.mediaplayer.bean.proxy;
 
 import java.io.Serializable;
 
-import lib.kalu.mediaplayer.args.StartArgs;
+import lib.kalu.mediaplayer.bean.args.StartArgs;
 
 public interface ProxyBuried extends Serializable {
 

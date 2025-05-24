@@ -7,11 +7,10 @@ import androidx.annotation.FloatRange;
 
 import java.util.List;
 
-import lib.kalu.exoplayer2.util.ExoLogUtil;
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.args.HlsSpanInfo;
-import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.TrackInfo;
+import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
+import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;

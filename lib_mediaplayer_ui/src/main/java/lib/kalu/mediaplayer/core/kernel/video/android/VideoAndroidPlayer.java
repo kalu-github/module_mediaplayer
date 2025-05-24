@@ -11,8 +11,8 @@ import android.view.Surface;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.args.TrackInfo;
+import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
