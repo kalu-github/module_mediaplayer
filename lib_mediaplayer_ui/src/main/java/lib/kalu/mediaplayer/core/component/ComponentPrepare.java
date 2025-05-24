@@ -40,9 +40,9 @@ public class ComponentPrepare extends RelativeLayout implements ComponentApi {
     }
 
     @Override
-    public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
-        // 网速
-        updateNetSpeed();
+    public void onUpdateSpeed(int kernel, CharSequence result) {
+        TextView textView = findViewById(R.id.module_mediaplayer_component_prepare_net);
+        textView.setText(result);
     }
 
     @Override
@@ -54,9 +54,6 @@ public class ComponentPrepare extends RelativeLayout implements ComponentApi {
             setComponentText(mediaTitle);
         } catch (Exception e) {
         }
-
-        // 网速
-        updateNetSpeed();
     }
 
     @Override
@@ -92,24 +89,5 @@ public class ComponentPrepare extends RelativeLayout implements ComponentApi {
 
     public int initViewIdTextNetSpeed() {
         return R.id.module_mediaplayer_component_prepare_net;
-    }
-
-    private void updateNetSpeed() {
-        // 网速
-        try {
-            boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
-            int id = initViewIdTextNetSpeed();
-            TextView textView = findViewById(id);
-            if (null == textView)
-                throw new Exception("textView error: null");
-            int viewVisibility = textView.getVisibility();
-            if (viewVisibility != View.VISIBLE)
-                throw new Exception("viewVisibility warning: " + viewVisibility);
-            String speed = getNetSpeed();
-            textView.setText(speed);
-        } catch (Exception e) {
-        }
     }
 }

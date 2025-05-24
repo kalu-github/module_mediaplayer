@@ -7,6 +7,7 @@ import androidx.annotation.FloatRange;
 
 import java.util.List;
 
+import lib.kalu.exoplayer2.util.ExoLogUtil;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.args.HlsSpanInfo;
 import lib.kalu.mediaplayer.args.StartArgs;
@@ -16,6 +17,7 @@ import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.util.SpeedUtil;
 
 public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         VideoPlayerApiBuried,
@@ -449,7 +451,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                 @Override
                 public void onUpdateProgress() {
-
                     try {
                         long position = getPosition();
                         long duration = getDuration();
@@ -477,13 +478,32 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                 }
 
                 @Override
+                public void onUpdateSpeed(int kernel) {
+                    try {
+                        boolean showSpeed = args.isShowSpeed();
+                        if (!showSpeed)
+                            throw new Exception("warning: showSpeed false");
+                        String speed = SpeedUtil.getNetSpeed(getBaseContext());
+                        if (speed.isEmpty())
+                            throw new Exception("warning: speed isEmpty");
+                        callSpeed(kernel, speed);
+                    } catch (Exception e) {
+                    }
+                }
+
+                @Override
                 public void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {
-                    LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
+                   // LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
 
                     // 透传
                     callEvent(event);
 
                     switch (event) {
+                        //
+                        case PlayerType.EventType.INIT_READY:
+                            //
+                            videoKernel.sendMessageSpeedUpdate(kernel);
+                            break;
                         //
                         case PlayerType.EventType.INIT:
                             long connectTimeout = args.getConnectTimout();
@@ -513,6 +533,8 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         case PlayerType.EventType.VIDEO_RENDERING_START:
                             // 埋点
                             onBuriedVideoRenderingStart();
+                            //
+                            videoKernel.removeMessagesSpeedUpdate();
                             //
                             videoKernel.removeMessagesConnectTimeout();
                             //
@@ -549,7 +571,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             // 执行
                             setScreenKeep(false);
                             // 停止轮训
-                            videoKernel.removeMessagesProgressUpdate();
+                            videoKernel.removeMessagesAll();
                             break;
                         //
                         case PlayerType.EventType.PAUSE:

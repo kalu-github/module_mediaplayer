@@ -88,7 +88,6 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
         }
     }
 
-
     @Override
     public void onUpdateSubtitle(int kernel, CharSequence result) {
         try {
@@ -97,6 +96,17 @@ public abstract class VideoBasePlayer implements VideoKernelApi {
             eventApi.onUpdateSubtitle(kernel, result);
         } catch (Exception e) {
             LogUtil.log("VideoBasePlayer => onUpdateSubtitle => " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void onUpdateSpeed(int kernel) {
+        try {
+            if (null == eventApi || null == eventApi)
+                throw new Exception("eventApi error: null");
+            eventApi.onUpdateSpeed(kernel);
+        } catch (Exception e) {
+            LogUtil.log("VideoBasePlayer => onUpdateSpeed => " + e.getMessage());
         }
     }
 

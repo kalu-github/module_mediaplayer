@@ -19,8 +19,6 @@ public interface VideoKernelApi extends VideoKernelApiHandler,
         VideoKernelApiStartArgs,
         VideoKernelApiHls {
 
-    void onUpdateProgress();
-
     <T extends Object> T getPlayer();
 
     void releaseDecoder(boolean isFromUser);

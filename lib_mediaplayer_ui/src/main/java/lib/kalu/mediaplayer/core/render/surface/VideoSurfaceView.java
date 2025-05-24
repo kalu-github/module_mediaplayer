@@ -221,13 +221,13 @@ public class VideoSurfaceView extends SurfaceView implements VideoRenderApi {
                 throw new Exception("warning: measureSpec null");
             int width = measureSpec[0];
             int height = measureSpec[1];
-            LogUtil.log("VideoSurfaceView => onMeasure => width = " + width + ", height = " + height + ",screenWidth = " + screenWidth + ", screenHeight = " + screenHeight);
+           // LogUtil.log("VideoSurfaceView => onMeasure => width = " + width + ", height = " + height + ",screenWidth = " + screenWidth + ", screenHeight = " + screenHeight);
             int specW = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
             int specH = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
             super.onMeasure(specW, specH);
             getHolder().setFixedSize(specW, specH);
         } catch (Exception e) {
-            LogUtil.log("VideoSurfaceView => onMeasure => Exception " + e.getMessage());
+          //  LogUtil.log("VideoSurfaceView => onMeasure => Exception " + e.getMessage());
         }
     }
 

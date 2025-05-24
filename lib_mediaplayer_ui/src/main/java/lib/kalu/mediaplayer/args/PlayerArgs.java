@@ -1,12 +1,11 @@
 package lib.kalu.mediaplayer.args;
 
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.File;
-
-import lib.kalu.mediaplayer.buried.BuriedEvent;
+import lib.kalu.mediaplayer.proxy.Proxy;
+import lib.kalu.mediaplayer.proxy.ProxyBuried;
+import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.type.PlayerType;
 
 /**
@@ -31,7 +30,6 @@ public final class PlayerArgs {
     private int decoderType; // 解码器类型
     @PlayerType.ScaleType
     private int scaleType; // 视频缩放比例
-    private BuriedEvent buriedEvent;  // 埋点事件log
 
     // 旋转角度
     @PlayerType.RotationType.Value
@@ -113,15 +111,18 @@ public final class PlayerArgs {
         return scaleType;
     }
 
-    public BuriedEvent getBuriedEvent() {
-        return buriedEvent;
-    }
-
     @PlayerType.SeekType.Value
     private int seekType;
 
     public int getSeekType() {
         return seekType;
+    }
+
+    // 代理
+    private Proxy proxy;
+
+    public Proxy getProxy() {
+        return proxy;
     }
 
     /****************/
@@ -141,9 +142,9 @@ public final class PlayerArgs {
         cacheLocal = builder.cacheLocal;
         cacheSize = builder.cacheSize;
         cacheDirName = builder.cacheDirName;
-        buriedEvent = builder.buriedEvent;
         seekType = builder.seekType;
         rotation = builder.rotation;
+        proxy = builder.proxy;
     }
 
     public Builder newBuilder() {
@@ -162,9 +163,9 @@ public final class PlayerArgs {
         builder.setCacheLocal(this.cacheLocal);
         builder.setCacheSize(this.cacheSize);
         builder.setCacheDirName(this.cacheDirName);
-        builder.setBuriedEvent(this.buriedEvent);
         builder.setSeekType(this.seekType);
         builder.setRotation(this.rotation);
+        builder.setProxy(this.proxy);
         return builder;
     }
 
@@ -186,8 +187,6 @@ public final class PlayerArgs {
         private int decoderType = PlayerType.DecoderType.DEFAULT; // 解码器类型
         @PlayerType.ScaleType
         private int scaleType = PlayerType.ScaleType.DEFAULT; // 视频缩放比例
-        private BuriedEvent buriedEvent = null;  // 埋点事件log
-
 
         // 旋转角度
         @PlayerType.RotationType.Value
@@ -294,8 +293,11 @@ public final class PlayerArgs {
             return this;
         }
 
-        public Builder setBuriedEvent(BuriedEvent buriedEvent) {
-            this.buriedEvent = buriedEvent;
+        // 代理
+        private Proxy proxy = null;
+
+        public Builder setProxy(Proxy v) {
+            this.proxy = v;
             return this;
         }
 

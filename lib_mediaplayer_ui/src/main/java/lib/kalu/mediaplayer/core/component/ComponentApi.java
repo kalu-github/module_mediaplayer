@@ -301,6 +301,9 @@ public interface ComponentApi {
     default void onUpdateSubtitle(int kernel, CharSequence result) {
     }
 
+    default void onUpdateSpeed(int kernel, CharSequence result) {
+    }
+
     /*******************/
 
     default PlayerView getPlayerView() {
@@ -413,18 +416,6 @@ public interface ComponentApi {
         } catch (Exception e) {
             LogUtil.log("ComponentApi => isPrepared => " + e.getMessage());
             return false;
-        }
-    }
-
-    default String getNetSpeed() {
-        try {
-            PlayerView playerView = getPlayerView();
-            if (null == playerView)
-                throw new Exception("playerView error: null");
-            return playerView.getNetSpeed();
-        } catch (Exception e) {
-            LogUtil.log("ComponentApi => isFull => " + e.getMessage());
-            return "0kb/s";
         }
     }
 

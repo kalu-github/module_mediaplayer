@@ -33,6 +33,12 @@
     public <methods>;
 }
 
+# proxy
+-keep class lib.kalu.mediaplayer.proxy.** {
+    public <fields>;
+    public <methods>;
+}
+
 # args
 -keep class lib.kalu.mediaplayer.args.StartArgs {
     public <methods>;
@@ -92,7 +98,7 @@
 }
 
 # buried
--keep class lib.kalu.mediaplayer.buried.BuriedEvent {
+-keep class lib.kalu.mediaplayer.proxy.ProxyBuried {
     public <fields>;
     public <methods>;
 }

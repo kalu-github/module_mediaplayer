@@ -34,6 +34,7 @@ import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.hls.HlsManifest;
 import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist;
+import com.google.android.exoplayer2.source.hls.playlist.HlsPlaylistParserFactory;
 import com.google.android.exoplayer2.text.Cue;
 import com.google.android.exoplayer2.text.CueGroup;
 import com.google.android.exoplayer2.text.TextOutput;
@@ -46,7 +47,6 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.FileDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSink;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
@@ -63,7 +63,6 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NavigableSet;
@@ -72,6 +71,8 @@ import lib.kalu.mediaplayer.args.HlsSpanInfo;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.args.TrackInfo;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
+import lib.kalu.mediaplayer.core.kernel.video.exo2.proxy.CustomDefaultHttpDataSource;
+import lib.kalu.mediaplayer.core.kernel.video.exo2.proxy.CustomHlsPlaylistParserFactory;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
@@ -631,7 +632,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
             builder.setUri(Uri.parse(url));
 
 
-            lib.kalu.mediaplayer.core.kernel.video.exo2.DefaultHttpDataSource.Factory dataSourceFactory = new lib.kalu.mediaplayer.core.kernel.video.exo2.DefaultHttpDataSource.Factory()
+            CustomDefaultHttpDataSource.Factory dataSourceFactory = new CustomDefaultHttpDataSource.Factory()
                     .setUserAgent(ExoPlayerLibraryInfo.VERSION_SLASHY)
                     .setConnectTimeoutMs((int) args.getConnectTimout())
                     .setReadTimeoutMs((int) args.getConnectTimout())
@@ -758,7 +759,8 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     Class<?> cls = Class.forName("com.google.android.exoplayer2.source.hls.HlsMediaSource$Factory");
                     Constructor<?> constructor = cls.getDeclaredConstructor(DataSource.Factory.class);
                     constructor.setAccessible(true);
-                    Object object = constructor.newInstance(dataSource);
+                    Method method = cls.getMethod("setPlaylistParserFactory", HlsPlaylistParserFactory.class);
+                    Object object = method.invoke(constructor.newInstance(dataSource), new CustomHlsPlaylistParserFactory());
                     LogUtil.log("VideoExo2Player => buildSource => hls");
 
                     MediaSource source = ((MediaSource.Factory) object)

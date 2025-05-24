@@ -169,6 +169,37 @@ public interface VideoPlayerApiListener extends VideoPlayerApiBase, VideoPlayerA
 //        }
     }
 
+    default void callSpeed(int kernel, CharSequence result) {
+
+        // component
+        try {
+            ViewGroup viewGroup = getBaseComponentViewGroup();
+            int childCount = viewGroup.getChildCount();
+            if (childCount <= 0)
+                throw new Exception("not find component");
+            for (int i = 0; i < childCount; i++) {
+                View childAt = viewGroup.getChildAt(i);
+                if (null == childAt)
+                    continue;
+                if (!(childAt instanceof ComponentApi))
+                    continue;
+                ((ComponentApi) childAt).onUpdateSpeed(kernel, result);
+            }
+        } catch (Exception e) {
+            LogUtil.log("VideoPlayerApiComponent => callSpeed => " + e.getMessage());
+        }
+
+//        // listenr
+//        try {
+//            OnPlayerProgressListener progressListener = getOnPlayerProgressListener();
+//            if (null != progressListener) {
+//                progressListener.onProgress(position, duration);
+//            }
+//        } catch (Exception e) {
+//            LogUtil.log("VideoPlayerApiListener => callSpeed => " + e.getMessage());
+//        }
+    }
+
     /**************/
 
     default void clearOnPlayerListener() {

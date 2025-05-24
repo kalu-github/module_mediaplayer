@@ -1,165 +1,80 @@
 package lib.kalu.mediaplayer.core.player.video;
 
+import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.args.StartArgs;
-import lib.kalu.mediaplayer.buried.BuriedEvent;
+import lib.kalu.mediaplayer.proxy.Proxy;
+import lib.kalu.mediaplayer.proxy.ProxyBuried;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerApiBuried {
 
     default void onBuriedVideoRenderingStart() {
-        try {
-            Object[] objects = checkValue();
-            if (null == objects)
-                throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onVideoRenderingStart((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedVideoRenderingStart => Exception " + e.getMessage());
-        }
+        callBuried("onVideoRenderingStart");
     }
 
     default void onBuriedStart() {
-        try {
-            Object[] objects = checkValue();
-            if (null == objects)
-                throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onStart((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedStart => Exception " + e.getMessage());
-        }
+        callBuried("onStart");
     }
 
     default void onBuriedError(@PlayerType.EventType.Value int code) {
-        try {
-            Object[] objects = checkValue();
-            if (null == objects)
-                throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onError((StartArgs) objects[1], (long) objects[2], (long) objects[3], code);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedError => Exception " + e.getMessage());
-        }
+        callBuried("onError");
     }
 
     default void onBuriedPause() {
-        try {
-            Object[] objects = checkValue();
-            if (null == objects)
-                throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onPause((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedPause => Exception " + e.getMessage());
-        }
+        callBuried("onPause");
     }
 
     default void onBuriedResume() {
-        try {
-            Object[] objects = checkValue();
-            if (null == objects)
-                throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onResume((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedResume => Exception " + e.getMessage());
-        }
+        callBuried("onResume");
     }
 
     default void onBuriedComplete() {
-        try {
-            Object[] objects = checkValue();
-            if (null == objects)
-                throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onComplete((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedComplete => Exception " + e.getMessage());
-        }
+        callBuried("onComplete");
     }
 
     default void onBuriedStop() {
-        try {
-            Object[] objects = checkValue();
-            if (null == objects)
-                throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onStop((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedStop => Exception " + e.getMessage());
-        }
+        callBuried("onStop");
     }
 
     default void onBuriedBufferingStart() {
-        try {
-            Object[] objects = checkValue();
-            if (null == objects)
-                throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onBufferingStart((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedBufferingStart => Exception " + e.getMessage());
-        }
+        callBuried("onBufferingStart");
     }
 
     default void onBuriedBufferingStop() {
-        try {
-            Object[] objects = checkValue();
-            if (null == objects)
-                throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onBufferingStop((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedBufferingStop => Exception " + e.getMessage());
-        }
+        callBuried("onBufferingStop");
     }
 
     default void onBuriedSeekStartForward() {
-        try {
-            Object[] objects = checkValue();
-            if (null == objects)
-                throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onSeekStartForward((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedSeekStartForward => Exception " + e.getMessage());
-        }
+        callBuried("onSeekStartForward");
     }
 
     default void onBuriedSeekStartRewind() {
-        try {
-            Object[] objects = checkValue();
-            if (null == objects)
-                throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onSeekStartRewind((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedSeekStartRewind => Exception " + e.getMessage());
-        }
+        callBuried("onSeekStartRewind");
     }
 
     default void onBuriedSeekFinish() {
-        try {
-            Object[] objects = checkValue();
-            if (null == objects)
-                throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onSeekFinish((StartArgs) objects[1], (long) objects[2], (long) objects[3]);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedSeekFinish => Exception " + e.getMessage());
-        }
+        callBuried("onSeekFinish");
     }
 
     default void onBuriedWindow(@PlayerType.WindowType.Value int type) {
-        try {
-            Object[] objects = checkValue();
-            if (null == objects)
-                throw new Exception("warning: objects null");
-            ((BuriedEvent) objects[0]).onWindow((StartArgs) objects[1], (long) objects[2], (long) objects[3], type);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuriedEvent => onBuriedWindow => Exception " + e.getMessage());
-        }
+        callBuried("onWindow");
     }
 
-    default Object[] checkValue() {
+    default void callBuried(String name) {
+
         try {
             if (!(this instanceof VideoPlayerApi))
                 throw new Exception("error: this not VideoPlayerApi");
-            StartArgs args = ((VideoPlayerApi) this).getStartArgs();
-            if (null == args)
-                throw new Exception("error: args null");
-            BuriedEvent buriedEvent = args.getBuriedEvent();
-            if(null == buriedEvent)
-                throw new Exception("error: buriedEvent null");
+            Proxy proxy = PlayerSDK.init().getPlayerBuilder().getProxy();
+            if (null == proxy)
+                throw new Exception("error: proxy null");
+            ProxyBuried proxyBuried = proxy.getProxyBuried();
+            if (null == proxyBuried)
+                throw new Exception("error: proxyBuried null");
+            StartArgs startArgs = ((VideoPlayerApi) this).getStartArgs();
+            if (null == startArgs)
+                throw new Exception("error: startArgs null");
             long position = ((VideoPlayerApi) this).getPosition();
             if (position < 0L) {
                 position = -1L;
@@ -168,10 +83,9 @@ public interface VideoPlayerApiBuried {
             if (duration < 0L) {
                 duration = -1L;
             }
-            return new Object[]{buriedEvent, args, position, duration};
+            proxyBuried.onCall(name, startArgs, position, duration);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiBuried => checkValue => Exception " + e.getMessage());
-            return null;
+            LogUtil.log("VideoPlayerApiBuried => callBuried => Exception " + e.getMessage());
         }
     }
 }

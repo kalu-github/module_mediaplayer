@@ -156,7 +156,7 @@ public interface VideoRenderApi extends VideoRenderApiBase {
 //            heightMeasureSpec = widthMeasureSpec - heightMeasureSpec;
 //            widthMeasureSpec = widthMeasureSpec - heightMeasureSpec;
         }
-        LogUtil.log("VideoRenderApi => doMeasureSpec => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
+      //  LogUtil.log("VideoRenderApi => doMeasureSpec => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", screenWidth = " + screenWidth + ", screenHeight = " + screenHeight + ", videoScaleType = " + videoScaleType + ", videoRotation = " + videoRotation);
         // SCREEN_SCALE_ORIGINAL
         if (videoScaleType == PlayerType.ScaleType.REAL) {
             try {
@@ -205,7 +205,7 @@ public interface VideoRenderApi extends VideoRenderApiBase {
 //                    return new int[]{(int) realW, (int) realH};
 //                }
             } catch (Exception e) {
-                LogUtil.log("VideoRenderApi => doMeasureSpec => REAL => Exception " + e.getMessage());
+             //   LogUtil.log("VideoRenderApi => doMeasureSpec => REAL => Exception " + e.getMessage());
                 return null;
             }
         }
@@ -235,7 +235,7 @@ public interface VideoRenderApi extends VideoRenderApiBase {
                     return new int[]{(int) realW, (int) realH};
                 }
             } catch (Exception e) {
-                LogUtil.log("VideoRenderApi => doMeasureSpec => 16_9 => Exception " + e.getMessage());
+            //    LogUtil.log("VideoRenderApi => doMeasureSpec => 16_9 => Exception " + e.getMessage());
                 return null;
             }
         }
@@ -265,7 +265,7 @@ public interface VideoRenderApi extends VideoRenderApiBase {
                     return new int[]{(int) realW, (int) realH};
                 }
             } catch (Exception e) {
-                LogUtil.log("VideoRenderApi => doMeasureSpec => SCREEN_SCALE_16_10 => Exception " + e.getMessage());
+            //    LogUtil.log("VideoRenderApi => doMeasureSpec => SCREEN_SCALE_16_10 => Exception " + e.getMessage());
                 return null;
             }
         }
@@ -295,7 +295,7 @@ public interface VideoRenderApi extends VideoRenderApiBase {
                     return new int[]{(int) realW, (int) realH};
                 }
             } catch (Exception e) {
-                LogUtil.log("VideoRenderApi => doMeasureSpec => 5_4 => Exception " + e.getMessage());
+              //  LogUtil.log("VideoRenderApi => doMeasureSpec => 5_4 => Exception " + e.getMessage());
                 return null;
             }
         }
@@ -325,7 +325,7 @@ public interface VideoRenderApi extends VideoRenderApiBase {
                     return new int[]{(int) realW, (int) realH};
                 }
             } catch (Exception e) {
-                LogUtil.log("VideoRenderApi => doMeasureSpec => 4_3 => Exception " + e.getMessage());
+             //   LogUtil.log("VideoRenderApi => doMeasureSpec => 4_3 => Exception " + e.getMessage());
                 return null;
             }
         }
@@ -349,7 +349,7 @@ public interface VideoRenderApi extends VideoRenderApiBase {
                     return new int[]{(int) realW, (int) realH};
                 }
             } catch (Exception e) {
-                LogUtil.log("VideoRenderApi => doMeasureSpec => 1_1 => Exception " + e.getMessage());
+             //   LogUtil.log("VideoRenderApi => doMeasureSpec => 1_1 => Exception " + e.getMessage());
                 return null;
             }
         }
@@ -364,7 +364,7 @@ public interface VideoRenderApi extends VideoRenderApiBase {
                 float realH = screenHeight * 1F;
                 return new int[]{(int) realW, (int) realH};
             } catch (Exception e) {
-                LogUtil.log("VideoRenderApi => doMeasureSpec => FULL => Exception " + e.getMessage());
+              //  LogUtil.log("VideoRenderApi => doMeasureSpec => FULL => Exception " + e.getMessage());
                 return null;
             }
         }
@@ -379,8 +379,8 @@ public interface VideoRenderApi extends VideoRenderApiBase {
                 float v1 = (float) screenWidth / screenHeight;
                 // 视频比例
                 float v2 = (float) videoWidth / videoHeight;
-                LogUtil.log("VideoRenderApi => doMeasureSpec => AUTO => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", screenWidth = " + screenWidth + ", screenHeight = " + screenHeight);
-                LogUtil.log("VideoRenderApi => doMeasureSpec => AUTO => v1 = " + v1 + ", v2 = " + v2);
+              //  LogUtil.log("VideoRenderApi => doMeasureSpec => AUTO => videoWidth = " + videoWidth + ", videoHeight = " + videoHeight + ", screenWidth = " + screenWidth + ", screenHeight = " + screenHeight);
+              //  LogUtil.log("VideoRenderApi => doMeasureSpec => AUTO => v1 = " + v1 + ", v2 = " + v2);
                 // 视频宽高比>屏幕宽高比, 以屏幕宽度为基准缩放
                 if (v2 > v1) {
                     float realW = screenWidth * 1F;
@@ -400,7 +400,7 @@ public interface VideoRenderApi extends VideoRenderApiBase {
                     return new int[]{(int) realW, (int) realH};
                 }
             } catch (Exception e) {
-                LogUtil.log("VideoRenderApi => doMeasureSpec => AUTO => Exception " + e.getMessage());
+              //  LogUtil.log("VideoRenderApi => doMeasureSpec => AUTO => Exception " + e.getMessage());
                 return null;
             }
         }

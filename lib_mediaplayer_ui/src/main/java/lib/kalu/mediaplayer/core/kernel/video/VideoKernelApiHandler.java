@@ -24,6 +24,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
     int WHAT_CheckPreparedPlaying = 3000;
     int WHAT_ProgressUpdate = 4000;
     int WHAT_BufferingTimeout = 5000;
+    int WHAT_UPDATE_SPEED = 6000;
 
     HashMap<VideoKernelApiBase, android.os.Handler> mHandler = new HashMap<>();
 
@@ -112,6 +113,13 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     } else {
                         removeMessagesBufferingTimeout();
                     }
+                }
+            }
+            // 更新网速
+            else if (msg.what == WHAT_UPDATE_SPEED) {
+                if (!isPrepared()) {
+                    onUpdateSpeed(msg.arg1);
+                    sendMessageSpeedUpdate(msg.arg1);
                 }
             }
         } catch (Exception e) {
@@ -242,6 +250,33 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
     }
 
+    default void sendMessageSpeedUpdate(@PlayerType.KernelType.Value int kernelType) {
+        try {
+            Handler handler = mHandler.get(this);
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            LogUtil.log("VideoKernelApiHandler => sendMessageSpeedUpdate =>");
+            Message message = Message.obtain();
+            message.what = WHAT_UPDATE_SPEED;
+            message.arg1 = kernelType;
+            handler.sendMessageDelayed(message, 1000);
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiHandler => sendMessageSpeedUpdate => Exception " + e.getMessage());
+        }
+    }
+
+    default void removeMessagesSpeedUpdate() {
+        try {
+            Handler handler = mHandler.get(this);
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            LogUtil.log("VideoKernelApiHandler => removeMessagesSpeedUpdate =>");
+            handler.removeMessages(WHAT_UPDATE_SPEED);
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiHandler => removeMessagesSpeedUpdate => Exception " + e.getMessage());
+        }
+    }
+
     default void sendMessageBufferingTimeout(@PlayerType.KernelType.Value int kernelType, boolean bufferingTimeoutRetry, long timeMillis, long timeout) {
         try {
             Handler handler = mHandler.get(this);
@@ -268,6 +303,18 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             handler.removeMessages(WHAT_BufferingTimeout);
         } catch (Exception e) {
             LogUtil.log("VideoKernelApiHandler => removeMessagesBufferingTimeout => Exception " + e.getMessage());
+        }
+    }
+
+    default void removeMessagesAll() {
+        try {
+            Handler handler = mHandler.get(this);
+            if (null == handler)
+                throw new Exception("warning: handler null");
+            LogUtil.log("VideoKernelApiHandler => removeMessagesAll =>");
+            handler.removeCallbacksAndMessages(null);
+        } catch (Exception e) {
+            LogUtil.log("VideoKernelApiHandler => removeMessagesAll => Exception " + e.getMessage());
         }
     }
 }

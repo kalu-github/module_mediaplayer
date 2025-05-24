@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.core.kernel.video.exo2;
+package lib.kalu.mediaplayer.core.kernel.video.exo2.proxy;
 
 import static com.google.android.exoplayer2.upstream.HttpUtil.buildRangeRequestHeader;
 import static com.google.android.exoplayer2.util.Assertions.checkNotNull;
@@ -43,12 +43,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
-import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.PlayerSDK;
+import lib.kalu.mediaplayer.proxy.ProxyUrl;
 
-public final class DefaultHttpDataSource extends BaseDataSource implements HttpDataSource {
+public final class CustomDefaultHttpDataSource extends BaseDataSource implements HttpDataSource {
 
     /**
-     * {@link DataSource.Factory} for {@link DefaultHttpDataSource} instances.
+     * {@link DataSource.Factory} for {@link CustomDefaultHttpDataSource} instances.
      */
     public static final class Factory implements HttpDataSource.Factory {
 
@@ -100,7 +101,7 @@ public final class DefaultHttpDataSource extends BaseDataSource implements HttpD
         /**
          * Sets the connect timeout, in milliseconds.
          *
-         * <p>The default is {@link DefaultHttpDataSource#DEFAULT_CONNECT_TIMEOUT_MILLIS}.
+         * <p>The default is {@link CustomDefaultHttpDataSource#DEFAULT_CONNECT_TIMEOUT_MILLIS}.
          *
          * @param connectTimeoutMs The connect timeout, in milliseconds, that will be used.
          * @return This factory.
@@ -114,7 +115,7 @@ public final class DefaultHttpDataSource extends BaseDataSource implements HttpD
         /**
          * Sets the read timeout, in milliseconds.
          *
-         * <p>The default is {@link DefaultHttpDataSource#DEFAULT_READ_TIMEOUT_MILLIS}.
+         * <p>The default is {@link CustomDefaultHttpDataSource#DEFAULT_READ_TIMEOUT_MILLIS}.
          *
          * @param readTimeoutMs The connect timeout, in milliseconds, that will be used.
          * @return This factory.
@@ -142,7 +143,7 @@ public final class DefaultHttpDataSource extends BaseDataSource implements HttpD
         /**
          * Sets a content type {@link Predicate}. If a content type is rejected by the predicate then a
          * {@link InvalidContentTypeException} is thrown from {@link
-         * DefaultHttpDataSource#open(DataSpec)}.
+         * CustomDefaultHttpDataSource#open(DataSpec)}.
          *
          * <p>The default is {@code null}.
          *
@@ -183,9 +184,9 @@ public final class DefaultHttpDataSource extends BaseDataSource implements HttpD
         }
 
         @Override
-        public DefaultHttpDataSource createDataSource() {
-            DefaultHttpDataSource dataSource =
-                    new DefaultHttpDataSource(
+        public CustomDefaultHttpDataSource createDataSource() {
+            CustomDefaultHttpDataSource dataSource =
+                    new CustomDefaultHttpDataSource(
                             userAgent,
                             connectTimeoutMs,
                             readTimeoutMs,
@@ -243,7 +244,7 @@ public final class DefaultHttpDataSource extends BaseDataSource implements HttpD
      */
     @SuppressWarnings("deprecation")
     @Deprecated
-    public DefaultHttpDataSource() {
+    public CustomDefaultHttpDataSource() {
         this(/* userAgent= */ null, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
     }
 
@@ -252,7 +253,7 @@ public final class DefaultHttpDataSource extends BaseDataSource implements HttpD
      */
     @SuppressWarnings("deprecation")
     @Deprecated
-    public DefaultHttpDataSource(@Nullable String userAgent) {
+    public CustomDefaultHttpDataSource(@Nullable String userAgent) {
         this(userAgent, DEFAULT_CONNECT_TIMEOUT_MILLIS, DEFAULT_READ_TIMEOUT_MILLIS);
     }
 
@@ -261,7 +262,7 @@ public final class DefaultHttpDataSource extends BaseDataSource implements HttpD
      */
     @SuppressWarnings("deprecation")
     @Deprecated
-    public DefaultHttpDataSource(
+    public CustomDefaultHttpDataSource(
             @Nullable String userAgent, int connectTimeoutMillis, int readTimeoutMillis) {
         this(
                 userAgent,
@@ -275,7 +276,7 @@ public final class DefaultHttpDataSource extends BaseDataSource implements HttpD
      * @deprecated Use {@link Factory} instead.
      */
     @Deprecated
-    public DefaultHttpDataSource(
+    public CustomDefaultHttpDataSource(
             @Nullable String userAgent,
             int connectTimeoutMillis,
             int readTimeoutMillis,
@@ -291,7 +292,7 @@ public final class DefaultHttpDataSource extends BaseDataSource implements HttpD
                 /* keepPostFor302Redirects= */ false);
     }
 
-    private DefaultHttpDataSource(
+    private CustomDefaultHttpDataSource(
             @Nullable String userAgent,
             int connectTimeoutMillis,
             int readTimeoutMillis,
@@ -370,7 +371,7 @@ public final class DefaultHttpDataSource extends BaseDataSource implements HttpD
     @Override
     public long open(DataSpec dataSpec) throws HttpDataSourceException {
 
-        this.dataSpec = dataSpec;
+        this.dataSpec = formatDataSpec(dataSpec);
         bytesRead = 0;
         bytesToRead = 0;
         transferInitializing(dataSpec);
@@ -529,13 +530,7 @@ public final class DefaultHttpDataSource extends BaseDataSource implements HttpD
      */
     private HttpURLConnection makeConnection(DataSpec dataSpec) throws IOException {
 
-
         String uri = dataSpec.uri.toString();
-        if (uri.endsWith(".ts")) {
-            uri = uri + "?key=1&value=2";
-        }
-        LogUtil.log("DefaultHttpDataSource => open => uri = " + uri);
-
         URL url = new URL(uri);
         @HttpMethod int httpMethod = dataSpec.httpMethod;
         @Nullable byte[] httpBody = dataSpec.httpBody;
@@ -923,6 +918,17 @@ public final class DefaultHttpDataSource extends BaseDataSource implements HttpD
         @Override
         public int hashCode() {
             return super.standardHashCode();
+        }
+    }
+
+    private DataSpec formatDataSpec(DataSpec dataSpec) {
+        try {
+            ProxyUrl proxyUrl = PlayerSDK.init().getPlayerBuilder().getProxy().getProxyUrl();
+            if (null == proxyUrl)
+                throw new Exception("waring: proxyUrl null");
+            return proxyUrl.formatDataSpec(dataSpec);
+        } catch (Exception e) {
+            return dataSpec;
         }
     }
 }

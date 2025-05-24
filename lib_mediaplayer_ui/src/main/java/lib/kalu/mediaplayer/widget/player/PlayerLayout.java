@@ -94,7 +94,7 @@ public class PlayerLayout extends RelativeLayout {
     private PlayerView getPlayerView() {
         try {
             int childCount = getChildCount();
-            LogUtil.log("PlayerLayout => getPlayerView => childCount = " + childCount + ", this = " + this);
+          //  LogUtil.log("PlayerLayout => getPlayerView => childCount = " + childCount + ", this = " + this);
             // sample
             if (childCount == 1) {
                 return (PlayerView) getChildAt(0);
@@ -102,14 +102,14 @@ public class PlayerLayout extends RelativeLayout {
             // not
             else {
                 ViewGroup decorView = findDecorView(this);
-                LogUtil.log("PlayerLayout => getPlayerView => decorView = " + decorView);
+               // LogUtil.log("PlayerLayout => getPlayerView => decorView = " + decorView);
                 if (null == decorView)
                     throw new Exception("decorView error: null");
                 int decorChildCount = decorView.getChildCount();
-                LogUtil.log("PlayerLayout => getPlayerView => decorChildCount = " + decorChildCount);
+               // LogUtil.log("PlayerLayout => getPlayerView => decorChildCount = " + decorChildCount);
                 for (int i = 0; i < decorChildCount; i++) {
                     View childAt = decorView.getChildAt(i);
-                    LogUtil.log("PlayerLayout => getPlayerView => childAt = " + childAt);
+                 //   LogUtil.log("PlayerLayout => getPlayerView => childAt = " + childAt);
                     if (null == childAt)
                         continue;
                     if (childAt.getId() == R.id.module_mediaplayer_id_player) {

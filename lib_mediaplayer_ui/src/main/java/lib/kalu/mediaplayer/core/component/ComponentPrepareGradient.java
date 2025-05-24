@@ -40,9 +40,9 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
     }
 
     @Override
-    public void onUpdateProgress(boolean isFromUser, long max, long position, long duration) {
-        // 网速
-        updateNetSpeed();
+    public void onUpdateSpeed(int kernel, CharSequence result) {
+        TextView textView = findViewById(R.id.module_mediaplayer_component_prepare_gradient_net);
+        textView.setText(result);
     }
 
     @Override
@@ -55,8 +55,6 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
             ComponentApi.super.show();
             // 2
             setComponentText(getTitle());
-            // 3
-            updateNetSpeed();
         } catch (Exception e) {
             LogUtil.log("ComponentLoadingGradient => show => Exception " + e.getMessage());
         }
@@ -92,26 +90,4 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
         return R.id.module_mediaplayer_component_prepare_gradient_name;
     }
 
-    public int initViewIdTextNetSpeed() {
-        return R.id.module_mediaplayer_component_prepare_gradient_net;
-    }
-
-    private void updateNetSpeed() {
-        // 网速
-        try {
-            boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
-            int id = initViewIdTextNetSpeed();
-            TextView textView = findViewById(id);
-            if (null == textView)
-                throw new Exception("textView error: null");
-            int viewVisibility = textView.getVisibility();
-            if (viewVisibility != View.VISIBLE)
-                throw new Exception("viewVisibility warning: " + viewVisibility);
-            String speed = getNetSpeed();
-            textView.setText(speed);
-        } catch (Exception e) {
-        }
-    }
 }

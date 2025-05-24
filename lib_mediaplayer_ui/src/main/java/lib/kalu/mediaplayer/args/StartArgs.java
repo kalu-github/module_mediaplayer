@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.mediaplayer.buried.BuriedEvent;
+import lib.kalu.mediaplayer.proxy.ProxyBuried;
 import lib.kalu.mediaplayer.type.PlayerType;
 
 public class StartArgs implements Serializable {
@@ -185,14 +185,6 @@ public class StartArgs implements Serializable {
         return prepareAsync;
     }
 
-
-    // 数据埋点
-    private BuriedEvent buriedEvent;
-
-    public BuriedEvent getBuriedEvent() {
-        return buriedEvent;
-    }
-
     // 旋转角度
     @PlayerType.RotationType.Value
     private int rotation;
@@ -229,6 +221,13 @@ public class StartArgs implements Serializable {
         return extraData;
     }
 
+    // 显示网速
+    private boolean showSpeed;
+
+    public boolean isShowSpeed() {
+        return showSpeed;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
@@ -256,12 +255,12 @@ public class StartArgs implements Serializable {
                 ", playWhenReadyDelayedTime=" + playWhenReadyDelayedTime +
                 ", playWhenReadySeekToPosition=" + playWhenReadySeekToPosition +
                 ", prepareAsync=" + prepareAsync +
-                ", buriedEvent=" + buriedEvent +
                 ", rotation=" + rotation +
                 ", extraTrackSubtitle=" + extraTrackSubtitle +
                 ", extraTrackAudio=" + extraTrackAudio +
                 ", extraTrackVideo=" + extraTrackVideo +
                 ", extraData=" + extraData +
+                ", showSpeed=" + showSpeed +
                 '}';
     }
 
@@ -290,12 +289,12 @@ public class StartArgs implements Serializable {
         this.playWhenReadyDelayedTime = builder.playWhenReadyDelayedTime;
         this.playWhenReadySeekToPosition = builder.playWhenReadySeekToPosition;
         this.prepareAsync = builder.prepareAsync;
-        this.buriedEvent = builder.buriedEvent;
         this.rotation = builder.rotation;
         this.extraTrackSubtitle = builder.extraTrackSubtitle;
         this.extraTrackAudio = builder.extraTrackAudio;
         this.extraTrackVideo = builder.extraTrackVideo;
         this.extraData = builder.extraData;
+        this.showSpeed = builder.showSpeed;
     }
 
     public Builder newBuilder() {
@@ -324,12 +323,12 @@ public class StartArgs implements Serializable {
         builder.playWhenReadyDelayedTime = playWhenReadyDelayedTime;
         builder.playWhenReadySeekToPosition = playWhenReadySeekToPosition;
         builder.prepareAsync = prepareAsync;
-        builder.buriedEvent = buriedEvent;
         builder.rotation = rotation;
         builder.extraTrackSubtitle = extraTrackSubtitle;
         builder.extraTrackAudio = extraTrackAudio;
         builder.extraTrackVideo = extraTrackVideo;
         builder.extraData = extraData;
+        builder.showSpeed = showSpeed;
         return builder;
     }
 
@@ -356,8 +355,6 @@ public class StartArgs implements Serializable {
         private boolean bufferingTimeoutRetry = playerArgs.getBufferingTimeoutRetry();
         // 开始播放前，是否销毁已存在的播放器相关实例
         private boolean initRelease = playerArgs.isInitRelease();
-        // 数据埋点
-        private BuriedEvent buriedEvent = playerArgs.getBuriedEvent();
         // 自动暂停&续播&销毁...
         private boolean supportAutoRelease = playerArgs.isSupportAutoRelease();
 
@@ -512,6 +509,14 @@ public class StartArgs implements Serializable {
 
         public Builder setExtraData(JSONObject v) {
             this.extraData = v;
+            return this;
+        }
+
+        // 显示网速
+        private boolean showSpeed;
+
+        public Builder setShowSpeed(boolean v) {
+            this.showSpeed = v;
             return this;
         }
 

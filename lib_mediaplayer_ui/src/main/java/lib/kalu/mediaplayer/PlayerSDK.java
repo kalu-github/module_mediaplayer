@@ -2,7 +2,9 @@ package lib.kalu.mediaplayer;
 
 
 import lib.kalu.mediaplayer.args.PlayerArgs;
-import lib.kalu.mediaplayer.buried.BuriedEvent;
+import lib.kalu.mediaplayer.proxy.Proxy;
+import lib.kalu.mediaplayer.proxy.ProxyBuried;
+import lib.kalu.mediaplayer.proxy.ProxyUrl;
 import lib.kalu.mediaplayer.type.PlayerType;
 
 
@@ -103,8 +105,8 @@ public final class PlayerSDK {
         return this;
     }
 
-    public PlayerSDK setBuriedEvent(BuriedEvent v) {
-        mPlayerBuilder.setBuriedEvent(v);
+    public PlayerSDK setProxy(Proxy v) {
+        mPlayerBuilder.setProxy(v);
         return this;
     }
 
