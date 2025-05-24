@@ -13,6 +13,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.kalu.mediaplayer.proxy.ProxyBuried;
+import com.kalu.mediaplayer.proxy.ProxyUrl;
+
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;

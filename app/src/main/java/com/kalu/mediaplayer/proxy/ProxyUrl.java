@@ -1,4 +1,4 @@
-package com.kalu.mediaplayer;
+package com.kalu.mediaplayer.proxy;
 
 import com.google.android.exoplayer2.upstream.DataSpec;
 

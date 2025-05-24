@@ -1,8 +1,6 @@
-package com.kalu.mediaplayer;
+package com.kalu.mediaplayer.proxy;
 
 import android.util.Log;
-
-import androidx.annotation.NonNull;
 
 import lib.kalu.mediaplayer.args.StartArgs;
 
