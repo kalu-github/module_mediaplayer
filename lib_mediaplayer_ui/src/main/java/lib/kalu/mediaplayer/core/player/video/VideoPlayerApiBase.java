@@ -9,7 +9,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.widget.player.PlayerLayout;
+import lib.kalu.mediaplayer.PlayerLayout;
 
 public interface VideoPlayerApiBase {
 

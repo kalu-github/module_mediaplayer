@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.widget.player;
+package lib.kalu.mediaplayer;
 
 import android.content.Context;
 import android.os.Build;
@@ -13,7 +13,6 @@ import androidx.annotation.RequiresApi;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;

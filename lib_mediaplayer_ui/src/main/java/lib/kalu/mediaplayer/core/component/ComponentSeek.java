@@ -37,7 +37,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
             // 试看
             long trySeeDuration = getTrySeeDuration();
             if (trySeeDuration > 0L)
-                throw new Exception("warning: trySee true");
+                throw new Exception("warning: trySeeDuration > 0L");
             // seekForward => start
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);

@@ -30,7 +30,7 @@ import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.widget.player.PlayerLayout;
+import lib.kalu.mediaplayer.PlayerLayout;
 
 /**
  * @description: 横屏全屏视频播放器

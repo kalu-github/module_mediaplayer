@@ -8,8 +8,8 @@ import android.widget.RelativeLayout;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
-import lib.kalu.mediaplayer.widget.player.PlayerLayout;
-import lib.kalu.mediaplayer.widget.player.PlayerView;
+import lib.kalu.mediaplayer.PlayerLayout;
+import lib.kalu.mediaplayer.PlayerView;
 
 public interface VideoPlayerApiWindow extends VideoPlayerApiBase, VideoPlayerApiRender, VideoPlayerApiListener {
 

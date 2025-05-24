@@ -76,12 +76,6 @@
     *;
 }
 
-# buried
--keep class lib.kalu.mediaplayer.bean.proxy.ProxyBuried {
-    public <fields>;
-    public <methods>;
-}
-
 # listener
 -keep class lib.kalu.mediaplayer.listener.** {
     public <fields>;
@@ -107,11 +101,10 @@
 }
 
 # view
--keep class lib.kalu.mediaplayer.widget.player.PlayerLayout {
+-keep class lib.kalu.mediaplayer.PlayerLayout {
     public <methods>;
 }
--keep class lib.kalu.mediaplayer.widget.player.PlayerView{
-    public <fields>;
+-keep class lib.kalu.mediaplayer.PlayerView{
     public <methods>;
 }
 
