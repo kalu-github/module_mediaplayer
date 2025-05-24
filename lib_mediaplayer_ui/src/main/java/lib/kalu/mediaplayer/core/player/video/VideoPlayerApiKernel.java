@@ -493,7 +493,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                 @Override
                 public void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {
-                   // LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
+                    // LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
 
                     // 透传
                     callEvent(event);
@@ -502,7 +502,10 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         //
                         case PlayerType.EventType.INIT_READY:
                             //
-                            videoKernel.sendMessageSpeedUpdate(kernel);
+                            boolean showSpeed = args.isShowSpeed();
+                            if (showSpeed) {
+                                videoKernel.sendMessageSpeedUpdate(kernel);
+                            }
                             break;
                         //
                         case PlayerType.EventType.INIT:

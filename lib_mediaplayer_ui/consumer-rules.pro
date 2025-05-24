@@ -98,7 +98,7 @@
 }
 
 # buried
--keep class lib.kalu.mediaplayer.proxy.ProxyBuried {
+-keep class lib.kalu.mediaplayer.bean.proxy.ProxyBuried {
     public <fields>;
     public <methods>;
 }

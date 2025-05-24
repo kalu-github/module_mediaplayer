@@ -345,46 +345,6 @@ public @interface PlayerType {
     @Documented
     @Retention(CLASS)
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface CacheType {
-
-        int OPEN = 9_000;
-        int CLOSE = 9_001;
-        int DEFAULT = CLOSE;
-
-        @Documented
-        @Retention(CLASS)
-        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef(value = {
-                CacheType.OPEN,
-                CacheType.CLOSE,
-                CacheType.DEFAULT})
-        @interface Value {
-        }
-    }
-
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-    @interface CacheLocalType {
-
-        int INNER = 10_001;
-        int EXTERNAL = 10_002;
-        int DEFAULT = INNER;
-
-        @Documented
-        @Retention(CLASS)
-        @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
-        @IntDef(value = {
-                CacheLocalType.EXTERNAL,
-                CacheLocalType.INNER,
-                CacheLocalType.DEFAULT})
-        @interface Value {
-        }
-    }
-
-    @Documented
-    @Retention(CLASS)
-    @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     @interface TrackType {
 
         String TEXT_VTT = "text/vtt";

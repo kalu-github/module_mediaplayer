@@ -25,7 +25,8 @@ import java.util.List;
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.args.TrackInfo;
-import lib.kalu.mediaplayer.proxy.Proxy;
+import lib.kalu.mediaplayer.bean.cache.Cache;
+import lib.kalu.mediaplayer.bean.proxy.Proxy;
 import lib.kalu.mediaplayer.test.TestActivity;
 import lib.kalu.mediaplayer.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -550,14 +551,7 @@ public class MainActivity extends Activity {
                 break;
         }
 
-        @PlayerType.CacheType
-        int cacheType;
         boolean cacheChecked = ((CheckBox) findViewById(R.id.main_cache_yes)).isChecked();
-        if (cacheChecked) {
-            cacheType = PlayerType.CacheType.OPEN;
-        } else {
-            cacheType = PlayerType.CacheType.CLOSE;
-        }
 
 
         CheckBox checkBox = findViewById(R.id.main_log_yes);
@@ -582,16 +576,15 @@ public class MainActivity extends Activity {
                 .setInitRelease(false)
                 // 播放器生命周期自动销毁（默认true）
                 .setSupportAutoRelease(false)
-                // 缓存类型（仅针对 Exo Media3）
-                .setCacheType(cacheType)
-                // 缓存类型（仅针对 Exo Media3）
-                .setCacheLocal(PlayerType.CacheLocalType.DEFAULT)
-                // 缓存大小（仅针对 Exo Media3）
-                .setCacheSize(500)
-                // 缓存文件夹（仅针对 ExoPlayer）
-                .setCacheDirName("test_cache")
                 // 快进类型（仅针对 MediaPlayer ExoPlayer IjkPlayer）
                 .setSeekType(PlayerType.SeekType.DEFAULT)
+                // 缓存
+                .setCache(new Cache.Builder()
+                        .setEnable(cacheChecked)
+                        .setExternal(false)
+                        .setSize(1000)
+                        .setDir("test_cache")
+                        .build())
                 // 代理
                 .setProxy(new Proxy.Builder()
                         .setProxyBuried(new ProxyBuried())

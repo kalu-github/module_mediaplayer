@@ -7,38 +7,10 @@ import java.io.Serializable;
 import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
-import lib.kalu.mediaplayer.proxy.ProxyBuried;
+import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.type.PlayerType;
 
 public class StartArgs implements Serializable {
-
-    @PlayerType.CacheType.Value
-    private int cacheType;
-
-    @PlayerType.CacheType.Value
-    public int getCacheType() {
-        return cacheType;
-    }
-
-    @PlayerType.CacheLocalType.Value
-    protected int cacheLocal;
-
-    @PlayerType.CacheLocalType.Value
-    public int getCacheLocal() {
-        return cacheLocal;
-    }
-
-    private int cacheSize;
-
-    public int getCacheSize() {
-        return cacheSize;
-    }
-
-    private String cacheDirName;
-
-    public String getCacheDirName() {
-        return cacheDirName;
-    }
 
     @PlayerType.DecoderType.Value
     private int decoderType;
@@ -232,10 +204,6 @@ public class StartArgs implements Serializable {
     public String toString() {
         return "StartArgs{" +
                 ", seekType=" + seekType +
-                ", cacheType=" + cacheType +
-                ", cacheLocal=" + cacheLocal +
-                ", cacheSize=" + cacheSize +
-                ", cacheDirName=" + cacheDirName +
                 ", renderType=" + renderType +
                 ", scaleType=" + scaleType +
                 ", decoderType=" + decoderType +
@@ -267,10 +235,6 @@ public class StartArgs implements Serializable {
     public StartArgs(Builder builder) {
         this.decoderType = builder.decoderType;
         this.seekType = builder.seekType;
-        this.cacheType = builder.cacheType;
-        this.cacheLocal = builder.cacheLocal;
-        this.cacheSize = builder.cacheSize;
-        this.cacheDirName = builder.cacheDirName;
         this.renderType = builder.renderType;
         this.scaleType = builder.scaleType;
         this.kernelType = builder.kernelType;
@@ -300,10 +264,6 @@ public class StartArgs implements Serializable {
     public Builder newBuilder() {
         Builder builder = new Builder();
         builder.seekType = seekType;
-        builder.cacheType = cacheType;
-        builder.cacheLocal = cacheLocal;
-        builder.cacheSize = cacheSize;
-        builder.cacheDirName = cacheDirName;
         builder.decoderType = decoderType;
         builder.renderType = renderType;
         builder.scaleType = scaleType;
@@ -362,17 +322,6 @@ public class StartArgs implements Serializable {
             this.supportAutoRelease = v;
             return this;
         }
-
-        // 缓存类型
-        @PlayerType.CacheType.Value
-        private int cacheType = playerArgs.getCacheType();
-
-        @PlayerType.CacheLocalType.Value
-        private int cacheLocal = playerArgs.getCacheLocal();
-
-        private int cacheSize = playerArgs.getCacheSizeType();
-
-        private String cacheDirName = playerArgs.getCacheDirName();
 
         @PlayerType.SeekType.Value
         private int seekType = playerArgs.getSeekType();

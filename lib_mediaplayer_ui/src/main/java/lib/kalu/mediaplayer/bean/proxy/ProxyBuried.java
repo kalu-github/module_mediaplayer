@@ -1,4 +1,4 @@
-package lib.kalu.mediaplayer.proxy;
+package lib.kalu.mediaplayer.bean.proxy;
 
 
 import java.io.Serializable;

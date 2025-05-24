@@ -67,9 +67,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NavigableSet;
 
+import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.args.HlsSpanInfo;
 import lib.kalu.mediaplayer.args.StartArgs;
 import lib.kalu.mediaplayer.args.TrackInfo;
+import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.kernel.video.exo2.proxy.CustomDefaultHttpDataSource;
 import lib.kalu.mediaplayer.core.kernel.video.exo2.proxy.CustomHlsPlaylistParserFactory;
@@ -639,38 +641,34 @@ public final class VideoExo2Player extends VideoBasePlayer {
                     .setAllowCrossProtocolRedirects(true)
                     .setKeepPostFor302Redirects(true);
 
-            int cacheType = args.getCacheType();
+
+            Cache cache = PlayerSDK.init().getPlayerBuilder().getCache();
+            boolean enable = cache.isEnable();
             if (lowerCase.startsWith(PlayerType.SchemeType.FILE)) {
-                cacheType = PlayerType.CacheType.CLOSE;
+                enable = false;
             } else if (args.isLive()) {
-                cacheType = PlayerType.CacheType.CLOSE;
+                enable = false;
             }
 
-            // 关闭缓存
-            DataSource.Factory dataSource;
-            if (cacheType == PlayerType.CacheType.CLOSE) {
-                dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
-            }
             // 开启缓存
-            else {
+            DataSource.Factory dataSource;
+            if (enable) {
                 if (null == mSimpleCache) {
-
-                    int local = args.getCacheLocal();
-                    String dirName = args.getCacheDirName();
+                    boolean external = cache.isExternal();
                     File dir;
-                    if (local == PlayerType.CacheLocalType.EXTERNAL) {
+                    if (external) {
                         File externalCacheDir = context.getExternalCacheDir();
-                        dir = new File(externalCacheDir, dirName);
+                        dir = new File(externalCacheDir, cache.getDir());
                     } else {
                         File cacheDir = context.getCacheDir();
-                        dir = new File(cacheDir, dirName);
+                        dir = new File(cacheDir, cache.getDir());
                     }
 
                     if (!dir.exists()) {
                         dir.mkdirs();
                     }
 
-                    int size = args.getCacheSize();
+                    int size = cache.getSize();
                     mSimpleCache = new SimpleCache(dir,
                             //
                             new LeastRecentlyUsedCacheEvictor(size * 1024 * 1024),
@@ -705,6 +703,10 @@ public final class VideoExo2Player extends VideoBasePlayer {
                                 }
                             }
                         });
+            }
+            // 关闭缓存
+            else {
+                dataSource = new DefaultDataSource.Factory(context, dataSourceFactory);
             }
 
             //

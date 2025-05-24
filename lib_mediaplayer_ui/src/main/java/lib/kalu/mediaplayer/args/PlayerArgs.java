@@ -1,11 +1,8 @@
 package lib.kalu.mediaplayer.args;
 
 
-import androidx.annotation.Nullable;
-
-import lib.kalu.mediaplayer.proxy.Proxy;
-import lib.kalu.mediaplayer.proxy.ProxyBuried;
-import lib.kalu.mediaplayer.proxy.ProxyUrl;
+import lib.kalu.mediaplayer.bean.cache.Cache;
+import lib.kalu.mediaplayer.bean.proxy.Proxy;
 import lib.kalu.mediaplayer.type.PlayerType;
 
 /**
@@ -39,32 +36,10 @@ public final class PlayerArgs {
         return rotation;
     }
 
-    @PlayerType.CacheType.Value
-    private int cacheType;
+    private Cache cache;
 
-    @PlayerType.CacheType.Value
-    public int getCacheType() {
-        return cacheType;
-    }
-
-    @PlayerType.CacheLocalType.Value
-    private int cacheLocal;
-
-    @PlayerType.CacheLocalType.Value
-    public int getCacheLocal() {
-        return cacheLocal;
-    }
-
-    private int cacheSize;
-
-    public int getCacheSizeType() {
-        return cacheSize;
-    }
-
-    private String cacheDirName;
-
-    public String getCacheDirName() {
-        return cacheDirName;
+    public Cache getCache() {
+        return cache;
     }
 
     public int getConnectTimeout() {
@@ -138,12 +113,9 @@ public final class PlayerArgs {
         renderType = builder.renderType;
         decoderType = builder.decoderType;
         scaleType = builder.scaleType;
-        cacheType = builder.cacheType;
-        cacheLocal = builder.cacheLocal;
-        cacheSize = builder.cacheSize;
-        cacheDirName = builder.cacheDirName;
         seekType = builder.seekType;
         rotation = builder.rotation;
+        cache = builder.cache;
         proxy = builder.proxy;
     }
 
@@ -159,12 +131,9 @@ public final class PlayerArgs {
         builder.setRenderType(this.renderType);
         builder.setDecoderType(this.decoderType);
         builder.setScaleType(this.scaleType);
-        builder.setCacheType(this.cacheType);
-        builder.setCacheLocal(this.cacheLocal);
-        builder.setCacheSize(this.cacheSize);
-        builder.setCacheDirName(this.cacheDirName);
         builder.setSeekType(this.seekType);
         builder.setRotation(this.rotation);
+        builder.setCache(this.cache);
         builder.setProxy(this.proxy);
         return builder;
     }
@@ -197,41 +166,6 @@ public final class PlayerArgs {
             return this;
         }
 
-        // 视频缓存
-        @PlayerType.CacheType.Value
-        private int cacheType = PlayerType.CacheType.DEFAULT;
-
-        public Builder setCacheType(@PlayerType.CacheType int v) {
-            cacheType = v;
-            return this;
-        }
-
-        // 缓存位置
-        @PlayerType.CacheLocalType.Value
-        private int cacheLocal = PlayerType.CacheLocalType.DEFAULT;
-
-        public Builder setCacheLocal(@PlayerType.CacheLocalType.Value int v) {
-            cacheLocal = v;
-            return this;
-        }
-
-        // 缓存大小
-        private int cacheSize = 500;
-
-        public Builder setCacheSize(int v) {
-            cacheSize = v;
-            return this;
-        }
-
-        // 缓存文件夹名
-        private String cacheDirName = "video_cache";
-
-        public Builder setCacheDirName(@Nullable String v) {
-            if (null != v && !v.isEmpty()) {
-                cacheDirName = v;
-            }
-            return this;
-        }
 
         // 快进参数
         @PlayerType.SeekType.Value
@@ -290,6 +224,15 @@ public final class PlayerArgs {
 
         public Builder setScaleType(@PlayerType.ScaleType.Value int v) {
             scaleType = v;
+            return this;
+        }
+
+        // 缓存
+        private Cache cache = new Cache.Builder()
+                .build();
+
+        public Builder setCache(Cache v) {
+            this.cache = v;
             return this;
         }
 

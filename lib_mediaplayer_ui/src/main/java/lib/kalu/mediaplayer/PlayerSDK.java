@@ -2,9 +2,8 @@ package lib.kalu.mediaplayer;
 
 
 import lib.kalu.mediaplayer.args.PlayerArgs;
-import lib.kalu.mediaplayer.proxy.Proxy;
-import lib.kalu.mediaplayer.proxy.ProxyBuried;
-import lib.kalu.mediaplayer.proxy.ProxyUrl;
+import lib.kalu.mediaplayer.bean.cache.Cache;
+import lib.kalu.mediaplayer.bean.proxy.Proxy;
 import lib.kalu.mediaplayer.type.PlayerType;
 
 
@@ -41,26 +40,6 @@ public final class PlayerSDK {
 
     public PlayerSDK setSeekType(@PlayerType.SeekType.Value int v) {
         mPlayerBuilder.setSeekType(v);
-        return this;
-    }
-
-    public PlayerSDK setCacheType(@PlayerType.CacheType.Value int v) {
-        mPlayerBuilder.setCacheType(v);
-        return this;
-    }
-
-    public PlayerSDK setCacheLocal(@PlayerType.CacheLocalType.Value int v) {
-        mPlayerBuilder.setCacheLocal(v);
-        return this;
-    }
-
-    public PlayerSDK setCacheSize(int v) {
-        mPlayerBuilder.setCacheSize(v);
-        return this;
-    }
-
-    public PlayerSDK setCacheDirName(String v) {
-        mPlayerBuilder.setCacheDirName(v);
         return this;
     }
 
@@ -102,6 +81,11 @@ public final class PlayerSDK {
     public PlayerSDK setScaleType(@PlayerType.ScaleType.Value int v) {
         mPlayerBuilder.setScaleType(v);
         updatePlayerBuilder(false);
+        return this;
+    }
+
+    public PlayerSDK setCache(Cache v) {
+        mPlayerBuilder.setCache(v);
         return this;
     }
 
