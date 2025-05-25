@@ -52,36 +52,171 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         LogUtil.log("ComponentSeek => dispatchKeyEvent => action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+
         try {
             // 试看
             long trySeeDuration = getTrySeeDuration();
             if (trySeeDuration > 0L)
                 throw new Exception("warning: trySeeDuration > 0L");
             // seekForward => start
-            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT && event.getRepeatCount() == 0) {
                 onUpdateProgress(true, -2, -2, -2);
                 superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
-                int repeatCount = event.getRepeatCount();
-                actionDown(repeatCount, KeyEvent.KEYCODE_DPAD_RIGHT);
+                //
+                show();
+                //
+                lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+                int progress = seekBar.getProgress();
+                int duration = seekBar.getMax();
+                if (progress >= duration)
+                    throw new Exception("warning: progress >= duration");
+                // >=2H 2 * 60 * 60 * 1000
+                if (duration >= 7200000) {
+                    progress += 8000;
+                }
+                // >=1H 60*60*1000
+                else if (duration >= 3600000) {
+                    progress += 4000;
+                }
+                // >=30MIN 30*60*1000
+                else if (duration >= 1800000) {
+                    progress += 1000;
+                }
+                // 10MIN 10*60*1000
+                else if (duration >= 600000) {
+                    progress += 400;
+                }
+                // 时间太短了
+                else {
+                    progress += 100;
+                }
+                if (progress >= duration) {
+                    progress = duration;
+                }
+                onUpdateProgress(true, trySeeDuration, progress, duration);
+                return true;
+            }
+            // seekForward => longPress
+            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
+                //
+                lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+                int progress = seekBar.getProgress();
+                int duration = seekBar.getMax();
+                if (progress >= duration)
+                    throw new Exception("warning: progress > duration");
+                // >=2H 2 * 60 * 60 * 1000
+                if (duration >= 7200000) {
+                    progress += 60000;
+                }
+                // >=1H 60*60*1000
+                else if (duration >= 3600000) {
+                    progress += 30000;
+                }
+                // >=30MIN 30*60*1000
+                else if (duration >= 1800000) {
+                    progress += 10000;
+                }
+                // 10MIN 10*60*1000
+                else if (duration >= 600000) {
+                    progress += 5000;
+                }
+                // 时间太短了
+                else {
+                    progress += 1000;
+                }
+                if (progress >= duration) {
+                    progress = duration;
+                }
+                onUpdateProgress(true, trySeeDuration, progress, duration);
                 return true;
             }
             // seekForward => stop
             else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 onUpdateProgress(true, -1, -1, -1);
+                //
+                hide();
                 return true;
             }
             // seekRewind => start
-            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT && event.getRepeatCount() == 0) {
                 onUpdateProgress(true, -2, -2, -2);
                 superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
+                //
                 show();
-                int repeatCount = event.getRepeatCount();
-                actionDown(repeatCount, KeyEvent.KEYCODE_DPAD_LEFT);
+                //
+                lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+                int progress = seekBar.getProgress();
+                if (progress <= 0)
+                    throw new Exception("warning: progress <=0");
+                int duration = seekBar.getMax();
+                // >=2H 2 * 60 * 60 * 1000
+                if (duration >= 7200000) {
+                    progress -= 8000;
+                }
+                // >=1H 60*60*1000
+                else if (duration >= 3600000) {
+                    progress -= 4000;
+                }
+                // >=30MIN 30*60*1000
+                else if (duration >= 1800000) {
+                    progress -= 1000;
+                }
+                // 10MIN 10*60*1000
+                else if (duration >= 600000) {
+                    progress -= 400;
+                }
+                // 时间太短了
+                else {
+                    progress -= 100;
+                }
+                if (progress <= 0) {
+                    progress = 0;
+                }
+                onUpdateProgress(true, trySeeDuration, progress, duration);
+                return true;
+            }
+            // seekRewind => longPress
+            else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+                superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
+                //
+                //
+                lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+                int progress = seekBar.getProgress();
+                if (progress <= 0)
+                    throw new Exception("warning: progress <=0");
+                int duration = seekBar.getMax();
+                // >=2H 2 * 60 * 60 * 1000
+                if (duration >= 7200000) {
+                    progress -= 60000;
+                }
+                // >=1H 60*60*1000
+                else if (duration >= 3600000) {
+                    progress -= 30000;
+                }
+                // >=30MIN 30*60*1000
+                else if (duration >= 1800000) {
+                    progress -= 10000;
+                }
+                // 10MIN 10*60*1000
+                else if (duration >= 600000) {
+                    progress -= 5000;
+                }
+                // 时间太短了
+                else {
+                    progress -= 1000;
+                }
+                if (progress <= 0) {
+                    progress = 0;
+                }
+                onUpdateProgress(true, trySeeDuration, progress, duration);
                 return true;
             }
             // seekRewind => stop
             else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
                 onUpdateProgress(true, -1, -1, -1);
+                //
+                hide();
                 return true;
             }
 
@@ -147,82 +282,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     }
 
     /**********/
-
-    private void actionDown(int repeatCount, int keyCode) {
-
-        try {
-            long duration = getDuration();
-            if (duration <= 0)
-                throw new Exception("warning: duration <=0");
-            // click
-            if (repeatCount == 0) {
-                lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-                int progress = seekBar.getProgress();
-                if (progress >= duration)
-                    throw new Exception("warning: range >= duration");
-                // >=2H 2 * 60 * 60 * 1000
-                if (duration >= 7200000) {
-                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 8000 : -8000);
-                }
-                // >=1H 60*60*1000
-                else if (duration >= 3600000) {
-                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 4000 : -4000);
-                }
-                // >=30MIN 30*60*1000
-                else if (duration >= 1800000) {
-                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 1000 : -1000);
-                }
-                // 10MIN 10*60*1000
-                else if (duration >= 600000) {
-                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 400 : -400);
-                }
-                // 时间太短了
-                else {
-                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 100 : -100);
-                }
-                if (progress >= duration) {
-                    progress = (int) duration;
-                }
-
-                long trySeeDuration = getTrySeeDuration();
-                onUpdateProgress(true, trySeeDuration, progress, duration);
-            }
-            // long click
-            else {
-                lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-                int progress = seekBar.getProgress();
-                if (progress >= duration)
-                    throw new Exception("warning: progress > duration");
-                // >=2H 2 * 60 * 60 * 1000
-                if (duration >= 7200000) {
-                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 60000 : -60000);
-                }
-                // >=1H 60*60*1000
-                else if (duration >= 3600000) {
-                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 30000 : -30000);
-                }
-                // >=30MIN 30*60*1000
-                else if (duration >= 1800000) {
-                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 10000 : -10000);
-                }
-                // 10MIN 10*60*1000
-                else if (duration >= 600000) {
-                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 5000 : -5000);
-                }
-                // 时间太短了
-                else {
-                    progress += (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ? 1000 : -1000);
-                }
-                if (progress >= duration) {
-                    progress = (int) duration;
-                }
-                long trySeeDuration = getTrySeeDuration();
-                onUpdateProgress(true, trySeeDuration, progress, duration);
-            }
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => startInitMsg => Exception " + e.getMessage());
-        }
-    }
 
     private void updateTimeMillis() {
         try {
