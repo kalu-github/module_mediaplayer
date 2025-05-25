@@ -102,88 +102,72 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     public void onUpdateProgress(boolean isFromUser, long trySeeDuration, long progress, long duration) {
         LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", trySeeDuration = " + trySeeDuration + ", progress = " + progress + ", duration = " + duration);
 
-        try {
-            if (isFromUser && progress == -1 && duration == -1) {
+        lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+        seekBar.setMax((int) duration);
+        if (isFromUser) {
+            seekBar.setProgress((int) duration);
+        } else {
+            seekBar.setTextInfo(progress, duration);
+        }
 
-            } else if (isFromUser) {
-                show();
-                lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-//                seekBar.setProgressHovered((int) progress);
-                seekBar.setProgress((int) progress);
-                seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
-//                setHovered(true);
-//                int visibility = seekBar.getVisibility();
-//                if (visibility == View.VISIBLE) {
-//                    show();
-//                }
-            } else {
-                boolean componentShowing = isComponentShowing();
-                if (componentShowing) {
-                    lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-                    seekBar.setProgress((int) progress);
-                    seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
-                }
-            }
-
-//            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-//            if (isFromUser && trySeeDuration == -1 && progress == -1 && duration == -1) {
-//                long position = getPosition();
-//                int seek = seekBar.getProgress();
-////                LogUtil.log("ComponentSeek11 => onUpdateProgress11 => seek = " + seek + ", position = " + position);
-//                long range = Math.abs(position - seek);
-//                if (range > 1000L) {
-//                    clearTimeMillis();
-//                    superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_HIDE);
-//                    seekTo(seek);
-//                    setHovered(false);
-//                    hide();
-//                } else {
-//                    updateTimeMillis();
-//                }
+//        try {
+//            if (isFromUser && progress == -1 && duration == -1) {
+//
 //            } else if (isFromUser) {
-//                long position = getPosition();
-////                LogUtil.log("ComponentSeek11 => onUpdateProgress22 => progress = " + progress + ", position = " + position);
-//                seekBar.setProgressHovered((int) position);
-//                seekBar.setProgress((int) progress);
+//                show();
+//                lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+//                seekBar.setProgressHovered((int) progress);
+////                seekBar.setProgress((int) progress);
 //                seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
-//                setHovered(true);
-//                int visibility = seekBar.getVisibility();
-//                if (visibility == View.VISIBLE) {
-//                    show();
-//                }
+////                int visibility = seekBar.getVisibility();
+////                if (visibility == View.VISIBLE) {
+////                    show();
+////                }
 //            } else {
-//                long castTimeMillis = getCastTimeMillis();
-//                if (castTimeMillis > 1000L) {
-//                    hide();
+//                boolean componentShowing = isComponentShowing();
+//                if (componentShowing) {
+//                    lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+//                    seekBar.setProgress((int) progress);
+//                    seekBar.setProgressHovered((int) 0);
+//                    seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
 //                }
 //            }
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => onUpdateProgress => Exception " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void show() {
-        try {
-            boolean componentShowing = isComponentShowing();
-            if (componentShowing)
-                throw new Exception("warning: componentShowing true");
-            ComponentApi.super.show();
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => show => Exception1 " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void hide() {
-        try {
-            boolean componentShowing = isComponentShowing();
-            if (!componentShowing)
-                throw new Exception("warning: componentShowing false");
-            ComponentApi.super.hide();
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => hide => Exception " + e.getMessage());
-        }
+//
+////            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+////            if (isFromUser && trySeeDuration == -1 && progress == -1 && duration == -1) {
+////                long position = getPosition();
+////                int seek = seekBar.getProgress();
+//////                LogUtil.log("ComponentSeek11 => onUpdateProgress11 => seek = " + seek + ", position = " + position);
+////                long range = Math.abs(position - seek);
+////                if (range > 1000L) {
+////                    clearTimeMillis();
+////                    superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_HIDE);
+////                    seekTo(seek);
+////                    setHovered(false);
+////                    hide();
+////                } else {
+////                    updateTimeMillis();
+////                }
+////            } else if (isFromUser) {
+////                long position = getPosition();
+//////                LogUtil.log("ComponentSeek11 => onUpdateProgress22 => progress = " + progress + ", position = " + position);
+////                seekBar.setProgressHovered((int) position);
+////                seekBar.setProgress((int) progress);
+////                seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
+////                setHovered(true);
+////                int visibility = seekBar.getVisibility();
+////                if (visibility == View.VISIBLE) {
+////                    show();
+////                }
+////            } else {
+////                long castTimeMillis = getCastTimeMillis();
+////                if (castTimeMillis > 1000L) {
+////                    hide();
+////                }
+////            }
+//        } catch (Exception e) {
+//            LogUtil.log("ComponentSeek => onUpdateProgress => Exception " + e.getMessage());
+//        }
     }
 
     /**********/

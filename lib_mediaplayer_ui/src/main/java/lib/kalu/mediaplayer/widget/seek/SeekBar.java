@@ -27,7 +27,6 @@ public final class SeekBar extends android.widget.SeekBar {
     private int mTextDurationPaddingRight = 0;
     private int mTextProgressPaddingLeft = 0;
     private int mTextProgressPaddingRight = 0;
-    private int mMode = 2;
 
     public SeekBar(Context context) {
         super(context);
@@ -51,7 +50,7 @@ public final class SeekBar extends android.widget.SeekBar {
     }
 
     @Override
-    protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
         // 计算 paddingLeft paddingRight
         try {
@@ -81,8 +80,16 @@ public final class SeekBar extends android.widget.SeekBar {
         super.onMeasure(widthMeasureSpec, -2);
     }
 
+    private long mPosition = 0L;
+    private long mDuration = 0L;
+
+    public void setTextInfo(long position, long duration) {
+        this.mPosition = position;
+        this.mDuration = duration;
+    }
+
     @Override
-    protected synchronized void onDraw(Canvas canvas) {
+    protected void onDraw(Canvas canvas) {
 
         // 进度条
         try {
@@ -99,169 +106,143 @@ public final class SeekBar extends android.widget.SeekBar {
             LogUtil.log("SeekBar => onDraw => Exception1 " + e.getMessage());
         }
 
-        // 时长
+        // 文字
         try {
-            int visibility = getVisibility();
-            if (visibility != View.VISIBLE)
-                throw new Exception("error: visibility != View.VISIBLE");
 
-            long duration = getMax();
-            if (duration <= 0)
-                throw new Exception("warning: duration <= 0");
+            if (mDuration <= 0)
+                throw new Exception("warning: mDuration <= 0");
 
-            if (null == mPaint) {
-                mPaint = new Paint();
-            }
-            mPaint.setAntiAlias(true);
-            mPaint.setTextSize(mTextSize);
-            mPaint.setColor(mTextColor);
+            if (mPosition <= 0)
+                throw new Exception("warning: mPosition <= 0");
 
-            String text = TimeUtil.formatTimeMillis(duration);
+            for (int i = 0; i < 2; i++) {
+
+                if (null == mPaint) {
+                    mPaint = new Paint();
+                }
+                mPaint.setAntiAlias(true);
+                mPaint.setTextSize(mTextSize);
+                mPaint.setColor(mTextColor);
+
+                if (i == 0) {
+
+                    String text = TimeUtil.formatTimeMillis(mPosition, mDuration);
+//            LogUtil.log("SeekBar => onDraw => duration = " + duration + ", progress = " + progress + ", text = " + text + ", progressReal = " + progressReal + ", mMode = " + mMode);
+                    Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
+                    float textHeight = fontMetrics.bottom - fontMetrics.top;
+
+                    int y;
+                    if (mTextGravity == 1) {
+                        y = (int) (textHeight * 0.8);
+                    } else if (mTextGravity == 2) {
+                        Rect rect = getProgressDrawable().getBounds();
+                        int paddingTop = getPaddingTop();
+                        int height = rect.height();
+                        int top = rect.top;
+                        y = paddingTop + top + height * 2;
+                    } else {
+                        int height = getHeight();
+                        y = (int) (height - fontMetrics.descent);
+                    }
+
+                    int left = getPaddingLeft();
+                    float textWidth = mPaint.measureText(text);
+                    int x = (int) (left - textWidth - mTextProgressPaddingRight);
+
+                    canvas.drawText(text, x, y, mPaint);
+                } else {
+
+                    String text = TimeUtil.formatTimeMillis(mDuration);
 //            float textWidth = mPaint.measureText(text);
 //            LogUtil.log("SeekBar => onDraw => duration = " + duration + ", text = " + text + ", textWidth = " + textWidth);
-            Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
-            float textHeight = fontMetrics.bottom - fontMetrics.top;
+                    Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
+                    float textHeight = fontMetrics.bottom - fontMetrics.top;
 
 
-            int width = getWidth();
-            int right = getPaddingRight();
-            int x = (width - right + mTextDurationPaddingLeft);
+                    int width = getWidth();
+                    int right = getPaddingRight();
+                    int x = (width - right + mTextDurationPaddingLeft);
 
-            int y;
-            // top
-            if (mTextGravity == 1) {
-                y = (int) (textHeight * 0.8);
+                    int y;
+                    // top
+                    if (mTextGravity == 1) {
+                        y = (int) (textHeight * 0.8);
+                    }
+                    // center
+                    else if (mTextGravity == 2) {
+                        Rect rect = getProgressDrawable().getBounds();
+                        int paddingTop = getPaddingTop();
+                        int height = rect.height();
+                        int top = rect.top;
+                        y = paddingTop + top + height * 2;
+                    }
+                    // bottom
+                    else {
+                        int height = getHeight();
+                        y = (int) (height - fontMetrics.descent);
+                    }
+
+                    canvas.drawText(text, x, y, mPaint);
+                }
+
             }
-            // center
-            else if (mTextGravity == 2) {
-                Rect rect = getProgressDrawable().getBounds();
-                int paddingTop = getPaddingTop();
-                int height = rect.height();
-                int top = rect.top;
-                y = paddingTop + top + height * 2;
-            }
-            // bottom
-            else {
-                int height = getHeight();
-                y = (int) (height - fontMetrics.descent);
-            }
-
-            canvas.drawText(text, x, y, mPaint);
 
         } catch (Exception e) {
-            LogUtil.log("SeekBar => onDraw => Exception2 " + e.getMessage());
+            LogUtil.log("ComponentSeek => onUpdateProgress => Exception3 " + e.getMessage());
         }
 
-        // 进度
-        try {
-            int visibility = getVisibility();
-            if (visibility != View.VISIBLE)
-                throw new Exception("error: visibility != View.VISIBLE");
-
-            long duration = getMax();
-            LogUtil.log("SeekBar => onDraw => duration = " + duration);
-            if (duration <= 0)
-                throw new Exception("warning: duration <= 0");
-
-            if (null == mPaint) {
-                mPaint = new Paint();
-            }
-            mPaint.setAntiAlias(true);
-            mPaint.setTextSize(mTextSize);
-            mPaint.setColor(mTextColor);
-
-            long progress;
-            if (mMode == 2 || this.progressHovered <= 0) {
-                progress = getProgress();
-            } else {
-                progress = this.progressHovered;
-            }
-            LogUtil.log("SeekBar => onDraw => progress = " + progress + ", mMode = " + mMode + ", progressHovered = " + progressHovered);
-            if (progress < 0L) {
-                progress = 0L;
-            }
-
-            String text = TimeUtil.formatTimeMillis(progress, duration);
-//            LogUtil.log("SeekBar => onDraw => duration = " + duration + ", progress = " + progress + ", text = " + text + ", progressReal = " + progressReal + ", mMode = " + mMode);
-            Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
-            float textHeight = fontMetrics.bottom - fontMetrics.top;
-
-            int y;
-            if (mTextGravity == 1) {
-                y = (int) (textHeight * 0.8);
-            } else if (mTextGravity == 2) {
-                Rect rect = getProgressDrawable().getBounds();
-                int paddingTop = getPaddingTop();
-                int height = rect.height();
-                int top = rect.top;
-                y = paddingTop + top + height * 2;
-            } else {
-                int height = getHeight();
-                y = (int) (height - fontMetrics.descent);
-            }
-
-            int left = getPaddingLeft();
-            float textWidth = mPaint.measureText(text);
-            int x = (int) (left - textWidth - mTextProgressPaddingRight);
-
-            canvas.drawText(text, x, y, mPaint);
-
-        } catch (Exception e) {
-            LogUtil.log("SeekBar => onDraw => Exception3 " + e.getMessage());
-        }
-
-        // 快进快退 提示
-        try {
-            int visibility = getVisibility();
-            if (visibility != View.VISIBLE)
-                throw new Exception("error: visibility != View.VISIBLE");
-
-            if (mMode == 2)
-                throw new Exception("warning: mMode = 2");
-
-            long duration = getMax();
-            if (duration <= 0L)
-                throw new Exception("warning: duration <= 0");
-
-            long progress = getProgress();
-            if (progress < 0L) {
-                progress = 0L;
-            }
-
-            if (null == mPaint) {
-                mPaint = new Paint();
-            }
-            mPaint.setAntiAlias(true);
-            mPaint.setTextSize((float) (mTextSize * 1.1));
-            mPaint.setColor(mTextColor);
-
-            String text = TimeUtil.formatTimeMillis(progress, duration);
-            float textWidth = mPaint.measureText(text);
-
-            Rect rect = getProgressDrawable().getBounds();
-            int width = rect.width();
-//            int paddingLeft = getPaddingLeft();
-
-            int range = (int) (width * progress / duration);
-            int x = (int) (range + mTextProgressPaddingLeft + mTextProgressPaddingRight + textWidth * 0.5);
-
-            Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
-            float textHeight = fontMetrics.bottom - fontMetrics.top;
-
-            int top = getPaddingTop();
-            int y = (int) (top - textHeight * 0.5);
-
-            canvas.drawText(text, x, y, mPaint);
-        } catch (Exception e) {
-            LogUtil.log("SeekBar => onDraw => Exception4 " + e.getMessage());
-        }
+//        // 快进快退 提示
+//        try {
+//            int visibility = getVisibility();
+//            if (visibility != View.VISIBLE)
+//                throw new Exception("error: visibility != View.VISIBLE");
+//
+////            if (mMode == 2)
+////                throw new Exception("warning: mMode = 2");
+//
+//            long duration = getMax();
+//            if (duration <= 0L)
+//                throw new Exception("warning: duration <= 0");
+//
+//            long progress = getProgress();
+//            if (progress < 0L) {
+//                progress = 0L;
+//            }
+//
+//            if (null == mPaint) {
+//                mPaint = new Paint();
+//            }
+//            mPaint.setAntiAlias(true);
+//            mPaint.setTextSize((float) (mTextSize * 1.1));
+//            mPaint.setColor(mTextColor);
+//
+//            String text = TimeUtil.formatTimeMillis(progress, duration);
+//            float textWidth = mPaint.measureText(text);
+//
+//            Rect rect = getProgressDrawable().getBounds();
+//            int width = rect.width();
+////            int paddingLeft = getPaddingLeft();
+//
+//            int range = (int) (width * progress / duration);
+//            int x = (int) (range + mTextProgressPaddingLeft + mTextProgressPaddingRight + textWidth * 0.5);
+//
+//            Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
+//            float textHeight = fontMetrics.bottom - fontMetrics.top;
+//
+//            int top = getPaddingTop();
+//            int y = (int) (top - textHeight * 0.5);
+//
+//            canvas.drawText(text, x, y, mPaint);
+//        } catch (Exception e) {
+//            LogUtil.log("SeekBar => onDraw => Exception4 " + e.getMessage());
+//        }
     }
 
     private void init(@Nullable AttributeSet attrs) {
         TypedArray a = null;
         try {
             a = getContext().obtainStyledAttributes(attrs, R.styleable.SeekBar);
-            mMode = a.getInteger(R.styleable.SeekBar_sb_mode, 2);
+            //  mMode = a.getInteger(R.styleable.SeekBar_sb_mode, 2);
             mTextColor = a.getColor(R.styleable.SeekBar_sb_text_color, Color.WHITE);
             mTextGravity = a.getInteger(R.styleable.SeekBar_sb_text_gravity, 2);
             mTextSize = a.getDimensionPixelOffset(R.styleable.SeekBar_sb_text_size, 10);
@@ -279,46 +260,7 @@ public final class SeekBar extends android.widget.SeekBar {
 
         setMax(0);
         setProgress(0);
-        setProgressHovered(0);
+        setSecondaryProgress(0);
         setThumbOffset(0);
-    }
-
-    /*********/
-
-
-    private int progressHovered;
-
-    public synchronized void setProgressHovered(int progress) {
-        this.progressHovered = progress;
-    }
-
-    public synchronized int getProgressHovered() {
-        return progressHovered;
-    }
-
-    private int mProgress = 0;
-
-    @Override
-    public synchronized void setProgress(int progress) {
-        super.setProgress(progress);
-        this.mProgress = progress;
-    }
-
-    @Override
-    public synchronized int getProgress() {
-        return mProgress;
-    }
-
-    private int mMax = 0;
-
-    @Override
-    public synchronized void setMax(int max) {
-        super.setMax(max);
-        this.mMax = max;
-    }
-
-    @Override
-    public synchronized int getMax() {
-        return mMax;
     }
 }

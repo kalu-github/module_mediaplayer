@@ -66,7 +66,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        LogUtil.log("PlayerView => dispatchKeyEvent0 => action = " + event.getAction() + ", ketCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+      //  LogUtil.log("PlayerView => dispatchKeyEvent0 => action = " + event.getAction() + ", ketCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
         try {
 
             // Component step1
@@ -85,7 +85,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
                 if (!dispatchKeyEvent)
                     continue;
-                LogUtil.log("PlayerView => dispatchKeyEvent1 => i = " + i + ", childAt = " + childAt);
+              //  LogUtil.log("PlayerView => dispatchKeyEvent1 => i = " + i + ", childAt = " + childAt);
                 return true;
             }
             // Component step2
@@ -99,7 +99,7 @@ public final class PlayerView extends RelativeLayout implements VideoPlayerApi {
                 boolean dispatchKeyEvent = childAt.dispatchKeyEvent(event);
                 if (!dispatchKeyEvent)
                     continue;
-                LogUtil.log("PlayerView => dispatchKeyEvent2 => i = " + i + ", childAt = " + childAt);
+              //  LogUtil.log("PlayerView => dispatchKeyEvent2 => i = " + i + ", childAt = " + childAt);
                 return true;
             }
 
