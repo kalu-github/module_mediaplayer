@@ -109,11 +109,13 @@ public final class SeekBar extends android.widget.SeekBar {
         // 文字
         try {
 
-            if (mDuration <= 0)
-                throw new Exception("warning: mDuration <= 0");
+            LogUtil.log("SeekBar => onDraw => mDuration = " + mDuration + ", mPosition = " + mPosition);
 
-            if (mPosition <= 0)
-                throw new Exception("warning: mPosition <= 0");
+//            if (mDuration <= 0)
+//                throw new Exception("warning: mDuration <= 0");
+//
+//            if (mPosition <= 0)
+//                throw new Exception("warning: mPosition <= 0");
 
             for (int i = 0; i < 2; i++) {
 
@@ -127,6 +129,8 @@ public final class SeekBar extends android.widget.SeekBar {
                 if (i == 0) {
 
                     String text = TimeUtil.formatTimeMillis(mPosition, mDuration);
+                    LogUtil.log("SeekBar => onDraw => text = " + text);
+
 //            LogUtil.log("SeekBar => onDraw => duration = " + duration + ", progress = " + progress + ", text = " + text + ", progressReal = " + progressReal + ", mMode = " + mMode);
                     Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
                     float textHeight = fontMetrics.bottom - fontMetrics.top;
@@ -153,6 +157,7 @@ public final class SeekBar extends android.widget.SeekBar {
                 } else {
 
                     String text = TimeUtil.formatTimeMillis(mDuration);
+                    LogUtil.log("SeekBar => onDraw => text = " + text);
 //            float textWidth = mPaint.measureText(text);
 //            LogUtil.log("SeekBar => onDraw => duration = " + duration + ", text = " + text + ", textWidth = " + textWidth);
                     Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
@@ -188,7 +193,7 @@ public final class SeekBar extends android.widget.SeekBar {
             }
 
         } catch (Exception e) {
-            LogUtil.log("ComponentSeek => onUpdateProgress => Exception3 " + e.getMessage());
+            LogUtil.log("SeekBar => onDraw => Exception2 " + e.getMessage());
         }
 
 //        // 快进快退 提示

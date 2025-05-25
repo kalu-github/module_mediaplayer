@@ -17,7 +17,26 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     public ComponentSeek(Context context) {
         super(context);
         inflate();
-        initSeekBarChangeListener();
+        lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                try {
+                    hide();
+                    int progress = seekBar.getProgress();
+                    seekTo(progress);
+                } catch (Exception e) {
+                }
+            }
+        });
     }
 
     @Override
@@ -40,6 +59,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
                 throw new Exception("warning: trySeeDuration > 0L");
             // seekForward => start
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                onUpdateProgress(true, -2, -2, -2);
                 superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
                 int repeatCount = event.getRepeatCount();
                 actionDown(repeatCount, KeyEvent.KEYCODE_DPAD_RIGHT);
@@ -47,11 +67,12 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
             }
             // seekForward => stop
             else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                //  onUpdateProgress(true, -1, -1, -1);
+                onUpdateProgress(true, -1, -1, -1);
                 return true;
             }
             // seekRewind => start
             else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+                onUpdateProgress(true, -2, -2, -2);
                 superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_SHOW);
                 show();
                 int repeatCount = event.getRepeatCount();
@@ -60,7 +81,7 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
             }
             // seekRewind => stop
             else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-                //  onUpdateProgress(true, -1, -1, -1);
+                onUpdateProgress(true, -1, -1, -1);
                 return true;
             }
 
@@ -102,72 +123,27 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     public void onUpdateProgress(boolean isFromUser, long trySeeDuration, long progress, long duration) {
         LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", trySeeDuration = " + trySeeDuration + ", progress = " + progress + ", duration = " + duration);
 
+
         lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-        seekBar.setMax((int) duration);
-        if (isFromUser) {
-            seekBar.setProgress((int) duration);
+
+        if (isFromUser && progress == -2 && duration == -2) {
+            seekBar.setHovered(true);
+            show();
+        } else if (isFromUser && progress == -1 && duration == -1) {
+            seekBar.setHovered(false);
+            hide();
+        } else if (isFromUser) {
+            seekBar.setMax((int) duration);
+            seekBar.setProgress((int) progress);
+            seekBar.setTextInfo(progress, duration);
         } else {
+            seekBar.setMax((int) duration);
+            boolean hovered = seekBar.isHovered();
+            if (!hovered) {
+                seekBar.setProgress((int) progress);
+            }
             seekBar.setTextInfo(progress, duration);
         }
-
-//        try {
-//            if (isFromUser && progress == -1 && duration == -1) {
-//
-//            } else if (isFromUser) {
-//                show();
-//                lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-//                seekBar.setProgressHovered((int) progress);
-////                seekBar.setProgress((int) progress);
-//                seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
-////                int visibility = seekBar.getVisibility();
-////                if (visibility == View.VISIBLE) {
-////                    show();
-////                }
-//            } else {
-//                boolean componentShowing = isComponentShowing();
-//                if (componentShowing) {
-//                    lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-//                    seekBar.setProgress((int) progress);
-//                    seekBar.setProgressHovered((int) 0);
-//                    seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
-//                }
-//            }
-//
-////            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-////            if (isFromUser && trySeeDuration == -1 && progress == -1 && duration == -1) {
-////                long position = getPosition();
-////                int seek = seekBar.getProgress();
-//////                LogUtil.log("ComponentSeek11 => onUpdateProgress11 => seek = " + seek + ", position = " + position);
-////                long range = Math.abs(position - seek);
-////                if (range > 1000L) {
-////                    clearTimeMillis();
-////                    superCallEvent(false, true, PlayerType.EventType.COMPONENT_SEEK_HIDE);
-////                    seekTo(seek);
-////                    setHovered(false);
-////                    hide();
-////                } else {
-////                    updateTimeMillis();
-////                }
-////            } else if (isFromUser) {
-////                long position = getPosition();
-//////                LogUtil.log("ComponentSeek11 => onUpdateProgress22 => progress = " + progress + ", position = " + position);
-////                seekBar.setProgressHovered((int) position);
-////                seekBar.setProgress((int) progress);
-////                seekBar.setMax((int) (trySeeDuration > 0 ? trySeeDuration : duration));
-////                setHovered(true);
-////                int visibility = seekBar.getVisibility();
-////                if (visibility == View.VISIBLE) {
-////                    show();
-////                }
-////            } else {
-////                long castTimeMillis = getCastTimeMillis();
-////                if (castTimeMillis > 1000L) {
-////                    hide();
-////                }
-////            }
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentSeek => onUpdateProgress => Exception " + e.getMessage());
-//        }
     }
 
     /**********/
@@ -273,35 +249,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
             return Math.abs(millis - start);
         } catch (Exception e) {
             return 0L;
-        }
-    }
-
-    private void initSeekBarChangeListener() {
-        try {
-            lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
-            if (null == seekBar)
-                throw new Exception("warning: null == seekBar");
-            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                    try {
-                        hide();
-                        int progress = seekBar.getProgress();
-                        seekTo(progress);
-                    } catch (Exception e) {
-                    }
-                }
-            });
-        } catch (Exception e) {
-            LogUtil.log("ComponentSeek => initSeekBarChangeListener => " + e.getMessage());
         }
     }
 }

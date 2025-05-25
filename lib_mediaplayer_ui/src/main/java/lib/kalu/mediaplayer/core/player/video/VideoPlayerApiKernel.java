@@ -540,7 +540,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             //
                             videoKernel.removeMessagesConnectTimeout();
                             //
-                            videoKernel.sendMessageProgressUpdate(kernel);
+                            videoKernel.sendMessageProgressUpdate(kernel, false);
                             break;
                         // 播放开始-默认
                         case PlayerType.EventType.START:
@@ -583,7 +583,7 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                         //
                         case PlayerType.EventType.RESUME:
                             // 停止轮训
-                            videoKernel.sendMessageProgressUpdate(kernel);
+                            videoKernel.sendMessageProgressUpdate(kernel,false);
                             break;
                         // 播放结束
                         case PlayerType.EventType.COMPLETE:

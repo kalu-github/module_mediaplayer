@@ -80,7 +80,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 if (isPrepared()) {
                     onUpdateProgress();
                 }
-                sendMessageProgressUpdate(msg.arg1);
+                sendMessageProgressUpdate(msg.arg1, true);
             }
             // 缓冲超时
             else if (msg.what == WHAT_BufferingTimeout) {
@@ -223,7 +223,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
     }
 
-    default void sendMessageProgressUpdate(@PlayerType.KernelType.Value int kernelType) {
+    default void sendMessageProgressUpdate(@PlayerType.KernelType.Value int kernelType, boolean delay) {
         try {
             Handler handler = mHandler.get(this);
             if (null == handler)
@@ -232,7 +232,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Message message = Message.obtain();
             message.what = WHAT_ProgressUpdate;
             message.arg1 = kernelType;
-            handler.sendMessageDelayed(message, 1000);
+            handler.sendMessageDelayed(message, delay ? 1000 : 0);
         } catch (Exception e) {
             LogUtil.log("VideoKernelApiHandler => sendMessageProgressUpdate => Exception " + e.getMessage());
         }
