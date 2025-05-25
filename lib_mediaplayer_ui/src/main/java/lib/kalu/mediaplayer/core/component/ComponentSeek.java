@@ -280,34 +280,4 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
             seekBar.setTextInfo(progress, duration);
         }
     }
-
-    /**********/
-
-    private void updateTimeMillis() {
-        try {
-            long millis = System.currentTimeMillis();
-            ((View) this).setTag(millis);
-        } catch (Exception e) {
-        }
-    }
-
-    private void clearTimeMillis() {
-        try {
-            ((View) this).setTag(null);
-        } catch (Exception e) {
-        }
-    }
-
-    private long getCastTimeMillis() {
-        try {
-            Object tag = ((View) this).getTag();
-            if (null == tag)
-                throw new Exception("warning: tag null");
-            long start = (long) tag;
-            long millis = System.currentTimeMillis();
-            return Math.abs(millis - start);
-        } catch (Exception e) {
-            return 0L;
-        }
-    }
 }
