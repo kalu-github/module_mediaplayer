@@ -133,6 +133,11 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
             }
             // seekForward => stop
             else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                //
+                lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+                int progress = seekBar.getProgress();
+                seekTo(progress);
+                //
                 onUpdateProgress(true, -1, -1, -1);
                 //
                 hide();
@@ -214,6 +219,11 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
             }
             // seekRewind => stop
             else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+                //
+                lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
+                int progress = seekBar.getProgress();
+                seekTo(progress);
+                //
                 onUpdateProgress(true, -1, -1, -1);
                 //
                 hide();
@@ -263,14 +273,11 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
 
         if (isFromUser && progress == -2 && duration == -2) {
             seekBar.setHovered(true);
-            show();
         } else if (isFromUser && progress == -1 && duration == -1) {
             seekBar.setHovered(false);
-            hide();
         } else if (isFromUser) {
             seekBar.setMax((int) duration);
             seekBar.setProgress((int) progress);
-            seekBar.setTextInfo(progress, duration);
         } else {
             seekBar.setMax((int) duration);
             boolean hovered = seekBar.isHovered();
