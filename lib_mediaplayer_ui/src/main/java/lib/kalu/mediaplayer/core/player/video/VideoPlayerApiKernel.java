@@ -14,7 +14,7 @@ import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApiEvent;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelFactoryManager;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.util.SpeedUtil;
 
@@ -74,11 +74,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 3
             setTags(args);
             setScreenKeep(true);
-            callEvent(PlayerType.EventType.INIT);
-            long trySeeDuration = args.getTrySeeDuration();
-            if (trySeeDuration > 0L) {
-                callEvent(PlayerType.EventType.TRY_SEE_START);
-            }
             // 4
             checkKernelNull(args, false);
             // 5
@@ -86,8 +81,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             // 6
             attachRenderKernel();
             // 7
-            setKernelEvent(args);
-            // 8
             initDecoder(args);
         } catch (Exception e) {
             callEvent(PlayerType.EventType.ERROR);
@@ -320,9 +313,6 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            // 定时器
-            kernel.createTimer();
-            // 播放
             Context context = getBaseContext();
             kernel.initDecoder(context, args);
         } catch (Exception e) {
@@ -426,27 +416,17 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
             if (release) {
                 releaseKernel(false, true);
             }
-            VideoKernelApi videoKernel = getVideoKernel();
-            if (null != videoKernel)
-                throw new Exception("warning: null != videoKernel");
+            if (null != getVideoKernel())
+                throw new Exception("warning: getVideoKernel not null");
+            //
             Context context = getBaseContext();
             int kernelType = args.getKernelType();
+            //
             VideoKernelApi kernelApi = VideoKernelFactoryManager.getKernel(kernelType);
-            kernelApi.createDecoder(context, args);
             setVideoKernel(kernelApi);
-        } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => checkKernelNull => " + e.getMessage());
-        }
-    }
-
-    default void setKernelEvent(StartArgs args) {
-
-        try {
-            VideoKernelApi videoKernel = getVideoKernel();
-            if (null == videoKernel)
-                throw new Exception("warning: videoKernel null");
-            videoKernel.setPlayerApi((VideoPlayerApi) this);
-            videoKernel.setKernelApi(new VideoKernelApiEvent() {
+            //
+            kernelApi.setPlayerApi((VideoPlayerApi) this);
+            kernelApi.setKernelApi(new VideoKernelApiEvent() {
 
                 @Override
                 public void onUpdateProgress() {
@@ -492,27 +472,25 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
 
                 @Override
                 public void onEvent(@PlayerType.KernelType.Value int kernel, @PlayerType.EventType.Value int event) {
-                    // LogUtil.log("VideoPlayerApiKernel => setKernelEvent => onEvent = " + kernel + ", event = " + event);
+                    LogUtil.log("VideoPlayerApiKernel => onEvent = " + kernel + ", event = " + event);
 
                     // 透传
                     callEvent(event);
 
                     switch (event) {
                         //
-                        case PlayerType.EventType.INIT_READY:
+                        case PlayerType.EventType.INIT:
                             //
                             boolean showSpeed = args.isShowSpeed();
                             if (showSpeed) {
-                                videoKernel.sendMessageSpeedUpdate(kernel);
+                                kernelApi.sendMessageSpeedUpdate(kernel, false);
                             }
-                            break;
-                        //
-                        case PlayerType.EventType.INIT:
+                            //
                             long connectTimeout = args.getConnectTimout();
                             @PlayerType.KernelType.Value
                             int kernelType = args.getKernelType();
                             long timeMillis = System.currentTimeMillis();
-                            videoKernel.sendMessageConnectTimeout(kernelType, timeMillis, connectTimeout);
+                            kernelApi.sendMessageConnectTimeout(kernelType, timeMillis, connectTimeout, false);
                             break;
                         // 缓冲开始
                         case PlayerType.EventType.BUFFERING_START:
@@ -522,25 +500,25 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             boolean bufferingTimeoutRetry = args.isBufferingTimeoutRetry();
                             long connectTimout = args.getConnectTimout();
                             long timeMillis1 = System.currentTimeMillis();
-                            videoKernel.sendMessageBufferingTimeout(kernel, bufferingTimeoutRetry, timeMillis1, connectTimout);
+                            kernelApi.sendMessageBufferingTimeout(kernel, bufferingTimeoutRetry, timeMillis1, connectTimout);
                             break;
                         // 缓冲结束
                         case PlayerType.EventType.BUFFERING_STOP:
                             // 埋点
                             onBuriedBufferingStop();
                             //
-                            videoKernel.removeMessagesBufferingTimeout();
+                            kernelApi.removeMessagesBufferingTimeout();
                             break;
                         // 视频首帧
                         case PlayerType.EventType.VIDEO_RENDERING_START:
                             // 埋点
                             onBuriedVideoRenderingStart();
                             //
-                            videoKernel.removeMessagesSpeedUpdate();
+                            kernelApi.removeMessagesSpeedUpdate();
                             //
-                            videoKernel.removeMessagesConnectTimeout();
+                            kernelApi.removeMessagesConnectTimeout();
                             //
-                            videoKernel.sendMessageProgressUpdate(kernel, false);
+                            kernelApi.sendMessageProgressUpdate(kernel, false);
                             break;
                         // 播放开始-默认
                         case PlayerType.EventType.START:
@@ -573,17 +551,17 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                             // 执行
                             setScreenKeep(false);
                             // 停止轮训
-                            videoKernel.removeMessagesAll();
+                            kernelApi.removeMessagesAll();
                             break;
                         //
                         case PlayerType.EventType.PAUSE:
                             // 停止轮训
-                            videoKernel.removeMessagesProgressUpdate();
+                            kernelApi.removeMessagesProgressUpdate();
                             break;
                         //
                         case PlayerType.EventType.RESUME:
                             // 停止轮训
-                            videoKernel.sendMessageProgressUpdate(kernel,false);
+                            kernelApi.sendMessageProgressUpdate(kernel, false);
                             break;
                         // 播放结束
                         case PlayerType.EventType.COMPLETE:
@@ -625,8 +603,12 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
                     setVideoFormat(kernel, rotation, scaleType, width, height, bitrate);
                 }
             });
+            // 定时器
+            kernelApi.createTimer();
+            // 解码
+            kernelApi.createDecoder(context, args);
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => setKernelEvent => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => checkKernelNull => " + e.getMessage());
         }
     }
 

@@ -1,12 +1,11 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentPrepare extends RelativeLayout implements ComponentApi {

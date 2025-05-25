@@ -1,26 +1,11 @@
 package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
-import android.graphics.BlurMaskFilter;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.style.CharacterStyle;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.MaskFilterSpan;
-import android.util.AttributeSet;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentSubtitle extends RelativeLayout implements ComponentApi {

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.RelativeLayout;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentBuffering extends RelativeLayout implements ComponentApi {

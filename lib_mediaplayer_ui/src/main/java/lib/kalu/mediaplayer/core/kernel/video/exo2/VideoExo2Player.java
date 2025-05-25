@@ -75,7 +75,7 @@ import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.core.kernel.video.exo2.proxy.CustomDefaultHttpDataSource;
 import lib.kalu.mediaplayer.core.kernel.video.exo2.proxy.CustomHlsPlaylistParserFactory;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
@@ -254,6 +254,13 @@ public final class VideoExo2Player extends VideoBasePlayer {
 
             mExoPlayer = builder.build();
             registListener();
+
+            //
+            onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.INIT);
+            long trySeeDuration = args.getTrySeeDuration();
+            if (trySeeDuration > 0L) {
+                onEvent(PlayerType.KernelType.EXO_V2, PlayerType.EventType.TRY_SEE_START);
+            }
 
 //            if (mSpeedPlaybackParameters != null) {
 //                mExoPlayer.setPlaybackParameters(mSpeedPlaybackParameters);

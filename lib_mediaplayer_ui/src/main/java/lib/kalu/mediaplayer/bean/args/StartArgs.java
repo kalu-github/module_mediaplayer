@@ -8,7 +8,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 public class StartArgs implements Serializable {
 

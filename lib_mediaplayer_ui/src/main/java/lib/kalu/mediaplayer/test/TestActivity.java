@@ -3,7 +3,6 @@ package lib.kalu.mediaplayer.test;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -28,7 +27,7 @@ import lib.kalu.mediaplayer.core.component.ComponentWarningTrySee;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.PlayerLayout;
 
@@ -38,20 +37,7 @@ import lib.kalu.mediaplayer.PlayerLayout;
  */
 public final class TestActivity extends Activity {
 
-    public static final int RESULT_CODE = 31001;
     public static final String INTENT_ARGS = "intent_args";
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-
-//        PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-//        boolean dispatchKeyEvent = playerLayout.dispatchKeyEvent(event);
-//        if (dispatchKeyEvent) {
-//            return true;
-//        }
-
-        return super.dispatchKeyEvent(event);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

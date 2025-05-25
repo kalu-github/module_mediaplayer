@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 

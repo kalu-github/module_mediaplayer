@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.Surface;
 
 import lib.kalu.mediaplayer.bean.args.StartArgs;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 

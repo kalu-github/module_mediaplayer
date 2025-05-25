@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.bean.info;
 
 import java.io.Serializable;
 
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 public final class TrackInfo implements Serializable {
 

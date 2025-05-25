@@ -6,7 +6,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 
 /**

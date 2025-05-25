@@ -2,14 +2,11 @@ package lib.kalu.mediaplayer.core.component;
 
 import android.content.Context;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
-import java.util.Arrays;
-
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public class ComponentSeek extends RelativeLayout implements ComponentApi {

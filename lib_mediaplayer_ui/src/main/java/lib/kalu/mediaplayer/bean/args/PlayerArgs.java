@@ -3,7 +3,7 @@ package lib.kalu.mediaplayer.bean.args;
 
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.proxy.Proxy;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 /**
  * @description: 播放器全局配置

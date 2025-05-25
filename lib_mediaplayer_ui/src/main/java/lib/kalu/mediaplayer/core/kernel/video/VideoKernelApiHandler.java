@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 
 import java.util.HashMap;
 
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
@@ -50,7 +50,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                     getPlayerApi().stop(true, false);
                     throw new Exception("warning: connect timeout");
                 } else {
-                    sendMessageConnectTimeout(msg.arg1, start, timeout);
+                    sendMessageConnectTimeout(msg.arg1, start, timeout, true);
                 }
             }
             // 解决部分盒子不回调 info code=3
@@ -109,7 +109,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
                 } else {
                     boolean buffering = isBuffering();
                     if (buffering) {
-                        sendMessageConnectTimeout(msg.arg1, start, timeout);
+                        sendMessageConnectTimeout(msg.arg1, start, timeout, true);
                     } else {
                         removeMessagesBufferingTimeout();
                     }
@@ -119,7 +119,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             else if (msg.what == WHAT_UPDATE_SPEED) {
                 if (!isPrepared()) {
                     onUpdateSpeed(msg.arg1);
-                    sendMessageSpeedUpdate(msg.arg1);
+                    sendMessageSpeedUpdate(msg.arg1, true);
                 }
             }
         } catch (Exception e) {
@@ -178,7 +178,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
     }
 
-    default void sendMessageConnectTimeout(@PlayerType.KernelType.Value int kernelType, long timeMillis, long timeout) {
+    default void sendMessageConnectTimeout(@PlayerType.KernelType.Value int kernelType, long timeMillis, long timeout, boolean delay) {
         try {
             Handler handler = mHandler.get(this);
             if (null == handler)
@@ -188,7 +188,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             message.what = WHAT_ConnectTimeout;
             message.arg1 = kernelType;
             message.obj = new long[]{timeMillis, timeout};
-            handler.sendMessageDelayed(message, 1000);
+            handler.sendMessageDelayed(message, delay?1000:0);
         } catch (Exception e) {
             LogUtil.log("VideoKernelApiHandler => sendMessageConnectTimeout => Exception " + e.getMessage());
         }
@@ -250,7 +250,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
         }
     }
 
-    default void sendMessageSpeedUpdate(@PlayerType.KernelType.Value int kernelType) {
+    default void sendMessageSpeedUpdate(@PlayerType.KernelType.Value int kernelType, boolean delay) {
         try {
             Handler handler = mHandler.get(this);
             if (null == handler)
@@ -259,7 +259,7 @@ public interface VideoKernelApiHandler extends VideoKernelApiBase, VideoKernelAp
             Message message = Message.obtain();
             message.what = WHAT_UPDATE_SPEED;
             message.arg1 = kernelType;
-            handler.sendMessageDelayed(message, 1000);
+            handler.sendMessageDelayed(message, delay?1000:0);
         } catch (Exception e) {
             LogUtil.log("VideoKernelApiHandler => sendMessageSpeedUpdate => Exception " + e.getMessage());
         }

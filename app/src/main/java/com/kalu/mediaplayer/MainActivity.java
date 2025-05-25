@@ -28,7 +28,7 @@ import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.cache.Cache;
 import lib.kalu.mediaplayer.bean.proxy.Proxy;
 import lib.kalu.mediaplayer.test.TestActivity;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 /**
@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
                         .setPlayWhenReadyDelayedTime(getPlayWhenReadyDelayedTime())
                         .setPlayWhenReady(isPlayWhenReady())
                         .setTrySeeDuration(getTrySeeDuration())
-                        .setShowSpeed(true)
+                        .setShowSpeed(isShowNet())
                         .build();
                 Intent intent = new Intent(getApplicationContext(), TestActivity.class);
                 intent.putExtra(TestActivity.INTENT_ARGS, args);
@@ -145,6 +145,11 @@ public class MainActivity extends Activity {
     private long getSeek() {
         CheckBox checkBox = findViewById(R.id.main_seek_yes);
         return checkBox.isChecked() ? 300 * 1000L : 0L;
+    }
+
+    private boolean isShowNet() {
+        CheckBox checkBox = findViewById(R.id.main_net_yes);
+        return checkBox.isChecked();
     }
 
     private int getPlayWhenReadyDelayedTime() {

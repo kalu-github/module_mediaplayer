@@ -7,7 +7,7 @@ import lib.kalu.mediaplayer.core.kernel.video.ffmpeg.VideoFFmpegPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.ijk.VideoIjkPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.VideoMediaxPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.vlc.VideoVlcPlayerFactory;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 /**
  * @description: 工具类

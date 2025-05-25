@@ -5,7 +5,7 @@ import android.view.KeyEvent;
 import android.widget.RelativeLayout;
 
 import lib.kalu.mediaplayer.R;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.seek.SeekBar;
 

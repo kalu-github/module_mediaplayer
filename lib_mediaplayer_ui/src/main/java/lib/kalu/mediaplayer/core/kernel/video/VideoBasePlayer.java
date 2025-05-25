@@ -1,11 +1,7 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
-import android.nfc.tech.Ndef;
-
-import androidx.annotation.Nullable;
-
 import lib.kalu.mediaplayer.core.player.video.VideoPlayerApi;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public abstract class VideoBasePlayer implements VideoKernelApi {

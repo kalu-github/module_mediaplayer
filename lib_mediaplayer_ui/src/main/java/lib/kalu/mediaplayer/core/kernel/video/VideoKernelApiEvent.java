@@ -1,6 +1,6 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 
 public interface VideoKernelApiEvent {

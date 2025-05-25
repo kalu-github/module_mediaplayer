@@ -2,7 +2,7 @@ package lib.kalu.mediaplayer.core.kernel.audio;
 
 import lib.kalu.mediaplayer.core.kernel.audio.android.AudioAndroidPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.audio.ijk.AudioIjkPlayerFactory;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 public final class AudioKernelFactoryManager {
 

@@ -211,6 +211,12 @@
                 android:orientation="horizontal">
 
                 <CheckBox
+                    android:id="@+id/main_net_yes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="显示网速" />
+
+                <CheckBox
                     android:id="@+id/main_log_yes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

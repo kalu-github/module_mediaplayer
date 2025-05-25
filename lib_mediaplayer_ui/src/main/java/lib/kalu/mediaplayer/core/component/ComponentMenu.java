@@ -21,7 +21,7 @@ import org.json.JSONObject;
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.widget.popu.PopuView;
 
@@ -58,9 +58,45 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        // action_down -> keycode_dpad_down
-        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
-            return keycodeDown(KeyEvent.ACTION_DOWN);
+        LogUtil.log("ComponentMenu => dispatchKeyEvent => action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
+
+        // action_up keycode_dpad_down
+        if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+            try {
+                boolean componentShowing = isComponentShowing();
+                if (componentShowing)
+                    throw new Exception("warning: componentShowing true");
+                show();
+                superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_SHOW);
+                initTabView();
+                showTabAt(0);
+                requestTabAt(0);
+            } catch (Exception e) {
+            }
+            return true;
+        }
+        // action_down keycode_dpad_down
+        else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+            try {
+                View focus = findFocus();
+                if (null == focus)
+                    throw new Exception("warning: focus null");
+                int focusId = focus.getId();
+                // 选集
+                if (focusId == R.id.module_mediaplayer_component_menu_item_episode) {
+                    requestTabAt(0);
+                }
+                // 倍速
+                else if (focusId == R.id.module_mediaplayer_component_menu_item_speed) {
+                    requestTabAt(1);
+                }
+                // 画面比例
+                else if (focusId == R.id.module_mediaplayer_component_menu_item_scale) {
+                    requestTabAt(2);
+                }
+            } catch (Exception e) {
+            }
+            return true;
         }
         // action_down -> keycode_dpad_up
         else if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
@@ -784,46 +820,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
             throw new Exception("error: not find");
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => keycodeRight => Exception " + e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean keycodeDown(int action) {
-        try {
-            if (action == KeyEvent.ACTION_DOWN) {
-                boolean componentShowing = isComponentShowing();
-                if (componentShowing) {
-                    View focus = findFocus();
-                    if (null == focus)
-                        throw new Exception("warning: focus null");
-                    int focusId = focus.getId();
-                    // 选集
-                    if (focusId == R.id.module_mediaplayer_component_menu_item_episode) {
-                        requestTabAt(0);
-                        return true;
-                    }
-                    // 倍速
-                    else if (focusId == R.id.module_mediaplayer_component_menu_item_speed) {
-                        requestTabAt(1);
-                        return true;
-                    }
-                    // 画面比例
-                    else if (focusId == R.id.module_mediaplayer_component_menu_item_scale) {
-                        requestTabAt(2);
-                        return true;
-                    }
-                } else {
-                    show();
-                    superCallEvent(false, true, PlayerType.EventType.COMPONENT_MENU_SHOW);
-                    initTabView();
-                    showTabAt(0);
-                    requestTabAt(0);
-                    return true;
-                }
-            }
-            throw new Exception("warning: not find");
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => keycodeDown => Exception " + e.getMessage());
             return false;
         }
     }

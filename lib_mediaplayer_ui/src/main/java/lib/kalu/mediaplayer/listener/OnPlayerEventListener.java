@@ -1,6 +1,6 @@
 package lib.kalu.mediaplayer.listener;
 
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 
 public interface OnPlayerEventListener {

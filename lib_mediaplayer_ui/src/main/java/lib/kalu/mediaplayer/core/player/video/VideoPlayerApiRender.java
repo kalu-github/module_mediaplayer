@@ -9,7 +9,7 @@ import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.core.kernel.video.VideoKernelApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderApi;
 import lib.kalu.mediaplayer.core.render.VideoRenderFactoryManager;
-import lib.kalu.mediaplayer.type.PlayerType;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApiListener {
