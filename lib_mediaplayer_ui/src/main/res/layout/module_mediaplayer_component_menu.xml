@@ -22,7 +22,7 @@
         android:visibility="gone">
 
         <!-- 数据 -->
-        <RadioGroup
+        <LinearLayout
             android:id="@+id/module_mediaplayer_component_menu_tab_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             android:weightSum="10" />
 
         <!-- 菜单 -->
-        <RadioGroup
+        <LinearLayout
             android:id="@+id/module_mediaplayer_component_menu_tab_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

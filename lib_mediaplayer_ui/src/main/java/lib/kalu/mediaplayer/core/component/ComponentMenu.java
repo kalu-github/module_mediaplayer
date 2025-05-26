@@ -9,6 +9,9 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Arrays;
+import java.util.List;
+
 import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
@@ -48,8 +51,83 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
     public boolean dispatchKeyEvent(KeyEvent event) {
         LogUtil.log("ComponentMenu => dispatchKeyEvent => action =  " + event.getAction() + ", keyCode = " + event.getKeyCode() + ", repeatCount = " + event.getRepeatCount());
 
+        // keycode_dpad_center
+        if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER || event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+            try {
+                View focus = findFocus();
+                if (null == focus)
+                    throw new Exception("warning: focus null");
+                int focusId = focus.getId();
+                if (focusId != R.id.module_mediaplayer_component_menu_item_content)
+                    throw new Exception("warning: focusId != R.id.module_mediaplayer_component_menu_item_content");
+                Object tag = focus.getTag();
+                if (null == tag)
+                    throw new Exception("warning: tag null");
+                List<Integer> listScale = Arrays.asList(PlayerType.ScaleType._1_1,
+                        PlayerType.ScaleType._4_3,
+                        PlayerType.ScaleType._5_4,
+                        PlayerType.ScaleType._16_10,
+                        PlayerType.ScaleType._16_9,
+                        PlayerType.ScaleType.REAL,
+                        PlayerType.ScaleType.FULL,
+                        PlayerType.ScaleType.AUTO);
+                List<Integer> listSpeed = Arrays.asList(PlayerType.SpeedType._0_5,
+                        PlayerType.SpeedType._1_0,
+                        PlayerType.SpeedType._1_5,
+                        PlayerType.SpeedType._2_0,
+                        PlayerType.SpeedType._2_5,
+                        PlayerType.SpeedType._3_0,
+                        PlayerType.SpeedType._3_5,
+                        PlayerType.SpeedType._4_0,
+                        PlayerType.SpeedType._4_5,
+                        PlayerType.SpeedType._5_0);
+
+                ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_content);
+                int childCount = viewGroup.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = viewGroup.getChildAt(i);
+                    if (null == childAt)
+                        continue;
+                    childAt.setSelected(childAt == focus);
+                }
+
+                // 倍速
+                if (listSpeed.contains((int) tag)) {
+                    setVideoSpeed((int) tag);
+                    hide();
+                    return true;
+                }
+                // 画面比例
+                else if (listScale.contains((int) tag)) {
+                    hide();
+                    setVideoScaleType((int) tag);
+                    return true;
+                }
+
+//                // 选集
+//                if (focusId == R.id.module_mediaplayer_component_menu_item_episode) {
+//
+//                    int playingIndex = getEpisodePlayingIndex();
+//                    int episodeIndex = (int) focus.getTag();
+//                    if (playingIndex != episodeIndex) {
+//                        hide();
+//                        stop();
+//                        ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
+//                        int index = episodeGroup.indexOfChild(focus);
+//                        clickEpisodeText(index, episodeIndex);
+//                        callListener(episodeIndex);
+//                        return true;
+//                    }
+//                }
+
+                throw new Exception("warning: not find");
+            } catch (Exception e) {
+                LogUtil.log("ComponentMenu => keycodeCenter => keycode_dpad_center => " + e.getMessage());
+                return false;
+            }
+        }
         // action_up keycode_dpad_down
-        if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+        else if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
             try {
                 boolean componentShowing = isComponentShowing();
                 if (componentShowing)
@@ -318,11 +396,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
 //                return true;
 //            }
 //        }
-//        // keycode_dpad_center
-//        else if (event.getAction() == KeyEvent.ACTION_DOWN && (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER || event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-//            return keycodeCenter(KeyEvent.ACTION_DOWN);
-//        }
-
 
         boolean componentShowing = isComponentShowing();
         if (componentShowing)
@@ -665,9 +738,9 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
 //            }
             // 倍速
             if (index == 0) {
-                showTabSpeedView();
+                showTabContentView(0);
             } else if (index == 1) {
-                showTabScaleView();
+                showTabContentView(1);
             }
         } catch (Exception e) {
             LogUtil.log("ComponentMenu => showTabContent => Exception " + e.getMessage());
@@ -678,95 +751,111 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
         return getResources().getIntArray(R.array.module_mediaplayer_array_scales);
     }
 
-    public void showTabScaleView() {
-        try {
-            int[] scaleData = initScaleData();
-            if (null == scaleData)
-                throw new Exception("error: scaleData null");
-            if (scaleData.length == 0)
-                throw new Exception("error: scaleData.length == 0");
-            ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_content);
-            viewGroup.removeAllViews();
-            for (int i = 0; i < scaleData.length; i++) {
-                // 1
-                LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_content, viewGroup, true);
-                // 2
-                int scaleType = scaleData[i];
-                int videoScaleType = getVideoScaleType();
-                View childAt = viewGroup.getChildAt(i);
-                // 3
-                childAt.setTag(scaleType);
-                childAt.setSelected(videoScaleType == scaleType);
-                if (scaleType == PlayerType.ScaleType.REAL) {
-                    ((RadioButton) childAt).setText("原始");
-                } else if (scaleType == PlayerType.ScaleType.FULL) {
-                    ((RadioButton) childAt).setText("全屏");
-                } else if (scaleType == PlayerType.ScaleType._1_1) {
-                    ((RadioButton) childAt).setText("1:1");
-                } else if (scaleType == PlayerType.ScaleType._4_3) {
-                    ((RadioButton) childAt).setText("4:3");
-                } else if (scaleType == PlayerType.ScaleType._5_4) {
-                    ((RadioButton) childAt).setText("5:4");
-                } else if (scaleType == PlayerType.ScaleType._16_9) {
-                    ((RadioButton) childAt).setText("16:9");
-                } else if (scaleType == PlayerType.ScaleType._16_10) {
-                    ((RadioButton) childAt).setText("16:10");
-                } else {
-                    ((RadioButton) childAt).setText("自动");
-                }
-            }
-        } catch (Exception e) {
-            LogUtil.log("ComponentMenu => showTabScaleView => Exception " + e.getMessage());
-        }
-    }
-
     public int[] initSpeedData() {
         return getResources().getIntArray(R.array.module_mediaplayer_array_speeds);
     }
 
-    private void showTabSpeedView() {
+    private int[] getTabContentData(int index) {
+        if (index == 0) {
+            return initSpeedData();
+        } else if (index == 1) {
+            return initScaleData();
+        } else {
+            return null;
+        }
+    }
+
+    public void showTabContentView(int index) {
         try {
-            int[] speedData = initSpeedData();
-            if (null == speedData)
-                throw new Exception("error: speedData null");
-            if (speedData.length == 0)
-                throw new Exception("error: speedData.length == 0");
+            int[] contentData = getTabContentData(index);
+            if (null == contentData)
+                throw new Exception("error: contentData null");
+            if (contentData.length == 0)
+                throw new Exception("error: contentData.length == 0");
             ViewGroup viewGroup = findViewById(R.id.module_mediaplayer_component_menu_tab_content);
             viewGroup.removeAllViews();
-            for (int i = 0; i < speedData.length; i++) {
-                // 1
+
+            int videoScaleType = getVideoScaleType();
+            int videoSpeed = getVideoSpeed();
+
+            List<Integer> listScale = Arrays.asList(PlayerType.ScaleType._1_1,
+                    PlayerType.ScaleType._4_3,
+                    PlayerType.ScaleType._5_4,
+                    PlayerType.ScaleType._16_10,
+                    PlayerType.ScaleType._16_9,
+                    PlayerType.ScaleType.REAL,
+                    PlayerType.ScaleType.FULL,
+                    PlayerType.ScaleType.AUTO);
+
+            List<Integer> listSpeed = Arrays.asList(PlayerType.SpeedType._0_5,
+                    PlayerType.SpeedType._1_0,
+                    PlayerType.SpeedType._1_5,
+                    PlayerType.SpeedType._2_0,
+                    PlayerType.SpeedType._2_5,
+                    PlayerType.SpeedType._3_0,
+                    PlayerType.SpeedType._3_5,
+                    PlayerType.SpeedType._4_0,
+                    PlayerType.SpeedType._4_5,
+                    PlayerType.SpeedType._5_0);
+
+            for (int i = 0; i < contentData.length; i++) {
+                //
                 LayoutInflater.from(getContext()).inflate(R.layout.module_mediaplayer_component_menu_item_content, viewGroup, true);
-                // 2
-                int speedType = speedData[i];
-                int videoSpeed = getVideoSpeed();
-                View childAt = viewGroup.getChildAt(i);
-                // 3
-                childAt.setTag(speedType);
-                childAt.setSelected(videoSpeed == speedType);
-                if (speedType == PlayerType.SpeedType._0_5) {
-                    ((RadioButton) childAt).setText("0.5");
-                } else if (speedType == PlayerType.SpeedType._1_5) {
-                    ((RadioButton) childAt).setText("1.5");
-                } else if (speedType == PlayerType.SpeedType._2_0) {
-                    ((RadioButton) childAt).setText("2.0");
-                } else if (speedType == PlayerType.SpeedType._2_5) {
-                    ((RadioButton) childAt).setText("2.5");
-                } else if (speedType == PlayerType.SpeedType._3_0) {
-                    ((RadioButton) childAt).setText("3.0");
-                } else if (speedType == PlayerType.SpeedType._3_5) {
-                    ((RadioButton) childAt).setText("3.5");
-                } else if (speedType == PlayerType.SpeedType._4_0) {
-                    ((RadioButton) childAt).setText("4.0");
-                } else if (speedType == PlayerType.SpeedType._4_5) {
-                    ((RadioButton) childAt).setText("4.5");
-                } else if (speedType == PlayerType.SpeedType._5_0) {
-                    ((RadioButton) childAt).setText("5.0");
-                } else {
-                    ((RadioButton) childAt).setText("1.0");
+                TextView childAt = (TextView) viewGroup.getChildAt(i);
+                //
+                int value = contentData[i];
+
+                // 倍速
+                if (listSpeed.contains(value)) {
+                    childAt.setTag(value);
+                    childAt.setSelected(videoSpeed == value);
+                    if (value == PlayerType.SpeedType._0_5) {
+                        childAt.setText("0.5");
+                    } else if (value == PlayerType.SpeedType._1_5) {
+                        childAt.setText("1.5");
+                    } else if (value == PlayerType.SpeedType._2_0) {
+                        childAt.setText("2.0");
+                    } else if (value == PlayerType.SpeedType._2_5) {
+                        childAt.setText("2.5");
+                    } else if (value == PlayerType.SpeedType._3_0) {
+                        childAt.setText("3.0");
+                    } else if (value == PlayerType.SpeedType._3_5) {
+                        childAt.setText("3.5");
+                    } else if (value == PlayerType.SpeedType._4_0) {
+                        childAt.setText("4.0");
+                    } else if (value == PlayerType.SpeedType._4_5) {
+                        childAt.setText("4.5");
+                    } else if (value == PlayerType.SpeedType._5_0) {
+                        childAt.setText("5.0");
+                    } else {
+                        childAt.setText("1.0");
+                    }
+                }
+                // 画面比例
+                else if (listScale.contains(value)) {
+                    childAt.setTag(value);
+                    childAt.setSelected(videoScaleType == value);
+                    if (value == PlayerType.ScaleType.REAL) {
+                        childAt.setText("原始");
+                    } else if (value == PlayerType.ScaleType.FULL) {
+                        childAt.setText("全屏");
+                    } else if (value == PlayerType.ScaleType._1_1) {
+                        childAt.setText("1:1");
+                    } else if (value == PlayerType.ScaleType._4_3) {
+                        childAt.setText("4:3");
+                    } else if (value == PlayerType.ScaleType._5_4) {
+                        childAt.setText("5:4");
+                    } else if (value == PlayerType.ScaleType._16_9) {
+                        childAt.setText("16:9");
+                    } else if (value == PlayerType.ScaleType._16_10) {
+                        childAt.setText("16:10");
+                    } else {
+                        childAt.setText("自动");
+                    }
                 }
             }
         } catch (Exception e) {
-            LogUtil.log("ComponentMenu => showTabSpeedView => Exception " + e.getMessage());
+            LogUtil.log("ComponentMenu => showTabContentView => Exception " + e.getMessage());
         }
     }
 
@@ -985,69 +1074,6 @@ public class ComponentMenu extends RelativeLayout implements ComponentApi {
 //            throw new Exception("error: not find");
 //        } catch (Exception e) {
 //            LogUtil.log("ComponentMenu => keycodeRight => Exception " + e.getMessage());
-//            return false;
-//        }
-//    }
-
-//    public boolean keycodeCenter(int action) {
-//        try {
-//            if (action == KeyEvent.ACTION_DOWN) {
-//                boolean componentShowing = isComponentShowing();
-//                if (!componentShowing)
-//                    throw new Exception("warning: componentShowing false");
-//                View focus = findFocus();
-//                if (null == focus)
-//                    throw new Exception("warning: focus null");
-//
-//                int focusId = focus.getId();
-//
-//                // 选集
-//                if (focusId == R.id.module_mediaplayer_component_menu_item_episode) {
-//
-//                    int playingIndex = getEpisodePlayingIndex();
-//                    int episodeIndex = (int) focus.getTag();
-//                    if (playingIndex != episodeIndex) {
-//                        hide();
-//                        stop();
-//                        ViewGroup episodeGroup = findViewById(R.id.module_mediaplayer_component_menu_episode_root);
-//                        int index = episodeGroup.indexOfChild(focus);
-//                        clickEpisodeText(index, episodeIndex);
-//                        callListener(episodeIndex);
-//                        return true;
-//                    }
-//                }
-//                // 倍速
-//                else if (focusId == R.id.module_mediaplayer_component_menu_item_speed) {
-//                    RadioGroup speedGroup = findViewById(R.id.module_mediaplayer_component_menu_speed_root);
-//                    int speedCount = speedGroup.getChildCount();
-//                    for (int i = 0; i < speedCount; i++) {
-//                        View childAt = speedGroup.getChildAt(i);
-//                        if (null == childAt)
-//                            continue;
-//                        childAt.setSelected(childAt == focus);
-//                    }
-//                    Object tag = focus.getTag();
-//                    setVideoSpeed((Integer) tag);
-//                    return true;
-//                }
-//                // 画面比例
-//                else if (focusId == R.id.module_mediaplayer_component_menu_item_scale) {
-//                    RadioGroup dataGroup = findViewById(R.id.module_mediaplayer_component_menu_scale_root);
-//                    int dataCount = dataGroup.getChildCount();
-//                    for (int i = 0; i < dataCount; i++) {
-//                        View childAt = dataGroup.getChildAt(i);
-//                        if (null == childAt)
-//                            continue;
-//                        childAt.setSelected(childAt == focus);
-//                    }
-//                    Object tag = focus.getTag();
-//                    setVideoScaleType((Integer) tag);
-//                    return true;
-//                }
-//            }
-//            throw new Exception("warning: not find");
-//        } catch (Exception e) {
-//            LogUtil.log("ComponentMenu => keycodeCenter => keycode_dpad_center => " + e.getMessage());
 //            return false;
 //        }
 //    }
