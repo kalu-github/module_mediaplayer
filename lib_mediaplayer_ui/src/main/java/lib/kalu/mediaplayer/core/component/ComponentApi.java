@@ -555,14 +555,14 @@ public interface ComponentApi {
     }
 
     @PlayerType.ScaleType.Value
-    default int getVideoScaleType() {
+    default int getVideoScale() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.getVideoScaleType();
+            return playerView.getVideoScale();
         } catch (Exception e) {
-            LogUtil.log("ComponentApi => getVideoScaleType => " + e.getMessage());
+            LogUtil.log("ComponentApi => getVideoScale => " + e.getMessage());
             return PlayerType.ScaleType.DEFAULT;
         }
     }

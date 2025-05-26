@@ -19,6 +19,7 @@
         android:orientation="vertical"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
+        android:paddingBottom="24dp"
         android:visibility="gone">
 
         <!-- 数据 -->
@@ -26,6 +27,7 @@
             android:id="@+id/module_mediaplayer_component_menu_tab_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:focusable="false"

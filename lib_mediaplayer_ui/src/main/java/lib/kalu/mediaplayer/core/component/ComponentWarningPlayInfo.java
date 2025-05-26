@@ -23,14 +23,14 @@ public class ComponentWarningPlayInfo extends RelativeLayout implements Componen
         return R.layout.module_mediaplayer_component_warning_play_info;
     }
 
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
-            hide();
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    public boolean dispatchKeyEvent(KeyEvent event) {
+//        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+//            hide();
+//            return true;
+//        }
+//        return false;
+//    }
 
     @Override
     public void callEvent(int playState) {

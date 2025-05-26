@@ -35,12 +35,12 @@ public interface VideoPlayerApiRender extends VideoPlayerApiBase, VideoPlayerApi
     }
 
     @PlayerType.ScaleType.Value
-    default int getVideoScaleType() {
+    default int getVideoScale() {
         try {
             VideoRenderApi render = getVideoRender();
             if (null == render)
                 throw new Exception("render error: null");
-            return render.getVideoScaleType();
+            return render.getVideoScale();
         } catch (Exception e) {
             LogUtil.log("VideoPlayerApiRender => getVideoScaleType => " + e.getMessage());
             return PlayerType.ScaleType.DEFAULT;

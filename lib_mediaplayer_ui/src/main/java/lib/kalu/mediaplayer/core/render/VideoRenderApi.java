@@ -90,7 +90,7 @@ public interface VideoRenderApi extends VideoRenderApiBase {
     }
 
     @PlayerType.ScaleType.Value
-    default int getVideoScaleType() {
+    default int getVideoScale() {
         return mVideoScaleType[0];
     }
 
@@ -145,7 +145,7 @@ public interface VideoRenderApi extends VideoRenderApiBase {
      */
     default int[] doMeasureSpec(int screenWidth, int screenHeight) {
 
-        int videoScaleType = getVideoScaleType();
+        int videoScaleType = getVideoScale();
         int videoRotation = getVideoRotation();
         int videoWidth = getVideoWidth();
         int videoHeight = getVideoHeight();
