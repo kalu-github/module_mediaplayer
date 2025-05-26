@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <lib.kalu.mediaplayer.widget.line.UnderLineRadioButton xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/module_mediaplayer_component_menu_item_tab"
+    android:id="@+id/module_mediaplayer_component_menu_tab_group_item"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_weight="1"

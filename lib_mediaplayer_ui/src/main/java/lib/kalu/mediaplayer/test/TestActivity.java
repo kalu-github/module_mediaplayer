@@ -128,8 +128,8 @@ public final class TestActivity extends Activity {
         loading.setComponentBackgroundColorInt(Color.BLACK);
         playerLayout.addComponent(loading);
         // seek
-        ComponentSeek seek = new ComponentSeek(getApplicationContext());
-        playerLayout.addComponent(seek);
+//        ComponentSeek seek = new ComponentSeek(getApplicationContext());
+//        playerLayout.addComponent(seek);
         // complete
         ComponentComplete end = new ComponentComplete(getApplicationContext());
         playerLayout.addComponent(end);

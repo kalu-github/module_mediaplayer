@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/module_mediaplayer_component_menu_item_scale"
+    android:id="@+id/module_mediaplayer_component_menu_item_content"
     android:layout_width="0dp"
     android:layout_height="match_parent"
+    android:layout_margin="4dp"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
-    android:layout_margin="4dp"
     android:layout_weight="1"
     android:background="@drawable/module_mediaplayer_selector_bg_menu_item"
     android:button="@null"
     android:focusable="true"
     android:gravity="center"
-    android:textColor="@color/module_mediaplayer_selector_textcolor_scale"
+    android:textColor="@color/module_mediaplayer_selector_textcolor_speed"
     android:textSize="20sp" />

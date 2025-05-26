@@ -1,7 +1,7 @@
 <resources>
 
     <string-array name="module_mediaplayer_array_tabs">
-        <item>选集</item>
+<!--        <item>选集</item>-->
         <item>倍速</item>
         <item>画面比例</item>
     </string-array>

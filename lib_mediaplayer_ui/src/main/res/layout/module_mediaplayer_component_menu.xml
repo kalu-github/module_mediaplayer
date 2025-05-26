@@ -7,7 +7,7 @@
     android:clipToPadding="false"
     android:focusable="false">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/module_mediaplayer_component_menu_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,54 +17,29 @@
         android:clipToPadding="false"
         android:focusable="false"
         android:orientation="vertical"
-        android:paddingLeft="40dp"
-        android:paddingTop="20dp"
-        android:paddingRight="40dp"
-        android:paddingBottom="20dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
         android:visibility="gone">
 
-        <!-- 数据:菜单 -->
+        <!-- 数据 -->
         <RadioGroup
-            android:id="@+id/module_mediaplayer_component_menu_tab_root"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:focusable="false"
-            android:orientation="horizontal"
-            android:paddingTop="10dp" />
-
-        <!-- 数据:选集 -->
-        <LinearLayout
-            android:id="@+id/module_mediaplayer_component_menu_episode_root"
+            android:id="@+id/module_mediaplayer_component_menu_tab_content"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_above="@id/module_mediaplayer_component_menu_tab_root"
+            android:layout_height="wrap_content"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:focusable="false"
             android:orientation="horizontal"
             android:weightSum="10" />
 
-        <!-- 数据:倍速 -->
+        <!-- 菜单 -->
         <RadioGroup
-            android:id="@+id/module_mediaplayer_component_menu_speed_root"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_above="@id/module_mediaplayer_component_menu_tab_root"
+            android:id="@+id/module_mediaplayer_component_menu_tab_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:focusable="false"
-            android:orientation="horizontal"
-            android:weightSum="10" />
+            android:orientation="horizontal" />
 
-        <!-- 数据:画面比例 -->
-        <RadioGroup
-            android:id="@+id/module_mediaplayer_component_menu_scale_root"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_above="@id/module_mediaplayer_component_menu_tab_root"
-            android:focusable="false"
-            android:orientation="horizontal"
-            android:weightSum="10" />
-
-    </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>
