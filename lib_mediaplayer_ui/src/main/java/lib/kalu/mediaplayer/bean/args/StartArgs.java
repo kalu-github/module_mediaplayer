@@ -8,6 +8,7 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
+import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 public class StartArgs implements Serializable {
@@ -200,6 +201,13 @@ public class StartArgs implements Serializable {
         return showSpeed;
     }
 
+    // 菜单数据
+    private Menu menu;
+
+    public Menu getMenu() {
+        return menu;
+    }
+
     @Override
     public String toString() {
         return "StartArgs{" +
@@ -229,6 +237,7 @@ public class StartArgs implements Serializable {
                 ", extraTrackVideo=" + extraTrackVideo +
                 ", extraData=" + extraData +
                 ", showSpeed=" + showSpeed +
+                ", menu=" + menu +
                 '}';
     }
 
@@ -259,6 +268,7 @@ public class StartArgs implements Serializable {
         this.extraTrackVideo = builder.extraTrackVideo;
         this.extraData = builder.extraData;
         this.showSpeed = builder.showSpeed;
+        this.menu = builder.menu;
     }
 
     public Builder newBuilder() {
@@ -289,6 +299,7 @@ public class StartArgs implements Serializable {
         builder.extraTrackVideo = extraTrackVideo;
         builder.extraData = extraData;
         builder.showSpeed = showSpeed;
+        builder.menu = menu;
         return builder;
     }
 
@@ -466,6 +477,15 @@ public class StartArgs implements Serializable {
 
         public Builder setShowSpeed(boolean v) {
             this.showSpeed = v;
+            return this;
+        }
+
+
+        // 菜单数据
+        private Menu menu;
+
+        public Builder setMenu(Menu v) {
+            this.menu = v;
             return this;
         }
 

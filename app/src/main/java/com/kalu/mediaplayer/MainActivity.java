@@ -26,6 +26,7 @@ import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.cache.Cache;
+import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.proxy.Proxy;
 import lib.kalu.mediaplayer.test.TestActivity;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
@@ -63,6 +64,7 @@ public class MainActivity extends Activity {
                         .setPlayWhenReady(isPlayWhenReady())
                         .setTrySeeDuration(getTrySeeDuration())
                         .setShowSpeed(isShowNet())
+                        .setMenu(createMenu())
                         .build();
                 Intent intent = new Intent(getApplicationContext(), TestActivity.class);
                 intent.putExtra(TestActivity.INTENT_ARGS, args);
@@ -140,6 +142,58 @@ public class MainActivity extends Activity {
             Toast.makeText(getApplicationContext(), "初始化资源文件 => 成功", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
         }
+    }
+
+    private Menu createMenu() {
+        ArrayList<Menu.Item> list = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+
+            // 选集
+            if (i == 0) {
+                Menu.Item item = new Menu.Item();
+                item.setName("选集");
+                item.setCount(24);
+                item.setFreeCount(2);
+                item.setFreeRes(R.drawable.ic_free);
+                item.setVipRes(R.drawable.ic_vip);
+                item.setEpisode(true);
+                list.add(item);
+            }
+            // 倍速
+            else if (i == 1) {
+                Menu.Item item = new Menu.Item();
+                item.setName("倍速");
+                item.setData(new int[]{
+                        PlayerType.SpeedType._0_5,
+                        PlayerType.SpeedType._1_0,
+                        PlayerType.SpeedType._1_5,
+                        PlayerType.SpeedType._2_0,
+                        PlayerType.SpeedType._2_5,
+                        PlayerType.SpeedType._3_0,
+                        PlayerType.SpeedType._3_5,
+                        PlayerType.SpeedType._4_0,
+                        PlayerType.SpeedType._4_5,
+                        PlayerType.SpeedType._5_0});
+                list.add(item);
+            }
+            // 画面比例
+            else {
+                Menu.Item item = new Menu.Item();
+                item.setName("画面比例");
+                item.setData(new int[]{
+                        PlayerType.ScaleType.AUTO,
+                        PlayerType.ScaleType.FULL,
+                        PlayerType.ScaleType.REAL,
+                        PlayerType.ScaleType._16_9,
+                        PlayerType.ScaleType._16_10,
+                        PlayerType.ScaleType._5_4,
+                        PlayerType.ScaleType._4_3,
+                        PlayerType.ScaleType._1_1});
+                list.add(item);
+            }
+        }
+
+        return new Menu.Builder().setData(list).build();
     }
 
     private long getSeek() {
