@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/module_mediaplayer_component_menu_item_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="0dp"
     android:layout_height="match_parent"
     android:layout_margin="4dp"
     android:layout_weight="1"
-    android:background="@drawable/module_mediaplayer_selector_bg_menu_item"
-    android:button="@null"
-    android:focusable="true"
-    android:gravity="center"
-    android:textColor="@color/module_mediaplayer_selector_textcolor_speed"
-    android:textSize="20sp" />
+    android:descendantFocusability="afterDescendants"
+    android:focusable="false">
+
+    <TextView
+        android:id="@+id/module_mediaplayer_component_menu_item_content_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/module_mediaplayer_selector_bg_menu_item"
+        android:button="@null"
+        android:focusable="true"
+        android:gravity="center"
+        android:textColor="@color/module_mediaplayer_selector_textcolor_speed"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/module_mediaplayer_component_menu_item_content_img"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_alignParentRight="true"
+        android:scaleType="fitEnd"
+        android:visibility="gone" />
+
+</RelativeLayout>

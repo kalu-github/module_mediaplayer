@@ -150,18 +150,27 @@ public class MainActivity extends Activity {
 
             // 选集
             if (i == 0) {
-                Menu.Item item = new Menu.Item();
+
+                int count = 24;
+                String url = getUrl();
+                ArrayList<String> strings = new ArrayList<>();
+                for (int j = 0; j < count; j++) {
+                    strings.add(url);
+                }
+
+                Menu.Episode item = new Menu.Episode();
                 item.setName("选集");
-                item.setCount(24);
+                item.setPlayPos(4);
+                item.setPlayCount(count);
+                item.setPlayUrls(strings);
                 item.setFreeCount(2);
                 item.setFreeRes(R.drawable.ic_free);
                 item.setVipRes(R.drawable.ic_vip);
-                item.setEpisode(true);
                 list.add(item);
             }
             // 倍速
             else if (i == 1) {
-                Menu.Item item = new Menu.Item();
+                Menu.Default item = new Menu.Default();
                 item.setName("倍速");
                 item.setData(new int[]{
                         PlayerType.SpeedType._0_5,
@@ -178,7 +187,7 @@ public class MainActivity extends Activity {
             }
             // 画面比例
             else {
-                Menu.Item item = new Menu.Item();
+                Menu.Default item = new Menu.Default();
                 item.setName("画面比例");
                 item.setData(new int[]{
                         PlayerType.ScaleType.AUTO,

@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
 import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mediaplayer.PlayerView;
@@ -579,6 +580,36 @@ public interface ComponentApi {
         } catch (Exception e) {
             LogUtil.log("ComponentApi => getStartArgs => " + e.getMessage());
             return null;
+        }
+    }
+
+    default int getPlayPos() {
+        try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            Menu menu = args.getMenu();
+            if (null == menu)
+                throw new Exception("error: menu null");
+            return menu.getPlayPos();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getPlayPos => " + e.getMessage());
+            return -1;
+        }
+    }
+
+    default int getPlayCount() {
+        try {
+            StartArgs args = getStartArgs();
+            if (null == args)
+                throw new Exception("error: args null");
+            Menu menu = args.getMenu();
+            if (null == menu)
+                throw new Exception("error: menu null");
+            return menu.getPlayCount();
+        } catch (Exception e) {
+            LogUtil.log("ComponentApi => getPlayCount => " + e.getMessage());
+            return -1;
         }
     }
 

@@ -13,6 +13,7 @@ import lib.kalu.mediaplayer.R;
 import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
+import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.core.component.ComponentBuffering;
 import lib.kalu.mediaplayer.core.component.ComponentComplete;
 import lib.kalu.mediaplayer.core.component.ComponentError;
@@ -24,6 +25,7 @@ import lib.kalu.mediaplayer.core.component.ComponentSeek;
 import lib.kalu.mediaplayer.core.component.ComponentSubtitle;
 import lib.kalu.mediaplayer.core.component.ComponentWarningPlayInfo;
 import lib.kalu.mediaplayer.core.component.ComponentWarningTrySee;
+import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
@@ -205,8 +207,8 @@ public final class TestActivity extends Activity {
             StartArgs args = (StartArgs) getIntent().getSerializableExtra(INTENT_ARGS);
             if (null == args)
                 throw new Exception("error: args null");
-            PlayerLayout videoLayout = findViewById(R.id.module_mediaplayer_test_video);
-            videoLayout.setOnPlayerEventListener(new OnPlayerEventListener() {
+            PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+            playerLayout.setOnPlayerEventListener(new OnPlayerEventListener() {
                 @Override
                 public void onComplete() {
 
@@ -221,7 +223,12 @@ public final class TestActivity extends Activity {
 
                 }
             });
-            videoLayout.start(args);
+            playerLayout.setOnPlayerEpisodeListener(new OnPlayerEpisodeListener() {
+                @Override
+                public void onEpisode(int curIndex) {
+                }
+            });
+            playerLayout.start(args);
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }

@@ -53,7 +53,14 @@ public class ComponentPrepareGradient extends RelativeLayout implements Componen
             // 1
             ComponentApi.super.show();
             // 2
-            setComponentText(getTitle());
+            String title = getTitle();
+            int playPos = getPlayPos();
+            if (playPos < 0) {
+                setComponentText(title);
+            } else {
+                String string = getResources().getString(R.string.module_mediaplayer_string_title, title, playPos + 1);
+                setComponentText(string);
+            }
         } catch (Exception e) {
             LogUtil.log("ComponentLoadingGradient => show => Exception " + e.getMessage());
         }

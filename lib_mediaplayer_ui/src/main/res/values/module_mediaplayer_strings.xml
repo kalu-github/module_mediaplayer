@@ -10,6 +10,6 @@
     <string name="module_mediaplayer_string_try">试看1分钟</string>
     <string name="module_mediaplayer_string_load">加载中...</string>
     <string name="module_mediaplayer_string_play_record">上次观看至%1$s, 长按【左键】从头播放</string>
-    <string name="module_mediaplayer_string_title">&#160;&#160;第%1$d集</string>
+    <string name="module_mediaplayer_string_title">%1$s&#160;&#160;第%2$d集</string>
     <string name="module_mediaplayer_string_episode_popu">第%1$d集</string>
 </resources>
