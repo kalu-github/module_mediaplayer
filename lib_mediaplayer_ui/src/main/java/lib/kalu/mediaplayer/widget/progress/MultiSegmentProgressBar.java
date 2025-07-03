@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
@@ -127,7 +128,6 @@ public class MultiSegmentProgressBar extends View {
         mBackgroundPaint.setStyle(Paint.Style.FILL);
 
         mProgressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mProgressPaint.setColor(mProgressColor);
         mProgressPaint.setStyle(Paint.Style.FILL);
 
         mBufferPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -136,7 +136,6 @@ public class MultiSegmentProgressBar extends View {
 
         mThumbPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mThumbPaint.setStyle(Paint.Style.FILL);
-        mThumbPaint.setColor(mThumbColor);
     }
 
     @Override
@@ -260,7 +259,10 @@ public class MultiSegmentProgressBar extends View {
                         null,                // 颜色分布位置（null表示均匀分布）
                         Shader.TileMode.CLAMP // 边缘处理模式
                 );
-                mThumbPaint.setShader(linearGradient);
+                mProgressPaint.setShader(linearGradient);
+            }
+            else{
+                mProgressPaint.setColor(mProgressColor);
             }
             mRectProgress.set(left, top, right, bottom);
             canvas.drawRoundRect(mRectProgress, mCorner, mCorner, mProgressPaint);
@@ -292,14 +294,17 @@ public class MultiSegmentProgressBar extends View {
 
             if (mThumbColorGradient != 0) {
                 int[] ints = getResources().getIntArray(mThumbColorGradient);
-                LinearGradient linearGradient = new LinearGradient(
-                        cx - mThumbRadius, cy - mThumbRadius,                 // 起点坐标 (x1, y1)
-                        cx + mThumbRadius, cy + mThumbRadius,             // 终点坐标 (x2, y2)
+                RadialGradient radialGradient = new RadialGradient(
+                        cx, cy,            // 圆心坐标 (centerX, centerY)
+                        mThumbRadius,                 // 半径
                         ints,
-                        null,                // 颜色分布位置（null表示均匀分布）
-                        Shader.TileMode.CLAMP // 边缘处理模式
+                        new float[]{0f, 1f}, // 颜色位置（0f为圆心，1f为边缘）
+                        Shader.TileMode.CLAMP
                 );
-                mThumbPaint.setShader(linearGradient);
+                mThumbPaint.setShader(radialGradient);
+            }
+            else{
+                mThumbPaint.setColor(mThumbColor);
             }
             canvas.drawCircle(cx, cy, radius, mThumbPaint);
 

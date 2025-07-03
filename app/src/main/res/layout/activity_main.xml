@@ -324,7 +324,7 @@
         app:ms_background_color="#33000000"
         app:ms_buffer_color="#4d000000"
         app:ms_corner="8dp"
-        app:ms_progress_color_gradient="@array/progress_colors"
+        app:ms_progress_color="#ff482a"
         app:ms_thumb_color_gradient="@array/thumb_colors"
         app:ms_thumb_icon="@drawable/ic_thumb"
         app:ms_thumb_icon_height="10dp"
