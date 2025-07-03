@@ -10,6 +10,7 @@
         <attr name="ms_corner" format="dimension|reference" />
         <attr name="ms_background_color" format="color|reference" />
         <attr name="ms_progress_color" format="color|reference" />
+        <attr name="ms_progress_color_gradient" format="reference" />
         <attr name="ms_buffer_color" format="color|reference" />
     </declare-styleable>
 

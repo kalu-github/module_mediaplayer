@@ -35,6 +35,7 @@ public class MultiSegmentProgressBar extends View {
 
     private int mBackgroundColor = Color.BLACK;
     private int mProgressColor = Color.RED;
+    private int mProgressColorGradient = 0;
     private int mBufferColor = Color.GRAY;
 
     private int mWidth;
@@ -72,6 +73,7 @@ public class MultiSegmentProgressBar extends View {
         try {
             typed = context.obtainStyledAttributes(attrs, R.styleable.MultiSegmentProgressBar);
             mBackgroundColor = typed.getColor(R.styleable.MultiSegmentProgressBar_ms_background_color, mBackgroundColor);
+            mProgressColorGradient = typed.getResourceId(R.styleable.MultiSegmentProgressBar_ms_progress_color_gradient, mProgressColorGradient);
             mBufferColor = typed.getColor(R.styleable.MultiSegmentProgressBar_ms_buffer_color, mBufferColor);
             mProgressColor = typed.getColor(R.styleable.MultiSegmentProgressBar_ms_progress_color, mProgressColor);
             mCorner = typed.getDimension(R.styleable.MultiSegmentProgressBar_ms_corner, mCorner);
@@ -131,6 +133,10 @@ public class MultiSegmentProgressBar extends View {
         mBufferPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBufferPaint.setColor(mBufferColor);
         mBufferPaint.setStyle(Paint.Style.FILL);
+
+        mThumbPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mThumbPaint.setStyle(Paint.Style.FILL);
+        mThumbPaint.setColor(mThumbColor);
     }
 
     @Override
@@ -244,6 +250,18 @@ public class MultiSegmentProgressBar extends View {
             float top = mHeight * 0.5F - mRealHeight * 0.5F;
             float right = mProgress * mWidth / mMax;
             float bottom = mHeight * 0.5F + mRealHeight * 0.5F;
+
+            if (mProgressColorGradient != 0) {
+                int[] ints = getResources().getIntArray(mProgressColorGradient);
+                LinearGradient linearGradient = new LinearGradient(
+                        left, top,                 // 起点坐标 (x1, y1)
+                        right, bottom,             // 终点坐标 (x2, y2)
+                        ints,
+                        null,                // 颜色分布位置（null表示均匀分布）
+                        Shader.TileMode.CLAMP // 边缘处理模式
+                );
+                mThumbPaint.setShader(linearGradient);
+            }
             mRectProgress.set(left, top, right, bottom);
             canvas.drawRoundRect(mRectProgress, mCorner, mCorner, mProgressPaint);
         } catch (Exception e) {
@@ -256,12 +274,6 @@ public class MultiSegmentProgressBar extends View {
                 return;
             if (mHeight <= 0)
                 return;
-
-            if (null == mThumbPaint) {
-                mThumbPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                mThumbPaint.setStyle(Paint.Style.FILL);
-                mThumbPaint.setColor(mThumbColor);
-            }
 
             float radius;
             if (mThumbRadius <= 0f) {
@@ -289,7 +301,6 @@ public class MultiSegmentProgressBar extends View {
                 );
                 mThumbPaint.setShader(linearGradient);
             }
-
             canvas.drawCircle(cx, cy, radius, mThumbPaint);
 
             //
