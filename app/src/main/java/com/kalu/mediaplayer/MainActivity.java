@@ -3,6 +3,9 @@ package com.kalu.mediaplayer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +15,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.kalu.mediaplayer.proxy.ProxyBuried;
 import com.kalu.mediaplayer.proxy.ProxyUrl;
@@ -24,13 +29,14 @@ import java.util.List;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
-import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.cache.Cache;
+import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.menu.Menu;
 import lib.kalu.mediaplayer.bean.proxy.Proxy;
-import lib.kalu.mediaplayer.test.TestActivity;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
+import lib.kalu.mediaplayer.test.TestActivity;
 import lib.kalu.mediaplayer.util.LogUtil;
+import lib.kalu.mediaplayer.widget.progress.MultiSegmentProgressBar;
 
 /**
  * description:
@@ -43,6 +49,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initMultiSegmentProgress();
         init();
 
         findViewById(R.id.main_button1).setOnClickListener(new View.OnClickListener() {
@@ -71,6 +78,56 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+
+    private void initMultiSegmentProgress() {
+
+        //
+        Handler handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                if (msg.what == 11) {
+                    //
+                    Message message = Message.obtain();
+                    message.what = 12;
+                    message.arg1 = 100;
+                    sendMessageDelayed(message, 100);
+                } else if (msg.what == 12) {
+                    //
+                    MultiSegmentProgressBar progressBar = findViewById(R.id.videoProgressBar);
+                    progressBar.setProgress(msg.arg1, 100_000);
+                    //
+                    Message message = Message.obtain();
+                    message.what = 12;
+                    message.arg1 = (msg.arg1 + 100);
+                    sendMessageDelayed(message, 100);
+                } else if (msg.what == 21) {
+                    //
+                    Message message = Message.obtain();
+                    message.what = 22;
+                    message.arg1 = 100;
+                    message.arg2 = 200;
+                    sendMessageDelayed(message, 100);
+                } else if (msg.what == 22) {
+                    //
+                    MultiSegmentProgressBar progressBar = findViewById(R.id.videoProgressBar);
+                    progressBar.addSegment(msg.arg1, msg.arg2);
+                    //
+                    Message message = Message.obtain();
+                    message.what = 22;
+                    message.arg1 = (msg.arg1 + 200);
+                    message.arg2 = (msg.arg2 + 200);
+                    sendMessageDelayed(message, 100);
+                }
+            }
+        };
+
+        // 模拟缓存进度
+        handler.sendEmptyMessageDelayed(21, 100);
+
+        // 模拟播放进度
+        handler.sendEmptyMessageDelayed(11, 100);
     }
 
     private void init() {
