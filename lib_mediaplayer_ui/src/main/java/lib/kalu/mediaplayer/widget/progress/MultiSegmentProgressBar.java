@@ -261,8 +261,7 @@ public class MultiSegmentProgressBar extends View {
                         Shader.TileMode.CLAMP // 边缘处理模式
                 );
                 mProgressPaint.setShader(linearGradient);
-            }
-            else{
+            } else {
                 mProgressPaint.setColor(mProgressColor);
             }
             mRectProgress.set(left, top, right, bottom);
@@ -303,8 +302,7 @@ public class MultiSegmentProgressBar extends View {
                         Shader.TileMode.CLAMP
                 );
                 mThumbPaint.setShader(radialGradient);
-            }
-            else{
+            } else {
                 mThumbPaint.setColor(mThumbColor);
             }
             canvas.drawCircle(cx, cy, radius, mThumbPaint);
@@ -332,8 +330,8 @@ public class MultiSegmentProgressBar extends View {
         invalidate();
     }
 
-    public final void addSegment(int start, int end) {
 
+    private void addBuffer(int start, int end) {
         try {
             if (start >= end)
                 return;
@@ -359,8 +357,39 @@ public class MultiSegmentProgressBar extends View {
 
         } catch (Exception e) {
         }
+    }
 
-        // 刷新视图
+    public final void addSegment(int start, int end) {
+        addBuffer(start, end);
+        invalidate();
+    }
+
+    public final void addSegments(int[] segments) {
+        if (null == segments)
+            return;
+        int length = segments.length;
+        if (length / 2 != 0)
+            return;
+        for (int i = 0; i < length; i += 2) {
+            int start = segments[i];
+            int end = segments[i + 1];
+            addBuffer(start, end);
+        }
+        invalidate();
+    }
+
+    public final void addSegments(List<int[]> segments) {
+        if (null == segments)
+            return;
+        for (int[] segment : segments) {
+            if (null == segment)
+                continue;
+            if (segment.length != 2)
+                continue;
+            int start = segment[0];
+            int end = segment[1];
+            addBuffer(start, end);
+        }
         invalidate();
     }
 
