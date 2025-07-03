@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import lib.kalu.mediaplayer.PlayerSDK;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
@@ -106,8 +107,10 @@ public class MainActivity extends Activity {
                     //
                     Message message = Message.obtain();
                     message.what = 22;
-                    message.arg1 = 100;
-                    message.arg2 = 200;
+                    int start = msg.arg1 + new Random().nextInt(1000);
+                    int end = start + new Random().nextInt(1000);
+                    message.arg1 = start;
+                    message.arg2 = end;
                     sendMessageDelayed(message, 100);
                 } else if (msg.what == 22) {
                     //
@@ -116,8 +119,10 @@ public class MainActivity extends Activity {
                     //
                     Message message = Message.obtain();
                     message.what = 22;
-                    message.arg1 = (msg.arg1 + 200);
-                    message.arg2 = (msg.arg2 + 200);
+                    int start = msg.arg1 + new Random().nextInt(1000);
+                    int end = start + new Random().nextInt(1000);
+                    message.arg1 = start;
+                    message.arg2 = end;
                     sendMessageDelayed(message, 100);
                 }
             }

@@ -227,7 +227,8 @@ public class MultiSegmentProgressBar extends View {
                 float right = end * mWidth / mMax;
                 float bottom = mHeight * 0.5F + mRealHeight * 0.5F;
                 mRectBuffer.set(left, top, right, bottom);
-                canvas.drawRoundRect(mRectBuffer, mCorner, mCorner, mBufferPaint);
+                canvas.drawRect(mRectBuffer, mBufferPaint);
+//                canvas.drawRoundRect(mRectBuffer, mCorner, mCorner, mBufferPaint);
             }
         } catch (Exception e) {
         }
