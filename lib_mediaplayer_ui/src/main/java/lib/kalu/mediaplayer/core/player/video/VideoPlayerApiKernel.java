@@ -736,14 +736,14 @@ public interface VideoPlayerApiKernel extends VideoPlayerApiListener,
         }
     }
 
-    default List<HlsSpanInfo> getBufferedHlsSpanInfo() {
+    default List<HlsSpanInfo> getSegments() {
         try {
             VideoKernelApi kernel = getVideoKernel();
             if (null == kernel)
                 throw new Exception("warning: kernel null");
-            return kernel.getBufferedHlsSpanInfo();
+            return kernel.getSegments();
         } catch (Exception e) {
-            LogUtil.log("VideoPlayerApiKernel => getBufferedHlsSpanInfo => " + e.getMessage());
+            LogUtil.log("VideoPlayerApiKernel => getSegments => " + e.getMessage());
             return null;
         }
     }

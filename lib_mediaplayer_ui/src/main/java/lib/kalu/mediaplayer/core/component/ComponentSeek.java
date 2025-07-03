@@ -265,7 +265,6 @@ public class ComponentSeek extends RelativeLayout implements ComponentApi {
     public void onUpdateProgress(boolean isFromUser, long trySeeDuration, long progress, long duration) {
         LogUtil.log("ComponentSeek => onUpdateProgress => isFromUser = " + isFromUser + ", trySeeDuration = " + trySeeDuration + ", progress = " + progress + ", duration = " + duration);
 
-
         lib.kalu.mediaplayer.widget.seek.SeekBar seekBar = findViewById(R.id.module_mediaplayer_component_seek_sb);
 
         if (isFromUser && progress == -2 && duration == -2) {

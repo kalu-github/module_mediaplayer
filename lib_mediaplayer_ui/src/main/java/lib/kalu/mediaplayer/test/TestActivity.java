@@ -77,14 +77,14 @@ public final class TestActivity extends Activity {
             @Override
             public void onClick(View v) {
                 PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
-                List<HlsSpanInfo> list = playerLayout.getBufferedHlsSpanInfo();
+                List<HlsSpanInfo> list = playerLayout.getSegments();
                 if (null != list) {
                     for (HlsSpanInfo span : list) {
                         long durationUs = span.getDurationUs();
                         long relativeStartTimeUs = span.getRelativeStartTimeUs();
                         String path = span.getPath();
                         String url = span.getUrl();
-                        LogUtil.log("TestActivity -> getBufferedHlsSpanInfo -> durationUs = " + durationUs + ", relativeStartTimeUs = " + relativeStartTimeUs + ", path = " + path + ", url = " + url);
+                        LogUtil.log("TestActivity -> getSegments -> durationUs = " + durationUs + ", relativeStartTimeUs = " + relativeStartTimeUs + ", path = " + path + ", url = " + url);
                     }
                 }
             }

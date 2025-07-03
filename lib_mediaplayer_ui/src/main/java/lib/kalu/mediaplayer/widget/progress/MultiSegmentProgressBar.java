@@ -30,9 +30,9 @@ public class MultiSegmentProgressBar extends View {
     private int mThumbColorGradient = 0;
 
     private float mCorner = 0f;
-    private int mProgress = 0;
-    private int mMax = 100;
-    private List<int[]> mSegments;
+    private long mProgress = 0; // 单位毫秒
+    private long mMax = 100L;// 单位毫秒
+    private List<long[]> mSegments;
 
     private int mBackgroundColor = Color.BLACK;
     private int mProgressColor = Color.RED;
@@ -209,13 +209,13 @@ public class MultiSegmentProgressBar extends View {
                 return;
 
             // 绘制缓存段
-            for (int[] segment : mSegments) {
+            for (long[] segment : mSegments) {
                 if (null == segment)
                     continue;
                 if (segment.length != 2)
                     continue;
-                int start = segment[0];
-                int end = segment[1];
+                long start = segment[0];
+                long end = segment[1];
 
                 if (null == mRectBuffer) {
                     mRectBuffer = new RectF();
@@ -331,7 +331,7 @@ public class MultiSegmentProgressBar extends View {
     }
 
 
-    private void addBuffer(int start, int end) {
+    private void addBuffer(long start, long end) {
         try {
             if (start >= end)
                 return;
@@ -342,14 +342,14 @@ public class MultiSegmentProgressBar extends View {
             }
             // 添加新的缓存段
             if (mSegments.isEmpty()) {
-                mSegments.add(new int[]{start, end});
+                mSegments.add(new long[]{start, end});
             } else {
                 int size = mSegments.size();
                 int index = size - 1;
-                int[] segment = mSegments.get(index);
-                int before = segment[1];
+                long[] segment = mSegments.get(index);
+                long before = segment[1];
                 if (start > before) {
-                    mSegments.add(new int[]{start, end});
+                    mSegments.add(new long[]{start, end});
                 } else {
                     segment[1] = end;
                 }
@@ -359,20 +359,20 @@ public class MultiSegmentProgressBar extends View {
         }
     }
 
-    public final void addSegment(int start, int end) {
+    public final void addSegment(long start, long end) {
         addBuffer(start, end);
         invalidate();
     }
 
-    public final void addSegments(int[] segments) {
+    public final void addSegments(long[] segments) {
         if (null == segments)
             return;
         int length = segments.length;
         if (length / 2 != 0)
             return;
         for (int i = 0; i < length; i += 2) {
-            int start = segments[i];
-            int end = segments[i + 1];
+            long start = segments[i];
+            long end = segments[i + 1];
             addBuffer(start, end);
         }
         invalidate();

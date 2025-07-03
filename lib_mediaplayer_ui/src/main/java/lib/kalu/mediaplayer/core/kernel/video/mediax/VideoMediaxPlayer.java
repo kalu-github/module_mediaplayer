@@ -1521,7 +1521,7 @@ public final class VideoMediaxPlayer extends VideoBasePlayer {
     }
 
     @Override
-    public List<HlsSpanInfo> getBufferedHlsSpanInfo() {
+    public List<HlsSpanInfo> getSegments() {
         try {
             if (null == mHlsManifest)
                 throw new Exception("warning: mHlsManifest null");

@@ -743,14 +743,14 @@ public class PlayerLayout extends RelativeLayout {
         }
     }
 
-    public final List<HlsSpanInfo> getBufferedHlsSpanInfo() {
+    public final List<HlsSpanInfo> getSegments() {
         try {
             PlayerView playerView = getPlayerView();
             if (null == playerView)
                 throw new Exception("playerView error: null");
-            return playerView.getBufferedHlsSpanInfo();
+            return playerView.getSegments();
         } catch (Exception e) {
-            LogUtil.log("PlayerLayout => getBufferedHlsSpanInfo => " + e.getMessage());
+            LogUtil.log("PlayerLayout => getSegments => " + e.getMessage());
             return null;
         }
     }

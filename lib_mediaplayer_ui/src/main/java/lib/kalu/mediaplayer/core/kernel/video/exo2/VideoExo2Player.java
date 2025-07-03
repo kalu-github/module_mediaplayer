@@ -1430,7 +1430,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
     }
 
     @Override
-    public List<HlsSpanInfo> getBufferedHlsSpanInfo() {
+    public List<HlsSpanInfo> getSegments() {
         try {
             if (null == mHlsManifest)
                 throw new Exception("warning: mHlsManifest null");
@@ -1474,7 +1474,7 @@ public final class VideoExo2Player extends VideoBasePlayer {
                 throw new Exception("warning: list null");
             return list;
         } catch (Exception e) {
-            LogUtil.log("VideoExo2Player => getBufferedHlsSpanInfo => Exception " + e.getMessage());
+            LogUtil.log("VideoExo2Player => getSegments => Exception " + e.getMessage());
             return null;
         }
     }
