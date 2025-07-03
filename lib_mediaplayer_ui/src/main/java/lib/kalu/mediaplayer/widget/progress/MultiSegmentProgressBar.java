@@ -347,10 +347,10 @@ public class MultiSegmentProgressBar extends View {
                 int size = mSegments.size();
                 int index = size - 1;
                 long[] segment = mSegments.get(index);
-                long before = segment[1];
-                if (start > before) {
+                long beforeEnd = segment[1];
+                if (start > beforeEnd) {
                     mSegments.add(new long[]{start, end});
-                } else {
+                } else if (end > beforeEnd) {
                     segment[1] = end;
                 }
             }
