@@ -440,4 +440,9 @@ public final class TextRenderer extends BaseRenderer implements Callback {
 
     return positionUs - outputStreamOffsetUs;
   }
+
+  @Override
+  public void setRendererOffsetUs(long offsetUs) {
+    this.outputStreamOffsetUs = offsetUs;
+  }
 }
