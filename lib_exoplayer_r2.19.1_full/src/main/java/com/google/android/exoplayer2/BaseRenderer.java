@@ -522,7 +522,4 @@ public abstract class BaseRenderer implements Renderer, RendererCapabilities {
       listener.onRendererCapabilitiesChanged(this);
     }
   }
-
-  public void setRendererOffsetUs(long offsetUs) {
-  }
 }

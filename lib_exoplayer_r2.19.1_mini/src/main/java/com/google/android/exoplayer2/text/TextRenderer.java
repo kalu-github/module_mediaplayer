@@ -457,7 +457,7 @@ public final class TextRenderer extends BaseRenderer implements Callback {
     }
 
     @Override
-    public void setRendererOffsetUs(long offsetUs) {
+    public void setTimelineOffsetUs(long offsetUs) {
         this.outputStreamOffsetUs = offsetUs;
     }
 }
