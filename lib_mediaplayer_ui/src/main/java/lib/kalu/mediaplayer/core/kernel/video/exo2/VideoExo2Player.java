@@ -1485,6 +1485,16 @@ public final class VideoExo2Player extends VideoBasePlayer {
         try {
             if (null == mExoPlayer)
                 throw new Exception("error: mExoPlayer null");
+            int rendererCount = mExoPlayer.getRendererCount();
+            for (int i = 0; i < rendererCount; i++) {
+                int rendererType = mExoPlayer.getRendererType(i);
+                LogUtil.log("VideoExo2Player => setSubtitleOffsetMs => i " + i + ", rendererType = " + rendererType);
+                if (rendererType != C.TRACK_TYPE_TEXT)
+                    continue;
+                Renderer renderer = mExoPlayer.getRenderer(i);
+                LogUtil.log("VideoExo2Player => setSubtitleOffsetMs => i " + i + ", renderer = " + renderer);
+                break;
+            }
             return true;
         } catch (Exception e) {
             LogUtil.log("VideoExo2Player => setSubtitleOffsetMs => Exception " + e.getMessage());

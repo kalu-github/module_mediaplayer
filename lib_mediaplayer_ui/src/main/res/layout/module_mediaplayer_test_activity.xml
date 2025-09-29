@@ -62,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/module_mediaplayer_track_text"
-        android:layout_toRightOf="@id/module_mediaplayer_hls_span"
+        android:layout_toRightOf="@id/module_mediaplayer_subtitle_offset"
         android:focusable="false"
         android:text="字幕增加" />
 
