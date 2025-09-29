@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initMultiSegmentProgress();
+       // initMultiSegmentProgress();
         init();
 
         findViewById(R.id.main_button1).setOnClickListener(new View.OnClickListener() {
@@ -107,7 +107,7 @@ public class MainActivity extends Activity {
                     //
                     Message message = Message.obtain();
                     message.what = 22;
-                    int start = msg.arg1 + new Random().nextInt(1000);
+                    int start = 0;
                     int end = start + new Random().nextInt(1000);
                     message.arg1 = start;
                     message.arg2 = end;
@@ -115,7 +115,7 @@ public class MainActivity extends Activity {
                 } else if (msg.what == 22) {
                     //
                     MultiSegmentProgressBar progressBar = findViewById(R.id.videoProgressBar);
-                    progressBar.addSegment(msg.arg1, msg.arg2);
+                    progressBar.addBufferSegment(msg.arg1, msg.arg2);
                     //
                     Message message = Message.obtain();
                     message.what = 22;

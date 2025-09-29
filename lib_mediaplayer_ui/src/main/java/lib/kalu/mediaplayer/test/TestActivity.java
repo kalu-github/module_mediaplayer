@@ -89,6 +89,27 @@ public final class TestActivity extends Activity {
                 }
             }
         });
+
+
+        // module_mediaplayer_subtitle_offset
+        findViewById(R.id.module_mediaplayer_subtitle_offset).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+                boolean result = playerLayout.setSubtitleOffsetMs(4000);
+                LogUtil.log("TestActivity -> setSubtitleOffsetMs -> result = " + result);
+            }
+        });
+
+        // module_mediaplayer_subtitle_add
+        findViewById(R.id.module_mediaplayer_subtitle_add).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayerLayout playerLayout = findViewById(R.id.module_mediaplayer_test_video);
+                boolean result = playerLayout.addSubtitleTrack("");
+                LogUtil.log("TestActivity -> addSubtitleTrack -> result = " + result);
+            }
+        });
     }
 
     public void toggleTrack(TrackInfo trackInfo) {

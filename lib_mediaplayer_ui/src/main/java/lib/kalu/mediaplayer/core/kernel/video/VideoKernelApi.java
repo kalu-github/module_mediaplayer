@@ -17,7 +17,8 @@ public interface VideoKernelApi extends VideoKernelApiHandler,
         VideoKernelApiBase,
         VideoKernelApiEvent,
         VideoKernelApiStartArgs,
-        VideoKernelApiHls {
+        VideoKernelApiHls,
+        VideoKernelApiSubtitle {
 
     <T extends Object> T getPlayer();
 

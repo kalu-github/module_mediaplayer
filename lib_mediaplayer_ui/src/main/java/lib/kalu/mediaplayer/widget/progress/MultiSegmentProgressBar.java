@@ -7,14 +7,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -23,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lib.kalu.mediaplayer.R;
+import lib.kalu.mediaplayer.util.LogUtil;
 
 public class MultiSegmentProgressBar extends View {
 
@@ -85,17 +83,14 @@ public class MultiSegmentProgressBar extends View {
             mThumbColorGradient = typed.getResourceId(R.styleable.MultiSegmentProgressBar_ms_thumb_color_gradient, mThumbColorGradient);
             //
             int resourceId = typed.getResourceId(R.styleable.MultiSegmentProgressBar_ms_thumb_icon, -1);
-            Log.e("MultiSegmentProgressBar", "init -> resourceId = " + resourceId);
             if (resourceId != -1) {
 
                 float reqWidth = typed.getDimension(R.styleable.MultiSegmentProgressBar_ms_thumb_icon_width, 0);
                 float reqHeight = typed.getDimension(R.styleable.MultiSegmentProgressBar_ms_thumb_icon_height, 0);
-                Log.e("MultiSegmentProgressBar", "init -> reqWidth = " + reqWidth + ", reqHeight = " + reqHeight);
 
                 if (reqWidth > 0 && reqHeight > 0) {
 
                     Drawable drawable = getResources().getDrawable(resourceId);
-                    Log.e("MultiSegmentProgressBar", "init -> drawable = " + drawable);
 
                     // 创建与 Drawable 尺寸相同的 Bitmap
                     Bitmap bitmap = Bitmap.createBitmap(
@@ -111,11 +106,10 @@ public class MultiSegmentProgressBar extends View {
 
 
                     mThumbIcon = bitmap;
-                    Log.e("MultiSegmentProgressBar", "init -> mThumbIcon = " + mThumbIcon);
                 }
             }
         } catch (Exception e) {
-            Log.e("MultiSegmentProgressBar", "init -> Exception " + e.getMessage(), e);
+            LogUtil.log("MultiSegmentProgressBar -> init -> Exception " + e.getMessage(), e);
         }
         if (null != typed) {
             typed.recycle();
@@ -127,7 +121,6 @@ public class MultiSegmentProgressBar extends View {
         // 初始化画笔
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
     }
 
     @Override
@@ -161,7 +154,7 @@ public class MultiSegmentProgressBar extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Log.e("MultiSegmentProgressBar", "onDraw -> mWidth = " + mWidth + ", mHeight = " + mHeight + ", mRealHeight = " + mRealHeight + ", mProgress = " + mProgress + ", mMax = " + mMax + ", mThumbIcon = " + mThumbIcon);
+        LogUtil.log("MultiSegmentProgressBar -> onDraw -> mWidth = " + mWidth + ", mHeight = " + mHeight + ", mRealHeight = " + mRealHeight + ", mProgress = " + mProgress + ", mMax = " + mMax + ", mThumbIcon = " + mThumbIcon);
         // 绘制背景
         drawBackground(canvas);
 
@@ -202,6 +195,13 @@ public class MultiSegmentProgressBar extends View {
             if (mHeight <= 0)
                 return;
 
+            mPaint.setShader(null);
+            mPaint.setColor(mBufferColor);
+
+
+            boolean isDrawLeft = false;
+            boolean isDrawRight = false;
+
             // 绘制缓存段
             for (long[] segment : mSegments) {
                 if (null == segment)
@@ -211,21 +211,58 @@ public class MultiSegmentProgressBar extends View {
                 long start = segment[0];
                 long end = segment[1];
 
+                float left = start * mWidth / mMax;
+                float top = mHeight * 0.5F - mRealHeight * 0.5F;
+                float right = end * mWidth / mMax;
+                float bottom = mHeight * 0.5F + mRealHeight * 0.5F;
+
+                // 左侧边缘半圆
+                if (left <= mCorner) {
+
+                    if (!isDrawLeft) {
+                        // 绘制上半圆（180度到360度）
+                        RectF oval = new RectF(0, top, mCorner, bottom);
+                        canvas.drawArc(oval, -90, -180, false, mPaint);
+                    }
+
+                    isDrawLeft = true;
+
+                    //
+                    left += (mCorner - left);
+                    if (right < left) {
+                        right = left;
+                    }
+
+                }
+                // 右侧边缘半圆
+                else if (right >= mWidth - mCorner) {
+
+
+                    if (!isDrawRight) {
+                        // 绘制上半圆（180度到360度）
+                        RectF oval = new RectF(mWidth - mCorner, top, mWidth, bottom);
+                        canvas.drawArc(oval, -90, 180, false, mPaint);
+                    }
+
+                    isDrawRight = true;
+
+                    //
+                    right -= (right - (mWidth - mCorner));
+                    if (left > right) {
+                        left = right;
+                    }
+                }
+
+
                 if (null == mRectBuffer) {
                     mRectBuffer = new RectF();
                 } else {
                     mRectBuffer.setEmpty();
                 }
-                float left = start * mWidth / mMax;
-                float top = mHeight * 0.5F - mRealHeight * 0.5F;
-                float right = end * mWidth / mMax;
-                float bottom = mHeight * 0.5F + mRealHeight * 0.5F;
                 mRectBuffer.set(left, top, right, bottom);
 
-                mPaint.setShader(null);
-                mPaint.setColor(mBufferColor);
                 canvas.drawRect(mRectBuffer, mPaint);
-//                canvas.drawRoundRect(mRectBuffer, mCorner, mCorner, mBufferPaint);
+//                canvas.drawRoundRect(mRectBuffer, mCorner, mCorner, mPaint);
             }
         } catch (Exception e) {
         }
@@ -329,6 +366,50 @@ public class MultiSegmentProgressBar extends View {
         invalidate();
     }
 
+    public final void setBuffer(int buffer) {
+        this.mSegments.clear();
+        addBuffer(0, buffer);
+        invalidate();
+    }
+
+    public final void addBufferSegment(long start, long end) {
+        addBuffer(start, end);
+        invalidate();
+    }
+
+    public final void addBufferSegments(long[] segments) {
+        if (null == segments)
+            return;
+        int length = segments.length;
+        if (length / 2 != 0)
+            return;
+        for (int i = 0; i < length; i += 2) {
+            long start = segments[i];
+            long end = segments[i + 1];
+            addBuffer(start, end);
+        }
+        invalidate();
+    }
+
+    public final void addBufferSegments(List<int[]> segments) {
+        if (null == segments)
+            return;
+        for (int[] segment : segments) {
+            if (null == segment)
+                continue;
+            if (segment.length != 2)
+                continue;
+            int start = segment[0];
+            int end = segment[1];
+            addBuffer(start, end);
+        }
+        invalidate();
+    }
+
+    public final void clearSegments() {
+        mSegments.clear();
+        invalidate();
+    }
 
     private void addBuffer(long start, long end) {
         try {
@@ -356,44 +437,5 @@ public class MultiSegmentProgressBar extends View {
 
         } catch (Exception e) {
         }
-    }
-
-    public final void addSegment(long start, long end) {
-        addBuffer(start, end);
-        invalidate();
-    }
-
-    public final void addSegments(long[] segments) {
-        if (null == segments)
-            return;
-        int length = segments.length;
-        if (length / 2 != 0)
-            return;
-        for (int i = 0; i < length; i += 2) {
-            long start = segments[i];
-            long end = segments[i + 1];
-            addBuffer(start, end);
-        }
-        invalidate();
-    }
-
-    public final void addSegments(List<int[]> segments) {
-        if (null == segments)
-            return;
-        for (int[] segment : segments) {
-            if (null == segment)
-                continue;
-            if (segment.length != 2)
-                continue;
-            int start = segment[0];
-            int end = segment[1];
-            addBuffer(start, end);
-        }
-        invalidate();
-    }
-
-    public final void clearSegments() {
-        mSegments.clear();
-        invalidate();
     }
 }

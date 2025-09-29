@@ -300,7 +300,8 @@
                 android:id="@+id/main_edit"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:hint="输入视频地址" />
+                android:hint="输入视频地址"
+                android:text="https://live.tvinterior.com.br/hls/stream.m3u8" />
 
             <Button
                 android:id="@+id/main_button1"

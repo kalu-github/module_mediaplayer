@@ -13,15 +13,15 @@ import androidx.annotation.RequiresApi;
 
 import java.util.List;
 
-import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.info.HlsSpanInfo;
 import lib.kalu.mediaplayer.bean.info.TrackInfo;
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.component.ComponentApi;
 import lib.kalu.mediaplayer.listener.OnPlayerEpisodeListener;
 import lib.kalu.mediaplayer.listener.OnPlayerEventListener;
 import lib.kalu.mediaplayer.listener.OnPlayerProgressListener;
 import lib.kalu.mediaplayer.listener.OnPlayerWindowListener;
-import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.util.LogUtil;
 
 
@@ -93,7 +93,7 @@ public class PlayerLayout extends RelativeLayout {
     private PlayerView getPlayerView() {
         try {
             int childCount = getChildCount();
-          //  LogUtil.log("PlayerLayout => getPlayerView => childCount = " + childCount + ", this = " + this);
+            //  LogUtil.log("PlayerLayout => getPlayerView => childCount = " + childCount + ", this = " + this);
             // sample
             if (childCount == 1) {
                 return (PlayerView) getChildAt(0);
@@ -101,14 +101,14 @@ public class PlayerLayout extends RelativeLayout {
             // not
             else {
                 ViewGroup decorView = findDecorView(this);
-               // LogUtil.log("PlayerLayout => getPlayerView => decorView = " + decorView);
+                // LogUtil.log("PlayerLayout => getPlayerView => decorView = " + decorView);
                 if (null == decorView)
                     throw new Exception("decorView error: null");
                 int decorChildCount = decorView.getChildCount();
-               // LogUtil.log("PlayerLayout => getPlayerView => decorChildCount = " + decorChildCount);
+                // LogUtil.log("PlayerLayout => getPlayerView => decorChildCount = " + decorChildCount);
                 for (int i = 0; i < decorChildCount; i++) {
                     View childAt = decorView.getChildAt(i);
-                 //   LogUtil.log("PlayerLayout => getPlayerView => childAt = " + childAt);
+                    //   LogUtil.log("PlayerLayout => getPlayerView => childAt = " + childAt);
                     if (null == childAt)
                         continue;
                     if (childAt.getId() == R.id.module_mediaplayer_id_player) {
@@ -767,6 +767,30 @@ public class PlayerLayout extends RelativeLayout {
         } catch (Exception e) {
             LogUtil.log("PlayerLayout => screenshot => " + e.getMessage());
             return null;
+        }
+    }
+
+    public final boolean setSubtitleOffsetMs(int offset) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.setSubtitleOffsetMs(offset);
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => setSubtitleOffsetMs => " + e.getMessage());
+            return false;
+        }
+    }
+
+    public final boolean addSubtitleTrack(String url) {
+        try {
+            PlayerView playerView = getPlayerView();
+            if (null == playerView)
+                throw new Exception("playerView error: null");
+            return playerView.addSubtitleTrack(url);
+        } catch (Exception e) {
+            LogUtil.log("PlayerLayout => addSubtitleTrack => " + e.getMessage());
+            return false;
         }
     }
 
