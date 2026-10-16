@@ -21,6 +21,7 @@ import lib.kalu.mpvplayer.inter.OnVideoSizeChangedListener;
 
 public final class VideoMpvPlayer extends VideoBasePlayer {
 
+    private final String TAG = "VideoMpvPlayer22";
     private boolean isVideoSizeChanged = false;
     private boolean isPrepared = false;
     private boolean isBuffering = false;
@@ -37,7 +38,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> releaseDecoder -> mMpvPlayer error: null");
+                    LogUtil.log(TAG, "releaseDecoder -> mMpvPlayer error: null");
                 }
                 return;
             }
@@ -46,7 +47,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
             release();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> releaseDecoder -> " + e.getMessage());
+                LogUtil.log(TAG, "releaseDecoder -> " + e.getMessage());
             }
         }
     }
@@ -56,7 +57,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (null != mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> checkDecoder -> warning: null != mMpvPlayer");
+                    LogUtil.log(TAG, "checkDecoder -> warning: null != mMpvPlayer");
                 }
                 return;
             }
@@ -64,7 +65,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
             registListener();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> checkDecoder -> " + e.getMessage());
+                LogUtil.log(TAG, "checkDecoder -> " + e.getMessage());
             }
         }
     }
@@ -75,20 +76,20 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> startDecoder -> error: mMpvPlayer null");
+                    LogUtil.log(TAG, "startDecoder -> error: mMpvPlayer null");
                 }
                 return;
             }
             if (null == args) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> startDecoder -> error: args null");
+                    LogUtil.log(TAG, "startDecoder -> error: args null");
                 }
                 return;
             }
             boolean containsVideoUrl = args.containsVideoUrl();
             if (!containsVideoUrl) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> startDecoder -> error: containsVideoUrl false");
+                    LogUtil.log(TAG, "startDecoder -> error: containsVideoUrl false");
                 }
                 return;
             }
@@ -97,7 +98,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
             mMpvPlayer.prepare();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> startDecoder -> " + e.getMessage());
+                LogUtil.log(TAG, "startDecoder -> " + e.getMessage());
             }
             stop();
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.STOP);
@@ -110,7 +111,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> initOptions -> error: mMpvPlayer null");
+                    LogUtil.log(TAG, "initOptions -> error: mMpvPlayer null");
                 }
                 return;
             }
@@ -124,7 +125,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
             mMpvPlayer.setLooping(looping);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> initOptions -> Exception " + e.getMessage());
+                LogUtil.log(TAG, "initOptions -> Exception " + e.getMessage());
             }
         }
     }
@@ -134,7 +135,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> registListener -> error: mMpvPlayer null");
+                    LogUtil.log(TAG, "registListener -> error: mMpvPlayer null");
                 }
                 return;
             }
@@ -148,7 +149,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
             mMpvPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> registListener -> Exception " + e.getMessage());
+                LogUtil.log(TAG, "registListener -> Exception " + e.getMessage());
             }
         }
     }
@@ -158,7 +159,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> unRegistListener -> mMpvPlayer error: null");
+                    LogUtil.log(TAG, "unRegistListener -> mMpvPlayer error: null");
                 }
                 return;
             }
@@ -172,7 +173,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
             mMpvPlayer.setOnBufferingUpdateListener(null);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> unRegistListener -> Exception " + e.getMessage());
+                LogUtil.log(TAG, "unRegistListener -> Exception " + e.getMessage());
             }
         }
     }
@@ -185,7 +186,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
 //        try {
 //            mMpvPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
 //        } catch (Exception e) {
-//            MPLogUtil.log("VideoMpvPlayer -> " + e.getMessage());
+//            MPLogUtil.log(TAG, "" + e.getMessage());
 //        }
 //    }
 
@@ -194,7 +195,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> release -> mMpvPlayer error: null");
+                    LogUtil.log(TAG, "release -> mMpvPlayer error: null");
                 }
                 return;
             }
@@ -203,7 +204,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
             mMpvPlayer = null;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> start -> " + e.getMessage());
+                LogUtil.log(TAG, "start -> " + e.getMessage());
             }
         }
     }
@@ -221,14 +222,14 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> start -> mMpvPlayer error: null");
+                    LogUtil.log(TAG, "start -> mMpvPlayer error: null");
                 }
                 return;
             }
             mMpvPlayer.start();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> start -> " + e.getMessage());
+                LogUtil.log(TAG, "start -> " + e.getMessage());
             }
         }
     }
@@ -241,20 +242,20 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (!isPrepared) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> pause -> mPrepared warning: false");
+                    LogUtil.log(TAG, "pause -> mPrepared warning: false");
                 }
                 return;
             }
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> pause -> mMpvPlayer error: null");
+                    LogUtil.log(TAG, "pause -> mMpvPlayer error: null");
                 }
                 return;
             }
             mMpvPlayer.pause();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> pause -> " + e.getMessage());
+                LogUtil.log(TAG, "pause -> " + e.getMessage());
             }
         }
     }
@@ -267,14 +268,14 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> stop -> mMpvPlayer error: null");
+                    LogUtil.log(TAG, "stop -> mMpvPlayer error: null");
                 }
                 return;
             }
             mMpvPlayer.stop();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> stop -> " + e.getMessage());
+                LogUtil.log(TAG, "stop -> " + e.getMessage());
             }
         }
     }
@@ -287,20 +288,20 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (!isPrepared) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> isPlaying -> mPrepared warning: false");
+                    LogUtil.log(TAG, "isPlaying -> mPrepared warning: false");
                 }
                 return false;
             }
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> isPlaying -> mMpvPlayer error: null");
+                    LogUtil.log(TAG, "isPlaying -> mMpvPlayer error: null");
                 }
                 return false;
             }
             return mMpvPlayer.isPlaying();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> isPlaying -> " + e.getMessage());
+                LogUtil.log(TAG, "isPlaying -> " + e.getMessage());
             }
             return false;
         }
@@ -319,20 +320,20 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (seek < 0L) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> seekTo -> error: seek<0");
+                    LogUtil.log(TAG, "seekTo -> error: seek<0");
                 }
                 return;
             }
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> seekTo -> error: mMpvPlayer null");
+                    LogUtil.log(TAG, "seekTo -> error: mMpvPlayer null");
                 }
                 return;
             }
             StartArgs args = getStartArgs();
             if (null == args) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> seekTo -> error: args null");
+                    LogUtil.log(TAG, "seekTo -> error: args null");
                 }
                 return;
             }
@@ -350,11 +351,11 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
             }
             mMpvPlayer.seekTo((int) seek);
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> seekTo ->");
+                LogUtil.log(TAG, "seekTo ->");
             }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> seekTo -> " + e.getMessage());
+                LogUtil.log(TAG, "seekTo -> " + e.getMessage());
             }
         }
     }
@@ -367,27 +368,27 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (!isPrepared) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> getPosition -> mPrepared warning: false");
+                    LogUtil.log(TAG, "getPosition -> mPrepared warning: false");
                 }
                 return 0L;
             }
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> getPosition -> mMpvPlayer error: null");
+                    LogUtil.log(TAG, "getPosition -> mMpvPlayer error: null");
                 }
                 return 0L;
             }
             long currentPosition = mMpvPlayer.getCurrentPosition();
             if (currentPosition < 0) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> getPosition -> currentPosition warning: " + currentPosition);
+                    LogUtil.log(TAG, "getPosition -> currentPosition warning: " + currentPosition);
                 }
                 return 0L;
             }
             return currentPosition;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> getPosition -> " + e.getMessage());
+                LogUtil.log(TAG, "getPosition -> " + e.getMessage());
             }
             return 0L;
         }
@@ -401,27 +402,27 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (!isPrepared) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> getDuration -> mPrepared warning: false");
+                    LogUtil.log(TAG, "getDuration -> mPrepared warning: false");
                 }
                 return 0L;
             }
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> getDuration -> mMpvPlayer error: null");
+                    LogUtil.log(TAG, "getDuration -> mMpvPlayer error: null");
                 }
                 return 0L;
             }
             int duration = mMpvPlayer.getDuration();
             if (duration <= 0) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> getDuration -> duration warning: " + duration);
+                    LogUtil.log(TAG, "getDuration -> duration warning: " + duration);
                 }
                 return 0L;
             }
             return duration;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> getDuration -> " + e.getMessage());
+                LogUtil.log(TAG, "getDuration -> " + e.getMessage());
             }
             return 0L;
         }
@@ -437,20 +438,20 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> setSurface -> mMpvPlayer error: null");
+                    LogUtil.log(TAG, "setSurface -> mMpvPlayer error: null");
                 }
                 return;
             }
             if (null == surface) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> setSurface -> surface error: null");
+                    LogUtil.log(TAG, "setSurface -> surface error: null");
                 }
                 return;
             }
             mMpvPlayer.setSurface(surface);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> setSurface -> " + e.getMessage());
+                LogUtil.log(TAG, "setSurface -> " + e.getMessage());
             }
         }
     }
@@ -460,7 +461,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> setSpeed -> mMpvPlayer error: null");
+                    LogUtil.log(TAG, "setSpeed -> mMpvPlayer error: null");
                 }
                 return;
             }
@@ -469,7 +470,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
 //                throw new Exception("only support above Android M");
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> setSpeed -> " + e.getMessage());
+                LogUtil.log(TAG, "setSpeed -> " + e.getMessage());
             }
         }
     }
@@ -483,7 +484,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         @Override
         public boolean onInfo(MpvPlayer mp, int what, int extra) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> onInfo -> what = " + what);
+                LogUtil.log(TAG, "onInfo -> what = " + what);
             }
             // 缓冲开始
             if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
@@ -492,7 +493,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_BUFFERING_START);
                 } else {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMpvPlayer -> onInfo -> what = " + what + ", mPrepared = false");
+                        LogUtil.log(TAG, "onInfo -> what = " + what + ", mPrepared = false");
                     }
                 }
             }
@@ -503,7 +504,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
                     onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_BUFFERING_STOP);
                 } else {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMpvPlayer -> onInfo -> what = " + what + ", mPrepared = false");
+                        LogUtil.log(TAG, "onInfo -> what = " + what + ", mPrepared = false");
                     }
                 }
             }
@@ -512,7 +513,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
                 try {
                     if (isPrepared) {
                         if (LogUtil.DEBUG) {
-                            LogUtil.log("VideoMpvPlayer -> onInfo -> MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START -> warning: isPrepared true");
+                            LogUtil.log(TAG, "onInfo -> MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START -> warning: isPrepared true");
                         }
                         return true;
                     }
@@ -535,7 +536,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
                     }
                 } catch (Exception e) {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMpvPlayer -> onInfo -> what = " + what + ", msg = " + e.getMessage());
+                        LogUtil.log(TAG, "onInfo -> what = " + what + ", msg = " + e.getMessage());
                     }
                 }
             }
@@ -547,7 +548,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         @Override
         public void onSeekComplete(MpvPlayer mediaPlayer) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> onSeekComplete ->");
+                LogUtil.log(TAG, "onSeekComplete ->");
             }
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_UPDATE_SEEK_FINISH);
 
@@ -561,7 +562,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
                         boolean playing = isPlaying();
                         if (playing) {
                             if (LogUtil.DEBUG) {
-                                LogUtil.log("VideoMpvPlayer -> onSeekComplete -> warning: isPlaying true");
+                                LogUtil.log(TAG, "onSeekComplete -> warning: isPlaying true");
                             }
                             return;
                         }
@@ -577,7 +578,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
                 }
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> onSeekComplete -> Exception " + e.getMessage());
+                    LogUtil.log(TAG, "onSeekComplete -> Exception " + e.getMessage());
                 }
             }
         }
@@ -587,7 +588,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         @Override
         public void onPrepared(MpvPlayer mp) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> onPrepared ->");
+                LogUtil.log(TAG, "onPrepared ->");
             }
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.MEDIA_INFO_PREPARE);
             start();
@@ -598,7 +599,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         @Override
         public void onBufferingUpdate(MpvPlayer mp, int percent) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> onBufferingUpdate -> percent = " + percent);
+                LogUtil.log(TAG, "onBufferingUpdate -> percent = " + percent);
             }
         }
     };
@@ -607,7 +608,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         @Override
         public boolean onError(MpvPlayer mp, int what, int extra) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> onError -> what = " + what);
+                LogUtil.log(TAG, "onError -> what = " + what);
             }
             // ignore -38
             if (what == -38) {
@@ -627,7 +628,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         @Override
         public void onCompletion(MpvPlayer mp) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> onCompletion ->");
+                LogUtil.log(TAG, "onCompletion ->");
             }
             stop();
             onEvent(PlayerType.KernelType.FFPLAYER, PlayerType.EventType.STOP);
@@ -641,34 +642,34 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
             try {
                 if (null == mp) {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMpvPlayer -> onVideoSizeChanged -> error: MediaPlayer null");
+                        LogUtil.log(TAG, "onVideoSizeChanged -> error: MediaPlayer null");
                     }
                     return;
                 }
                 int videoWidth = mp.getVideoWidth();
                 if (videoWidth <= 0) {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMpvPlayer -> onVideoSizeChanged -> error: videoWidth <= 0");
+                        LogUtil.log(TAG, "onVideoSizeChanged -> error: videoWidth <= 0");
                     }
                     return;
                 }
                 int videoHeight = mp.getVideoHeight();
                 if (videoHeight <= 0) {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMpvPlayer -> onVideoSizeChanged -> error: videoHeight <= 0");
+                        LogUtil.log(TAG, "onVideoSizeChanged -> error: videoHeight <= 0");
                     }
                     return;
                 }
                 if (isVideoSizeChanged) {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMpvPlayer -> onVideoSizeChanged -> warning: isVideoSizeChanged true");
+                        LogUtil.log(TAG, "onVideoSizeChanged -> warning: isVideoSizeChanged true");
                     }
                     return;
                 }
                 StartArgs args = getStartArgs();
                 if (null == args) {
                     if (LogUtil.DEBUG) {
-                        LogUtil.log("VideoMpvPlayer -> onVideoSizeChanged -> error: args null");
+                        LogUtil.log(TAG, "onVideoSizeChanged -> error: args null");
                     }
                     return;
                 }
@@ -679,7 +680,7 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
                 onVideoFormatChanged(PlayerType.KernelType.FFPLAYER, rotation, scaleType, videoWidth, videoHeight, -1);
             } catch (Exception e) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> onVideoSizeChanged -> " + e.getMessage());
+                    LogUtil.log(TAG, "onVideoSizeChanged -> " + e.getMessage());
                 }
             }
         }
@@ -692,21 +693,21 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> setVolume -> mMpvPlayer error: null");
+                    LogUtil.log(TAG, "setVolume -> mMpvPlayer error: null");
                 }
                 return;
             }
             float volume = Math.max(v1, v2);
             if (volume < 0) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> setVolume -> error: volume < 0");
+                    LogUtil.log(TAG, "setVolume -> error: volume < 0");
                 }
                 return;
             }
             mMpvPlayer.setVolume(volume, volume);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> setVolume -> " + e.getMessage());
+                LogUtil.log(TAG, "setVolume -> " + e.getMessage());
             }
         }
     }
@@ -716,14 +717,14 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
         try {
             if (null == mMpvPlayer) {
                 if (LogUtil.DEBUG) {
-                    LogUtil.log("VideoMpvPlayer -> getVolume -> mMpvPlayer error: null");
+                    LogUtil.log(TAG, "getVolume -> mMpvPlayer error: null");
                 }
                 return 0f;
             }
             return 0f;
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log("VideoMpvPlayer -> getVolume -> " + e.getMessage());
+                LogUtil.log(TAG, "getVolume -> " + e.getMessage());
             }
             return 0f;
         }

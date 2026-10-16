@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
 
-        minSdkVersion 21 // android4.4
+        minSdkVersion 23 // Android 6.0; required by the MPV native libraries
         targetSdkVersion 34
         multiDexEnabled true
 
@@ -44,13 +44,13 @@ android {
         buildTypes {
             release {
                 signingConfig signingConfigs.config
-                minifyEnabled true
-                zipAlignEnabled true
-                shrinkResources true
-                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-//                minifyEnabled false
-//                zipAlignEnabled false
-//                shrinkResources false
+//                minifyEnabled true
+//                zipAlignEnabled true
+//                shrinkResources true
+//                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                minifyEnabled false
+                zipAlignEnabled false
+                shrinkResources false
             }
             debug {
                 signingConfig signingConfigs.config
@@ -111,9 +111,12 @@ dependencies {
     api files('../repo/aar/lib_player_exo_mini_2.19.1_release_20251022.aar')
     // ijk
     api files('../repo/aar/lib_mediaplayer_ijk_k0.8.8_ff4.4.4_mini_release_20240509.aar')
+    // mpv: the UI module uses compileOnly, so the app must package the runtime.
+    implementation files('../repo/aar/lib_mediaplayer_mpv_0.41.0_merged_release.aar')
     // ffplayer
 //    api files('../repo/aar/lib_mediaplayer_ffplayer_ff3.4.13_mini_release_20240508.aar')
     // vlc
 //    api files('../repo/aar/lib_mediaplayer_vlc_r3.5.1_release_20230420.aar')
+    // mpv
+    implementation files('../repo/aar/lib_mediaplayer_mpv_0.41.0_merged_release.aar')
 }
-
