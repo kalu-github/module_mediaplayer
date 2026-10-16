@@ -69,7 +69,7 @@ def verify_exports(deps, libs, toolchain, java_source):
            re.findall(r'\bnative\s+\S+\s+(\w+)\(', java_source.read_text())}
     if not ffmpeg or not mpv or len(jni) < 2:
         raise RuntimeError('Cannot determine the required public API')
-    for name, expected in [('libffmpeg.so', ffmpeg), ('libmpvplayer.so', mpv | jni)]:
+    for name, expected in [('libmpvffmpeg.so', ffmpeg), ('libmpvplayer.so', mpv | jni)]:
         missing = expected - symbols(name)
         if missing:
             raise RuntimeError(name + ' is missing exports: ' + ', '.join(sorted(missing)))
@@ -129,7 +129,7 @@ def main():
         libs = stage / 'jni' / args.abi
         libs.mkdir(parents=True)
         if merged:
-            shutil.copy2(work / 'cmake/libffmpeg.so', libs / 'libffmpeg.so')
+            shutil.copy2(work / 'cmake/libmpvffmpeg.so', libs / 'libmpvffmpeg.so')
         else:
             for p in sorted((deps / 'lib').glob('*.so')):
                 shutil.copy2(p, libs / p.name)
@@ -137,7 +137,7 @@ def main():
         if not merged:
             shutil.copy2(toolchain / 'sysroot/usr/lib' / TRIPLES[args.abi] / 'libc++_shared.so',
                          libs / 'libc++_shared.so')
-        elif {p.name for p in libs.glob('*.so')} != {'libffmpeg.so', 'libmpvplayer.so'}:
+        elif {p.name for p in libs.glob('*.so')} != {'libmpvffmpeg.so', 'libmpvplayer.so'}:
             raise RuntimeError('Merged AAR must contain exactly two native libraries.')
         for p in libs.glob('*.so'):
             run([toolchain / 'bin/llvm-strip', '--strip-unneeded', p])
@@ -183,6 +183,8 @@ def main():
             native_output.mkdir(parents=True, exist_ok=True)
             for library in libs.glob('*.so'):
                 shutil.copy2(library, native_output / library.name)
+            # Remove the previous generated name when upgrading an existing output directory.
+            (native_output / 'libffmpeg.so').unlink(missing_ok=True)
         (aar.with_suffix('.aar.sha256')).write_text(digest(aar) + '  ' + aar.name + '\n')
         (work / 'verification.json').write_text(json.dumps(report, indent=2) + '\n')
         aar.with_suffix('.verification.json').write_text(json.dumps({

@@ -13,14 +13,14 @@ if(MPV_LAYOUT STREQUAL "merged")
         message(FATAL_ERROR "The two-library layout requires -DANDROID_STL=c++_static")
     endif()
     include("${MPV_DEPS}/link.cmake")
-    add_library(ffmpeg SHARED mpv/ffmpeg_anchor.c)
-    target_link_options(ffmpeg PRIVATE
+    add_library(mpvffmpeg SHARED mpv/ffmpeg_anchor.c)
+    target_link_options(mpvffmpeg PRIVATE
         "-Wl,-z,max-page-size=16384" "-Wl,--no-undefined"
         "-Wl,--version-script=${MPV_DEPS}/ffmpeg.exports"
         "@${MPV_DEPS}/ffmpeg-roots.rsp")
-    set_property(TARGET ffmpeg APPEND PROPERTY LINK_DEPENDS
+    set_property(TARGET mpvffmpeg APPEND PROPERTY LINK_DEPENDS
         "${MPV_DEPS}/ffmpeg.exports" "${MPV_DEPS}/ffmpeg-roots.rsp")
-    target_link_libraries(ffmpeg PRIVATE
+    target_link_libraries(mpvffmpeg PRIVATE
         "-Wl,--start-group" ${FFMPEG_STATIC_ARCHIVES} "-Wl,--end-group"
         ${FFMPEG_SYSTEM_LINK_FLAGS})
 elseif(MPV_LAYOUT STREQUAL "split")
@@ -51,7 +51,7 @@ if(MPV_LAYOUT STREQUAL "merged")
     list(REMOVE_ITEM MPV_STATIC_ARCHIVES "${MPV_DEPS}/lib/libmpv.a")
     target_link_libraries(mpvplayer PRIVATE
         "-Wl,--whole-archive" "${MPV_DEPS}/lib/libmpv.a" "-Wl,--no-whole-archive"
-        "-Wl,--start-group" ${MPV_STATIC_ARCHIVES} ffmpeg "-Wl,--end-group"
+        "-Wl,--start-group" ${MPV_STATIC_ARCHIVES} mpvffmpeg "-Wl,--end-group"
         ${MPV_SYSTEM_LINK_FLAGS} android log)
 else()
     target_link_libraries(mpvplayer PRIVATE mpv avcodec android log)

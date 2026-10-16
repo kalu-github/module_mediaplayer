@@ -51,7 +51,7 @@ src/main/cpp/ffmpeg/<ABI>/
 
 默认 AAR 每个 ABI 只包含两个动态库：
 
-- `libffmpeg.so`：合并 avcodec、avformat、avfilter、avutil、avdevice、postproc、
+- `libmpvffmpeg.so`：合并 avcodec、avformat、avfilter、avutil、avdevice、postproc、
   swresample 和 swscale，保留原有公开接口。
 - `libmpvplayer.so`：合并 mpv、JNI、字幕/渲染依赖和 C++ 运行时；不需要另带
   `libmpv.so` 或 `libc++_shared.so`。Java 仍调用 `System.loadLibrary("mpvplayer")`。
@@ -186,7 +186,7 @@ python3 tools/combine_aars.py --ndk "$ANDROID_NDK_ROOT"
 
 合包工具核对四个单 ABI AAR 的校验和、Java 字节码、Manifest、ELF 架构和运行库依赖。
 输出为 `build/outputs/aar/lib_mediaplayer_mpv_0.41.0_all_merged_release.aar`；每个 ABI
-包含 `libffmpeg.so` 和 `libmpvplayer.so`，共 8 个动态库。
+包含 `libmpvffmpeg.so` 和 `libmpvplayer.so`，共 8 个动态库。
 
 
 使用其它 NDK 时，依赖构建和 Gradle 必须保持一致：

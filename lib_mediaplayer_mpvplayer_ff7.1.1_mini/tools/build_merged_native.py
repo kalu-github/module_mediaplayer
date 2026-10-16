@@ -167,8 +167,8 @@ def main():
     roots.write_text(''.join('-Wl,--undefined=' + name + '\n' for name in sorted(expected_exports)))
     triple = 'armv7a-linux-androideabi' if abi == 'armeabi-v7a' else TRIPLES[abi]
     compiler = toolchain / 'bin' / (triple + '23-clang')
-    merged_ffmpeg = prefix / 'lib/libffmpeg.so'
-    base.run([compiler, '-shared', '-Wl,-soname,libffmpeg.so', '-Wl,--no-undefined',
+    merged_ffmpeg = prefix / 'lib/libmpvffmpeg.so'
+    base.run([compiler, '-shared', '-Wl,-soname,libmpvffmpeg.so', '-Wl,--no-undefined',
               '-Wl,-z,max-page-size=16384', '-Wl,--version-script=' + str(version_script),
               '@' + str(roots), '-o', merged_ffmpeg, '-Wl,--start-group'] +
              [prefix / 'lib' / ('lib' + name + '.a') for name in FFLIBS] +
@@ -179,14 +179,14 @@ def main():
     elf_report([merged_ffmpeg], toolchain, abi)
     for name in FFLIBS:
         pc = prefix / 'lib/pkgconfig' / ('lib' + name + '.pc')
-        text = re.sub(r'^Libs:.*$', 'Libs: -L${libdir} -lffmpeg', pc.read_text(), flags=re.M)
+        text = re.sub(r'^Libs:.*$', 'Libs: -L${libdir} -lmpvffmpeg', pc.read_text(), flags=re.M)
         text = re.sub(r'^(Libs.private|Requires|Requires.private):.*$', r'\1:', text, flags=re.M)
         pc.write_text(text)
     base.run(['bash', 'buildall.sh', '-n', '--arch', arch, 'mpv'], cwd=work, env=env)
     links = shlex.split(subprocess.check_output(['pkg-config', '--static', '--libs', 'mpv'], env=env, text=True))
     archives, system = [], []
     for flag in links:
-        if flag.startswith('-L') or flag in {'-lc++', '-lffmpeg'}:
+        if flag.startswith('-L') or flag in {'-lc++', '-lmpvffmpeg'}:
             continue
         archive = prefix / 'lib' / ('lib' + flag[2:] + '.a') if flag.startswith('-l') else None
         if archive is not None and archive.is_file():

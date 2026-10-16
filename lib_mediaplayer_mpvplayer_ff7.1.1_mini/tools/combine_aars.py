@@ -44,7 +44,7 @@ def main():
             if info['dependency_build']['abi'] != abi:
                 raise RuntimeError('Wrong ABI metadata: ' + str(source))
             names = {name for name in files if name.startswith('jni/')}
-            expected = {f'jni/{abi}/libffmpeg.so', f'jni/{abi}/libmpvplayer.so'}
+            expected = {f'jni/{abi}/libmpvffmpeg.so', f'jni/{abi}/libmpvplayer.so'}
             if names != expected:
                 raise RuntimeError('Expected exactly two native libraries for ' + abi)
             libraries = []
