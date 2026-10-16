@@ -248,6 +248,7 @@ public @interface PlayerType {
         int IJK = 6_004; // ijk
         int VLC = 6_005; // vlc
         int FFPLAYER = 6_006; // ffmpeg
+        int MPV = 6_007; // mpv
         int DEFAULT = ANDROID;
 
         @Documented
@@ -259,6 +260,7 @@ public @interface PlayerType {
                 MEDIA_V3,
                 VLC,
                 FFPLAYER,
+                MPV,
                 DEFAULT})
         @interface Value {
         }

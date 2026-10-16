@@ -17,3 +17,6 @@ local.properties
 /lib_mediaxplayer_r1.8.0_mini/
 /lib_mediaxplayer_r1.9.0_mini/
 /lib_mediaxplayer_r1.11.0_mini/
+
+# mpv
+/lib_mediaplayer_mpv*

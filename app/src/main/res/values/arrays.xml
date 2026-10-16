@@ -80,6 +80,7 @@
         <item>ijk</item>
         <item>vlc</item>
         <item>ff</item>
+        <item>mpv</item>
     </string-array>
 
     <integer-array name="kernels_ids">
@@ -89,6 +90,7 @@
         <item>6004</item>
         <item>6005</item>
         <item>6006</item>
+        <item>6007</item>
     </integer-array>
 
     <string-array name="decodes">

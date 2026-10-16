@@ -1,13 +1,14 @@
 package lib.kalu.mediaplayer.core.kernel.video;
 
 
+import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.android.VideoAndroidPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.exo2.VideoExo2PlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.ffmpeg.VideoFFmpegPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.ijk.VideoIjkPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.mediax.VideoMediaxPlayerFactory;
+import lib.kalu.mediaplayer.core.kernel.video.mpv.VideoMpvPlayerFactory;
 import lib.kalu.mediaplayer.core.kernel.video.vlc.VideoVlcPlayerFactory;
-import lib.kalu.mediaplayer.bean.type.PlayerType;
 
 /**
  * @description: 工具类
@@ -36,6 +37,10 @@ public final class VideoKernelFactoryManager {
         // ffplayer
         else if (type == PlayerType.KernelType.FFPLAYER) {
             return VideoFFmpegPlayerFactory.build();
+        }
+        // mpv
+        else if (type == PlayerType.KernelType.MPV) {
+            return VideoMpvPlayerFactory.build();
         }
         // android
         else {

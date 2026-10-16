@@ -110,5 +110,7 @@ dependencies {
     compileOnly files('../repo/aar/lib_mediaplayer_ffplayer_ff3.4.13_mini_release_20240508.aar')
     // vlc
     compileOnly files('../repo/aar/lib_mediaplayer_vlc_r3.5.1_release_20230420.aar')
+    // mpv
+    compileOnly files('../repo/aar/lib_mediaplayer_mpv_0.41.0_merged_release.aar')
 }
 
