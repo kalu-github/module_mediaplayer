@@ -27,6 +27,11 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
     private boolean isBuffering = false;
     private boolean mPlayWhenReadySeeking = false;
     private MpvPlayer mMpvPlayer = null;
+    // The render view can provide its Surface before checkDecoder creates MPV.
+    // The render view owns this Surface; never release it here.
+    private Surface mSurface;
+    private int mSurfaceWidth;
+    private int mSurfaceHeight;
 
     @Override
     public VideoMpvPlayer getPlayer() {
@@ -36,14 +41,10 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
     @Override
     public void releaseDecoder() {
         try {
-            if (null == mMpvPlayer) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "releaseDecoder -> mMpvPlayer error: null");
-                }
-                return;
-            }
             setEvent(null);
-            unRegistListener();
+            if (mMpvPlayer != null) {
+                unRegistListener();
+            }
             release();
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
@@ -63,9 +64,10 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
             }
             mMpvPlayer = new MpvPlayer();
             registListener();
+            setSurface(mSurface, mSurfaceWidth, mSurfaceHeight);
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "checkDecoder -> " + e.getMessage());
+                LogUtil.log(TAG, "checkDecoder -> " + e.getMessage(), e);
             }
         }
     }
@@ -192,19 +194,27 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
 
     @Override
     public void release() {
+        MpvPlayer player = mMpvPlayer;
+        mMpvPlayer = null;
+        mSurface = null;
+        mSurfaceWidth = 0;
+        mSurfaceHeight = 0;
+        isPrepared = false;
+        isBuffering = false;
+        isVideoSizeChanged = false;
+        mPlayWhenReadySeeking = false;
         try {
-            if (null == mMpvPlayer) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "release -> mMpvPlayer error: null");
-                }
+            if (player == null) {
                 return;
             }
-            mMpvPlayer.setSurface(null);
-            mMpvPlayer.release();
-            mMpvPlayer = null;
+            try {
+                player.setSurface(null);
+            } finally {
+                player.release();
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "start -> " + e.getMessage());
+                LogUtil.log(TAG, "release -> " + e.getMessage(), e);
             }
         }
     }
@@ -436,22 +446,25 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
     @Override
     public void setSurface(Surface surface, int w, int h) {
         try {
-            if (null == mMpvPlayer) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "setSurface -> mMpvPlayer error: null");
-                }
-                return;
+            if (surface != null && !surface.isValid()) {
+                surface = null;
             }
-            if (null == surface) {
-                if (LogUtil.DEBUG) {
-                    LogUtil.log(TAG, "setSurface -> surface error: null");
+            mSurface = surface;
+            mSurfaceWidth = surface == null ? 0 : Math.max(0, w);
+            mSurfaceHeight = surface == null ? 0 : Math.max(0, h);
+            if (null == mMpvPlayer) {
+                if (surface != null && LogUtil.DEBUG) {
+                    LogUtil.log(TAG, "setSurface -> saved until checkDecoder");
                 }
                 return;
             }
             mMpvPlayer.setSurface(surface);
+            if (surface != null && mSurfaceWidth > 0 && mSurfaceHeight > 0) {
+                mMpvPlayer.setSurfaceSize(mSurfaceWidth, mSurfaceHeight);
+            }
         } catch (Exception e) {
             if (LogUtil.DEBUG) {
-                LogUtil.log(TAG, "setSurface -> " + e.getMessage());
+                LogUtil.log(TAG, "setSurface -> " + e.getMessage(), e);
             }
         }
     }
