@@ -21,13 +21,15 @@ constexpr int PREPARED = 1, COMPLETE = 2, BUFFERING = 3, SEEK_COMPLETE = 4,
         VIDEO_SIZE = 5, TIMED_TEXT = 99, ERROR = 100, INFO = 200;
 
 void fail(JNIEnv *env, const char *message, const char *type = "java/lang/IllegalStateException") {
+    __android_log_print(ANDROID_LOG_ERROR, "MpvPlayer", "%s", message);
     if (env->ExceptionCheck()) return;
     jclass cls = env->FindClass(type);
     if (cls) { env->ThrowNew(cls, message); env->DeleteLocalRef(cls); }
 }
-bool check(JNIEnv *env, int code) {
+bool check(JNIEnv *env, int code, const char *operation = "libmpv") {
     if (code >= 0) return true;
-    fail(env, mpv_error_string(code));
+    std::string message = std::string(operation) + ": " + mpv_error_string(code);
+    fail(env, message.c_str());
     return false;
 }
 
@@ -69,6 +71,8 @@ struct Player {
     bool barrierComplete = false;
     bool preparing = false;
     int prepareResult = 0;
+    // Owned by the event thread, reset for each media load (not each seek).
+    bool renderingStarted = false;
     std::unique_ptr<FileSlice> file;
 
     void finishPrepare(int result) {
@@ -105,6 +109,9 @@ struct Player {
             mpv_event *event = mpv_wait_event(mpv, -1);
             if (quitting) break;
             switch (event->event_id) {
+                case MPV_EVENT_START_FILE:
+                    renderingStarted = false;
+                    break;
                 case MPV_EVENT_COMMAND_REPLY:
                     if (event->reply_userdata == 1) {
                         std::lock_guard<std::mutex> lock(barrierMutex);
@@ -132,6 +139,17 @@ struct Player {
                     break;
                 case MPV_EVENT_PLAYBACK_RESTART:
                     if (seekInProgress.exchange(false) && seekRequested.exchange(false)) post(env, SEEK_COMPLETE);
+                    if (!renderingStarted) {
+                        int configured = 0;
+                        mpv_get_property(mpv, "vo-configured", MPV_FORMAT_FLAG, &configured);
+                        char *vo = mpv_get_property_string(mpv, "current-vo");
+                        // Audio-only playback and the null VO must not report a video frame.
+                        if (configured && vo && strcmp(vo, "gpu") == 0 && number("dwidth") > 0) {
+                            renderingStarted = true;
+                            post(env, INFO, 3); // MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START
+                        }
+                        mpv_free(vo);
+                    }
                     break;
                 case MPV_EVENT_VIDEO_RECONFIG:
                     post(env, VIDEO_SIZE, static_cast<int>(number("dwidth")), static_cast<int>(number("dheight")));
@@ -226,16 +244,16 @@ extern "C" JNIEXPORT jlong JNICALL JNI_METHOD(nativeCreate)(JNIEnv *env, jclass 
         {"osc", "no"}, {"osd-level", "0"}, {"network-timeout", "30"}
     };
     for (const auto &option : options) {
-        if (!check(env, mpv_set_option_string(p->mpv, option[0], option[1]))) { p->destroy(env); return 0; }
+        if (!check(env, mpv_set_option_string(p->mpv, option[0], option[1]), option[0])) { p->destroy(env); return 0; }
     }
-    if (!check(env, mpv_initialize(p->mpv)) ||
+    mpv_request_log_messages(p->mpv, "warn");
+    if (!check(env, mpv_initialize(p->mpv), "mpv_initialize") ||
         !check(env, mpv_stream_cb_add_ro(p->mpv, "androidfd", p.get(), openFile)) ||
         !check(env, mpv_observe_property(p->mpv, 1, "paused-for-cache", MPV_FORMAT_FLAG)) ||
         !check(env, mpv_observe_property(p->mpv, 2, "demuxer-cache-time", MPV_FORMAT_DOUBLE)) ||
         !check(env, mpv_observe_property(p->mpv, 3, "sub-text", MPV_FORMAT_STRING))) {
         p->destroy(env); return 0;
     }
-    mpv_request_log_messages(p->mpv, "warn");
     try { p->events = std::thread(&Player::eventLoop, p.get()); }
     catch (const std::exception &e) { p->destroy(env); fail(env, e.what()); return 0; }
     return reinterpret_cast<jlong>(p.release());

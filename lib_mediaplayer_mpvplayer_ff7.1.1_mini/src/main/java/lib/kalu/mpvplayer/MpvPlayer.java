@@ -26,6 +26,7 @@ import lib.kalu.mpvplayer.inter.*;
  */
 public class MpvPlayer implements AutoCloseable {
     public static final int MEDIA_ERROR_UNKNOWN = 1;
+    public static final int MEDIA_INFO_VIDEO_RENDERING_START = 3;
     public static final int MEDIA_INFO_BUFFERING_START = 701;
     public static final int MEDIA_INFO_BUFFERING_END = 702;
     private static final int PREPARED = 1, COMPLETE = 2, BUFFERING = 3,

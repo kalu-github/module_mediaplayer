@@ -1,0 +1,20 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="lib.kalu.mpvplayer.smoke">
+    <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="32" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <application android:label="MPV playback verification" android:debuggable="true"
+        android:theme="@android:style/Theme.Material.NoActionBar" android:hardwareAccelerated="true"
+        android:extractNativeLibs="true">
+        <uses-library android:name="android.test.runner" android:required="true" />
+        <uses-library android:name="android.test.base" android:required="false" />
+        <activity android:name=".PlaybackActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+    <instrumentation android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="lib.kalu.mpvplayer.smoke" />
+</manifest>
