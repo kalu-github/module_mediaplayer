@@ -1,0 +1,19 @@
+option('test', type: 'feature', description: 'enable test program (requires libpng)')
+option('compare', type: 'feature', description: 'enable compare program')
+option('profile', type: 'feature', description: 'enable profiling program')
+option('fuzz', type: 'feature', description: 'enable fuzzing consumer')
+option('checkasm', type: 'feature', description: 'enable assembly unit test program')
+option('art-samples', type: 'string', description: 'Path to the root of regression testing sample repository. If set, it is used in meson test.')
+option('fuzz-link-args', type: 'string', description: 'Additional link flags for fuzz targets.')
+option('fuzz-link-language', type : 'combo', choices : ['c', 'cpp'], value : 'c', description: 'Linking language for fuzz targets.')
+
+option('fontconfig', type: 'feature', description: 'Fontconfig support')
+option('directwrite', type: 'feature', description: 'DirectWrite support (win32 only)')
+option('coretext', type: 'feature', description: 'Core Text support (Apple only)')
+option('asm', type: 'feature', description: 'ASM support (better performance)')
+option('libunibreak', type: 'feature', description: 'libunibreak support')
+
+option('require-system-font-provider', type: 'boolean', value: true,
+       description: 'disallow compilation if no system font provider was found')
+option('large-tiles', type: 'boolean', value: false,
+       description: 'use larger tiles in the rasterizer (better performance, slightly worse quality)')

@@ -1,0 +1,7 @@
+MPVPLAYER_1 {
+    global:
+        JNI_OnLoad;
+        Java_lib_kalu_mpvplayer_MpvPlayer_*;
+        mpv_*;
+    local: *;
+};

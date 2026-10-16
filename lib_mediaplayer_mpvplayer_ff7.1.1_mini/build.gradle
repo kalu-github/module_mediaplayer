@@ -1,0 +1,57 @@
+apply plugin: 'com.android.library'
+
+def requestedAbis = (findProperty('mpvAbis') ?: 'arm64-v8a,armeabi-v7a,x86,x86_64').split(',')
+def nativeLayout = findProperty('mpvLayout') ?: 'merged'
+android {
+    namespace 'lib.kalu.mpvplayer'
+    compileSdkVersion 32
+    ndkVersion (findProperty('mpvNdkVersion') ?: '28.1.13356709')
+
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 32
+        versionCode 1
+        versionName '0.41.0'
+        testInstrumentationRunner 'android.test.InstrumentationTestRunner'
+        consumerProguardFiles 'consumer-rules.pro'
+        ndk { abiFilters.addAll(requestedAbis) }
+        externalNativeBuild {
+            cmake {
+                arguments "-DMPV_LAYOUT=${nativeLayout}",
+                          "-DANDROID_STL=${nativeLayout == 'merged' ? 'c++_static' : 'c++_shared'}"
+                abiFilters.addAll(requestedAbis)
+            }
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path 'src/main/cpp/CMakeLists.txt'
+            version '3.22.1'
+        }
+    }
+    sourceSets {
+        // Runtime dependencies other than CMake's direct imports (mpv, avcodec).
+        main.jniLibs.srcDirs = nativeLayout == 'merged' ? [] : ['src/main/jniLibs']
+    }
+    buildTypes {
+        release { minifyEnabled false }
+        debug { minifyEnabled false }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures { buildConfig false }
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "lib_mediaplayer_mpv_0.41.0_${nativeLayout}_${variant.buildType.name}.aar"
+        }
+    }
+}
+
+// The device tests use Android's built-in runner, with no external test framework download.
+dependencies {
+    androidTestCompileOnly files(
+        "${android.sdkDirectory}/platforms/android-32/optional/android.test.runner.jar",
+        "${android.sdkDirectory}/platforms/android-32/optional/android.test.base.jar")
+}

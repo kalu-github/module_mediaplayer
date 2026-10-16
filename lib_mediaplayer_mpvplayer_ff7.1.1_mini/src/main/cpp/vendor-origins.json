@@ -1,0 +1,47 @@
+{
+  "layout": "vendored-source",
+  "repositories": [
+    {
+      "path": "libplacebo-7.351.0-full",
+      "commit": "3188549fba13bbdf3a5a98de2a38c2e71f04e21e",
+      "origin": "https://github.com/haasn/libplacebo.git",
+      "tracked_files": 242
+    },
+    {
+      "path": "libplacebo-7.351.0-full/3rdparty/fast_float",
+      "commit": "1bf70101536d37fa9954cc4f03fd0903d045a9f3",
+      "origin": "https://github.com/fastfloat/fast_float.git",
+      "tracked_files": 106
+    },
+    {
+      "path": "libplacebo-7.351.0-full/3rdparty/markupsafe",
+      "commit": "28ace20b140d15c083e1cbc163ee6b7778ba098c",
+      "origin": "https://github.com/pallets/markupsafe",
+      "tracked_files": 53
+    },
+    {
+      "path": "libplacebo-7.351.0-full/3rdparty/jinja",
+      "commit": "15206881c006c79667fe5154fe80c01c65410679",
+      "origin": "https://github.com/pallets/jinja",
+      "tracked_files": 117
+    },
+    {
+      "path": "libplacebo-7.351.0-full/3rdparty/glad",
+      "commit": "73db193f853e2ee079bf3ca8a64aa2eaf6459043",
+      "origin": "https://github.com/Dav1dde/glad",
+      "tracked_files": 243
+    },
+    {
+      "path": "libplacebo-7.351.0-full/3rdparty/Vulkan-Headers",
+      "commit": "cacef3039d277c448c89336290ec3937270b0996",
+      "origin": "https://github.com/KhronosGroup/Vulkan-Headers",
+      "tracked_files": 82
+    },
+    {
+      "path": "libplacebo-7.351.0-full/demos/3rdparty/nuklear",
+      "commit": "b0fbe40b943e735150465875d81e4ed0562359a8",
+      "origin": "https://github.com/Immediate-Mode-UI/Nuklear.git",
+      "tracked_files": 271
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+set(FFMPEG_STATIC_ARCHIVES
+  "${MPV_DEPS}/lib/libavdevice.a"
+  "${MPV_DEPS}/lib/libavfilter.a"
+  "${MPV_DEPS}/lib/libavformat.a"
+  "${MPV_DEPS}/lib/libavcodec.a"
+  "${MPV_DEPS}/lib/libpostproc.a"
+  "${MPV_DEPS}/lib/libswresample.a"
+  "${MPV_DEPS}/lib/libswscale.a"
+  "${MPV_DEPS}/lib/libavutil.a"
+  "${MPV_DEPS}/lib/libxml2.a"
+  "${MPV_DEPS}/lib/libmbedtls.a"
+  "${MPV_DEPS}/lib/libmbedx509.a"
+  "${MPV_DEPS}/lib/libmbedcrypto.a"
+  "${MPV_DEPS}/lib/libdav1d.a"
+)
+set(FFMPEG_SYSTEM_LINK_FLAGS
+  "-lm"
+  "-lz"
+  "-pthread"
+  "-latomic"
+  "-landroid"
+  "-lmediandk"
+)
+set(MPV_STATIC_ARCHIVES
+  "${MPV_DEPS}/lib/libmpv.a"
+  "${MPV_DEPS}/lib/libass.a"
+  "${MPV_DEPS}/lib/libfribidi.a"
+  "${MPV_DEPS}/lib/libharfbuzz.a"
+  "${MPV_DEPS}/lib/libunibreak.a"
+  "${MPV_DEPS}/lib/libfontconfig.a"
+  "${MPV_DEPS}/lib/libfreetype.a"
+  "${MPV_DEPS}/lib/libxml2.a"
+  "${MPV_DEPS}/lib/libplacebo.a"
+  "${MPV_DEPS}/lib/liblua.a"
+)
+set(MPV_SYSTEM_LINK_FLAGS
+  "-latomic"
+  "-landroid"
+  "-lOpenSLES"
+  "-lEGL"
+  "-lm"
+  "-lz"
+  "-pthread"
+  "-ldl"
+)

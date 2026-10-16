@@ -1,0 +1,192 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+stages:
+    - compile
+    - test
+    - sanitize
+
+variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    IMAGE_UBUNTU_NOBLE: registry.videolan.org/libplacebo-ubuntu-noble:20250312114616
+    IMAGE_UBUNTU_JAMMY_AARCH: registry.videolan.org/libplacebo-ubuntu-jammy-aarch64:20230203024122
+
+linux:
+    image: $IMAGE_UBUNTU_NOBLE
+    stage: compile
+    tags:
+        - docker
+        - amd64
+    script:
+        - meson build --buildtype release
+                      --werror
+                      -Dtests=true
+                      -Dshaderc=enabled
+                      -Dglslang=enabled
+        - ninja -C build
+
+static:
+    image: $IMAGE_UBUNTU_NOBLE
+    stage: compile
+    tags:
+        - docker
+        - amd64
+    script:
+        - meson build --buildtype release
+                      --default-library static
+                      --werror
+                      -Dshaderc=enabled
+                      -Dglslang=enabled
+        - ninja -C build
+
+win32:
+    image: $IMAGE_UBUNTU_NOBLE
+    stage: compile
+    tags:
+        - docker
+        - amd64
+    script:
+        - meson build --buildtype release
+                      --werror
+                      -Dtests=true
+                      -Ddebug-abort=true
+                      -Dd3d11=enabled
+                      --cross-file i686-w64-mingw32.meson
+        - ninja -C build
+        - cd build && meson test -t 5 -v --num-processes=1
+
+win64:
+    image: $IMAGE_UBUNTU_NOBLE
+    stage: compile
+    tags:
+        - docker
+        - amd64
+    script:
+        - meson build --buildtype release
+                      --werror
+                      -Dtests=true
+                      -Ddebug-abort=true
+                      -Dd3d11=enabled
+                      --cross-file x86_64-w64-mingw32.meson
+        - ninja -C build
+        - cd build && meson test -t 5 -v --num-processes=1
+
+aarch64:
+    image: $IMAGE_UBUNTU_JAMMY_AARCH
+    stage: compile
+    tags:
+        - docker
+        - aarch64
+    script:
+        - meson build --buildtype release --werror -Dtests=true
+        - ninja -C build
+        - cd build && meson test -t 5 -v --num-processes=1
+
+macos:
+    stage: compile
+    tags:
+        - amd64
+        - monterey
+    script:
+        - meson build --buildtype release
+                      -Ddefault_library=both
+                      -Dtests=true
+                      -Ddebug-abort=true
+                      -Dc_args='-mmacosx-version-min=10.11 -Wunguarded-availability'
+                      --werror
+        - ninja -C build
+        - cd build && meson test -t 5 -v --num-processes=1
+
+scan:
+    image: $IMAGE_UBUNTU_NOBLE
+    stage: compile
+    tags:
+        - docker
+        - amd64
+    script:
+        - env CC=clang CXX=clang++ CC_LD=lld CXX_LD=lld
+            meson build --buildtype debugoptimized
+                        --werror
+                        -Dtests=true
+                        -Dbench=true
+                        -Dshaderc=enabled
+                        -Dglslang=enabled
+        - ninja -C build scan-build
+
+llvmpipe:
+    image: $IMAGE_UBUNTU_NOBLE
+    stage: test
+    tags:
+        - docker
+        - amd64
+    script:
+        - meson build --buildtype release
+                      --werror
+                      -Dtests=true
+                      -Ddebug-abort=true
+                      -Dc_args='-DCI_ALLOW_SW -DCI_MAXGL'
+                      -Dshaderc=enabled
+                      -Dglslang=enabled
+        - ninja -C build
+        - cd build && meson test -t 20 -v --num-processes=1
+
+gpu:
+    image: $IMAGE_UBUNTU_NOBLE
+    stage: test
+    tags:
+        - gpu
+    script:
+        - git clone --depth 1 -b v1.16 https://github.com/linux-test-project/lcov.git
+        - export PATH="`realpath lcov/bin`:$PATH"
+        - meson build --buildtype release
+                      --werror
+                      -Dtests=true
+                      -Ddemos=false
+                      -Ddebug-abort=true
+                      -Dshaderc=enabled
+                      -Dglslang=enabled
+                      -Db_coverage=true
+        - ninja -C build
+        - vulkaninfo
+        - cd build && meson test -t 5 -v --num-processes=1
+        - ninja coverage-html
+        - mv meson-logs/coveragereport ../coverage
+        - ninja coverage-xml
+        - grep -Eo 'line-rate="[^"]+"' meson-logs/coverage.xml | head -n 1 |
+          grep -Eo '[0-9.]+' | awk '{ print "coverage:", $1 * 100 } '
+    coverage: '/^coverage: (\d+.\d+)$/'
+    artifacts:
+        expose_as: 'Coverage HTML report'
+        paths:
+            - coverage/
+        reports:
+            coverage_report:
+              coverage_format: cobertura
+              path: build/meson-logs/coverage.xml
+
+sanitize:
+    image: $IMAGE_UBUNTU_NOBLE
+    stage: sanitize
+    tags:
+        - gpu
+    variables:
+        # Disable leak detection, mesa likes to leak some memory, and since
+        # the driver is unloaded we can't really add suppressions for them.
+        # https://gitlab.freedesktop.org/mesa/mesa/-/issues/12805
+        # https://gitlab.freedesktop.org/mesa/mesa/-/issues/12811
+        ASAN_OPTIONS: "halt_on_error=1:abort_on_error=1:print_summary=1:detect_leaks=0"
+    script:
+        - env CC=clang CXX=clang++ CC_LD=lld CXX_LD=lld
+            meson build --buildtype debugoptimized
+                        --werror
+                        -Dtests=true
+                        -Ddebug-abort=true
+                        -Dc_args='-DCI_MAXGL -Wno-deprecated-declarations'
+                        -Db_sanitize=address,undefined
+                        -Db_lundef=false
+                        -Dshaderc=enabled
+        - ninja -C build
+        - cd build && time meson test -t 5 -v --num-processes=1

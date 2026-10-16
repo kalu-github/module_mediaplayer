@@ -1,0 +1,137 @@
+/*
+ * This file is part of libplacebo.
+ *
+ * libplacebo is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * libplacebo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with libplacebo. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#pragma once
+
+#include <errno.h>
+#include <pthread.h>
+#include <sys/time.h>
+#include <time.h>
+
+#include <pl_assert.h>
+
+typedef pthread_mutex_t pl_mutex;
+typedef pthread_cond_t  pl_cond;
+typedef pthread_mutex_t pl_static_mutex;
+typedef pthread_t       pl_thread;
+#define PL_STATIC_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
+
+static inline int pl_mutex_init_type_internal(pl_mutex *mutex, enum pl_mutex_type mtype)
+{
+    int mutex_type;
+    switch (mtype) {
+        case PL_MUTEX_RECURSIVE:
+            mutex_type = PTHREAD_MUTEX_RECURSIVE;
+            break;
+        case PL_MUTEX_NORMAL:
+        default:
+        #ifndef NDEBUG
+            mutex_type = PTHREAD_MUTEX_ERRORCHECK;
+        #else
+            mutex_type = PTHREAD_MUTEX_DEFAULT;
+        #endif
+            break;
+    }
+
+    int ret = 0;
+    pthread_mutexattr_t attr;
+    ret = pthread_mutexattr_init(&attr);
+    if (ret != 0)
+        return ret;
+
+    pthread_mutexattr_settype(&attr, mutex_type);
+    ret = pthread_mutex_init(mutex, &attr);
+    pthread_mutexattr_destroy(&attr);
+    return ret;
+}
+
+#define pl_mutex_init_type(mutex, mtype) \
+    pl_assert(!pl_mutex_init_type_internal(mutex, mtype))
+
+#define pl_mutex_destroy    pthread_mutex_destroy
+#define pl_mutex_lock       pthread_mutex_lock
+#define pl_mutex_unlock     pthread_mutex_unlock
+
+static inline int pl_cond_init(pl_cond *cond)
+{
+    int ret = 0;
+    pthread_condattr_t attr;
+    ret = pthread_condattr_init(&attr);
+    if (ret != 0)
+        return ret;
+
+#ifdef PTHREAD_HAS_SETCLOCK
+    pthread_condattr_setclock(&attr, CLOCK_MONOTONIC);
+#endif
+    ret = pthread_cond_init(cond, &attr);
+    pthread_condattr_destroy(&attr);
+    return ret;
+}
+
+#define pl_cond_destroy     pthread_cond_destroy
+#define pl_cond_broadcast   pthread_cond_broadcast
+#define pl_cond_signal      pthread_cond_signal
+#define pl_cond_wait        pthread_cond_wait
+
+static inline int pl_cond_timedwait(pl_cond *cond, pl_mutex *mutex, uint64_t timeout)
+{
+    if (timeout == UINT64_MAX)
+        return pthread_cond_wait(cond, mutex);
+
+    struct timespec ts;
+#ifdef PTHREAD_HAS_SETCLOCK
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) < 0)
+        return errno;
+#else
+    struct timeval tv;
+    if (gettimeofday(&tv, NULL) < 0) // equivalent to CLOCK_REALTIME
+        return errno;
+    ts.tv_sec = tv.tv_sec;
+    ts.tv_nsec = tv.tv_usec * 1000;
+#endif
+
+    ts.tv_sec  += timeout / 1000000000LLU;
+    ts.tv_nsec += timeout % 1000000000LLU;
+
+    if (ts.tv_nsec > 1000000000L) {
+        ts.tv_nsec -= 1000000000L;
+        ts.tv_sec++;
+    }
+
+    return pthread_cond_timedwait(cond, mutex, &ts);
+}
+
+#define pl_static_mutex_lock    pthread_mutex_lock
+#define pl_static_mutex_unlock  pthread_mutex_unlock
+
+#define PL_THREAD_VOID void *
+#define PL_THREAD_RETURN() return NULL
+
+#define pl_thread_create(t, f, a) pthread_create(t, NULL, f, a)
+#define pl_thread_join(t)         pthread_join(t, NULL)
+
+static inline bool pl_thread_sleep(double t)
+{
+    if (t <= 0.0)
+        return true;
+
+    struct timespec ts;
+    ts.tv_sec = (time_t) t;
+    ts.tv_nsec = (t - ts.tv_sec) * 1e9;
+
+    return nanosleep(&ts, NULL) == 0;
+}

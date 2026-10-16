@@ -1,0 +1,110 @@
+{
+  "layout": "static-inputs",
+  "abi": "x86",
+  "ndk": "28.1.13356709",
+  "api": 23,
+  "original_build": {
+    "mpv": "0.41.0",
+    "ffmpeg": "n7.1.1",
+    "abi": "x86",
+    "api": 23,
+    "disable_x86_asm": true,
+    "ndk": "28.1.13356709",
+    "mpv_source_sha256": "18d25d3addb9c5f5ba83a3941a3ac02e3505af3d8375291e2ceadefb393992b4",
+    "sources": {
+      "ffmpeg": {
+        "path": "/Users/a1/Documents/module_mediaplayer/repo/ffmpeg-7.1.1",
+        "version": "n7.1.1",
+        "sha256": "9221093384096ed045ee102aeeec5e63e759cfa5143f72e8ab7b6e3557b19fcd"
+      },
+      "libplacebo": {
+        "path": "/Users/a1/Documents/module_mediaplayer/repo/libplacebo-7.351.0-full",
+        "version": "v7.351.0",
+        "sha256": "467aecada9c87434b51bd3cdd94b6d368a3f53f3f857556fe66736a2429e8e79"
+      },
+      "libxml2": {
+        "url": "https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.15.4/libxml2-v2.15.4.tar.gz",
+        "sha256": "a569ee9c59eabb197a0d5047046d757ee14c86fb2d4a734555b633cb5584ad25"
+      },
+      "freetype2": "0a0221a1347e2f1e07c395263540026e9a0aa7c7",
+      "harfbuzz": {
+        "url": "https://github.com/harfbuzz/harfbuzz/releases/download/14.4.0/harfbuzz-14.4.0.tar.xz",
+        "sha256": "2357ed966c6ced7bfa720b0640c0231065af01158fbea215093ffa15aed44371"
+      },
+      "mbedtls": {
+        "url": "https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-3.6.7/mbedtls-3.6.7.tar.bz2",
+        "sha256": "a7e8bcbec0e6f761b4af24f25677626b35f762f68eef79c08677a363212d11f6"
+      },
+      "unibreak": {
+        "url": "https://github.com/adah1972/libunibreak/releases/download/libunibreak_8_0/libunibreak-8.0.tar.gz",
+        "sha256": "9c4fad6e517338a098373acc9f35579ae2c325e6446666fb9ac2666ba15ceba4"
+      },
+      "fribidi": {
+        "url": "https://github.com/fribidi/fribidi/releases/download/v1.0.16/fribidi-1.0.16.tar.xz",
+        "sha256": "1b1cde5b235d40479e91be2f0e88a309e3214c8ab470ec8a2744d82a5a9ea05c"
+      },
+      "lua": {
+        "url": "https://www.lua.org/ftp/lua-5.2.4.tar.gz",
+        "sha256": "b9e2e4aad6789b3b63a056d442f7b39f0ecfca3ae0f1fc0ae4e9614401b69f4b"
+      },
+      "fontconfig": {
+        "url": "https://gitlab.freedesktop.org/fontconfig/fontconfig/-/archive/2.18.3/fontconfig-2.18.3.tar.gz",
+        "sha256": "9ae01e1d53acdef56010c5451cd34aa41d325b2faccd8606448d8fa01b2496b3"
+      },
+      "curl": {
+        "url": "https://curl.se/download/curl-8.21.0.tar.gz",
+        "sha256": "d9b327997999045a24cda50f3983e69e51c516bd8be6ef9842fc7f99135e33bb"
+      },
+      "dav1d": "42b2b24fb8819f1ed3643aa9cf2a62f03868e3aa",
+      "libass": {
+        "path": "/Users/a1/Documents/module_mediaplayer/repo/libass-0.17.4",
+        "version": "0.17.4",
+        "sha256": "77210ee0f0b04f2140e225b2aa3ebc206cd106c3adfe3610160b4d8d9698eb48"
+      }
+    },
+    "libraries": {
+      "libavutil.so": "86cd4b512c8973912f7d6a9de6aa0ecd33a91d29adab7f6e952d0a2c3a4049b2",
+      "libavfilter.so": "7ba910307d2c956112a33f17335fd065dacffd0645be5022454196e1ad22fbf1",
+      "libpostproc.so": "908ab034c6e8ecfe0d5384ff167ccd8305aee465fce4b30f308cfebf0c9fc01a",
+      "libmpv.so": "b4dbdb3d6b9103b80c6c2e7bfa2e18bca15800a44d42ec962b0215fdb855d1ef",
+      "libswscale.so": "ef55488659e374044c02bdfa14497bf644ee080aa7cb3c5818a240d1a44011fa",
+      "libswresample.so": "1ef71e38777ce2794d3330bae84d9234e4b6f27b81388bfe9deeed34048fd338",
+      "libavdevice.so": "94c275cde6f09d64c67ad9eff152d421fe4166aca7de447d8e8cda84d5e4dfc5",
+      "libavcodec.so": "033d2a94a9a33aefb8e4dbd6ed4cc7399c624b841369a35f36543b97ac821dc3",
+      "libavformat.so": "e70e4bdb24c8192fd638a4ee9681f03b3f1563c480a50bf24e4df9f0b9451664"
+    }
+  },
+  "original_manifest_sha256": "8264b80dd6e22e849bf8d2249c45369debbb669e18af0f3450d719293878d274",
+  "recipe_sha256": "745f01fcfc65a158d2145b2b72a682246ea96ff37a1e639340ae22bef9e0c3f7",
+  "ffmpeg_export_count": 1072,
+  "libraries": {},
+  "archives": {
+    "libass.a": "9c4328e7b7bef28d22ba65d7c24f931583831d9a8be9349c01813efe449ebf08",
+    "libavcodec.a": "93326e3f41e026851b22199aac17f2617acb1372e04425ae28ebbc727d652054",
+    "libavdevice.a": "2a9fcd3753edf1a2888ce913f40d209827b89fa9e3a180929b495c71a5c4f776",
+    "libavfilter.a": "262b5049353e086fe1d7e78a231f97d0113b2938f9bb2c3127a111123d8d749a",
+    "libavformat.a": "315f3635232da1678077b57a23b7b0609e2861e9d1c9ee6110fa07a177e54662",
+    "libavutil.a": "e367b1cae56b9ce892cb548b9908428d09b21eb1902b9fbd337da3d00fbca3d0",
+    "libdav1d.a": "7b649fc65abaaccbf258ccc8f79ad450e15eb38013e9e40e7b71c4c5531622bf",
+    "libfontconfig.a": "dd93da4a48c5b12f52132ad66397ba80918e78b69ea5416fc298c29924e93b28",
+    "libfreetype.a": "9294ade18d5fc19c9c846a9cffa7e4f98b76fbaffc0adf5011ebdc1115aacf1b",
+    "libfribidi.a": "a81482e6137302bc7b6332208400e9e3cbeb49832938bd413fdf0ea2aa8b86bb",
+    "libharfbuzz.a": "7a827fa3e6b51bf7fad3e5daaec7d5bbcd67edff422e84d1e40615091b2af0ce",
+    "liblua.a": "b91a7ea7b82202205d066ead5280c3dc9bed9c62c39325476b0a42b1bcddb33d",
+    "libmbedcrypto.a": "775ebf1bfffcd67dd08f7011fbfa31ce563f87ba8abac4e2ddb1611343a5d4f5",
+    "libmbedtls.a": "abed755170bd286bd86920c883b134b3295830c82fa1f76ed49d698250b8b31b",
+    "libmbedx509.a": "aef8605f8fd0c3d7cee47bbf8c34287d2f7e226f1700e2e49cb7a02982a35cbc",
+    "libmpv.a": "a985e3debf24c973af4a63fb84c0b4b65249f6d26678e5892fa851a465187eae",
+    "libplacebo.a": "f99ef8f420486ced3497f27d016e5c3cc79ddecd99b5ad40d73eb888d886249b",
+    "libpostproc.a": "9901254ee57dd1c50db51d8fc1e41719ad14d0abac46074e750735298d28d273",
+    "libswresample.a": "3255eea2efa519d7172d4bc6f9f2e239f6067ebc3c51550453101828916c0d26",
+    "libswscale.a": "34fdb60375f0691dce6785cdeb91166b234e69fe374fb08c464faad02725a135",
+    "libunibreak.a": "059b31448684934cbba59be93c268f6441924c5d6bc1aec942a5bef41b4dc5f0",
+    "libxml2.a": "3950e778d807c594b4e61acc9c7b1336b70aa31c5fb79e2059e019b298ad5552"
+  },
+  "link_files": {
+    "link.cmake": "9a5b0357ebb13d74558a820d0452e8bbacd0ac9ccf207913203cfbbf8319e7f5",
+    "ffmpeg.exports": "ed5f92ad1f2a1f50c8610ab9b812fc76e78169dbb444ef94c51545a0a2cd43a4",
+    "ffmpeg-roots.rsp": "9712e6c047a59308b03c7d5ab680e5383ec16bb813e04cdadc3414df7f42d6b0"
+  }
+}

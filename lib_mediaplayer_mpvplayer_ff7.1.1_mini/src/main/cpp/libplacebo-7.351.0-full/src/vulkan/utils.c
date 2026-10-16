@@ -1,0 +1,181 @@
+/*
+ * This file is part of libplacebo.
+ *
+ * libplacebo is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * libplacebo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with libplacebo. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "utils.h"
+
+VkExternalMemoryHandleTypeFlagBitsKHR
+vk_mem_handle_type(enum pl_handle_type handle_type)
+{
+    if (!handle_type)
+        return 0;
+
+    switch (handle_type) {
+    case PL_HANDLE_FD:
+        return VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR;
+    case PL_HANDLE_WIN32:
+        return VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR;
+    case PL_HANDLE_WIN32_KMT:
+        return VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR;
+    case PL_HANDLE_DMA_BUF:
+        return VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT;
+    case PL_HANDLE_HOST_PTR:
+        return VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT;
+    case PL_HANDLE_MTL_TEX:
+    case PL_HANDLE_IOSURFACE:
+        return 0;
+    }
+
+    pl_unreachable();
+}
+
+VkExternalSemaphoreHandleTypeFlagBitsKHR
+vk_sync_handle_type(enum pl_handle_type handle_type)
+{
+    if (!handle_type)
+        return 0;
+
+    switch (handle_type) {
+    case PL_HANDLE_FD:
+        return VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT_KHR;
+    case PL_HANDLE_WIN32:
+        return VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR;
+    case PL_HANDLE_WIN32_KMT:
+        return VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR;
+    case PL_HANDLE_DMA_BUF:
+    case PL_HANDLE_HOST_PTR:
+    case PL_HANDLE_MTL_TEX:
+    case PL_HANDLE_IOSURFACE:
+        return 0;
+    }
+
+    pl_unreachable();
+}
+
+bool vk_external_mem_check(struct vk_ctx *vk,
+                           const VkExternalMemoryPropertiesKHR *props,
+                           enum pl_handle_type handle_type,
+                           bool import)
+{
+    VkExternalMemoryFeatureFlagsKHR flags = props->externalMemoryFeatures;
+    VkExternalMemoryHandleTypeFlagBitsKHR vk_handle = vk_mem_handle_type(handle_type);
+
+    if (import) {
+        if (!(flags & VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_KHR)) {
+            PL_DEBUG(vk, "Handle type %s (0x%x) is not importable",
+                     vk_handle_name(vk_handle), (unsigned int) handle_type);
+            return false;
+        }
+    } else {
+        if (!(flags & VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_KHR)) {
+            PL_DEBUG(vk, "Handle type %s (0x%x) is not exportable",
+                     vk_handle_name(vk_handle), (unsigned int) handle_type);
+            return false;
+        }
+    }
+
+    return true;
+}
+
+const enum pl_handle_type vk_mem_handle_list[] = {
+        PL_HANDLE_HOST_PTR,
+#ifdef PL_HAVE_UNIX
+        PL_HANDLE_FD,
+        PL_HANDLE_DMA_BUF,
+#endif
+#ifdef PL_HAVE_WIN32
+        PL_HANDLE_WIN32,
+        PL_HANDLE_WIN32_KMT,
+#endif
+        0
+};
+
+const enum pl_handle_type vk_sync_handle_list[] = {
+#ifdef PL_HAVE_UNIX
+        PL_HANDLE_FD,
+#endif
+#ifdef PL_HAVE_WIN32
+        PL_HANDLE_WIN32,
+        PL_HANDLE_WIN32_KMT,
+#endif
+        0
+};
+
+const void *vk_find_struct(const void *chain, VkStructureType stype)
+{
+    const VkBaseInStructure *in = chain;
+    while (in) {
+        if (in->sType == stype)
+            return in;
+
+        in = in->pNext;
+    }
+
+    return NULL;
+}
+
+void vk_link_struct(void *chain, const void *in)
+{
+    if (!in)
+        return;
+
+    VkBaseOutStructure *out = chain;
+    while (out->pNext)
+        out = out->pNext;
+
+    out->pNext = (void *) in;
+}
+
+void *vk_struct_memdup(void *alloc, const void *pin)
+{
+    if (!pin)
+        return NULL;
+
+    const VkBaseInStructure *in = pin;
+    size_t size = vk_struct_size(in->sType);
+    pl_assert(size);
+
+    VkBaseOutStructure *out = pl_memdup(alloc, in, size);
+    out->pNext = NULL;
+    return out;
+}
+
+void *vk_chain_memdup(void *alloc, const void *pin)
+{
+    if (!pin)
+        return NULL;
+
+    const VkBaseInStructure *in = pin;
+    VkBaseOutStructure *out = vk_struct_memdup(alloc, in);
+    pl_assert(out);
+
+    out->pNext = vk_chain_memdup(alloc, in->pNext);
+    return out;
+}
+
+void *vk_chain_alloc(void *alloc, void *chain, VkStructureType stype)
+{
+    for (VkBaseOutStructure *out = chain;; out = out->pNext) {
+        if (out->sType == stype)
+            return out;
+        if (!out->pNext) {
+            VkBaseOutStructure *s = pl_zalloc(alloc, vk_struct_size(stype));
+            s->sType = stype;
+            out->pNext = s;
+            return s;
+        }
+    }
+}

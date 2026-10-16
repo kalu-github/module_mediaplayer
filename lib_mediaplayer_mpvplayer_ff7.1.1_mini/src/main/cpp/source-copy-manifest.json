@@ -1,0 +1,42 @@
+{
+  "ffmpeg-7.1.1": {
+    "source": "/Users/a1/Documents/module_mediaplayer/repo/ffmpeg-7.1.1",
+    "destination": "/Users/a1/Documents/module_mediaplayer/lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/ffmpeg-7.1.1",
+    "entries": 8645,
+    "files": 8540,
+    "bytes": 83043001,
+    "inventory_sha256": "f2549a666066fd80ef0fe02a9f4078a015f9165074c8f5664b6d3c0f94d8696c"
+  },
+  "mpv-0.41.0": {
+    "source": "/Users/a1/Documents/module_mediaplayer/repo/mpv-0.41.0",
+    "destination": "/Users/a1/Documents/module_mediaplayer/lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/mpv-0.41.0",
+    "entries": 892,
+    "files": 832,
+    "bytes": 14621496,
+    "inventory_sha256": "d0de0cba8a2bf7736cba75404e23196d533b1eb0efca3649532bfbc67763da89"
+  },
+  "mpv-android-2026-09-17": {
+    "source": "/Users/a1/Documents/module_mediaplayer/repo/mpv-android-2026-09-17",
+    "destination": "/Users/a1/Documents/module_mediaplayer/lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/mpv-android-2026-09-17",
+    "entries": 313,
+    "files": 240,
+    "bytes": 2746025,
+    "inventory_sha256": "26d9bc8dfb67e354969516adff02ae37c710567e998e5ddfd5abb3a5c8482cf6"
+  },
+  "libass-0.17.4": {
+    "source": "/Users/a1/Documents/module_mediaplayer/repo/libass-0.17.4",
+    "destination": "/Users/a1/Documents/module_mediaplayer/lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/libass-0.17.4",
+    "entries": 148,
+    "files": 131,
+    "bytes": 1265885,
+    "inventory_sha256": "84c2fe2e93e5342327d8afab78714e770382ae99339ed7249e02a285966c418a"
+  },
+  "libplacebo-7.351.0-full": {
+    "source": "/Users/a1/Documents/module_mediaplayer/repo/libplacebo-7.351.0-full",
+    "destination": "/Users/a1/Documents/module_mediaplayer/lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/libplacebo-7.351.0-full",
+    "entries": 2266,
+    "files": 1816,
+    "bytes": 177858467,
+    "inventory_sha256": "d233fcdfe79fe5d558258f9a4a8ca351acaa0b1d6d96be2c8b0a878166dd82eb"
+  }
+}

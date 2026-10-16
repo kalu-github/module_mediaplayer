@@ -1,0 +1,990 @@
+/*
+ * This file is part of libplacebo.
+ *
+ * libplacebo is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * libplacebo is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with libplacebo. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <stdio.h>
+#include <math.h>
+
+#include "common.h"
+#include "log.h"
+#include "shaders.h"
+
+pl_shader_info pl_shader_info_ref(pl_shader_info pinfo)
+{
+    struct sh_info *info = (struct sh_info *) pinfo;
+    if (!info)
+        return NULL;
+
+    pl_rc_ref(&info->rc);
+    return &info->info;
+}
+
+void pl_shader_info_deref(pl_shader_info *pinfo)
+{
+    struct sh_info *info = (struct sh_info *) *pinfo;
+    if (!info)
+        return;
+
+    if (pl_rc_deref(&info->rc))
+        pl_free(info);
+    *pinfo = NULL;
+}
+
+static struct sh_info *sh_info_alloc(void *alloc)
+{
+    struct sh_info *info = pl_zalloc_ptr(alloc, info);
+    info->tmp = pl_tmp(info);
+    pl_rc_init(&info->rc);
+    return info;
+}
+
+// Re-use `sh_info` allocation if possible, allocate new otherwise
+static struct sh_info *sh_info_recycle(struct sh_info *info)
+{
+    if (!pl_rc_deref(&info->rc))
+        return sh_info_alloc(NULL);
+
+    memset(&info->info, 0, sizeof(info->info)); // reset public fields
+    pl_free_children(info->tmp);
+    pl_rc_ref(&info->rc);
+    info->desc.len = 0;
+    info->steps.num = 0;
+    return info;
+}
+
+static uint8_t reverse_bits(uint8_t x)
+{
+    static const uint8_t reverse_nibble[16] = {
+        0x0, 0x8, 0x4, 0xc, 0x2, 0xa, 0x6, 0xe,
+        0x1, 0x9, 0x5, 0xd, 0x3, 0xb, 0x7, 0xf,
+    };
+
+    return reverse_nibble[x & 0xF] << 4 | reverse_nibble[x >> 4];
+}
+
+static void init_shader(pl_shader sh, const struct pl_shader_params *params)
+{
+    if (params) {
+        sh->info->info.params = *params;
+
+        // To avoid collisions for shaders with very high number of
+        // identifiers, pack the shader ID into the highest bits (MSB -> LSB)
+        pl_static_assert(sizeof(sh->prefix) > sizeof(params->id));
+        const int shift = 8 * (sizeof(sh->prefix) - sizeof(params->id));
+        sh->prefix = reverse_bits(params->id) << shift;
+    }
+
+    sh->name = sh_fresh(sh, "main");
+}
+
+pl_shader pl_shader_alloc(pl_log log, const struct pl_shader_params *params)
+{
+    static const int glsl_ver_req = 130;
+    if (params && params->glsl.version && params->glsl.version < 130) {
+        pl_err(log, "Requested GLSL version %d too low (required: %d)",
+               params->glsl.version, glsl_ver_req);
+        return NULL;
+    }
+
+    pl_shader sh = pl_alloc_ptr(NULL, sh);
+    *sh = (struct pl_shader_t) {
+        .log        = log,
+        .tmp        = pl_tmp(sh),
+        .info       = sh_info_alloc(NULL),
+        .mutable    = true,
+    };
+
+    for (int i = 0; i < PL_ARRAY_SIZE(sh->buffers); i++)
+        sh->buffers[i] = pl_str_builder_alloc(sh);
+
+    init_shader(sh, params);
+    return sh;
+}
+
+static void sh_obj_deref(pl_shader_obj obj);
+
+void sh_deref(pl_shader sh)
+{
+    pl_free_children(sh->tmp);
+
+    for (int i = 0; i < sh->obj.num; i++)
+        sh_obj_deref(sh->obj.elem[i]);
+    sh->obj.num = 0;
+}
+
+void pl_shader_free(pl_shader *psh)
+{
+    pl_shader sh = *psh;
+    if (!sh)
+        return;
+
+    sh_deref(sh);
+    pl_shader_info_deref((pl_shader_info *) &sh->info);
+    pl_free_ptr(psh);
+}
+
+void pl_shader_reset(pl_shader sh, const struct pl_shader_params *params)
+{
+    sh_deref(sh);
+
+    struct pl_shader_t new = {
+        .log            = sh->log,
+        .tmp            = sh->tmp,
+        .info           = sh_info_recycle(sh->info),
+        .data.buf       = sh->data.buf,
+        .mutable        = true,
+
+        // Preserve array allocations
+        .obj.elem       = sh->obj.elem,
+        .vas.elem       = sh->vas.elem,
+        .vars.elem      = sh->vars.elem,
+        .descs.elem     = sh->descs.elem,
+        .consts.elem    = sh->consts.elem,
+    };
+
+    // Preserve buffer allocations
+    memcpy(new.buffers, sh->buffers, sizeof(new.buffers));
+    for (int i = 0; i < PL_ARRAY_SIZE(new.buffers); i++)
+        pl_str_builder_reset(new.buffers[i]);
+
+    *sh = new;
+    init_shader(sh, params);
+}
+
+static void *sh_alloc(pl_shader sh, size_t size, size_t align)
+{
+    const size_t offset = PL_ALIGN2(sh->data.len, align);
+    const size_t req_size = offset + size;
+    if (req_size <= pl_get_size(sh->data.buf)) {
+        sh->data.len = offset + size;
+        return sh->data.buf + offset;
+    }
+
+    // We can't realloc this buffer because various pointers will be left
+    // dangling, so just reparent it onto `sh->tmp` (so it will be cleaned
+    // up when the shader is next reset) and allocate a new, larger buffer
+    // in its place
+    const size_t new_size = PL_MAX(req_size << 1, 256);
+    pl_steal(sh->tmp, sh->data.buf);
+    sh->data.buf = pl_alloc(sh, new_size);
+    sh->data.len = size;
+    return sh->data.buf;
+}
+
+static void *sh_memdup(pl_shader sh, const void *data, size_t size, size_t align)
+{
+    if (!size)
+        return NULL;
+
+    void *dst = sh_alloc(sh, size, align);
+    assert(data);
+    memcpy(dst, data, size);
+    return dst;
+}
+
+bool pl_shader_is_failed(const pl_shader sh)
+{
+    return sh->failed;
+}
+
+struct pl_glsl_version sh_glsl(const pl_shader sh)
+{
+    if (SH_PARAMS(sh).glsl.version)
+        return SH_PARAMS(sh).glsl;
+
+    if (SH_GPU(sh))
+        return SH_GPU(sh)->glsl;
+
+    return (struct pl_glsl_version) { .version = 130 };
+}
+
+bool sh_try_compute(pl_shader sh, int bw, int bh, bool flex, size_t mem)
+{
+    pl_assert(bw && bh);
+    int *sh_bw = &sh->group_size[0];
+    int *sh_bh = &sh->group_size[1];
+
+    struct pl_glsl_version glsl = sh_glsl(sh);
+    if (!glsl.compute) {
+        PL_TRACE(sh, "Disabling compute shader due to missing `compute` support");
+        return false;
+    }
+
+    if (sh->shmem + mem > glsl.max_shmem_size) {
+        PL_TRACE(sh, "Disabling compute shader due to insufficient shmem");
+        return false;
+    }
+
+    if (sh->type == SH_FRAGMENT) {
+        PL_TRACE(sh, "Disabling compute shader because shader is already marked "
+                 "as fragment shader");
+        return false;
+    }
+
+    if (bw > glsl.max_group_size[0] ||
+        bh > glsl.max_group_size[1] ||
+        (bw * bh) > glsl.max_group_threads)
+    {
+        if (!flex) {
+            PL_TRACE(sh, "Disabling compute shader due to exceeded group "
+                     "thread count.");
+            return false;
+        } else {
+            // Pick better group sizes
+            bw = PL_MIN(bw, glsl.max_group_size[0]);
+            bh = glsl.max_group_threads / bw;
+        }
+    }
+
+    sh->shmem += mem;
+
+    // If the current shader is either not a compute shader, or we have no
+    // choice but to override the metadata, always do so
+    if (sh->type != SH_COMPUTE || (sh->flexible_work_groups && !flex)) {
+        *sh_bw = bw;
+        *sh_bh = bh;
+        sh->type = SH_COMPUTE;
+        sh->flexible_work_groups = flex;
+        return true;
+    }
+
+    // If both shaders are flexible, pick the larger of the two
+    if (sh->flexible_work_groups && flex) {
+        *sh_bw = PL_MAX(*sh_bw, bw);
+        *sh_bh = PL_MAX(*sh_bh, bh);
+        pl_assert(*sh_bw * *sh_bh <= glsl.max_group_threads);
+        return true;
+    }
+
+    // At this point we're looking only at a non-flexible compute shader
+    pl_assert(sh->type == SH_COMPUTE && !sh->flexible_work_groups);
+    if (!flex) {
+        // Ensure parameters match
+        if (bw != *sh_bw || bh != *sh_bh) {
+            PL_TRACE(sh, "Disabling compute shader due to incompatible group "
+                     "sizes %dx%d and %dx%d", *sh_bw, *sh_bh, bw, bh);
+            sh->shmem -= mem;
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool pl_shader_is_compute(const pl_shader sh)
+{
+    return sh->type == SH_COMPUTE;
+}
+
+bool pl_shader_output_size(const pl_shader sh, int *w, int *h)
+{
+    if (!sh->output_w || !sh->output_h)
+        return false;
+
+    *w = sh->transpose ? sh->output_h : sh->output_w;
+    *h = sh->transpose ? sh->output_w : sh->output_h;
+    return true;
+}
+
+ident_t sh_fresh(pl_shader sh, const char *name)
+{
+    unsigned short id = ++sh->fresh;
+    assert(!(sh->prefix & id));
+    id |= sh->prefix;
+
+    assert(name);
+    return sh_mkident(id, name);
+}
+
+static inline ident_t sh_fresh_name(pl_shader sh, const char **pname)
+{
+    ident_t id = sh_fresh(sh, *pname);
+    *pname = sh_ident_pack(id);
+    return id;
+}
+
+ident_t sh_var(pl_shader sh, struct pl_shader_var sv)
+{
+    ident_t id = sh_fresh_name(sh, &sv.var.name);
+    struct pl_var_layout layout = pl_var_host_layout(0, &sv.var);
+    sv.data = sh_memdup(sh, sv.data, layout.size, layout.stride);
+    PL_ARRAY_APPEND(sh, sh->vars, sv);
+    return id;
+}
+
+ident_t sh_var_int(pl_shader sh, const char *name, int val, bool dynamic)
+{
+    return sh_var(sh, (struct pl_shader_var) {
+        .var     = pl_var_int(name),
+        .data    = &val,
+        .dynamic = dynamic,
+    });
+}
+
+ident_t sh_var_uint(pl_shader sh, const char *name, unsigned int val, bool dynamic)
+{
+    return sh_var(sh, (struct pl_shader_var) {
+        .var     = pl_var_uint(name),
+        .data    = &val,
+        .dynamic = dynamic,
+    });
+}
+
+ident_t sh_var_float(pl_shader sh, const char *name, float val, bool dynamic)
+{
+    return sh_var(sh, (struct pl_shader_var) {
+        .var     = pl_var_float(name),
+        .data    = &val,
+        .dynamic = dynamic,
+    });
+}
+
+ident_t sh_var_mat3(pl_shader sh, const char *name, pl_matrix3x3 val)
+{
+    return sh_var(sh, (struct pl_shader_var) {
+        .var     = pl_var_mat3(name),
+        .data    = PL_TRANSPOSE_3X3(val.m),
+    });
+}
+
+ident_t sh_desc(pl_shader sh, struct pl_shader_desc sd)
+{
+    switch (sd.desc.type) {
+    case PL_DESC_BUF_UNIFORM:
+    case PL_DESC_BUF_STORAGE:;
+        size_t bsize = sizeof(sd.buffer_vars[0]) * sd.num_buffer_vars;
+        sd.buffer_vars = sh_memdup(sh, sd.buffer_vars, bsize,
+                                   alignof(struct pl_buffer_var));
+        for (int i = 0; i < sd.num_buffer_vars; i++) {
+            struct pl_var *bv = &sd.buffer_vars[i].var;
+            const char *name = bv->name;
+            GLSLP("#define %s "$"\n", name, sh_fresh_name(sh, &bv->name));
+        }
+        break;
+
+    case PL_DESC_BUF_TEXEL_UNIFORM:
+    case PL_DESC_BUF_TEXEL_STORAGE:
+    case PL_DESC_SAMPLED_TEX:
+    case PL_DESC_STORAGE_IMG:
+        pl_assert(!sd.num_buffer_vars);
+        break;
+
+    case PL_DESC_INVALID:
+    case PL_DESC_TYPE_COUNT:
+        pl_unreachable();
+    }
+
+    ident_t id = sh_fresh_name(sh, &sd.desc.name);
+    PL_ARRAY_APPEND(sh, sh->descs, sd);
+    return id;
+}
+
+ident_t sh_const(pl_shader sh, struct pl_shader_const sc)
+{
+    if (SH_PARAMS(sh).dynamic_constants && !sc.compile_time) {
+        return sh_var(sh, (struct pl_shader_var) {
+            .var = {
+                .name = sc.name,
+                .type = sc.type,
+                .dim_v = 1,
+                .dim_m = 1,
+                .dim_a = 1,
+            },
+            .data = sc.data,
+        });
+    }
+
+    ident_t id = sh_fresh_name(sh, &sc.name);
+
+    pl_gpu gpu = SH_GPU(sh);
+    if (gpu && gpu->limits.max_constants) {
+        if (!sc.compile_time || gpu->limits.array_size_constants) {
+            size_t size = pl_var_type_size(sc.type);
+            sc.data = sh_memdup(sh, sc.data, size, size);
+            PL_ARRAY_APPEND(sh, sh->consts, sc);
+            return id;
+        }
+    }
+
+    // Fallback for GPUs without specialization constants
+    switch (sc.type) {
+    case PL_VAR_SINT:
+        GLSLH("const int "$" = %d; \n", id, *(int *) sc.data);
+        return id;
+    case PL_VAR_UINT:
+        GLSLH("const uint "$" = uint(%u); \n", id, *(unsigned int *) sc.data);
+        return id;
+    case PL_VAR_FLOAT:
+        GLSLH("const float "$" = float(%f); \n", id, *(float *) sc.data);
+        return id;
+    case PL_VAR_INVALID:
+    case PL_VAR_TYPE_COUNT:
+        break;
+    }
+
+    pl_unreachable();
+}
+
+ident_t sh_const_int(pl_shader sh, const char *name, int val)
+{
+    return sh_const(sh, (struct pl_shader_const) {
+        .type = PL_VAR_SINT,
+        .name = name,
+        .data = &val,
+    });
+}
+
+ident_t sh_const_uint(pl_shader sh, const char *name, unsigned int val)
+{
+    return sh_const(sh, (struct pl_shader_const) {
+        .type = PL_VAR_UINT,
+        .name = name,
+        .data = &val,
+    });
+}
+
+ident_t sh_const_float(pl_shader sh, const char *name, float val)
+{
+    return sh_const(sh, (struct pl_shader_const) {
+        .type = PL_VAR_FLOAT,
+        .name = name,
+        .data = &val,
+    });
+}
+
+ident_t sh_attr(pl_shader sh, struct pl_shader_va sva)
+{
+    const size_t vsize = sva.attr.fmt->texel_size;
+    uint8_t *data = sh_alloc(sh, vsize * 4, vsize);
+    for (int i = 0; i < 4; i++) {
+        memcpy(data, sva.data[i], vsize);
+        sva.data[i] = data;
+        data += vsize;
+    }
+
+    ident_t id = sh_fresh_name(sh, &sva.attr.name);
+    PL_ARRAY_APPEND(sh, sh->vas, sva);
+    return id;
+}
+
+ident_t sh_attr_vec2(pl_shader sh, const char *name, const pl_rect2df *rc)
+{
+    pl_gpu gpu = SH_GPU(sh);
+    if (!gpu) {
+        SH_FAIL(sh, "Failed adding vertex attr '%s': No GPU available!", name);
+        return NULL_IDENT;
+    }
+
+    pl_fmt fmt = pl_find_vertex_fmt(gpu, PL_FMT_FLOAT, 2);
+    if (!fmt) {
+        SH_FAIL(sh, "Failed adding vertex attr '%s': no vertex fmt!", name);
+        return NULL_IDENT;
+    }
+
+    float verts[4][2] = {
+        { rc->x0, rc->y0 },
+        { rc->x1, rc->y0 },
+        { rc->x0, rc->y1 },
+        { rc->x1, rc->y1 },
+    };
+
+    return sh_attr(sh, (struct pl_shader_va) {
+        .attr = {
+            .name     = name,
+            .fmt      = fmt,
+        },
+        .data = { verts[0], verts[1], verts[2], verts[3] },
+    });
+}
+
+ident_t sh_bind(pl_shader sh, pl_tex tex,
+                enum pl_tex_address_mode address_mode,
+                enum pl_tex_sample_mode sample_mode,
+                const char *name, const pl_rect2df *rect,
+                ident_t *out_pos, ident_t *out_pt)
+{
+    if (pl_tex_params_dimension(tex->params) != 2) {
+        SH_FAIL(sh, "Failed binding texture '%s': not a 2D texture!", name);
+        return NULL_IDENT;
+    }
+
+    if (!tex->params.sampleable) {
+        SH_FAIL(sh, "Failed binding texture '%s': texture not sampleable!", name);
+        return NULL_IDENT;
+    }
+
+    ident_t itex = sh_desc(sh, (struct pl_shader_desc) {
+        .desc = {
+            .name = name,
+            .type = PL_DESC_SAMPLED_TEX,
+        },
+        .binding = {
+            .object = tex,
+            .address_mode = address_mode,
+            .sample_mode = sample_mode,
+        },
+    });
+
+    float sx, sy;
+    if (tex->sampler_type == PL_SAMPLER_RECT) {
+        sx = 1.0;
+        sy = 1.0;
+    } else {
+        sx = 1.0 / tex->params.w;
+        sy = 1.0 / tex->params.h;
+    }
+
+    if (out_pos) {
+        pl_rect2df full = {
+            .x1 = tex->params.w,
+            .y1 = tex->params.h,
+        };
+
+        rect = PL_DEF(rect, &full);
+        *out_pos = sh_attr_vec2(sh, "tex_coord", &(pl_rect2df) {
+            .x0 = sx * rect->x0, .y0 = sy * rect->y0,
+            .x1 = sx * rect->x1, .y1 = sy * rect->y1,
+        });
+    }
+
+    if (out_pt) {
+        *out_pt = sh_var(sh, (struct pl_shader_var) {
+            .var  = pl_var_vec2("tex_pt"),
+            .data = &(float[2]) {sx, sy},
+        });
+    }
+
+    return itex;
+}
+
+bool sh_buf_desc_append(void *alloc, pl_gpu gpu,
+                        struct pl_shader_desc *buf_desc,
+                        struct pl_var_layout *out_layout,
+                        const struct pl_var new_var)
+{
+    struct pl_buffer_var bv = { .var = new_var };
+    size_t cur_size = sh_buf_desc_size(buf_desc);
+
+    switch (buf_desc->desc.type) {
+    case PL_DESC_BUF_UNIFORM:
+        bv.layout = pl_std140_layout(cur_size, &new_var);
+        if (bv.layout.offset + bv.layout.size > gpu->limits.max_ubo_size)
+            return false;
+        break;
+    case PL_DESC_BUF_STORAGE:
+        bv.layout = pl_std430_layout(cur_size, &new_var);
+        if (bv.layout.offset + bv.layout.size > gpu->limits.max_ssbo_size)
+            return false;
+        break;
+    case PL_DESC_INVALID:
+    case PL_DESC_SAMPLED_TEX:
+    case PL_DESC_STORAGE_IMG:
+    case PL_DESC_BUF_TEXEL_UNIFORM:
+    case PL_DESC_BUF_TEXEL_STORAGE:
+    case PL_DESC_TYPE_COUNT:
+        pl_unreachable();
+    }
+
+    if (out_layout)
+        *out_layout = bv.layout;
+    PL_ARRAY_APPEND_RAW(alloc, buf_desc->buffer_vars, buf_desc->num_buffer_vars, bv);
+    return true;
+}
+
+size_t sh_buf_desc_size(const struct pl_shader_desc *buf_desc)
+{
+    if (!buf_desc->num_buffer_vars)
+        return 0;
+
+    const struct pl_buffer_var *last;
+    last = &buf_desc->buffer_vars[buf_desc->num_buffer_vars - 1];
+    return last->layout.offset + last->layout.size;
+}
+
+void sh_describef(pl_shader sh, const char *fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    sh_describe(sh, pl_vasprintf(sh->info->tmp, fmt, ap));
+    va_end(ap);
+}
+
+static const char *insigs[] = {
+    [PL_SHADER_SIG_NONE]  = "",
+    [PL_SHADER_SIG_COLOR] = "vec4 color",
+};
+
+static const char *outsigs[] = {
+    [PL_SHADER_SIG_NONE]  = "void",
+    [PL_SHADER_SIG_COLOR] = "vec4",
+};
+
+static const char *retvals[] = {
+    [PL_SHADER_SIG_NONE]  = "",
+    [PL_SHADER_SIG_COLOR] = "return color;",
+};
+
+// libplacebo currently only allows 2D samplers for shader signatures
+static const char *samplers2D[] = {
+    [PL_SAMPLER_NORMAL]     = "sampler2D",
+    [PL_SAMPLER_RECT]       = "sampler2DRect",
+    [PL_SAMPLER_EXTERNAL]   = "samplerExternalOES",
+};
+
+ident_t sh_subpass(pl_shader sh, pl_shader sub)
+{
+    pl_assert(sh->mutable);
+
+    if (sh->prefix == sub->prefix) {
+        PL_TRACE(sh, "Can't merge shaders: conflicting identifiers!");
+        return NULL_IDENT;
+    }
+
+    // Check for shader compatibility
+    int res_w = PL_DEF(sh->output_w, sub->output_w),
+        res_h = PL_DEF(sh->output_h, sub->output_h);
+
+    if ((sub->output_w && res_w != sub->output_w) ||
+        (sub->output_h && res_h != sub->output_h))
+    {
+        PL_TRACE(sh, "Can't merge shaders: incompatible sizes: %dx%d and %dx%d",
+                 sh->output_w, sh->output_h, sub->output_w, sub->output_h);
+        return NULL_IDENT;
+    }
+
+    if (sub->type == SH_COMPUTE) {
+        int subw = sub->group_size[0],
+            subh = sub->group_size[1];
+        bool flex = sub->flexible_work_groups;
+
+        if (!sh_try_compute(sh, subw, subh, flex, sub->shmem)) {
+            PL_TRACE(sh, "Can't merge shaders: incompatible block sizes or "
+                     "exceeded shared memory resource capabilities");
+            return NULL_IDENT;
+        }
+    }
+
+    sh->output_w = res_w;
+    sh->output_h = res_h;
+
+    // Append the prelude and header
+    pl_str_builder_concat(sh->buffers[SH_BUF_PRELUDE], sub->buffers[SH_BUF_PRELUDE]);
+    pl_str_builder_concat(sh->buffers[SH_BUF_HEADER], sub->buffers[SH_BUF_HEADER]);
+
+    // Append the body as a new header function
+    if (sub->input == PL_SHADER_SIG_SAMPLER) {
+        pl_assert(sub->sampler_prefix);
+        GLSLH("%s "$"(%c%s src_tex, vec2 tex_coord) {\n",
+              outsigs[sub->output], sub->name,
+              sub->sampler_prefix, samplers2D[sub->sampler_type]);
+    } else {
+        GLSLH("%s "$"(%s) {\n",
+              outsigs[sub->output], sub->name, insigs[sub->input]);
+    }
+    pl_str_builder_concat(sh->buffers[SH_BUF_HEADER], sub->buffers[SH_BUF_BODY]);
+    GLSLH("%s\n}\n\n", retvals[sub->output]);
+
+    // Steal all inputs and objects from the subpass
+#define ARRAY_STEAL(arr) do                 \
+{                                           \
+    PL_ARRAY_CONCAT(sh, sh->arr, sub->arr); \
+    sub->arr.num = 0;                       \
+} while (0)
+
+    ARRAY_STEAL(obj);
+    ARRAY_STEAL(vas);
+    ARRAY_STEAL(vars);
+    ARRAY_STEAL(descs);
+    ARRAY_STEAL(consts);
+#undef ARRAY_STEAL
+
+    // Steal the scratch buffer (if it holds data)
+    if (sub->data.len) {
+        pl_steal(sh->tmp, sub->data.buf);
+        sub->data = (pl_str) {0};
+    }
+
+    // Steal all temporary allocations and mark the child as unusable
+    pl_steal(sh->tmp, sub->tmp);
+    sub->tmp = pl_tmp(sub);
+    sub->failed = true;
+
+    // Steal the shader steps array (and allocations)
+    pl_assert(pl_rc_count(&sub->info->rc) == 1);
+    PL_ARRAY_CONCAT(sh->info, sh->info->steps, sub->info->steps);
+    pl_steal(sh->info->tmp, sub->info->tmp);
+    sub->info->tmp = pl_tmp(sub->info);
+    sub->info->steps.num = 0; // sanity
+
+    return sub->name;
+}
+
+pl_str_builder sh_finalize_internal(pl_shader sh)
+{
+    pl_assert(sh->mutable); // this function should only ever be called once
+    if (sh->failed)
+        return NULL;
+
+    // Padding for readability
+    GLSLP("\n");
+
+    // Concatenate everything onto the prelude to form the final output
+    pl_str_builder_concat(sh->buffers[SH_BUF_PRELUDE], sh->buffers[SH_BUF_HEADER]);
+
+    if (sh->input == PL_SHADER_SIG_SAMPLER) {
+        pl_assert(sh->sampler_prefix);
+        GLSLP("%s "$"(%c%s src_tex, vec2 tex_coord) {\n",
+              outsigs[sh->output], sh->name,
+              sh->sampler_prefix,
+              samplers2D[sh->sampler_type]);
+    } else {
+        GLSLP("%s "$"(%s) {\n", outsigs[sh->output], sh->name, insigs[sh->input]);
+    }
+
+    pl_str_builder_concat(sh->buffers[SH_BUF_PRELUDE], sh->buffers[SH_BUF_BODY]);
+    pl_str_builder_concat(sh->buffers[SH_BUF_PRELUDE], sh->buffers[SH_BUF_FOOTER]);
+    GLSLP("%s\n}\n\n", retvals[sh->output]);
+
+    // Generate the shader info
+    struct sh_info *info = sh->info;
+    info->info.steps = info->steps.elem;
+    info->info.num_steps = info->steps.num;
+    info->info.description = "(unknown shader)";
+
+    // Generate pretty description
+    for (int i = 0; i < info->steps.num; i++) {
+        const char *step = info->steps.elem[i];
+
+        // Prevent duplicates. We're okay using a weak equality check here
+        // because most pass descriptions are static strings.
+        for (int j = 0; j < i; j++) {
+            if (info->steps.elem[j] == step)
+                goto next_step;
+        }
+
+        int count = 1;
+        for (int j = i+1; j < info->steps.num; j++) {
+            if (info->steps.elem[j] == step)
+                count++;
+        }
+
+        const char *prefix = i > 0 ? ", " : "";
+        if (count > 1) {
+            pl_str_append_asprintf(info, &info->desc, "%s%s x%d",
+                                   prefix, step, count);
+        } else {
+            pl_str_append_asprintf(info, &info->desc, "%s%s", prefix, step);
+        }
+
+next_step: ;
+    }
+
+    if (info->desc.len)
+        info->info.description = (char *) info->desc.buf;
+
+    sh->mutable = false;
+    return sh->buffers[SH_BUF_PRELUDE];
+}
+
+const struct pl_shader_res *pl_shader_finalize(pl_shader sh)
+{
+    if (sh->failed) {
+        return NULL;
+    } else if (!sh->mutable) {
+        return &sh->result;
+    }
+
+    pl_shader_info info = &sh->info->info;
+    pl_str_builder glsl = sh_finalize_internal(sh);
+
+    // Turn ident_t into friendly strings before passing it to users
+#define FIX_IDENT(name) \
+    name = sh_ident_tostr(sh_ident_unpack(name))
+    for (int i = 0; i < sh->vas.num; i++)
+        FIX_IDENT(sh->vas.elem[i].attr.name);
+    for (int i = 0; i < sh->vars.num; i++)
+        FIX_IDENT(sh->vars.elem[i].var.name);
+    for (int i = 0; i < sh->consts.num; i++)
+        FIX_IDENT(sh->consts.elem[i].name);
+    for (int i = 0; i < sh->descs.num; i++) {
+        struct pl_shader_desc *sd = &sh->descs.elem[i];
+        FIX_IDENT(sd->desc.name);
+        for (int j = 0; j < sd->num_buffer_vars; j++)
+            FIX_IDENT(sd->buffer_vars[j].var.name);
+    }
+#undef FIX_IDENT
+
+    sh->result = (struct pl_shader_res) {
+        .info               = info,
+        .glsl               = (char *) pl_str_builder_exec(glsl).buf,
+        .name               = sh_ident_tostr(sh->name),
+        .input              = sh->input,
+        .output             = sh->output,
+        .compute_group_size = { sh->group_size[0], sh->group_size[1] },
+        .compute_shmem      = sh->shmem,
+        .vertex_attribs     = sh->vas.elem,
+        .num_vertex_attribs = sh->vas.num,
+        .variables          = sh->vars.elem,
+        .num_variables      = sh->vars.num,
+        .descriptors        = sh->descs.elem,
+        .num_descriptors    = sh->descs.num,
+        .constants          = sh->consts.elem,
+        .num_constants      = sh->consts.num,
+        // deprecated fields
+        .params             = info->params,
+        .steps              = info->steps,
+        .num_steps          = info->num_steps,
+        .description        = info->description,
+    };
+
+    return &sh->result;
+}
+
+bool sh_require(pl_shader sh, enum pl_shader_sig insig, int w, int h)
+{
+    if (sh->failed) {
+        SH_FAIL(sh, "Attempting to modify a failed shader!");
+        return false;
+    }
+
+    if (!sh->mutable) {
+        SH_FAIL(sh, "Attempted to modify an immutable shader!");
+        return false;
+    }
+
+    if ((w && sh->output_w && sh->output_w != w) ||
+        (h && sh->output_h && sh->output_h != h))
+    {
+        SH_FAIL(sh, "Illegal sequence of shader operations: Incompatible "
+                "output size requirements %dx%d and %dx%d",
+                sh->output_w, sh->output_h, w, h);
+        return false;
+    }
+
+    static const char *names[] = {
+        [PL_SHADER_SIG_NONE]  = "PL_SHADER_SIG_NONE",
+        [PL_SHADER_SIG_COLOR] = "PL_SHADER_SIG_COLOR",
+    };
+
+    // If we require an input, but there is none available - just get it from
+    // the user by turning it into an explicit input signature.
+    if (!sh->output && insig) {
+        pl_assert(!sh->input);
+        sh->input = insig;
+    } else if (sh->output != insig) {
+        SH_FAIL(sh, "Illegal sequence of shader operations! Current output "
+                "signature is '%s', but called operation expects '%s'!",
+                names[sh->output], names[insig]);
+        return false;
+    }
+
+    // All of our shaders end up returning a vec4 color
+    sh->output = PL_SHADER_SIG_COLOR;
+    sh->output_w = PL_DEF(sh->output_w, w);
+    sh->output_h = PL_DEF(sh->output_h, h);
+    return true;
+}
+
+static void sh_obj_deref(pl_shader_obj obj)
+{
+    if (!pl_rc_deref(&obj->rc))
+        return;
+
+    if (obj->uninit)
+        obj->uninit(obj->gpu, obj->priv);
+
+    pl_free(obj);
+}
+
+void pl_shader_obj_destroy(pl_shader_obj *ptr)
+{
+    pl_shader_obj obj = *ptr;
+    if (!obj)
+        return;
+
+    sh_obj_deref(obj);
+    *ptr = NULL;
+}
+
+void *sh_require_obj(pl_shader sh, pl_shader_obj *ptr,
+                     enum pl_shader_obj_type type, size_t priv_size,
+                     void (*uninit)(pl_gpu gpu, void *priv))
+{
+    if (!ptr)
+        return NULL;
+
+    pl_shader_obj obj = *ptr;
+    if (obj && obj->gpu != SH_GPU(sh)) {
+        SH_FAIL(sh, "Passed pl_shader_obj belongs to different GPU!");
+        return NULL;
+    }
+
+    if (obj && obj->type != type) {
+        SH_FAIL(sh, "Passed pl_shader_obj of wrong type! Shader objects must "
+                "always be used with the same type of shader.");
+        return NULL;
+    }
+
+    if (!obj) {
+        obj = pl_zalloc_ptr(NULL, obj);
+        pl_rc_init(&obj->rc);
+        obj->gpu = SH_GPU(sh);
+        obj->type = type;
+        obj->priv = pl_zalloc(obj, priv_size);
+        obj->uninit = uninit;
+    }
+
+    PL_ARRAY_APPEND(sh, sh->obj, obj);
+    pl_rc_ref(&obj->rc);
+
+    *ptr = obj;
+    return obj->priv;
+}
+
+ident_t sh_prng(pl_shader sh, bool temporal, ident_t *p_state)
+{
+    ident_t randfun = sh_fresh(sh, "rand"),
+            state = sh_fresh(sh, "state");
+
+    // Based on pcg3d (http://jcgt.org/published/0009/03/02/)
+    GLSLP("#define prng_t uvec3\n");
+    GLSLH("vec3 "$"(inout uvec3 s) {                    \n"
+          "    s = 1664525u * s + uvec3(1013904223u);   \n"
+          "    s.x += s.y * s.z;                        \n"
+          "    s.y += s.z * s.x;                        \n"
+          "    s.z += s.x * s.y;                        \n"
+          "    s ^= s >> 16u;                           \n"
+          "    s.x += s.y * s.z;                        \n"
+          "    s.y += s.z * s.x;                        \n"
+          "    s.z += s.x * s.y;                        \n"
+          "    return vec3(s) * 1.0/float(0xFFFFFFFFu); \n"
+          "}                                            \n",
+          randfun);
+
+    if (temporal) {
+        GLSL("uvec3 "$" = uvec3(gl_FragCoord.xy, "$"); \n",
+             state, SH_UINT_DYN(SH_PARAMS(sh).index));
+    } else {
+        GLSL("uvec3 "$" = uvec3(gl_FragCoord.xy, 0.0); \n", state);
+    }
+
+    if (p_state)
+        *p_state = state;
+
+    ident_t res = sh_fresh(sh, "RAND");
+    GLSLH("#define "$" ("$"("$"))\n", res, randfun, state);
+    return res;
+}

@@ -1,0 +1,267 @@
+name: Meson CI
+
+on:
+  push:
+    branches: [ master, ci ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: Windows (MSVC)
+            os: windows-latest
+            msvc: true
+            shell: 'pwsh'
+            args: '-Ddefault_library=shared'
+            devenv: |
+              Import-Module "$env:VS\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"
+              Enter-VsDevShell -VsInstallPath $env:VS -SkipAutomaticLocation -DevCmdArguments "-arch=x64 -host_arch=x64"
+
+          - name: Windows (CLANG64)
+            os: windows-latest
+            msystem: CLANG64
+            shell: 'msys2 {0}'
+            args: '-Ddefault_library=static -Db_sanitize=address,undefined'
+
+          - name: Windows (UCRT64)
+            os: windows-latest
+            msystem: UCRT64
+            shell: 'msys2 {0}'
+            args: '-Ddefault_library=both'
+
+          - name: Windows (MINGW64)
+            os: windows-latest
+            msystem: MINGW64
+            shell: 'msys2 {0}'
+            args: '-Ddefault_library=shared'
+
+          - name: Ubuntu
+            os: ubuntu-latest
+            args: '-Db_sanitize=address,undefined'
+
+          - name: Ubuntu (ARM64)
+            os: ubuntu-24.04-arm
+            args: '-Db_sanitize=address,undefined'
+
+          - name: macOS
+            os: macos-latest
+
+    defaults:
+      run:
+        shell: ${{ matrix.config.shell || 'bash' }}
+
+    env:
+      VS: "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise"
+      ART_SAMPLES: ${{ github.workspace }}/ext_art-samples
+      SCCACHE_DIR: ${{ github.workspace }}/.sccache
+      SCCACHE_MAXSIZE: 200M
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+
+      - name: Download test samples
+        uses: actions/checkout@v4
+        with:
+          repository: libass/libass-tests
+          path: ${{ env.ART_SAMPLES }}
+
+      - name: Setup MSYS2
+        if: matrix.config.msystem
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.config.msystem }}
+          pacboy: >-
+            cc
+            fontconfig
+            freetype
+            fribidi
+            harfbuzz
+            libpng
+            meson
+            nasm
+            ninja
+
+      - name: Get time
+        if: matrix.config.msvc
+        id: get_time
+        run: |
+          "timestamp=$((Get-Date).Ticks)" >> $env:GITHUB_OUTPUT
+
+      - name: Restore cache
+        if: matrix.config.msvc
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.SCCACHE_DIR }}
+          key: windows-msvc-${{ steps.get_time.outputs.timestamp }}
+          restore-keys: windows-msvc-
+
+      - name: Install MSVC dependecies with choco
+        if: matrix.config.msvc
+        # Install meson through pip to add it to PATH easily
+        run: |
+          python -m pip install meson
+          choco install nasm sccache
+
+      - name: Install dependencies
+        if: ${{ !matrix.config.msvc && !matrix.config.msystem}}
+        run: |
+          case "${{ matrix.config.os }}" in
+            macos-*)
+              brew install nasm ninja pkg-config meson
+              ;;
+            ubuntu-*)
+              sudo apt-get update
+              sudo apt-get install ninja-build meson build-essential pkg-config nasm \
+                libfreetype-dev libfontconfig-dev libharfbuzz-dev libfribidi-dev \
+              ;;
+          esac
+
+      - name: Set up WrapDB
+        if: matrix.config.msvc || matrix.config.os == 'macos-latest'
+        run: |
+          meson wrap update-db
+
+      - name: Configure
+        run: |
+          ${{ matrix.config.devenv }}
+          meson setup build ${{ matrix.config.args }} --wrap-mode=nopromote -Dtest=enabled -Dcompare=enabled -Dprofile=enabled -Dfuzz=enabled '-Dart-samples=${{ env.ART_SAMPLES }}' -Dharfbuzz:icu=disabled
+
+      - name: Build
+        run: |
+          ${{ matrix.config.devenv }}
+          meson compile -C build
+
+      - name: Run tests
+        id: run-tests
+        if: matrix.config.skip_tests != 'yes'
+        env:
+          ART_REG_SKIP: ${{ matrix.config.art_reg_skip }}
+        run: |
+          ${{ matrix.config.devenv }}
+          meson test -C build
+
+      - name: Dump Meson Debug Info
+        if: failure()
+        run: cat build/meson-logs/meson-log.txt
+
+      - name: Dump Meson Test Debug Info
+        if: ${{ failure() && steps.run-tests.conclusion == 'failure' }}
+        run: cat build/meson-logs/testlog.txt
+
+      - name: Save Cache
+        uses: actions/cache/save@v4
+        if: always() && matrix.config.msvc
+        with:
+          path: ${{ env.SCCACHE_DIR }}
+          key: windows-msvc-${{ steps.get_time.outputs.timestamp }}
+
+  build-muon:
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:edge
+
+    strategy:
+      fail-fast: false
+      matrix:
+        cc: [gcc]
+
+    steps:
+      - name: add testing repo
+        run: |
+          echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+          apk update
+
+      - name: install deps
+        run: |
+          # muon's style lint uses git
+          apk add nasm ${{ matrix.cc }} musl-dev muon samurai \
+                  freetype-dev fribidi-dev harfbuzz-dev \
+                  fontconfig-dev libpng-dev git
+
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: configure
+        run: |
+          muon version
+          muon setup -Dtest=enabled build
+
+      - name: build
+        run: |
+          samu -C build
+
+      - name: check binary works
+        run: |
+          build/test/libass_test /tmp/out.png compare/test/sub1.ass 0.5
+
+      - name: lint style (informational)
+        run: |
+          # `muon fmt -q` already lets us check _if_ there’d be changes, but
+          # doesn’t show what would change. `git diff` doesn’t want to work
+          # (even with increased fetch-depth) either, possibly due to container env
+          LINT_FILES="$(find . -name "meson.build" | sort)"
+          for f in $LINT_FILES ; do
+            cp "$f" "${f}.org"
+          done
+
+          if muon fmt -q $LINT_FILES ; then
+            echo "ok"
+          else
+            muon fmt -i $LINT_FILES
+            for f in $LINT_FILES ; do
+              git diff --no-index "${f}.org" "$f" || :
+            done
+            # currently formatting rules are being tweaked;
+            # maybe reformat and fail here after muon 0.3.0 is released
+            exit 0
+          fi
+
+      - name: validate meson.build
+        run: |
+          # our test build above doesn't hit all conditional paths
+          # for now ignore warnings, only fail on errors
+          muon analyze
+
+  build-from-tarball:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        cc: [gcc]
+
+    steps:
+      - name: install dependencies
+        run: |
+          sudo apt-get update #&& sudo apt-get upgrade
+          sudo apt-get install -y --no-install-recommends \
+                  autoconf automake make libtool \
+                  libfontconfig1-dev libfreetype6-dev libfribidi-dev \
+                  libharfbuzz-dev nasm ${{ matrix.cc }} \
+                  libpng-dev meson ninja-build
+
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: setup distdir
+        run: |
+          autoreconf -ivf .
+          ./configure
+          make distdir
+          ls -ld libass-*
+
+      - name: meson build in distdir
+        run: |
+          cd libass-*/
+          meson setup build
+          ninja -C build
+          DESTDIR="$PWD/TEST_INSTALL" ninja -C build install

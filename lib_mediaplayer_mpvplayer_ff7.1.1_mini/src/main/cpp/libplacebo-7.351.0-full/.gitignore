@@ -1,0 +1,8 @@
+/build*
+/tags
+/TAGS
+# Third-party sources are vendored as ordinary files in the parent repository.
+*.exe
+*.o
+.cache
+__pycache__

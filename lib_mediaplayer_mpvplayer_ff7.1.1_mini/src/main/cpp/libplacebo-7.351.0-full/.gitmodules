@@ -1,0 +1,18 @@
+[submodule "demos/3rdparty/nuklear"]
+	path = demos/3rdparty/nuklear
+	url = https://github.com/Immediate-Mode-UI/Nuklear.git
+[submodule "3rdparty/glad"]
+	path = 3rdparty/glad
+	url = https://github.com/Dav1dde/glad
+[submodule "3rdparty/jinja"]
+	path = 3rdparty/jinja
+	url = https://github.com/pallets/jinja
+[submodule "3rdparty/markupsafe"]
+	path = 3rdparty/markupsafe
+	url = https://github.com/pallets/markupsafe
+[submodule "3rdparty/Vulkan-Headers"]
+	path = 3rdparty/Vulkan-Headers
+	url = https://github.com/KhronosGroup/Vulkan-Headers
+[submodule "3rdparty/fast_float"]
+	path = 3rdparty/fast_float
+	url = https://github.com/fastfloat/fast_float.git
