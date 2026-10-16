@@ -78,9 +78,9 @@
         <item>exo2</item>
         <item>mediax</item>
         <item>ijk</item>
+        <item>mpv</item>
         <item>vlc</item>
         <item>ff</item>
-        <item>mpv</item>
     </string-array>
 
     <integer-array name="kernels_ids">
@@ -88,9 +88,9 @@
         <item>6002</item>
         <item>6003</item>
         <item>6004</item>
+        <item>6007</item>
         <item>6005</item>
         <item>6006</item>
-        <item>6007</item>
     </integer-array>
 
     <string-array name="decodes">

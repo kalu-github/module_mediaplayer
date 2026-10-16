@@ -32,6 +32,17 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
     private Surface mSurface;
     private int mSurfaceWidth;
     private int mSurfaceHeight;
+    private StartArgs mStartArgs;
+
+    @Override
+    public StartArgs getStartArgs() {
+        return mStartArgs;
+    }
+
+    @Override
+    public void setStartArgs(StartArgs args) {
+        this.mStartArgs = args;
+    }
 
     @Override
     public VideoMpvPlayer getPlayer() {

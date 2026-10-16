@@ -159,32 +159,38 @@
                 android:text="渲染类型"
                 android:textSize="14sp" />
 
-            <RadioGroup
-                android:id="@+id/main_render"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
-                <RadioButton
-                    android:id="@+id/main_render_surfaceview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true"
-                    android:text="surfaceview" />
+                <RadioGroup
+                    android:id="@+id/main_render"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/main_render_textureview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="textureview" />
+                    <RadioButton
+                        android:id="@+id/main_render_surfaceview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:checked="true"
+                        android:text="surfaceview" />
 
-                <RadioButton
-                    android:id="@+id/main_render_glsurfaceview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="glsurfaceview[不稳定]" />
+                    <RadioButton
+                        android:id="@+id/main_render_textureview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="textureview" />
 
-            </RadioGroup>
+                    <RadioButton
+                        android:id="@+id/main_render_glsurfaceview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="glsurfaceview[不稳定]" />
+
+                </RadioGroup>
+
+            </HorizontalScrollView>
 
             <TextView
                 android:layout_width="match_parent"
