@@ -8,6 +8,7 @@ import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
@@ -24,6 +25,9 @@ public final class PlaybackActivity extends Activity implements TextureView.Surf
     public static final String URL = "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
     public volatile int prepared, rendering, sizes, seeks, completed, changedFrames, pcmPeak;
     public volatile long position;
+    public volatile long startupCallMs = -1, maxStartupUiDelayMs;
+    public volatile int startupHeartbeats;
+    private long lastHeartbeat;
     public volatile String failure;
     public MpvPlayer player;
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -62,6 +66,9 @@ public final class PlaybackActivity extends Activity implements TextureView.Surf
     }
 
     @Override public void onSurfaceTextureAvailable(SurfaceTexture value, int width, int height) {
+        long started = SystemClock.elapsedRealtime();
+        lastHeartbeat = started;
+        handler.postDelayed(startupHeartbeat, 16);
         try {
             surface = new Surface(value);
             player = new MpvPlayer();
@@ -98,7 +105,23 @@ public final class PlaybackActivity extends Activity implements TextureView.Surf
             player.setDataSource(url == null ? URL : url);
             player.prepareAsync();
         } catch (Exception | LinkageError e) { failed(e); }
+        finally {
+            startupCallMs = SystemClock.elapsedRealtime() - started;
+            Log.i("MpvPlaybackTest", "startup API calls took " + startupCallMs + " ms");
+        }
     }
+
+    private final Runnable startupHeartbeat = new Runnable() {
+        @Override public void run() {
+            long now = SystemClock.elapsedRealtime();
+            maxStartupUiDelayMs = Math.max(maxStartupUiDelayMs, Math.max(0, now - lastHeartbeat - 16));
+            lastHeartbeat = now; startupHeartbeats++;
+            // Exercise status queries during native initialization/loading as well as Handler dispatch.
+            if (player != null) { player.getDurationLong(); player.getVideoWidth(); }
+            if (rendering == 0 && failure == null) handler.postDelayed(this, 16);
+            else Log.i("MpvPlaybackTest", "startup UI delay max=" + maxStartupUiDelayMs + " ms");
+        }
+    };
 
     private final Runnable sampleAudio = new Runnable() {
         @Override public void run() {

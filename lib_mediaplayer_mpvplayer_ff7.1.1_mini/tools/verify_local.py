@@ -42,6 +42,8 @@ def main():
              '-d', output / 'sdk-tests'] + sdk_tests)
         run([args.java_home / 'bin/java', '-cp', os.pathsep.join(map(str,
              [output / 'sdk-tests', output / 'classes', android])), 'lib.kalu.mpvplayer.SdkStateTest'])
+        run([args.java_home / 'bin/java', '-cp', os.pathsep.join(map(str,
+             [output / 'sdk-tests', output / 'classes', android])), 'lib.kalu.mpvplayer.AsyncEngineTest'])
     optional = args.sdk / 'platforms/android-32/optional'
     test_classpath = os.pathsep.join(str(p) for p in [android, output / 'classes',
         optional / 'android.test.runner.jar', optional / 'android.test.base.jar'])

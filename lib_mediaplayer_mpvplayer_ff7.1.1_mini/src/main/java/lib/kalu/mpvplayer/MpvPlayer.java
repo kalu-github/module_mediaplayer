@@ -3,8 +3,6 @@ package lib.kalu.mpvplayer;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -28,7 +26,8 @@ import lib.kalu.mpvplayer.inter.*;
 
 /**
  * Unified playback API over libmpv; prefer prepareAsync() on the UI thread. All time values are milliseconds.
- * Public methods are serialized; listener calls are queued on the main thread outside player locks.
+ * Public methods are serialized; native work runs on a private worker and getters read snapshots.
+ * Listener calls are queued on the main thread outside player locks. prepare() explicitly waits.
  * The caller owns the Surface and must detach it before destroying it. Close this player on teardown.
  */
 public class MpvPlayer implements AutoCloseable {
@@ -113,7 +112,7 @@ public class MpvPlayer implements AutoCloseable {
 
     public MpvPlayer() { this(new PlayerConfig.Builder().build()); }
     public MpvPlayer(PlayerConfig config) { this(createEngine(config),new MainPlayerScheduler(),config); }
-    private static PlayerEngine createEngine(PlayerConfig config) { Objects.requireNonNull(config); return new NativePlayerEngine(); }
+    private static PlayerEngine createEngine(PlayerConfig config) { Objects.requireNonNull(config); return new AsyncPlayerEngine(NativePlayerEngine::new, config.progressIntervalMs); }
     MpvPlayer(PlayerEngine engine,PlayerScheduler scheduler,PlayerConfig config) {
         this.engine=Objects.requireNonNull(engine); this.scheduler=Objects.requireNonNull(scheduler);
         this.config=Objects.requireNonNull(config); autoPlay=config.autoPlay; playWhenReady=autoPlay;
@@ -162,6 +161,8 @@ public class MpvPlayer implements AutoCloseable {
                 emit(l -> l.onCompletion(MpvPlayer.this));
             }); }
             public void error(int code) { dispatch(() -> onError(PlayerError.nativeError(code))); }
+            public void failure(Throwable cause) { dispatch(() -> onError(new PlayerError(0,PlayerError.Type.INTERNAL,
+                "Native player operation failed",cause,false,false))); }
             public void info(int what) { dispatch(() -> onInfo(what)); }
             public void size(int w,int h) { dispatch(() -> emit(l -> l.onVideoSizeChanged(MpvPlayer.this,w,h))); }
             public void seeked() { dispatch(() -> emit(l -> l.onSeekComplete(MpvPlayer.this))); }
@@ -738,7 +739,7 @@ public class MpvPlayer implements AutoCloseable {
     }
     public synchronized void setScreenOnWhilePlaying(boolean enabled) { alive(); screenOn=enabled; updateScreen(); }
     private void updateScreen() { if(displayHolder!=null) displayHolder.setKeepScreenOn(screenOn && isPlaying()); }
-    synchronized Object queryProperty(String name) { alive(); return engine.get(name); }
+    synchronized Object queryProperty(String name) { alive(); return engine.query(name); }
     synchronized void setProperty(String name,String value) { alive(); engine.set(name,value); extraProperties.put(name,value); }
     public synchronized void setOnPreparedListener(OnPreparedListener listener) { alive(); onPreparedListener=listener; }
     public synchronized void setOnCompletionListener(OnCompletionListener listener) { alive(); onCompletionListener=listener; }
@@ -780,7 +781,7 @@ public class MpvPlayer implements AutoCloseable {
 
         static { System.loadLibrary("mpvplayer"); }
 
-        private final Handler handler = new Handler(Looper.getMainLooper());
+        private final java.util.concurrent.Executor callbacks;
         private long nativeHandle;
         private int generation;
         private State state = State.IDLE;
@@ -794,7 +795,7 @@ public class MpvPlayer implements AutoCloseable {
         private PlayerEngine.Events events;
         synchronized void setEvents(PlayerEngine.Events value) { events=value; }
 
-        public Core() { nativeHandle = nativeCreate(new WeakReference<>(this), ++generation); }
+        Core(java.util.concurrent.Executor callbacks) { this.callbacks=callbacks; nativeHandle = nativeCreate(new WeakReference<>(this), ++generation); }
 
         public synchronized void setDataSource(String path) { setDataSource(path, Collections.emptyMap()); }
 
@@ -971,7 +972,6 @@ public class MpvPlayer implements AutoCloseable {
             state = State.IDLE;
             updateScreen();
             nativeRelease(old);
-            handler.removeCallbacksAndMessages(null);
             source = null;
             headers = Collections.emptyMap();
             restartOnPrepared = false;
@@ -993,7 +993,6 @@ public class MpvPlayer implements AutoCloseable {
             long old = nativeHandle;
             nativeHandle = 0;
             nativeRelease(old);
-            handler.removeCallbacksAndMessages(null);
             surface = null;
             holder = null;
             events = null;
@@ -1022,7 +1021,7 @@ public class MpvPlayer implements AutoCloseable {
         private static void postEventFromNative(Object reference, int generation, int event, int arg1, int arg2, byte[] bytes) {
             String text = bytes == null ? null : new String(bytes, StandardCharsets.UTF_8);
             Core player = (Core) ((WeakReference<?>) reference).get();
-            if (player != null) player.handler.post(() -> player.dispatch(generation, event, arg1, arg2, text));
+            if (player != null) player.callbacks.execute(() -> player.dispatch(generation, event, arg1, arg2, text));
         }
 
         private synchronized void dispatch(int token, int event, int arg1, int arg2, String text) {

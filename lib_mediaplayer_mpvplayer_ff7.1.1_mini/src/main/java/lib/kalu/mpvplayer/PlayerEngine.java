@@ -11,6 +11,7 @@ interface PlayerEngine {
         void prepared();
         void completed();
         void error(int code);
+        default void failure(Throwable cause) { error(0); }
         void info(int what);
         void size(int width,int height);
         void seeked();
@@ -31,4 +32,5 @@ interface PlayerEngine {
     void surfaceSize(int width,int height);
     void set(String name,String value);
     Object get(String name);
+    default Object query(String name) { return get(name); }
 }

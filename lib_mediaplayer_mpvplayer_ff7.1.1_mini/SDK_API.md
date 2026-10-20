@@ -86,6 +86,10 @@ Surface 归调用方所有：SDK 不调用调用方 Surface 的 `release()`。Te
 `MediaSource.StreamType` 为 UNKNOWN、VOD、LIVE。SDK 不会仅凭 URL 后缀、缺失时长或不能 Seek 就判定直播。
 `isLive()` 只有在源明确标记 LIVE 时才为 true；需要区分未知状态时使用 `getStreamType()`。
 
+native 库加载、创建、配置、prepareAsync、Surface 绑定、控制命令和销毁由每个实例的 `mpv-control` 串行线程执行。设置数据源仅保存输入，冷启动只创建一次 native 实例；停止不会先销毁再创建空实例。
+公开状态查询读取后台快照（默认 500 ms 刷新），不会等待 native 属性读取；prepared、尺寸和 Seek 回调交付前会更新对应快照。设置命令被接受后，后台执行失败通过 `onError` 报告。`release()` 立即使旧事件失效并返回，native 资源在工作线程上依次回收；`onReleased` 表示 SDK 已关闭，不表示 native 销毁线程已退出。
+`prepare()` 是保留的同步入口，仍会等待工作线程，UI 线程请使用 `prepareAsync()`。缓冲阈值影响首帧等待时间，与页面线程是否阻塞是两回事。
+
 所有 SDK 监听器在主线程交付，且不在 SDK 锁内调用用户代码。`add/remove` 支持多个监听器。
 切源、停止及释放会使旧会话的排队事件失效；已经执行中的用户回调不会被强行中断。
 
@@ -187,6 +191,7 @@ HTTP 状态码、分片加载耗时和分片失败计数底层未暴露，明确
 `tools/verify_local.py` 现在额外执行 `tests/java/.../SdkStateTest.java` 的确定性主机测试，
 74 项断言覆盖会话隔离、轨道 ID、切换确认/取消/超时、三种码率模式、有限重试、停止取消重试、释放及未知数据语义，
 以及旧方法签名对应的同步准备、监听器转发、重复回调抑制、reset 隔离和 int/long 时间兼容。
+`AsyncEngineTest` 另有 25 项并发断言，故意阻塞创建、准备、属性读取和销毁，验证调用线程可继续查询、切源及释放；同时检查旧会话回调隔离、配置顺序、同步 prepare 和 native 加载异常上报。
 这些测试使用测试后端验证 SDK 策略，不是解码或真实网络播放证据。
 
 `src/androidTest/.../MpvPlayerTest.java` 增加真实 JNI 结构化属性读取（含 Unicode）和统一 SDK 音频播放用例。

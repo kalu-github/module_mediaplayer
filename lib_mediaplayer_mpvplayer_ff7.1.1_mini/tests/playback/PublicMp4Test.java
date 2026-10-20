@@ -25,6 +25,12 @@ public final class PublicMp4Test extends InstrumentationTestCase {
             await(activity, "prepared callback", () -> activity.prepared == 1);
             await(activity, "video size callback", () -> activity.sizes > 0);
             await(activity, "first video rendering callback", () -> activity.rendering == 1);
+            getInstrumentation().waitForIdleSync();
+            assertTrue("Main-thread startup APIs took " + activity.startupCallMs + " ms",
+                    activity.startupCallMs >= 0 && activity.startupCallMs < 1000);
+            assertTrue("Startup heartbeat must run", activity.startupHeartbeats > 0);
+            assertTrue("Main thread stalled " + activity.maxStartupUiDelayMs + " ms before first frame",
+                    activity.maxStartupUiDelayMs < 1000);
             await(activity, "three changing non-flat pixel frames", () -> activity.changedFrames >= 3);
             await(activity, "non-silent PCM on this player's AudioTrack session", () -> activity.pcmPeak >= 3);
             await(activity, "playback clock advances", () -> activity.position > 3000);

@@ -33,3 +33,5 @@ a fast connection may not buffer. The sample has no subtitle requirement.
 PCM evidence establishes audio signal at AudioTrack, not physical speaker audibility.
 The report deliberately keeps `speaker_audibility_verified` false. Listening or an
 external audio loopback recording is still needed to establish that last condition.
+
+起播响应性检查：测试记录创建到 `prepareAsync()` 返回的主线程调用耗时，以及首帧前 16 ms Handler 心跳的最大延迟（包含状态查询）。公开 MP4 用例要求两者低于 1000 ms，并在 `MpvPlaybackTest` 日志中输出实测值。构建 APK 不表示该检查已经在设备上通过。

@@ -5,7 +5,8 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 
 final class NativePlayerEngine implements PlayerEngine {
-    private final MpvPlayer.Core player = new MpvPlayer.Core();
+    private final MpvPlayer.Core player;
+    NativePlayerEngine(java.util.concurrent.Executor callbacks) { player = new MpvPlayer.Core(callbacks); }
     public void events(Events e) { player.setEvents(e); }
     public void reset() { player.reset(); }
     public void source(MediaSource value) { player.setDataSource(value.uri,value.headers); }
