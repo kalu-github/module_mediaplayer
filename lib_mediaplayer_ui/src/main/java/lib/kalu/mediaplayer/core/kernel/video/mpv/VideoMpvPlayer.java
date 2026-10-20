@@ -5,11 +5,16 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.Surface;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lib.kalu.mediaplayer.bean.args.StartArgs;
+import lib.kalu.mediaplayer.bean.info.TrackInfo;
 import lib.kalu.mediaplayer.bean.type.PlayerType;
 import lib.kalu.mediaplayer.core.kernel.video.VideoBasePlayer;
 import lib.kalu.mediaplayer.util.LogUtil;
 import lib.kalu.mpvplayer.MpvPlayer;
+import lib.kalu.mpvplayer.OperationResult;
 import lib.kalu.mpvplayer.inter.OnBufferingUpdateListener;
 import lib.kalu.mpvplayer.inter.OnCompletionListener;
 import lib.kalu.mpvplayer.inter.OnErrorListener;
@@ -33,6 +38,12 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
     private int mSurfaceWidth;
     private int mSurfaceHeight;
     private StartArgs mStartArgs;
+
+    // Match Mediax TrackInfo.trackType without requiring Media3 at runtime.
+    // These values differ from getTrackInfo's query parameters (1=video, 2=audio).
+    private static final int TRACK_TYPE_AUDIO = 1;
+    private static final int TRACK_TYPE_VIDEO = 2;
+    private static final int TRACK_TYPE_SUBTITLE = 3;
 
     @Override
     public StartArgs getStartArgs() {
@@ -751,6 +762,144 @@ public final class VideoMpvPlayer extends VideoBasePlayer {
                 LogUtil.log(TAG, "getVolume -> " + e.getMessage());
             }
             return 0f;
+        }
+    }
+
+    @Override
+    public List<TrackInfo> getTrackInfo(int type) {
+        try {
+            MpvPlayer player = mMpvPlayer;
+            if (player == null || (type != -1 && type != 1 && type != 2 && type != 3)) {
+                return null;
+            }
+            // Snapshot the three lists together; group indices stay consistent across filters.
+            synchronized (player) {
+                List<lib.kalu.mpvplayer.TrackInfo> video = player.getVideoTracks();
+                List<lib.kalu.mpvplayer.TrackInfo> audio = player.getAudioTracks();
+                List<lib.kalu.mpvplayer.TrackInfo> subtitle = player.getSubtitleTracks();
+                int groupCount = (video.isEmpty() ? 0 : 1) + (audio.isEmpty() ? 0 : 1)
+                        + (subtitle.isEmpty() ? 0 : 1);
+                int groupIndex = 0;
+                List<TrackInfo> result = new ArrayList<>();
+                if (!video.isEmpty()) {
+                    if (type == -1 || type == 1) {
+                        appendTrackInfo(result, video, TRACK_TYPE_VIDEO, groupCount, groupIndex,
+                                player.supports(MpvPlayer.Capability.ADAPTIVE_HLS_VARIANTS));
+                    }
+                    groupIndex++;
+                }
+                if (!audio.isEmpty()) {
+                    if (type == -1 || type == 2) {
+                        appendTrackInfo(result, audio, TRACK_TYPE_AUDIO, groupCount, groupIndex, false);
+                    }
+                    groupIndex++;
+                }
+                if (!subtitle.isEmpty() && (type == -1 || type == 3)) {
+                    appendTrackInfo(result, subtitle, TRACK_TYPE_SUBTITLE, groupCount, groupIndex, false);
+                }
+                // Same empty-list contract as VideoMediaxPlayer.
+                return result.isEmpty() ? null : result;
+            }
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "getTrackInfo -> " + e.getMessage(), e);
+            }
+            return null;
+        }
+    }
+
+    private void appendTrackInfo(List<TrackInfo> result, List<lib.kalu.mpvplayer.TrackInfo> tracks,
+                                 int trackType, int groupCount, int groupIndex, boolean adaptive) {
+        // MPV exposes flat lists, not Media3 rendition groups. Each type is one UI group.
+        boolean groupSelected = false;
+        boolean groupSupported = false;
+        for (lib.kalu.mpvplayer.TrackInfo track : tracks) {
+            groupSelected |= track.selected;
+            groupSupported |= track.support == lib.kalu.mpvplayer.TrackInfo.Support.SUPPORTED;
+        }
+        for (int index = 0; index < tracks.size(); index++) {
+            lib.kalu.mpvplayer.TrackInfo track = tracks.get(index);
+            if (track.support == lib.kalu.mpvplayer.TrackInfo.Support.UNSUPPORTED) {
+                continue;
+            }
+            TrackInfo info = new TrackInfo();
+            info.setId(track.id);
+            info.setLabel(track.name);
+            info.setLanguage(track.language);
+            info.setSampleMimeType(track.mimeType);
+            info.setSelectionFlags((track.defaultTrack ? 1 : 0) | (track.forced ? 2 : 0));
+            info.setGroupCount(groupCount);
+            info.setGroupIndex(groupIndex);
+            info.setTrackCount(tracks.size());
+            info.setTrackIndex(index);
+            info.setTrackType(trackType);
+            info.setGroupAdaptiveSupported(adaptive && track.kind == lib.kalu.mpvplayer.TrackInfo.Kind.HLS_VARIANT);
+            info.setGroupSupported(groupSupported);
+            info.setGroupSelected(groupSelected);
+            // UNKNOWN remains visible/selectable, but is not reported as confirmed support.
+            info.setTrackSupported(track.support == lib.kalu.mpvplayer.TrackInfo.Support.SUPPORTED);
+            info.setTrackSelected(track.selected);
+            long bitrate = track.hlsBitrate > 0 ? track.hlsBitrate : track.bitrate;
+            info.setBitrate(bitrate < 0 ? -1 : (int) Math.min(Integer.MAX_VALUE, bitrate));
+            info.setWidth(track.width);
+            info.setHeight(track.height);
+            result.add(info);
+        }
+    }
+
+    @Override
+    public List<TrackInfo> getTrackInfoAll() {
+        return getTrackInfo(-1);
+    }
+
+    @Override
+    public List<TrackInfo> getTrackInfoAudio() {
+        return getTrackInfo(2);
+    }
+
+    @Override
+    public List<TrackInfo> getTrackInfoSubtitle() {
+        return getTrackInfo(3);
+    }
+
+    @Override
+    public List<TrackInfo> getTrackInfoVideo() {
+        return getTrackInfo(1);
+    }
+
+    /** Returns whether the SDK accepted the request, not whether the async switch has completed. */
+    @Override
+    public boolean toggleTrack(TrackInfo trackInfo) {
+        try {
+            MpvPlayer player = mMpvPlayer;
+            if (player == null || trackInfo == null || trackInfo.getId() == null
+                    || trackInfo.getId().isEmpty()) {
+                return false;
+            }
+            // Session-scoped IDs are validated by the SDK; never substitute a stale list index.
+            OperationResult result;
+            switch (trackInfo.getTrackType()) {
+                case TRACK_TYPE_VIDEO:
+                    result = player.selectVideoTrack(trackInfo.getId());
+                    break;
+                case TRACK_TYPE_AUDIO:
+                    result = player.selectAudioTrack(trackInfo.getId());
+                    break;
+                case TRACK_TYPE_SUBTITLE:
+                    result = player.selectSubtitleTrack(trackInfo.getId());
+                    break;
+                default:
+                    return false;
+            }
+            if (!result.isSuccess() && LogUtil.DEBUG) {
+                LogUtil.log(TAG, "toggleTrack -> " + result);
+            }
+            return result.isSuccess();
+        } catch (Exception e) {
+            if (LogUtil.DEBUG) {
+                LogUtil.log(TAG, "toggleTrack -> " + e.getMessage(), e);
+            }
+            return false;
         }
     }
 }
