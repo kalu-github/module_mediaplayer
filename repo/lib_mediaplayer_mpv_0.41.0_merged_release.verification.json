@@ -1,0 +1,200 @@
+{
+  "aar": "/Users/a1/Documents/module_mediaplayer/repo/lib_mediaplayer_mpv_0.41.0_merged_release.aar",
+  "sha256": "a6188452e6ae356cf288fadc4af288bbefc42a84aca5a1bf575c4f6786f990c2",
+  "bytes": 51955934,
+  "abis": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86",
+    "x86_64"
+  ],
+  "libraries": {
+    "arm64-v8a": {
+      "libmpvffmpeg.so": {
+        "sha256": "2e475a312436379516b45ce9ba149b948b9ec05b90112fc2fbd5df66098060bb",
+        "bytes": 20909416,
+        "needed": [
+          "libm.so",
+          "libz.so",
+          "libandroid.so",
+          "libmediandk.so",
+          "libdl.so",
+          "libc.so"
+        ],
+        "machine": "AArch64",
+        "load_alignment": [
+          16384,
+          16384,
+          16384
+        ]
+      },
+      "libmpvplayer.so": {
+        "sha256": "9eae71e3805b6eefc35838c8aaa6db6e775d03c26c7c007177e33c6d6d956878",
+        "bytes": 6844568,
+        "needed": [
+          "libmpvffmpeg.so",
+          "libandroid.so",
+          "libOpenSLES.so",
+          "libEGL.so",
+          "libm.so",
+          "libz.so",
+          "libdl.so",
+          "liblog.so",
+          "libc.so"
+        ],
+        "machine": "AArch64",
+        "load_alignment": [
+          16384,
+          16384,
+          16384
+        ]
+      }
+    },
+    "armeabi-v7a": {
+      "libmpvffmpeg.so": {
+        "sha256": "ea09c821c5f867e2369c608652c54a6d8a33921a8372a7209408a3324e4a8008",
+        "bytes": 18950612,
+        "needed": [
+          "libm.so",
+          "libz.so",
+          "libandroid.so",
+          "libmediandk.so",
+          "libdl.so",
+          "libc.so"
+        ],
+        "machine": "ARM",
+        "load_alignment": [
+          16384,
+          16384,
+          16384
+        ]
+      },
+      "libmpvplayer.so": {
+        "sha256": "61f3ac250b0dba330c10575e3cec8641daadfa8152a603cf3223c7896a5a3df2",
+        "bytes": 6110412,
+        "needed": [
+          "libmpvffmpeg.so",
+          "libandroid.so",
+          "libOpenSLES.so",
+          "libEGL.so",
+          "libm.so",
+          "libz.so",
+          "libdl.so",
+          "liblog.so",
+          "libc.so"
+        ],
+        "machine": "ARM",
+        "load_alignment": [
+          16384,
+          16384,
+          16384
+        ]
+      }
+    },
+    "x86": {
+      "libmpvffmpeg.so": {
+        "sha256": "493d6d4b02de32768e6dca2fae3354e80a778123d6f24b25b931d430250b71a7",
+        "bytes": 23222728,
+        "needed": [
+          "libm.so",
+          "libz.so",
+          "libandroid.so",
+          "libmediandk.so",
+          "libdl.so",
+          "libc.so"
+        ],
+        "machine": "Intel 80386",
+        "load_alignment": [
+          16384,
+          16384,
+          16384
+        ]
+      },
+      "libmpvplayer.so": {
+        "sha256": "20b83dd28f059736d9617e7517ae37c976d387474fbeaf84b26f1270a4b93e7e",
+        "bytes": 6961828,
+        "needed": [
+          "libmpvffmpeg.so",
+          "libandroid.so",
+          "libOpenSLES.so",
+          "libEGL.so",
+          "libm.so",
+          "libz.so",
+          "libdl.so",
+          "liblog.so",
+          "libc.so"
+        ],
+        "machine": "Intel 80386",
+        "load_alignment": [
+          16384,
+          16384,
+          16384
+        ]
+      }
+    },
+    "x86_64": {
+      "libmpvffmpeg.so": {
+        "sha256": "580482b01df5f369141e3d93d6105c29f39a661e902c7cd82803f0b21c9a4a74",
+        "bytes": 23561088,
+        "needed": [
+          "libm.so",
+          "libz.so",
+          "libandroid.so",
+          "libmediandk.so",
+          "libdl.so",
+          "libc.so"
+        ],
+        "machine": "Advanced Micro Devices X86-64",
+        "load_alignment": [
+          16384,
+          16384,
+          16384
+        ]
+      },
+      "libmpvplayer.so": {
+        "sha256": "46dfc1102bcb6575b22b6852f6be55e24ef13b127b06386b506628a2466487ae",
+        "bytes": 6963592,
+        "needed": [
+          "libmpvffmpeg.so",
+          "libandroid.so",
+          "libOpenSLES.so",
+          "libEGL.so",
+          "libm.so",
+          "libz.so",
+          "libdl.so",
+          "liblog.so",
+          "libc.so"
+        ],
+        "machine": "Advanced Micro Devices X86-64",
+        "load_alignment": [
+          16384,
+          16384,
+          16384
+        ]
+      }
+    }
+  },
+  "public_exports": {
+    "arm64-v8a": {
+      "ffmpeg": 1072,
+      "mpv": 54,
+      "jni": 10
+    },
+    "armeabi-v7a": {
+      "ffmpeg": 1072,
+      "mpv": 54,
+      "jni": 10
+    },
+    "x86": {
+      "ffmpeg": 1072,
+      "mpv": 54,
+      "jni": 10
+    },
+    "x86_64": {
+      "ffmpeg": 1072,
+      "mpv": 54,
+      "jni": 10
+    }
+  },
+  "device_playback_verified": false
+}

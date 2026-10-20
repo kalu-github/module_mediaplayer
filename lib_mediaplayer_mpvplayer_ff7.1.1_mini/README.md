@@ -4,6 +4,10 @@
 `lib.kalu.mpvplayer.MpvPlayer`。每个播放器持有独立的 libmpv 实例和事件线程。
 原生目标不编译、链接 `cpp/player`、`cpp/sdl2` 或旧 FFmpeg 3.4.13 静态库。
 
+统一 HLS SDK 入口为 `lib.kalu.mpvplayer.MpvPlayer`，包含多轨道选择、码率策略、
+状态/统计监听器及可查询的能力边界；接入示例和需求对应表见 [SDK_API.md](SDK_API.md)。
+对外只有 `MpvPlayer` 一个播放器入口，原有播放方法和监听器保留。`prepareAsync()` 异步准备，`prepare()` 保持同步语义。
+
 支持准备、播放、暂停、停止、重新播放、seek、循环、倍速、音量、时长/位置、
 Surface/SurfaceHolder、网络请求头、文件路径、文件描述符和 `content://`。
 回调包括准备完成、播放结束、错误、缓冲、seek 完成、视频尺寸和文本字幕。
@@ -265,10 +269,10 @@ python3 tools/verify_local.py --sdk "$ANDROID_HOME" --ndk "$ANDROID_NDK_ROOT" --
 
 已完成四种 ABI 的完整依赖和 mpv 0.41.0 编译、JNI 链接及合并版 AAR 打包。
 单 ABI AAR 各包含 2 个 `.so`，四 ABI 合包共 8 个；各库的目标架构、SONAME、动态依赖闭包、16 KB LOAD
-对齐检查通过；FFmpeg 原有 1072 个导出、mpv 的 54 个 `mpv_*` API 和全部 9 个
+对齐检查通过；FFmpeg 原有 1072 个导出、mpv 的 54 个 `mpv_*` API 和全部 10 个
 Java native 方法的 JNI 导出均保留。C++ 运行时已静态链接，不依赖 `libc++_shared.so`。
-合包工具检查四个 AAR 的 Java 类字节码和 Manifest 逐字节一致；ARM64 的 Java
-类字节码和 Manifest 亦已与之前通过 D8/AAPT2 检查的拆分版核对一致。
+合包工具检查四个 AAR 的 Java 类字节码和 Manifest 逐字节一致。
+统一 `MpvPlayer` 保留原 AAR 的 47 个公共成员签名，新增 API 一并打入 `classes.jar`。
 同目录的 `.verification.json` 记录 AAR 和各平台库的哈希、大小、导出接口数量及动态依赖。
 x86/x86_64 当前通过 `--disable-x86-asm` 离线构建，未启用 FFmpeg、dav1d、libass 的
 NASM 汇编优化，软件解码性能较低；ARM 两个平台保留 ARM 汇编优化。

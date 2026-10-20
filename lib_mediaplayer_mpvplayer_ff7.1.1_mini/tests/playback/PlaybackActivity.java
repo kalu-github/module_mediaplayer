@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import lib.kalu.mpvplayer.MpvPlayer;
 
@@ -70,11 +69,9 @@ public final class PlaybackActivity extends Activity implements TextureView.Surf
             // Test-only reflection avoids adding diagnostics to the public player API.
             session = ((AudioManager)getSystemService(AUDIO_SERVICE)).generateAudioSessionId();
             if (session <= 0) throw new IllegalStateException("Cannot allocate an audio session");
-            Field handle = MpvPlayer.class.getDeclaredField("nativeHandle");
-            Method set = MpvPlayer.class.getDeclaredMethod("nativeSetProperty", long.class, String.class, String.class);
-            handle.setAccessible(true);
+            Method set = MpvPlayer.class.getDeclaredMethod("setProperty", String.class, String.class);
             set.setAccessible(true);
-            set.invoke(null, handle.getLong(player), "audiotrack-session-id", Integer.toString(session));
+            set.invoke(player, "audiotrack-session-id", Integer.toString(session));
             player.setOnPreparedListener(p -> {
                 event("onPrepared"); prepared++;
                 try { p.start(); handler.postDelayed(sampleAudio, 1000); }

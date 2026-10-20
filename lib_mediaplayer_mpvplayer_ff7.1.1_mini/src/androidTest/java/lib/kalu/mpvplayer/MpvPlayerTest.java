@@ -9,6 +9,10 @@ import java.nio.ByteOrder;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /** Runs against the actual libmpv/FFmpeg libraries on an Android device. */
 @SuppressWarnings("deprecation")
@@ -98,5 +102,55 @@ public class MpvPlayerTest extends InstrumentationTestCase {
             assertTrue(error.await(10, TimeUnit.SECONDS));
             assertTrue(code.get() < 0);
         }
+    }
+
+    public void testTypedNativePropertyBridge() throws Exception {
+        try (MpvPlayer player = new MpvPlayer()) {
+            setSlice(player);
+            player.prepare();
+            Object tracks = player.queryProperty("track-list");
+            assertTrue(tracks instanceof List);
+            assertFalse(((List<?>) tracks).isEmpty());
+            Object item = ((List<?>) tracks).get(0);
+            assertTrue(item instanceof Map);
+            Map<?, ?> track = (Map<?, ?>) item;
+            assertEquals("audio", track.get("type"));
+            assertTrue(track.get("id") instanceof Long);
+            assertTrue(track.get("selected") instanceof Boolean);
+            assertEquals(Boolean.TRUE, player.queryProperty("pause"));
+            assertTrue(player.queryProperty("duration") instanceof Number);
+            player.setProperty("title", "中文 🎞️");
+            assertEquals("中文 🎞️", player.queryProperty("title"));
+            assertNull(player.queryProperty("sdk-property-that-does-not-exist"));
+        }
+    }
+
+    public void testUnifiedSdkAudioPlayback() throws Exception {
+        File media = File.createTempFile("sdk-audio-", ".wav", wave.getParentFile());
+        try {
+            try (RandomAccessFile input = new RandomAccessFile(wave, "r"); FileOutputStream output = new FileOutputStream(media)) {
+                byte[] bytes = new byte[BYTES]; input.seek(PREFIX); input.readFully(bytes); output.write(bytes);
+            }
+            CountDownLatch prepared = new CountDownLatch(1), complete = new CountDownLatch(1);
+            AtomicReference<PlayerError> error = new AtomicReference<>();
+            try (MpvPlayer player = new MpvPlayer(new PlayerConfig.Builder().autoPlay(true).build())) {
+                player.addPlayerListener(new PlayerListener() {
+                    @Override public void onPrepared(MpvPlayer p) { prepared.countDown(); }
+                    @Override public void onCompletion(MpvPlayer p) { complete.countDown(); }
+                    @Override public void onError(MpvPlayer p, PlayerError value) { error.set(value); prepared.countDown(); complete.countDown(); }
+                });
+                player.setMediaSource(new MediaSource(media.getPath(), Collections.emptyMap(), MediaSource.StreamType.VOD));
+                player.prepareAsync();
+                assertTrue(prepared.await(15, TimeUnit.SECONDS));
+                assertNull(error.get());
+                assertEquals(1, player.getAudioTracks().size());
+                assertTrue(player.getVideoTracks().isEmpty());
+                assertFalse(player.supports(MpvPlayer.Capability.ADAPTIVE_HLS_VARIANTS));
+                assertTrue(complete.await(15, TimeUnit.SECONDS));
+                assertNull(error.get());
+                assertEquals(MpvPlayer.PlaybackState.ENDED, player.getPlaybackState());
+                assertEquals(2000, player.getDuration());
+            }
+        } finally { media.delete(); }
     }
 }

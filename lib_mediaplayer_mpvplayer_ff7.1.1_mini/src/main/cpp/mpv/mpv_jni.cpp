@@ -217,6 +217,67 @@ int openFile(void *opaque, char *uri, mpv_stream_cb_info *info) {
     info->cancel_fn = [](void *s) { static_cast<FileSlice *>(s)->cancelled = true; };
     return 0;
 }
+
+// Java collections preserve node types and UTF-8 metadata without a JSON dependency.
+jobject nodeObject(JNIEnv *env, const mpv_node &node, int depth = 0) {
+    if (env->ExceptionCheck()) return nullptr;
+    if (depth > 32) { fail(env, "mpv property nesting exceeds 32"); return nullptr; }
+    const char *className = nullptr, *signature = nullptr;
+    switch (node.format) {
+        case MPV_FORMAT_STRING: {
+            const char *value = node.u.string ? node.u.string : "";
+            auto length = static_cast<jsize>(strlen(value));
+            jbyteArray bytes = env->NewByteArray(length);
+            if (!bytes) return nullptr;
+            env->SetByteArrayRegion(bytes, 0, length, reinterpret_cast<const jbyte *>(value));
+            jclass cls = env->FindClass("java/lang/String");
+            jmethodID ctor = cls ? env->GetMethodID(cls, "<init>", "([BLjava/lang/String;)V") : nullptr;
+            jstring encoding = env->NewStringUTF("UTF-8");
+            jobject result = ctor && encoding && !env->ExceptionCheck() ? env->NewObject(cls, ctor, bytes, encoding) : nullptr;
+            env->DeleteLocalRef(bytes);
+            if (encoding) env->DeleteLocalRef(encoding);
+            if (cls) env->DeleteLocalRef(cls);
+            return result;
+        }
+        case MPV_FORMAT_INT64: className = "java/lang/Long"; signature = "(J)Ljava/lang/Long;"; break;
+        case MPV_FORMAT_DOUBLE: className = "java/lang/Double"; signature = "(D)Ljava/lang/Double;"; break;
+        case MPV_FORMAT_FLAG: className = "java/lang/Boolean"; signature = "(Z)Ljava/lang/Boolean;"; break;
+        case MPV_FORMAT_NODE_ARRAY:
+        case MPV_FORMAT_NODE_MAP: {
+            bool map = node.format == MPV_FORMAT_NODE_MAP;
+            jclass cls = env->FindClass(map ? "java/util/LinkedHashMap" : "java/util/ArrayList");
+            if (!cls) return nullptr;
+            jmethodID ctor = env->GetMethodID(cls, "<init>", "()V");
+            jmethodID put = env->GetMethodID(cls, map ? "put" : "add", map ?
+                "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;" : "(Ljava/lang/Object;)Z");
+            jobject result = ctor && put ? env->NewObject(cls, ctor) : nullptr;
+            if (result && node.u.list) for (int i = 0; i < node.u.list->num && !env->ExceptionCheck(); ++i) {
+                if (env->PushLocalFrame(8) < 0) break;
+                jobject value = nodeObject(env, node.u.list->values[i], depth + 1);
+                if (map) {
+                    mpv_node key{}; key.format = MPV_FORMAT_STRING; key.u.string = node.u.list->keys[i];
+                    jobject name = nodeObject(env, key, depth + 1);
+                    if (!env->ExceptionCheck()) env->CallObjectMethod(result, put, name, value);
+                } else if (!env->ExceptionCheck()) env->CallBooleanMethod(result, put, value);
+                env->PopLocalFrame(nullptr);
+            }
+            env->DeleteLocalRef(cls);
+            return result;
+        }
+        default: return nullptr;
+    }
+    jclass cls = env->FindClass(className);
+    if (!cls) return nullptr;
+    jmethodID valueOf = env->GetStaticMethodID(cls, "valueOf", signature);
+    jobject result = nullptr;
+    if (valueOf) {
+        if (node.format == MPV_FORMAT_INT64) result = env->CallStaticObjectMethod(cls, valueOf, static_cast<jlong>(node.u.int64));
+        else if (node.format == MPV_FORMAT_DOUBLE) result = env->CallStaticObjectMethod(cls, valueOf, static_cast<jdouble>(node.u.double_));
+        else result = env->CallStaticObjectMethod(cls, valueOf, static_cast<jboolean>(node.u.flag));
+    }
+    env->DeleteLocalRef(cls);
+    return result;
+}
 } // namespace
 
 #define JNI_METHOD(name) Java_lib_kalu_mpvplayer_MpvPlayer_##name
@@ -360,6 +421,20 @@ extern "C" JNIEXPORT jdouble JNICALL JNI_METHOD(nativeGetNumber)(JNIEnv *env, jc
     if (!p) return fallback;
     auto key = string(env, name);
     return env->ExceptionCheck() ? fallback : p->number(key.c_str(), fallback);
+}
+
+extern "C" JNIEXPORT jobject JNICALL JNI_METHOD(nativeGetProperty)(JNIEnv *env, jclass, jlong handle, jstring name) {
+    auto *p = player(env, handle);
+    if (!p) return nullptr;
+    auto key = string(env, name);
+    if (env->ExceptionCheck()) return nullptr;
+    mpv_node node{};
+    int code = mpv_get_property(p->mpv, key.c_str(), MPV_FORMAT_NODE, &node);
+    if (code == MPV_ERROR_PROPERTY_UNAVAILABLE || code == MPV_ERROR_PROPERTY_NOT_FOUND) return nullptr;
+    if (!check(env, code, key.c_str())) return nullptr;
+    jobject value = nodeObject(env, node);
+    mpv_free_node_contents(&node);
+    return value;
 }
 
 extern "C" JNIEXPORT void JNICALL JNI_METHOD(nativeSetSurface)(JNIEnv *env, jclass, jlong handle, jobject surface) {

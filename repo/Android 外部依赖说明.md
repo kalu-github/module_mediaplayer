@@ -1,10 +1,10 @@
 # Android mpv 开源依赖清单与作用说明
 
 整理日期：2026-10-19。范围为当前 `dev_mpvplayer` 分支实际启用的
-[lib_mediaplayer_mpvplayer_ff7.1.1_mini](lib_mediaplayer_mpvplayer_ff7.1.1_mini/README.md)
+[lib_mediaplayer_mpvplayer_ff7.1.1_mini](../lib_mediaplayer_mpvplayer_ff7.1.1_mini/README.md)
 模块，默认采用 `merged` 合并构建。
 
-[settings.gradle](settings.gradle) 当前只启用这个模块，其 Java 层没有声明额外的第三方运行时依赖。
+[settings.gradle](../settings.gradle) 当前只启用这个模块，其 Java 层没有声明额外的第三方运行时依赖。
 下列版本和用途依据本地源码、构建配方以及四种 ABI 的实际链接清单整理。
 同一项目可能生成多个静态库；作为链接输入，也不表示它的全部功能在每次播放时都启用。
 
@@ -61,7 +61,7 @@
 | MarkupSafe | `28ace20b140d15c083e1cbc163ee6b7778ba098c` | Jinja 使用的字符串标记和转义支持。 | 构建时依赖，不参与 Android 播放 |
 
 子模块的来源和提交见
-[vendor-origins.json](lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/vendor-origins.json)。
+[vendor-origins.json](../lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/vendor-origins.json)。
 当前 libplacebo 构建禁用 Vulkan 和 demos；JNI 有 Surface 时使用 `vo=gpu`、Android EGL/OpenGL ES，
 没有 Surface 时使用 `vo=null`。不能仅凭 libplacebo 被链接，就认定所有高级画质功能都默认开启。
 
@@ -135,11 +135,11 @@ Java 入口调用 `System.loadLibrary("mpvplayer")`。
 
 ## 8. 清单依据与后续维护
 
-- [模块 Gradle 配置](lib_mediaplayer_mpvplayer_ff7.1.1_mini/build.gradle)：Android 版本、NDK、CMake、Java 及测试依赖。
-- [CMake 链接配置](lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/CMakeLists.txt)：两个动态库的生成及系统库链接方式。
-- [ARM64 静态库链接清单](lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/ffmpeg/arm64-v8a/link.cmake)：运行时库输入；本次已核对其余三种 ABI 的清单一致。
-- [ARM64 构建清单](lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/ffmpeg/arm64-v8a/manifest.json)：源码来源、构建版本及静态库校验值；同级 ABI 目录各自保留对应记录。
-- [依赖版本配方](lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/mpv-android-2026-09-17/buildscripts/include/depinfo.sh) 与 [项目构建脚本](lib_mediaplayer_mpvplayer_ff7.1.1_mini/tools/build_native.py)：第三方版本及本项目对参考配方的调整。FFmpeg、dav1d、NDK 等应以项目覆盖值和实际构建清单为准，不能直接照搬参考工程默认值。
-- [宿主工具安装脚本](lib_mediaplayer_mpvplayer_ff7.1.1_mini/tools/setup_host_tools.sh)：固定的 Meson、pkgconf 安装版本。
+- [模块 Gradle 配置](../lib_mediaplayer_mpvplayer_ff7.1.1_mini/build.gradle)：Android 版本、NDK、CMake、Java 及测试依赖。
+- [CMake 链接配置](../lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/CMakeLists.txt)：两个动态库的生成及系统库链接方式。
+- [ARM64 静态库链接清单](../lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/ffmpeg/arm64-v8a/link.cmake)：运行时库输入；本次已核对其余三种 ABI 的清单一致。
+- [ARM64 构建清单](../lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/ffmpeg/arm64-v8a/manifest.json)：源码来源、构建版本及静态库校验值；同级 ABI 目录各自保留对应记录。
+- [依赖版本配方](../lib_mediaplayer_mpvplayer_ff7.1.1_mini/src/main/cpp/mpv-android-2026-09-17/buildscripts/include/depinfo.sh) 与 [项目构建脚本](../lib_mediaplayer_mpvplayer_ff7.1.1_mini/tools/build_native.py)：第三方版本及本项目对参考配方的调整。FFmpeg、dav1d、NDK 等应以项目覆盖值和实际构建清单为准，不能直接照搬参考工程默认值。
+- [宿主工具安装脚本](../lib_mediaplayer_mpvplayer_ff7.1.1_mini/tools/setup_host_tools.sh)：固定的 Meson、pkgconf 安装版本。
 
 后续升级库、修改裁剪选项、增加 Android 模块或重新生成静态库时，应同步更新对应版本、用途和“是否进入最终产物”的状态。

@@ -35,6 +35,13 @@ def main():
     run([javac, '--release', '8', '-Xlint:unchecked', '-Xlint:-options', '-cp', android,
          '-d', output / 'classes'] + java_sources)
     print('Java compilation passed', flush=True)
+    sdk_tests = sorted((MODULE / 'tests/java').rglob('*.java'))
+    if sdk_tests:
+        sdk_classpath = os.pathsep.join(map(str, [android, output / 'classes']))
+        run([javac, '--release', '8', '-Xlint:-options', '-cp', sdk_classpath,
+             '-d', output / 'sdk-tests'] + sdk_tests)
+        run([args.java_home / 'bin/java', '-cp', os.pathsep.join(map(str,
+             [output / 'sdk-tests', output / 'classes', android])), 'lib.kalu.mpvplayer.SdkStateTest'])
     optional = args.sdk / 'platforms/android-32/optional'
     test_classpath = os.pathsep.join(str(p) for p in [android, output / 'classes',
         optional / 'android.test.runner.jar', optional / 'android.test.base.jar'])
